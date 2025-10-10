@@ -25,17 +25,19 @@ const Login = () => {
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login(); // ถ้ายังไม่ล็อกอิน
+        liff.login();
       } else {
         const profile = await liff.getProfile();
+
+        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
-          First_name: profile.displayName,
-          Last_Name: user.lastName || "-"
+          First_Name: profile.displayName, // ✅ ชื่อเต็ม
+          Last_Name: user.lastName || "-",
           Provider: "line",
           Provider_ID: profile.userId,
+          
         };
-
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
 
         await fetch(DB_API, {
