@@ -87,53 +87,52 @@ const Login = () => {
 
   // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, facebookProvider);
-    const user = result.user;
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
-    console.log("user info:", user);
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken;
 
-    // สร้าง JSON แบบเดียวกับ Google
-    const userData = {
-      Email: user.email,
-      Provider: "facebook",
-      Provider_ID: user.uid, // ใช้ uid ของ Firebase เป็น Provider_ID
-    };
+      const userData = {
+        Email: user.email,
+        Provider: "facebook",
+        Provider_ID: user.uid,
+      };
 
-    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
-    // ส่งข้อมูลไปยัง endpoint ของคุณ
-    await fetch(DB_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-  } catch (error) {
-    if (error.code === "auth/popup-closed-by-user") {
-      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-    } else if (error.code === "auth/account-exists-with-different-credential") {
-      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-    } else {
-      console.error("Facebook login error:", error);
-      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+      window.location.reload(); // ✅ กลับหน้า login
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="login-container">
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-        <h2>Traffy Fondue</h2>
-        <h3>ระบบแจ้งปัญหาเมือง</h3>
+        <h2>Fondue Dashbord and Manager</h2>
+        <h3>แพลตฟอร์มบริหารจัดการปัญหาเมือง</h3>
 
-        <p className="description">
-          Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)
-สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการ ตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่าง รวดเร็ว
-        </p>
+       <p className="description">
+           <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span><br />
+          สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
+       </p>
+
 
         <button className="facebook-btn" onClick={handleFacebookLogin}>
           เข้าสู่ระบบด้วย Facebook
