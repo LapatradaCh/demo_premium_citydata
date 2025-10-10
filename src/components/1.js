@@ -86,40 +86,42 @@ const Login = () => {
   };
 
   // 🔹 ฟังก์ชันล็อกอิน Facebook
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential?.accessToken;
+ const handleFacebookLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
+    const credential = FacebookAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
+        console.log("user info:", user);
 
-      const userData = {
-        Email: user.email,
-        Provider: "facebook",
-        Provider_ID: user.uid,
-      };
+    // สร้าง JSON แบบเดียวกับ Google
+    const userData = {
+      Email: user.email,
+      Provider: "facebook",
+      Provider_ID: user.uid, // ใช้ uid ของ Firebase เป็น Provider_ID
+    };
 
-      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    // ส่งข้อมูลไปยัง endpoint ของคุณ
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
 
-      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload(); // ✅ กลับหน้า login
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
-      }
+    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+    } else if (error.code === "auth/account-exists-with-different-credential") {
+      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+    } else {
+      console.error("Facebook login error:", error);
+      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
     }
-  };
+  }
+};
 
   return (
     <div className="login-container">
