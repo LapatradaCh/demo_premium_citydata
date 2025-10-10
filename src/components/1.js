@@ -31,7 +31,7 @@ const Login = () => {
         const userData = {
           Email: profile.userId + "@line.me",
           First_Name: profile.displayName,
-           Last_Name: " ",
+          Last_Name: " ",
           Provider: "line",
           Provider_ID: profile.userId,
         };
@@ -64,6 +64,7 @@ const Login = () => {
       // ✅ แยกชื่อกับนามสกุล (Google มักมีชื่อเต็มใน displayName)
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
       const lastName = lastParts.join(" ");
+      console.log("User info:" user);
 
       const userData = {
         Email: user.email,
