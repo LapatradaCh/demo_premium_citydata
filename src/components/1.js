@@ -28,11 +28,13 @@ const Login = () => {
         liff.login();
       } else {
         const profile = await liff.getProfile();
-        const userData = {
+        c const userData = {
           Email: profile.userId + "@line.me",
+          First_Name: profile.displayName, // ✅ ชื่อเต็ม
+          Last_Name: "", // LINE ไม่มีข้อมูลนามสกุล
           Provider: "line",
           Provider_ID: profile.userId,
-          DisplayName: profile.displayName,
+          
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -59,8 +61,11 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
+      
       const userData = {
         Email: user.email,
+        First_Name: firstName || "",
+        Last_Name: lastName || "",
         Provider: "google",
         Provider_ID: user.uid,
       };
@@ -95,6 +100,8 @@ const Login = () => {
 
       const userData = {
         Email: user.email,
+        Name: firstName || "",
+        Last_Name: lastName || "",
         Provider: "facebook",
         Provider_ID: user.uid,
       };
