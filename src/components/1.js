@@ -30,9 +30,10 @@ const Login = () => {
         const profile = await liff.getProfile();
         const userData = {
           Email: profile.userId + "@line.me",
+          First_name: profile.displayName,
+          Last_name: "-",
           Provider: "line",
           Provider_ID: profile.userId,
-          DisplayName: profile.displayName,
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
