@@ -13,8 +13,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
 
+const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope("email"); // ✅ เพิ่ม scope email
+
+const facebookProvider = new FacebookAuthProvider();
+facebookProvider.addScope("email"); // ✅ เพิ่ม scope email
 
 export { auth, googleProvider, facebookProvider };
