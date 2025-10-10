@@ -30,7 +30,7 @@ const Login = () => {
         const profile = await liff.getProfile();
         const userData = {
           Email: profile.userId + "@line.me",
-          First_Name: profile.displayName,,
+          First_Name: profile.displayName,
            Last_Name: " ",
           Provider: "line",
           Provider_ID: profile.userId,
