@@ -93,7 +93,8 @@ const Login = () => {
     }
   };
 
-  // 🔹 Facebook Login
+  const facebookProvider = new FacebookAuthProvider();
+facebookProvider.addScope('email'); 
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
