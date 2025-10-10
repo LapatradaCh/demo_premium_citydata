@@ -33,7 +33,7 @@ const Login = () => {
         const userData = {
           Email: profile.userId + "@line.me",
           First_Name: profile.displayName, // ✅ ชื่อเต็ม
-          Last_Name: user.lastName || "-",
+          Last_Name: "-",
           Provider: "line",
           Provider_ID: profile.userId,
           
