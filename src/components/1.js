@@ -150,17 +150,18 @@ const Login = () => {
   }
 };
 
-  return (
+ return (
     <div className="login-container">
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-        <h2>Fondue Dashboard and Manager</h2>
+        <h2>Fondue Dashbord and Manager</h2>
         <h3>แพลตฟอร์มบริหารจัดการปัญหาเมือง</h3>
 
-        <p className="description">
-          <span className="highlight">Traffy Fondue</span><br />
-          ช่วยให้หน่วยงานบริหารจัดการปัญหาได้รวดเร็วและมีประสิทธิภาพ
-        </p>
+       <p className="description">
+           <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span><br />
+          สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
+       </p>
+
 
         <button className="facebook-btn" onClick={handleFacebookLogin}>
           เข้าสู่ระบบด้วย Facebook
@@ -173,11 +174,54 @@ const Login = () => {
         <button className="line-btn" onClick={handleLineLogin}>
           เข้าสู่ระบบด้วย LINE
         </button>
-
         <p className="contact">สอบถามข้อมูลเพิ่มเติมได้ที่ LINE: @fonduehelp</p>
+
+        <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันได้ที่</p>
+        <div className="store-icons">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.traffy2.traffy_report"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              alt="Google Play"
+            />
+          </a>
+          <a
+            href="https://apps.apple.com/th/app/fondue-manager/id1431630978?l=th"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+              alt="App Store"
+            />
+          </a>
+        </div>
+
+        <div className="links">
+          <a
+            href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            คู่มือการใช้งาน
+          </a>
+          <p className="contact">
+            <a
+              href="line://ti/p/@fonduehelp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ติดต่อสอบถาม
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+
