@@ -4,6 +4,8 @@ import traffyLogo from "./traffy.png";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
+const DB_API = "https://350910e518b5.ngrok-free.app/users"
+
 const Login = () => {
 
   // ฟังก์ชันล็อกอิน Google
@@ -20,7 +22,7 @@ const Login = () => {
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
 
-      await fetch("https://3b613b37cbc8.ngrok-free.app/users", {
+      await fetch(DB_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -54,7 +56,7 @@ const Login = () => {
     console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
     // ส่งข้อมูลไปยัง endpoint ของคุณ
-    await fetch("https://3b613b37cbc8.ngrok-free.app/users", {
+    await fetch(DB_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
