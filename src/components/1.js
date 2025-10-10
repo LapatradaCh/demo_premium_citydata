@@ -64,7 +64,6 @@ const Login = () => {
       // ✅ แยกชื่อกับนามสกุล (Google มักมีชื่อเต็มใน displayName)
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
       const lastName = lastParts.join(" ");
-      console.log("User info:" ,user);
 
       const userData = {
         Email: user.email,
