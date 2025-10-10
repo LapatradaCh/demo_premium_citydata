@@ -1,3 +1,4 @@
+มันไม่ขึ้นalertเลยเมื่อล็อกอินเสร็จมันต้องกดเพื่อเข้าไลน์อีกรอบถึงจะขึ้นalert
 import React, { useEffect } from "react";
 import "./1.css";
 import traffyLogo from "./traffy.png";
@@ -25,19 +26,17 @@ const Login = () => {
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login();
+        liff.login(); // ถ้ายังไม่ล็อกอิน
       } else {
         const profile = await liff.getProfile();
-
-        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
-          First_Name: profile.displayName, // ✅ ชื่อเต็ม
-          Last_Name: "-",
+          First_Name: profile.displayName,,
+           Last_Name: " ",
           Provider: "line",
           Provider_ID: profile.userId,
-          
         };
+
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
 
         await fetch(DB_API, {
