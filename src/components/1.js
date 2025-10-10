@@ -33,7 +33,7 @@ const Login = () => {
           Email: profile.userId + "@line.me",
           Provider: "line",
           Provider_ID: profile.userId,
-          Name: profile.displayName, // ✅ ชื่อเต็ม
+          First_Name: profile.displayName, // ✅ ชื่อเต็ม
           Last_Name: "", // LINE ไม่มีข้อมูลนามสกุล
         };
 
@@ -69,7 +69,7 @@ const Login = () => {
         Email: user.email,
         Provider: "google",
         Provider_ID: user.uid,
-        Name: firstName || "",
+        First_Name: firstName || "",
         Last_Name: lastName || "",
       };
 
@@ -109,7 +109,7 @@ const Login = () => {
         Email: user.email,
         Provider: "facebook",
         Provider_ID: user.uid,
-        Name: firstName || "",
+        First_Name: firstName || "",
         Last_Name: lastName || "",
       };
 
