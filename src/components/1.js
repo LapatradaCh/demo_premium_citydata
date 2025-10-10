@@ -100,6 +100,8 @@ const Login = () => {
       const user = result.user;
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const accessToken = credential?.accessToken;
+      console.log("userinfo:", user);
+
 
       // ✅ แยกชื่อกับนามสกุลเหมือน Google
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
