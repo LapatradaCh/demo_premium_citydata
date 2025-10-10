@@ -4,7 +4,7 @@ import traffyLogo from "./traffy.png";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
-const DB_API = "https://4dc21ea9e1b0.ngrok-free.app/users"
+const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"
 
 const Login = () => {
 
