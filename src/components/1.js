@@ -57,44 +57,41 @@ const Login = () => {
     }
   };
 
-  // 🔹 Google Login
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+ const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
 
-      // ✅ แยกชื่อกับนามสกุล (Google มักมีชื่อเต็มใน displayName)
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
+    // fallback email
+    const email = user.email || user.providerData[0]?.email || "";
 
-      const userData = {
-        Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
-        Provider: "google",
-        Provider_ID: user.uid,
-        
-      };
+    // แยกชื่อกับนามสกุล
+    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+    const lastName = lastParts.join(" ");
 
-      console.log("ล็อกอิน Google สำเร็จ:", userData);
+    const userData = {
+      Email: email,
+      First_Name: firstName || "",
+      Last_Name: lastName || "",
+      Provider: "google",
+      Provider_ID: user.uid,
+    };
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    console.log("ล็อกอิน Google สำเร็จ:", userData);
 
-      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload();
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
-      }
-    }
-  };
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+
+    alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+    window.location.reload();
+  } catch (error) {
+    console.error("Google login error:", error);
+    alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
+  }
+};
 
   const facebookProvider = new FacebookAuthProvider();
 facebookProvider.addScope('email');
