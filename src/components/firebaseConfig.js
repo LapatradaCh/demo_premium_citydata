@@ -64,15 +64,21 @@ const Login = () => {
 
     alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
   } catch (error) {
-    if (error.code === "auth/popup-closed-by-user") {
-      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-    } else if (error.code === "auth/account-exists-with-different-credential") {
-      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-    } else {
-      console.error("Facebook login error:", error);
-      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+  if (error.code === "auth/account-exists-with-different-credential") {
+    // ดึง provider เดิม
+    const pendingCred = FacebookAuthProvider.credentialFromError(error);
+    const email = error.customData.email;
+
+    // ค้นหา provider เดิมของ email
+    const methods = await fetchSignInMethodsForEmail(auth, email);
+
+    if (methods.includes("google.com")) {
+      // ให้ user login ด้วย Google ก่อน แล้ว link กับ Facebook
+      const result = await signInWithPopup(auth, googleProvider);
+      await linkWithCredential(result.user, pendingCred);
     }
   }
+}
 };
 
   
