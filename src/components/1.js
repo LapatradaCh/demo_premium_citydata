@@ -95,45 +95,60 @@ const Login = () => {
 
   // 🔹 Facebook Login
   const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential?.accessToken;
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
 
-      // ✅ แยกชื่อกับนามสกุลเหมือน Google
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
+    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+    const lastName = lastParts.join(" ");
 
-      const userData = {
-        Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
-        Provider: "facebook",
-        Provider_ID: user.uid,
-      };
+    const userData = {
+      Email: user.email,
+      First_Name: firstName || "",
+      Last_Name: lastName || "",
+      Provider: "facebook",
+      Provider_ID: user.uid,
+    };
 
-      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
 
-      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload();
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+    window.location.reload();
+  } catch (error) {
+    // ✅ ตรวจว่ามีบัญชีนี้อยู่แล้วใน provider อื่น
+    if (error.code === "auth/account-exists-with-different-credential") {
+      const email = error.customData?.email;
+      const pendingCred = FacebookAuthProvider.credentialFromError(error);
+
+      // 🔹 ดึง provider เดิมที่อีเมลนี้ใช้
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+
+      // ถ้า provider เดิมคือ google ให้ login google ก่อน
+      if (methods.includes("google.com")) {
+        const googleResult = await signInWithPopup(auth, googleProvider);
+
+        // 🔗 ผูก Facebook เข้ากับบัญชี Google เดิม
+        await linkWithCredential(googleResult.user, pendingCred);
+
+        alert("เชื่อมบัญชี Facebook กับ Google สำเร็จ!");
+        window.location.reload();
       } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
       }
+    } else if (error.code === "auth/popup-closed-by-user") {
+      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+    } else {
+      console.error("Facebook login error:", error);
+      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
     }
-  };
+  }
+};
 
   return (
     <div className="login-container">
