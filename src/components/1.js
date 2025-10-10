@@ -8,11 +8,10 @@ import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุณเอง
 
 const Login = () => {
-  // 🔹 เริ่มต้น LIFF
   useEffect(() => {
     const initLiff = async () => {
       try {
-        await liff.init({ liffId: "2008265392-G9mE93Em" }); 
+        await liff.init({ liffId: "2008265392-G9mE93Em" });
         console.log("LIFF initialized");
       } catch (error) {
         console.error("LIFF init error:", error);
@@ -21,20 +20,21 @@ const Login = () => {
     initLiff();
   }, []);
 
-  // 🔹 ฟังก์ชันล็อกอิน LINE
+  // 🔹 LINE Login
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
         liff.login();
       } else {
         const profile = await liff.getProfile();
-        c const userData = {
+
+        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
+        const userData = {
           Email: profile.userId + "@line.me",
-          First_Name: profile.displayName, // ✅ ชื่อเต็ม
-          Last_Name: "", // LINE ไม่มีข้อมูลนามสกุล
           Provider: "line",
           Provider_ID: profile.userId,
-          
+          Name: profile.displayName, // ✅ ชื่อเต็ม
+          Last_Name: "", // LINE ไม่มีข้อมูลนามสกุล
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -46,7 +46,7 @@ const Login = () => {
         });
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-        liff.logout(); // ✅ ออกจากระบบแล้วกลับหน้า login
+        liff.logout();
         window.location.reload();
       }
     } catch (error) {
@@ -55,19 +55,22 @@ const Login = () => {
     }
   };
 
-  // 🔹 ฟังก์ชันล็อกอิน Google
+  // 🔹 Google Login
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      
+      // ✅ แยกชื่อกับนามสกุล (Google มักมีชื่อเต็มใน displayName)
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
+
       const userData = {
         Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
         Provider: "google",
         Provider_ID: user.uid,
+        Name: firstName || "",
+        Last_Name: lastName || "",
       };
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
@@ -79,7 +82,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload(); // ✅ กลับหน้า login
+      window.location.reload();
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -90,7 +93,7 @@ const Login = () => {
     }
   };
 
-  // 🔹 ฟังก์ชันล็อกอิน Facebook
+  // 🔹 Facebook Login
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
@@ -98,12 +101,16 @@ const Login = () => {
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const accessToken = credential?.accessToken;
 
+      // ✅ แยกชื่อกับนามสกุลเหมือน Google
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
+
       const userData = {
         Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
         Provider: "facebook",
         Provider_ID: user.uid,
+        Name: firstName || "",
+        Last_Name: lastName || "",
       };
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
@@ -115,7 +122,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload(); // ✅ กลับหน้า login
+      window.location.reload();
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
