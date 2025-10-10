@@ -31,7 +31,7 @@ const Login = () => {
         const userData = {
           Email: profile.userId + "@line.me",
           First_name: profile.displayName,
-          Last_name: null,
+          Last_Name: user.lastName || "-"
           Provider: "line",
           Provider_ID: profile.userId,
         };
