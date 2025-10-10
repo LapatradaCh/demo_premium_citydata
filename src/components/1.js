@@ -9,18 +9,33 @@ const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุ�
 
 const Login = () => {
   useEffect(() => {
-  const initLiff = async () => {
-    try {
-      await liff.init({ liffId: "2008265392-G9mE93Em" });
-      console.log("LIFF initialized");
+    const initLiff = async () => {
+      try {
+        await liff.init({ liffId: "2008265392-G9mE93Em" });
+        console.log("LIFF initialized");
+      } catch (error) {
+        console.error("LIFF init error:", error);
+      }
+    };
+    initLiff();
+  }, []);
 
-      if (liff.isLoggedIn()) {
+  // 🔹 LINE Login
+  const handleLineLogin = async () => {
+    try {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
         const profile = await liff.getProfile();
+
+        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
+          First_Name: profile.displayName, // ✅ ชื่อเต็ม
+          Last_Name: user.lastName || "-",
           Provider: "line",
           Provider_ID: profile.userId,
-          DisplayName: profile.displayName,
+          
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -32,20 +47,14 @@ const Login = () => {
         });
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
+        liff.logout();
+        window.location.reload();
       }
     } catch (error) {
-      console.error("LINE init error:", error);
+      console.error("LINE login error:", error);
+      alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
     }
   };
-
-  initLiff();
-}, []);
-
-const handleLineLogin = () => {
-  if (!liff.isLoggedIn()) {
-    liff.login({ redirectUri: window.location.href });
-  }
-};
 
   // 🔹 Google Login
   const handleGoogleLogin = async () => {
