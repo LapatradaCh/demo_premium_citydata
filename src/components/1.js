@@ -3,7 +3,7 @@ import "./1.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
-import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { signInWithPopup, FacebookAuthProvider,GoogleAuthProvider } from "firebase/auth";
 
 const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุณเอง
 
@@ -54,7 +54,9 @@ const Login = () => {
       alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
     }
   };
-
+  
+    const google_Provider = new GoogleAuthProvider();
+google_Provider.addScope('email');
   // 🔹 Google Login
   const handleGoogleLogin = async () => {
     try {
