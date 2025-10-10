@@ -7,7 +7,8 @@ import {
   fetchSignInMethodsForEmail, 
   linkWithCredential, 
   FacebookAuthProvider, 
-  signInWithPopup 
+  signInWithPopup,
+  GoogleAuthProvider 
 } from "firebase/auth";
 
 const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุณเอง
