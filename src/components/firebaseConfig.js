@@ -16,7 +16,5 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-// ✅ เพิ่ม scope ให้ Facebook ขอ email
-facebookProvider.addScope("email");
 
 export { auth, googleProvider, facebookProvider };
