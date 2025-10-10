@@ -8,6 +8,7 @@ import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุณเอง
 
 const Login = () => {
+  // 🔹 เริ่มต้น LIFF
   useEffect(() => {
     const initLiff = async () => {
       try {
@@ -20,22 +21,18 @@ const Login = () => {
     initLiff();
   }, []);
 
-  // 🔹 LINE Login
+  // 🔹 ฟังก์ชันล็อกอิน LINE
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login();
+        liff.login(); // ถ้ายังไม่ล็อกอิน
       } else {
         const profile = await liff.getProfile();
-
-        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
-          First_Name: profile.displayName, // ✅ ชื่อเต็ม
-          Last_Name: user.lastName || "-",
           Provider: "line",
           Provider_ID: profile.userId,
-          
+          DisplayName: profile.displayName,
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -47,7 +44,8 @@ const Login = () => {
         });
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-        liff.logout();
+        
+        liff.logout(); // ✅ ออกจากระบบแล้วกลับหน้า login
         window.location.reload();
       }
     } catch (error) {
