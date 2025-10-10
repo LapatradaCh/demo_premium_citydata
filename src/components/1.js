@@ -100,7 +100,7 @@ const Login = () => {
 
       const userData = {
         Email: user.email,
-        Name: firstName || "",
+        First_Name: firstName || "",
         Last_Name: lastName || "",
         Provider: "facebook",
         Provider_ID: user.uid,
