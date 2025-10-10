@@ -63,7 +63,8 @@ const Login = () => {
     const user = result.user;
 
     // fallback email
-    const email = user.email || user.providerData[0]?.email || "";
+    const email = user.email || user.providerData[0]?.email || "no-email@example.com";
+
 
     // แยกชื่อกับนามสกุล
     const [firstName, ...lastParts] = (user.displayName || "").split(" ");
