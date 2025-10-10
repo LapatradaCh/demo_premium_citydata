@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
-import { doc } from "firebase/firestore/lite";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDneYf7SUAAooViXeQU5ihU-X-BO_JA0d8",
@@ -16,5 +15,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
+
+// ✅ เพิ่ม scope ให้ Facebook ขอ email
+facebookProvider.addScope("email");
 
 export { auth, googleProvider, facebookProvider };
