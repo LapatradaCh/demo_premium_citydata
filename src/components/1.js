@@ -31,10 +31,10 @@ const Login = () => {
         // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
-          Provider: "line",
-          Provider_ID: profile.userId,
           First_Name: profile.displayName, // ✅ ชื่อเต็ม
           Last_Name: "", // LINE ไม่มีข้อมูลนามสกุล
+          Provider: "line",
+          Provider_ID: profile.userId,
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -67,10 +67,10 @@ const Login = () => {
 
       const userData = {
         Email: user.email,
-        Provider: "google",
-        Provider_ID: user.uid,
         First_Name: firstName || "",
         Last_Name: lastName || "",
+        Provider: "google",
+        Provider_ID: user.uid,
       };
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
@@ -107,10 +107,10 @@ const Login = () => {
 
       const userData = {
         Email: user.email,
-        Provider: "facebook",
-        Provider_ID: user.uid,
         First_Name: firstName || "",
         Last_Name: lastName || "",
+        Provider: "facebook",
+        Provider_ID: user.uid,
       };
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
