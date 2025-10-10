@@ -2,14 +2,9 @@ import React from "react";
 import "./1.css";
 import traffyLogo from "./traffy.png";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
-import { 
-  signInWithPopup, 
-  FacebookAuthProvider, 
-  fetchSignInMethodsForEmail, 
-  linkWithCredential 
-} from "firebase/auth";
+import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
-const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users";
+const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"
 
 const Login = () => {
 
@@ -44,71 +39,43 @@ const Login = () => {
     }
   };
 
-  // ✅ ฟังก์ชันล็อกอิน Facebook (เวอร์ชันที่รองรับเชื่อม provider)
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
+ const handleFacebookLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
+    const credential = FacebookAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
 
-      const userData = {
-        Email: user.email,
-        Provider: "facebook",
-        Provider_ID: user.uid,
-      };
+    // สร้าง JSON แบบเดียวกับ Google
+    const userData = {
+      Email: user.email,
+      Provider: "facebook",
+      Provider_ID: user.uid, // ใช้ uid ของ Firebase เป็น Provider_ID
+    };
 
-      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    // ส่งข้อมูลไปยัง endpoint ของคุณ
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
 
-      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-    } catch (error) {
+    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+    } else if (error.code === "auth/account-exists-with-different-credential") {
+      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+    } else {
       console.error("Facebook login error:", error);
-
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } 
-      else if (error.code === "auth/account-exists-with-different-credential") {
-        // ⚠️ เมื่อเจอว่าอีเมลนี้เคยใช้ provider อื่น (เช่น Google)
-        const email = error.customData?.email;
-        const pendingCred = FacebookAuthProvider.credentialFromError(error);
-        const methods = await fetchSignInMethodsForEmail(auth, email);
-
-        if (methods.includes("google.com")) {
-          alert("บัญชีนี้เคยสมัครด้วย Google กำลังเชื่อมบัญชีให้...");
-
-          // ให้ผู้ใช้ล็อกอินด้วย Google ก่อน
-          const googleResult = await signInWithPopup(auth, googleProvider);
-          // แล้วเชื่อม Facebook เข้ากับบัญชี Google เดิม
-          await linkWithCredential(googleResult.user, pendingCred);
-
-          // บันทึกข้อมูลอัปเดตไป backend
-          const user = googleResult.user;
-          const userData = {
-            Email: user.email,
-            Provider: "google+facebook",
-            Provider_ID: user.uid,
-          };
-
-          await fetch(DB_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
-          });
-
-          alert("เชื่อมบัญชี Facebook เข้ากับ Google สำเร็จ!");
-        } else {
-          alert("บัญชีนี้ใช้ผู้ให้บริการอื่น กรุณาเข้าสู่ระบบด้วย provider เดิม");
-        }
-      } 
-      else {
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
-      }
+      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
     }
-  };
+  }
+};
+
+  
 
   return (
     <div className="login-container">
@@ -156,5 +123,6 @@ const Login = () => {
     </div>
   );
 };
+
 
 export default Login;
