@@ -94,50 +94,54 @@ const Login = () => {
   };
 
   const facebookProvider = new FacebookAuthProvider();
-facebookProvider.addScope('email'); 
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential?.accessToken;
-      console.log("userinfo:", user);
+facebookProvider.addScope('email');
 
+const handleFacebookLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
+    const credential = FacebookAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
 
-      // ✅ แยกชื่อกับนามสกุลเหมือน Google
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
+    console.log("userinfo:", user);
 
-      const userData = {
-        Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
-        Provider: "facebook",
-        Provider_ID: user.uid,
-        
-      };
+    // แยกชื่อกับนามสกุล
+    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+    const lastName = lastParts.join(" ");
 
-      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+    // ใช้ fallback ถ้า user.email เป็น null
+    const email = user.email || user.providerData[0]?.email || "";
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    const userData = {
+      Email: email,
+      First_Name: firstName || "",
+      Last_Name: lastName || "",
+      Provider: "facebook",
+      Provider_ID: user.uid,
+    };
 
-      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      window.location.reload();
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
-      }
+    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+
+    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+    window.location.reload();
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+    } else if (error.code === "auth/account-exists-with-different-credential") {
+      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+    } else {
+      console.error("Facebook login error:", error);
+      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
     }
-  };
+  }
+};
+
 
   return (
     <div className="login-container">
