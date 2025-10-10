@@ -1,4 +1,3 @@
-มันไม่ขึ้นalertเลยเมื่อล็อกอินเสร็จมันต้องกดเพื่อเข้าไลน์อีกรอบถึงจะขึ้นalert
 import React, { useEffect } from "react";
 import "./1.css";
 import traffyLogo from "./traffy.png";
