@@ -5,7 +5,7 @@ import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
-const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // ของคุณเอง
+const DB_API = "https://780fc4c943c0.ngrok-free.app/users"; // ของคุณเอง
 
 const Login = () => {
   // 🔹 เริ่มต้น LIFF
