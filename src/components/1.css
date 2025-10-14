@@ -7,7 +7,7 @@
   width: 100vw;
   font-family: "Prompt", sans-serif;
   background-image: 
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), /* เพิ่ม overlay หนาให้ตัวหนังสือชัด */
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), /* overlay */
     url('https://www.shutterstock.com/image-photo/aerial-view-traffic-transportation-during-600nw-2522794113.jpg');
   background-size: cover;  
   background-position: center;
@@ -20,11 +20,11 @@
 .login-column {
   width: 100%;
   max-width: 700px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   border-radius: 25px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-  padding: 3rem 4rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+  padding: 2rem 3rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -35,98 +35,95 @@
 
 /* Logo */
 .logo {
-  width: 110px;
+  width: 100px;
   margin-bottom: 1rem;
   border-radius: 50%;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Headings */
 h2 {
-  margin: 0.3rem 0;
-  font-size: 2.3rem;
-  letter-spacing: 1.5px;
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 1px;
   font-weight: 700;
-  color: #ffca28;
 }
 h3 {
   margin: 0.5rem 0 1.5rem;
   font-weight: 400;
-  font-size: 1.2rem;
-  opacity: 0.9;
-  color: #e0e0e0;
+  opacity: 0.85;
 }
 .description {
   font-family: 'Prompt', sans-serif; 
-  font-size: 1.05rem;
-  line-height: 2;
+  font-size: 1rem;
+  line-height: 1.8;
   color: #f1f1f1;
-  margin-bottom: 2rem;
-  text-align: center;
+  margin-bottom: 1.5rem;
+  text-align: justify;
 }
 
 .description .highlight {
   display: block;         
   text-align: center;     
-  color: #ffd54f;       
+  color: #ff9b36;       
   font-weight: 600;       
-  font-size: 1.1rem;    
+  font-size: 1.05rem;    
   margin-bottom: 0.5rem;  
 }
+
 
 /* Buttons */
 button {
   width: 80%;
-  padding: 1rem;
-  margin: 0.6rem 0;
+  padding: 0.9rem;
+  margin: 0.5rem 0;
   border: none;
-  border-radius: 18px;
-  font-size: 1.05rem;
+  border-radius: 15px;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
-  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  gap: 0.5rem;
 }
 button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Social Buttons */
 .facebook-btn { background: linear-gradient(135deg, #1877f2, #145db2); color: #fff; }
-.google-btn { background: linear-gradient(135deg, #fff, #f0f0f0); color: #444; border: 1px solid #ccc; }
+.google-btn { background: linear-gradient(135deg, #fff, #eee); color: #444; border: 1px solid #ccc; }
 .line-btn { background: linear-gradient(135deg, #06c755, #04a347); color: #fff; }
 
-/* Contact & Download */
+/* Contact */
 .contact {
-  font-size: 0.95rem;
-  margin-top: 0.7rem;
-  line-height: 1.5;
-}
-.download-text {
-  margin-top: 1.2rem;
-  font-weight: 600;
-  color: #ffecb3;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
 }
 
-/* Store Icons */
+/* Download Text & Store Icons */
+.download-text {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  font-size: 1rem;
+}
 .store-icons {
   display: flex;
   justify-content: center;
-  gap: 1.2rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 .store-icons img {
   width: 120px;
-  border-radius: 12px;
   transition: transform 0.3s ease;
 }
-.store-icons img:hover { transform: scale(1.08); }
+.store-icons img:hover { transform: scale(1.05); }
 
 /* Links */
 .links {
@@ -134,39 +131,43 @@ button:hover {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
 }
 .links a {
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem 1rem;
   background-color: rgba(255, 255, 255, 0.15);
   color: white;
   font-weight: 500;
-  border-radius: 15px;
+  border-radius: 12px;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 .links a:hover {
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.4);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
-/* Responsive */
+/* Responsive Tablet */
 @media (max-width: 992px) {
-  .login-column { width: 90%; padding: 2.5rem 3rem; }
+  .login-column { width: 90%; padding: 2rem; }
   .logo { width: 90px; }
-  h2 { font-size: 2rem; }
+  h2 { font-size: 1.8rem; }
   h3 { font-size: 1.1rem; }
-  button { width: 85%; font-size: 1rem; }
+  button { width: 85%; font-size: 0.95rem; }
   .store-icons img { width: 100px; }
+  .links a { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
 }
+
+/* Responsive Mobile */
 @media (max-width: 768px) {
-  .login-column { width: 95%; padding: 2rem 2.5rem; }
-  .logo { width: 75px; }
-  h2 { font-size: 1.7rem; }
+  .login-column { width: 95%; padding: 1.5rem 2rem; }
+  .logo { width: 70px; }
+  h2 { font-size: 1.5rem; }
   h3 { font-size: 1rem; }
-  button { width: 90%; font-size: 0.95rem; }
+  button { width: 90%; font-size: 0.9rem; }
   .store-icons img { width: 80px; }
+  .links { flex-wrap: wrap; gap: 0.5rem; }
+  .links a { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
 }
