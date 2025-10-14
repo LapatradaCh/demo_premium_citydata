@@ -6,7 +6,7 @@ import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const DB_API = "https://780fc4c943c0.ngrok-free.app/users"; // URL API ของคุณ
+const DB_API = "https://myapi-331445071173.asia-southeast1.run.app/users"; // URL API ของคุณ
 
 const Login = () => {
   const navigate = useNavigate();
