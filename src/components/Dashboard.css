@@ -11,7 +11,7 @@ body {
 }
 
 .dashboard-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -27,27 +27,43 @@ body {
   color: #222;
 }
 
-/* เมนูแนวตั้ง */
-.menu-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+/* Search box */
+.search-box input {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  margin-bottom: 30px;
+  transition: all 0.2s ease;
 }
 
-/* ปุ่มเมนู */
-.menu-item {
+.search-box input:focus {
+  border-color: #666;
+}
+
+/* Menu grid แบบ responsive */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* ปุ่มหัวข้อ */
+.menu-button {
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 15px 20px;
-  text-align: left;
+  border-radius: 15px;
+  padding: 25px 15px;
   cursor: pointer;
+  text-align: center;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 
-.menu-item:hover {
+.menu-button:hover {
   background-color: #444;
   color: #fff;
   border-color: #444;
@@ -61,10 +77,9 @@ body {
 .menu-desc {
   font-size: 12px;
   color: #777;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 
-/* hover สีขาว */
-.menu-item:hover .menu-desc {
+.menu-button:hover .menu-desc {
   color: #ddd;
 }
