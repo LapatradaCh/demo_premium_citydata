@@ -54,11 +54,23 @@ h3 {
   opacity: 0.85;
 }
 .description {
+  font-family: 'Prompt', sans-serif; 
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.8;
   color: #f1f1f1;
   margin-bottom: 1.5rem;
+  text-align: justify;
 }
+
+.description .highlight {
+  display: block;         
+  text-align: center;     
+  color: #ff9b36;       
+  font-weight: 600;       
+  font-size: 1.05rem;    
+  margin-bottom: 0.5rem;  
+}
+
 
 /* Buttons */
 button {

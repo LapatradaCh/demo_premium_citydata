@@ -1,25 +1,89 @@
-// Login.js
-import React from "react";
+import React, { useEffect } from "react";
 import "./1.css";
 import traffyLogo from "./traffy.png";
-import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
-import { signInWithPopup } from "firebase/auth";
 import liff from "@line/liff";
+import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
+import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const LIFF_ID = "2008265392-G9mE93Em"; // ใส่ LIFF ID ของคุณ
+const DB_API = "https://1ed0db3ec62d.ngrok-free.app/users"; // URL API ของคุณ
 
 const Login = () => {
   const navigate = useNavigate();
 
+  // 🔹 เริ่มต้น LIFF
+  useEffect(() => {
+    const initLiff = async () => {
+      try {
+        await liff.init({ liffId: "2008265392-G9mE93Em" });
+        console.log("LIFF initialized");
+      } catch (error) {
+        console.error("LIFF init error:", error);
+      }
+    };
+    initLiff();
+  }, []);
+
+  // 🔹 ฟังก์ชันล็อกอิน LINE
+  const handleLineLogin = async () => {
+    try {
+      if (!liff.isLoggedIn()) {
+        liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
+      } else {
+        const profile = await liff.getProfile();
+        const userData = {
+          Email: profile.userId + "@line.me",
+          Provider: "line",
+          Provider_ID: profile.userId,
+          DisplayName: profile.displayName,
+        };
+
+        console.log("ล็อกอิน LINE สำเร็จ:", userData);
+
+        await fetch(DB_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        });
+
+        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
+
+        // ✅ ไปหน้า Dashboard
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("LINE login error:", error);
+      alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
+    }
+  };
+
+  // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
 
-      navigate("/login"); // redirect กลับหน้า Login
+      const userData = {
+        Email: user.email,
+        First_Name: firstName || "",
+        Last_Name: lastName || "",
+        Provider: "google",
+        Provider_ID: user.uid,
+      };
+
+      console.log("ล็อกอิน Google สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/dashboard"); // ✅ ไปหน้า Dashboard
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -30,14 +94,35 @@ const Login = () => {
     }
   };
 
+  // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result.user;
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken;
+
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
+
+      const userData = {
+        Email: user.email,
+        First_Name: firstName || "",
+        Last_Name: lastName || "",
+        Provider: "facebook",
+        Provider_ID: user.uid,
+      };
+
+      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
       alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-
-      navigate("/login"); // redirect กลับหน้า Login
+      navigate("/dashboard"); // ✅ ไปหน้า Dashboard
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -50,33 +135,18 @@ const Login = () => {
     }
   };
 
-  const handleLineLogin = async () => {
-    try {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) {
-        liff.login(); // LIFF จะ handle popup/redirect
-      } else {
-        const profile = await liff.getProfile();
-        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-
-        navigate("/login"); // redirect กลับหน้า Login
-      }
-    } catch (error) {
-      console.error("LINE login error:", error);
-      alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
-    }
-  };
-
   return (
     <div className="login-container">
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-        <h2>Traffy Fondue</h2>
-        <h3>
-          Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู) สามารถช่วยให้หน่วยงานต่างๆ
-          บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน
-          และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
-        </h3>
+        <h2>Fondue Dashboard and Manager</h2>
+        <h3>แพลตฟอร์มบริหารจัดการปัญหาเมือง</h3>
+
+        <p className="description">
+          <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span>
+          <br />
+          สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
+        </p>
 
         <button className="facebook-btn" onClick={handleFacebookLogin}>
           เข้าสู่ระบบด้วย Facebook
