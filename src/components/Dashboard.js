@@ -9,7 +9,6 @@ import LowerImage1 from "./traffy-preview.png";
 import LowerImage2 from "./traffy-preview2.png";
 import LowerImage3 from "./traffy-preview3.png";
 import LowerImage4 from "./traffy-preview4.png";
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [openTab, setOpenTab] = useState(null);
