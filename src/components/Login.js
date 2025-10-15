@@ -72,7 +72,7 @@ const Login = () => {
       // const emailFromToken = token.claims.email || null;
       // console.log({ emailFromUser, emailFromProvider, emailFromToken, providerData: result.providerData });
       
-      const user = result.tokenResponse;
+      const user = result._tokenResponse;
       console.log("result info:", result)
       
       // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
