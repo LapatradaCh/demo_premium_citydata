@@ -4,10 +4,13 @@ import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
-const DB_API = "https://myapi-331445071173.asia-southeast1.run.app/users"; // ของคุณเอง
+const DB_API = "https://myapi-331445071173.asia-southeast1.run.app/users"; // URL API ของคุณ
 
 const Login = () => {
+  const navigate = useNavigate();
+
   // 🔹 เริ่มต้น LIFF
   useEffect(() => {
     const initLiff = async () => {
@@ -25,19 +28,17 @@ const Login = () => {
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login();
+        liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
       } else {
         const profile = await liff.getProfile();
-
-        // ✅ เพิ่มชื่อและนามสกุล (LINE ไม่มีแยก จึงใส่รวมไว้ใน Name)
         const userData = {
           Email: profile.userId + "@line.me",
-          First_Name: profile.displayName, // ✅ ชื่อเต็ม
+          First_Name: profile.displayName,
           Last_Name: "-",
           Provider: "line",
           Provider_ID: profile.userId,
-          
         };
+
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
 
         await fetch(DB_API, {
@@ -47,9 +48,8 @@ const Login = () => {
         });
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-        
-        liff.logout(); // ✅ ออกจากระบบแล้วกลับหน้า login
-        window.location.reload();
+
+        navigate("/Home");
       }
     } catch (error) {
       console.error("LINE login error:", error);
@@ -57,105 +57,96 @@ const Login = () => {
     }
   };
 
- const handleGoogleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
+  // 🔹 ฟังก์ชันล็อกอิน Google
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
 
-    // fallback email
-    const email = user.email || user.providerData[0]?.email || "no-email@example.com";
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
 
+      const userData = {
+        Email: user.email,
+        First_Name: firstName || "",
+        Last_Name: lastName || "",
+        Provider: "google",
+        Provider_ID: user.uid,
+      };
 
-    // แยกชื่อกับนามสกุล
-    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-    const lastName = lastParts.join(" ");
+      console.log("ล็อกอิน Google สำเร็จ:", userData);
 
-    const userData = {
-      Email: email,
-      First_Name: firstName || "",
-      Last_Name: lastName || "",
-      Provider: "google",
-      Provider_ID: user.uid,
-    };
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-    console.log("ล็อกอิน Google สำเร็จ:", userData);
-
-    await fetch(DB_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-    window.location.reload();
-  } catch (error) {
-    console.error("Google login error:", error);
-    alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
-  }
-};
-
-  const facebookProvider = new FacebookAuthProvider();
-facebookProvider.addScope('email');
-
-const handleFacebookLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, facebookProvider);
-    const user = result.user;
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
-
-    console.log("userinfo:", user);
-
-    // แยกชื่อกับนามสกุล
-    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-    const lastName = lastParts.join(" ");
-
-    // ใช้ fallback ถ้า user.email เป็น null
-    const email = user.email || user.providerData[0]?.email || "";
-
-    const userData = {
-      Email: email,
-      First_Name: firstName || "",
-      Last_Name: lastName || "",
-      Provider: "facebook",
-      Provider_ID: user.uid,
-    };
-
-    console.log("ล็อกอิน Facebook สำเร็จ:", userData);
-
-    await fetch(DB_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-    window.location.reload();
-  } catch (error) {
-    if (error.code === "auth/popup-closed-by-user") {
-      alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-    } else if (error.code === "auth/account-exists-with-different-credential") {
-      alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-    } else {
-      console.error("Facebook login error:", error);
-      alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/Home"); 
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else {
+        console.error("Google login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
+      }
     }
-  }
-};
+  };
 
+  // 🔹 ฟังก์ชันล็อกอิน Facebook
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential?.accessToken;
+
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
+
+      const userData = {
+        Email: user.email,
+        First_Name: firstName || "",
+        Last_Name: lastName || "",
+        Provider: "facebook",
+        Provider_ID: user.uid,
+      };
+
+      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/Home");
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+      }
+    }
+  };
 
   return (
     <div className="login-container">
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-        <h2>Fondue Dashbord and Manager</h2>
+        <h2>Fondue Dashboard and Manager</h2>
         <h3>แพลตฟอร์มบริหารจัดการปัญหาเมือง</h3>
 
-       <p className="description">
-           <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span><br />
+        <p className="description">
+          <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span>
+          <br />
           สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
-       </p>
-
+        </p>
 
         <button className="facebook-btn" onClick={handleFacebookLogin}>
           เข้าสู่ระบบด้วย Facebook
@@ -168,6 +159,7 @@ const handleFacebookLogin = async () => {
         <button className="line-btn" onClick={handleLineLogin}>
           เข้าสู่ระบบด้วย LINE
         </button>
+
         <p className="contact">สอบถามข้อมูลเพิ่มเติมได้ที่ LINE: @fonduehelp</p>
 
         <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันได้ที่</p>
