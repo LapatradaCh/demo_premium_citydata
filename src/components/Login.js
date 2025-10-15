@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./1.css";
+import "./Login.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
