@@ -48,7 +48,7 @@ const Login = () => {
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
 
-        navigate("/dashboard");
+        navigate("/Home");
       }
     } catch (error) {
       console.error("LINE login error:", error);
@@ -82,7 +82,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/dashboard"); 
+      navigate("/Home"); 
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -121,7 +121,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/dashboard");
+      navigate("/Home");
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
