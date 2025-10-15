@@ -102,9 +102,9 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
     try {
-      const emailFromUser = result.email || null; 
-      console.log("result:",result)
       const result = await signInWithPopup(auth, facebookProvider);
+      console.log("result:",result)
+      const emailFromUser = result.email || null; 
       const user = result.user;
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const accessToken = credential?.accessToken;
