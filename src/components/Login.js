@@ -75,7 +75,7 @@ const Login = () => {
       const user = result.tokenResponse;
       console.log("result info:", result)
       
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const [firstName, ...lastParts] = (user.fullName || "").split(" ");
       const lastName = lastParts.join(" ");
 
       const userData = {
