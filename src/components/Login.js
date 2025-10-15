@@ -60,11 +60,12 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
-googleProvider.addScope("email");
+    googleProvider.addScope("email");
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       console.log("user info:",user)
+      console.log("emai:l",email)
 
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
       const lastName = lastParts.join(" ");
