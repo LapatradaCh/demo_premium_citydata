@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./Login.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
+import Swal from 'sweetalert2';
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -58,40 +59,41 @@ const Login = () => {
   };
 
   // 🔹 ฟังก์ชันล็อกอิน Google
-const handleGoogleLogin = async () => {
-  const googleProvider = new GoogleAuthProvider();
-  googleProvider.addScope("email"); // ✅ เพิ่มสิทธิ์อ่านอีเมล
+  const handleGoogleLogin = () => {
+    // 3. ✅ เรียกใช้ googleProvider ที่ import เข้ามาโดยตรง
+    signInWithPopup(auth, googleProvider) 
+      .then((result) => {
+        const user = result.user;
+        console.log("user info:", user);
+        console.log("email:", user.email); // 🎉 ตอนนี้ email จะไม่เป็น null แล้ว
 
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
+        const displayName = user.displayName || "";
+        const nameParts = displayName.split(" ");
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(" ");
+        
+        const userData = {
+          Email: user.email, // <-- ข้อมูล email จะถูกส่งไปที่ API อย่างถูกต้อง
+          First_Name: firstName,
+          Last_Name: lastName,
+          Provider: "google",
+          Provider_ID: user.uid,
+        };
 
-    console.log("user info:", user);
-    console.log("email:", user.email); // ✅ เอา email จาก user.email
+        console.log("ล็อกอิน Google สำเร็จ:", userData);
 
-    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-    const lastName = lastParts.join(" ");
-
-    const userData = {
-      Email: user.email,
-      First_Name: firstName || "",
-      Last_Name: lastName || "",
-      Provider: "google",
-      Provider_ID: user.uid,
-    };
-
-    console.log("ล็อกอิน Google สำเร็จ:", userData);
-
-    // ส่งไป DB
-    await fetch(DB_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-  } catch (error) {
-    console.error("Google login error:", error);
-  }
-};
+        // โค้ดส่งข้อมูลไปที่ API ของคุณ...
+        // ...
+      })
+      .catch((error) => {
+        console.error("ล็อกอิน Google ไม่สำเร็จ:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'ล็อกอินไม่สำเร็จ',
+          text: error.message,
+        });
+      });
+  };
 
 
   // 🔹 ฟังก์ชันล็อกอิน Facebook
