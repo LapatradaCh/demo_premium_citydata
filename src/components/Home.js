@@ -13,7 +13,6 @@ import LowerImage4 from "./traffy-preview4.png";
 const Home = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [openTab, setOpenTab] = useState(null);
-
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     // เปิด dropdown เฉพาะ tab ที่ไม่ใช่ "หน่วยงาน"
