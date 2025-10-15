@@ -106,7 +106,7 @@ const Home = () => {
           {/* ปุ่มออกจากระบบ */}
           <div className="tab-item">
             <button 
-              onClick={() => window.location.href = "http://localhost:3000/"}
+              onClick={() => window.location.href = "https://demo-premium-citydata-pi.vercel.app/"}
             >
               ออกจากระบบ <FaSignOutAlt style={{ marginLeft: "8px" }} />
             </button>
