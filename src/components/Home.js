@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Dashboard.css";
+import "./Home.css";
 import { 
   FaMapMarkedAlt, FaBuilding, FaClipboardList, 
   FaChartBar, FaCog, FaSignOutAlt 
@@ -9,19 +9,21 @@ import LowerImage1 from "./traffy-preview.png";
 import LowerImage2 from "./traffy-preview2.png";
 import LowerImage3 from "./traffy-preview3.png";
 import LowerImage4 from "./traffy-preview4.png";
-const Dashboard = () => {
+
+const Home = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [openTab, setOpenTab] = useState(null);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     // เปิด dropdown เฉพาะ tab ที่ไม่ใช่ "หน่วยงาน"
-    if(tab !== "หน่วยงาน"){
+    if (tab !== "หน่วยงาน") {
       setOpenTab(openTab === tab ? null : tab);
     } else {
       setOpenTab(null);
     }
   };
+
   const cardsData = {
     "แผนที่": [
       { icon: <FaMapMarkedAlt />, label: "แผนที่สาธารณะ" },
@@ -40,7 +42,7 @@ const Dashboard = () => {
       { icon: <FaCog />, label: "QRCode หน่วยงาน" },
       { icon: <FaCog />, label: "QRCode สร้างเอง" }
     ]
-    // "หน่วยงาน" เราจะไม่ใส่ dropdown
+    // "หน่วยงาน" ไม่มี dropdown
   };
 
   const tabs = ["แผนที่", "หน่วยงาน", "รายการแจ้ง", "สถิติ", "ตั้งค่า"];
@@ -134,4 +136,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Home;
