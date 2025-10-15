@@ -62,7 +62,7 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       
-      result.reload();
+      await result.reload();
       const emailFromUser = result.email || null; 
       const emailFromProvider = result.providerData.find(p => p.providerId === 'google.com')?.email || null;
       const token = await result.getIdTokenResult(); 
