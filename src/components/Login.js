@@ -61,16 +61,9 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);      
-      // //await result.reload();
       const emailFromUser = result.email || null; 
       console.log("result:",result)
       console.log("email",result._tokenResponse.email)
-      // console.log("providerData",result.providerData)
-      // // console.log("providerId", providerId)
-      // const emailFromProvider = result.providerData.find(p => p.providerId === 'google.com')?.email || null;
-      // const token = await result.getIdTokenResult(); 
-      // const emailFromToken = token.claims.email || null;
-      // console.log({ emailFromUser, emailFromProvider, emailFromToken, providerData: result.providerData });
       
       const user = result._tokenResponse;
       console.log("user info:", user)
@@ -109,6 +102,8 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
     try {
+      const emailFromUser = result.email || null; 
+      console.log("result:",result)
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result.user;
       const credential = FacebookAuthProvider.credentialFromResult(result);
