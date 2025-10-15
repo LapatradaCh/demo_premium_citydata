@@ -64,6 +64,8 @@ const Login = () => {
       
       // //await result.reload();
       const emailFromUser = result.email || null; 
+      console.log("result:",result)
+      console.log("emailFromUser",emailFromUser)
       console.log("providerData",result.providerData)
       // console.log("providerId", providerId)
       const emailFromProvider = result.providerData.find(p => p.providerId === 'google.com')?.email || null;
