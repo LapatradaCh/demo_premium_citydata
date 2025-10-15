@@ -73,7 +73,7 @@ const Login = () => {
         const lastName = nameParts.slice(1).join(" ");
         
         const userData = {
-          Email: user.email, // <-- ข้อมูล email จะถูกส่งไปที่ API อย่างถูกต้อง
+          Email: "test", // <-- ข้อมูล email จะถูกส่งไปที่ API อย่างถูกต้อง
           First_Name: firstName,
           Last_Name: lastName,
           Provider: "google",
