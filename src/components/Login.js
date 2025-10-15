@@ -3,7 +3,7 @@ import "./Login.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
-import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { signInWithPopup, FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const DB_API = "https://myapi-331445071173.asia-southeast1.run.app/users"; // URL API ของคุณ
