@@ -58,44 +58,41 @@ const Login = () => {
   };
 
   // 🔹 ฟังก์ชันล็อกอิน Google
-  const handleGoogleLogin = async () => {
-    const googleProvider = new GoogleAuthProvider();
-    const goole_email=googleProvider.addScope("email");
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      console.log("user info:",user)
-      console.log("email:",google_email)
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
+const handleGoogleLogin = async () => {
+  const googleProvider = new GoogleAuthProvider();
+  googleProvider.addScope("email"); // ✅ เพิ่มสิทธิ์อ่านอีเมล
 
-      const userData = {
-        Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
-        Provider: "google",
-        Provider_ID: user.uid,
-      };
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
 
-      console.log("ล็อกอิน Google สำเร็จ:", userData);
+    console.log("user info:", user);
+    console.log("email:", user.email); // ✅ เอา email จาก user.email
 
-      await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+    const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+    const lastName = lastParts.join(" ");
 
-      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home"); 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
-      }
-    }
-  };
+    const userData = {
+      Email: user.email,
+      First_Name: firstName || "",
+      Last_Name: lastName || "",
+      Provider: "google",
+      Provider_ID: user.uid,
+    };
+
+    console.log("ล็อกอิน Google สำเร็จ:", userData);
+
+    // ส่งไป DB
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+  } catch (error) {
+    console.error("Google login error:", error);
+  }
+};
+
 
   // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
