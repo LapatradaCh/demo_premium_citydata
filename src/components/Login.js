@@ -67,7 +67,7 @@ const Login = () => {
       const lastName = lastParts.join(" ");
 
       const userData = {
-        Email: user.email,
+        Email: "Test",
         First_Name: firstName || "",
         Last_Name: lastName || "",
         Provider: "google",
