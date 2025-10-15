@@ -59,6 +59,8 @@ const Login = () => {
 
   // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
+    const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope("email");
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
