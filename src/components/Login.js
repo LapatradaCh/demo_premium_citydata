@@ -73,7 +73,7 @@ const Login = () => {
       // console.log({ emailFromUser, emailFromProvider, emailFromToken, providerData: result.providerData });
       
       const user = result._tokenResponse;
-      console.log("result info:", result)
+      console.log("user info:", user)
       
       // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
       // const lastName = lastParts.join(" ");
@@ -83,7 +83,7 @@ const Login = () => {
         First_Name: user.firstName,
         Last_Name: user.lastName,
         Provider: "google",
-        Provider_ID: user.uid,
+        Provider_ID: user.oauthAccessToken,
       };
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
