@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./1.css";
+import "./Login.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
@@ -48,7 +48,6 @@ const Login = () => {
 
         alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
 
-        // ✅ ไปหน้า Dashboard
         navigate("/dashboard");
       }
     } catch (error) {
@@ -83,7 +82,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/dashboard"); // ✅ ไปหน้า Dashboard
+      navigate("/dashboard"); 
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -122,7 +121,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/dashboard"); // ✅ ไปหน้า Dashboard
+      navigate("/dashboard");
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
