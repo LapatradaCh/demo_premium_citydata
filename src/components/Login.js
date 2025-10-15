@@ -62,7 +62,7 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log("user info:", user)
+      console.log("result info:", result)
       
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
       const lastName = lastParts.join(" ");
