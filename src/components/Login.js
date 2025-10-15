@@ -60,12 +60,11 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      
+      const result = await signInWithPopup(auth, googleProvider);      
       // //await result.reload();
       const emailFromUser = result.email || null; 
       console.log("result:",result)
-      console.log("email",_tokenResponse.email)
+      console.log("email",result._tokenResponse.email)
       console.log("providerData",result.providerData)
       // console.log("providerId", providerId)
       const emailFromProvider = result.providerData.find(p => p.providerId === 'google.com')?.email || null;
