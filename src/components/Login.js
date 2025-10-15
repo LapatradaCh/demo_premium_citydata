@@ -75,13 +75,13 @@ const Login = () => {
       const user = result.tokenResponse;
       console.log("result info:", result)
       
-      const [firstName, ...lastParts] = (user.fullName || "").split(" ");
-      const lastName = lastParts.join(" ");
+      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
+      // const lastName = lastParts.join(" ");
 
       const userData = {
         Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
+        First_Name: user.firstName,
+        Last_Name: user.lastName,
         Provider: "google",
         Provider_ID: user.uid,
       };
