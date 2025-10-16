@@ -10,6 +10,8 @@ import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
+// ✅  ใส่ Channel ID ของคุณเรียบร้อยแล้ว
+const LINE_CHANNEL_ID = "2008265392"; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,23 +21,19 @@ const Login = () => {
   useEffect(() => {
     const initializeLiff = async () => {
       try {
-        await liff.init({ liffId: "2008265392-G9mE93Em" }); // ⬅️ LIFF ID ของคุณ
+        // ใส่ LIFF ID ของคุณ
+        await liff.init({ liffId: "2008265392-G9mE93Em" }); 
         console.log("LIFF initialized successfully");
 
-        // โค้ดส่วนนี้จะทำงานเมื่อผู้ใช้ถูก redirect กลับมาจากหน้าล็อกอินของ LINE
         if (liff.isLoggedIn()) {
           console.log("User is logged in. Processing redirect...");
           const idToken = liff.getIDToken();
-          if (!idToken) {
-            throw new Error("Could not get ID Token.");
-          }
+          if (!idToken) throw new Error("Could not get ID Token.");
 
           const decodedToken = jwtDecode(idToken);
           const userEmail = decodedToken.email;
 
-          // การตรวจสอบที่สำคัญ: ได้รับอีเมลหรือไม่?
           if (!userEmail) {
-            // กรณีนี้จะเกิดขึ้นหากผู้ใช้ยังคง 'ไม่ติ๊ก' ช่องยินยอมอีเมลบนหน้าจอของ LINE
             alert("การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล");
             liff.logout();
             setIsProcessing(false);
@@ -61,7 +59,6 @@ const Login = () => {
           navigate("/Home");
 
         } else {
-          // ถ้ายังไม่ล็อกอิน ก็พร้อมสำหรับให้ผู้ใช้กดปุ่ม
           console.log("User is not logged in. Ready for manual login.");
           setIsProcessing(false);
         }
@@ -75,26 +72,17 @@ const Login = () => {
     initializeLiff();
   }, [navigate]);
 
-  /**
-   * ✅ ฟังก์ชันจัดการการล็อกอิน LINE ที่แก้ไขแล้ว
-   * สร้าง URL เองเพื่อบังคับให้แสดงหน้าจอขออนุญาต (prompt=consent)
-   */
   const handleLineLogin = () => {
     try {
-      if (!liff.getLoginChannelId()) {
-          alert("LIFF ยังไม่พร้อมใช้งาน กรุณารอสักครู่");
-          return;
-      }
       const redirectUri = window.location.href;
       const authUrl = `https://access.line.me/oauth2/v2.1/authorize?${new URLSearchParams({
         response_type: 'code',
-        client_id: liff.getLoginChannelId(),
+        client_id: LINE_CHANNEL_ID,
         redirect_uri: redirectUri,
         scope: 'profile openid email',
         state: 'liff-login-' + Math.random().toString(36).substr(2, 9),
-        prompt: 'consent', // ⬅️ นี่คือส่วนสำคัญที่สุดในการแก้ปัญหา
+        prompt: 'consent',
       })}`;
-      // ส่งผู้ใช้ไปยัง URL ที่สร้างขึ้น
       window.location.href = authUrl;
     } catch (error) {
       console.error("Failed to construct LINE Login URL:", error);
