@@ -105,7 +105,9 @@ const Login = () => {
       const result = await signInWithPopup(auth, facebookProvider);
       console.log("result:",result)
       const emailFromUser = result.email || null; 
-      const user = result.user;
+      console.log("email",result._tokenResponse.email)
+      const user = result._tokenResponse;
+      console.log("email ", user.email)
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const accessToken = credential?.accessToken;
 
@@ -114,8 +116,8 @@ const Login = () => {
 
       const userData = {
         email: user.email,
-        first_name: firstName || "",
-        last_name: lastName || "",
+        first_name: user.firstName || "",
+        last_name: users.lastName || "",
         provider: "facebook",
         access_Token: user.uid,
       };
