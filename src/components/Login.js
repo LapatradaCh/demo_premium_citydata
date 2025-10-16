@@ -150,14 +150,7 @@ const Login = () => {
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
-        <h3>แพลตฟอร์มบริหารจัดการปัญหาเมือง</h3>
-
-        <p className="description">
-          <span className="highlight">Traffy Fondue (ทราฟฟี่ฟองดูว์ / ท่านพี่ฟ้องดู)</span>
-          <br />
-          สามารถช่วยให้หน่วยงานต่างๆ บริหารจัดการปัญหาได้ทันท่วงที พร้อมแสดงข้อมูลรายละเอียดของปัญหา ภาพหน้างาน และพิกัดตำแหน่ง เพื่อประกอบการตัดสินใจให้เจ้าหน้าที่พร้อมเข้าแก้ไขปัญหาได้อย่างรวดเร็ว
-        </p>
-
+        <h3>พลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
         <button className="facebook-btn" onClick={handleFacebookLogin}>
           เข้าสู่ระบบด้วย Facebook
         </button>
@@ -169,10 +162,7 @@ const Login = () => {
         <button className="line-btn" onClick={handleLineLogin}>
           เข้าสู่ระบบด้วย LINE
         </button>
-
-        <p className="contact">สอบถามข้อมูลเพิ่มเติมได้ที่ LINE: @fonduehelp</p>
-
-        <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันได้ที่</p>
+        <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันสำหรับเจ้าหน้าที่ได้ที่</p>
         <div className="store-icons">
           <a
             href="https://play.google.com/store/apps/details?id=com.traffy2.traffy_report"
