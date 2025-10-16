@@ -17,26 +17,26 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const initializeAndLogin = async () => {
+    const initializeLiff = async () => {
       try {
-        await liff.init({ liffId: "2008265392-G9mE93Em" });
+        await liff.init({ liffId: "2008265392-G9mE93Em" }); // ⬅️ LIFF ID ของคุณ
         console.log("LIFF initialized successfully");
 
+        // โค้ดส่วนนี้จะทำงานเมื่อผู้ใช้ถูก redirect กลับมาจากหน้าล็อกอินของ LINE
         if (liff.isLoggedIn()) {
           console.log("User is logged in. Processing redirect...");
           const idToken = liff.getIDToken();
           if (!idToken) {
-            liff.logout();
-            setIsProcessing(false);
-            setErrorMessage("เซสชันล็อกอินไม่ถูกต้อง กรุณาลองใหม่");
-            return;
+            throw new Error("Could not get ID Token.");
           }
 
           const decodedToken = jwtDecode(idToken);
           const userEmail = decodedToken.email;
 
+          // การตรวจสอบที่สำคัญ: ได้รับอีเมลหรือไม่?
           if (!userEmail) {
-            alert("แอปพลิเคชันจำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาล็อกอินใหม่อีกครั้งและกดยินยอม");
+            // กรณีนี้จะเกิดขึ้นหากผู้ใช้ยังคง 'ไม่ติ๊ก' ช่องยินยอมอีเมลบนหน้าจอของ LINE
+            alert("การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล");
             liff.logout();
             setIsProcessing(false);
             return;
@@ -61,23 +61,44 @@ const Login = () => {
           navigate("/Home");
 
         } else {
+          // ถ้ายังไม่ล็อกอิน ก็พร้อมสำหรับให้ผู้ใช้กดปุ่ม
           console.log("User is not logged in. Ready for manual login.");
           setIsProcessing(false);
         }
       } catch (error) {
-        console.error("LIFF initialization or auto-login error:", error);
-        setErrorMessage("เกิดข้อผิดพลาดระหว่างการล็อกอิน กรุณาลองใหม่อีกครั้ง");
+        console.error("LIFF logic error:", error);
+        setErrorMessage("เกิดข้อผิดพลาดในการเริ่มต้น LIFF");
         setIsProcessing(false);
       }
     };
 
-    initializeAndLogin();
+    initializeLiff();
   }, [navigate]);
 
-  // ✅ ฟังก์ชันที่แก้ไขแล้ว
+  /**
+   * ✅ ฟังก์ชันจัดการการล็อกอิน LINE ที่แก้ไขแล้ว
+   * สร้าง URL เองเพื่อบังคับให้แสดงหน้าจอขออนุญาต (prompt=consent)
+   */
   const handleLineLogin = () => {
-    if (!liff.isLoggedIn()) {
-      liff.login({ scope: 'profile openid email' });
+    try {
+      if (!liff.getLoginChannelId()) {
+          alert("LIFF ยังไม่พร้อมใช้งาน กรุณารอสักครู่");
+          return;
+      }
+      const redirectUri = window.location.href;
+      const authUrl = `https://access.line.me/oauth2/v2.1/authorize?${new URLSearchParams({
+        response_type: 'code',
+        client_id: liff.getLoginChannelId(),
+        redirect_uri: redirectUri,
+        scope: 'profile openid email',
+        state: 'liff-login-' + Math.random().toString(36).substr(2, 9),
+        prompt: 'consent', // ⬅️ นี่คือส่วนสำคัญที่สุดในการแก้ปัญหา
+      })}`;
+      // ส่งผู้ใช้ไปยัง URL ที่สร้างขึ้น
+      window.location.href = authUrl;
+    } catch (error) {
+      console.error("Failed to construct LINE Login URL:", error);
+      alert("เกิดข้อผิดพลาดในการเตรียมการล็อกอินด้วย LINE");
     }
   };
 
@@ -92,7 +113,12 @@ const Login = () => {
         provider: "google",
         access_token: user.oauthAccessToken,
       };
-      await fetch(DB_API, { /* ... */ });
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
       navigate("/Home");
     } catch (error) {
       if (error.code !== "auth/popup-closed-by-user") {
@@ -117,7 +143,12 @@ const Login = () => {
         provider: "facebook",
         access_token: user.oauthAccessToken,
       };
-      await fetch(DB_API, { /* ... */ });
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
       navigate("/Home");
     } catch (error) {
       if (error.code === 'auth/account-exists-with-different-credential') {
