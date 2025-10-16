@@ -32,11 +32,11 @@ const Login = () => {
       } else {
         const profile = await liff.getProfile();
         const userData = {
-          Email: profile.userId + "@line.me",
-          First_Name: profile.displayName,
-          Last_Name: "-",
-          Provider: "line",
-          Provider_ID: profile.userId,
+          email: profile.userId + "@line.me",
+          first_name: profile.displayName,
+          last_name: "-",
+          provider: "line",
+          access_Token: profile.userId,
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -72,11 +72,11 @@ const Login = () => {
       // const lastName = lastParts.join(" ");
 
       const userData = {
-        Email: user.email,
-        First_Name: user.firstName,
-        Last_Name: user.lastName,
-        Provider: "google",
-        Provider_ID: user.oauthAccessToken,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        provider: "google",
+        access_Token: user.oauthAccessToken,
       };
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
@@ -113,11 +113,11 @@ const Login = () => {
       const lastName = lastParts.join(" ");
 
       const userData = {
-        Email: user.email,
-        First_Name: firstName || "",
-        Last_Name: lastName || "",
-        Provider: "facebook",
-        Provider_ID: user.uid,
+        email: user.email,
+        first_name: firstName || "",
+        last_name: lastName || "",
+        provider: "facebook",
+        access_Token: user.uid,
       };
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
