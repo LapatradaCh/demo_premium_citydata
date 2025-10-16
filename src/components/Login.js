@@ -52,7 +52,7 @@ const handleLineLogin = async () => {
       // 1. สร้าง URL สำหรับขออนุญาตใหม่
       const liffId = "2008265392-G9mE93Em"; // LIFF ID ของคุณ
       const redirectUri = window.location.href; // URL หน้าปัจจุบันที่จะให้ LINE redirect กลับมา
-      const consentUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${liff.getOS() === 'web' ? 'YOUR_CHANNEL_ID' : liffId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=profile%20openid%20email&prompt=consent&state=some_string`;
+      const consentUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${liff.getOS() === 'web' ? '2008265392' : liffId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=profile%20openid%20email&prompt=consent&state=some_string`;
       // ⚠️ หมายเหตุ: คุณต้องใส่ Channel ID ของคุณเองตรง 'YOUR_CHANNEL_ID' สำหรับ Web
 
       // 2. แจ้งเตือนผู้ใช้และส่งไปหน้าขออนุญาต
