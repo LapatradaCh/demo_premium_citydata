@@ -110,9 +110,8 @@ const Login = () => {
       console.log("email",result._tokenResponse.email)
       const user = result._tokenResponse;
       console.log("email ", user.email)
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential?.accessToken;
-      console.log("access token ", accessToken)
+      // const credential = FacebookAuthProvider.credentialFromResult(result);
+      // const accessToken = credential?.accessToken;
 
 
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
