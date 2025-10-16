@@ -5,7 +5,8 @@ import liff from "@line/liff";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-
+import { FaFacebookF, FaLine } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc"; 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users"; // URL API ของคุณ
 
 const Login = () => {
@@ -151,16 +152,16 @@ const Login = () => {
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
         <h3>พลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
-        <button className="facebook-btn" onClick={handleFacebookLogin}>
-          เข้าสู่ระบบด้วย Facebook
+         <button className="facebook-btn" onClick={handleFacebookLogin}>
+          <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
         </button>
 
         <button className="google-btn" onClick={handleGoogleLogin}>
-          เข้าสู่ระบบด้วย Google
+          <FcGoogle size={22} /> เข้าสู่ระบบด้วย Google
         </button>
 
         <button className="line-btn" onClick={handleLineLogin}>
-          เข้าสู่ระบบด้วย LINE
+          <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
         </button>
         <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันสำหรับเจ้าหน้าที่ได้ที่</p>
         <div className="store-icons">
