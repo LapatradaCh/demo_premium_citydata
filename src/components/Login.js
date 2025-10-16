@@ -13,48 +13,71 @@ const Login = () => {
   const navigate = useNavigate();
 
   // 🔹 เริ่มต้น LIFF
-  useEffect(() => {
-    const initLiff = async () => {
+    useEffect(() => {
+    const initializeLiff = async () => {
       try {
         await liff.init({ liffId: "2008265392-G9mE93Em" });
         console.log("LIFF initialized");
+
+        // ถ้าผู้ใช้ล็อกอินอยู่แล้ว (หลังจาก redirect กลับมา) ให้เริ่มดึงข้อมูล
+        if (liff.isLoggedIn()) {
+          console.log("User is logged in, processing data...");
+          
+          const profile = await liff.getProfile();
+          const idToken = liff.getIDToken();
+          const accessToken = liff.getAccessToken();
+
+          if (!idToken) {
+            alert("ไม่สามารถรับข้อมูลอีเมลได้ กรุณาลองอีกครั้ง");
+            liff.logout();
+            return;
+          }
+
+          // ถอดรหัส ID Token เพื่อเอาอีเมลจริง
+          const decodedIdToken = JSON.parse(atob(idToken.split('.')[1]));
+          const userEmail = decodedIdToken.email;
+
+          if (!userEmail) {
+            alert("ไม่สามารถเข้าถึงอีเมลได้ กรุณาตรวจสอบว่าบัญชี LINE ของคุณได้ยืนยันอีเมลแล้ว");
+            liff.logout();
+            return;
+          }
+          
+          const userData = {
+            email: userEmail,
+            first_name: profile.displayName,
+            last_name: "-",
+            provider: "line",
+            access_token: accessToken, // ใช้ Access Token จริง
+          };
+
+          console.log("ล็อกอิน LINE สำเร็จ:", userData);
+
+          await fetch(DB_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userData),
+          });
+
+          alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
+          navigate("/Home");
+        }
       } catch (error) {
-        console.error("LIFF init error:", error);
+        console.error("LIFF process error:", error);
       }
     };
-    initLiff();
-  }, []);
+    initializeLiff();
+  }, [navigate]); 
 
   // 🔹 ฟังก์ชันล็อกอิน LINE
-  const handleLineLogin = async () => {
+ const handleLineLogin = () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
-      } else {
-        const profile = await liff.getProfile();
-        console.log("profile info:", profile)
-        const userData = {
-          email: profile.userId + "@line.me",
-          first_name: profile.displayName,
-          last_name: "-",
-          provider: "line",
-          access_token: profile.userId,
-        };
-
-        console.log("ล็อกอิน LINE สำเร็จ:", userData);
-
-        await fetch(DB_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        });
-
-        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-
-        navigate("/Home");
+        // สั่งให้ LIFF เปิดหน้าล็อกอิน พร้อมขอสิทธิ์ในการเข้าถึงอีเมล
+        liff.login({ scope: 'profile openid email' });
       }
     } catch (error) {
-      console.error("LINE login error:", error);
+      console.error("LINE login trigger error:", error);
       alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
     }
   };
