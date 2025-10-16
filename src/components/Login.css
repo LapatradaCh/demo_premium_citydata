@@ -1,4 +1,6 @@
-/* Login.css */
+/* ========================= */
+/* Login.css - Full Version  */
+/* ========================= */
 
 /* Container + Background */
 .login-container {
@@ -95,22 +97,29 @@ button:hover {
 
 /* Download Text & Store Icons */
 .download-text {
-  margin-top: 1rem;
+  margin-top: 1.5rem; /* เพิ่มระยะห่างจากปุ่ม social */
   font-weight: 600;
   color: #f5f5f5;
   font-size: 1rem;
+  text-align: center;
 }
+
 .store-icons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 2rem; /* เพิ่มช่องว่างระหว่างไอคอน */
+  margin: 1rem 0 1.5rem; /* margin บน-ล่าง */
+  flex-wrap: wrap; /* รองรับมือถือ ให้ icon เลื่อนลงบรรทัดใหม่ */
 }
+
 .store-icons img {
   width: 120px;
   transition: transform 0.3s ease;
 }
-.store-icons img:hover { transform: scale(1.05); }
+
+.store-icons img:hover {
+  transform: scale(1.05);
+}
 
 /* Links */
 .links {
@@ -136,6 +145,7 @@ button:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
+/* ========================= */
 /* Responsive Tablet */
 @media (max-width: 992px) {
   .login-column { width: 90%; padding: 2rem; }
@@ -143,10 +153,12 @@ button:hover {
   h2 { font-size: 1.8rem; }
   h3 { font-size: 1.1rem; }
   button { width: 85%; font-size: 0.95rem; }
+  .store-icons { gap: 1.5rem; }
   .store-icons img { width: 100px; }
   .links a { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
 }
 
+/* ========================= */
 /* Responsive Mobile */
 @media (max-width: 768px) {
   .login-column { width: 95%; padding: 1.5rem 2rem; }
@@ -154,6 +166,7 @@ button:hover {
   h2 { font-size: 1.5rem; }
   h3 { font-size: 1rem; }
   button { width: 90%; font-size: 0.9rem; }
+  .store-icons { gap: 1rem; }
   .store-icons img { width: 80px; }
   .links { flex-wrap: wrap; gap: 0.5rem; }
   .links a { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
