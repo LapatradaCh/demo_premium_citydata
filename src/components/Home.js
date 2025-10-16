@@ -1,27 +1,50 @@
 import React, { useState } from "react";
 import "./Home.css";
-import { 
-  FaMapMarkedAlt, FaBuilding, FaClipboardList, 
-  FaChartBar, FaCog, FaSignOutAlt 
+import {
+  FaMapMarkedAlt, FaBuilding, FaClipboardList,
+  FaChartBar, FaCog, FaSignOutAlt
 } from "react-icons/fa";
-import Logo from "./logo.png"; 
-import LowerImage1 from "./traffy-preview.png"; 
+import Logo from "./logo.png";
+import LowerImage1 from "./traffy-preview.png";
 import LowerImage2 from "./traffy-preview2.png";
 import LowerImage3 from "./traffy-preview3.png";
 import LowerImage4 from "./traffy-preview4.png";
 
+// 1. Import สิ่งที่จำเป็นเข้ามา
+import { useNavigate } from 'react-router-dom';
+import liff from '@line/liff';
+
 const Home = () => {
+  const navigate = useNavigate(); // 2. เตรียม useNavigate ไว้ใช้งาน
   const [activeTab, setActiveTab] = useState(null);
   const [openTab, setOpenTab] = useState(null);
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-    // เปิด dropdown เฉพาะ tab ที่ไม่ใช่ "หน่วยงาน"
     if (tab !== "หน่วยงาน") {
       setOpenTab(openTab === tab ? null : tab);
     } else {
       setOpenTab(null);
     }
   };
+
+  /**
+   * 3. สร้างฟังก์ชันสำหรับออกจากระบบโดยเฉพาะ
+   */
+  const handleLogout = () => {
+    // ตรวจสอบว่าผู้ใช้ล็อกอินผ่าน LIFF หรือไม่
+    if (liff.isLoggedIn()) {
+      liff.logout();
+      alert("ออกจากระบบสำเร็จ");
+      // liff.logout() จะทำการรีเฟรชหน้าและเคลียร์เซสชันให้เอง
+      // เราไม่จำเป็นต้องสั่ง navigate ไปหน้าอื่น
+    } else {
+      // สำหรับกรณีที่อาจล็อกอินด้วยช่องทางอื่นในอนาคต
+      // หรือเป็น fallback หากไม่ได้ล็อกอินด้วย LIFF
+      navigate('/'); // กลับไปหน้า Login
+    }
+  };
+
   const cardsData = {
     "แผนที่": [
       { icon: <FaMapMarkedAlt />, label: "แผนที่สาธารณะ" },
@@ -40,7 +63,6 @@ const Home = () => {
       { icon: <FaCog />, label: "QRCode หน่วยงาน" },
       { icon: <FaCog />, label: "QRCode สร้างเอง" }
     ]
-    // "หน่วยงาน" ไม่มี dropdown
   };
 
   const tabs = ["แผนที่", "หน่วยงาน", "รายการแจ้ง", "สถิติ", "ตั้งค่า"];
@@ -83,14 +105,11 @@ const Home = () => {
                 className={activeTab === tab ? "active" : ""}
                 onClick={() => handleTabClick(tab)}
               >
-                {tab} 
-                {/* แสดงลูกศรเฉพาะ tab ที่มี dropdown */}
+                {tab}
                 {tab !== "หน่วยงาน" && (
                   <span className={`chevron ${openTab === tab ? "open" : ""}`}>▼</span>
                 )}
               </button>
-
-              {/* แสดง dropdown เฉพาะ tab ที่มี dropdown */}
               {openTab === tab && cardsData[tab] && (
                 <div className="dropdown">
                   {cardsData[tab].map((card, index) => (
@@ -103,11 +122,9 @@ const Home = () => {
             </div>
           ))}
 
-          {/* ปุ่มออกจากระบบ */}
+          {/* 4. แก้ไขปุ่มออกจากระบบให้เรียกใช้ฟังก์ชันใหม่ */}
           <div className="tab-item">
-            <button 
-              onClick={() => window.location.href = "https://demo-premium-citydata-pi.vercel.app/"}
-            >
+            <button onClick={handleLogout}>
               ออกจากระบบ <FaSignOutAlt style={{ marginLeft: "8px" }} />
             </button>
           </div>
