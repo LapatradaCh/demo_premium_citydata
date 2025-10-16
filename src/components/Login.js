@@ -86,9 +86,92 @@ const Login = () => {
   };
 
   // ... (โค้ดของ handleGoogleLogin และ handleFacebookLogin เหมือนเดิม)
-  const handleGoogleLogin = async () => { /* ... โค้ดเดิม ... */ };
-  const handleFacebookLogin = async () => { /* ... โค้ดเดิม ... */ };
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);      
+      const emailFromUser = result.email || null; 
+      console.log("result:",result)
+      console.log("email",result._tokenResponse.email)
+      
+      const user = result._tokenResponse;
+      console.log("user info:", user)
+      
+      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
+      // const lastName = lastParts.join(" ");
 
+      const userData = {
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        provider: "google",
+        access_token: user.oauthAccessToken,
+      };
+
+      console.log("ล็อกอิน Google สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/Home"); 
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else {
+        console.error("Google login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
+      }
+    }
+  };
+
+  // 🔹 ฟังก์ชันล็อกอิน Facebook
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      console.log("result:",result)
+      const emailFromUser = result.email || null; 
+      console.log("email",result._tokenResponse.email)
+      const user = result._tokenResponse;
+      console.log("email ", user.email)
+      // const credential = FacebookAuthProvider.credentialFromResult(result);
+      // const accessToken = credential?.accessToken;
+
+
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
+
+      const userData = {
+        email: user.email,
+        first_name: user.firstName || "",
+        last_name: user.lastName || "",
+        provider: "facebook",
+        access_token: user.oauthAccessToken,
+      };
+
+      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/Home");
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
+      }
+    }
+  };
   return (
     <div className="login-container">
       <div className="login-column">
