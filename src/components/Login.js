@@ -14,78 +14,77 @@ const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users"; // URL AP
 const Login = () => {
   const navigate = useNavigate();
 
-  // 🔹 เริ่มต้น LIFF
+ // 🔽 1. แยก Logic ส่วนจัดการ Token ออกมาเป็นฟังก์ชันใหม่
+  const processLineLogin = async () => {
+    try {
+      const idToken = liff.getIDToken();
+      if (!idToken) {
+        throw new Error("ไม่สามารถดึง ID Token ได้");
+      }
+
+      const decodedToken = jwtDecode(idToken);
+      const userEmail = decodedToken.email;
+
+      if (!userEmail) {
+        // ถ้าผู้ใช้เคยปฏิเสธสิทธิ์ email ไปแล้ว
+        alert("แอปพลิเคชันต้องการสิทธิ์ในการเข้าถึงอีเมล กรุณากดยินยอมอีกครั้ง");
+        liff.logout(); // ล้างสถานะเก่า
+        // บังคับให้ขออนุญาตใหม่
+        liff.login({ scope: 'profile openid email' });
+        return;
+      }
+
+      const userData = {
+        email: userEmail,
+        first_name: decodedToken.name,
+        last_name: "-",
+        provider: "line",
+        access_token: decodedToken.sub,
+      };
+
+      console.log("ล็อกอิน LINE สำเร็จ:", userData);
+
+      await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${decodedToken.name}`);
+      navigate("/Home");
+
+    } catch (error) {
+      console.error("Error processing LINE login:", error);
+      alert("เกิดข้อผิดพลาดในการประมวลผลข้อมูลล็อกอิน LINE");
+    }
+  };
+
+  // 🔽 2. ทำให้ useEffect จัดการการล็อกอินอัตโนมัติ
   useEffect(() => {
-    const initLiff = async () => {
+    const initializeLiff = async () => {
       try {
-        // ID ของ LIFF App คุณ
-        await liff.init({ liffId: "2008265392-G9mE93Em" }); 
+        await liff.init({ liffId: "2008265392-G9mE93Em" });
         console.log("LIFF initialized");
+
+        // ถ้าผู้ใช้ล็อกอินแล้ว (คือเพิ่งกลับมาจากหน้า LINE)
+        if (liff.isLoggedIn()) {
+          console.log("User is already logged in. Processing login...");
+          await processLineLogin(); // เรียกใช้ฟังก์ชันจัดการ Token ทันที
+        }
       } catch (error) {
         console.error("LIFF init error:", error);
       }
     };
-    initLiff();
-  }, []);
 
-  // 🔹 ฟังก์ชันล็อกอิน LINE (ฉบับแก้ไขสมบูรณ์)
-// ... (imports และ code ส่วนอื่นๆ เหมือนเดิม)
+    initializeLiff();
+  }, []); // ใส่ [] เพื่อให้ useEffect ทำงานครั้งเดียวตอน component โหลด
 
-// 🔹 ฟังก์ชันล็อกอิน LINE (อัปเดตล่าสุด)
-const handleLineLogin = async () => {
-  try {
+  // 🔽 3. ปุ่มกดจะทำหน้าที่แค่ "เริ่ม" การล็อกอินเท่านั้น
+  const handleLineLogin = () => {
     if (!liff.isLoggedIn()) {
       liff.login({ scope: 'profile openid email' });
-      return; // ออกจากฟังก์ชันไปก่อน เพราะหน้าจะ redirect
     }
-
-    const idToken = liff.getIDToken();
-    if (!idToken) {
-      throw new Error("ไม่สามารถดึง ID Token ได้");
-    }
-
-    const decodedToken = jwtDecode(idToken);
-    const userEmail = decodedToken.email;
-
-    // ❗️ จุดแก้ไข: ตรวจสอบว่าได้อีเมลหรือไม่
-    if (!userEmail) {
-      // 1. สร้าง URL สำหรับขออนุญาตใหม่
-      const liffId = "2008265392-G9mE93Em"; // LIFF ID ของคุณ
-      const redirectUri = window.location.href; // URL หน้าปัจจุบันที่จะให้ LINE redirect กลับมา
-      const consentUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${liff.getOS() === 'web' ? '2008265392' : liffId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=profile%20openid%20email&prompt=consent&state=some_string`;
-      // ⚠️ หมายเหตุ: คุณต้องใส่ Channel ID ของคุณเองตรง 'YOUR_CHANNEL_ID' สำหรับ Web
-
-      // 2. แจ้งเตือนผู้ใช้และส่งไปหน้าขออนุญาต
-      alert("แอปพลิเคชันต้องการสิทธิ์ในการเข้าถึงอีเมลเพื่อดำเนินการต่อ กรุณากดยินยอมในหน้าถัดไป");
-      window.location.href = consentUrl; // สั่งให้ redirect ไปยังหน้าขอสิทธิ์
-      return; // หยุดการทำงานส่วนที่เหลือ
-    }
-
-    // ถ้าได้อีเมลแล้ว ก็ทำงานตามปกติ
-    const userData = {
-      email: userEmail,
-      first_name: decodedToken.name,
-      last_name: "-",
-      provider: "line",
-      access_token: decodedToken.sub,
-    };
-
-    console.log("ล็อกอิน LINE สำเร็จ:", userData);
-
-    await fetch(DB_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${decodedToken.name}`);
-    navigate("/Home");
-
-  } catch (error) {
-    console.error("LINE login error:", error);
-    alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
-  }
-};
+  };
 
   // 🔹 ฟังก์ชันล็อกอิน Google (โค้ดเดิม)
   const handleGoogleLogin = async () => {
