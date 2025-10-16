@@ -36,7 +36,7 @@ const Login = () => {
           first_name: profile.displayName,
           last_name: "-",
           provider: "line",
-          access_Token: profile.userId,
+          access_token: profile.userId,
         };
 
         console.log("ล็อกอิน LINE สำเร็จ:", userData);
@@ -76,7 +76,7 @@ const Login = () => {
         first_name: user.firstName,
         last_name: user.lastName,
         provider: "google",
-        access_Token: user.oauthAccessToken,
+        access_token: user.oauthAccessToken,
       };
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
@@ -119,7 +119,7 @@ const Login = () => {
         first_name: user.firstName || "",
         last_name: user.lastName || "",
         provider: "facebook",
-        access_Token: user.uid,
+        access_token: user.uid,
       };
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
