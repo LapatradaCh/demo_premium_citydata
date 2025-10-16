@@ -6,14 +6,30 @@ import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaLine } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc"; 
+import { FcGoogle } from "react-icons/fc";
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users"; // URL API ของคุณ
+
+// ✅ Helper function to correctly decode Base64URL encoded JWTs
+function decodeJwtPayload(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error("Failed to decode JWT", e);
+    return null;
+  }
+}
+
 
 const Login = () => {
   const navigate = useNavigate();
 
-  // 🔹 เริ่มต้น LIFF
-    useEffect(() => {
+  // 🔹 เริ่มต้น LIFF และจัดการข้อมูลหลัง Login
+  useEffect(() => {
     const initializeLiff = async () => {
       try {
         await liff.init({ liffId: "2008265392-G9mE93Em" });
@@ -33,18 +49,17 @@ const Login = () => {
             return;
           }
 
-          // ถอดรหัส ID Token เพื่อเอาอีเมลจริง
-          const decodedIdToken = JSON.parse(atob(idToken.split('.')[1]));
-          const userEmail = decodedIdToken.email;
+          // ✅ FIX: Use the new helper function to decode the token
+          const decodedIdToken = decodeJwtPayload(idToken);
 
-          if (!userEmail) {
+          if (!decodedIdToken || !decodedIdToken.email) {
             alert("ไม่สามารถเข้าถึงอีเมลได้ กรุณาตรวจสอบว่าบัญชี LINE ของคุณได้ยืนยันอีเมลแล้ว");
             liff.logout();
             return;
           }
           
           const userData = {
-            email: userEmail,
+            email: decodedIdToken.email,
             first_name: profile.displayName,
             last_name: "-",
             provider: "line",
@@ -67,10 +82,10 @@ const Login = () => {
       }
     };
     initializeLiff();
-  }, [navigate]); 
+  }, [navigate]);
 
   // 🔹 ฟังก์ชันล็อกอิน LINE
- const handleLineLogin = () => {
+  const handleLineLogin = () => {
     try {
       if (!liff.isLoggedIn()) {
         // สั่งให้ LIFF เปิดหน้าล็อกอิน พร้อมขอสิทธิ์ในการเข้าถึงอีเมล
@@ -85,16 +100,8 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);      
-      const emailFromUser = result.email || null; 
-      console.log("result:",result)
-      console.log("email",result._tokenResponse.email)
-      
+      const result = await signInWithPopup(auth, googleProvider);
       const user = result._tokenResponse;
-      console.log("user info:", user)
-      
-      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
-      // const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -113,7 +120,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home"); 
+      navigate("/Home");
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -128,17 +135,7 @@ const Login = () => {
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
-      console.log("result:",result)
-      const emailFromUser = result.email || null; 
-      console.log("email",result._tokenResponse.email)
       const user = result._tokenResponse;
-      console.log("email ", user.email)
-      // const credential = FacebookAuthProvider.credentialFromResult(result);
-      // const accessToken = credential?.accessToken;
-
-
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -176,7 +173,7 @@ const Login = () => {
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
         <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
-         <button className="facebook-btn" onClick={handleFacebookLogin}>
+        <button className="facebook-btn" onClick={handleFacebookLogin}>
           <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
         </button>
 
