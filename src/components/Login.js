@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import "./Login.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
+import { jwtDecode } from "jwt-decode"; // ⬅️ เพิ่ม import นี้เข้ามา
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
-import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaLine } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc"; 
+import { FcGoogle } from "react-icons/fc";
+
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users"; // URL API ของคุณ
 
 const Login = () => {
@@ -16,7 +18,8 @@ const Login = () => {
   useEffect(() => {
     const initLiff = async () => {
       try {
-        await liff.init({ liffId: "2008265392-G9mE93Em" });
+        // ID ของ LIFF App คุณ
+        await liff.init({ liffId: "2008265392-G9mE93Em" }); 
         console.log("LIFF initialized");
       } catch (error) {
         console.error("LIFF init error:", error);
@@ -25,32 +28,50 @@ const Login = () => {
     initLiff();
   }, []);
 
-  // 🔹 ฟังก์ชันล็อกอิน LINE
+  // 🔹 ฟังก์ชันล็อกอิน LINE (ฉบับแก้ไขสมบูรณ์)
   const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
+        // ขอ scope 'profile', 'openid', และ 'email' ตอน login
+        liff.login({ scope: 'profile openid email' });
       } else {
-        const profile = await liff.getProfile();
-        console.log("profile info:", profile)
+        const idToken = liff.getIDToken();
+        if (!idToken) {
+          throw new Error("ไม่สามารถดึง ID Token ได้");
+        }
+
+        // ถอดรหัส ID Token เพื่อเอาข้อมูลผู้ใช้
+        const decodedToken = jwtDecode(idToken);
+        console.log("Decoded Token Info:", decodedToken);
+        
+        const userEmail = decodedToken.email;
+
+        // ตรวจสอบว่าผู้ใช้ได้อนุญาตให้เข้าถึงอีเมลหรือไม่
+        if (!userEmail) {
+          alert("ผู้ใช้ไม่ได้อนุญาตให้เข้าถึงอีเมล กรุณาลองอีกครั้งและกดยินยอม");
+          // บังคับ logout เพื่อให้ผู้ใช้สามารถกดขอ permission ใหม่ได้ในครั้งถัดไป
+          liff.logout(); 
+          return;
+        }
+
         const userData = {
-          email: profile.userId + "@line.me",
-          first_name: profile.displayName,
-          last_name: "-",
+          email: userEmail,
+          first_name: decodedToken.name, // ใช้ชื่อจาก token
+          last_name: "-", // สามารถเว้นว่างหรือจัดการภายหลังได้
           provider: "line",
-          access_token: profile.userId,
+          access_token: decodedToken.sub, // 'sub' คือ user ID ใน ID Token
         };
 
-        console.log("ล็อกอิน LINE สำเร็จ:", userData);
+        console.log("ล็อกอิน LINE สำเร็จ (ข้อมูลจาก ID Token):", userData);
 
+        // ส่งข้อมูลไปยัง API ของคุณ
         await fetch(DB_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         });
 
-        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-
+        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${decodedToken.name}`);
         navigate("/Home");
       }
     } catch (error) {
@@ -59,19 +80,11 @@ const Login = () => {
     }
   };
 
-  // 🔹 ฟังก์ชันล็อกอิน Google
+  // 🔹 ฟังก์ชันล็อกอิน Google (โค้ดเดิม)
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);      
-      const emailFromUser = result.email || null; 
-      console.log("result:",result)
-      console.log("email",result._tokenResponse.email)
-      
+      const result = await signInWithPopup(auth, googleProvider);
       const user = result._tokenResponse;
-      console.log("user info:", user)
-      
-      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
-      // const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -90,7 +103,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home"); 
+      navigate("/Home");
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -101,21 +114,11 @@ const Login = () => {
     }
   };
 
-  // 🔹 ฟังก์ชันล็อกอิน Facebook
+  // 🔹 ฟังก์ชันล็อกอิน Facebook (โค้ดเดิม)
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
-      console.log("result:",result)
-      const emailFromUser = result.email || null; 
-      console.log("email",result._tokenResponse.email)
       const user = result._tokenResponse;
-      console.log("email ", user.email)
-      // const credential = FacebookAuthProvider.credentialFromResult(result);
-      // const accessToken = credential?.accessToken;
-
-
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -147,13 +150,14 @@ const Login = () => {
     }
   };
 
+  // 🔹 ส่วน JSX สำหรับแสดงผล (โค้ดเดิม)
   return (
     <div className="login-container">
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
         <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
-         <button className="facebook-btn" onClick={handleFacebookLogin}>
+        <button className="facebook-btn" onClick={handleFacebookLogin}>
           <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
         </button>
 
