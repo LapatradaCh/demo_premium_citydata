@@ -112,6 +112,8 @@ const Login = () => {
       console.log("email ", user.email)
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const accessToken = credential?.accessToken;
+      console.log("access token ", accessToken)
+
 
       const [firstName, ...lastParts] = (user.displayName || "").split(" ");
       const lastName = lastParts.join(" ");
@@ -121,7 +123,7 @@ const Login = () => {
         first_name: user.firstName || "",
         last_name: user.lastName || "",
         provider: "facebook",
-        access_token: user.uid,
+        access_token: user.oauthAccessToken,
       };
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
