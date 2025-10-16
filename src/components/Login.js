@@ -117,7 +117,7 @@ const Login = () => {
       const userData = {
         email: user.email,
         first_name: user.firstName || "",
-        last_name: users.lastName || "",
+        last_name: user.lastName || "",
         provider: "facebook",
         access_Token: user.uid,
       };
