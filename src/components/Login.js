@@ -151,7 +151,7 @@ const Login = () => {
       <div className="login-column">
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
-        <h3>พลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
+        <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
          <button className="facebook-btn" onClick={handleFacebookLogin}>
           <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
         </button>
