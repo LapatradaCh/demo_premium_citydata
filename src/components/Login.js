@@ -31,6 +31,7 @@ const Login = () => {
         liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
       } else {
         const profile = await liff.getProfile();
+        console.log("profile info:", profile)
         const userData = {
           email: profile.userId + "@line.me",
           first_name: profile.displayName,
