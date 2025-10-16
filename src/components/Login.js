@@ -6,93 +6,55 @@ import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaLine } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc"; 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users"; // URL API ของคุณ
-
-// ✅ Helper function to correctly decode Base64URL encoded JWTs
-function decodeJwtPayload(token) {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    console.error("Failed to decode JWT", e);
-    return null;
-  }
-}
-
 
 const Login = () => {
   const navigate = useNavigate();
 
-  // 🔹 เริ่มต้น LIFF และจัดการข้อมูลหลัง Login
+  // 🔹 เริ่มต้น LIFF
   useEffect(() => {
-    const initializeLiff = async () => {
+    const initLiff = async () => {
       try {
         await liff.init({ liffId: "2008265392-G9mE93Em" });
         console.log("LIFF initialized");
-
-        // ถ้าผู้ใช้ล็อกอินอยู่แล้ว (หลังจาก redirect กลับมา) ให้เริ่มดึงข้อมูล
-        if (liff.isLoggedIn()) {
-          console.log("User is logged in, processing data...");
-          
-          const profile = await liff.getProfile();
-          const idToken = liff.getIDToken();
-          const accessToken = liff.getAccessToken();
-
-          if (!idToken) {
-            alert("ไม่สามารถรับข้อมูลอีเมลได้ กรุณาลองอีกครั้ง");
-            liff.logout();
-            return;
-          }
-
-          // ✅ FIX: Use the new helper function to decode the token
-          const decodedIdToken = decodeJwtPayload(idToken);
-
-          if (!decodedIdToken || !decodedIdToken.email) {
-            alert("ไม่สามารถเข้าถึงอีเมลได้ กรุณาตรวจสอบว่าบัญชี LINE ของคุณได้ยืนยันอีเมลแล้ว");
-            liff.logout();
-            return;
-          }
-          
-          const userData = {
-            email: decodedIdToken.email,
-            first_name: profile.displayName,
-            last_name: "-",
-            provider: "line",
-            access_token: accessToken, // ใช้ Access Token จริง
-          };
-
-          console.log("ล็อกอิน LINE สำเร็จ:", userData);
-
-          await fetch(DB_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userData),
-          });
-
-          alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
-          navigate("/Home");
-        }
       } catch (error) {
-        console.error("LIFF process error:", error);
+        console.error("LIFF init error:", error);
       }
     };
-    initializeLiff();
-  }, [navigate]);
+    initLiff();
+  }, []);
 
   // 🔹 ฟังก์ชันล็อกอิน LINE
-  const handleLineLogin = () => {
+  const handleLineLogin = async () => {
     try {
       if (!liff.isLoggedIn()) {
-        // สั่งให้ LIFF เปิดหน้าล็อกอิน พร้อมขอสิทธิ์ในการเข้าถึงอีเมล
-        liff.login({ scope: 'profile openid email' });
+        liff.login(); // ถ้ายังไม่ล็อกอินให้เข้าสู่ระบบ LINE
+      } else {
+        const profile = await liff.getProfile();
+        console.log("profile info:", profile)
+        const userData = {
+          email: profile.userId + "@line.me",
+          first_name: profile.displayName,
+          last_name: "-",
+          provider: "line",
+          access_token: profile.userId,
+        };
+
+        console.log("ล็อกอิน LINE สำเร็จ:", userData);
+
+        await fetch(DB_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        });
+
+        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${profile.displayName}`);
+
+        navigate("/Home");
       }
     } catch (error) {
-      console.error("LINE login trigger error:", error);
+      console.error("LINE login error:", error);
       alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
     }
   };
@@ -100,8 +62,16 @@ const Login = () => {
   // 🔹 ฟังก์ชันล็อกอิน Google
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);      
+      const emailFromUser = result.email || null; 
+      console.log("result:",result)
+      console.log("email",result._tokenResponse.email)
+      
       const user = result._tokenResponse;
+      console.log("user info:", user)
+      
+      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
+      // const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -120,7 +90,7 @@ const Login = () => {
       });
 
       alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home");
+      navigate("/Home"); 
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
         alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
@@ -135,7 +105,17 @@ const Login = () => {
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
+      console.log("result:",result)
+      const emailFromUser = result.email || null; 
+      console.log("email",result._tokenResponse.email)
       const user = result._tokenResponse;
+      console.log("email ", user.email)
+      // const credential = FacebookAuthProvider.credentialFromResult(result);
+      // const accessToken = credential?.accessToken;
+
+
+      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
+      const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -173,7 +153,7 @@ const Login = () => {
         <img src={traffyLogo} alt="Traffy Logo" className="logo" />
         <h2>Fondue Dashboard and Manager</h2>
         <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
-        <button className="facebook-btn" onClick={handleFacebookLogin}>
+         <button className="facebook-btn" onClick={handleFacebookLogin}>
           <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
         </button>
 
