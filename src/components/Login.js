@@ -29,56 +29,63 @@ const Login = () => {
   }, []);
 
   // 🔹 ฟังก์ชันล็อกอิน LINE (ฉบับแก้ไขสมบูรณ์)
-  const handleLineLogin = async () => {
-    try {
-      if (!liff.isLoggedIn()) {
-        // ขอ scope 'profile', 'openid', และ 'email' ตอน login
-        liff.login({ scope: 'profile openid email' });
-      } else {
-        const idToken = liff.getIDToken();
-        if (!idToken) {
-          throw new Error("ไม่สามารถดึง ID Token ได้");
-        }
+// ... (imports และ code ส่วนอื่นๆ เหมือนเดิม)
 
-        // ถอดรหัส ID Token เพื่อเอาข้อมูลผู้ใช้
-        const decodedToken = jwtDecode(idToken);
-        console.log("Decoded Token Info:", decodedToken);
-        
-        const userEmail = decodedToken.email;
-
-        // ตรวจสอบว่าผู้ใช้ได้อนุญาตให้เข้าถึงอีเมลหรือไม่
-        if (!userEmail) {
-          alert("ผู้ใช้ไม่ได้อนุญาตให้เข้าถึงอีเมล กรุณาลองอีกครั้งและกดยินยอม");
-          // บังคับ logout เพื่อให้ผู้ใช้สามารถกดขอ permission ใหม่ได้ในครั้งถัดไป
-          liff.logout(); 
-          return;
-        }
-
-        const userData = {
-          email: userEmail,
-          first_name: decodedToken.name, // ใช้ชื่อจาก token
-          last_name: "-", // สามารถเว้นว่างหรือจัดการภายหลังได้
-          provider: "line",
-          access_token: decodedToken.sub, // 'sub' คือ user ID ใน ID Token
-        };
-
-        console.log("ล็อกอิน LINE สำเร็จ (ข้อมูลจาก ID Token):", userData);
-
-        // ส่งข้อมูลไปยัง API ของคุณ
-        await fetch(DB_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        });
-
-        alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${decodedToken.name}`);
-        navigate("/Home");
-      }
-    } catch (error) {
-      console.error("LINE login error:", error);
-      alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
+// 🔹 ฟังก์ชันล็อกอิน LINE (อัปเดตล่าสุด)
+const handleLineLogin = async () => {
+  try {
+    if (!liff.isLoggedIn()) {
+      liff.login({ scope: 'profile openid email' });
+      return; // ออกจากฟังก์ชันไปก่อน เพราะหน้าจะ redirect
     }
-  };
+
+    const idToken = liff.getIDToken();
+    if (!idToken) {
+      throw new Error("ไม่สามารถดึง ID Token ได้");
+    }
+
+    const decodedToken = jwtDecode(idToken);
+    const userEmail = decodedToken.email;
+
+    // ❗️ จุดแก้ไข: ตรวจสอบว่าได้อีเมลหรือไม่
+    if (!userEmail) {
+      // 1. สร้าง URL สำหรับขออนุญาตใหม่
+      const liffId = "2008265392-G9mE93Em"; // LIFF ID ของคุณ
+      const redirectUri = window.location.href; // URL หน้าปัจจุบันที่จะให้ LINE redirect กลับมา
+      const consentUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${liff.getOS() === 'web' ? 'YOUR_CHANNEL_ID' : liffId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=profile%20openid%20email&prompt=consent&state=some_string`;
+      // ⚠️ หมายเหตุ: คุณต้องใส่ Channel ID ของคุณเองตรง 'YOUR_CHANNEL_ID' สำหรับ Web
+
+      // 2. แจ้งเตือนผู้ใช้และส่งไปหน้าขออนุญาต
+      alert("แอปพลิเคชันต้องการสิทธิ์ในการเข้าถึงอีเมลเพื่อดำเนินการต่อ กรุณากดยินยอมในหน้าถัดไป");
+      window.location.href = consentUrl; // สั่งให้ redirect ไปยังหน้าขอสิทธิ์
+      return; // หยุดการทำงานส่วนที่เหลือ
+    }
+
+    // ถ้าได้อีเมลแล้ว ก็ทำงานตามปกติ
+    const userData = {
+      email: userEmail,
+      first_name: decodedToken.name,
+      last_name: "-",
+      provider: "line",
+      access_token: decodedToken.sub,
+    };
+
+    console.log("ล็อกอิน LINE สำเร็จ:", userData);
+
+    await fetch(DB_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+
+    alert(`เข้าสู่ระบบ LINE สำเร็จ! สวัสดี ${decodedToken.name}`);
+    navigate("/Home");
+
+  } catch (error) {
+    console.error("LINE login error:", error);
+    alert("ไม่สามารถเข้าสู่ระบบด้วย LINE ได้");
+  }
+};
 
   // 🔹 ฟังก์ชันล็อกอิน Google (โค้ดเดิม)
   const handleGoogleLogin = async () => {
