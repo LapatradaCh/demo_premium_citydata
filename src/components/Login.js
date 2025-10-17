@@ -197,15 +197,13 @@ const Login = () => {
             </button>
             
             {/* ... JSX ส่วนที่เหลือเหมือนเดิม ... */}
-            <div className="links">
+            <div className="bottom-links">
               <a href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f" target="_blank" rel="noopener noreferrer">
                 คู่มือการใช้งาน
               </a>
-              <p className="contact">
-                <a href="line://ti/p/@fonduehelp" target="_blank" rel="noopener noreferrer">
-                  ติดต่อสอบถาม
-                </a>
-              </p>
+              <a href="line://ti/p/@fonduehelp" target="_blank" rel="noopener noreferrer">
+                ติดต่อสอบถาม
+              </a>
             </div>
           </>
         )}
