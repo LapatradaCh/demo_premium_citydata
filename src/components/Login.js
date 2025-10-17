@@ -30,6 +30,7 @@ const Login = () => {
 
           const decodedToken = jwtDecode(idToken);
           const userEmail = decodedToken.email;
+          console.log("info",decodedToken)
 
           if (!userEmail) {
             alert("การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาลองใหม่อีกครั้งและกดยินยอม");
