@@ -7,7 +7,6 @@ import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc"; 
-
 const DB_API = "https://myapi-331445071173.asia-southeast1.run.app/users";
 
 const Login = () => {
