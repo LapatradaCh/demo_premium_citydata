@@ -39,6 +39,7 @@ const Home = () => {
   const handleLogout = async () => {
     // 1. ดึง Access Token ที่ถูกเก็บไว้หลังจาก Login สำเร็จ
     const accessToken = localStorage.getItem("accessToken");
+    console.log("token":, accessToken)
 
     // 2. ถ้ามี Token, ให้เรียก API ของ Backend เพื่อบันทึก Log การ Logout
     if (accessToken) {
