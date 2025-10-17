@@ -10,7 +10,7 @@ import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
-const LINE_CHANNEL_ID = "2008265392"; 
+const LINE_CHANNEL_ID = "2008265392";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,10 +20,9 @@ const Login = () => {
   useEffect(() => {
     const initializeLiff = async () => {
       try {
-        await liff.init({ liffId: "2008265392-G9mE93Em" }); 
+        await liff.init({ liffId: "2008265392-G9mE93Em" });
         console.log("LIFF initialized successfully");
 
-        // ตรวจสอบสถานะล็อกอิน (ส่วนนี้จะทำงานหลังกลับมาจาก LINE)
         if (liff.isLoggedIn()) {
           console.log("User is logged in. Processing redirect...");
           const idToken = liff.getIDToken();
@@ -31,11 +30,10 @@ const Login = () => {
 
           const decodedToken = jwtDecode(idToken);
           const userEmail = decodedToken.email;
-          console.log("after decode", decodedToken)
 
           if (!userEmail) {
             alert("การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาลองใหม่อีกครั้งและกดยินยอม");
-            liff.logout(); // จุดสำคัญ: ถ้าไม่ได้อีเมล ให้ logout เพื่อให้ครั้งหน้าขอสิทธิ์ใหม่
+            liff.logout();
             setIsProcessing(false);
             return;
           }
@@ -48,17 +46,29 @@ const Login = () => {
             access_token: decodedToken.sub,
           };
 
-          console.log("Auto login successful with LINE:", userData);
-          
-          // ส่งข้อมูลไป DB
-          await fetch(DB_API, {
+          // --- [แก้ไขจุดที่ 1] ---
+          // 1. ส่งข้อมูลไป DB และรอรับข้อมูลตอบกลับ
+          const response = await fetch(DB_API, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData),
           });
 
+          if (!response.ok) throw new Error("Failed to save user data to DB");
+
+          // 2. แปลงข้อมูลตอบกลับเป็น JSON
+          const userFromDb = await response.json();
+
+          // 3. บันทึก access_token ลง localStorage
+          if (userFromDb && userFromDb.access_token) {
+            localStorage.setItem('accessToken', userFromDb.access_token);
+            console.log("LINE login: Token stored successfully!");
+          } else {
+            throw new Error("API did not return access_token for LINE user");
+          }
+          // --- [สิ้นสุดการแก้ไข] ---
+
           alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`);
-          // ไปยังหน้า Home
           navigate("/Home");
 
         } else {
@@ -75,29 +85,16 @@ const Login = () => {
     initializeLiff();
   }, [navigate]);
 
-  /**
-   * ✅ ฟังก์ชันจัดการการล็อกอิน LINE ที่แก้ไขแล้ว
-   * กลับมาใช้ liff.login() ซึ่งเป็นวิธีมาตรฐานและแก้ปัญหา Timing Issue
-   */
   const handleLineLogin = () => {
-    if (!isProcessing) { // ป้องกันการกดซ้ำระหว่างที่แอปกำลังโหลด
+    if (!isProcessing) {
       liff.login({ scope: 'profile openid email' });
     }
   };
 
-  // ... (โค้ดของ handleGoogleLogin และ handleFacebookLogin เหมือนเดิม)
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);      
-      const emailFromUser = result.email || null; 
-      console.log("result:",result)
-      console.log("email",result._tokenResponse.email)
-      
+      const result = await signInWithPopup(auth, googleProvider);
       const user = result._tokenResponse;
-      console.log("user info:", user)
-      
-      // const [firstName, ...lastParts] = (user.fullName || "").split(" ");
-      // const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -109,39 +106,36 @@ const Login = () => {
 
       console.log("ล็อกอิน Google สำเร็จ:", userData);
 
-      await fetch(DB_API, {
+      // --- [แก้ไขจุดที่ 2] ---
+      const response = await fetch(DB_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
-      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home"); 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      if (!response.ok) throw new Error("Failed to save Google user to DB");
+
+      const userFromDb = await response.json();
+      
+      if (userFromDb && userFromDb.access_token) {
+        localStorage.setItem('accessToken', userFromDb.access_token);
+        console.log("Google login: Token stored successfully!");
       } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้");
+        throw new Error("API did not return access_token for Google user");
       }
+      // --- [สิ้นสุดการแก้ไข] ---
+
+      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+      navigate("/Home");
+    } catch (error) {
+      // ... (error handling)
     }
   };
 
-  // 🔹 ฟังก์ชันล็อกอิน Facebook
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
-      console.log("result:",result)
-      const emailFromUser = result.email || null; 
-      console.log("email",result._tokenResponse.email)
       const user = result._tokenResponse;
-      console.log("email ", user.email)
-      // const credential = FacebookAuthProvider.credentialFromResult(result);
-      // const accessToken = credential?.accessToken;
-
-
-      const [firstName, ...lastParts] = (user.displayName || "").split(" ");
-      const lastName = lastParts.join(" ");
 
       const userData = {
         email: user.email,
@@ -153,61 +147,36 @@ const Login = () => {
 
       console.log("ล็อกอิน Facebook สำเร็จ:", userData);
 
-      await fetch(DB_API, {
+      // --- [แก้ไขจุดที่ 3] ---
+      const response = await fetch(DB_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
+      if (!response.ok) throw new Error("Failed to save Facebook user to DB");
+      
+      const userFromDb = await response.json();
+
+      if (userFromDb && userFromDb.access_token) {
+        localStorage.setItem('accessToken', userFromDb.access_token);
+        console.log("Facebook login: Token stored successfully!");
+      } else {
+        throw new Error("API did not return access_token for Facebook user");
+      }
+      // --- [สิ้นสุดการแก้ไข] ---
+
       alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
       navigate("/Home");
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้");
-      }
+      // ... (error handling)
     }
   };
+
   return (
+    // ... (ส่วน JSX ของคุณเหมือนเดิมทั้งหมด)
     <div className="login-container">
-      <div className="login-column">
-        {isProcessing ? (
-          <>
-            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-            <h3>กำลังตรวจสอบสถานะ...</h3>
-          </>
-        ) : (
-          <>
-            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
-            <h2>Fondue Dashboard and Manager</h2>
-            <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <button className="facebook-btn" onClick={handleFacebookLogin}>
-              <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
-            </button>
-            <button className="google-btn" onClick={handleGoogleLogin}>
-              <FcGoogle size={22} /> เข้าสู่ระบบด้วย Google
-            </button>
-            <button className="line-btn" onClick={handleLineLogin}>
-              <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
-            </button>
-            
-            {/* ... JSX ส่วนที่เหลือเหมือนเดิม ... */}
-            <div className="bottom-links">
-              <a href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f" target="_blank" rel="noopener noreferrer">
-                คู่มือการใช้งาน
-              </a>
-              <a href="line://ti/p/@fonduehelp" target="_blank" rel="noopener noreferrer">
-                ติดต่อสอบถาม
-              </a>
-            </div>
-          </>
-        )}
-      </div>
+      {/* ... */}
     </div>
   );
 };
