@@ -24,9 +24,9 @@ const Login = () => {
         console.log("LIFF initialized successfully");
 
         if (liff.isLoggedIn()) {
-          console.log("User is logged in. Processing redirect...");
+          console.log("User is logged in via LIFF. Processing login...");
           const idToken = liff.getIDToken();
-          if (!idToken) throw new Error("Could not get ID Token.");
+          if (!idToken) throw new Error("Could not get ID Token from LIFF.");
 
           const decodedToken = jwtDecode(idToken);
           const userEmail = decodedToken.email;
@@ -41,9 +41,9 @@ const Login = () => {
           const userData = {
             email: userEmail,
             first_name: decodedToken.name,
-            last_name: "-",
+            last_name: "-", // LINE does not provide a separate last name
             provider: "line",
-            access_token: decodedToken.sub,
+            access_token: decodedToken.sub, // Use 'sub' as a unique token for LINE
           };
 
           // --- [แก้ไขจุดที่ 1] ---
@@ -54,22 +54,24 @@ const Login = () => {
             body: JSON.stringify(userData),
           });
 
-          if (!response.ok) throw new Error("Failed to save user data to DB");
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to save user data to DB");
+          }
 
           // 2. แปลงข้อมูลตอบกลับเป็น JSON
           const userFromDb = await response.json();
 
-          // 3. บันทึก access_token ลง localStorage
+          // 3. บันทึก access_token ที่ได้รับจาก Backend ลง localStorage
           if (userFromDb && userFromDb.access_token) {
             localStorage.setItem('accessToken', userFromDb.access_token);
             console.log("LINE login: Token stored successfully!");
+            alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`);
+            navigate("/Home");
           } else {
             throw new Error("API did not return access_token for LINE user");
           }
           // --- [สิ้นสุดการแก้ไข] ---
-
-          alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`);
-          navigate("/Home");
 
         } else {
           console.log("User is not logged in. Ready for manual login.");
@@ -77,7 +79,7 @@ const Login = () => {
         }
       } catch (error) {
         console.error("LIFF logic error:", error);
-        setErrorMessage("เกิดข้อผิดพลาดในการเริ่มต้น LIFF");
+        setErrorMessage("เกิดข้อผิดพลาดในการเริ่มต้น LIFF: " + error.message);
         setIsProcessing(false);
       }
     };
@@ -104,7 +106,7 @@ const Login = () => {
         access_token: user.oauthAccessToken,
       };
 
-      console.log("ล็อกอิน Google สำเร็จ:", userData);
+      console.log("Attempting Google login with user data:", userData);
 
       // --- [แก้ไขจุดที่ 2] ---
       const response = await fetch(DB_API, {
@@ -113,22 +115,30 @@ const Login = () => {
         body: JSON.stringify(userData),
       });
 
-      if (!response.ok) throw new Error("Failed to save Google user to DB");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Google user to DB");
+      }
 
       const userFromDb = await response.json();
       
       if (userFromDb && userFromDb.access_token) {
         localStorage.setItem('accessToken', userFromDb.access_token);
         console.log("Google login: Token stored successfully!");
+        alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+        navigate("/Home");
       } else {
         throw new Error("API did not return access_token for Google user");
       }
       // --- [สิ้นสุดการแก้ไข] ---
 
-      alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home");
     } catch (error) {
-      // ... (error handling)
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else {
+        console.error("Google login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
+      }
     }
   };
 
@@ -145,7 +155,7 @@ const Login = () => {
         access_token: user.oauthAccessToken,
       };
 
-      console.log("ล็อกอิน Facebook สำเร็จ:", userData);
+      console.log("Attempting Facebook login with user data:", userData);
 
       // --- [แก้ไขจุดที่ 3] ---
       const response = await fetch(DB_API, {
@@ -154,29 +164,70 @@ const Login = () => {
         body: JSON.stringify(userData),
       });
 
-      if (!response.ok) throw new Error("Failed to save Facebook user to DB");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Facebook user to DB");
+      }
       
       const userFromDb = await response.json();
 
       if (userFromDb && userFromDb.access_token) {
         localStorage.setItem('accessToken', userFromDb.access_token);
         console.log("Facebook login: Token stored successfully!");
+        alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+        navigate("/Home");
       } else {
         throw new Error("API did not return access_token for Facebook user");
       }
       // --- [สิ้นสุดการแก้ไข] ---
 
-      alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-      navigate("/Home");
     } catch (error) {
-      // ... (error handling)
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
+      }
     }
   };
 
   return (
-    // ... (ส่วน JSX ของคุณเหมือนเดิมทั้งหมด)
     <div className="login-container">
-      {/* ... */}
+      <div className="login-column">
+        {isProcessing ? (
+          <>
+            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
+            <h3>กำลังตรวจสอบสถานะ...</h3>
+          </>
+        ) : (
+          <>
+            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
+            <h2>Fondue Dashboard and Manager</h2>
+            <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button className="facebook-btn" onClick={handleFacebookLogin}>
+              <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
+            </button>
+            <button className="google-btn" onClick={handleGoogleLogin}>
+              <FcGoogle size={22} /> เข้าสู่ระบบด้วย Google
+            </button>
+            <button className="line-btn" onClick={handleLineLogin}>
+              <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
+            </button>
+            
+            <div className="bottom-links">
+              <a href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f" target="_blank" rel="noopener noreferrer">
+                คู่มือการใช้งาน
+              </a>
+              <a href="line://ti/p/@fonduehelp" target="_blank" rel="noopener noreferrer">
+                ติดต่อสอบถาม
+              </a>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
