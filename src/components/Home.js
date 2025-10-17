@@ -39,14 +39,17 @@ const Home = () => {
   const handleLogout = async () => {
     // 1. ดึง Access Token ที่ถูกเก็บไว้หลังจาก Login สำเร็จ
     const accessToken = localStorage.getItem("accessToken");
-    console.log("token:", accessToken)
+    
+    // [แก้ไข] เปลี่ยน colon (:) เป็น comma (,)
+    console.log("token:", accessToken);
 
     // 2. ถ้ามี Token, ให้เรียก API ของ Backend เพื่อบันทึก Log การ Logout
     if (accessToken) {
       try {
-        // ใช้ Environment Variable เพื่อความปลอดภัยและยืดหยุ่น
+        // แนะนำ: ควรใช้ Environment Variable แทนการ Hardcode URL โดยตรง
+        // const apiUrl = `${process.env.REACT_APP_API_URL}/api/logout`;
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-        
+
         const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
@@ -59,7 +62,6 @@ const Home = () => {
         if (response.ok) {
           console.log("Backend notified of logout successfully.");
         } else {
-          // แม้ API จะล้มเหลว ก็ยังควรให้ผู้ใช้ Logout จากฝั่ง Client ต่อไป
           console.error("Failed to notify backend of logout, but proceeding with client-side logout.");
         }
       } catch (error) {
@@ -68,14 +70,11 @@ const Home = () => {
     }
 
     // 3. ทำการ Logout ฝั่ง Client (เคลียร์ข้อมูลและเปลี่ยนหน้า)
-    // ส่วนนี้ควรจะทำงานเสมอ ไม่ว่าการเรียก API จะสำเร็จหรือล้มเหลวก็ตาม
     if (liff.isLoggedIn()) {
       liff.logout(); // LIFF จะจัดการเคลียร์ Session และ Refresh หน้าเว็บให้เอง
     } else {
-      // สำหรับการ Login แบบอื่นๆ (Google, Facebook, etc.)
+      // สำหรับการ Login แบบอื่นๆ
       localStorage.removeItem("accessToken"); // ลบ Token ออกจาก Storage
-      // หากมีข้อมูลผู้ใช้อื่นๆ ก็ควรลบไปด้วย
-      // localStorage.removeItem('userData');
       navigate("/"); // กลับไปที่หน้า Login หลัก
     }
   };
