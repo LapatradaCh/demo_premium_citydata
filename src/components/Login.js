@@ -195,17 +195,6 @@ const Login = () => {
             <button className="line-btn" onClick={handleLineLogin}>
               <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
             </button>
-            
-            {/* ... JSX ส่วนที่เหลือเหมือนเดิม ... */}
-            <p className="download-text">ดาวน์โหลดและติดตั้งแอปพลิเคชันสำหรับเจ้าหน้าที่ได้ที่</p>
-            <div className="store-icons">
-              <a href="https://play.google.com/store/apps/details?id=com.traffy2.traffy_report" target="_blank" rel="noopener noreferrer">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" />
-              </a>
-              <a href="https://apps.apple.com/th/app/fondue-manager/id1431630978?l=th" target="_blank" rel="noopener noreferrer">
-                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" />
-              </a>
-            </div>
             <div className="links">
               <a href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f" target="_blank" rel="noopener noreferrer">
                 คู่มือการใช้งาน
