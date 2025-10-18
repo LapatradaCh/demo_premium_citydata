@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDneYf7SUAAooViXeQU5ihU-X-BO_JA0d8",
-  authDomain: "db-citydata--login.firebaseapp.com",
-  projectId: "db-citydata--login",
-  storageBucket: "db-citydata--login.firebasestorage.app",
-  messagingSenderId: "498235395733",
-  appId: "1:498235395733:web:b2438f543e622b27d4559c",
-  measurementId: "G-ZYLFQY7QQY"
+  apiKey: "AIzaSyASdwHrVFQ5ZzUfNY39lcKZip4c-nXjWys",
+  authDomain: "api-premium-citydata.firebaseapp.com",
+  projectId: "api-premium-citydata",
+  storageBucket: "api-premium-citydata.firebasestorage.app",
+  messagingSenderId: "30821232259",
+  appId: "1:30821232259:web:66c51ba5e37d3e8ef335b6",
+  measurementId: "G-W2RYNDTP0C"
 };
 
 const app = initializeApp(firebaseConfig);
