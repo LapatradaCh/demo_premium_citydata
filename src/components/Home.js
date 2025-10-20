@@ -36,49 +36,42 @@ const Home = () => {
    * ฟังก์ชันสำหรับออกจากระบบ (ฉบับสมบูรณ์)
    * ทำการเรียก API ไปยัง Backend เพื่อบันทึก Log ก่อน แล้วจึงเคลียร์ข้อมูลฝั่ง Client
    */
-  const handleLogout = async () => {
-    // 1. ดึง Access Token ที่ถูกเก็บไว้หลังจาก Login สำเร็จ
-    const accessToken = localStorage.getItem("accessToken");
-    
-    // [แก้ไข] เปลี่ยน colon (:) เป็น comma (,)
-    console.log("token:", accessToken);
+ const handleLogout = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("Initiating logout for token:", accessToken);
 
-    // 2. ถ้ามี Token, ให้เรียก API ของ Backend เพื่อบันทึก Log การ Logout
+  try {
+    // Step 1: Notify the backend (only if a token exists)
     if (accessToken) {
-      try {
-        // แนะนำ: ควรใช้ Environment Variable แทนการ Hardcode URL โดยตรง
-        // const apiUrl = `${process.env.REACT_APP_API_URL}/api/logout`;
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // [สำคัญ] ส่ง Token ไปใน Header เพื่อให้ Backend รู้ว่าใครกำลัง Logout
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response.ok) {
-          console.log("Backend notified of logout successfully.");
-        } else {
-          console.error("Failed to notify backend of logout, but proceeding with client-side logout.");
-        }
-      } catch (error) {
-        console.error("Error calling logout API:", error);
-      }
+      const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+      await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("Backend has been notified of the logout.");
     }
+  } catch (error) {
+    // It's okay if the backend call fails. We still want to log the user out on the client-side.
+    console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+  } finally {
+    // Step 2: Perform client-side logout actions (this block ALWAYS runs)
+    console.log("Executing client-side cleanup.");
 
-    // 3. ทำการ Logout ฝั่ง Client (เคลียร์ข้อมูลและเปลี่ยนหน้า)
+    // Logout from LIFF if the user is logged in via LIFF
     if (liff.isLoggedIn()) {
-      liff.logout(); // LIFF จะจัดการเคลียร์ Session และ Refresh หน้าเว็บให้เอง
-    } else {
-      // สำหรับการ Login แบบอื่นๆ
-      localStorage.removeItem("accessToken"); // ลบ Token ออกจาก Storage
-      navigate("/"); // กลับไปที่หน้า Login หลัก
+      liff.logout();
     }
-  };
 
+    // ALWAYS remove the token from local storage, regardless of login method
+    localStorage.removeItem("accessToken");
+
+    // ALWAYS navigate the user back to the login page for a consistent experience
+    navigate("/"); // Or '/login'
+  }
+};
   // --- ข้อมูลสำหรับแสดงผล UI (ไม่มีการเปลี่ยนแปลง) ---
   const cardsData = {
     "แผนที่": [
