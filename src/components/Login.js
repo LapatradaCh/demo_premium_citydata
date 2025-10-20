@@ -88,18 +88,11 @@ const Login = () => {
     initializeLiff();
   }, [navigate]);
 
- // โค้ดที่แก้ไขแล้ว
-const handleLineLogin = () => {
-  if (!isProcessing) {
-    // 1. ตั้งค่าสถานะเป็นกำลังประมวลผลทันที
-    setIsProcessing(true); 
-    setErrorMessage(""); // ล้างข้อความ error เก่า (ถ้ามี)
-
-    // 2. เรียก liff.login() เพื่อเริ่มกระบวนการ Redirect
-    // เมื่อผู้ใช้กลับมาที่หน้านี้, useEffect จะจัดการส่วนที่เหลือเอง
-    liff.login({ scope: 'profile openid email' });
-  }
-};
+  const handleLineLogin = () => {
+    if (!isProcessing) {
+      liff.login({ scope: 'profile openid email' });
+    }
+  };
 
   const handleGoogleLogin = async () => {
     try {
