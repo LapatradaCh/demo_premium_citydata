@@ -10,66 +10,14 @@ import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
-// [NEW] API Endpoint สำหรับนับจำนวนองค์กรของ User (ต้องสร้างที่ Backend)
-const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
-const LIFF_ID = "2008265392-G9mE93Em"; 
+const LIFF_ID = "2008265392-G9mE93Em"; // <-- แยกค่าคงที่ออกมา
 
 const Login = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // [NEW] ฟังก์ชันกลางสำหรับจัดการการนำทาง (Navigation) หลังล็อกอินสำเร็จ
-  const handleLoginSuccess = useCallback(async (userFromDb, welcomeName) => {
-    try {
-      // ตรวจสอบว่าได้ข้อมูล user_id และ access_token มาจาก API ของเราหรือไม่
-      if (!userFromDb || !userFromDb.access_token || !userFromDb.user_id) {
-        throw new Error("API response is missing access_token or user_id.");
-      }
-
-      // 1. เก็บ Token
-      localStorage.setItem("accessToken", userFromDb.access_token);
-      console.log("Token stored successfully!");
-
-      // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
-      const userId = userFromDb.user_id;
-      const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
-
-      if (!orgCountResponse.ok) {
-        // ถ้า API เช็คองค์กรล้มเหลว ก็ยังให้ไปหน้า Home ปกติ
-        console.error("Failed to fetch organization count. Navigating to /Home as default.");
-        alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
-        navigate("/Home");
-        return;
-      }
-
-      const orgData = await orgCountResponse.json();
-      console.log(orgData)
-      // สมมติว่า API คืนค่า { count: N }
-      const orgCount = orgData.length || 0; 
-
-      console.log(`User ${userId} is in ${orgCount} organizations.`);
-
-      // 3. แสดง Alert
-      alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
-      
-      // 4. นำทางตามเงื่อนไข
-      if (orgCount > 1) {
-        navigate("/home1"); // ไปหน้าเลือกองค์กร
-      } else {
-        navigate("/Home"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
-      }
-
-    } catch (error) {
-      console.error("Login Success Handler Error:", error);
-      setErrorMessage("เกิดข้อผิดพลาดหลังล็อกอิน: " + error.message);
-      // หากเกิด Error ระหว่างเช็คองค์กร ให้ fallback ไปหน้า Home
-      navigate("/Home");
-    }
-  }, [navigate]); // Dependency คือ navigate
-
-
-  // --- [MODIFIED] ปรับปรุง processLiffLogin ---
+  // --- [แก้ไขจุดที่ 1] สร้างฟังก์ชันสำหรับจัดการข้อมูลหลังล็อกอินสำเร็จ ---
   const processLiffLogin = useCallback(async () => {
     try {
       console.log("User is logged in via LIFF. Processing login...");
@@ -84,7 +32,7 @@ const Login = () => {
         alert(
           "การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาลองใหม่อีกครั้งและกดยินยอม"
         );
-        liff.logout();
+        liff.logout(); // ยังคง logout ไว้ เผื่อกรณีที่ผู้ใช้กดยกเลิก permission
         setIsProcessing(false);
         return;
       }
@@ -112,15 +60,20 @@ const Login = () => {
 
       const userFromDb = await response.json();
 
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
-      await handleLoginSuccess(userFromDb, decodedToken.name);
-
+      if (userFromDb && userFromDb.access_token) {
+        localStorage.setItem("accessToken", userFromDb.access_token);
+        console.log("LINE login: Token stored successfully!");
+        alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`);
+        navigate("/Home");
+      } else {
+        throw new Error("API did not return access_token for LINE user");
+      }
     } catch (error) {
       console.error("LIFF Process Error:", error);
       setErrorMessage("เกิดข้อผิดพลาดในการประมวลผลข้อมูล LIFF: " + error.message);
       setIsProcessing(false);
     }
-  }, [navigate, handleLoginSuccess]); // [MODIFIED] เพิ่ม handleLoginSuccess ใน dependency
+  }, [navigate]); // useCallback พร้อม dependency คือ navigate
 
   useEffect(() => {
     const initializeLiff = async () => {
@@ -129,8 +82,10 @@ const Login = () => {
         console.log("LIFF initialized successfully");
 
         if (liff.isLoggedIn()) {
+          // ถ้าล็อกอินอยู่แล้ว ให้เริ่มประมวลผลข้อมูลเลย (Auto-Login)
           await processLiffLogin();
         } else {
+          // ถ้ายังไม่ล็อกอิน ก็พร้อมให้ผู้ใช้กดปุ่ม
           console.log("User is not logged in. Ready for manual login.");
           setIsProcessing(false);
         }
@@ -142,97 +97,109 @@ const Login = () => {
     };
 
     initializeLiff();
-  }, [processLiffLogin]); // dependency ถูกต้องแล้ว
+  }, [processLiffLogin]); // ใส่ processLiffLogin เป็น dependency
 
-  
+  // --- [แก้ไขจุดที่ 2] ปรับปรุง handleLineLogin ให้ชัดเจนขึ้น ---
   const handleLineLogin = () => {
-    if (isProcessing) return; 
-    setIsProcessing(true); 
+    if (isProcessing) return; // ป้องกันการกดซ้ำซ้อน
+    
+    setIsProcessing(true); // แสดงสถานะกำลังโหลดก่อน Redirect
+    // สั่งให้ LIFF ทำการล็อกอิน, หลังจากนี้หน้าเว็บจะถูก Redirect
+    // และเมื่อกลับมา `useEffect` จะทำงานและตรวจจับสถานะ `liff.isLoggedIn()` ที่เป็น true เอง
     liff.login({ scope: "profile openid email" });
   };
 
 
-  // --- [MODIFIED] ปรับปรุง handleGoogleLogin ---
+  // ... (โค้ดของ handleGoogleLogin และ handleFacebookLogin ยังคงเหมือนเดิม) ...
   const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result._tokenResponse;
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result._tokenResponse;
 
-      const userData = {
-        email: user.email,
-        first_name: user.firstName,
-        last_name: user.lastName,
-        provider: "google",
-        access_token: user.oauthAccessToken,
-      };
+      const userData = {
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        provider: "google",
+        access_token: user.oauthAccessToken,
+      };
 
-      const response = await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to save Google user to DB");
-      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Google user to DB");
+      }
 
-      const userFromDb = await response.json();
-      
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
-      await handleLoginSuccess(userFromDb, user.displayName);
+      const userFromDb = await response.json();
+      
+      if (userFromDb && userFromDb.access_token) {
+        localStorage.setItem('accessToken', userFromDb.access_token);
+        alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
+        navigate("/Home");
+      } else {
+        throw new Error("API did not return access_token for Google user");
+      }
 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
-      }
-    }
-  };
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else {
+        console.error("Google login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
+      }
+    }
+  };
 
-  // --- [MODIFIED] ปรับปรุง handleFacebookLogin ---
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result._tokenResponse;
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result._tokenResponse;
 
-      const userData = {
-        email: user.email,
-        first_name: user.firstName || "",
-        last_name: user.lastName || "",
-        provider: "facebook",
-        access_token: user.oauthAccessToken,
-      };
+      const userData = {
+        email: user.email,
+        first_name: user.firstName || "",
+        last_name: user.lastName || "",
+        provider: "facebook",
+        access_token: user.oauthAccessToken,
+      };
 
-      const response = await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to save Facebook user to DB");
-      }
-      
-      const userFromDb = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Facebook user to DB");
+      }
+      
+      const userFromDb = await response.json();
 
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
-      await handleLoginSuccess(userFromDb, user.displayName);
+      if (userFromDb && userFromDb.access_token) {
+        localStorage.setItem('accessToken', userFromDb.access_token);
+        alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
+        navigate("/Home");
+      } else {
+        throw new Error("API did not return access_token for Facebook user");
+      }
 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
-      }
-    }
-  };
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
+      }
+    }
+  };
 
 
   return (
