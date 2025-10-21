@@ -114,7 +114,7 @@ const ReportTable = () => (
   </div>
 );
 
-//HOME
+// Home
 const Home = () => {
   const [activeTab,setActiveTab] = useState("รายการแจ้ง");
   const [dropdownOpen,setDropdownOpen] = useState(null);
@@ -122,53 +122,61 @@ const Home = () => {
   const toggleDropdown = tab => setDropdownOpen(dropdownOpen===tab?null:tab);
 
   const navigate = useNavigate();
-  
 
-  // --- vvv เพิ่ม State สำหรับเก็บข้อมูลหน่วยงาน vvv ---
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
-    logo: logo // ใช้ logo ที่ import มาเป็นค่าเริ่มต้น
+    logo: logo 
   });
-  // --- ^^^ สิ้นสุดส่วนที่เพิ่ม State ^^^ ---
 
 
-  // --- vvv เพิ่ม useEffect เพื่อดึงข้อมูลหน่วยงาน vvv ---
   useEffect(() => {
     const fetchOrganizationInfo = async () => {
       try {
-        const userId = localStorage.getItem("user_id");
-        const accessToken = localStorage.getItem("accessToken");
-
-        if (!userId || !accessToken) {
-          console.warn("ไม่พบ User ID หรือ Token, ไม่สามารถดึงข้อมูลหน่วยงานได้");
-          setOrganizationInfo({ name: "ไม่พบข้อมูล", logo: logo });
-          return;
-        }
-
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
-
-        const response = await fetch(apiUrl, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`, // สำคัญ: ต้องใส่ Token
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch organization info");
-        }
-
-        const data = await response.json();
-
-        // **สมมติฐาน**: เราใช้ข้อมูลหน่วยงาน "แรก" ที่ user สังกัดอยู่
-        if (data && data.length > 0) {
-          const firstOrg = data[0];
+        // 1. ตรวจสอบว่ามีข้อมูลที่ถูกเลือกมาจากหน้า Home1 หรือไม่
+        const cachedOrg = localStorage.getItem("selectedOrg");
+        
+        if (cachedOrg) {
+          // 1.1 ถ้ามี: ใช้ข้อมูลนั้นเลย ไม่ต้อง fetch API
+          const org = JSON.parse(cachedOrg);
           setOrganizationInfo({
-            name: firstOrg.organization_name,
-            logo: firstOrg.url_logo // (จากตาราง view_user_org_details)
+            name: org.name,
+            logo: org.img // <-- รับค่า .img จากที่ Home1 ส่งมา
           });
+          
+          // (สำคัญ) ล้างค่าที่เลือกไว้ เพื่อให้ครั้งต่อไปที่เข้าหน้านี้ตรงๆ มันจะโหลดค่า default
+          localStorage.removeItem("selectedOrg"); 
+          
         } else {
-          setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+          // 1.2 ถ้าไม่มี (เช่น เข้า /home ตรงๆ): ไป fetch API หาค่า default (หน่วยงานแรก)
+          const userId = localStorage.getItem("user_id");
+          const accessToken = localStorage.getItem("accessToken");
+
+          if (!userId || !accessToken) {
+            throw new Error("ไม่พบ User ID หรือ Token");
+          }
+
+          const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+
+          const response = await fetch(apiUrl, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`, 
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch organization info");
+
+          const data = await response.json();
+
+          if (data && data.length > 0) {
+            const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
+            setOrganizationInfo({
+              name: firstOrg.organization_name,
+              logo: firstOrg.url_logo 
+            });
+          } else {
+            setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+          }
         }
 
       } catch (error) {
@@ -179,10 +187,8 @@ const Home = () => {
 
     fetchOrganizationInfo();
   }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
-  // --- ^^^ สิ้นสุดส่วน useEffect ^^^ ---
 
 
-  // 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     console.log("Initiating logout for token:", accessToken);
@@ -215,6 +221,7 @@ const Home = () => {
       // ALWAYS remove the token from local storage, regardless of login method
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
+      localStorage.removeItem("selectedOrg"); // เคลียร์ค่าที่เลือกไว้ด้วย
 
       // ALWAYS navigate the user back to the login page for a consistent experience
       navigate("/"); // Or '/login'
@@ -225,7 +232,6 @@ const Home = () => {
   return (
     <div>
       <div className="top-navigation">
-        {/* --- vvv แก้ไขส่วนแสดงผล Logo และ ชื่อ vvv --- */}
         <div className="logo-section">
           <img 
             src={organizationInfo.logo} 
@@ -236,7 +242,6 @@ const Home = () => {
           />
           <span className="unit-name">{organizationInfo.name}</span>
         </div>
-        {/* --- ^^^ สิ้นสุดส่วนที่แก้ไข ^^^ --- */}
 
         <nav className="center-menu">
           {tabs.map(tab=>(
