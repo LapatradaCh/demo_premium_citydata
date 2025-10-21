@@ -44,6 +44,7 @@ const Login = () => {
       }
 
       const orgData = await orgCountResponse.json();
+      console.log(orgData)
       // สมมติว่า API คืนค่า { count: N }
       const orgCount = orgData.count || 0; 
 
