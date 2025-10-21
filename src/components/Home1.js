@@ -24,6 +24,8 @@ const Home1 = () => {
       // ดึง user_id และ token จาก localStorage
       // (*** สมมติว่าคุณเก็บ user_id ไว้ใน localStorage ตอน login ***)
       const userId = localStorage.getItem("user_id"); 
+      console.log(user_id)
+      console.log(accessToken)
       const accessToken = localStorage.getItem("accessToken");
 
       if (!userId || !accessToken) {
