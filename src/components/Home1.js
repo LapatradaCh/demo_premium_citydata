@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from 'react'; // <-- เพิ่ม useEffect
+import React, { useState, useEffect } from 'react';
 import { Search, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import liff from "@line/liff";
 import './Home1.css';
 
-// --- vvv ลบ const agencies ที่ hardcode ออกไป vvv ---
-// const agencies = [ ... ];
-// --- ^^^ สิ้นสุดการลบ ^^^ ---
-
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // --- vvv ส่วนที่เพิ่มเข้ามาสำหรับ Fetch API vvv ---
-  const [allAgencies, setAllAgencies] = useState([]); // เก็บ master list จาก API
-  const [filteredAgencies, setFilteredAgencies] = useState([]); // state ที่ใช้แสดงผล (เริ่มต้นเป็น array ว่าง)
-  const [isLoading, setIsLoading] = useState(true); // สถานะกำลังโหลด
-  const [error, setError] = useState(null); // สถานะ error
+  const [allAgencies, setAllAgencies] = useState([]); 
+  const [filteredAgencies, setFilteredAgencies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // ฟังก์ชันสำหรับดึงข้อมูลหน่วยงาน
     const fetchAgencies = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        // 1. ดึง user_id และ token จาก localStorage
         const userId = localStorage.getItem('user_id'); 
         const accessToken = localStorage.getItem('accessToken');
 
@@ -37,10 +30,8 @@ const Home1 = () => {
           throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
         }
 
-        // 2. สร้าง URL ตามที่ร้องขอ
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
 
-        // 3. เรียก API
         const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -54,18 +45,13 @@ const Home1 = () => {
 
         const data = await response.json();
 
-        // 4. ทำการ Map ข้อมูลจาก API (ตามที่คุณต้องการ)
-        // API field: organization_name -> name
-        // API field: url_logo -> img
-        // เราจะสมมติว่า API คืน organization_id มาเพื่อใช้เป็น key นะครับ
         const formattedData = data.map(item => ({
-          id: item.organization_id, // หรือ item.id ขึ้นอยู่กับ API ของคุณ
+          id: item.organization_id, 
           name: item.organization_name,
-          img: item.url_logo,
-          badge: null // API ของคุณอาจไม่มี badge, ใส่ null ไว้ก่อน
+          img: item.url_logo, // <-- **สำคัญ: เราจะส่ง field 'img' นี้ไป**
+          badge: null 
         }));
 
-        // 5. อัปเดต State
         setAllAgencies(formattedData);
         setFilteredAgencies(formattedData);
 
@@ -73,17 +59,15 @@ const Home1 = () => {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูลหน่วยงาน:", err);
         setError(err.message);
       } finally {
-        setIsLoading(false); // สิ้นสุดการโหลด
+        setIsLoading(false);
       }
     };
 
-    fetchAgencies(); // เรียกใช้งานฟังก์ชันเมื่อ component โหลด
-  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
-  // --- ^^^ สิ้นสุดส่วนที่เพิ่มเข้ามา ^^^ ---
+    fetchAgencies(); 
+  }, []);
 
 
   const handleLogout = async () => {
-    // ... (ส่วนของ Logout ยังคงเดิม ไม่เปลี่ยนแปลง) ...
     const accessToken = localStorage.getItem("accessToken");
     console.log("Initiating logout for token:", accessToken);
  
@@ -109,7 +93,8 @@ const Home1 = () => {
       }
  
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); // <-- แนะนำให้ลบ user_id ออกไปด้วย
+      localStorage.removeItem("user_id"); 
+      localStorage.removeItem("selectedOrg"); // <-- **3. เพิ่มการล้างค่าที่เลือกไว้**
  
       navigate("/");
     }
@@ -117,78 +102,80 @@ const Home1 = () => {
 
 
   const handleSearch = () => {
-    // --- vvv อัปเดตให้ค้นหาจาก allAgencies vvv ---
     const filtered = allAgencies.filter((agency) =>
       agency.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // --- ^^^ สิ้นสุดการอัปเดต ^^^ ---
     setFilteredAgencies(filtered);
   };
 
   const handleClear = () => {
     setSearchTerm('');
-    // --- vvv อัปเดตให้รีเซ็ตเป็น allAgencies vvv ---
     setFilteredAgencies(allAgencies);
-    // --- ^^^ สิ้นสุดการอัปเดต ^^^ ---
   };
 
-  const handleAgencyClick = () => navigate('/home');
+  // --- vvv 1. แก้ไข handleAgencyClick vvv ---
+  const handleAgencyClick = (agency) => {
+    // 1. เก็บข้อมูลหน่วยงานที่เลือก (ทั้ง object) ลงใน localStorage
+    localStorage.setItem('selectedOrg', JSON.stringify(agency));
+    
+    // 2. นำทางไปหน้า /home (หน้า Dashboard)
+    navigate('/home');
+  };
+  // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
 
   return (
     <div className="app-body">
-      {/* Logout Button */}
+      {/* ... (ส่วน Logout, Header, Search Box เหมือนเดิม) ... */}
       <div className="logout-icon">
-        <button onClick={handleLogout}>
-          <LogOut size={18} />
-          <span>ออกจากระบบ</span>
-        </button>
-      </div>
-
-      {/* Header */}
-      <h1 className="title">เลือกหน่วยงานที่คุณต้องการ</h1>
-
-      {/* Search Box */}
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="ค้นหาหน่วยงาน..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-        {searchTerm && (
-          <button className="clear-button" onClick={handleClear}>
-            <X size={16} />
-          </button>
-        )}
-        <button className="search-button" onClick={handleSearch}>
-          <Search size={18} />
-        </button>
-      </div>
+         <button onClick={handleLogout}>
+           <LogOut size={18} />
+           <span>ออกจากระบบ</span>
+         </button>
+       </div>
+ 
+       <h1 className="title">เลือกหน่วยงานที่คุณต้องการ</h1>
+ 
+       <div className="search-container">
+         <input
+           type="text"
+           className="search-input"
+           placeholder="ค้นหาหน่วยงาน..."
+           value={searchTerm}
+           onChange={(e) => setSearchTerm(e.target.value)}
+           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+         />
+         {searchTerm && (
+           <button className="clear-button" onClick={handleClear}>
+             <X size={16} />
+           </button>
+         )}
+         <button className="search-button" onClick={handleSearch}>
+           <Search size={18} />
+         </button>
+       </div>
 
       {/* Agency Grid */}
       <div className="agency-section">
-        {/* --- vvv ส่วนจัดการ Loading และ Error vvv --- */}
         {isLoading ? (
           <p className="loading-message">กำลังโหลดข้อมูลหน่วยงาน...</p>
         ) : error ? (
           <p className="error-message">เกิดข้อผิดพลาด: {error}</p>
         ) : filteredAgencies.length === 0 ? (
-        // --- ^^^ สิ้นสุดส่วนจัดการ Loading และ Error ^^^ --- */}
           <p className="no-results">ไม่พบหน่วยงาน</p>
         ) : (
           <div className="agency-grid">
             {filteredAgencies.map((agency) => (
               <div
-                key={agency.id} // <-- id นี้จะมาจาก item.organization_id ที่เรา map ไว้
+                key={agency.id} 
                 className="agency-item"
-                onClick={handleAgencyClick}
+                // --- vvv 2. แก้ไข onClick vvv ---
+                onClick={() => handleAgencyClick(agency)}
+                // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
               >
                 <div className="agency-img">
                   <img
-                    src={agency.img} // <-- img นี้จะมาจาก item.url_log
-                    alt={agency.name} // <-- name นี้จะมาจาก item.organization_name
+                    src={agency.img} // <-- field นี้จะถูกส่งไป
+                    alt={agency.name} 
                     title={agency.name}
                     onError={(e) => {
                       e.target.onerror = null;
@@ -198,7 +185,7 @@ const Home1 = () => {
                   {agency.badge && <div className="agency-badge">{agency.badge}</div>}
                 </div>
                 <div className="agency-name" title="คลิกเพื่อเข้าหน่วยงานนี้">
-                  {agency.name} {/* <-- name นี้จะมาจาก item.organization_name */}
+                  {agency.name} {/* <-- field นี้จะถูกส่งไป */}
                 </div>
               </div>
             ))}
@@ -209,4 +196,4 @@ const Home1 = () => {
   );
 };
 
-export default Home1;
+export default Home1
