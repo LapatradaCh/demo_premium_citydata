@@ -18,6 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  console.log("userdata:",userFromDb)
 
   // [NEW] ฟังก์ชันกลางสำหรับจัดการการนำทาง (Navigation) หลังล็อกอินสำเร็จ
   const handleLoginSuccess = useCallback(async (userFromDb, welcomeName) => {
@@ -29,7 +30,7 @@ const Login = () => {
 
       // 1. เก็บ Token
       localStorage.setItem("accessToken", userFromDb.access_token);
-      coonsole.log("userdata:",userFromDb)
+      console.log("userdata:",userFromDb)
       console.log("Token stored successfully!");
 
       // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
