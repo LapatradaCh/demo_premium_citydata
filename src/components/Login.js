@@ -28,11 +28,13 @@ const Login = () => {
       }
 
       // 1. เก็บ Token
+      const userId = userFromDb.user_id;
       localStorage.setItem("accessToken", userFromDb.access_token);
-      console.log("info:",userFromDb)
+      localStorage.setItem("user_id", userId);
+
 
       // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
-      const userId = userFromDb.user_id;
+      
       const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
 
       if (!orgCountResponse.ok) {
@@ -54,11 +56,11 @@ const Login = () => {
       alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
       
       // 4. นำทางตามเงื่อนไข
-      // if (orgCount > 1) {
-      //   navigate("/home1"); // ไปหน้าเลือกองค์กร
-      // } else {
-      //   navigate("/Home"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
-      // }
+      if (orgCount > 1) {
+        navigate("/home1"); // ไปหน้าเลือกองค์กร
+      } else {
+        navigate("/Home"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
+      }
 
     } catch (error) {
       console.error("Login Success Handler Error:", error);
