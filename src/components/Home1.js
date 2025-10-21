@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
 import { Search, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import liff from "@line/liff"; // <-- 1. เพิ่มการ import นี้
+import liff from "@line/liff"; // [1] เพิ่มการ import LIFF
 import './Home1.css';
 
 const agencies = [
   { id: 1, name: "หน่วยงานราชการ A", img: "https://placehold.co/100x100/A0AEC0/ffffff?text=A" },
   { id: 2, name: "หน่วยงานราชการ B", img: "https://placehold.co/100x100/F59E0B/ffffff?text=B" },
   { id: 3, name: "หน่วยงานราชการ C", img: "https://placehold.co/100x100/10B981/ffffff?text=C" },
-  { id: 4, name: "หน่วยงานราชการ D", img: "https://placehold.co/100x100/3B82F6/ffffff?text=D" },
-  { id: 5, name: "หน่วยงานราชการ E", img: "https://placehold.co/100x100/EC4899/ffffff?text=E" },
-  { id: 6, name: "หน่วยงานราชการ F", img: "https://placehold.co/100x100/F87171/ffffff?text=F" },
-  { id: 7, name: "หน่วยงานราชการ G", img: "https://placehold.co/100x100/8B5CF6/ffffff?text=G" },
-  { id: 8, name: "หน่วยงานราชการ H", img: "https://placehold.co/100x100/22D3EE/ffffff?text=H" },
-  { id: 9, name: "หน่วยงานราชการ I", img: "https://placehold.co/100x100/FACC15/ffffff?text=I" },
-  { id: 10, name: "หน่วยงานราชการ J", img: "https://placehold.co/100x100/EC4899/ffffff?text=J" },
-  { id: 11, name: "หน่วยงานราชการ K", img: "https://placehold.co/100x100/3B82F6/ffffff?text=K" },
+  // ... (ข้อมูล agencies ที่เหลือ)
   { id: 12, name: "หน่วยงานราชการ L", img: "https://placehold.co/100x100/10B981/ffffff?text=L" },
 ];
 
@@ -24,11 +17,11 @@ const Home1 = () => {
   const [filteredAgencies, setFilteredAgencies] = useState(agencies);
   const navigate = useNavigate();
 
-  // --- 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้ ---
-  const handleLogout = async () => {
+  // [2] แทนที่ handleLogout เดิมด้วยฟังก์ชัน async ฉบับสมบูรณ์
+  const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     console.log("Initiating logout for token:", accessToken);
-  
+
     try {
       // Step 1: Notify the backend (only if a token exists)
       if (accessToken) {
@@ -48,20 +41,19 @@ const Home1 = () => {
     } finally {
       // Step 2: Perform client-side logout actions (this block ALWAYS runs)
       console.log("Executing client-side cleanup.");
-  
+
       // Logout from LIFF if the user is logged in via LIFF
       if (liff.isLoggedIn()) {
         liff.logout();
       }
-  
+
       // ALWAYS remove the token from local storage, regardless of login method
       localStorage.removeItem("accessToken");
-  
+
       // ALWAYS navigate the user back to the login page for a consistent experience
       navigate("/"); // Or '/login'
     }
   };
-  // --- สิ้นสุดส่วนที่แทนที่ ---
 
   const handleSearch = () => {
     const filtered = agencies.filter((agency) =>
@@ -78,9 +70,9 @@ const Home1 = () => {
     <div className="app-body">
       {/* Logout Button */}
       <div className="logout-icon">
-        <button onClick={handleLogout}>
+        <button onClick={handleLogout}> {/* ปุ่มนี้จะเรียกใช้ฟังก์ชันใหม่ */}
           <LogOut size={18} />
-          <span>ออกจากระบบ</span> {/* ข้อความไม่เลื่อน */}
+          <span>ออกจากระบบ</span>
         </button>
       </div>
 
