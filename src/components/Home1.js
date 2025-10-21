@@ -25,8 +25,8 @@ const Home1 = () => {
       // (*** สมมติว่าคุณเก็บ user_id ไว้ใน localStorage ตอน login ***)
       const userId = localStorage.getItem("user_id"); 
       const accessToken = localStorage.getItem("accessToken");
-      console.log(userId)
-      console.log(accessToken)
+      console.log("info userid:",userId)
+      console.log("info accesstoken:",accessToken)
       
       if (!userId || !accessToken) {
         console.error("User ID or Access Token not found. Redirecting to login.");
