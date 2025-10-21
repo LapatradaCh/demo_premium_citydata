@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
-import logo from "./logo.png";
+import logo from "./logo.png"; // ใช้เป็น fallback
 import { 
   FaMapMarkedAlt, FaClipboardList, FaChartBar, FaCog, FaSignOutAlt, FaSearch 
 } from "react-icons/fa";
@@ -123,80 +123,48 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  // 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้
-  const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("Initiating logout for token:", accessToken);
+  // --- vvv เพิ่ม State สำหรับเก็บข้อมูลหน่วยงาน vvv ---
+  const [organizationInfo, setOrganizationInfo] = useState({
+    name: "กำลังโหลด...",
+    logo: logo // ใช้ logo ที่ import มาเป็นค่าเริ่มต้น
+  });
+  // --- ^^^ สิ้นสุดส่วนที่เพิ่ม State ^^^ ---
 
-    try {
-      // Step 1: Notify the backend (only if a token exists)
-      if (accessToken) {
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-        await fetch(apiUrl, {
-          method: "POST",
+
+  // --- vvv เพิ่ม useEffect เพื่อดึงข้อมูลหน่วยงาน vvv ---
+  useEffect(() => {
+    const fetchOrganizationInfo = async () => {
+      try {
+        const userId = localStorage.getItem("user_id");
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (!userId || !accessToken) {
+          console.warn("ไม่พบ User ID หรือ Token, ไม่สามารถดึงข้อมูลหน่วยงานได้");
+          setOrganizationInfo({ name: "ไม่พบข้อมูล", logo: logo });
+          return;
+        }
+
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+
+        const response = await fetch(apiUrl, {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
+            'Authorization': `Bearer ${accessToken}`, // สำคัญ: ต้องใส่ Token
+            'Content-Type': 'application/json'
+          }
         });
-        console.log("Backend has been notified of the logout.");
-      }
-    } catch (error) {
-      // It's okay if the backend call fails. We still want to log the user out on the client-side.
-      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
-    } finally {
-      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
-      console.log("Executing client-side cleanup.");
 
-      // Logout from LIFF if the user is logged in via LIFF
-      if (liff.isLoggedIn()) {
-        liff.logout();
-      }
+        if (!response.ok) {
+          throw new Error("Failed to fetch organization info");
+        }
 
-      // ALWAYS remove the token from local storage, regardless of login method
-      localStorage.removeItem("accessToken");
+        const data = await response.json();
 
-      // ALWAYS navigate the user back to the login page for a consistent experience
-      navigate("/"); // Or '/login'
-    }
-  };
-
-
-  return (
-    <div>
-      <div className="top-navigation">
-        <div className="logo-section">
-          <img src={logo} alt="Logo" className="logo-img" />
-          <span className="unit-name">ชื่อหน่วยงานของคุณ</span>
-        </div>
-
-        <nav className="center-menu">
-          {tabs.map(tab=>(
-            <div key={tab} className="menu-wrapper">
-              <button className={activeTab===tab?"menu-item active":"menu-item"} onClick={()=>{setActiveTab(tab); toggleDropdown(tab);}}>
-                {tab}
-                {cardsData[tab] && cardsData[tab].length>0 && (dropdownOpen===tab?<FiChevronUp className="chevron-icon"/>:<FiChevronDown className="chevron-icon"/>)}
-              </button>
-              {dropdownOpen===tab && cardsData[tab] && (
-                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(<div className="dropdown-item" key={i}>{card.icon}{card.label}</div>))}</div>
-              )}
-            </div>
-          ))}
-        </nav>
-
-        <div className="logout-icon">
-          <button onClick={handleLogout}>
-            <FaSignOutAlt size={18} />
-            <span>ออกจากระบบ</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="dashboard-content">
-        {activeTab==="รายการแจ้ง" && <ReportTable />}
-      </div>
-    </div>
-  );
-};
-
-export default Dashboard;
+        // **สมมติฐาน**: เราใช้ข้อมูลหน่วยงาน "แรก" ที่ user สังกัดอยู่
+        if (data && data.length > 0) {
+          const firstOrg = data[0];
+          setOrganizationInfo({
+            name: firstOrg.organization_name,
+            logo: firstOrg.url_logo // (จากตาราง view_user_org_details)
+          });
+        } else {
+          setOrganizationInfo({ name: "ไม่พบหน่วยงาน",
