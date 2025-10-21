@@ -10,82 +10,65 @@ import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
-const LIFF_ID = "2008265392-G9mE93Em";
+// [NEW] API Endpoint สำหรับนับจำนวนองค์กรของ User (ต้องสร้างที่ Backend)
+const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/user-organizations";
+const LIFF_ID = "2008265392-G9mE93Em"; 
 
 const Login = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // --- [จุดที่ 1: สร้างฟังก์ชันใหม่] ---
-  // ฟังก์ชันนี้จะตรวจสอบองค์กรและทำการ redirect
-  const checkUserOrgsAndNavigate = useCallback(
-    async (userFromDb, successMessage) => {
-      // ตรวจสอบว่ามีข้อมูล user ที่จำเป็นหรือไม่
-      // **ข้อสมมติ**: ผมใช้ userFromDb.user_id ถ้าใน DB ของคุณเป็น id เฉยๆ ให้แก้ตรงนี้
-      // *** แก้ไข: ใช้ userFromDb.user_id ตามที่คุยกันใน schema ***
-      if (!userFromDb || !userFromDb.user_id || !userFromDb.access_token) {
-        console.error("Invalid user data received from DB", userFromDb);
-        setErrorMessage("ข้อมูลผู้ใช้ไม่สมบูรณ์ ไม่สามารถตรวจสอบองค์กรได้");
-        setIsProcessing(false);
+  // [NEW] ฟังก์ชันกลางสำหรับจัดการการนำทาง (Navigation) หลังล็อกอินสำเร็จ
+  const handleLoginSuccess = useCallback(async (userFromDb, welcomeName) => {
+    try {
+      // ตรวจสอบว่าได้ข้อมูล user_id และ access_token มาจาก API ของเราหรือไม่
+      if (!userFromDb || !userFromDb.access_token || !userFromDb.user_id) {
+        throw new Error("API response is missing access_token or user_id.");
+      }
+
+      // 1. เก็บ Token
+      localStorage.setItem("accessToken", userFromDb.access_token);
+      console.log("Token stored successfully!");
+
+      // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
+      const userId = userFromDb.user_id;
+      const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
+
+      if (!orgCountResponse.ok) {
+        // ถ้า API เช็คองค์กรล้มเหลว ก็ยังให้ไปหน้า Home ปกติ
+        console.error("Failed to fetch organization count. Navigating to /Home as default.");
+        alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
+        navigate("/Home");
         return;
       }
 
-      try {
-        console.log(`Checking organizations for user_id: ${userFromDb.user_id}`);
+      const orgData = await orgCountResponse.json();
+      // สมมติว่า API คืนค่า { count: N }
+      const orgCount = orgData.count || 0; 
 
-        // --- [สำคัญมาก: ต้องสร้าง API นี้ที่ Backend] ---
-        // นี่คือ API ที่คุณต้องสร้างเพิ่มใน Vercel
-        // เพื่อคืนค่า Array ขององค์กรที่ User คนนี้สังกัดอยู่
-        // (อิงจากตาราง users_organizations)
-        const orgsResponse = await fetch(
-          `${DB_API}/${userFromDb.user_id}/organizations`, // URL คือ .../api/users/USER_ID/organizations
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              // ส่ง Token ที่เพิ่งได้มา เพื่อยืนยันตัวตน
-              Authorization: `Bearer ${userFromDb.access_token}`,
-            },
-          }
-        );
+      console.log(`User ${userId} is in ${orgCount} organizations.`);
 
-        if (!orgsResponse.ok) {
-          throw new Error("Failed to fetch user organizations");
-        }
-
-        // สมมติว่า API คืนค่ามาเป็น Array เช่น [{org_id: 1}, {org_id: 2}]
-        const organizations = await orgsResponse.json();
-        
-        // ถ้า API คืนค่ามาเป็น { count: 2 } ให้เปลี่ยนตรงนี้เป็น organizations.count
-        const orgCount = Array.isArray(organizations) ? organizations.length : 0;
-
-        console.log(`User belongs to ${orgCount} organization(s).`);
-
-        // เก็บ Token ลง localStorage
-        localStorage.setItem("accessToken", userFromDb.access_token);
-        alert(successMessage); // แสดง Alert ที่ส่งมาจากฟังก์ชันก่อนหน้า
-
-        if (orgCount > 1) {
-          console.log("Navigating to Home1 (Multiple orgs)");
-          navigate("/Home1"); // ไปหน้าเลือกองค์กร
-        } else {
-          // ถ้ามี 1 หรือ 0 องค์กร ก็ไปหน้า Home ปกติ
-          console.log("Navigating to Home (Single or Zero orgs)");
-          navigate("/Home"); // ไปหน้าหลัก
-        }
-      } catch (error) {
-        console.error("Error checking organizations:", error);
-        setErrorMessage(
-          "เกิดข้อผิดพลาดในการตรวจสอบข้อมูลองค์กร: " + error.message
-        );
-        setIsProcessing(false); // หยุดหมุน
+      // 3. แสดง Alert
+      alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
+      
+      // 4. นำทางตามเงื่อนไข
+      if (orgCount > 1) {
+        navigate("/home1"); // ไปหน้าเลือกองค์กร
+      } else {
+        navigate("/Home"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
       }
-    },
-    [navigate] // dependency array
-  );
 
-  // --- [จุดที่ 2: ปรับปรุง processLiffLogin] ---
+    } catch (error) {
+      console.error("Login Success Handler Error:", error);
+      setErrorMessage("เกิดข้อผิดพลาดหลังล็อกอิน: " + error.message);
+      // หากเกิด Error ระหว่างเช็คองค์กร ให้ fallback ไปหน้า Home
+      navigate("/Home");
+    }
+  }, [navigate]); // Dependency คือ navigate
+
+
+  // --- [MODIFIED] ปรับปรุง processLiffLogin ---
   const processLiffLogin = useCallback(async () => {
     try {
       console.log("User is logged in via LIFF. Processing login...");
@@ -108,9 +91,9 @@ const Login = () => {
       const userData = {
         email: userEmail,
         first_name: decodedToken.name,
-        last_name: "-", // หรือจะใช้ "" ก็ได้ถ้าต้องการ
+        last_name: "-",
         provider: "line",
-        access_token: decodedToken.sub, // ใช้ sub เป็น access_token สำหรับ LINE
+        access_token: decodedToken.sub,
       };
 
       const response = await fetch(DB_API, {
@@ -128,20 +111,15 @@ const Login = () => {
 
       const userFromDb = await response.json();
 
-      // --- [แก้ไข] ---
-      // เรียกใช้ฟังก์ชัน checkUserOrgsAndNavigate
-      if (userFromDb && userFromDb.access_token) {
-        const successMessage = `เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`;
-        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
-      } else {
-        throw new Error("API did not return access_token for LINE user");
-      }
+      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
+      await handleLoginSuccess(userFromDb, decodedToken.name);
+
     } catch (error) {
       console.error("LIFF Process Error:", error);
       setErrorMessage("เกิดข้อผิดพลาดในการประมวลผลข้อมูล LIFF: " + error.message);
       setIsProcessing(false);
     }
-  }, [navigate, checkUserOrgsAndNavigate]); // <-- เพิ่ม checkUserOrgsAndNavigate
+  }, [navigate, handleLoginSuccess]); // [MODIFIED] เพิ่ม handleLoginSuccess ใน dependency
 
   useEffect(() => {
     const initializeLiff = async () => {
@@ -150,10 +128,8 @@ const Login = () => {
         console.log("LIFF initialized successfully");
 
         if (liff.isLoggedIn()) {
-          // ถ้าล็อกอินอยู่แล้ว ให้เริ่มประมวลผลข้อมูลเลย (Auto-Login)
           await processLiffLogin();
         } else {
-          // ถ้ายังไม่ล็อกอิน ก็พร้อมให้ผู้ใช้กดปุ่ม
           console.log("User is not logged in. Ready for manual login.");
           setIsProcessing(false);
         }
@@ -165,17 +141,17 @@ const Login = () => {
     };
 
     initializeLiff();
-  }, [processLiffLogin]); // ใส่ processLiffLogin เป็น dependency
+  }, [processLiffLogin]); // dependency ถูกต้องแล้ว
 
+  
   const handleLineLogin = () => {
-    if (isProcessing) return; // ป้องกันการกดซ้ำซ้อน
-    
-    setIsProcessing(true); // แสดงสถานะกำลังโหลดก่อน Redirect
-    // สั่งให้ LIFF ทำการล็อกอิน
+    if (isProcessing) return; 
+    setIsProcessing(true); 
     liff.login({ scope: "profile openid email" });
   };
 
-  // --- [จุดที่ 3: ปรับปรุง handleGoogleLogin] ---
+
+  // --- [MODIFIED] ปรับปรุง handleGoogleLogin ---
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -186,7 +162,7 @@ const Login = () => {
         first_name: user.firstName,
         last_name: user.lastName,
         provider: "google",
-        access_token: user.oauthAccessToken, // ใช้ oauthAccessToken สำหรับ Google
+        access_token: user.oauthAccessToken,
       };
 
       const response = await fetch(DB_API, {
@@ -202,13 +178,8 @@ const Login = () => {
 
       const userFromDb = await response.json();
       
-      // --- [แก้ไข] ---
-      if (userFromDb && userFromDb.access_token) {
-        const successMessage = `เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`;
-        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
-      } else {
-        throw new Error("API did not return access_token for Google user");
-      }
+      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
+      await handleLoginSuccess(userFromDb, user.displayName);
 
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
@@ -217,11 +188,10 @@ const Login = () => {
         console.error("Google login error:", error);
         alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
       }
-      setIsProcessing(false); // เพิ่ม setIsProcessing(false) ใน catch
     }
   };
 
-  // --- [จุดที่ 4: ปรับปรุง handleFacebookLogin] ---
+  // --- [MODIFIED] ปรับปรุง handleFacebookLogin ---
   const handleFacebookLogin = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
@@ -232,7 +202,7 @@ const Login = () => {
         first_name: user.firstName || "",
         last_name: user.lastName || "",
         provider: "facebook",
-        access_token: user.oauthAccessToken, // ใช้ oauthAccessToken สำหรับ Facebook
+        access_token: user.oauthAccessToken,
       };
 
       const response = await fetch(DB_API, {
@@ -248,13 +218,8 @@ const Login = () => {
       
       const userFromDb = await response.json();
 
-      // --- [แก้ไข] ---
-      if (userFromDb && userFromDb.access_token) {
-        const successMessage = `เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`;
-        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
-      } else {
-        throw new Error("API did not return access_token for Facebook user");
-      }
+      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
+      await handleLoginSuccess(userFromDb, user.displayName);
 
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {
@@ -265,7 +230,6 @@ const Login = () => {
         console.error("Facebook login error:", error);
         alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
       }
-      setIsProcessing(false); // เพิ่ม setIsProcessing(false) ใน catch
     }
   };
 
