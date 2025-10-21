@@ -24,10 +24,10 @@ const Home1 = () => {
       // ดึง user_id และ token จาก localStorage
       // (*** สมมติว่าคุณเก็บ user_id ไว้ใน localStorage ตอน login ***)
       const userId = localStorage.getItem("user_id"); 
-      console.log(user_id)
-      console.log(accessToken)
       const accessToken = localStorage.getItem("accessToken");
-
+      console.log(userId)
+      console.log(accessToken)
+      
       if (!userId || !accessToken) {
         console.error("User ID or Access Token not found. Redirecting to login.");
         setError("ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบใหม่");
