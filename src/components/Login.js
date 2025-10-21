@@ -46,7 +46,7 @@ const Login = () => {
       const orgData = await orgCountResponse.json();
       console.log(orgData)
       // สมมติว่า API คืนค่า { count: N }
-      const orgCount = orgData.count || 0; 
+      const orgCount = orgData.length || 0; 
 
       console.log(`User ${userId} is in ${orgCount} organizations.`);
 
