@@ -11,7 +11,7 @@ import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
 // [NEW] API Endpoint สำหรับนับจำนวนองค์กรของ User (ต้องสร้างที่ Backend)
-const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/user-organizations";
+const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 const LIFF_ID = "2008265392-G9mE93Em"; 
 
 const Login = () => {
