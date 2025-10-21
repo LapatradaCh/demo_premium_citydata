@@ -122,6 +122,15 @@ const Home = () => {
   const toggleDropdown = tab => setDropdownOpen(dropdownOpen===tab?null:tab);
 
   const navigate = useNavigate();
+  const handleDropdownClick = (card) => {
+    // ปิด dropdown
+    setDropdownOpen(null); 
+    
+    // ตรวจสอบว่ามี path ที่กำหนดไว้หรือไม่
+    if (card.path) {
+      navigate(card.path); // สั่งให้ย้ายหน้า
+    }
+  };
 
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
