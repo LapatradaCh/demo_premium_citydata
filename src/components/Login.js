@@ -10,14 +10,82 @@ import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
-const LIFF_ID = "2008265392-G9mE93Em"; // <-- แยกค่าคงที่ออกมา
+const LIFF_ID = "2008265392-G9mE93Em";
 
 const Login = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // --- [แก้ไขจุดที่ 1] สร้างฟังก์ชันสำหรับจัดการข้อมูลหลังล็อกอินสำเร็จ ---
+  // --- [จุดที่ 1: สร้างฟังก์ชันใหม่] ---
+  // ฟังก์ชันนี้จะตรวจสอบองค์กรและทำการ redirect
+  const checkUserOrgsAndNavigate = useCallback(
+    async (userFromDb, successMessage) => {
+      // ตรวจสอบว่ามีข้อมูล user ที่จำเป็นหรือไม่
+      // **ข้อสมมติ**: ผมใช้ userFromDb.user_id ถ้าใน DB ของคุณเป็น id เฉยๆ ให้แก้ตรงนี้
+      // *** แก้ไข: ใช้ userFromDb.id ตามที่คุยกันใน schema ***
+      if (!userFromDb || !userFromDb.id || !userFromDb.access_token) {
+        console.error("Invalid user data received from DB", userFromDb);
+        setErrorMessage("ข้อมูลผู้ใช้ไม่สมบูรณ์ ไม่สามารถตรวจสอบองค์กรได้");
+        setIsProcessing(false);
+        return;
+      }
+
+      try {
+        console.log(`Checking organizations for user_id: ${userFromDb.id}`);
+
+        // --- [สำคัญมาก: ต้องสร้าง API นี้ที่ Backend] ---
+        // นี่คือ API ที่คุณต้องสร้างเพิ่มใน Vercel
+        // เพื่อคืนค่า Array ขององค์กรที่ User คนนี้สังกัดอยู่
+        // (อิงจากตาราง users_organizations)
+        const orgsResponse = await fetch(
+          `${DB_API}/${userFromDb.id}/organizations`, // URL คือ .../api/users/USER_ID/organizations
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              // ส่ง Token ที่เพิ่งได้มา เพื่อยืนยันตัวตน
+              Authorization: `Bearer ${userFromDb.access_token}`,
+            },
+          }
+        );
+
+        if (!orgsResponse.ok) {
+          throw new Error("Failed to fetch user organizations");
+        }
+
+        // สมมติว่า API คืนค่ามาเป็น Array เช่น [{org_id: 1}, {org_id: 2}]
+        const organizations = await orgsResponse.json();
+        
+        // ถ้า API คืนค่ามาเป็น { count: 2 } ให้เปลี่ยนตรงนี้เป็น organizations.count
+        const orgCount = Array.isArray(organizations) ? organizations.length : 0;
+
+        console.log(`User belongs to ${orgCount} organization(s).`);
+
+        // เก็บ Token ลง localStorage
+        localStorage.setItem("accessToken", userFromDb.access_token);
+        alert(successMessage); // แสดง Alert ที่ส่งมาจากฟังก์ชันก่อนหน้า
+
+        if (orgCount > 1) {
+          console.log("Navigating to Home1 (Multiple orgs)");
+          navigate("/Home1"); // ไปหน้าเลือกองค์กร
+        } else {
+          // ถ้ามี 1 หรือ 0 องค์กร ก็ไปหน้า Home ปกติ
+          console.log("Navigating to Home (Single or Zero orgs)");
+          navigate("/Home"); // ไปหน้าหลัก
+        }
+      } catch (error) {
+        console.error("Error checking organizations:", error);
+        setErrorMessage(
+          "เกิดข้อผิดพลาดในการตรวจสอบข้อมูลองค์กร: " + error.message
+        );
+        setIsProcessing(false); // หยุดหมุน
+      }
+    },
+    [navigate] // dependency array
+  );
+
+  // --- [จุดที่ 2: ปรับปรุง processLiffLogin] ---
   const processLiffLogin = useCallback(async () => {
     try {
       console.log("User is logged in via LIFF. Processing login...");
@@ -32,7 +100,7 @@ const Login = () => {
         alert(
           "การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาลองใหม่อีกครั้งและกดยินยอม"
         );
-        liff.logout(); // ยังคง logout ไว้ เผื่อกรณีที่ผู้ใช้กดยกเลิก permission
+        liff.logout();
         setIsProcessing(false);
         return;
       }
@@ -40,9 +108,9 @@ const Login = () => {
       const userData = {
         email: userEmail,
         first_name: decodedToken.name,
-        last_name: "-",
+        last_name: "-", // หรือจะใช้ "" ก็ได้ถ้าต้องการ
         provider: "line",
-        access_token: decodedToken.sub,
+        access_token: decodedToken.sub, // ใช้ sub เป็น access_token สำหรับ LINE
       };
 
       const response = await fetch(DB_API, {
@@ -60,11 +128,11 @@ const Login = () => {
 
       const userFromDb = await response.json();
 
+      // --- [แก้ไข] ---
+      // เรียกใช้ฟังก์ชัน checkUserOrgsAndNavigate
       if (userFromDb && userFromDb.access_token) {
-        localStorage.setItem("accessToken", userFromDb.access_token);
-        console.log("LINE login: Token stored successfully!");
-        alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`);
-        navigate("/Home");
+        const successMessage = `เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${decodedToken.name}`;
+        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
       } else {
         throw new Error("API did not return access_token for LINE user");
       }
@@ -73,7 +141,7 @@ const Login = () => {
       setErrorMessage("เกิดข้อผิดพลาดในการประมวลผลข้อมูล LIFF: " + error.message);
       setIsProcessing(false);
     }
-  }, [navigate]); // useCallback พร้อม dependency คือ navigate
+  }, [navigate, checkUserOrgsAndNavigate]); // <-- เพิ่ม checkUserOrgsAndNavigate
 
   useEffect(() => {
     const initializeLiff = async () => {
@@ -99,107 +167,107 @@ const Login = () => {
     initializeLiff();
   }, [processLiffLogin]); // ใส่ processLiffLogin เป็น dependency
 
-  // --- [แก้ไขจุดที่ 2] ปรับปรุง handleLineLogin ให้ชัดเจนขึ้น ---
   const handleLineLogin = () => {
     if (isProcessing) return; // ป้องกันการกดซ้ำซ้อน
     
     setIsProcessing(true); // แสดงสถานะกำลังโหลดก่อน Redirect
-    // สั่งให้ LIFF ทำการล็อกอิน, หลังจากนี้หน้าเว็บจะถูก Redirect
-    // และเมื่อกลับมา `useEffect` จะทำงานและตรวจจับสถานะ `liff.isLoggedIn()` ที่เป็น true เอง
+    // สั่งให้ LIFF ทำการล็อกอิน
     liff.login({ scope: "profile openid email" });
   };
 
-
-  // ... (โค้ดของ handleGoogleLogin และ handleFacebookLogin ยังคงเหมือนเดิม) ...
+  // --- [จุดที่ 3: ปรับปรุง handleGoogleLogin] ---
   const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result._tokenResponse;
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result._tokenResponse;
 
-      const userData = {
-        email: user.email,
-        first_name: user.firstName,
-        last_name: user.lastName,
-        provider: "google",
-        access_token: user.oauthAccessToken,
-      };
+      const userData = {
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        provider: "google",
+        access_token: user.oauthAccessToken, // ใช้ oauthAccessToken สำหรับ Google
+      };
 
-      const response = await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to save Google user to DB");
-      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Google user to DB");
+      }
 
-      const userFromDb = await response.json();
-      
-      if (userFromDb && userFromDb.access_token) {
-        localStorage.setItem('accessToken', userFromDb.access_token);
-        alert(`เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`);
-        navigate("/Home");
-      } else {
-        throw new Error("API did not return access_token for Google user");
-      }
+      const userFromDb = await response.json();
+      
+      // --- [แก้ไข] ---
+      if (userFromDb && userFromDb.access_token) {
+        const successMessage = `เข้าสู่ระบบ Google สำเร็จ! สวัสดี ${user.displayName}`;
+        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
+      } else {
+        throw new Error("API did not return access_token for Google user");
+      }
 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
-      }
-    }
-  };
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else {
+        console.error("Google login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
+      }
+      setIsProcessing(false); // เพิ่ม setIsProcessing(false) ใน catch
+    }
+  };
 
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result._tokenResponse;
+  // --- [จุดที่ 4: ปรับปรุง handleFacebookLogin] ---
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result._tokenResponse;
 
-      const userData = {
-        email: user.email,
-        first_name: user.firstName || "",
-        last_name: user.lastName || "",
-        provider: "facebook",
-        access_token: user.oauthAccessToken,
-      };
+      const userData = {
+        email: user.email,
+        first_name: user.firstName || "",
+        last_name: user.lastName || "",
+        provider: "facebook",
+        access_token: user.oauthAccessToken, // ใช้ oauthAccessToken สำหรับ Facebook
+      };
 
-      const response = await fetch(DB_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(DB_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to save Facebook user to DB");
-      }
-      
-      const userFromDb = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save Facebook user to DB");
+      }
+      
+      const userFromDb = await response.json();
 
-      if (userFromDb && userFromDb.access_token) {
-        localStorage.setItem('accessToken', userFromDb.access_token);
-        alert(`เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`);
-        navigate("/Home");
-      } else {
-        throw new Error("API did not return access_token for Facebook user");
-      }
+      // --- [แก้ไข] ---
+      if (userFromDb && userFromDb.access_token) {
+        const successMessage = `เข้าสู่ระบบ Facebook สำเร็จ! สวัสดี ${user.displayName}`;
+        await checkUserOrgsAndNavigate(userFromDb, successMessage); // <-- เรียกใช้ฟังก์ชันใหม่
+      } else {
+        throw new Error("API did not return access_token for Facebook user");
+      }
 
-    } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
-      }
-    }
-  };
+    } catch (error) {
+      if (error.code === "auth/popup-closed-by-user") {
+        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
+      } else {
+        console.error("Facebook login error:", error);
+        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
+      }
+      setIsProcessing(false); // เพิ่ม setIsProcessing(false) ใน catch
+    }
+  };
 
 
   return (
