@@ -60,8 +60,10 @@ const Login = () => {
       // 4. นำทางตามเงื่อนไข
       if (orgCount > 1) {
         navigate("/home1"); // ไปหน้าเลือกองค์กร
-      } else {
-        navigate("/Home"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
+      } else if (orgCount ==1){
+        navigate("/home")
+      }else {
+        navigate("/home1"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
       }
 
     } catch (error) {
