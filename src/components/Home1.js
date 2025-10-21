@@ -56,12 +56,12 @@ const Home1 = () => {
 
         // 4. ทำการ Map ข้อมูลจาก API (ตามที่คุณต้องการ)
         // API field: organization_name -> name
-        // API field: url_log -> img
+        // API field: url_logo -> img
         // เราจะสมมติว่า API คืน organization_id มาเพื่อใช้เป็น key นะครับ
         const formattedData = data.map(item => ({
           id: item.organization_id, // หรือ item.id ขึ้นอยู่กับ API ของคุณ
           name: item.organization_name,
-          img: item.url_log,
+          img: item.url_logo,
           badge: null // API ของคุณอาจไม่มี badge, ใส่ null ไว้ก่อน
         }));
 
