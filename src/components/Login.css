@@ -12,11 +12,7 @@ html, body {
   font-family: "Prompt", sans-serif;
   
   background-image: 
-    radial-gradient(
-      ellipse at center, 
-      rgba(0, 0, 0, 0.2) 0%, /* ตรงกลางโปร่งใส/มืดเล็กน้อย */
-      rgba(0, 0, 0, 0.9) 100% /* ที่ขอบ มืดทึบ 90% */
-    ),
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
     url('https://www.shutterstock.com/image-photo/aerial-view-traffic-transportation-during-600nw-2522794113.jpg'); 
   background-size: cover;  
   background-position: center;
