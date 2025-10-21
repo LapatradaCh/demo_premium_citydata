@@ -4,140 +4,135 @@ import { useNavigate } from 'react-router-dom';
 import liff from "@line/liff";
 import './Home1.css';
 
-// --- vvv ลบ const agencies ที่ hardcode ไว้ออก vvv ---
+// --- vvv ลบ const agencies ที่ hardcode ออกไป vvv ---
 // const agencies = [ ... ];
-// --- ^^^ ลบ const agencies ที่ hardcode ไว้ออก ^^^ ---
+// --- ^^^ สิ้นสุดการลบ ^^^ ---
 
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // --- vvv ส่วนที่อัปเดต vvv ---
-  const [agencies, setAgencies] = useState([]); // State สำหรับเก็บข้อมูลจริงจาก API
-  const [filteredAgencies, setFilteredAgencies] = useState([]); // State สำหรับแสดงผล (หลังค้นหา)
-  const [isLoading, setIsLoading] = useState(true); // State สำหรับ Loading
-  const [error, setError] = useState(null); // State สำหรับ Error
-  // --- ^^^ สิ้นสุดส่วนที่อัปเดต ^^^ ---
-
   const navigate = useNavigate();
 
-  // --- vvv ส่วนที่เพิ่มมา (useEffect) vvv ---
+  // --- vvv ส่วนที่เพิ่มเข้ามาสำหรับ Fetch API vvv ---
+  const [allAgencies, setAllAgencies] = useState([]); // เก็บ master list จาก API
+  const [filteredAgencies, setFilteredAgencies] = useState([]); // state ที่ใช้แสดงผล (เริ่มต้นเป็น array ว่าง)
+  const [isLoading, setIsLoading] = useState(true); // สถานะกำลังโหลด
+  const [error, setError] = useState(null); // สถานะ error
+
   useEffect(() => {
+    // ฟังก์ชันสำหรับดึงข้อมูลหน่วยงาน
     const fetchAgencies = async () => {
-      // 1. ดึง user_id และ token จาก localStorage
-      // (ผมสมมติว่าคุณเก็บ user_id ไว้นะครับ ถ้าไม่ได้เก็บ ต้องหาวิธีส่ง user_id มา)
-      const userId = localStorage.getItem("user_id"); 
-      const accessToken = localStorage.getItem("accessToken");
-
-      // 2. ถ้าไม่มีข้อมูล user หรือ token ให้หยุดทำงาน
-      if (!userId || !accessToken) {
-        console.error("User ID or Access Token not found. Cannot fetch agencies.");
-        setError("ไม่พบข้อมูลผู้ใช้งาน กรุณาเข้าสู่ระบบใหม่");
-        setIsLoading(false);
-        // อาจจะ navigate ไปหน้า login เลยก็ได้
-        // navigate("/"); 
-        return;
-      }
-
-      // 3. สร้าง URL ตามที่คุณต้องการ
-      const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+      setIsLoading(true);
+      setError(null);
 
       try {
+        // 1. ดึง user_id และ token จาก localStorage
+        const userId = localStorage.getItem('user_id'); 
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (!userId) {
+          throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
+        }
+        
+        if (!accessToken) {
+          throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
+        }
+
+        // 2. สร้าง URL ตามที่ร้องขอ
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+
+        // 3. เรียก API
         const response = await fetch(apiUrl, {
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`, // ส่ง Token ไปด้วย
-          },
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
         }
 
         const data = await response.json();
 
-        // 4. Map ข้อมูลที่ได้จาก API ให้ตรงกับ format ที่ UI ต้องการ
-        // (ผมสมมติว่า ID ขององค์กรคือ organization_id)
-        const formattedData = data.map(org => ({
-          id: org.organization_id, // หรือ ID อื่นๆ ที่เป็น unique key
-          name: org.organization_name, // ตามที่คุณระบุ
-          img: org.url_log, // ตามที่คุณระบุ
-          badge: null // API ของคุณอาจไม่มี badge, ถ้ามีก็ map มาได้เลย
+        // 4. ทำการ Map ข้อมูลจาก API (ตามที่คุณต้องการ)
+        // API field: organization_name -> name
+        // API field: url_log -> img
+        // เราจะสมมติว่า API คืน organization_id มาเพื่อใช้เป็น key นะครับ
+        const formattedData = data.map(item => ({
+          id: item.organization_id, // หรือ item.id ขึ้นอยู่กับ API ของคุณ
+          name: item.organization_name,
+          img: item.url_log,
+          badge: null // API ของคุณอาจไม่มี badge, ใส่ null ไว้ก่อน
         }));
 
-        setAgencies(formattedData); // เก็บข้อมูลต้นฉบับ
-        setFilteredAgencies(formattedData); // ตั้งค่าข้อมูลที่จะแสดงผล
-        
+        // 5. อัปเดต State
+        setAllAgencies(formattedData);
+        setFilteredAgencies(formattedData);
+
       } catch (err) {
-        console.error("Failed to fetch agencies:", err);
-        setError("ไม่สามารถดึงข้อมูลหน่วยงานได้");
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูลหน่วยงาน:", err);
+        setError(err.message);
       } finally {
-        setIsLoading(false); // หยุด Loading
+        setIsLoading(false); // สิ้นสุดการโหลด
       }
     };
 
-    fetchAgencies();
-  }, [navigate]); // ใส่ navigate ไว้ใน dependency array (เผื่อใช้ในอนาคต)
-  // --- ^^^ สิ้นสุดส่วนที่เพิ่มมา (useEffect) ^^^ ---
+    fetchAgencies(); // เรียกใช้งานฟังก์ชันเมื่อ component โหลด
+  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
+  // --- ^^^ สิ้นสุดส่วนที่เพิ่มเข้ามา ^^^ ---
 
-  
+
   const handleLogout = async () => {
-    // ... (ส่วน Logout ของคุณเหมือนเดิม ไม่ได้แก้ไข) ...
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("Initiating logout for token:", accessToken);
-
-    try {
-      if (accessToken) {
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-        await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log("Backend has been notified of the logout.");
-      }
-    } catch (error) {
-      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
-    } finally {
-      console.log("Executing client-side cleanup.");
-      if (liff.isLoggedIn()) {
-        liff.logout();
-      }
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); // <-- แนะนำให้ลบ user_id ออกด้วย
-      navigate("/");
-    }
+    // ... (ส่วนของ Logout ยังคงเดิม ไม่เปลี่ยนแปลง) ...
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("Initiating logout for token:", accessToken);
+ 
+    try {
+      if (accessToken) {
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log("Backend has been notified of the logout.");
+      }
+    } catch (error) {
+      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    } finally {
+      console.log("Executing client-side cleanup.");
+ 
+      if (liff.isLoggedIn()) {
+        liff.logout();
+      }
+ 
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id"); // <-- แนะนำให้ลบ user_id ออกไปด้วย
+ 
+      navigate("/");
+    }
   };
 
-  // --- vvv ส่วนที่อัปเดต (Logic ค้นหา) vvv ---
+
   const handleSearch = () => {
-    // กรองจาก `agencies` (ข้อมูลต้นฉบับ)
-    const filtered = agencies.filter((agency) =>
+    // --- vvv อัปเดตให้ค้นหาจาก allAgencies vvv ---
+    const filtered = allAgencies.filter((agency) =>
       agency.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredAgencies(filtered); // อัปเดต state ที่ใช้แสดงผล
+    // --- ^^^ สิ้นสุดการอัปเดต ^^^ ---
+    setFilteredAgencies(filtered);
   };
 
   const handleClear = () => {
     setSearchTerm('');
-    setFilteredAgencies(agencies); // Reset กลับไปใช้ข้อมูลต้นฉบับ
+    // --- vvv อัปเดตให้รีเซ็ตเป็น allAgencies vvv ---
+    setFilteredAgencies(allAgencies);
+    // --- ^^^ สิ้นสุดการอัปเดต ^^^ ---
   };
-  // --- ^^^ สิ้นสุดส่วนที่อัปเดต (Logic ค้นหา) ^^^ ---
 
   const handleAgencyClick = () => navigate('/home');
-
-  // --- vvv ส่วนที่อัปเดต (JSX) vvv ---
-  // แสดง Loading
-  if (isLoading) {
-    return <div className="app-body"><div className="loading-spinner"></div><p>กำลังโหลดข้อมูล...</p></div>;
-  }
-
-  // แสดง Error
-  if (error) {
-    return <div className="app-body"><p className="error-message">เกิดข้อผิดพลาด: {error}</p></div>;
-  }
-  // --- ^^^ สิ้นสุดส่วนที่อัปเดต (JSX) ^^^ ---
 
   return (
     <div className="app-body">
@@ -174,24 +169,26 @@ const Home1 = () => {
 
       {/* Agency Grid */}
       <div className="agency-section">
-        {/*
-          * ส่วนนี้ไม่ต้องแก้เลย เพราะมันอ่านจาก `filteredAgencies`
-          * ซึ่งเราจัดการอัปเดตมันใน useEffect, handleSearch, handleClear อยู่แล้ว
-        */}
-        {filteredAgencies.length === 0 ? (
+        {/* --- vvv ส่วนจัดการ Loading และ Error vvv --- */}
+        {isLoading ? (
+          <p className="loading-message">กำลังโหลดข้อมูลหน่วยงาน...</p>
+        ) : error ? (
+          <p className="error-message">เกิดข้อผิดพลาด: {error}</p>
+        ) : filteredAgencies.length === 0 ? (
+        // --- ^^^ สิ้นสุดส่วนจัดการ Loading และ Error ^^^ --- */}
           <p className="no-results">ไม่พบหน่วยงาน</p>
         ) : (
           <div className="agency-grid">
             {filteredAgencies.map((agency) => (
               <div
-                key={agency.id} // <-- ใช้ ID ที่ได้จาก API
+                key={agency.id} // <-- id นี้จะมาจาก item.organization_id ที่เรา map ไว้
                 className="agency-item"
                 onClick={handleAgencyClick}
               >
                 <div className="agency-img">
                   <img
-                    src={agency.img} // <-- ใช้ img (url_log) จาก API
-                    alt={agency.name}
+                    src={agency.img} // <-- img นี้จะมาจาก item.url_log
+                    alt={agency.name} // <-- name นี้จะมาจาก item.organization_name
                     title={agency.name}
                     onError={(e) => {
                       e.target.onerror = null;
@@ -201,7 +198,7 @@ const Home1 = () => {
                   {agency.badge && <div className="agency-badge">{agency.badge}</div>}
                 </div>
                 <div className="agency-name" title="คลิกเพื่อเข้าหน่วยงานนี้">
-                  {agency.name} {/* <-- ใช้ name (organization_name) จาก API */}
+                  {agency.name} {/* <-- name นี้จะมาจาก item.organization_name */}
                 </div>
               </div>
             ))}
