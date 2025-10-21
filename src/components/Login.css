@@ -10,7 +10,7 @@
   background-image: 
     linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
     url('https://www.shutterstock.com/image-photo/aerial-view-traffic-transportation-during-600nw-2522794113.jpg'); 
-  background-size: cover;  
+  background-size: 100% 100%;  
   background-position: center;
   background-repeat: no-repeat;
   padding: 1rem;
