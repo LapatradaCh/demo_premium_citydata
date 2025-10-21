@@ -1,86 +1,143 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // <-- เพิ่ม useEffect
 import { Search, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import liff from "@line/liff"; // <-- เพิ่ม import นี้
+import liff from "@line/liff";
 import './Home1.css';
 
-const agencies = [
-  { id: 1, name: "หน่วยงานราชการ A", img: "https://placehold.co/100x100/A0AEC0/ffffff?text=A", badge: "ใหม่" },
-  { id: 2, name: "หน่วยงานราชการ B", img: "https://placehold.co/100x100/F59E0B/ffffff?text=B" },
-  { id: 3, name: "หน่วยงานราชการ C", img: "https://placehold.co/100x100/10B981/ffffff?text=C", badge: "ยอดนิยม" },
-  { id: 4, name: "หน่วยงานราชการ D", img: "https://placehold.co/100x100/3B82F6/ffffff?text=D" },
-  { id: 5, name: "หน่วยงานราชการ E", img: "https://placehold.co/100x100/EC4899/ffffff?text=E" },
-  { id: 6, name: "หน่วยงานราชการ F", img: "https://placehold.co/100x100/F87171/ffffff?text=F" },
-  { id: 7, name: "หน่วยงานราชการ G", img: "https://placehold.co/100x100/8B5CF6/ffffff?text=G" },
-  { id: 8, name: "หน่วยงานราชการ H", img: "https://placehold.co/100x100/22D3EE/ffffff?text=H" },
-  { id: 9, name: "หน่วยงานราชการ I", img: "https://placehold.co/100x100/FACC15/ffffff?text=I", badge: "ใหม่" },
-  { id: 10, name: "หน่วยงานราชการ J", img: "https://placehold.co/100x100/EC4899/ffffff?text=J" },
-  { id: 11, name: "หน่วยงานราชการ K", img: "https://placehold.co/100x100/3B82F6/ffffff?text=K" },
-  { id: 12, name: "หน่วยงานราชการ L", img: "https://placehold.co/100x100/10B981/ffffff?text=L" },
-];
+// --- vvv ลบ const agencies ที่ hardcode ไว้ออก vvv ---
+// const agencies = [ ... ];
+// --- ^^^ ลบ const agencies ที่ hardcode ไว้ออก ^^^ ---
 
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredAgencies, setFilteredAgencies] = useState(agencies);
-  const navigate = useNavigate();
-
+  
   // --- vvv ส่วนที่อัปเดต vvv ---
-  /**
-   * ฟังก์ชันสำหรับออกจากระบบ (ฉบับสมบูรณ์)
-   * ทำการเรียก API ไปยัง Backend เพื่อบันทึก Log ก่อน แล้วจึงเคลียร์ข้อมูลฝั่ง Client
-   */
-  const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("Initiating logout for token:", accessToken);
-
-    try {
-      // Step 1: Notify the backend (only if a token exists)
-      if (accessToken) {
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-        await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log("Backend has been notified of the logout.");
-      }
-    } catch (error) {
-      // It's okay if the backend call fails. We still want to log the user out on the client-side.
-      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
-    } finally {
-      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
-      console.log("Executing client-side cleanup.");
-
-      // Logout from LIFF if the user is logged in via LIFF
-      if (liff.isLoggedIn()) {
-        liff.logout();
-      }
-
-      // ALWAYS remove the token from local storage, regardless of login method
-      localStorage.removeItem("accessToken");
-
-      // ALWAYS navigate the user back to the login page for a consistent experience
-      navigate("/"); // Or '/login'
-    }
-  };
+  const [agencies, setAgencies] = useState([]); // State สำหรับเก็บข้อมูลจริงจาก API
+  const [filteredAgencies, setFilteredAgencies] = useState([]); // State สำหรับแสดงผล (หลังค้นหา)
+  const [isLoading, setIsLoading] = useState(true); // State สำหรับ Loading
+  const [error, setError] = useState(null); // State สำหรับ Error
   // --- ^^^ สิ้นสุดส่วนที่อัปเดต ^^^ ---
 
+  const navigate = useNavigate();
 
+  // --- vvv ส่วนที่เพิ่มมา (useEffect) vvv ---
+  useEffect(() => {
+    const fetchAgencies = async () => {
+      // 1. ดึง user_id และ token จาก localStorage
+      // (ผมสมมติว่าคุณเก็บ user_id ไว้นะครับ ถ้าไม่ได้เก็บ ต้องหาวิธีส่ง user_id มา)
+      const userId = localStorage.getItem("user_id"); 
+      const accessToken = localStorage.getItem("accessToken");
+
+      // 2. ถ้าไม่มีข้อมูล user หรือ token ให้หยุดทำงาน
+      if (!userId || !accessToken) {
+        console.error("User ID or Access Token not found. Cannot fetch agencies.");
+        setError("ไม่พบข้อมูลผู้ใช้งาน กรุณาเข้าสู่ระบบใหม่");
+        setIsLoading(false);
+        // อาจจะ navigate ไปหน้า login เลยก็ได้
+        // navigate("/"); 
+        return;
+      }
+
+      // 3. สร้าง URL ตามที่คุณต้องการ
+      const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+
+      try {
+        const response = await fetch(apiUrl, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`, // ส่ง Token ไปด้วย
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // 4. Map ข้อมูลที่ได้จาก API ให้ตรงกับ format ที่ UI ต้องการ
+        // (ผมสมมติว่า ID ขององค์กรคือ organization_id)
+        const formattedData = data.map(org => ({
+          id: org.organization_id, // หรือ ID อื่นๆ ที่เป็น unique key
+          name: org.organization_name, // ตามที่คุณระบุ
+          img: org.url_log, // ตามที่คุณระบุ
+          badge: null // API ของคุณอาจไม่มี badge, ถ้ามีก็ map มาได้เลย
+        }));
+
+        setAgencies(formattedData); // เก็บข้อมูลต้นฉบับ
+        setFilteredAgencies(formattedData); // ตั้งค่าข้อมูลที่จะแสดงผล
+        
+      } catch (err) {
+        console.error("Failed to fetch agencies:", err);
+        setError("ไม่สามารถดึงข้อมูลหน่วยงานได้");
+      } finally {
+        setIsLoading(false); // หยุด Loading
+      }
+    };
+
+    fetchAgencies();
+  }, [navigate]); // ใส่ navigate ไว้ใน dependency array (เผื่อใช้ในอนาคต)
+  // --- ^^^ สิ้นสุดส่วนที่เพิ่มมา (useEffect) ^^^ ---
+
+  
+  const handleLogout = async () => {
+    // ... (ส่วน Logout ของคุณเหมือนเดิม ไม่ได้แก้ไข) ...
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("Initiating logout for token:", accessToken);
+
+    try {
+      if (accessToken) {
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log("Backend has been notified of the logout.");
+      }
+    } catch (error) {
+      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    } finally {
+      console.log("Executing client-side cleanup.");
+      if (liff.isLoggedIn()) {
+        liff.logout();
+      }
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id"); // <-- แนะนำให้ลบ user_id ออกด้วย
+      navigate("/");
+    }
+  };
+
+  // --- vvv ส่วนที่อัปเดต (Logic ค้นหา) vvv ---
   const handleSearch = () => {
+    // กรองจาก `agencies` (ข้อมูลต้นฉบับ)
     const filtered = agencies.filter((agency) =>
       agency.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredAgencies(filtered);
+    setFilteredAgencies(filtered); // อัปเดต state ที่ใช้แสดงผล
   };
 
   const handleClear = () => {
     setSearchTerm('');
-    setFilteredAgencies(agencies);
+    setFilteredAgencies(agencies); // Reset กลับไปใช้ข้อมูลต้นฉบับ
   };
+  // --- ^^^ สิ้นสุดส่วนที่อัปเดต (Logic ค้นหา) ^^^ ---
 
   const handleAgencyClick = () => navigate('/home');
+
+  // --- vvv ส่วนที่อัปเดต (JSX) vvv ---
+  // แสดง Loading
+  if (isLoading) {
+    return <div className="app-body"><div className="loading-spinner"></div><p>กำลังโหลดข้อมูล...</p></div>;
+  }
+
+  // แสดง Error
+  if (error) {
+    return <div className="app-body"><p className="error-message">เกิดข้อผิดพลาด: {error}</p></div>;
+  }
+  // --- ^^^ สิ้นสุดส่วนที่อัปเดต (JSX) ^^^ ---
 
   return (
     <div className="app-body">
@@ -117,19 +174,23 @@ const Home1 = () => {
 
       {/* Agency Grid */}
       <div className="agency-section">
+        {/*
+          * ส่วนนี้ไม่ต้องแก้เลย เพราะมันอ่านจาก `filteredAgencies`
+          * ซึ่งเราจัดการอัปเดตมันใน useEffect, handleSearch, handleClear อยู่แล้ว
+        */}
         {filteredAgencies.length === 0 ? (
           <p className="no-results">ไม่พบหน่วยงาน</p>
         ) : (
           <div className="agency-grid">
             {filteredAgencies.map((agency) => (
               <div
-                key={agency.id}
+                key={agency.id} // <-- ใช้ ID ที่ได้จาก API
                 className="agency-item"
                 onClick={handleAgencyClick}
               >
                 <div className="agency-img">
                   <img
-                    src={agency.img}
+                    src={agency.img} // <-- ใช้ img (url_log) จาก API
                     alt={agency.name}
                     title={agency.name}
                     onError={(e) => {
@@ -140,7 +201,7 @@ const Home1 = () => {
                   {agency.badge && <div className="agency-badge">{agency.badge}</div>}
                 </div>
                 <div className="agency-name" title="คลิกเพื่อเข้าหน่วยงานนี้">
-                  {agency.name}
+                  {agency.name} {/* <-- ใช้ name (organization_name) จาก API */}
                 </div>
               </div>
             ))}
