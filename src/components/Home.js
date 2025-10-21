@@ -18,13 +18,10 @@ const reportData = [
   { id:"#2025-ETNEZE", detail:"มีต้นไม้กีดขวาง ทางเดิน...", image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_bRmXqJQOpLMvoKvL89IYlHse2LioPsA8sQ&s", category:"ต้นไม้", datetime_in:"พฤ. 13 มี.ค. 68 16:08 น.", datetime_out:"ต.ค. 3 ส.ค. 69 15:23 น.", location:"460 หมู่ 12 ถนน มิตรภาพ", responsible_unit:"ทีมพัฒนา", status:"เสร็จสิ้น", rating:4 },
 ];
 
-// Dropdown Data (แก้ไขตรงนี้)
+// Dropdown Data
 const cardsData = {
   "แผนที่":[{ icon:<FaMapMarkedAlt />, label:"แผนที่สาธารณะ" },{ icon:<FaMapMarkedAlt />, label:"แผนที่ภายใน" }],
-  "รายการแจ้ง":[
-    { icon:<FaClipboardList />, label:"เฉพาะหน่วยงาน", path: "/home1" }, // <-- เพิ่ม path
-    { icon:<FaClipboardList />, label:"รายการแจ้งรวม" }
-  ],
+  "รายการแจ้ง":[{ icon:<FaClipboardList />, label:"เฉพาะหน่วยงาน" },{ icon:<FaClipboardList />, label:"รายการแจ้งรวม" }],
   "สถิติ":[{ icon:<FaChartBar />, label:"สถิติ" },{ icon:<FaChartBar />, label:"สถิติองค์กร" }],
   "ตั้งค่า":[{ icon:<FaCog />, label:"ตั้งค่า" },{ icon:<FaCog />, label:"QRCode หน่วยงาน" },{ icon:<FaCog />, label:"QRCode สร้างเอง" }]
 };
@@ -117,8 +114,8 @@ const ReportTable = () => (
   </div>
 );
 
-// Home
-const Home = () => {
+// Dashboard
+const Dashboard = () => {
   const [activeTab,setActiveTab] = useState("รายการแจ้ง");
   const [dropdownOpen,setDropdownOpen] = useState(null);
   const tabs = ["แผนที่","หน่วยงาน","รายการแจ้ง","สถิติ","ตั้งค่า"];
@@ -231,18 +228,6 @@ const Home = () => {
     }
   };
 
-  // ฟังก์ชันสำหรับจัดการการคลิก Dropdown
-  const handleDropdownClick = (card) => {
-    // ปิด dropdown
-    setDropdownOpen(null); 
-    
-    // ตรวจสอบว่ามี path ที่กำหนดไว้หรือไม่
-    if (card.path) {
-      navigate(card.path); // สั่งให้ย้ายหน้า
-    }
-    // ถ้าไม่มี path ก็ไม่ต้องทำอะไร
-  };
-
 
   return (
     <div>
@@ -265,20 +250,9 @@ const Home = () => {
                 {tab}
                 {cardsData[tab] && cardsData[tab].length>0 && (dropdownOpen===tab?<FiChevronUp className="chevron-icon"/>:<FiChevronDown className="chevron-icon"/>)}
               </button>
-              
-              {/* ส่วน Dropdown ที่แก้ไขแล้ว */}
               {dropdownOpen===tab && cardsData[tab] && (
-                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(
-                  <div 
-                    className="dropdown-item" 
-                    key={i} 
-                    onClick={() => handleDropdownClick(card)} // <-- เพิ่ม onClick
-                  >
-                    {card.icon}{card.label}
-                  </div>
-                ))}</div>
+                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(<div className="dropdown-item" key={i}>{card.icon}{card.label}</div>))}</div>
               )}
-
             </div>
           ))}
         </nav>
@@ -298,4 +272,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Dashboard;
