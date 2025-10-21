@@ -28,13 +28,11 @@ const Login = () => {
       }
 
       // 1. เก็บ Token
-      const userId = userFromDb.user_id;
       localStorage.setItem("accessToken", userFromDb.access_token);
-      localStorage.setItem("user_id", userId);
-
+      console.log("Token stored successfully!");
 
       // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
-      
+      const userId = userFromDb.user_id;
       const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
 
       if (!orgCountResponse.ok) {
