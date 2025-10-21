@@ -21,7 +21,7 @@ const reportData = [
 // Dropdown Data
 const cardsData = {
   "แผนที่":[{ icon:<FaMapMarkedAlt />, label:"แผนที่สาธารณะ" },{ icon:<FaMapMarkedAlt />, label:"แผนที่ภายใน" }],
-  "รายการแจ้ง":[{ icon:<FaClipboardList />, label:"เฉพาะหน่วยงาน" path: "/home1" },{ icon:<FaClipboardList />, label:"รายการแจ้งรวม" }],
+  "รายการแจ้ง":[{ icon:<FaClipboardList />, label:"เฉพาะหน่วยงาน" , path: "/home1" },{ icon:<FaClipboardList />, label:"รายการแจ้งรวม" }],
   "สถิติ":[{ icon:<FaChartBar />, label:"สถิติ" },{ icon:<FaChartBar />, label:"สถิติองค์กร" }],
   "ตั้งค่า":[{ icon:<FaCog />, label:"ตั้งค่า" },{ icon:<FaCog />, label:"QRCode หน่วยงาน" },{ icon:<FaCog />, label:"QRCode สร้างเอง" }]
 };
