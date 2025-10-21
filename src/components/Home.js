@@ -167,4 +167,103 @@ const Dashboard = () => {
             logo: firstOrg.url_logo // (จากตาราง view_user_org_details)
           });
         } else {
-          setOrganizationInfo({ name: "ไม่พบหน่วยงาน",
+          setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+        }
+
+      } catch (error) {
+        console.error("Error fetching organization info:", error);
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
+      }
+    };
+
+    fetchOrganizationInfo();
+  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
+  // --- ^^^ สิ้นสุดส่วน useEffect ^^^ ---
+
+
+  // 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("Initiating logout for token:", accessToken);
+
+    try {
+      // Step 1: Notify the backend (only if a token exists)
+      if (accessToken) {
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log("Backend has been notified of the logout.");
+      }
+    } catch (error) {
+      // It's okay if the backend call fails. We still want to log the user out on the client-side.
+      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    } finally {
+      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
+      console.log("Executing client-side cleanup.");
+
+      // Logout from LIFF if the user is logged in via LIFF
+      if (liff.isLoggedIn()) {
+        liff.logout();
+      }
+
+      // ALWAYS remove the token from local storage, regardless of login method
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
+
+      // ALWAYS navigate the user back to the login page for a consistent experience
+      navigate("/"); // Or '/login'
+    }
+  };
+
+
+  return (
+    <div>
+      <div className="top-navigation">
+        {/* --- vvv แก้ไขส่วนแสดงผล Logo และ ชื่อ vvv --- */}
+        <div className="logo-section">
+          <img 
+            src={organizationInfo.logo} 
+            alt="Logo" 
+            className="logo-img"
+            // เพิ่ม Fallback หากรูปจาก API โหลดไม่สำเร็จ
+            onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
+          />
+          <span className="unit-name">{organizationInfo.name}</span>
+        </div>
+        {/* --- ^^^ สิ้นสุดส่วนที่แก้ไข ^^^ --- */}
+
+        <nav className="center-menu">
+          {tabs.map(tab=>(
+            <div key={tab} className="menu-wrapper">
+              <button className={activeTab===tab?"menu-item active":"menu-item"} onClick={()=>{setActiveTab(tab); toggleDropdown(tab);}}>
+                {tab}
+                {cardsData[tab] && cardsData[tab].length>0 && (dropdownOpen===tab?<FiChevronUp className="chevron-icon"/>:<FiChevronDown className="chevron-icon"/>)}
+              </button>
+              {dropdownOpen===tab && cardsData[tab] && (
+                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(<div className="dropdown-item" key={i}>{card.icon}{card.label}</div>))}</div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        <div className="logout-icon">
+          <button onClick={handleLogout}>
+            <FaSignOutAlt size={18} />
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-content">
+        {activeTab==="รายการแจ้ง" && <ReportTable />}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
