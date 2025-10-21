@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} /> {/* หน้า Login */}
         <Route path="/Home" element={<Home />} /> {/* หน้า Home */}
-        <Route path="/Home1" element={<Home />} /> {/* หน้า Home */}
+        <Route path="/Home1" element={<Home1 />} /> {/* หน้า Home */}
       </Routes>
     </Router>
   );
