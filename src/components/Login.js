@@ -29,6 +29,7 @@ const Login = () => {
 
       // 1. เก็บ Token
       localStorage.setItem("accessToken", userFromDb.access_token);
+      coonsole.log("userdata:",userFromDb)
       console.log("Token stored successfully!");
 
       // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
