@@ -43,7 +43,7 @@ const Login = () => {
         // ถ้า API เช็คองค์กรล้มเหลว ก็ยังให้ไปหน้า Home ปกติ
         console.error("Failed to fetch organization count. Navigating to /Home as default.");
         alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
-        navigate("/Home");
+        navigate("/Home1");
         return;
       }
 
