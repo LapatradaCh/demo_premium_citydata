@@ -8,6 +8,13 @@ const agencies = [
   { id: 3, name: "หน่วยงานราชการ C", img: "https://placehold.co/100x100/10B981/ffffff?text=C" },
   { id: 4, name: "หน่วยงานราชการ D", img: "https://placehold.co/100x100/3B82F6/ffffff?text=D" },
   { id: 5, name: "หน่วยงานราชการ E", img: "https://placehold.co/100x100/EC4899/ffffff?text=E" },
+  { id: 6, name: "หน่วยงานราชการ F", img: "https://placehold.co/100x100/F87171/ffffff?text=F" },
+  { id: 7, name: "หน่วยงานราชการ G", img: "https://placehold.co/100x100/8B5CF6/ffffff?text=G" },
+  { id: 8, name: "หน่วยงานราชการ H", img: "https://placehold.co/100x100/22D3EE/ffffff?text=H" },
+  { id: 9, name: "หน่วยงานราชการ I", img: "https://placehold.co/100x100/FACC15/ffffff?text=I" },
+  { id: 10, name: "หน่วยงานราชการ J", img: "https://placehold.co/100x100/EC4899/ffffff?text=J" },
+  { id: 11, name: "หน่วยงานราชการ K", img: "https://placehold.co/100x100/3B82F6/ffffff?text=K" },
+  { id: 12, name: "หน่วยงานราชการ L", img: "https://placehold.co/100x100/10B981/ffffff?text=L" },
 ];
 
 const Home1 = () => {
