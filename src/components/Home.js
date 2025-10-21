@@ -260,7 +260,16 @@ const Home = () => {
                 {cardsData[tab] && cardsData[tab].length>0 && (dropdownOpen===tab?<FiChevronUp className="chevron-icon"/>:<FiChevronDown className="chevron-icon"/>)}
               </button>
               {dropdownOpen===tab && cardsData[tab] && (
-                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(<div className="dropdown-item" key={i}>{card.icon}{card.label}</div>))}</div>
+                <div className="dropdown-menu">{cardsData[tab].map((card,i)=>(
+                  // 3. เพิ่ม onClick ตรงนี้
+                  <div 
+                    className="dropdown-item" 
+                    key={i} 
+                    onClick={() => handleDropdownClick(card)}
+                  >
+                    {card.icon}{card.label}
+                  </div>
+                ))}</div>
               )}
             </div>
           ))}
