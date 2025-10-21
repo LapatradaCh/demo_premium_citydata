@@ -114,8 +114,8 @@ const ReportTable = () => (
   </div>
 );
 
-// Dashboard
-const Dashboard = () => {
+//HOME
+const Home = () => {
   const [activeTab,setActiveTab] = useState("รายการแจ้ง");
   const [dropdownOpen,setDropdownOpen] = useState(null);
   const tabs = ["แผนที่","หน่วยงาน","รายการแจ้ง","สถิติ","ตั้งค่า"];
