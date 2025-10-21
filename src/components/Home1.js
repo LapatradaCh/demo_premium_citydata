@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Search, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import liff from "@line/liff"; // <-- 1. เพิ่มการ import นี้
 import './Home1.css';
-// 1. Import LIFF เข้ามา
-import liff from "@line/liff";
 
 const agencies = [
   { id: 1, name: "หน่วยงานราชการ A", img: "https://placehold.co/100x100/A0AEC0/ffffff?text=A" },
@@ -25,15 +24,11 @@ const Home1 = () => {
   const [filteredAgencies, setFilteredAgencies] = useState(agencies);
   const navigate = useNavigate();
 
-  // 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้
-  /**
-   * ฟังก์ชันสำหรับออกจากระบบ (ฉบับสมบูรณ์)
-   * ทำการเรียก API ไปยัง Backend เพื่อบันทึก Log ก่อน แล้วจึงเคลียร์ข้อมูลฝั่ง Client
-   */
-  const handleLogout = async () => {
+  // --- 2. แทนที่ handleLogout เดิมด้วยฟังก์ชันนี้ ---
+  const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     console.log("Initiating logout for token:", accessToken);
-
+  
     try {
       // Step 1: Notify the backend (only if a token exists)
       if (accessToken) {
@@ -53,19 +48,20 @@ const Home1 = () => {
     } finally {
       // Step 2: Perform client-side logout actions (this block ALWAYS runs)
       console.log("Executing client-side cleanup.");
-
+  
       // Logout from LIFF if the user is logged in via LIFF
       if (liff.isLoggedIn()) {
         liff.logout();
       }
-
+  
       // ALWAYS remove the token from local storage, regardless of login method
       localStorage.removeItem("accessToken");
-
+  
       // ALWAYS navigate the user back to the login page for a consistent experience
       navigate("/"); // Or '/login'
     }
   };
+  // --- สิ้นสุดส่วนที่แทนที่ ---
 
   const handleSearch = () => {
     const filtered = agencies.filter((agency) =>
@@ -82,10 +78,9 @@ const Home1 = () => {
     <div className="app-body">
       {/* Logout Button */}
       <div className="logout-icon">
-        {/* ปุ่มนี้จะเรียกใช้ handleLogout ตัวใหม่ */}
-        <button onClick={handleLogout}> 
+        <button onClick={handleLogout}>
           <LogOut size={18} />
-          <span>ออกจากระบบ</span>
+          <span>ออกจากระบบ</span> {/* ข้อความไม่เลื่อน */}
         </button>
       </div>
 
