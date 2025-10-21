@@ -23,8 +23,8 @@ const Login = () => {
     async (userFromDb, successMessage) => {
       // ตรวจสอบว่ามีข้อมูล user ที่จำเป็นหรือไม่
       // **ข้อสมมติ**: ผมใช้ userFromDb.user_id ถ้าใน DB ของคุณเป็น id เฉยๆ ให้แก้ตรงนี้
-      // *** แก้ไข: ใช้ userFromDb.id ตามที่คุยกันใน schema ***
-      if (!userFromDb || !userFromDb.id || !userFromDb.access_token) {
+      // *** แก้ไข: ใช้ userFromDb.user_id ตามที่คุยกันใน schema ***
+      if (!userFromDb || !userFromDb.user_id || !userFromDb.access_token) {
         console.error("Invalid user data received from DB", userFromDb);
         setErrorMessage("ข้อมูลผู้ใช้ไม่สมบูรณ์ ไม่สามารถตรวจสอบองค์กรได้");
         setIsProcessing(false);
@@ -32,14 +32,14 @@ const Login = () => {
       }
 
       try {
-        console.log(`Checking organizations for user_id: ${userFromDb.id}`);
+        console.log(`Checking organizations for user_id: ${userFromDb.user_id}`);
 
         // --- [สำคัญมาก: ต้องสร้าง API นี้ที่ Backend] ---
         // นี่คือ API ที่คุณต้องสร้างเพิ่มใน Vercel
         // เพื่อคืนค่า Array ขององค์กรที่ User คนนี้สังกัดอยู่
         // (อิงจากตาราง users_organizations)
         const orgsResponse = await fetch(
-          `${DB_API}/${userFromDb.id}/organizations`, // URL คือ .../api/users/USER_ID/organizations
+          `${DB_API}/${userFromDb.user_id}/organizations`, // URL คือ .../api/users/USER_ID/organizations
           {
             method: "GET",
             headers: {
