@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Search, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Home1.css';
-
 const agencies = [
   { id: 1, name: "หน่วยงานราชการ A", img: "https://placehold.co/100x100/A0AEC0/ffffff?text=A" },
   { id: 2, name: "หน่วยงานราชการ B", img: "https://placehold.co/100x100/F59E0B/ffffff?text=B" },
