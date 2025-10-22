@@ -128,7 +128,6 @@ const Home = () => {
   });
 
 
-  // --- (จุดที่แก้ไข) ---
   useEffect(() => {
     const fetchOrganizationInfo = async () => {
       try {
@@ -136,23 +135,23 @@ const Home = () => {
         const cachedOrg = localStorage.getItem("selectedOrg");
 
         if (cachedOrg) {
-          // 1.1 ถ้ามี: ใช้ข้อมูลนั้นเลย (Flow ปกติ)
+          // 1.1 ถ้ามี: ใช้ข้อมูลนั้นเลย ไม่ต้อง fetch API
           const org = JSON.parse(cachedOrg);
           setOrganizationInfo({
             name: org.name,
-            logo: org.img 
+            logo: org.img // <-- รับค่า .img จากที่ Home1 ส่งมา
           });
+
+          // (สำคัญ) ล้างค่าที่เลือกไว้ เพื่อให้ครั้งต่อไปที่เข้าหน้านี้ตรงๆ มันจะโหลดค่า default
           localStorage.removeItem("selectedOrg");
 
         } else {
-          // 1.2 ถ้าไม่มี (เช่น เข้า /home ตรงๆ): ไป fetch API
+          // 1.2 ถ้าไม่มี (เช่น เข้า /home ตรงๆ): ไป fetch API หาค่า default (หน่วยงานแรก)
           const userId = localStorage.getItem("user_id");
           const accessToken = localStorage.getItem("accessToken");
 
           if (!userId || !accessToken) {
-            // ถ้าไม่มี token/user ให้เด้งกลับไปหน้า login
-            navigate("/"); 
-            return; // จบการทำงาน
+            throw new Error("ไม่พบ User ID หรือ Token");
           }
 
           const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
@@ -168,23 +167,13 @@ const Home = () => {
 
           const data = await response.json();
 
-          // 2. ตรวจสอบจำนวนหน่วยงานที่ได้กลับมา
           if (data && data.length > 0) {
-            
-            if (data.length === 1) {
-              // 2.1) ถ้ามี 1 หน่วยงาน: ให้ใช้เป็น default ได้เลย
-              const firstOrg = data[0]; 
-              setOrganizationInfo({
-                name: firstOrg.organization_name,
-                logo: firstOrg.url_logo
-              });
-            } else {
-              // 2.2) ถ้ามี "มากกว่า 1 หน่วยงาน": บังคับกลับไปหน้าเลือก
-              navigate("/home1");
-            }
-
+            const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
+            setOrganizationInfo({
+              name: firstOrg.organization_name,
+              logo: firstOrg.url_logo
+            });
           } else {
-            // 2.3) ถ้า "ไม่มี" หน่วยงาน: แสดงว่าไม่พบ
             setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
           }
         }
@@ -192,18 +181,14 @@ const Home = () => {
       } catch (error) {
         console.error("Error fetching organization info:", error);
         setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
-        // ถ้า Error เพราะ Token หมดอายุ หรือไม่ถูกต้อง ก็ควรเด้งกลับ
-        if (!localStorage.getItem("accessToken")) {
-            navigate("/");
-        }
       }
     };
 
     fetchOrganizationInfo();
-  }, [navigate]); // <-- (สำคัญ) ต้องใส่ navigate ใน dependency array
-  // --- (จบจุดที่แก้ไข) ---
+  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
 
-
+  // --- (จุดที่ 1) ---
+  // ฟังก์ชันใหม่สำหรับจัดการการคลิกแท็บ
   const handleTabClick = (tab) => {
     if (tab === "หน่วยงาน") {
       // 1. ถ้าคลิก "หน่วยงาน" ให้ navigate กลับไปหน้าหลัก (หน้าเลือกหน่วยงาน)
@@ -214,6 +199,7 @@ const Home = () => {
       toggleDropdown(tab);
     }
   };
+  // --- (จบจุดที่ 1) ---
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -273,10 +259,13 @@ const Home = () => {
           {tabs.map(tab => (
             <div key={tab} className="menu-wrapper">
               
+              {/* --- (จุดที่ 2) --- */}
               <button 
                 className={activeTab === tab ? "menu-item active" : "menu-item"} 
                 onClick={() => handleTabClick(tab)} // <-- เปลี่ยนมาเรียกฟังก์ชันนี้
               >
+              {/* --- (จบจุดที่ 2) --- */}
+              
                 {tab}
                 {cardsData[tab] && cardsData[tab].length > 0 && (dropdownOpen === tab ? <FiChevronUp className="chevron-icon" /> : <FiChevronDown className="chevron-icon" />)}
               </button>
