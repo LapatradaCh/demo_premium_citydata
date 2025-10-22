@@ -135,7 +135,10 @@ const Home1 = () => {
   const handleAgencyClick = (agency) => {
     // 1. เก็บข้อมูลหน่วยงานที่เลือก (ทั้ง object) ลงใน localStorage
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
-    
+
+    // ✅ 2. เก็บค่าไว้เป็นหน่วยงานล่าสุดด้วย
+    localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
+      
     // 2. นำทางไปหน้า /home (หน้า Dashboard)
     navigate('/home');
   };
