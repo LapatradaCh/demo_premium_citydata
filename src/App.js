@@ -1,5 +1,5 @@
 // App.js
-import Dashboard from './components/Dashboard';
+import Home from './components/Home';
 import Home1 from './components/Home1';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute'; // <-- 1. Import ยามเข้ามา
