@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import "./Login.css";
+import "./Login.module.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { jwtDecode } from "jwt-decode";
