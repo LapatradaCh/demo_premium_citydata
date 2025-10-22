@@ -101,7 +101,7 @@ const Home1 = () => {
       
       console.log("Executing client-side cleanup.");
 
-      if (liff.!isLoggedIn()) {
+      if (liff.isLoggedIn()) {
         liff.logout();
       }
 
