@@ -25,3 +25,4 @@ import ProtectedRoute from './components/ProtectedRoute'; // <-- 1. Import à¸¢à¸
     } 
   />
 </Routes>
+export default App;
