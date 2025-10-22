@@ -107,7 +107,6 @@ body .texture-overlay {
 
 /* แสงสะท้อนมุม */
 body::after {
-  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
   mix-blend-mode: overlay;
 }
 
