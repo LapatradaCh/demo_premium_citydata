@@ -128,64 +128,81 @@ const Home = () => {
   });
 
 
-  useEffect(() => {
-    const fetchOrganizationInfo = async () => {
-      try {
-        // 1. ตรวจสอบว่ามีข้อมูลที่ถูกเลือกมาจากหน้า Home1 หรือไม่
-        const cachedOrg = localStorage.getItem("selectedOrg");
+useEffect(() => {
+  const fetchOrganizationInfo = async () => {
+    try {
+      // 1. ตรวจสอบว่า user เคยเลือกหน่วยงานล่าสุดหรือไม่
+      const cachedOrg = localStorage.getItem("selectedOrg");
+      const lastOrg = localStorage.getItem("lastSelectedOrg");
 
-        if (cachedOrg) {
-          // 1.1 ถ้ามี: ใช้ข้อมูลนั้นเลย ไม่ต้อง fetch API
-          const org = JSON.parse(cachedOrg);
-          setOrganizationInfo({
-            name: org.name,
-            logo: org.img // <-- รับค่า .img จากที่ Home1 ส่งมา
-          });
+      if (cachedOrg) {
+        // 1.1 ถ้ามีค่า selectedOrg จากหน้า Home1: ใช้ค่าเลย
+        const org = JSON.parse(cachedOrg);
+        setOrganizationInfo({
+          name: org.name,
+          logo: org.img
+        });
+        // ล้าง selectedOrg หลังจากใช้แล้ว
+        localStorage.removeItem("selectedOrg");
 
-          // (สำคัญ) ล้างค่าที่เลือกไว้ เพื่อให้ครั้งต่อไปที่เข้าหน้านี้ตรงๆ มันจะโหลดค่า default
-          localStorage.removeItem("selectedOrg");
+        // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่ครั้งต่อไป
+        localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
 
-        } else {
-          // 1.2 ถ้าไม่มี (เช่น เข้า /home ตรงๆ): ไป fetch API หาค่า default (หน่วยงานแรก)
-          const userId = localStorage.getItem("user_id");
-          const accessToken = localStorage.getItem("accessToken");
+      } else if (lastOrg) {
+        // 1.2 ถ้าไม่มี selectedOrg แต่มี lastSelectedOrg (จำหน่วยงานล่าสุด)
+        const org = JSON.parse(lastOrg);
+        setOrganizationInfo({
+          name: org.name,
+          logo: org.img
+        });
 
-          if (!userId || !accessToken) {
-            throw new Error("ไม่พบ User ID หรือ Token");
-          }
+      } else {
+        // 1.3 ถ้าไม่มีค่าใน localStorage เลย: fetch API หาหน่วยงานแรก
+        const userId = localStorage.getItem("user_id");
+        const accessToken = localStorage.getItem("accessToken");
 
-          const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
-
-          const response = await fetch(apiUrl, {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json'
-            }
-          });
-
-          if (!response.ok) throw new Error("Failed to fetch organization info");
-
-          const data = await response.json();
-
-          if (data && data.length > 0) {
-            const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
-            setOrganizationInfo({
-              name: firstOrg.organization_name,
-              logo: firstOrg.url_logo
-            });
-          } else {
-            setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
-          }
+        if (!userId || !accessToken) {
+          throw new Error("ไม่พบ User ID หรือ Token");
         }
 
-      } catch (error) {
-        console.error("Error fetching organization info:", error);
-        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
-      }
-    };
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+        const response = await fetch(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-    fetchOrganizationInfo();
-  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
+        if (!response.ok) throw new Error("Failed to fetch organization info");
+
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+          const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
+          setOrganizationInfo({
+            name: firstOrg.organization_name,
+            logo: firstOrg.url_logo
+          });
+
+          // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่
+          localStorage.setItem("lastSelectedOrg", JSON.stringify({
+            name: firstOrg.organization_name,
+            img: firstOrg.url_logo
+          }));
+        } else {
+          setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+        }
+      }
+
+    } catch (error) {
+      console.error("Error fetching organization info:", error);
+      setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
+    }
+  };
+
+  fetchOrganizationInfo();
+}, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
+
 
   // --- (จุดที่ 1) ---
   // ฟังก์ชันใหม่สำหรับจัดการการคลิกแท็บ
