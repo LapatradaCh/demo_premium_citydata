@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import liff from "@line/liff";
+import liff from "@line/liff"; 
 import './Home1.css';
 
 const Home1 = () => {
