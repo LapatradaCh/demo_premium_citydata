@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect, useRef } from "react";
 import "./css/Home.css";
 import logo from "./logo.png"; // ใช้เป็น fallback
 import {
   FaMapMarkedAlt, FaClipboardList, FaChartBar, FaCog, FaSignOutAlt, FaSearch
 } from "react-icons/fa";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
 import { useNavigate } from "react-router-dom";
 
 // 1. Import LIFF เข้ามา
 import liff from "@line/liff";
+
+// 2. Import Cally (Web Component)
+import "cally";
 
 // ตัวอย่าง Report Data
 const reportData = [
@@ -26,17 +27,50 @@ const cardsData = {
   "ตั้งค่า": [{ icon: <FaCog />, label: "ตั้งค่า" }, { icon: <FaCog />, label: "QRCode หน่วยงาน" }, { icon: <FaCog />, label: "QRCode สร้างเอง" }]
 };
 
-// Date Filter
+// Date Filter (ปรับปรุงใหม่เพื่อใช้ Cally)
 const DateFilter = () => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(null);
-  const formatDate = d => d ? d.toLocaleDateString() : "กดเพื่อเลือกช่วงเวลา";
+  const calendarRef = useRef(null); // สร้าง Ref เพื่ออ้างอิงถึง web component
+
+  const formatDate = d => d ? d.toLocaleDateString('th-TH') : "กดเพื่อเลือกช่วงเวลา";
+
+  // ใช้ useEffect เพื่อเพิ่ม Event Listener ให้กับ web component
+  useEffect(() => {
+    const node = calendarRef.current;
+
+    if (node && show) {
+      // เมื่อ web component มีการ 'change' (เลือกวัน)
+      const handleChange = (e) => {
+        // e.target.value จะเป็นค่าวันที่ (เช่น "2025-10-23")
+        const selectedDate = new Date(e.target.value);
+        setDate(selectedDate);
+        setShow(false); // ซ่อนปฏิทิน
+      };
+
+      node.addEventListener('change', handleChange);
+
+      // Cleanup function: ลบ listener ออกเมื่อ component หายไป
+      return () => {
+        node.removeEventListener('change', handleChange);
+      };
+    }
+  }, [show]); // ให้ Effect นี้ทำงานใหม่ทุกครั้งที่ 'show' เปลี่ยนค่า
+
   return (
     <div style={{ position: "relative" }}>
       <button className="time-range-button" onClick={() => setShow(!show)}>{formatDate(date)}</button>
       {show && (
         <div className="calendar-popup">
-          <Calendar onChange={d => { setDate(d); setShow(false); }} value={date || new Date()} />
+          {/* ใช้ <calendar-date> ที่คุณให้มา */}
+          <calendar-date
+            ref={calendarRef} // ผูก Ref เข้ากับ element
+            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
+          >
+            <svg aria-label="Previous" className="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
+            <svg aria-label="Next" className="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+            <calendar-month></calendar-month>
+          </calendar-date>
         </div>
       )}
     </div>
@@ -128,80 +162,80 @@ const Home = () => {
   });
 
 
-useEffect(() => {
-  const fetchOrganizationInfo = async () => {
-    try {
-      // 1. ตรวจสอบว่า user เคยเลือกหน่วยงานล่าสุดหรือไม่
-      const cachedOrg = localStorage.getItem("selectedOrg");
-      const lastOrg = localStorage.getItem("lastSelectedOrg");
+  useEffect(() => {
+    const fetchOrganizationInfo = async () => {
+      try {
+        // 1. ตรวจสอบว่า user เคยเลือกหน่วยงานล่าสุดหรือไม่
+        const cachedOrg = localStorage.getItem("selectedOrg");
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
 
-      if (cachedOrg) {
-        // 1.1 ถ้ามีค่า selectedOrg จากหน้า Home1: ใช้ค่าเลย
-        const org = JSON.parse(cachedOrg);
-        setOrganizationInfo({
-          name: org.name,
-          logo: org.img
-        });
-        // ล้าง selectedOrg หลังจากใช้แล้ว
-        localStorage.removeItem("selectedOrg");
-
-        // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่ครั้งต่อไป
-        localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
-
-      } else if (lastOrg) {
-        // 1.2 ถ้าไม่มี selectedOrg แต่มี lastSelectedOrg (จำหน่วยงานล่าสุด)
-        const org = JSON.parse(lastOrg);
-        setOrganizationInfo({
-          name: org.name,
-          logo: org.img
-        });
-
-      } else {
-        // 1.3 ถ้าไม่มีค่าใน localStorage เลย: fetch API หาหน่วยงานแรก
-        const userId = localStorage.getItem("user_id");
-        const accessToken = localStorage.getItem("accessToken");
-
-        if (!userId || !accessToken) {
-          throw new Error("ไม่พบ User ID หรือ Token");
-        }
-
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
-        const response = await fetch(apiUrl, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch organization info");
-
-        const data = await response.json();
-
-        if (data && data.length > 0) {
-          const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
+        if (cachedOrg) {
+          // 1.1 ถ้ามีค่า selectedOrg จากหน้า Home1: ใช้ค่าเลย
+          const org = JSON.parse(cachedOrg);
           setOrganizationInfo({
-            name: firstOrg.organization_name,
-            logo: firstOrg.url_logo
+            name: org.name,
+            logo: org.img
+          });
+          // ล้าง selectedOrg หลังจากใช้แล้ว
+          localStorage.removeItem("selectedOrg");
+
+          // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่ครั้งต่อไป
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
+
+        } else if (lastOrg) {
+          // 1.2 ถ้าไม่มี selectedOrg แต่มี lastSelectedOrg (จำหน่วยงานล่าสุด)
+          const org = JSON.parse(lastOrg);
+          setOrganizationInfo({
+            name: org.name,
+            logo: org.img
           });
 
-          // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่
-          localStorage.setItem("lastSelectedOrg", JSON.stringify({
-            name: firstOrg.organization_name,
-            img: firstOrg.url_logo
-          }));
         } else {
-          setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+          // 1.3 ถ้าไม่มีค่าใน localStorage เลย: fetch API หาหน่วยงานแรก
+          const userId = localStorage.getItem("user_id");
+          const accessToken = localStorage.getItem("accessToken");
+
+          if (!userId || !accessToken) {
+            throw new Error("ไม่พบ User ID หรือ Token");
+          }
+
+          const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+          const response = await fetch(apiUrl, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch organization info");
+
+          const data = await response.json();
+
+          if (data && data.length > 0) {
+            const firstOrg = data[0]; // ใช้หน่วยงานแรกเป็น default
+            setOrganizationInfo({
+              name: firstOrg.organization_name,
+              logo: firstOrg.url_logo
+            });
+
+            // เก็บเป็น lastSelectedOrg เผื่อเปิดหน้าใหม่
+            localStorage.setItem("lastSelectedOrg", JSON.stringify({
+              name: firstOrg.organization_name,
+              img: firstOrg.url_logo
+            }));
+          } else {
+            setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo });
+          }
         }
+
+      } catch (error) {
+        console.error("Error fetching organization info:", error);
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
       }
+    };
 
-    } catch (error) {
-      console.error("Error fetching organization info:", error);
-      setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
-    }
-  };
-
-  fetchOrganizationInfo();
-}, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
+    fetchOrganizationInfo();
+  }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
 
 
   // --- (จุดที่ 1) ---
@@ -275,14 +309,14 @@ useEffect(() => {
         <nav className="center-menu">
           {tabs.map(tab => (
             <div key={tab} className="menu-wrapper">
-              
+
               {/* --- (จุดที่ 2) --- */}
-              <button 
-                className={activeTab === tab ? "menu-item active" : "menu-item"} 
+              <button
+                className={activeTab === tab ? "menu-item active" : "menu-item"}
                 onClick={() => handleTabClick(tab)} // <-- เปลี่ยนมาเรียกฟังก์ชันนี้
               >
-              {/* --- (จบจุดที่ 2) --- */}
-              
+                {/* --- (จบจุดที่ 2) --- */}
+
                 {tab}
                 {cardsData[tab] && cardsData[tab].length > 0 && (dropdownOpen === tab ? <FiChevronUp className="chevron-icon" /> : <FiChevronDown className="chevron-icon" />)}
               </button>
