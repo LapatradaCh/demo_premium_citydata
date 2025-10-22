@@ -28,71 +28,59 @@ const cardsData = {
 };
 
 // Helper function เพื่อแปลง Date object เป็น string "YYYY-MM-DD"
+// เพราะ <calendar-date> ต้องการค่า value ใน format นี้
 const toYYYYMMDD = (d) => {
   if (!d) return null;
+  // ใช้ toISOString() แล้วตัดเอาเฉพาะส่วนวันที่
   return d.toISOString().split('T')[0];
 };
 
-// Date Filter (ปรับปรุงใหม่เป็น Mobile-First Modal)
+// Date Filter (ปรับปรุงใหม่เพื่อใช้ Cally และ default วันปัจจุบัน)
 const DateFilter = () => {
   const [show, setShow] = useState(false);
+  // ตั้งค่าเริ่มต้น (useState) ให้เป็นวันปัจจุบัน
   const [date, setDate] = useState(new Date()); 
-  const calendarRef = useRef(null); 
+  const calendarRef = useRef(null); // สร้าง Ref เพื่ออ้างอิงถึง web component
 
   const formatDate = d => d ? d.toLocaleDateString('th-TH') : "กดเพื่อเลือกช่วงเวลา";
 
-  // useEffect จะทำงานเมื่อ 'show' เป็น true (Modal เปิด)
+  // ใช้ useEffect เพื่อเพิ่ม Event Listener ให้กับ web component
   useEffect(() => {
     const node = calendarRef.current;
 
     if (node && show) {
+      // เมื่อ web component มีการ 'change' (เลือกวัน)
       const handleChange = (e) => {
+        // e.target.value จะเป็นค่าวันที่ (เช่น "2025-10-23")
         const selectedDate = new Date(e.target.value);
         setDate(selectedDate);
-        setShow(false); // <--- (สำคัญ) ปิด Modal เมื่อเลือกวัน
+        setShow(false); // ซ่อนปฏิทิน
       };
 
       node.addEventListener('change', handleChange);
 
+      // Cleanup function: ลบ listener ออกเมื่อ component หายไป
       return () => {
         node.removeEventListener('change', handleChange);
       };
     }
-  }, [show]); // ทำงานใหม่ทุกครั้งที่ 'show' เปลี่ยน
+  }, [show]); // ให้ Effect นี้ทำงานใหม่ทุกครั้งที่ 'show' เปลี่ยนค่า
 
   return (
-    // ไม่ต้องใช้ position:relative แล้ว
-    <div>
-      {/* 1. ปุ่มนี้จะทำหน้าที่เปิด Modal */}
-      <button 
-        className="time-range-button" 
-        onClick={() => setShow(true)} // <--- เปลี่ยนเป็น setShow(true)
-      >
-        {formatDate(date)}
-      </button>
-
-      {/* 2. โครงสร้าง Modal ของ DaisyUI */}
+    <div style={{ position: "relative" }}>
+      <button className="time-range-button" onClick={() => setShow(!show)}>{formatDate(date)}</button>
       {show && (
-        <dialog className="modal modal-bottom sm:modal-middle modal-open">
-          
-          {/* 3. กล่องเนื้อหา Modal */}
-          <div className="modal-box">
-            <calendar-date
-              ref={calendarRef} 
-              value={toYYYYMMDD(date)} 
-              className="cally w-full" // <--- ใช้ class แค่นี้พอ
-            >
-              <svg aria-label="Previous" className="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
-              <svg aria-label="Next" className="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
-              <calendar-month></calendar-month>
-            </calendar-date>
-          </div>
-
-          {/* 4. พื้นหลัง (Backdrop) เมื่อคลิกจะปิด Modal */}
-          <form method="dialog" className="modal-backdrop">
-            <button onClick={() => setShow(false)}>close</button>
-          </form>
-        </dialog>
+        <div className="calendar-popup">
+          <calendar-date
+            ref={calendarRef} // ผูก Ref เข้ากับ element
+            value={toYYYYMMDD(date)} // ส่ง props 'value' ที่เป็น format "YYYY-MM-DD"
+            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
+          >
+            <svg aria-label="Previous" className="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
+            <svg aria-label="Next" className="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+            <calendar-month></calendar-month>
+          </calendar-date>
+        </div>
       )}
     </div>
   );
