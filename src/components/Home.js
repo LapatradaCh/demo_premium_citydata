@@ -27,10 +27,19 @@ const cardsData = {
   "ตั้งค่า": [{ icon: <FaCog />, label: "ตั้งค่า" }, { icon: <FaCog />, label: "QRCode หน่วยงาน" }, { icon: <FaCog />, label: "QRCode สร้างเอง" }]
 };
 
-// Date Filter (ปรับปรุงใหม่เพื่อใช้ Cally)
+// Helper function เพื่อแปลง Date object เป็น string "YYYY-MM-DD"
+// เพราะ <calendar-date> ต้องการค่า value ใน format นี้
+const toYYYYMMDD = (d) => {
+  if (!d) return null;
+  // ใช้ toISOString() แล้วตัดเอาเฉพาะส่วนวันที่
+  return d.toISOString().split('T')[0];
+};
+
+// Date Filter (ปรับปรุงใหม่เพื่อใช้ Cally และ default วันปัจจุบัน)
 const DateFilter = () => {
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(null);
+  // ตั้งค่าเริ่มต้น (useState) ให้เป็นวันปัจจุบัน
+  const [date, setDate] = useState(new Date()); 
   const calendarRef = useRef(null); // สร้าง Ref เพื่ออ้างอิงถึง web component
 
   const formatDate = d => d ? d.toLocaleDateString('th-TH') : "กดเพื่อเลือกช่วงเวลา";
@@ -62,9 +71,9 @@ const DateFilter = () => {
       <button className="time-range-button" onClick={() => setShow(!show)}>{formatDate(date)}</button>
       {show && (
         <div className="calendar-popup">
-          {/* ใช้ <calendar-date> ที่คุณให้มา */}
           <calendar-date
             ref={calendarRef} // ผูก Ref เข้ากับ element
+            value={toYYYYMMDD(date)} // ส่ง props 'value' ที่เป็น format "YYYY-MM-DD"
             className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
           >
             <svg aria-label="Previous" className="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
@@ -76,6 +85,7 @@ const DateFilter = () => {
     </div>
   );
 };
+
 
 // Report Table
 const ReportTable = () => (
@@ -238,7 +248,6 @@ const Home = () => {
   }, []); // [] หมายถึงให้รันแค่ครั้งเดียวตอนโหลด
 
 
-  // --- (จุดที่ 1) ---
   // ฟังก์ชันใหม่สำหรับจัดการการคลิกแท็บ
   const handleTabClick = (tab) => {
     if (tab === "หน่วยงาน") {
@@ -250,7 +259,6 @@ const Home = () => {
       toggleDropdown(tab);
     }
   };
-  // --- (จบจุดที่ 1) ---
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -310,12 +318,10 @@ const Home = () => {
           {tabs.map(tab => (
             <div key={tab} className="menu-wrapper">
 
-              {/* --- (จุดที่ 2) --- */}
               <button
                 className={activeTab === tab ? "menu-item active" : "menu-item"}
                 onClick={() => handleTabClick(tab)} // <-- เปลี่ยนมาเรียกฟังก์ชันนี้
               >
-                {/* --- (จบจุดที่ 2) --- */}
 
                 {tab}
                 {cardsData[tab] && cardsData[tab].length > 0 && (dropdownOpen === tab ? <FiChevronUp className="chevron-icon" /> : <FiChevronDown className="chevron-icon" />)}
