@@ -40,7 +40,7 @@ body::after {
   pointer-events: none;
 }
 
-body::before {
+/* body::before {
   left: 0;
   background: linear-gradient(to right, rgba(247, 231, 212, 0.3), transparent 80%);
 }
@@ -48,7 +48,7 @@ body::before {
 body::after {
   right: 0;
   background: linear-gradient(to left, rgba(247, 231, 212, 0.3), transparent 80%);
-}
+} */
 
 /* Texture ละเอียดแบบพรีเมียม */
 body .texture-overlay {
