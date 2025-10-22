@@ -68,11 +68,15 @@ const Home1 = () => {
 
 
   const handleLogout = async () => {
+    // 1. "checktoken"
+    // ดึง Token มาจาก localStorage
     const accessToken = localStorage.getItem("accessToken");
     console.log("Initiating logout for token:", accessToken);
- 
+
     try {
+      // 2. ตรวจสอบว่า "ถ้ามี" Token (token != null)
       if (accessToken) {
+        // ถ้ามี Token: ก็ไปเรียก API หลังบ้านเพื่อแจ้ง Logout
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
         await fetch(apiUrl, {
           method: "POST",
@@ -83,20 +87,34 @@ const Home1 = () => {
         });
         console.log("Backend has been notified of the logout.");
       }
+      
+      // 3. ถ้า Token "เป็น null" (accessToken == null)
+      // Code ใน if (accessToken) จะไม่ทำงาน
+      // และมันจะข้ามไปทำงานที่บล็อก finally ต่อไป
+      
     } catch (error) {
+      // (ส่วนจัดการ Error)
       console.error("Failed to notify backend, but proceeding with client-side logout.", error);
     } finally {
+      // 4. บล็อก finally: จะทำงาน "เสมอ" 
+      // (ไม่ว่า Token จะมี หรือจะเป็น null ก็ตาม)
+      
       console.log("Executing client-side cleanup.");
- 
+
       if (liff.isLoggedIn()) {
         liff.logout();
       }
- 
+
+      // 5. "ล้าง token ก่อน"
+      // ถ้า Token มี: มันจะถูกลบ
+      // ถ้า Token เป็น null: คำสั่งนี้ก็ไม่ทำอะไร (ซึ่งถูกต้อง)
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); 
-      localStorage.removeItem("selectedOrg"); // <-- **3. เพิ่มการล้างค่าที่เลือกไว้**
- 
-      navigate("/");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("selectedOrg"); 
+
+      // 6. "กลับไปหน้า login"
+      // นำทางกลับไปหน้าแรก (หน้า Login)
+      navigate("/"); 
     }
   };
 
