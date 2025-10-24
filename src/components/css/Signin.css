@@ -2,13 +2,13 @@
 
 /* Reset & Base */
 *,
-*::before,
+/* *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Prompt', Arial, sans-serif;
-}
+} */
 
 :root {
   --color-primary: #b78b66;
