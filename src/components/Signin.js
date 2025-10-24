@@ -1,142 +1,169 @@
-import React, { useState } from "react";
-import styles from "./css/Signin.module.css";
-import logo from "./traffy.png";
-import { FaSignOutAlt as LogOut } from "react-icons/fa";
+/* ========================= */
 
-const JoinORG = () => {
-  const [unitCode, setUnitCode] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otpCode, setOtpCode] = useState("");
-  const [generatedOTP, setGeneratedOTP] = useState("");
-  const [otpSentTime, setOtpSentTime] = useState(null);
-  const [message, setMessage] = useState("");
-  const [otpActive, setOtpActive] = useState(false);
+/* Reset & Base (global) */
+:global(*),
+:global(*::before),
+:global(*::after) {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Prompt', Arial, sans-serif;
+}
 
-  const OTP_EXPIRY_SECONDS = 60;
+/* Root variables */
+:root {
+  --color-primary: #b78b66;
+  --color-secondary: #4b3b2f;
+  --color-bg: #ffffff;
+  --color-accent: #fffaf5;
+  --shadow-card: 0 15px 35px rgba(0, 0, 0, 0.1);
+  --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  // ฟังก์ชันออกจากระบบ
-  const handleLogout = () => {
-    setUnitCode("");
-    setPhoneNumber("");
-    setOtpCode("");
-    setGeneratedOTP("");
-    setOtpSentTime(null);
-    setOtpActive(false);
-    setMessage("คุณได้ออกจากระบบแล้ว");
-    console.log("Logout success");
-  };
+/* ------------------ Background ------------------ */
+.bodySignin {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url('https://visitamanta.com/wp-content/uploads/2021/04/1.1-2-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+}
 
-  // ส่ง OTP
-  const handleGetOTP = () => {
-    if (!phoneNumber.trim()) return setMessage("กรุณาใส่เบอร์โทรศัพท์ก่อน");
-    if (!/^\d{9,10}$/.test(phoneNumber)) return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
+/* Floating soft circles */
+@keyframes floatLight {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate(30px, -20px) scale(1.05); opacity: 0.9; }
+}
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    setGeneratedOTP(otp);
-    setOtpSentTime(Date.now());
-    setMessage(`ส่ง OTP ไปที่ ${phoneNumber} แล้ว (จำลองการส่ง: ${otp})`);
-    setOtpActive(true);
+.floating-circle-1,
+.floating-circle-2,
+.floating-circle-3 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  animation: floatLight 14s ease-in-out infinite;
+  z-index: 1;
+}
 
-    let timeLeft = OTP_EXPIRY_SECONDS;
-    const interval = setInterval(() => {
-      timeLeft--;
-      if (timeLeft <= 0) {
-        clearInterval(interval);
-        setOtpActive(false);
-        setGeneratedOTP("");
-        setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
-      }
-    }, 1000);
-  };
+.floating-circle-1 { width: 280px; height: 280px; top: -100px; left: -80px; background: radial-gradient(circle, rgba(183,134,102,0.15), transparent 70%); }
+.floating-circle-2 { width: 400px; height: 400px; bottom: -160px; right: -160px; background: radial-gradient(circle, rgba(183,134,102,0.12), transparent 70%); animation-delay: 2s; }
+.floating-circle-3 { width: 240px; height: 240px; bottom: 10%; left: 25%; background: radial-gradient(circle, rgba(255,214,170,0.12), transparent 70%); animation-delay: 4s; }
 
-  // ส่งฟอร์ม
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setMessage("");
+/* ------------------ OTP Container ------------------ */
+@keyframes fadeSlideIn {
+  0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 
-    if (!unitCode || !phoneNumber || !otpCode)
-      return setMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-    if (!generatedOTP) return setMessage("กรุณากดปุ่ม OTP ก่อน");
+.otp-container {
+  width: 92%;
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  animation: fadeSlideIn 1s ease;
+  transition: all 0.4s ease;
+}
 
-    const elapsed = (Date.now() - otpSentTime) / 1000;
-    if (elapsed > OTP_EXPIRY_SECONDS) {
-      setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
-      setGeneratedOTP("");
-      return;
-    }
+.otp-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
 
-    if (otpCode === generatedOTP) {
-      setMessage(`เข้าสู่ระบบหน่วยงาน ${unitCode} สำเร็จ!`);
-      setUnitCode("");
-      setPhoneNumber("");
-      setOtpCode("");
-      setGeneratedOTP("");
-    } else {
-      setMessage("รหัส OTP ไม่ถูกต้อง");
-    }
-  };
+/* Header Logo */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
 
-  return (
-    <div className={styles.bodySignin}>
-      {/* Logout Button */}
-      <div className={styles["logout-icon"]}>
-        <button onClick={handleLogout}>
-          <LogOut size={18} />
-          <span>ออกจากระบบ</span>
-        </button>
-      </div>
+.logo-img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--color-primary);
+  margin-bottom: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transition: transform 0.4s ease;
+}
+.logo-img:hover {
+  transform: rotate(5deg) scale(1.05);
+}
 
-      {/* Container OTP */}
-      <div className={styles["otp-container"]}>
-        <div className={styles.header}>
-          <img src={logo} alt="Logo" className={styles["logo-img"]} />
-        </div>
+/* ------------------ ฟอร์ม OTP ------------------ */
+.otp-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-        <form className={styles["otp-form"]} onSubmit={handleSubmit}>
-          <label className={styles.labelUse}>รหัสหน่วยงาน</label>
-          <div className={styles.inputField}>
-            <input
-              type="text"
-              value={unitCode}
-              onChange={(e) => setUnitCode(e.target.value)}
-              placeholder="รหัสหน่วยงาน"
-            />
-          </div>
+.labelUse {
+  font-weight: 600;
+  color: #492610;
+  margin: 12px 0 6px;
+}
 
-          <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
-          <div className={styles["phone-otp-group"]}>
-            <input
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="ตัวอย่าง: 0812345678"
-            />
-            <button type="button" onClick={handleGetOTP} disabled={otpActive}>
-              {otpActive ? "OTP กำลังส่ง..." : "OTP"}
-            </button>
-          </div>
+.inputField input[type="text"],
+.inputField input[type="tel"] {
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 1em;
+  outline: none;
+  transition: all 0.3s;
+  background-color: #fff;
+}
 
-          <label className={styles.labelUse}>รหัส OTP</label>
-          <div className={styles.inputField}>
-            <input
-              type="text"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="กรอกรหัส OTP"
-            />
-          </div>
+.inputField input[type="text"]:focus,
+.inputField input[type="tel"]:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(183,134,102,0.35);
+}
 
-          <button type="submit" className={styles["submit-btn"]}>
-            เข้าร่วมหน่วยงาน
-          </button>
+.inputField input:hover {
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
 
-          {message && <div className={styles.message}>{message}</div>}
-        </form>
+.phone-otp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+  align-items: stretch;
+}
 
-        <div className={styles["contact-info"]}>ติดต่อสอบถาม: @fonduehelp</div>
-      </div>
-    </div>
-  );
-};
+.phone-otp-group input {
+  flex: 1;
+}
 
-export default JoinORG;
+.phone-otp-group button {
+  flex: unset;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  height: 46px;
+  box-shadow: 0 5px 12px rgba(0,123,255,0.3);
+}
+
+.phone-otp-group button
