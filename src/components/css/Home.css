@@ -1,11 +1,12 @@
-/* ========================= */
-/* Reset & Base Font */
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 body {
   background: #f9f9f9;
   color: #1c1c1e;
@@ -30,11 +31,13 @@ body {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
+
 .logo-section {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .logo-img {
   width: 44px;
   height: 44px;
@@ -42,12 +45,16 @@ body {
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
 .unit-name {
   font-weight: 700;
   font-size: 18px;
   color: #1c1c1e;
   white-space: nowrap;
 }
+
+/* ========================= */
+/* Center Menu */
 .center-menu {
   display: flex;
   justify-content: center;
@@ -55,9 +62,11 @@ body {
   gap: 28px;
   flex: 1 1 auto;
 }
+
 .menu-wrapper {
   position: relative;
 }
+
 .menu-item {
   white-space: nowrap;
   background: none;
@@ -73,14 +82,17 @@ body {
   align-items: center;
   gap: 6px;
 }
+
 .menu-item:hover {
   background: rgba(201, 122, 68, 0.15);
   transform: translateY(-2px);
 }
+
 .menu-item.active {
   font-weight: 600;
   color: #c97a44;
 }
+
 .menu-item.active::after {
   content: "";
   position: absolute;
@@ -92,9 +104,9 @@ body {
   border-radius: 2px;
   background: #c97a44;
 }
-.chevron-icon {
-  font-size: 12px;
-}
+
+/* ========================= */
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 120%;
@@ -107,6 +119,7 @@ body {
   min-width: 220px;
   z-index: 100;
 }
+
 .dropdown-item {
   padding: 10px 20px;
   font-size: 13px;
@@ -117,59 +130,60 @@ body {
   gap: 10px;
   transition: all 0.2s ease;
   border-radius: 12px;
+  background: transparent;
 }
+
 .dropdown-item:hover {
   background: #fdf3e6;
   color: #c97a44;
 }
 
 /* ========================= */
-/* Logout Button */
+/* Logout Button (เล็กสุด มินิมอล) */
 .logout-icon {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  height: 20px;
 }
 
 .logout-icon button {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 2px;
   background: #ff4d4f;
   border: none;
   color: #fff;
-  border-radius: 20px;
-  padding: 4px 8px;
-  cursor: pointer;
+  border-radius: 16px;
+  padding: 24px 48px;
+  height: 18px; 
+  font-size: 15px;
   font-weight: 600;
-  font-size: 12px;
-  box-shadow: var(--shadow);
-  transition: 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.logout-icon button:hover {
-  background: #d9363e;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .logout-icon button span {
   display: inline-block;
-  transform: translateY(0);
-}
-
-.logout-icon button:hover span {
-  transform: translateY(0);
+  vertical-align: middle;
 }
 
 .logout-icon button svg {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.3s ease;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.25s ease;
+}
+
+.logout-icon button:hover {
+  background: #d9363e;
+  transform: translateY(-1px);
 }
 
 .logout-icon button:hover svg {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 /* ========================= */
@@ -183,20 +197,22 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
-/* ------------------------------------- */
+/* ========================= */
 /* Search Field */
 .search-top {
   display: flex;
   justify-content: center;
   margin-bottom: 24px;
 }
+
 .search-input-container {
   width: 60%;
   position: relative;
 }
+
 .search-input-container input {
   width: 100%;
-  padding: 12px 48px 12px 18px; 
+  padding: 12px 48px 12px 18px;
   border-radius: 28px;
   border: none;
   font-size: 14px;
@@ -204,10 +220,12 @@ body {
   transition: all 0.25s ease;
   background-color: #fff;
 }
+
 .search-input-container input:focus {
   outline: none;
   box-shadow: 0 4px 16px rgba(201, 122, 68, 0.18);
 }
+
 .search-icon {
   position: absolute;
   right: 14px;
@@ -226,20 +244,24 @@ body {
   gap: 14px;
   margin-bottom: 24px;
 }
+
 .filter-group {
   flex: 1 1 calc(25% - 14px);
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .filter-group.lower-row {
   flex: 1 1 calc(33.33% - 14px);
 }
+
 .filter-group label {
   font-size: 12px;
   font-weight: 600;
   color: #555;
 }
+
 .filter-group select,
 .time-range-button {
   padding: 10px 14px;
@@ -252,6 +274,7 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   color: #333;
 }
+
 .filter-group select:hover,
 .filter-group select:focus,
 .time-range-button:hover,
@@ -273,24 +296,25 @@ body {
   padding: 18px;
   min-width: 280px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  font-family: 'Inter', sans-serif;
 }
 
 /* ========================= */
 /* Report Table */
-.report-table-container { 
-  width: 100%; 
-  padding: 0; 
+.report-table-container {
+  width: 100%;
+  padding: 0;
   background: transparent;
-  border-collapse: collapse; /* เพื่อเส้นขอบยังคงต่อเนื่อง */
+  border-collapse: collapse;
 }
-.report-summary { 
-  font-weight: 600; 
-  margin-bottom: 12px; 
-  color: #555; 
-  text-align: left; 
+
+.report-summary {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #555;
+  text-align: left;
   padding-left: 4px;
 }
+
 .report-table-header {
   display: grid;
   grid-template-columns: 2fr 0.6fr 0.8fr 1.2fr 1.2fr 1.8fr 1.2fr 0.8fr;
@@ -298,10 +322,15 @@ body {
   padding: 12px 16px;
   font-weight: 700;
   color: #fff;
-  background: linear-gradient(90deg, #8b5e3c, #a67450);
+  background-color: #8b5e3c !important;
   width: 100%;
   border-radius: 12px 12px 0 0;
 }
+
+.report-table-header > * {
+  background: transparent !important;
+}
+
 .report-table-row {
   display: grid;
   grid-template-columns: 2fr 0.6fr 0.8fr 1.2fr 1.2fr 1.8fr 1.2fr 0.8fr;
@@ -309,43 +338,90 @@ body {
   padding: 12px 16px;
   font-size: 13px;
   color: #1c1c1e;
-
-  /* พื้นหลังเรียบ ไม่มีเงา */
   background: transparent;
-  box-shadow: none;
-  border-radius: 0;
-  margin-bottom: 0;
-
-  /* คงเส้นขอบล่างจริง */
   border-bottom: 1px solid #e0e0e0;
 }
-.report-table-row:nth-child(even){ 
-  background: transparent; 
-}
-.report-table-row:hover{ 
-  background: #f9f9f9; 
-  box-shadow: none; 
-  transform: none;
+
+.report-table-row:nth-child(even) {
+  background: transparent;
 }
 
-.report-image{ 
-  width:44px;
-  height:44px;
-  object-fit:cover;
-  border-radius:10px;
+.report-table-row:hover {
+  background: #f9f9f9;
 }
-.status-tag{ 
-  padding:6px 14px;
-  border-radius:22px;
-  font-size:12px;
-  font-weight:600;
-  color:#fff; 
-  display:inline-block; 
-  text-align:center;
+
+.report-image {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
 }
-.status-tag.pending{ background:#ff7f00;}
-.status-tag.completed{ background:#28c745;}
-.rating{ display:flex; align-items:center; gap:4px; font-size:20px;}
-.rating-star{ color:#ffc107; cursor:pointer; transition:color 0.25s ease, transform 0.2s ease;}
-.rating-star.active{ color:#ffb300; transform:scale(1.2);}
-.rating-star:hover, .rating-star:hover ~ .rating-star{ color:#ffd54f; transform:scale(1.2);}
+
+.status-tag {
+  padding: 6px 14px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  text-align: center;
+}
+
+.status-tag.pending {
+  background: #ff7f00;
+}
+
+.status-tag.completed {
+  background: #28c745;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 20px;
+}
+
+.rating-star {
+  color: #ffc107;
+  cursor: pointer;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.rating-star.active {
+  color: #ffb300;
+  transform: scale(1.2);
+}
+
+.rating-star:hover,
+.rating-star:hover ~ .rating-star {
+  color: #ffd54f;
+  transform: scale(1.2);
+}
+
+/* ========================= */
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .top-navigation {
+    flex-wrap: wrap;
+    padding: 10px 20px;
+  }
+
+  .center-menu {
+    gap: 12px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .logout-icon button {
+    height: 16px;
+    padding: 0 5px;
+    font-size: 8px;
+  }
+
+  .logout-icon button svg {
+    width: 8px;
+    height: 8px;
+  }
+}
