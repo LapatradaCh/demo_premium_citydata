@@ -14,7 +14,6 @@ const JoinORG = () => {
 
   const OTP_EXPIRY_SECONDS = 60;
 
-  // ฟังก์ชันออกจากระบบ
   const handleLogout = () => {
     setUnitCode("");
     setPhoneNumber("");
@@ -23,10 +22,8 @@ const JoinORG = () => {
     setOtpSentTime(null);
     setOtpActive(false);
     setMessage("คุณได้ออกจากระบบแล้ว");
-    console.log("Logout success");
   };
 
-  // ส่ง OTP
   const handleGetOTP = () => {
     if (!phoneNumber.trim()) return setMessage("กรุณาใส่เบอร์โทรศัพท์ก่อน");
     if (!/^\d{9,10}$/.test(phoneNumber)) return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
@@ -49,7 +46,6 @@ const JoinORG = () => {
     }, 1000);
   };
 
-  // ส่งฟอร์ม
   const handleSubmit = (e) => {
     e.preventDefault();
     setMessage("");
@@ -106,22 +102,19 @@ const JoinORG = () => {
 
           {/* เบอร์โทรศัพท์ */}
           <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
-          <div className={styles.inputField}>
-            <input
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="ตัวอย่าง: 0812345678"
-            />
+          <div className={styles["phone-otp-group"]}>
+            <div className={styles.inputField}>
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="ตัวอย่าง: 0812345678"
+              />
+            </div>
+            <button type="button" onClick={handleGetOTP} disabled={otpActive}>
+              {otpActive ? "OTP กำลังส่ง..." : "OTP"}
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleGetOTP}
-            disabled={otpActive}
-            className={styles["submit-btn"]}
-          >
-            {otpActive ? "OTP กำลังส่ง..." : "ขอ OTP"}
-          </button>
 
           {/* รหัส OTP */}
           <label className={styles.labelUse}>รหัส OTP</label>
@@ -134,12 +127,11 @@ const JoinORG = () => {
             />
           </div>
 
-          {/* ปุ่มเข้าร่วมหน่วยงาน */}
+          {/* Submit */}
           <button type="submit" className={styles["submit-btn"]}>
             เข้าร่วมหน่วยงาน
           </button>
 
-          {/* ข้อความแจ้งเตือน */}
           {message && <div className={styles.message}>{message}</div>}
         </form>
 
