@@ -1,14 +1,14 @@
 /* ========================= */
 
-/* Reset & Base */
-*,
-/* *::before,
-*::after {
+/* Reset & Base (global) */
+:global(*),
+:global(*::before),
+:global(*::after) {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Prompt', Arial, sans-serif;
-} */
+}
 
 :root {
   --color-primary: #b78b66;
@@ -20,8 +20,8 @@
 }
 
 /* ------------------ Background ------------------ */
-body {
-  background-image: 
+.bodySignin {
+  background-image:
     linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
     url('https://visitamanta.com/wp-content/uploads/2021/04/1.1-2-scaled.jpg');
   background-size: cover;
@@ -112,14 +112,14 @@ body {
   flex-direction: column;
 }
 
-label {
+.labelUse {
   font-weight: 600;
   color: #492610;
   margin: 12px 0 6px;
 }
 
-input[type="text"],
-input[type="tel"] {
+.inputField input[type="text"],
+.inputField input[type="tel"] {
   padding: 14px 16px;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -129,13 +129,13 @@ input[type="tel"] {
   background-color: #fff;
 }
 
-input[type="text"]:focus,
-input[type="tel"]:focus {
-  border-color: #b78b66;
+.inputField input[type="text"]:focus,
+.inputField input[type="tel"]:focus {
+  border-color: var(--color-primary);
   box-shadow: 0 0 10px rgba(183,134,102,0.35);
 }
 
-input:hover {
+.inputField input:hover {
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
 
@@ -148,6 +148,18 @@ input:hover {
 
 .phone-otp-group input {
   flex: 1.4; /* ขยายช่องเบอร์โทรให้กว้างขึ้น */
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 1em;
+  outline: none;
+  transition: all 0.3s;
+  background-color: #fff;
+}
+
+.phone-otp-group input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(183,134,102,0.35);
 }
 
 .phone-otp-group button {
@@ -166,17 +178,10 @@ input:hover {
 }
 
 .phone-otp-group button:hover:not(:disabled) {
-  background-color: #0056b3; 
+  background-color: #0056b3;
   box-shadow: 0 8px 20px rgba(0,123,255,0.45);
   transform: translateY(-2px);
 }
-
-.phone-otp-group button:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-
 
 .phone-otp-group button:disabled {
   opacity: 0.65;
