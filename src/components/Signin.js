@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import "./css/Signin.css"; 
-
+import styles from "./css/Signin.module.css";
 import logo from "./traffy.png";
 import { FaSignOutAlt as LogOut } from "react-icons/fa";
- 
+
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -12,6 +11,7 @@ const JoinORG = () => {
   const [otpSentTime, setOtpSentTime] = useState(null);
   const [message, setMessage] = useState("");
   const [otpActive, setOtpActive] = useState(false);
+
   const OTP_EXPIRY_SECONDS = 60;
 
   // ฟังก์ชันออกจากระบบ
@@ -77,9 +77,9 @@ const JoinORG = () => {
   };
 
   return (
-    <div>
+    <div className={styles.bodySignin}>
       {/* Logout Button */}
-      <div className="logout-icon">
+      <div className={styles["logout-icon"]}>
         <button onClick={handleLogout}>
           <LogOut size={18} />
           <span>ออกจากระบบ</span>
@@ -87,22 +87,24 @@ const JoinORG = () => {
       </div>
 
       {/* Container OTP */}
-      <div className="otp-container">
-        <div className="header">
-          <img src={logo} alt="Logo" className="logo-img" />
+      <div className={styles["otp-container"]}>
+        <div className={styles.header}>
+          <img src={logo} alt="Logo" className={styles["logo-img"]} />
         </div>
 
-        <form className="otp-form" onSubmit={handleSubmit}>
-          <label>รหัสหน่วยงาน</label>
-          <input
-            type="text"
-            value={unitCode}
-            onChange={(e) => setUnitCode(e.target.value)}
-            placeholder="รหัสหน่วยงาน"
-          />
+        <form className={styles["otp-form"]} onSubmit={handleSubmit}>
+          <label className={styles.labelUse}>รหัสหน่วยงาน</label>
+          <div className={styles.inputField}>
+            <input
+              type="text"
+              value={unitCode}
+              onChange={(e) => setUnitCode(e.target.value)}
+              placeholder="รหัสหน่วยงาน"
+            />
+          </div>
 
-          <label>เบอร์โทรศัพท์</label>
-          <div className="phone-otp-group">
+          <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
+          <div className={styles["phone-otp-group"]}>
             <input
               type="tel"
               value={phoneNumber}
@@ -114,21 +116,24 @@ const JoinORG = () => {
             </button>
           </div>
 
-          <label>รหัส OTP</label>
-          <input
-            type="text"
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value)}
-            placeholder="กรอกรหัส OTP"
-          />
+          <label className={styles.labelUse}>รหัส OTP</label>
+          <div className={styles.inputField}>
+            <input
+              type="text"
+              value={otpCode}
+              onChange={(e) => setOtpCode(e.target.value)}
+              placeholder="กรอกรหัส OTP"
+            />
+          </div>
 
-          <button type="submit" className="submit-btn">
+          <button type="submit" className={styles["submit-btn"]}>
             เข้าร่วมหน่วยงาน
           </button>
-          {message && <div className="message">{message}</div>}
+
+          {message && <div className={styles.message}>{message}</div>}
         </form>
 
-        <div className="contact-info">ติดต่อสอบถาม: @fonduehelp</div>
+        <div className={styles["contact-info"]}>ติดต่อสอบถาม: @fonduehelp</div>
       </div>
     </div>
   );
