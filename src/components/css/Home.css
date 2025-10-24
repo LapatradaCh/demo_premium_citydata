@@ -22,7 +22,7 @@ body {
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.95);
-  padding: 24px 48px;
+  padding: 14px 40px;
   backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   position: sticky;
@@ -158,7 +158,7 @@ body {
   color: #fff;
   border-radius: 16px;
   padding: 48px 96px;
-  height: 40px; 
+  height: 38px; 
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -172,8 +172,8 @@ body {
 }
 
 .logout-icon button svg {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   transition: transform 0.25s ease;
 }
 
@@ -421,7 +421,7 @@ body {
   }
 
   .logout-icon button svg {
-    width: 8px;
-    height: 8px;
+    width: 20px;
+    height: 20px;
   }
 }
