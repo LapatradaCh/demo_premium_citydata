@@ -63,7 +63,7 @@ const Login = () => {
       } else if (orgCount ==1){
         navigate("/home")
       }else {
-        navigate("/signin"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
+        navigate("/Signin"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
       }
 
     } catch (error) {
