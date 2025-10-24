@@ -93,6 +93,7 @@ const JoinORG = () => {
         </div>
 
         <form className={styles["otp-form"]} onSubmit={handleSubmit}>
+          {/* รหัสหน่วยงาน */}
           <label className={styles.labelUse}>รหัสหน่วยงาน</label>
           <div className={styles.inputField}>
             <input
@@ -103,19 +104,26 @@ const JoinORG = () => {
             />
           </div>
 
+          {/* เบอร์โทรศัพท์ */}
           <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
-          <div className={styles["phone-otp-group"]}>
+          <div className={styles.inputField}>
             <input
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="ตัวอย่าง: 0812345678"
             />
-            <button type="button" onClick={handleGetOTP} disabled={otpActive}>
-              {otpActive ? "OTP กำลังส่ง..." : "OTP"}
-            </button>
           </div>
+          <button
+            type="button"
+            onClick={handleGetOTP}
+            disabled={otpActive}
+            className={styles["submit-btn"]}
+          >
+            {otpActive ? "OTP กำลังส่ง..." : "ขอ OTP"}
+          </button>
 
+          {/* รหัส OTP */}
           <label className={styles.labelUse}>รหัส OTP</label>
           <div className={styles.inputField}>
             <input
@@ -126,10 +134,12 @@ const JoinORG = () => {
             />
           </div>
 
+          {/* ปุ่มเข้าร่วมหน่วยงาน */}
           <button type="submit" className={styles["submit-btn"]}>
             เข้าร่วมหน่วยงาน
           </button>
 
+          {/* ข้อความแจ้งเตือน */}
           {message && <div className={styles.message}>{message}</div>}
         </form>
 
