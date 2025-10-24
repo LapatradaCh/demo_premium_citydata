@@ -157,8 +157,8 @@ body {
   border: none;
   color: #fff;
   border-radius: 16px;
-  padding: 36px 72px;
-  height: 30px; 
+  padding: 48px 96px;
+  height: 40px; 
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -172,8 +172,8 @@ body {
 }
 
 .logout-icon button svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   transition: transform 0.25s ease;
 }
 
