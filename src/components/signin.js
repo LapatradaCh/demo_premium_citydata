@@ -1,0 +1,136 @@
+import React, { useState } from "react";
+import "./css/signin.css";
+import logo from "./traffy.png";
+import { FaSignOutAlt as LogOut } from "react-icons/fa";
+
+const OTPModule = () => {
+  const [unitCode, setUnitCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [generatedOTP, setGeneratedOTP] = useState("");
+  const [otpSentTime, setOtpSentTime] = useState(null);
+  const [message, setMessage] = useState("");
+  const [otpActive, setOtpActive] = useState(false);
+  const OTP_EXPIRY_SECONDS = 60;
+
+  // ฟังก์ชันออกจากระบบ
+  const handleLogout = () => {
+    setUnitCode("");
+    setPhoneNumber("");
+    setOtpCode("");
+    setGeneratedOTP("");
+    setOtpSentTime(null);
+    setOtpActive(false);
+    setMessage("คุณได้ออกจากระบบแล้ว");
+    console.log("Logout success");
+  };
+
+  // ส่ง OTP
+  const handleGetOTP = () => {
+    if (!phoneNumber.trim()) return setMessage("กรุณาใส่เบอร์โทรศัพท์ก่อน");
+    if (!/^\d{9,10}$/.test(phoneNumber)) return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    setGeneratedOTP(otp);
+    setOtpSentTime(Date.now());
+    setMessage(`ส่ง OTP ไปที่ ${phoneNumber} แล้ว (จำลองการส่ง: ${otp})`);
+    setOtpActive(true);
+
+    let timeLeft = OTP_EXPIRY_SECONDS;
+    const interval = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        setOtpActive(false);
+        setGeneratedOTP("");
+        setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
+      }
+    }, 1000);
+  };
+
+  // ส่งฟอร์ม
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setMessage("");
+
+    if (!unitCode || !phoneNumber || !otpCode)
+      return setMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+    if (!generatedOTP) return setMessage("กรุณากดปุ่ม OTP ก่อน");
+
+    const elapsed = (Date.now() - otpSentTime) / 1000;
+    if (elapsed > OTP_EXPIRY_SECONDS) {
+      setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
+      setGeneratedOTP("");
+      return;
+    }
+
+    if (otpCode === generatedOTP) {
+      setMessage(`เข้าสู่ระบบหน่วยงาน ${unitCode} สำเร็จ!`);
+      setUnitCode("");
+      setPhoneNumber("");
+      setOtpCode("");
+      setGeneratedOTP("");
+    } else {
+      setMessage("รหัส OTP ไม่ถูกต้อง");
+    }
+  };
+
+  return (
+    <div>
+      {/* Logout Button */}
+      <div className="logout-icon">
+        <button onClick={handleLogout}>
+          <LogOut size={18} />
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
+
+      {/* Container OTP */}
+      <div className="otp-container">
+        <div className="header">
+          <img src={logo} alt="Logo" className="logo-img" />
+        </div>
+
+        <form className="otp-form" onSubmit={handleSubmit}>
+          <label>รหัสหน่วยงาน</label>
+          <input
+            type="text"
+            value={unitCode}
+            onChange={(e) => setUnitCode(e.target.value)}
+            placeholder="รหัสหน่วยงาน"
+          />
+
+          <label>เบอร์โทรศัพท์</label>
+          <div className="phone-otp-group">
+            <input
+              type="tel"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="ตัวอย่าง: 0812345678"
+            />
+            <button type="button" onClick={handleGetOTP} disabled={otpActive}>
+              {otpActive ? "OTP กำลังส่ง..." : "OTP"}
+            </button>
+          </div>
+
+          <label>รหัส OTP</label>
+          <input
+            type="text"
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value)}
+            placeholder="กรอกรหัส OTP"
+          />
+
+          <button type="submit" className="submit-btn">
+            เข้าร่วมหน่วยงาน
+          </button>
+          {message && <div className="message">{message}</div>}
+        </form>
+
+        <div className="contact-info">ติดต่อสอบถาม: @fonduehelp</div>
+      </div>
+    </div>
+  );
+};
+
+export default OTPModule;
