@@ -364,9 +364,9 @@ return (
 
     <div className={styles.dashboardContent}>
       {activeTab === "รายการแจ้ง" && <ReportTable />}
+     </div>
     </div>
-  </div>
-);
-
+  );
+};
 
 export default Home;
