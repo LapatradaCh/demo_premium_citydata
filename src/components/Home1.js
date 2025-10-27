@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, LogOut, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import liff from "@line/liff"; 
-import './css/Home1.css';
+import styles from './css/Home1.module.css';
 
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,55 +145,55 @@ const Home1 = () => {
   // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
 
   return (
-    <div className="app-body">
+    <div className={styles.appBody}>
       {/* ... (ส่วน Logout, Header, Search Box เหมือนเดิม) ... */}
-      <div className="logout-icon">
+      <div className={styles.logoutIcon}>
          <button onClick={handleLogout}>
            <LogOut size={18} />
            <span>ออกจากระบบ</span>
          </button>
        </div>
  
-       <h1 className="title">เลือกหน่วยงานที่คุณต้องการ</h1>
+       <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
  
-       <div className="search-container">
+       <div className={styles.searchContainer}>
          <input
            type="text"
-           className="search-input"
+           className={styles.searchInput}
            placeholder="ค้นหาหน่วยงาน..."
            value={searchTerm}
            onChange={(e) => setSearchTerm(e.target.value)}
            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
          />
          {searchTerm && (
-           <button className="clear-button" onClick={handleClear}>
+           <button className={styles.searchButton} onClick={handleClear}>
              <X size={16} />
            </button>
          )}
-         <button className="search-button" onClick={handleSearch}>
+         <button className={styles.searchButton} onClick={handleSearch}>
            <Search size={18} />
          </button>
        </div>
 
       {/* Agency Grid */}
-      <div className="agency-section">
+      <div className={styles.agencySection}>
         {isLoading ? (
           <p className="loading-message">กำลังโหลดข้อมูลหน่วยงาน...</p>
         ) : error ? (
           <p className="error-message">เกิดข้อผิดพลาด: {error}</p>
         ) : filteredAgencies.length === 0 ? (
-          <p className="no-results">ไม่พบหน่วยงาน</p>
+          <p className={styles.noResults}>ไม่พบหน่วยงาน</p>
         ) : (
-          <div className="agency-grid">
+          <div className={styles.agencyGrid}>
             {filteredAgencies.map((agency) => (
               <div
                 key={agency.id} 
-                className="agency-item"
+                className={styles.agencyItem}
                 // --- vvv 2. แก้ไข onClick vvv ---
                 onClick={() => handleAgencyClick(agency)}
                 // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
               >
-                <div className="agency-img">
+                <div className={styles.agencyImg}>
                   <img
                     src={agency.img} // <-- field นี้จะถูกส่งไป
                     alt={agency.name} 
@@ -205,7 +205,7 @@ const Home1 = () => {
                   />
                   {agency.badge && <div className="agency-badge">{agency.badge}</div>}
                 </div>
-                <div className="agency-name" title="คลิกเพื่อเข้าหน่วยงานนี้">
+                <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
                   {agency.name} {/* <-- field นี้จะถูกส่งไป */}
                 </div>
               </div>
