@@ -67,54 +67,44 @@ const Home1 = () => {
   }, []);
 
 
-  const handleLogout = async () => {
-    // 1. "checktoken"
-    // ดึง Token มาจาก localStorage
+const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("user_id"); // 1. ดึง user_id มาด้วย
     console.log("Initiating logout for token:", accessToken);
 
     try {
-      // 2. ตรวจสอบว่า "ถ้ามี" Token (token != null)
-      if (accessToken) {
-        // ถ้ามี Token: ก็ไปเรียก API หลังบ้านเพื่อแจ้ง Logout
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+      // Step 1: Notify the backend
+      if (accessToken && userId) { // 2. เช็กว่ามี cả userId ด้วย
+        const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
         await fetch(apiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
+          body: JSON.stringify({ user_id: userId }), // 3. ส่ง user_id ไปใน body
         });
         console.log("Backend has been notified of the logout.");
       }
-      
-      // 3. ถ้า Token "เป็น null" (accessToken == null)
-      // Code ใน if (accessToken) จะไม่ทำงาน
-      // และมันจะข้ามไปทำงานที่บล็อก finally ต่อไป
-      
     } catch (error) {
-      // (ส่วนจัดการ Error)
+      // It's okay if the backend call fails. We still want to log the user out on the client-side.
       console.error("Failed to notify backend, but proceeding with client-side logout.", error);
     } finally {
-      // 4. บล็อก finally: จะทำงาน "เสมอ" 
-      // (ไม่ว่า Token จะมี หรือจะเป็น null ก็ตาม)
-      
+      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
       console.log("Executing client-side cleanup.");
 
+      // Logout from LIFF if the user is logged in via LIFF
       if (liff.isLoggedIn()) {
         liff.logout();
       }
 
-      // 5. "ล้าง token ก่อน"
-      // ถ้า Token มี: มันจะถูกลบ
-      // ถ้า Token เป็น null: คำสั่งนี้ก็ไม่ทำอะไร (ซึ่งถูกต้อง)
+      // ALWAYS remove the token from local storage, regardless of login method
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("selectedOrg"); 
+      localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
+      localStorage.removeItem("selectedOrg"); // เคลียร์ค่าที่เลือกไว้ด้วย
 
-      // 6. "กลับไปหน้า login"
-      // นำทางกลับไปหน้าแรก (หน้า Login)
-      navigate("/"); 
+      // ALWAYS navigate the user back to the login page for a consistent experience
+      navigate("/"); // Or '/login'
     }
   };
 
