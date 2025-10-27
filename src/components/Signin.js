@@ -117,7 +117,7 @@ const JoinORG = () => {
     // 5. ถ้า OTP ถูกต้อง -> ยิง API
     setIsLoading(true);
     try {
-      const response = await fetch('/api/user_organizations', {
+    const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/user_organizations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
