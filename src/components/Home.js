@@ -67,9 +67,9 @@ const DateFilter = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      <button className="time-range-button" onClick={() => setShow(!show)}>{formatDate(date)}</button>
+      <button className={timeRangeButton} onClick={() => setShow(!show)}>{formatDate(date)}</button>
       {show && (
-        <div className="calendar-popup">
+        <div className={calendarPopup}>
           <calendar-date
             ref={calendarRef} // ผูก Ref เข้ากับ element
             value={toYYYYMMDD(date)} // ส่ง props 'value' ที่เป็น format "YYYY-MM-DD"
