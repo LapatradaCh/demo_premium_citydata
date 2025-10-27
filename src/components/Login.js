@@ -241,7 +241,7 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.loginContainer}">
+    <div className={styles.loginContainer}>
       <div className={styles.loginColumn}>
         {isProcessing ? (
           <>
