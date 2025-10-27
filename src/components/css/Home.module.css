@@ -188,7 +188,16 @@
 .logoutIcon button:hover svg {
   transform: translateY(-1px);
 }
-
+.calendarPopup {
+  position: absolute;
+  top: 120%;
+  z-index: 20;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  min-width: 280px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
 /* ========================= */
 /* Dashboard Content */
 .dashboardContent {
