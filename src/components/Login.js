@@ -33,8 +33,6 @@ const Login = () => {
       console.log("uid:",userFromDb.user_id)
       localStorage.setItem("accessToken", userFromDb.access_token);
       console.log("token:",userFromDb.access_token)
-      localStorage.setItem("accessToken", userFromDb.providers);
-      console.log("token:",userFromDb.providers)
 
       console.log("userdata:",userFromDb)
       
