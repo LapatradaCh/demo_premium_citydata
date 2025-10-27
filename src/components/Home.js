@@ -272,13 +272,14 @@ const Home = () => {
     }
   };
 
-  const handleLogout = async () => {
+const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("user_id"); // 1. ดึง user_id มาด้วย
     console.log("Initiating logout for token:", accessToken);
 
     try {
-      // Step 1: Notify the backend (only if a token exists)
-      if (accessToken) {
+      // Step 1: Notify the backend
+      if (accessToken && userId) { // 2. เช็กว่ามี cả userId ด้วย
         const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
         await fetch(apiUrl, {
           method: "POST",
@@ -286,6 +287,7 @@ const Home = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
+          body: JSON.stringify({ user_id: userId }), // 3. ส่ง user_id ไปใน body
         });
         console.log("Backend has been notified of the logout.");
       }
