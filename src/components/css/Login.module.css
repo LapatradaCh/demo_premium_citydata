@@ -1,4 +1,4 @@
-/* ========================= */
+
 /* Container + Background */
 .loginContainer {
   display: flex;
@@ -17,7 +17,7 @@
   padding: 1rem;
   box-sizing: border-box;
 }
-/* ========================= */
+
 /* Login Box */
 .loginColumn {
   width: 100%;
@@ -35,8 +35,6 @@
   color: #fff;
 }
 
-/* ========================= */
-/* Logo */
 .logo {
   width: 100px;
   height: 100px;
@@ -46,26 +44,23 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* ========================= */
 /* Headings */
-.title {
+h2 {
   margin: 0;
   font-size: 2rem;
   letter-spacing: 1px;
   font-weight: 700;
   color: #ff9102; 
 }
-
-.subtitle {
+h3 {
   margin: 0.5rem 0 1.5rem;
   font-weight: 400;
   opacity: 0.8;
   color: #fff;
 }
 
-/* ========================= */
 /* Buttons */
-.button {
+button {
   width: 80%;
   padding: 0.9rem;
   margin: 0.5rem 0;
@@ -81,52 +76,44 @@
   justify-content: center;
   gap: 0.5rem;
 }
-
-.button:hover {
+button:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* ========================= */
 /* Social Buttons */
 .facebookBtn { 
   background: linear-gradient(135deg, #1877f2, #145db2); 
   color: #fff; 
 }
-
 .googleBtn { 
   background: #fff; 
   color: #444; 
   border: 1px solid #ccc; 
 }
-
 .lineBtn { 
   background: linear-gradient(135deg, #06c755, #04a347); 
   color: #fff; 
 }
 
-/* ========================= */
-/* Icons inside buttons */
-.button svg {
+/* Social Icons inside buttons */
+button svg {
   display: inline-block;
   vertical-align: middle;
 }
-
-.facebookBtn svg {
+.facebook-btn svg {
   color: #1877f2;
   background: #fff;
   border-radius: 50%;
   padding: 3px;
 }
-
-.lineBtn svg {
+.line-btn svg {
   color: #06C755;
   background: #fff;
   border-radius: 50%;
   padding: 3px;
 }
 
-/* ========================= */
 /* Bottom Links */
 .bottomLinks {
   margin-top: 2rem;
@@ -136,7 +123,7 @@
   flex-wrap: wrap;
 }
 
-.bottomLinks a {
+.bottom-links a {
   padding: 0.6rem 1rem;
   background-color: rgba(255, 255, 255, 0.15);
   color: white;
@@ -146,8 +133,7 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
 }
-
-.bottomLinks a:hover {
+.bottom-links a:hover {
   background-color: rgba(255, 255, 255, 0.4);
   color: #fff;
   transform: translateY(-2px);
@@ -157,22 +143,22 @@
 /* ========================= */
 /* Responsive Tablet */
 @media (max-width: 992px) {
-  .loginColumn { width: 90%; padding: 2rem; }
+  .login-column { width: 90%; padding: 2rem; }
   .logo { width: 90px; }
-  .title { font-size: 1.8rem; }
-  .subtitle { font-size: 1.1rem; }
-  .button { width: 85%; font-size: 0.95rem; }
-  .bottomLinks a { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.1rem; }
+  button { width: 85%; font-size: 0.95rem; }
+  .bottom-links a { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
 }
 
 /* ========================= */
 /* Responsive Mobile */
 @media (max-width: 768px) {
-  .loginColumn { width: 95%; padding: 1.5rem 2rem; }
+  .login-column { width: 95%; padding: 1.5rem 2rem; }
   .logo { width: 70px; }
-  .title { font-size: 1.5rem; }
-  .subtitle { font-size: 1rem; }
-  .button { width: 90%; font-size: 0.9rem; }
-  .bottomLinks { gap: 1rem; }
-  .bottomLinks a { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1rem; }
+  button { width: 90%; font-size: 0.9rem; }
+  .bottom-links { gap: 1rem; }
+  .bottom-links a { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
 }
