@@ -32,8 +32,12 @@ const Login = () => {
       localStorage.setItem("user_id", userFromDb.user_id);
       console.log("uid:",userFromDb.user_id)
       localStorage.setItem("accessToken", userFromDb.access_token);
+      console.log("token:",userFromDb.access_token)
+      localStorage.setItem("accessToken", userFromDb.providers);
+      console.log("token:",userFromDb.providers)
 
       console.log("userdata:",userFromDb)
+      
       console.log("Token stored successfully!");
 
       // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
