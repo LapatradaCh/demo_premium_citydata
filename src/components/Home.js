@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./css/Home.css";
+import styles from "./css/Home.module.css";
 import logo from "./logo.png"; // ใช้เป็น fallback
 import {
   FaMapMarkedAlt, FaClipboardList, FaChartBar, FaCog, FaSignOutAlt, FaSearch
@@ -86,65 +86,78 @@ const DateFilter = () => {
   );
 };
 
-
-// Report Table
 const ReportTable = () => (
-  <div className="report-table-container">
-    <div className="search-top">
-      <div className="search-input-container">
+  <div className={styles.reportTableContainer}>
+    <div className={styles.searchTop}>
+      <div className={styles.searchInputContainer}>
         <input type="text" placeholder="ใส่คำที่ต้องการค้นหา" />
-        <FaSearch className="search-icon" /> {/* เพิ่มไอคอนค้นหา */}
+        <FaSearch className={styles.searchIcon} />
       </div>
     </div>
 
-    <div className="report-filters">
+    <div className={styles.reportFilters}>
       {["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"].map((label, i) => (
-        <div className="filter-group" key={i}>
+        <div className={styles.filterGroup} key={i}>
           <label>{label}</label>
-          {label === "ช่วงเวลา" ? <DateFilter /> : <select defaultValue="all"><option value="all">ทั้งหมด</option></select>}
+          {label === "ช่วงเวลา" ? (
+            <DateFilter />
+          ) : (
+            <select defaultValue="all">
+              <option value="all">ทั้งหมด</option>
+            </select>
+          )}
         </div>
       ))}
+
       {["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"].map((label, i) => (
-        <div className="filter-group lower-row" key={i}>
+        <div key={i} className={`${styles.filterGroup} ${styles.lowerRow}`}>
           <label>{label}</label>
-          <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
+          <select defaultValue="all">
+            <option value="all">ทั้งหมด</option>
+          </select>
         </div>
       ))}
     </div>
 
-    <div className="report-summary">เรื่อง <strong>(71 รายการ)</strong> 100% จากทุกรายการ</div>
+    <div className={styles.reportSummary}>
+      เรื่อง <strong>(71 รายการ)</strong> 100% จากทุกรายการ
+    </div>
 
-    <div className="report-table-header">
-      <div className="header-cell report-id"></div>
-      <div className="header-cell image-col">รูป</div>
-      <div className="header-cell category-col">ประเภท</div>
-      <div className="header-cell datetime-col sortable">วัน/เวลา</div>
-      <div className="header-cell updated-col sortable">อัพเดต</div>
-      <div className="header-cell location-col">ตำแหน่ง</div>
-      <div className="header-cell unit-col">รับผิดชอบปัจจุบัน</div>
-      <div className="header-cell status-col">สถานะ</div>
+    <div className={styles.reportTableHeader}>
+      <div className={`${styles.headerCell} ${styles.reportId}`}></div>
+      <div className={`${styles.headerCell} ${styles.imageCol}`}>รูป</div>
+      <div className={`${styles.headerCell} ${styles.categoryCol}`}>ประเภท</div>
+      <div className={`${styles.headerCell} ${styles.datetimeCol} ${styles.sortable}`}>วัน/เวลา</div>
+      <div className={`${styles.headerCell} ${styles.updatedCol} ${styles.sortable}`}>อัพเดต</div>
+      <div className={`${styles.headerCell} ${styles.locationCol}`}>ตำแหน่ง</div>
+      <div className={`${styles.headerCell} ${styles.unitCol}`}>รับผิดชอบปัจจุบัน</div>
+      <div className={`${styles.headerCell} ${styles.statusCol}`}>สถานะ</div>
     </div>
 
     {reportData.map(report => (
-      <div key={report.id} className="report-table-row">
-        <div className="row-cell detail-id">
-          <span className="report-id-text">{report.id}</span>
-          <p className="report-detail-text">{report.detail}</p>
+      <div key={report.id} className={styles.reportTableRow}>
+        <div className={`${styles.rowCell} ${styles.detailId}`}>
+          <span className={styles.reportIdText}>{report.id}</span>
+          <p className={styles.reportDetailText}>{report.detail}</p>
         </div>
-        <div className="row-cell image-col"><img src={report.image} alt="Report" className="report-image" /></div>
-        <div className="row-cell category-col">{report.category}</div>
-        <div className="row-cell datetime-col">{report.datetime_in}</div>
-        <div className="row-cell updated-col">{report.datetime_out}</div>
-        <div className="row-cell location-col">{report.location}</div>
-        <div className="row-cell unit-col">{report.responsible_unit}</div>
-        <div className="row-cell status-col">
-          <span className={`status-tag ${report.status === "รอรับเรื่อง" ? "pending" : "completed"}`}>{report.status}</span>
+        <div className={`${styles.rowCell} ${styles.imageCol}`}>
+          <img src={report.image} alt="Report" className={styles.reportImage} />
+        </div>
+        <div className={`${styles.rowCell} ${styles.categoryCol}`}>{report.category}</div>
+        <div className={`${styles.rowCell} ${styles.datetimeCol}`}>{report.datetime_in}</div>
+        <div className={`${styles.rowCell} ${styles.updatedCol}`}>{report.datetime_out}</div>
+        <div className={`${styles.rowCell} ${styles.locationCol}`}>{report.location}</div>
+        <div className={`${styles.rowCell} ${styles.unitCol}`}>{report.responsible_unit}</div>
+        <div className={`${styles.rowCell} ${styles.statusCol}`}>
+          <span className={`${styles.statusTag} ${report.status === "รอรับเรื่อง" ? styles.pending : styles.completed}`}>
+            {report.status}
+          </span>
           {report.rating && (
-            <div className="rating">
+            <div className={styles.rating}>
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className={`rating-star ${i < report.rating ? 'active' : ''}`}
+                  className={`${styles.ratingStar} ${i < report.rating ? styles.active : ""}`}
                 >
                   ★
                 </span>
@@ -302,48 +315,56 @@ const Home = () => {
 
   return (
     <div>
-      <div className="top-navigation">
-        <div className="logo-section">
+      <div className={styles.topNavigation}>
+        <div className={styles.logoSection}>
           <img
             src={organizationInfo.logo}
             alt="Logo"
-            className="logo-img"
+            className={styles.logoImg}
             // เพิ่ม Fallback หากรูปจาก API โหลดไม่สำเร็จ
             onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
           />
-          <span className="unit-name">{organizationInfo.name}</span>
+          <span className={styles.unitName}>{organizationInfo.name}</span>
         </div>
 
-        <nav className="center-menu">
+        <nav className={styles.centerMenu}>
           {tabs.map(tab => (
-            <div key={tab} className="menu-wrapper">
-
+            <div key={tab} className={styles.menuWrapper}>
               <button
-                className={activeTab === tab ? "menu-item active" : "menu-item"}
-                onClick={() => handleTabClick(tab)} // <-- เปลี่ยนมาเรียกฟังก์ชันนี้
+                className={`${styles.menuItem} ${activeTab === tab ? styles.active : ""}`}
+                onClick={() => handleTabClick(tab)}
               >
-
                 {tab}
-                {cardsData[tab] && cardsData[tab].length > 0 && (dropdownOpen === tab ? <FiChevronUp className="chevron-icon" /> : <FiChevronDown className="chevron-icon" />)}
+                {cardsData[tab] && cardsData[tab].length > 0 &&
+                  (dropdownOpen === tab
+                    ? <FiChevronUp className={styles.chevronIcon} />
+                    : <FiChevronDown className={styles.chevronIcon} />
+                  )
+                }
               </button>
               {dropdownOpen === tab && cardsData[tab] && (
-                <div className="dropdown-menu">{cardsData[tab].map((card, i) => (<div className="dropdown-item" key={i}>{card.icon}{card.label}</div>))}</div>
+                <div className={styles.dropdownMenu}>
+                  {cardsData[tab].map((card, i) => (
+                    <div className={styles.dropdownItem} key={i}>
+                      {card.icon}{card.label}
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           ))}
         </nav>
-
-        <div className="logout-icon">
+        
+        <div className={styles.logoutIcon}>
           <button onClick={handleLogout}>
             <FaSignOutAlt size={18} />
             <span>ออกจากระบบ</span>
           </button>
         </div>
-      </div>
-
-      <div className="dashboard-content">
-        {activeTab === "รายการแจ้ง" && <ReportTable />}
-      </div>
+        
+        <div className={styles.dashboardContent}>
+          {activeTab === "รายการแจ้ง" && <ReportTable />}
+        </div>
     </div>
   );
 };
