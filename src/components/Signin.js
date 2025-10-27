@@ -5,6 +5,7 @@ import { FaSignOutAlt as LogOut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // <-- IMPORT
 import liff from "@line/liff"; // <-- IMPORT
 
+const DB_API ="https://premium-citydata-api-ab.vercel.app/api/user_organizations";
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -117,7 +118,7 @@ const JoinORG = () => {
     // 5. ถ้า OTP ถูกต้อง -> ยิง API
     setIsLoading(true);
     try {
-    const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/user_organizations', {
+    const response = await fetch(DB_API , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
