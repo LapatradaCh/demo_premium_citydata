@@ -313,60 +313,60 @@ const Home = () => {
   };
 
 
-  return (
-    <div>
-      <div className={styles.topNavigation}>
-        <div className={styles.logoSection}>
-          <img
-            src={organizationInfo.logo}
-            alt="Logo"
-            className={styles.logoImg}
-            // เพิ่ม Fallback หากรูปจาก API โหลดไม่สำเร็จ
-            onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
-          />
-          <span className={styles.unitName}>{organizationInfo.name}</span>
-        </div>
+return (
+  <div>
+    <div className={styles.topNavigation}>
+      <div className={styles.logoSection}>
+        <img
+          src={organizationInfo.logo}
+          alt="Logo"
+          className={styles.logoImg}
+          onError={(e) => { e.target.onerror = null; e.target.src = logo; }}
+        />
+        <span className={styles.unitName}>{organizationInfo.name}</span>
+      </div>
 
-        <nav className={styles.centerMenu}>
-          {tabs.map(tab => (
-            <div key={tab} className={styles.menuWrapper}>
-              <button
-                className={`${styles.menuItem} ${activeTab === tab ? styles.active : ""}`}
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-                {cardsData[tab] && cardsData[tab].length > 0 &&
-                  (dropdownOpen === tab
-                    ? <FiChevronUp className={styles.chevronIcon} />
-                    : <FiChevronDown className={styles.chevronIcon} />
-                  )
-                }
-              </button>
-              {dropdownOpen === tab && cardsData[tab] && (
-                <div className={styles.dropdownMenu}>
-                  {cardsData[tab].map((card, i) => (
-                    <div className={styles.dropdownItem} key={i}>
-                      {card.icon}{card.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
-        
-        <div className={styles.logoutIcon}>
-          <button onClick={handleLogout}>
-            <FaSignOutAlt size={18} />
-            <span>ออกจากระบบ</span>
-          </button>
-        </div>
-        
-        <div className={styles.dashboardContent}>
-          {activeTab === "รายการแจ้ง" && <ReportTable />}
-        </div>
+      <nav className={styles.centerMenu}>
+        {tabs.map(tab => (
+          <div key={tab} className={styles.menuWrapper}>
+            <button
+              className={`${styles.menuItem} ${activeTab === tab ? styles.active : ""}`}
+              onClick={() => handleTabClick(tab)}
+            >
+              {tab}
+              {cardsData[tab] && cardsData[tab].length > 0 &&
+                (dropdownOpen === tab
+                  ? <FiChevronUp className={styles.chevronIcon} />
+                  : <FiChevronDown className={styles.chevronIcon} />
+                )
+              }
+            </button>
+            {dropdownOpen === tab && cardsData[tab] && (
+              <div className={styles.dropdownMenu}>
+                {cardsData[tab].map((card, i) => (
+                  <div className={styles.dropdownItem} key={i}>
+                    {card.icon}{card.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      <div className={styles.logoutIcon}>
+        <button onClick={handleLogout}>
+          <FaSignOutAlt size={18} />
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
+    </div> {/* <-- ปิด topNavigation */}
+
+    <div className={styles.dashboardContent}>
+      {activeTab === "รายการแจ้ง" && <ReportTable />}
     </div>
-  );
-};
+  </div>
+);
+
 
 export default Home;
