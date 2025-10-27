@@ -135,7 +135,7 @@ const JoinORG = () => {
       const data = await response.json();
       setIsLoading(false); 
 
-      if (response.status === 200) { // 200 Created (เข้าร่วมสำเร็จ)
+      if (response.status === 201) { // 201 Created (เข้าร่วมสำเร็จ)
         setMessage(`เข้าร่วมหน่วยงาน ${unitCode} สำเร็จ!`);
         // เคลียร์ฟอร์ม
         setUnitCode("");
@@ -143,7 +143,7 @@ const JoinORG = () => {
         setOtpCode("");
         setGeneratedOTP("");
         // (Optional: พาไปหน้า /home)
-        // navigate('/home');
+       navigate('/Home');
       } else if (response.status === 409) { // 409 Conflict (อยู่ในหน่วยงานนี้แล้ว)
         setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
       } else if (response.status === 404) { // 404 Not Found (รหัสหน่วยงาน/user ผิด)
