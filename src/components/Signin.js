@@ -5,7 +5,7 @@ import { FaSignOutAlt as LogOut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // <-- IMPORT
 import liff from "@line/liff"; // <-- IMPORT
 
-const DB_API ="https://premium-citydata-api-ab.vercel.app/api/user_organizations";
+const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
