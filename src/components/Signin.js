@@ -135,7 +135,7 @@ const JoinORG = () => {
       const data = await response.json();
       setIsLoading(false); 
 
-      if (response.status === 201) { // 201 Created (เข้าร่วมสำเร็จ)
+      if (response.status === 200) { // 200 Created (เข้าร่วมสำเร็จ)
         setMessage(`เข้าร่วมหน่วยงาน ${unitCode} สำเร็จ!`);
         // เคลียร์ฟอร์ม
         setUnitCode("");
