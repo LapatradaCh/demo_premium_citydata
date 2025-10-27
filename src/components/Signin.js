@@ -22,42 +22,43 @@ const JoinORG = () => {
 
   // --- ฟังก์ชัน Logout ใหม่ (ตามที่คุณให้มา) ---
   const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("Initiating logout for token:", accessToken);
+    // const accessToken = localStorage.getItem("accessToken");
+    // console.log("Initiating logout for token:", accessToken);
 
-    try {
-      // Step 1: Notify the backend (only if a token exists)
-      if (accessToken) {
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
-        await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log("Backend has been notified of the logout.");
-      }
-    } catch (error) {
-      // It's okay if the backend call fails. We still want to log the user out on the client-side.
-      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
-    } finally {
-      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
-      console.log("Executing client-side cleanup.");
+    // try {
+    //   // Step 1: Notify the backend (only if a token exists)
+    //   if (accessToken) {
+    //     const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+    //     await fetch(apiUrl, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     });
+    //     console.log("Backend has been notified of the logout.");
+    //   }
+    // } catch (error) {
+    //   // It's okay if the backend call fails. We still want to log the user out on the client-side.
+    //   console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    // } finally {
+    //   // Step 2: Perform client-side logout actions (this block ALWAYS runs)
+    //   console.log("Executing client-side cleanup.");
 
-      // Logout from LIFF if the user is logged in via LIFF
-      if (liff.isLoggedIn()) {
-        liff.logout();
-      }
+    //   // Logout from LIFF if the user is logged in via LIFF
+    //   if (liff.isLoggedIn()) {
+    //     liff.logout();
+    //   }
 
-      // ALWAYS remove the token from local storage, regardless of login method
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
-      localStorage.removeItem("selectedOrg"); // เคลียร์ค่าที่เลือกไว้ด้วย
+    //   // ALWAYS remove the token from local storage, regardless of login method
+    //   localStorage.removeItem("accessToken");
+    //   localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
+    //   localStorage.removeItem("selectedOrg"); // เคลียร์ค่าที่เลือกไว้ด้วย
 
-      // ALWAYS navigate the user back to the login page for a consistent experience
-      navigate("/"); // Or '/login'
-    }
+    //   // ALWAYS navigate the user back to the login page for a consistent experience
+    //   navigate("/"); // Or '/login'
+    // 
+          navigate("/"); // Or '/login'
   };
   // --- จบฟังก์ชัน Logout ---
 
