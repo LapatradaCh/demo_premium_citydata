@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import "./css/Login.css"; 
+import styles from "./css/Login.module.css";
 import traffyLogo from "./traffy.png";
 import liff from "@line/liff";
 import { jwtDecode } from "jwt-decode";
@@ -242,30 +242,30 @@ const Login = () => {
 
 
   return (
-    <div className="login-container">
-      <div className="login-column">
+    <div className="styles.loginContainer">
+      <div className="styles.loginColumn">
         {isProcessing ? (
           <>
-            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
+            <img src={traffyLogo} alt="Traffy Logo" className="styles.logo" />
             <h3>กำลังตรวจสอบสถานะ...</h3>
           </>
         ) : (
           <>
-            <img src={traffyLogo} alt="Traffy Logo" className="logo" />
+            <img src={traffyLogo} alt="Traffy Logo" className="styles.logo" />
             <h2>Fondue Dashboard and Manager</h2>
             <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <button className="facebook-btn" onClick={handleFacebookLogin}>
+            <button className="styles.facebookBtn" onClick={handleFacebookLogin}>
               <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
             </button>
-            <button className="google-btn" onClick={handleGoogleLogin}>
+            <button className="styles.googleBtn" onClick={handleGoogleLogin}>
               <FcGoogle size={22} /> เข้าสู่ระบบด้วย Google
             </button>
-            <button className="line-btn" onClick={handleLineLogin}>
+            <button className="styles.lineBtn" onClick={handleLineLogin}>
               <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
             </button>
 
-            <div className="bottom-links">
+            <div className="styles.bottomLinks  ">
               <a
                 href="https://www.traffy.in.th/Traffy-Fondue-247430d4aa7b803b835beb9ee988541f"
                 target="_blank"
