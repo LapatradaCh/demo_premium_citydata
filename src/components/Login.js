@@ -30,6 +30,7 @@ const Login = () => {
 
       // 1. เก็บ Token
       localStorage.setItem("user_id", userFromDb.user_id);
+      console.log("uid:",userFromDb.user_id)
       localStorage.setItem("accessToken", userFromDb.access_token);
 
       console.log("userdata:",userFromDb)
