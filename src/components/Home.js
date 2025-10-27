@@ -279,7 +279,7 @@ const Home = () => {
     try {
       // Step 1: Notify the backend (only if a token exists)
       if (accessToken) {
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/logout`;
+        const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
         await fetch(apiUrl, {
           method: "POST",
           headers: {
