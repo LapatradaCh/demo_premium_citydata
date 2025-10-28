@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaLine } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
+
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
-// [NEW] API Endpoint สำหรับนับจำนวนองค์กรของ User (ต้องสร้างที่ Backend)
 const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 const LIFF_ID = "2008265392-G9mE93Em"; 
 
@@ -18,81 +18,52 @@ const Login = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [processingMethod, setProcessingMethod] = useState(""); // เพิ่ม state ช่องทาง login
 
-
-  // [NEW] ฟังก์ชันกลางสำหรับจัดการการนำทาง (Navigation) หลังล็อกอินสำเร็จ
+  // ฟังก์ชันกลางจัดการ navigation หลังล็อกอิน
   const handleLoginSuccess = useCallback(async (userFromDb, welcomeName) => {
     try {
-      // ตรวจสอบว่าได้ข้อมูล user_id และ access_token มาจาก API ของเราหรือไม่
       if (!userFromDb || !userFromDb.access_token || !userFromDb.user_id) {
         throw new Error("API response is missing access_token or user_id.");
       }
 
-      // 1. เก็บ Token
       localStorage.setItem("user_id", userFromDb.user_id);
-      console.log("uid:",userFromDb.user_id)
       localStorage.setItem("accessToken", userFromDb.access_token);
-      console.log("token:",userFromDb.access_token)
 
-      console.log("userdata:",userFromDb)
-      
-      console.log("Token stored successfully!");
-
-      // 2. [สำคัญ] ยิง API เพื่อเช็คจำนวนองค์กร
       const userId = userFromDb.user_id;
       const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
-
       if (!orgCountResponse.ok) {
-        // ถ้า API เช็คองค์กรล้มเหลว ก็ยังให้ไปหน้า Home ปกติ
-        console.error("Failed to fetch organization count. Navigating to /Home as default.");
-        alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
         navigate("/Home1");
         return;
       }
 
       const orgData = await orgCountResponse.json();
-      console.log(orgData)
-      // สมมติว่า API คืนค่า { count: N }
       const orgCount = orgData.length || 0; 
 
-      console.log(`User ${userId} is in ${orgCount} organizations.`);
-
-      // 3. แสดง Alert
-      alert(`เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับคุณ ${welcomeName}`);
-      
-      // 4. นำทางตามเงื่อนไข
       if (orgCount > 1) {
-        navigate("/home1"); // ไปหน้าเลือกองค์กร
-      } else if (orgCount ==1){
-        navigate("/home")
-      }else {
-        navigate("/Signin"); // ไปหน้าหลัก (มี 1 หรือ 0 องค์กร)
+        navigate("/home1");
+      } else if (orgCount === 1) {
+        navigate("/home");
+      } else {
+        navigate("/Signin");
       }
-
     } catch (error) {
       console.error("Login Success Handler Error:", error);
       setErrorMessage("เกิดข้อผิดพลาดหลังล็อกอิน: " + error.message);
-      // หากเกิด Error ระหว่างเช็คองค์กร ให้ fallback ไปหน้า Home
       navigate("/Home");
     }
-  }, [navigate]); // Dependency คือ navigate
+  }, [navigate]);
 
-
-  // --- [MODIFIED] ปรับปรุง processLiffLogin ---
+  // LIFF Login
   const processLiffLogin = useCallback(async () => {
     try {
-      console.log("User is logged in via LIFF. Processing login...");
       const idToken = liff.getIDToken();
       if (!idToken) throw new Error("Could not get ID Token from LIFF.");
 
       const decodedToken = jwtDecode(idToken);
       const userEmail = decodedToken.email;
-      console.log("Decoded Token Info:", decodedToken);
 
       if (!userEmail) {
-        alert(
-          "การเข้าสู่ระบบล้มเหลว: จำเป็นต้องได้รับอนุญาตให้เข้าถึงอีเมล กรุณาลองใหม่อีกครั้งและกดยินยอม"
-        );
         liff.logout();
         setIsProcessing(false);
         return;
@@ -114,14 +85,10 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Failed to save user data to DB"
-        );
+        throw new Error(errorData.message || "Failed to save user data to DB");
       }
 
       const userFromDb = await response.json();
-
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
       await handleLoginSuccess(userFromDb, decodedToken.name);
 
     } catch (error) {
@@ -129,18 +96,15 @@ const Login = () => {
       setErrorMessage("เกิดข้อผิดพลาดในการประมวลผลข้อมูล LIFF: " + error.message);
       setIsProcessing(false);
     }
-  }, [navigate, handleLoginSuccess]); // [MODIFIED] เพิ่ม handleLoginSuccess ใน dependency
+  }, [handleLoginSuccess]);
 
   useEffect(() => {
     const initializeLiff = async () => {
       try {
         await liff.init({ liffId: LIFF_ID });
-        console.log("LIFF initialized successfully");
-
         if (liff.isLoggedIn()) {
           await processLiffLogin();
         } else {
-          console.log("User is not logged in. Ready for manual login.");
           setIsProcessing(false);
         }
       } catch (error) {
@@ -149,20 +113,23 @@ const Login = () => {
         setIsProcessing(false);
       }
     };
-
     initializeLiff();
-  }, [processLiffLogin]); // dependency ถูกต้องแล้ว
+  }, [processLiffLogin]);
 
-  
+  // LINE Login
   const handleLineLogin = () => {
-    if (isProcessing) return; 
-    setIsProcessing(true); 
+    if (isProcessing) return;
+    setProcessingMethod("LINE");
+    setIsProcessing(true);
     liff.login({ scope: "profile openid email" });
   };
 
-
-  // --- [MODIFIED] ปรับปรุง handleGoogleLogin ---
+  // Google Login
   const handleGoogleLogin = async () => {
+    if (isProcessing) return;
+    setProcessingMethod("Google");
+    setIsProcessing(true);
+
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result._tokenResponse;
@@ -187,22 +154,21 @@ const Login = () => {
       }
 
       const userFromDb = await response.json();
-      
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
       await handleLoginSuccess(userFromDb, user.displayName);
 
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else {
-        console.error("Google login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Google ได้: " + error.message);
-      }
+      console.error("Google login error:", error);
+      setIsProcessing(false);
+      setProcessingMethod("");
     }
   };
 
-  // --- [MODIFIED] ปรับปรุง handleFacebookLogin ---
+  // Facebook Login
   const handleFacebookLogin = async () => {
+    if (isProcessing) return;
+    setProcessingMethod("Facebook");
+    setIsProcessing(true);
+
     try {
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result._tokenResponse;
@@ -225,45 +191,51 @@ const Login = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to save Facebook user to DB");
       }
-      
-      const userFromDb = await response.json();
 
-      // [MODIFIED] เรียกใช้ฟังก์ชันกลางแทนการ navigate เอง
+      const userFromDb = await response.json();
       await handleLoginSuccess(userFromDb, user.displayName);
 
     } catch (error) {
-      if (error.code === "auth/popup-closed-by-user") {
-        alert("คุณปิดหน้าต่างล็อกอินก่อนเข้าสู่ระบบ");
-      } else if (error.code === "auth/account-exists-with-different-credential") {
-        alert("บัญชีนี้มีอยู่แล้วกับผู้ให้บริการอื่น กรุณาใช้บัญชีเดิมเข้าสู่ระบบ");
-      } else {
-        console.error("Facebook login error:", error);
-        alert("ไม่สามารถเข้าสู่ระบบด้วย Facebook ได้: " + error.message);
-      }
+      console.error("Facebook login error:", error);
+      setIsProcessing(false);
+      setProcessingMethod("");
     }
   };
 
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginColumn}>
-        {isProcessing ? (
+        {isProcessing && processingMethod && (
+          <p className="text-white mb-2">
+            กำลังเข้าสู่ระบบด้วย {processingMethod}...
+          </p>
+        )}
+
+        <img src={traffyLogo} alt="Traffy Logo" className={styles.logo} />
+        {!isProcessing && (
           <>
-            <img src={traffyLogo} alt="Traffy Logo" className={styles.logo} />
-            <h3>กำลังตรวจสอบสถานะ...</h3>
-          </>
-        ) : (
-          <>
-            <img src={traffyLogo} alt="Traffy Logo" className={styles.logo} />
             <h2>Fondue Dashboard and Manager</h2>
             <h3>แพลตฟอร์มบริหารจัดการปัญหาเมืองสำหรับเจ้าหน้าที่</h3>
             {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-            <button className={styles.facebookBtn} onClick={handleFacebookLogin}>
+            <button
+              onClick={handleFacebookLogin}
+              disabled={isProcessing}
+              className="btn btn-primary w-4/5 mb-3 flex items-center justify-center gap-2"
+            >
               <FaFacebookF size={20} /> เข้าสู่ระบบด้วย Facebook
             </button>
-            <button className={styles.googleBtn} onClick={handleGoogleLogin}>
+            <button
+              onClick={handleGoogleLogin}
+              disabled={isProcessing}
+              className="btn btn-outline btn-secondary w-4/5 mb-3 flex items-center justify-center gap-2"
+            >
               <FcGoogle size={22} /> เข้าสู่ระบบด้วย Google
             </button>
-            <button className={styles.lineBtn} onClick={handleLineLogin}>
+            <button
+              onClick={handleLineLogin}
+              disabled={isProcessing}
+              className="btn btn-success w-4/5 flex items-center justify-center gap-2"
+            >
               <FaLine size={20} /> เข้าสู่ระบบด้วย LINE
             </button>
 
