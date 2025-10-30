@@ -172,6 +172,7 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
       const user = result._tokenResponse;
+      console.log("user info :",user);
 
       const userData = {
         email: user.email,
