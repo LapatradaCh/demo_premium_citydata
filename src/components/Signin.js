@@ -5,6 +5,7 @@ import { FaSignOutAlt as LogOut } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // <-- IMPORT
 import liff from "@line/liff"; // <-- IMPORT
 
+
 const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
@@ -162,13 +163,45 @@ const JoinORG = () => {
 
   return (
     <div className={styles.bodySignin}>
-      {/* Logout Button */}
-      <div className={styles["logout-icon"]}>
-        <button onClick={handleLogout}>
-          <LogOut size={18} />
-          <span>ออกจากระบบ</span>
-        </button>
-      </div>
+      <div
+      style={{
+        position: "absolute",
+        top: "1rem",
+        right: "1rem",
+        zIndex: 1000, 
+      }}
+    >
+      <button
+        onClick={handleLogout}
+        style={{
+          display: "flex",
+          width: "180px",
+          alignItems: "center",
+          gap: "0.5rem",
+          color: "white",
+          padding: "0.5rem 1rem",
+          border: "none",
+          borderRadius: "0.75rem",
+          fontWeight: 600,
+          cursor: "pointer",
+          background: "linear-gradient(135deg, #e63946, #c92632)",
+          boxShadow: "0 6px 20px rgba(230,57,70,0.35)",
+          transition: "all 0.3s ease",
+          whiteSpace: "nowrap",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
+          e.currentTarget.style.boxShadow = "0 10px 30px rgba(230,57,70,0.45)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "translateY(0) scale(1)";
+          e.currentTarget.style.boxShadow = "0 6px 20px rgba(230,57,70,0.35)";
+        }}
+      >
+        <LogOut size={18} />
+        <span>ออกจากระบบ</span>
+      </button>
+    </div>
 
       {/* Container OTP */}
       <div className={styles["otp-container"]}>
@@ -179,6 +212,7 @@ const JoinORG = () => {
         <form className={styles["otp-form"]} onSubmit={handleSubmit}>
           {/* รหัสหน่วยงาน */}
           <label className={styles.labelUse}>รหัสหน่วยงาน</label>
+          
           <div className={styles.inputField}>
             <input
               type="text"
