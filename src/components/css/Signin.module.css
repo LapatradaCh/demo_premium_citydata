@@ -1,3 +1,4 @@
+/* ========================= */
 /* Reset & Base */
 :global(*), :global(*::before), :global(*::after) {
   box-sizing: border-box;
@@ -58,18 +59,52 @@
 /* Form */
 .otpForm { width: 100%; display:flex; flex-direction:column; }
 .labelUse { font-weight:600; color:#492610; margin:12px 0 6px; }
-.inputField input { width:100%; padding:14px 16px; border:1px solid #ddd; border-radius:12px; font-size:1em; outline:none; transition: all 0.3s; background-color:#fff; }
+.inputField input {
+  width: 100%;
+  padding:14px 16px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:1em;
+  outline:none;
+  transition: all 0.3s;
+  background-color:#fff;
+  height:52px;
+}
 .inputField input:focus { border-color: var(--color-primary); box-shadow:0 0 10px rgba(183,134,102,0.35); }
 .inputField input:hover { box-shadow:0 0 6px rgba(0,0,0,0.1); }
 
-/* Phone + OTP group */
-.phoneOtpGroup { display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
-.phoneOtpGroup input { flex:1; }
-.phoneOtpGroup button {
-  width:100%; padding:10px 12px; border-radius:20px; border:none; background-color:#007BFF; color:#fff; font-weight:600; cursor:pointer; transition: all 0.3s; height:46px; box-shadow:0 5px 12px rgba(0,123,255,0.3);
+/* ================= Phone + OTP Group ================= */
+.phoneOtpGroup {
+  display: flex;
+  gap: 8px;              /* ช่องว่างระหว่าง input + button */
+  margin-bottom: 18px;
+  width: 100%;
 }
-.phoneOtpGroup button:hover:not(:disabled) { background-color:#0056b3; transform: translateY(-2px); box-shadow:0 8px 20px rgba(0,123,255,0.45);}
-.phoneOtpGroup button:disabled { opacity:0.65; cursor:not-allowed; }
+.phoneOtpGroup .inputField {
+  flex: 1;                /* ขยายเต็มพื้นที่ */
+  min-width: 0;           /* ป้องกัน overflow */
+}
+.phoneOtpGroup button {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #007BFF;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.phoneOtpGroup button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.45);
+}
+.phoneOtpGroup button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
 /* Submit button */
 .submitBtn {
@@ -108,18 +143,15 @@
   transition: all 0.3s ease;
   white-space: nowrap;
 }
-
 .logoutBtn:hover {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 10px 30px rgba(230,57,70,0.45);
 }
-
 .logoutBtn svg {
   width: 18px;
   height: 18px;
   transition: transform 0.35s;
 }
-
 .logoutBtn:hover svg {
   transform: scale(1.15) rotate(-8deg);
 }
@@ -129,17 +161,12 @@
   .otpContainer { width: 92%; padding: 28px; }
   .logoutBtn { width: 160px; font-size: 1rem; }
   .submitBtn { font-size: 1.1rem; padding: 14px 22px; }
-  .phoneOtpGroup button { font-size: 0.9rem; }
 }
-
 @media (min-width: 768px) {
   .otpContainer { width: 92%; padding: 36px; }
-  .logoutBtn { width: 180px; font-size: 1.05rem; padding: 0.5rem 1rem; }
   .submitBtn { font-size: 1.15rem; padding: 16px 26px; }
-  .phoneOtpGroup { flex-direction: row; gap: 10px; }
-  .phoneOtpGroup button { width: auto; height: 46px; }
+  .logoutBtn { width: 180px; font-size: 1.05rem; padding: 0.5rem 1rem; }
 }
-
 @media (min-width: 1024px) {
   .otpContainer { width: 640px; padding: 48px; }
   .submitBtn { font-size: 1.2rem; padding: 18px 28px; }
