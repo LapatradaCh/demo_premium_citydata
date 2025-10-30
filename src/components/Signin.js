@@ -161,9 +161,8 @@ const JoinORG = () => {
   };
   // --- จบฟังก์ชัน Submit ---
 
- return (
+  return (
     <div className={styles.bodySignin}>
-      {/* Logout */}
       <div className={styles.logoutIcon}>
         <button className={styles.logoutBtn} onClick={handleLogout}>
           <LogOut size={18} />
@@ -171,7 +170,6 @@ const JoinORG = () => {
         </button>
       </div>
 
-      {/* OTP Container */}
       <div className={styles.otpContainer}>
         <div className={styles.header}>
           <img src={logo} alt="Logo" className={styles.logoImg} />
