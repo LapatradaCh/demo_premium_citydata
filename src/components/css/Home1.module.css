@@ -40,6 +40,19 @@
 .floatingCircle3 {
   display: none;
 }
+.sectionTitle {
+  text-align: center;
+  color: #000000;
+  background-color: #ffffff;
+  border: 2px solid #C7B299;
+  border-radius: 15px;
+  padding: 12px 25px;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 auto 30px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 400px;
+}
 
 /* App Body */
 .appBody {
