@@ -22,13 +22,8 @@ const Home1 = () => {
         const userId = localStorage.getItem('user_id'); 
         const accessToken = localStorage.getItem('accessToken');
 
-        if (!userId) {
-          throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
-        }
-        
-        if (!accessToken) {
-          throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
-        }
+        if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
+        if (!accessToken) throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
 
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
 
@@ -39,9 +34,7 @@ const Home1 = () => {
           }
         });
 
-        if (!response.ok) {
-          throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
 
         const data = await response.json();
 
@@ -66,7 +59,6 @@ const Home1 = () => {
     fetchAgencies(); 
   }, []);
 
-
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id"); 
@@ -89,16 +81,13 @@ const Home1 = () => {
       console.error("Failed to notify backend, but proceeding with client-side logout.", error);
     } finally {
       console.log("Executing client-side cleanup.");
-      if (liff.isLoggedIn()) {
-        liff.logout();
-      }
+      if (liff.isLoggedIn()) liff.logout();
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id"); 
       localStorage.removeItem("selectedOrg"); 
       navigate("/"); 
     }
   };
-
 
   const handleSearch = () => {
     const filtered = allAgencies.filter((agency) =>
@@ -169,31 +158,34 @@ const Home1 = () => {
         ) : filteredAgencies.length === 0 ? (
           <p className={styles.noResults}>ไม่พบหน่วยงาน</p>
         ) : (
-          <div className={styles.agencyGrid}>
-            {filteredAgencies.map((agency) => (
-              <div
-                key={agency.id} 
-                className={styles.agencyItem}
-                onClick={() => handleAgencyClick(agency)}
-              >
-                <div className={styles.agencyImg}>
-                  <img
-                    src={agency.img}
-                    alt={agency.name} 
-                    title={agency.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = `https://placehold.co/100x100/A0AEC0/ffffff?text=${agency.name.charAt(0)}`;
-                    }}
-                  />
-                  {agency.badge && <div className="agency-badge">{agency.badge}</div>}
+          <>
+            <h2 className={styles.sectionTitle}>หน่วยงานทั้งหมด</h2>
+            <div className={styles.agencyGrid}>
+              {filteredAgencies.map((agency) => (
+                <div
+                  key={agency.id} 
+                  className={styles.agencyItem}
+                  onClick={() => handleAgencyClick(agency)}
+                >
+                  <div className={styles.agencyImg}>
+                    <img
+                      src={agency.img}
+                      alt={agency.name} 
+                      title={agency.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://placehold.co/100x100/A0AEC0/ffffff?text=${agency.name.charAt(0)}`;
+                      }}
+                    />
+                    {agency.badge && <div className="agency-badge">{agency.badge}</div>}
+                  </div>
+                  <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
+                    {agency.name}
+                  </div>
                 </div>
-                <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
-                  {agency.name}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
