@@ -48,7 +48,7 @@ const Home1 = () => {
         const formattedData = data.map(item => ({
           id: item.organization_id, 
           name: item.organization_name,
-          img: item.url_logo, // <-- **สำคัญ: เราจะส่ง field 'img' นี้ไป**
+          img: item.url_logo, 
           badge: null 
         }));
 
@@ -67,14 +67,13 @@ const Home1 = () => {
   }, []);
 
 
-const handleLogout = async () => {
+  const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    const userId = localStorage.getItem("user_id"); // 1. ดึง user_id มาด้วย
+    const userId = localStorage.getItem("user_id"); 
     console.log("Initiating logout for token:", accessToken);
 
     try {
-      // Step 1: Notify the backend
-      if (accessToken && userId) { // 2. เช็กว่ามี cả userId ด้วย
+      if (accessToken && userId) { 
         const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
         await fetch(apiUrl, {
           method: "POST",
@@ -82,29 +81,21 @@ const handleLogout = async () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({ user_id: userId }), // 3. ส่ง user_id ไปใน body
+          body: JSON.stringify({ user_id: userId }), 
         });
         console.log("Backend has been notified of the logout.");
       }
     } catch (error) {
-      // It's okay if the backend call fails. We still want to log the user out on the client-side.
       console.error("Failed to notify backend, but proceeding with client-side logout.", error);
     } finally {
-      // Step 2: Perform client-side logout actions (this block ALWAYS runs)
       console.log("Executing client-side cleanup.");
-
-      // Logout from LIFF if the user is logged in via LIFF
       if (liff.isLoggedIn()) {
         liff.logout();
       }
-
-      // ALWAYS remove the token from local storage, regardless of login method
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); // เคลียร์ user_id ด้วย
-      localStorage.removeItem("selectedOrg"); // เคลียร์ค่าที่เลือกไว้ด้วย
-
-      // ALWAYS navigate the user back to the login page for a consistent experience
-      navigate("/"); // Or '/login'
+      localStorage.removeItem("user_id"); 
+      localStorage.removeItem("selectedOrg"); 
+      navigate("/"); 
     }
   };
 
@@ -121,22 +112,14 @@ const handleLogout = async () => {
     setFilteredAgencies(allAgencies);
   };
 
-  // --- vvv 1. แก้ไข handleAgencyClick vvv ---
   const handleAgencyClick = (agency) => {
-    // 1. เก็บข้อมูลหน่วยงานที่เลือก (ทั้ง object) ลงใน localStorage
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
-
-    // ✅ 2. เก็บค่าไว้เป็นหน่วยงานล่าสุดด้วย
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
-      
-    // 2. นำทางไปหน้า /home (หน้า Dashboard)
     navigate('/home');
   };
-  // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
 
   return (
     <div className={styles.appBody}>
-      {/* ... (ส่วน Logout, Header, Search Box เหมือนเดิม) ... */}
       <div className={styles.logoutIcon}>
          <button onClick={handleLogout}>
            <LogOut size={18} />
@@ -145,7 +128,7 @@ const handleLogout = async () => {
        </div>
  
        <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
- 
+
        <div className={styles.searchContainer}>
          <input
            type="text"
@@ -165,7 +148,19 @@ const handleLogout = async () => {
          </button>
        </div>
 
-      {/* Agency Grid */}
+       {/* --- Card ใหม่ 3 อัน --- */}
+       <div className={styles.extraCards}>
+         <div className={styles.extraCard} onClick={() => navigate('/request-code')}>
+           <p>ขอรหัสเพื่อเริ่มใช้งาน</p>
+         </div>
+         <div className={styles.extraCard} onClick={() => navigate('/Signin')}>
+           <p>ใส่รหัสเพื่อเริ่มใช้งาน</p>
+         </div>
+         <div className={styles.extraCard} onClick={() => navigate('/-')}>
+           <p>สร้างหน่วยงาน</p>
+         </div>
+       </div>
+
       <div className={styles.agencySection}>
         {isLoading ? (
           <p className="loading-message">กำลังโหลดข้อมูลหน่วยงาน...</p>
@@ -179,13 +174,11 @@ const handleLogout = async () => {
               <div
                 key={agency.id} 
                 className={styles.agencyItem}
-                // --- vvv 2. แก้ไข onClick vvv ---
                 onClick={() => handleAgencyClick(agency)}
-                // --- ^^^ สิ้นสุดการแก้ไข ^^^ ---
               >
                 <div className={styles.agencyImg}>
                   <img
-                    src={agency.img} // <-- field นี้จะถูกส่งไป
+                    src={agency.img}
                     alt={agency.name} 
                     title={agency.name}
                     onError={(e) => {
@@ -196,7 +189,7 @@ const handleLogout = async () => {
                   {agency.badge && <div className="agency-badge">{agency.badge}</div>}
                 </div>
                 <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
-                  {agency.name} {/* <-- field นี้จะถูกส่งไป */}
+                  {agency.name}
                 </div>
               </div>
             ))}
@@ -207,4 +200,4 @@ const handleLogout = async () => {
   );
 };
 
-export default Home1
+export default Home1;
