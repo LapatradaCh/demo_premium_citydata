@@ -123,8 +123,8 @@
 
 .logoutBtn svg {
   display: inline-block;
-  width: 40px;
-  height: 30px;
+  width: 70px;
+  height: 60px;
   stroke: currentColor;
   fill: currentColor;
   transition: transform 0.3s ease;
