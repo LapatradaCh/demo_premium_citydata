@@ -1,444 +1,319 @@
 /* ----------------------------------------------------------------
- * Modern White Theme CSS Design
- * (Adapted for single-file HTML)
+ * Modern White Theme CSS Design (CSS Module Compatible)
  * ---------------------------------------------------------------- */
 :root {
- --color-primary: #C7B299;
- --color-secondary: #333333;
- --color-bg: #FFFFFF;
- --color-accent: #F9F9F9;
- --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.08);
- --transition: 0.3s ease-in-out;
- --radius-card: 16px;
-}
-
-/* Section Title */
-.sectionTitle {
- text-align: center;
- color: #000000;
- background-color: var(--color-bg);
- border: 2px solid var(--color-primary);
- border-radius: var(--radius-card);
- padding: 10px 22px;
- font-size: 18px;
- font-weight: 700;
- margin: 0 auto 25px auto;
- box-shadow: 0 5px 15px rgba(0,0,0,0.08);
- max-width: 320px;
- transition: all var(--transition);
- /* Added cursor pointer as it looks like a tab */
- cursor: pointer;
-}
-
-/* Simulating the "active" tab from the image */
-.sectionTitle.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
+  --color-primary: #C7B299;
+  --color-secondary: #333333;
+  --color-bg: #FFFFFF;
+  --color-accent: #F9F9F9;
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --transition: 0.3s ease-in-out;
 }
 
 /* Global body */
-body {
- /* Using 'Sarabun' for Thai and 'Inter' as fallback */
- font-family: 'Sarabun', 'Inter', sans-serif;
- color: var(--color-secondary);
- line-height: 1.6;
- min-height: 100vh;
- background: var(--color-bg);
- position: relative;
- overflow-x: hidden;
- padding: 0;
- margin: 0;
-}
-
-/* Texture Overlay */
-.textureOverlay {
- position: absolute;
- inset: 0;
- /* Using a subtle texture */
- background-image: url('https://www.transparenttextures.com/patterns/white-paper.png');
- opacity: 0.05;
- mix-blend-mode: soft-light;
- pointer-events: none;
- z-index: 0;
-}
-
-/* App Body */
-.appBody {
- background: transparent;
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 30px; /* Reduced gap slightly */
- padding: 80px 20px 60px;
- position: relative;
- z-index: 1;
- min-height: 100vh;
+:global(body) {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-secondary);
+  line-height: 1.6;
+  min-height: 100vh;
+  background: var(--color-bg);
+  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* Logout */
 .logoutIcon {
- position: absolute;
- top: 25px;
- right: 25px;
- z-index: 10;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
 }
 
 .logoutIcon button {
- display: inline-flex;
- align-items: center;       
- justify-content: center;   
- gap: 0.5rem; /* Increased gap for icon */
- white-space: nowrap;       
- background: #ff4d4f;
- border: none;
- color: #fff;
- border-radius: 12px;
- padding: 8px 16px; /* Adjusted padding */
- cursor: pointer;
- font-weight: 600;
- font-size: 14px;
- font-family: 'Sarabun', 'Inter', sans-serif;
- box-shadow: 0 4px 14px rgba(255, 77, 79, 0.3);
- transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;       /* ทำให้ icon และข้อความอยู่แนวเดียว */
+  justify-content: center;
+  gap: 0.4rem;               /* ระยะห่าง icon กับข้อความ */
+  white-space: nowrap;       /* ป้องกันข้อความ wrap */
+  background: #ff4d4f;
+  border: none;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 20px;          /* ปรับให้ไม่กว้างเกินไป */
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(255, 77, 79, 0.3);
+  transition: all var(--transition);
 }
 
 .logoutIcon button:hover {
- transform: translateY(-2px);
- background: #d9363e;
- box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  background: #d9363e;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
 
 .logoutIcon button svg {
- width: 18px; /* Adjusted size */
- height: 18px; /* Adjusted size */
- stroke: currentColor;
- fill: none; /* Changed to none for line icon */
- stroke-width: 2;
- transition: transform 0.3s ease;
-}
-
-.logoutIcon button:hover svg {
- transform: rotate(0deg);
+  width: 38px;
+  height: 38px;
+  stroke: currentColor;
+  fill: currentColor;
+  transition: transform 0.3s ease;
 }
 
 /* Title */
 .title {
- font-size: 2rem;
- font-weight: 700;
- text-align: center;
- letter-spacing: 1px;
- color: #000000;
- margin-bottom: 20px; /* Reduced margin */
- text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.8px;
+  margin-bottom: 20px;
+  color: var(--color-secondary);
 }
 
 /* Search Container */
 .searchContainer {
- width: 100%;
- max-width: 500px;
- position: relative;
- display: flex;
- align-items: center;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 auto 30px auto;
 }
 
 .searchInput {
- width: 100%;
- padding: 14px 100px 14px 20px;
- border: 1px solid #e5e5e5;
- border-radius: 50px;
- background-color: #FFFFFF;
- font-size: 14px;
- font-family: 'Sarabun', 'Inter', sans-serif;
- box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
- transition: all var(--transition);
+  width: 100%;
+  padding: 14px 100px 14px 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 40px;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+  transition: all var(--transition);
 }
 
 .searchInput:focus {
- outline: none;
- border-color: #888888;
- box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
+  outline: none;
+  border-color: #888888;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput::placeholder {
+  color: #a0a0a0;
 }
 
 .searchButton {
- position: absolute;
- right: 6px;
- background: linear-gradient(135deg, #444444, #222222);
- border: none;
- border-radius: 50%;
- width: 42px;
- height: 42px;
- display: flex;
- align-items: center;
- justify-content: center;
- color: white;
- cursor: pointer;
- box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
- transition: all var(--transition);
-}
-
-.searchButton svg {
-    width: 20px;
-    height: 20px;
+  position: absolute;
+  right: 6px;
+  background: linear-gradient(135deg, #444444, #222222);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  transition: all var(--transition);
 }
 
 .searchButton:hover {
- transform: scale(1.06);
- box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .clearButton {
- position: absolute;
- right: 60px;
- background: #f5f5f5;
- border: none;
- border-radius: 50%;
- width: 36px;
- height: 36px;
- display: flex;
- align-items: center;
- justify-content: center;
- cursor: pointer;
- opacity: 0.9;
- transition: all var(--transition);
- /* Hidden by default, show on input */
- visibility: hidden;
- opacity: 0;
- transform: scale(0.8);
-}
-
-.searchContainer input:not(:placeholder-shown) ~ .clearButton {
-    visibility: visible;
-    opacity: 0.9;
-    transform: scale(1);
-}
-
-.clearButton svg {
-    width: 18px;
-    height: 18px;
-    color: #888;
+  position: absolute;
+  right: 60px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: all var(--transition);
 }
 
 .clearButton:hover {
- background: #e0e0e0;
- transform: scale(1.15);
- opacity: 1;
+  background: #e0e0e0;
+  transform: scale(1.1);
+  opacity: 1;
 }
 
 /* Extra Cards */
 .extraCards {
- display: flex;
- flex-wrap: wrap;
- gap: 20px;
- justify-content: center;
- width: 100%;
- max-width: 850px;
- margin-top: 10px; /* Reduced margin */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 15px;
 }
 
 .extraCard {
- background: var(--color-bg);
- border-radius: var(--radius-card);
- padding: 20px; /* Adjusted padding */
- display: flex;
- /* Changed to row layout */
- flex-direction: row; 
- align-items: center;
- gap: 12px;
- text-align: left; /* Aligned left */
- font-weight: 600;
- font-size: 15px;
- color: var(--color-secondary);
- cursor: pointer;
- flex: 1 1 200px; /* Adjusted flex basis */
- min-width: 180px;
- border: 1px solid #eeeeee;
- box-shadow: 0 4px 16px rgba(0,0,0,0.06);
- transition: all var(--transition);
-}
-
-.cardIcon {
- width: 42px;
- height: 42px;
- display: flex;
- align-items: center;
- justify-content: center;
- border-radius: 50%;
- background: var(--color-accent);
- color: var(--color-primary);
- /* Removed margin-bottom */
- flex-shrink: 0; /* Prevent icon from shrinking */
- box-shadow: 0 2px 8px rgba(0,0,0,0.08);
- transition: all var(--transition);
-}
-
-.cardIcon svg {
-    width: 20px;
-    height: 20px;
-}
-
-.extraCard:hover .cardIcon {
- background: var(--color-primary);
- color: white;
- transform: translateY(-2px);
-}
-
-.cardTitle {
- font-size: 15px; /* Adjusted size */
- font-weight: 600;
- text-align: left; /* Aligned left */
- color: var(--color-secondary);
- line-height: 1.3;
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-secondary);
+  cursor: pointer;
+  flex: 1 1 180px;
+  min-width: 160px;
+  border: 1px solid #eeeeee;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition);
 }
 
 .extraCard:hover {
- transform: translateY(-3px);
- box-shadow: 0 8px 20px rgba(0,0,0,0.12);
- border-color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(199,178,153,0.15);
+  border-color: var(--color-primary);
+}
+
+.cardIcon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-primary);
+  margin-bottom: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all var(--transition);
+}
+
+.extraCard:hover .cardIcon {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(199,178,153,0.4);
 }
 
 /* Agency Section */
 .agencySection {
- width: 100%;
- max-width: 1100px;
- padding: 40px 20px; /* Adjusted padding */
- position: relative;
+  width: 100%;
+  max-width: 1100px;
+  padding: 50px 20px;
+  margin: 0 auto;
 }
 
 .agencyGrid {
- display: grid;
- grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
- gap: 25px;
- justify-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 25px;
+  justify-items: center;
 }
 
 .agencyItem {
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 12px;
- background: #ffffff;
- border-radius: var(--radius-card);
- padding: 25px;
- border: 1px solid #f5f5f5;
- box-shadow: var(--shadow-card);
- cursor: pointer;
- transition: all var(--transition);
- position: relative;
- width: 100%; /* Make item fill grid cell */
- box-sizing: border-box; /* Include padding in width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #f5f5f5;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all var(--transition);
+  overflow: hidden;
+  position: relative;
 }
 
 .agencyItem:hover {
- transform: translateY(-3px);
- box-shadow: 0 10px 25px rgba(199, 178, 153, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(199,178,153,0.15);
 }
 
 .agencyImg {
- width: 120px;
- height: 120px;
- border-radius: 50%;
- overflow: hidden;
- border: 3px solid #f0f0f0;
- transition: all var(--transition);
- /* Added styles for placeholder */
- display: flex;
- align-items: center;
- justify-content: center;
- background-color: #cddbe5; /* Placeholder color from image */
- color: white;
- font-size: 60px;
- font-weight: 700;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #f0f0f0;
+  transition: all var(--transition);
 }
 
 .agencyImg img {
- width: 100%;
- height: 100%;
- object-fit: cover;
- transition: transform 0.4s ease-out;
-}
-
-/* Hide img if not present, showing placeholder text */
-.agencyImg:not(:has(img)) {
-    font-family: 'Inter', sans-serif;
-}
-.agencyImg:has(img) {
-    font-size: 0; /* Hide text if image exists */
-    background-color: #f0f0f0; /* Fallback bg */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-out;
 }
 
 .agencyItem:hover .agencyImg img {
- transform: scale(1.06);
-}
-
-/* Also scale placeholder text */
-.agencyItem:hover .agencyImg:not(:has(img)) {
-    transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .agencyName {
- font-size: 17px;
- font-weight: 600;
- text-align: center;
- color: var(--color-secondary);
- letter-spacing: 0.5px;
- transition: color var(--transition);
- margin-top: 8px; /* Added margin */
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-secondary);
 }
 
-.agencyItem:hover .agencyName {
- color: var(--color-primary);
+.agencyType {
+  font-size: 13px;
+  color: #888;
+  margin-top: -3px;
 }
-
-/* Removed agencyType as it's not in the image */
 
 /* No Results */
 .noResults {
- text-align: center;
- font-size: 20px;
- color: #aaa;
- margin-top: 40px;
- font-weight: 500;
- letter-spacing: 0.5px;
- grid-column: 1 / -1; /* Make it span full grid */
+  text-align: center;
+  font-size: 20px;
+  color: #aaa;
+  margin-top: 40px;
 }
 
-/* Responsive */
+/* -------------------- Responsive -------------------- */
 @media (max-width: 1024px) {
- .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
- .extraCard { flex: 1 1 150px; }
+  .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 20px; }
+  .extraCard { flex: 1 1 150px; }
 }
 
 @media (max-width: 768px) {
- .title { font-size: 1.8rem; }
- .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 18px; }
- .searchInput { font-size: 13px; padding: 12px 90px 12px 18px; }
- .searchButton { width: 36px; height: 36px; }
- .clearButton { right: 55px; width: 32px; height: 32px; }
- .extraCards { gap: 15px; max-width: 100%; flex-direction: column; }
- .extraCard { padding: 20px; min-width: 130px; font-size: 14px; flex: 1 1 auto; }
- .cardTitle { font-size: 15px; }
- .agencyImg { width: 100px; height: 100px; font-size: 50px; }
- .agencyName { font-size: 15px; }
+  .title { font-size: 1.8rem; }
+  .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 18px; }
+  .searchInput { padding: 12px 90px 12px 18px; font-size: 13px; }
+  .searchButton { width: 36px; height: 36px; }
+  .clearButton { right: 55px; width: 32px; height: 32px; }
+  .extraCards { gap: 15px; max-width: 90%; }
+  .extraCard { padding: 20px; min-width: 130px; font-size: 14px; }
+  .agencyImg { width: 100px; height: 100px; }
+  .agencyName { font-size: 15px; }
 }
 
 @media (max-width: 480px) {
- .appBody { padding-top: 70px; gap: 20px; }
- .title { font-size: 1.5rem; }
- .agencyGrid { grid-template-columns: repeat(2, 1fr); padding: 0 10px; gap: 15px; }
- .agencyItem { width: 100%; padding: 20px 15px; }
- .agencyImg { width: 80px; height: 80px; font-size: 40px; }
- .agencyName { font-size: 14px; }
- .extraCards { gap: 12px; }
- .extraCard { width: 100%; padding: 16px; box-sizing: border-box; }
- .noResults { font-size: 18px; margin-top: 30px; }
- .logoutIcon { top: 15px; right: 15px; }
- .logoutIcon button { padding: 8px 12px; font-size: 13px; }
- .logoutIcon button span { display: none; } /* Hide text on mobile */
- .searchContainer { max-width: 100%; }
- .searchInput { padding: 10px 75px 10px 15px; font-size: 12px; }
- .searchButton { width: 32px; height: 32px; }
- .clearButton { right: 50px; width: 30px; height: 30px; }
- .sectionTitle { max-width: 100%; }
- .agencySection { padding: 20px 0; }
+  .logoutIcon { top: 15px; right: 15px; }
+  .logoutIcon button { padding: 8px 15px; font-size: 13px; }
+  .title { font-size: 1.5rem; }
+  .searchContainer { max-width: 95%; }
+  .searchInput { padding: 10px 75px 10px 15px; font-size: 12px; }
+  .searchButton { width: 32px; height: 32px; }
+  .clearButton { right: 50px; width: 30px; height: 30px; }
+  .extraCards { flex-direction: column; gap: 12px; }
+  .extraCard { width: 90%; padding: 16px; }
+  .agencyGrid { grid-template-columns: 1fr; padding: 0 15px; }
+  .agencyItem { width: 90%; max-width: 250px; }
+  .agencyImg { width: 80px; height: 80px; }
+  .agencyName { font-size: 14px; }
+  .agencyType { font-size: 12px; }
+  .noResults { font-size: 18px; margin-top: 30px; }
 }
