@@ -124,7 +124,7 @@
 .logoutBtn svg {
   display: inline-block;
   width: 70px;
-  height: 60px;
+  height: 30px;
   stroke: currentColor;
   fill: currentColor;
   transition: transform 0.3s ease;
