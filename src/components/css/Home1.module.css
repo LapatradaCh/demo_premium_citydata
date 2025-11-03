@@ -80,9 +80,9 @@
   align-items: center;
   gap: 0.4rem;
   white-space: nowrap;
-  background: #ff4d4f;
+  /* background: #ff4d4f; */
   border: none;
-  color: #fff;
+  color: #ff4d4f;
   border-radius: 0.75rem;
   padding: 10px 45px;
   cursor: pointer;
