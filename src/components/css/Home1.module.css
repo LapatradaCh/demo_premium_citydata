@@ -69,18 +69,23 @@
 
 /* Logout */
 .logoutIcon {
-  position: absolute;
+  /* position: absolute;
   top: 25px;
   right: 25px;
-  z-index: 10;
+  z-index: 10; */
+
+    position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
 }
 
 .logoutIcon_button {
-  display: inline-flex;
+  /* display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   white-space: nowrap;
-  /* background: #ff4d4f; */
+  background: #ff4d4f;
   border: none;
   color: #ff4d4f;
   border-radius: 0.75rem;
@@ -90,27 +95,47 @@
   font-size: 14px;
   box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
   transition: all 0.25s ease;
-  letter-spacing: 0.1px;
+  letter-spacing: 0.1px; */
+  
+    display: flex;
+  width: 180px;             
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #e63946, #c92632);
+  box-shadow: 0 6px 20px rgba(230,57,70,0.35);
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .logoutIcon_button:hover {
-  transform: translateY(-1px);
+  /* transform: translateY(-1px);
   background: #d9363e;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35); */
+    transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(230,57,70,0.45);
 }
 
 .logoutIcon_button svg {
-  display: inline-block;
+  /* display: inline-block;
   width: 20px;
   height: 20px;
   stroke: currentColor;
   fill: currentColor;
   transition: transform 0.3s ease;
-  vertical-align: middle;
+  vertical-align: middle; */
+    width: 18px;
+  height: 18px;
+  transition: transform 0.35s;
 }
 
 .logoutIcon_button:hover svg {
-  transform: rotate(0deg);
+  transform: rotate(8deg);
 }
 
 /* Title */
