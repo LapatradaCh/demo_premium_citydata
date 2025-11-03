@@ -110,7 +110,7 @@ const Home1 = () => {
   return (
     <div className={styles.appBody}>
       <div className={styles.logoutIcon}>
-         <button onClick={handleLogout}>
+         <button className={styles.logoutBtn} onClick={handleLogout}>
            <LogOut size={18} />
            <span>ออกจากระบบ</span>
          </button>
