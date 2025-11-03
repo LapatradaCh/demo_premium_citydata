@@ -75,7 +75,7 @@
   z-index: 10;
 }
 
-.logoutIcon_button {
+.logoutIcon button {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -93,7 +93,7 @@
   letter-spacing: 0.1px;
 }
 
-.logoutIcon_button:hover {
+.logoutIcon button:hover {
   transform: translateY(-1px);
   background: #d9363e;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
