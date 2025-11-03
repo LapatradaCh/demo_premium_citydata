@@ -1,13 +1,11 @@
-/* ----------------------------------------------------------------
- * Modern White Theme CSS Design (CSS Module Compatible)
- * ---------------------------------------------------------------- */
 :root {
   --color-primary: #C7B299;
+  --color-primary-dark: #A58F75;
   --color-secondary: #333333;
+  --color-accent: #F5F2EE;
   --color-bg: #FFFFFF;
-  --color-accent: #F9F9F9;
-  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.1);
   --transition: 0.3s ease-in-out;
 }
 
@@ -15,16 +13,14 @@
 :global(body) {
   font-family: 'Inter', sans-serif;
   color: var(--color-secondary);
-  line-height: 1.6;
-  min-height: 100vh;
   background: var(--color-bg);
-  position: relative;
-  overflow-x: hidden;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  line-height: 1.6;
 }
 
-/* Logout */
+/* Logout button */
 .logoutIcon {
   position: absolute;
   top: 20px;
@@ -34,30 +30,30 @@
 
 .logoutIcon button {
   display: inline-flex;
-  align-items: center;       /* ทำให้ icon และข้อความอยู่แนวเดียว */
-  justify-content: center;
-  gap: 0.4rem;               /* ระยะห่าง icon กับข้อความ */
-  white-space: nowrap;       /* ป้องกันข้อความ wrap */
-  background: #ff4d4f;
-  border: none;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  background: var(--color-primary);
   color: #fff;
-  border-radius: 12px;
-  padding: 8px 20px;          /* ปรับให้ไม่กว้างเกินไป */
-  cursor: pointer;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 18px;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 4px 14px rgba(255, 77, 79, 0.3);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(199,178,153,0.3);
   transition: all var(--transition);
 }
 
 .logoutIcon button:hover {
-  background: #d9363e;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
 .logoutIcon button svg {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 28px;
   stroke: currentColor;
   fill: currentColor;
   transition: transform 0.3s ease;
@@ -68,83 +64,80 @@
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  letter-spacing: 0.8px;
-  margin-bottom: 20px;
+  letter-spacing: 1px;
   color: var(--color-secondary);
+  margin-bottom: 30px;
 }
 
 /* Search Container */
 .searchContainer {
   width: 100%;
-  max-width: 500px;
-  position: relative;
-  display: flex;
-  align-items: center;
+  max-width: 520px;
   margin: 0 auto 30px auto;
+  position: relative;
 }
 
 .searchInput {
   width: 100%;
   padding: 14px 100px 14px 20px;
-  border: 1px solid #e5e5e5;
-  border-radius: 40px;
-  background-color: #FFFFFF;
+  border-radius: 50px;
+  border: 1px solid #ddd;
   font-size: 14px;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
   transition: all var(--transition);
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #888888;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.searchInput::placeholder {
-  color: #a0a0a0;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px rgba(199,178,153,0.2);
 }
 
 .searchButton {
   position: absolute;
   right: 6px;
-  background: linear-gradient(135deg, #444444, #222222);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
   border: none;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  color: #fff;
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: white;
+  align-items: center;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(199,178,153,0.3);
   transition: all var(--transition);
 }
 
 .searchButton:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background: var(--color-primary-dark);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .clearButton {
   position: absolute;
   right: 60px;
-  background: #f5f5f5;
-  border: none;
-  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
   width: 36px;
   height: 36px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   opacity: 0.8;
   transition: all var(--transition);
 }
 
 .clearButton:hover {
-  background: #e0e0e0;
-  transform: scale(1.1);
+  background: #e0dcd1;
+  transform: translateY(-50%) scale(1.1);
   opacity: 1;
 }
 
@@ -154,15 +147,14 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  width: 100%;
-  max-width: 800px;
-  margin-top: 15px;
+  max-width: 900px;
+  margin: 0 auto 40px auto;
 }
 
 .extraCard {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 25px 20px;
+  background: var(--color-accent);
+  border-radius: 20px;
+  padding: 30px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -174,42 +166,41 @@
   cursor: pointer;
   flex: 1 1 180px;
   min-width: 160px;
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   box-shadow: var(--shadow-card);
   transition: all var(--transition);
 }
 
 .extraCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(199,178,153,0.15);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
   border-color: var(--color-primary);
 }
 
 .cardIcon {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-primary);
-  margin-bottom: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  box-shadow: 0 4px 10px rgba(199,178,153,0.3);
   transition: all var(--transition);
 }
 
 .extraCard:hover .cardIcon {
-  background: var(--color-primary);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(199,178,153,0.4);
+  background: var(--color-primary-dark);
+  transform: scale(1.1);
 }
 
 /* Agency Section */
 .agencySection {
   width: 100%;
   max-width: 1100px;
-  padding: 50px 20px;
+  padding: 40px 20px;
   margin: 0 auto;
 }
 
@@ -221,32 +212,32 @@
 }
 
 .agencyItem {
+  background: #fff;
+  border-radius: 25px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all var(--transition);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 25px;
-  border: 1px solid #f5f5f5;
-  box-shadow: var(--shadow-card);
-  cursor: pointer;
-  transition: all var(--transition);
-  overflow: hidden;
-  position: relative;
 }
 
 .agencyItem:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(199,178,153,0.15);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border: 1px solid var(--color-primary);
 }
 
 .agencyImg {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid #f0f0f0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: all var(--transition);
 }
 
@@ -254,66 +245,45 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease-out;
+  transition: transform 0.4s ease;
 }
 
 .agencyItem:hover .agencyImg img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .agencyName {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
-  text-align: center;
   color: var(--color-secondary);
 }
 
 .agencyType {
   font-size: 13px;
   color: #888;
-  margin-top: -3px;
 }
 
 /* No Results */
 .noResults {
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   color: #aaa;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 /* -------------------- Responsive -------------------- */
-@media (max-width: 1024px) {
-  .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 20px; }
-  .extraCard { flex: 1 1 150px; }
-}
-
 @media (max-width: 768px) {
   .title { font-size: 1.8rem; }
-  .agencyGrid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 18px; }
-  .searchInput { padding: 12px 90px 12px 18px; font-size: 13px; }
+  .searchContainer { max-width: 90%; }
+  .searchInput { padding: 12px 80px 12px 16px; font-size: 13px; }
   .searchButton { width: 36px; height: 36px; }
-  .clearButton { right: 55px; width: 32px; height: 32px; }
-  .extraCards { gap: 15px; max-width: 90%; }
-  .extraCard { padding: 20px; min-width: 130px; font-size: 14px; }
-  .agencyImg { width: 100px; height: 100px; }
-  .agencyName { font-size: 15px; }
-}
-
-@media (max-width: 480px) {
-  .logoutIcon { top: 15px; right: 15px; }
-  .logoutIcon button { padding: 8px 15px; font-size: 13px; }
-  .title { font-size: 1.5rem; }
-  .searchContainer { max-width: 95%; }
-  .searchInput { padding: 10px 75px 10px 15px; font-size: 12px; }
-  .searchButton { width: 32px; height: 32px; }
-  .clearButton { right: 50px; width: 30px; height: 30px; }
-  .extraCards { flex-direction: column; gap: 12px; }
-  .extraCard { width: 90%; padding: 16px; }
+  .clearButton { right: 50px; width: 32px; height: 32px; }
+  .extraCards { flex-direction: column; gap: 15px; }
+  .extraCard { width: 90%; padding: 20px; min-width: unset; }
   .agencyGrid { grid-template-columns: 1fr; padding: 0 15px; }
-  .agencyItem { width: 90%; max-width: 250px; }
-  .agencyImg { width: 80px; height: 80px; }
-  .agencyName { font-size: 14px; }
+  .agencyItem { width: 90%; max-width: 280px; }
+  .agencyImg { width: 90px; height: 90px; }
+  .agencyName { font-size: 15px; }
   .agencyType { font-size: 12px; }
-  .noResults { font-size: 18px; margin-top: 30px; }
+  .logoutIcon button { padding: 8px 15px; font-size: 13px; }
 }
