@@ -74,13 +74,15 @@
 
 .logoutIcon button {
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: center;       
+  justify-content: center;   
+  gap: 0.4rem;               
+  white-space: nowrap;       
   background: #ff4d4f;
   border: none;
   color: #fff;
   border-radius: 12px;
-  padding: 10px 45px;
+  padding: 8px 20px;         
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
