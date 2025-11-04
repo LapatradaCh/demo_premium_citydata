@@ -10,10 +10,6 @@ const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organization
 const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 
 const userId = localStorage.getItem("user_id");
-const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
-const orgData = await orgCountResponse.json();
-const orgCount = orgData.length || 0; 
-
 
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
@@ -151,8 +147,11 @@ const JoinORG = () => {
         setPhoneNumber("");
         setOtpCode("");
         setGeneratedOTP("");
-        // (Optional: พาไปหน้า /home)
         
+        // (Optional: พาไปหน้า /home)
+        const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
+        const orgData = await orgCountResponse.json();
+        const orgCount = orgData.length || 0; 
       if (orgCount > 1) {
         navigate("/home1");
       } else if (orgCount === 1) {
