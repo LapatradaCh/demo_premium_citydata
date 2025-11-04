@@ -167,8 +167,9 @@ const JoinORG = () => {
         checkORG();
 
       } else if (response.status === 409) { // 409 Conflict (อยู่ในหน่วยงานนี้แล้ว)
-        setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
         checkORG();
+        console.log("link to your option")
+        setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
         
       } else if (response.status === 404) { // 404 Not Found (รหัสหน่วยงาน/user ผิด)
         setMessage("รหัสหน่วยงานไม่ถูกต้อง หรือ ไม่พบข้อมูลผู้ใช้");
