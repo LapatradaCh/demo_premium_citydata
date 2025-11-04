@@ -12,6 +12,8 @@
   --color-blue-dark: #2563eb;
   --color-green: #10b981;
   --color-green-dark: #059669;
+  --color-red: #ef4444;
+  --color-red-dark: #dc2626;
 
   --radius-card: 1.5rem; /* 'IMPROVED: ลดความกลมเล็กน้อย' */
   --radius-input: 1rem; /* 'IMPROVED: ลดความกลมเล็กน้อย' */
