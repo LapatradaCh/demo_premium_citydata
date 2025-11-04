@@ -137,10 +137,23 @@ const JoinORG = () => {
       });
 
       const userId = localStorage.getItem("user_id");
-console.log("userInfo:", userId);
+      console.log("userInfo:", userId);
       
       const data = await response.json();
       setIsLoading(false); 
+
+        const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
+        const orgData = await orgCountResponse.json();
+        const orgCount = orgData.length || 0;
+        const checkORG = () => {
+                if (orgCount > 1) {
+                navigate("/home1");
+              } else if (orgCount === 1) {
+                navigate("/home");
+              } else {
+                navigate("/Signin");
+              }
+          }
 
       if (response.status === 201) { // 201 Created (เข้าร่วมสำเร็จ)
         setMessage(`เข้าร่วมหน่วยงาน ${unitCode} สำเร็จ!`);
@@ -151,18 +164,12 @@ console.log("userInfo:", userId);
         setGeneratedOTP("");
         
         // (Optional: พาไปหน้า /home)
-        const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
-        const orgData = await orgCountResponse.json();
-        const orgCount = orgData.length || 0; 
-      if (orgCount > 1) {
-        navigate("/home1");
-      } else if (orgCount === 1) {
-        navigate("/home");
-      } else {
-        navigate("/Signin");
-      }
+        checkORG();
+
       } else if (response.status === 409) { // 409 Conflict (อยู่ในหน่วยงานนี้แล้ว)
         setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
+        checkORG();
+        
       } else if (response.status === 404) { // 404 Not Found (รหัสหน่วยงาน/user ผิด)
         setMessage("รหัสหน่วยงานไม่ถูกต้อง หรือ ไม่พบข้อมูลผู้ใช้");
       } else {
