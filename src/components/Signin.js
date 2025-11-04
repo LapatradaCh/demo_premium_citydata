@@ -10,6 +10,7 @@ const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organization
 const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 
 const userId = localStorage.getItem("user_id");
+console.log("userInfo:", user_id);
 
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
