@@ -7,6 +7,9 @@ import liff from "@line/liff"; // <-- IMPORT
 
 
 const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+
+
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -133,8 +136,24 @@ const JoinORG = () => {
         }),
       });
 
+      const userId = localStorage.getItem("user_id");
+      console.log("userInfo:", userId);
+      
       const data = await response.json();
       setIsLoading(false); 
+
+        const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
+        const orgData = await orgCountResponse.json();
+        const orgCount = orgData.length || 0;
+        const checkORG = () => {
+                if (orgCount > 1) {
+                navigate("/home1");
+              } else if (orgCount === 1) {
+                navigate("/home");
+              } else {
+                navigate("/Signin");
+              }
+          }
 
       if (response.status === 201) { // 201 Created (เข้าร่วมสำเร็จ)
         setMessage(`เข้าร่วมหน่วยงาน ${unitCode} สำเร็จ!`);
@@ -143,10 +162,15 @@ const JoinORG = () => {
         setPhoneNumber("");
         setOtpCode("");
         setGeneratedOTP("");
+        
         // (Optional: พาไปหน้า /home)
-       navigate('/Home');
+        checkORG();
+
       } else if (response.status === 409) { // 409 Conflict (อยู่ในหน่วยงานนี้แล้ว)
+        checkORG();
+        console.log("link to your option")
         setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
+        
       } else if (response.status === 404) { // 404 Not Found (รหัสหน่วยงาน/user ผิด)
         setMessage("รหัสหน่วยงานไม่ถูกต้อง หรือ ไม่พบข้อมูลผู้ใช้");
       } else {
@@ -163,104 +187,47 @@ const JoinORG = () => {
 
   return (
     <div className={styles.bodySignin}>
-      <div
-      style={{
-        position: "absolute",
-        top: "1rem",
-        right: "1rem",
-        zIndex: 1000, 
-      }}
-    >
-      <button
-        onClick={handleLogout}
-        style={{
-          display: "flex",
-          width: "180px",
-          alignItems: "center",
-          gap: "0.5rem",
-          color: "white",
-          padding: "0.5rem 1rem",
-          border: "none",
-          borderRadius: "0.75rem",
-          fontWeight: 600,
-          cursor: "pointer",
-          background: "linear-gradient(135deg, #e63946, #c92632)",
-          boxShadow: "0 6px 20px rgba(230,57,70,0.35)",
-          transition: "all 0.3s ease",
-          whiteSpace: "nowrap",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
-          e.currentTarget.style.boxShadow = "0 10px 30px rgba(230,57,70,0.45)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translateY(0) scale(1)";
-          e.currentTarget.style.boxShadow = "0 6px 20px rgba(230,57,70,0.35)";
-        }}
-      >
-        <LogOut size={18} />
-        <span>ออกจากระบบ</span>
-      </button>
-    </div>
+      <div className={styles.logoutIcon}>
+        <button className={styles.logoutBtn} onClick={handleLogout}>
+          <LogOut size={18} />
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
 
-      {/* Container OTP */}
-      <div className={styles["otp-container"]}>
+      <div className={styles.otpContainer}>
         <div className={styles.header}>
-          <img src={logo} alt="Logo" className={styles["logo-img"]} />
+          <img src={logo} alt="Logo" className={styles.logoImg} />
         </div>
 
-        <form className={styles["otp-form"]} onSubmit={handleSubmit}>
-          {/* รหัสหน่วยงาน */}
+        <form className={styles.otpForm} onSubmit={handleSubmit}>
           <label className={styles.labelUse}>รหัสหน่วยงาน</label>
-          
           <div className={styles.inputField}>
-            <input
-              type="text"
-              value={unitCode}
-              onChange={(e) => setUnitCode(e.target.value)}
-              placeholder="รหัสหน่วยงาน"
-              disabled={isLoading}
-            />
+            <input type="text" value={unitCode} onChange={e => setUnitCode(e.target.value)} placeholder="รหัสหน่วยงาน" disabled={isLoading}/>
           </div>
 
-          {/* เบอร์โทรศัพท์ */}
           <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
-          <div className={styles["phone-otp-group"]}>
+          <div className={styles.phoneOtpGroup}>
             <div className={styles.inputField}>
-              <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="ตัวอย่าง: 0812345678"
-                disabled={isLoading}
-              />
+              <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="0812345678" disabled={isLoading}/>
             </div>
             <button type="button" onClick={handleGetOTP} disabled={otpActive || isLoading}>
               {otpActive ? "OTP กำลังส่ง..." : "OTP"}
             </button>
           </div>
 
-          {/* รหัส OTP */}
           <label className={styles.labelUse}>รหัส OTP</label>
           <div className={styles.inputField}>
-            <input
-              type="text"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="กรอกรหัส OTP"
-              disabled={isLoading}
-            />
+            <input type="text" value={otpCode} onChange={e => setOtpCode(e.target.value)} placeholder="กรอกรหัส OTP" disabled={isLoading}/>
           </div>
 
-          {/* Submit */}
-          <button type="submit" className={styles["submit-btn"]} disabled={isLoading}>
+          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
             {isLoading ? "กำลังดำเนินการ..." : "เข้าร่วมหน่วยงาน"}
           </button>
 
           {message && <div className={styles.message}>{message}</div>}
         </form>
 
-        <div className={styles["contact-info"]}>ติดต่อสอบถาม: @fonduehelp</div>
+        <div className={styles.contactInfo}>ติดต่อสอบถาม: @fonduehelp</div>
       </div>
     </div>
   );
