@@ -145,7 +145,7 @@ const Home1 = () => {
          <div className={styles.extraCard} onClick={() => navigate('/Signin')}>
            <p>ใส่รหัสเพื่อเริ่มใช้งาน</p>
          </div>
-         <div className={styles.extraCard} onClick={() => navigate('/-')}>
+         <div className={styles.extraCard} onClick={() => navigate('/CreateOrg')}>
            <p>สร้างหน่วยงาน</p>
          </div>
        </div>
