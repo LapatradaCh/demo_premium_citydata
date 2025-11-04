@@ -7,6 +7,14 @@ import liff from "@line/liff"; // <-- IMPORT
 
 
 const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+
+const userId = localStorage.getItem("user_id");
+const orgCountResponse = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userId}`);
+const orgData = await orgCountResponse.json();
+const orgCount = orgData.length || 0; 
+
+
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -144,7 +152,14 @@ const JoinORG = () => {
         setOtpCode("");
         setGeneratedOTP("");
         // (Optional: พาไปหน้า /home)
-       navigate('/Home');
+        
+      if (orgCount > 1) {
+        navigate("/home1");
+      } else if (orgCount === 1) {
+        navigate("/home");
+      } else {
+        navigate("/Signin");
+      }
       } else if (response.status === 409) { // 409 Conflict (อยู่ในหน่วยงานนี้แล้ว)
         setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
       } else if (response.status === 404) { // 404 Not Found (รหัสหน่วยงาน/user ผิด)
