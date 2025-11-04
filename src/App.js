@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom'; // <-- 1. Import Routes และ Route
 import Home from './components/Home';
 import Home1 from './components/Home1';
+import CreateOrg from './components/CreateOrg'
 import JoinORG from "./components/Signin"
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute'; // <-- Import ยามเข้ามา
@@ -36,6 +37,15 @@ function App() {
         element={
           <ProtectedRoute>
             <JoinORG />
+          </ProtectedRoute>
+        } 
+      />
+
+      <Route 
+        path="/CreateOrg" 
+        element={
+          <ProtectedRoute>
+            <CreateOrg />
           </ProtectedRoute>
         } 
       />
