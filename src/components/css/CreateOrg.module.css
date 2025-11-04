@@ -192,6 +192,17 @@
   transform: translateY(-3px);
   box-shadow: var(--shadow-button); /* 'IMPROVED: เพิ่มเงา' */
 }
+
+.btnPrimaryBack {
+  background-color: var(--color-red-dark);
+  color: white;
+}
+.btnPrimaryback:hover:not(:disabled) {
+  background-color: var(--color-red-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-button); /* 'IMPROVED: เพิ่มเงา' */
+}
+
 .btnSuccess {
   background-color: var(--color-green);
   color: white;
@@ -394,4 +405,3 @@
     gap: 1.5rem;
   }
 }
-
