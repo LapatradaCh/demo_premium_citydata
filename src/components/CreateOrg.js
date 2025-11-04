@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+// 'NEW: Import useNavigate'
+import { useNavigate } from "react-router-dom"; 
 import styles from "./css/CreateOrg.module.css"; 
 
 function CreateOrg() {
   const [page, setPage] = useState('create'); 
   const [activeAccordion, setActiveAccordion] = useState(null); 
+  // 'NEW: Initialize navigate function'
+  const navigate = useNavigate(); 
   
   const [orgName, setOrgName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,11 +48,18 @@ function CreateOrg() {
   };
 
   /**
-   * 'NEW: Function to go back and edit name'
+   * 'Function to go back and edit name (internal page navigation)'
    */
   const handleGoBackToEdit = () => {
-    setOrgName(createdOrgName); // 'เติมชื่อเดิมในช่องกรอก'
-    setPage('create');          // 'ย้อนกลับไปหน้า 1'
+    setOrgName(createdOrgName); 
+    setPage('create');          
+  };
+
+  /**
+   * 'NEW: Function to navigate back to /home1'
+   */
+  const handleBackToHome = () => {
+    navigate('/home1');
   };
 
   const handleAccordionClick = (section) => {
@@ -100,7 +111,6 @@ function CreateOrg() {
     <div id="page-quick-create" className={`${styles.page} ${styles.pageCreate}`}>
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>
-          {/* 'MODIFIED: เปลี่ยน Title เมื่อเป็นการแก้ไข' */}
           {createdOrgName ? 'แก้ไขชื่อหน่วยงาน' : 'สร้างหน่วยงานของคุณ'}
         </h1>
         <p className={styles.pageSubtitle}>
@@ -132,8 +142,21 @@ function CreateOrg() {
             className={`${styles.button} ${styles.btnPrimary}`}
             disabled={isLoading}
           >
-            {/* 'MODIFIED: เปลี่ยน Text ปุ่ม' */}
             {isLoading ? 'กำลังบันทึก...' : (createdOrgName ? 'ยืนยันการแก้ไข' : 'สร้างหน่วยงาน')}
+          </button>
+        </div>
+
+        {/* 'MODIFIED: Your new button, now functional' */}
+        <div className={styles.buttonGroup}>
+          <button
+            type="button" // 'FIX: Changed from "back" to "button"'
+            id="btn-back-home" // 'FIX: Changed ID to be unique'
+            className={`${styles.button} ${styles.btnPrimaryBack}`}
+            disabled={isLoading}
+            onClick={handleBackToHome} // 'NEW: Added onClick handler'
+          >
+            {/* 'FIX: Simplified text' */}
+            {'ย้อนกลับ'}
           </button>
         </div>
       </form>
@@ -143,7 +166,6 @@ function CreateOrg() {
   const renderSetupGuidePage = () => (
     <div id="page-setup-guide" className={`${styles.page} ${styles.pageSetup}`}>
       <div className={styles.pageHeader}>
-        {/* 'MODIFIED: เพิ่มปุ่มแก้ไข' */}
         <h1 className={styles.pageTitle}>
           <span>ยินดีต้อนรับสู่ <span className={styles.orgNameHighlight}>{createdOrgName}</span>!</span>
           <button 
@@ -151,6 +173,7 @@ function CreateOrg() {
             className={styles.editNameButton} 
             title="แก้ไขชื่อหน่วยงาน"
           >
+            {/* 'User's requested text change' */}
             (ย้อนกลับ)
           </button>
         </h1>
