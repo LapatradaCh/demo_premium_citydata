@@ -9,8 +9,6 @@ import liff from "@line/liff"; // <-- IMPORT
 const DB_API ="https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 
-const userId = localStorage.getItem("user_id");
-console.log("userInfo:", userId);
 
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
@@ -138,6 +136,9 @@ const JoinORG = () => {
         }),
       });
 
+      const userId = localStorage.getItem("user_id");
+console.log("userInfo:", userId);
+      
       const data = await response.json();
       setIsLoading(false); 
 
