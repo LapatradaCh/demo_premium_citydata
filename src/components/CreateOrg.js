@@ -355,8 +355,8 @@ function CreateOrg() {
   const [geoError, setGeoError] = useState(null);
 
   const [typeData, setTypeData] = useState({
-    org_type: '',   // ตอนนี้จะเก็บค่า (type_value) ที่เลือก
-    usage_type: '', // ตอนนี้จะเก็บค่า (type_value) ที่เลือก
+    org_type: '',   // ตอนนี้จะเก็บค่า UUID ที่เลือก
+    usage_type: '', // ตอนนี้จะเก็บค่า UUID ที่เลือก
   });
 
   // State สำหรับเก็บข้อมูล Dropdown จาก API
@@ -372,11 +372,10 @@ function CreateOrg() {
       setTypesLoading(true);
       setTypesError(null);
       try {
-        // ===== START: EDIT =====
-        // ยิง API พร้อมกัน 2 ตัว (ตามที่ผู้ใช้ร้องขอ)
-        const orgTypePromise = fetch('https://premium-citydata-api-ab.vercel.app/organization-types');
-        const usageTypePromise = fetch('https://premium-citydata-api-ab.vercel.app/usage-types');
-        // ===== END: EDIT =====
+        // ยิง API พร้อมกัน 2 ตัว
+        // (ใช้ Relative URL '/api/...')
+        const orgTypePromise = fetch('https://premium-citydata-api-ab.vercel.app/api/organization-types');
+        const usageTypePromise = fetch('https://premium-citydata-api-ab.vercel.app/api/usage-types');
 
         const [orgTypeRes, usageTypeRes] = await Promise.all([orgTypePromise, usageTypePromise]);
 
@@ -387,22 +386,9 @@ function CreateOrg() {
         const orgTypeData = await orgTypeRes.json();
         const usageTypeData = await usageTypeRes.json();
 
-        // ===== START: EDIT =====
-        // ทำการ Map ข้อมูลตามที่ผู้ใช้ร้องขอ (ใช้ 'type_value')
-        // เราจะใช้ 'type_value' สำหรับ cả value (ค่าที่จะเก็บ) และ label (ข้อความที่จะแสดง)
-        const mappedOrgTypes = orgTypeData.map(item => ({
-          value: item.type_value,
-          label: item.type_value
-        }));
-        
-        const mappedUsageTypes = usageTypeData.map(item => ({
-          value: item.type_value,
-          label: item.type_value
-        }));
-
-        setOrgTypeOptions(mappedOrgTypes);
-        setUsageTypeOptions(mappedUsageTypes);
-        // ===== END: EDIT =====
+        // API ของคุณคืนค่า [{ value: "uuid", label: "Text" }]
+        setOrgTypeOptions(orgTypeData);
+        setUsageTypeOptions(usageTypeData);
 
       } catch (error) {
         console.error("Error fetching types:", error);
@@ -528,7 +514,7 @@ function CreateOrg() {
       setOrgImage(file);
       const reader = new FileReader();
       reader.onloadend = () => setOrgImagePreview(reader.result);
-      reader.readDataURL(file);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -548,9 +534,9 @@ function CreateOrg() {
 
   const handleTypeSubmit = (e) => {
     e.preventDefault();
-    // ตอนนี้ typeData จะเก็บค่า 'type_value' ที่เป็น String
-    // เช่น { org_type: "โรงพยาบาล", usage_type: "ทั่วไป" }
-    console.log("Submitting Types (Values):", typeData);
+    // ตอนนี้ typeData จะเก็บ UUIDs แล้ว
+    // เช่น { org_type: "uuid-...", usage_type: "uuid-..." }
+    console.log("Submitting Types (UUIDs):", typeData);
     alert("บันทึกข้อมูลประเภทสำเร็จ!");
     setActiveAccordion(null); 
   };
