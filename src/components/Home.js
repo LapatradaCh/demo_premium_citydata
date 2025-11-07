@@ -331,9 +331,35 @@ const kpiFilters = [
 
 const compareFilters = ["2021", "2022", "2023", "2024"];
 
-// ------------------------- (*** DELETED ***)
-// (ลบ Mock Report Data)
-// -------------------------
+// ------------------------- ตัวอย่าง Report Data
+const reportData = [
+  {
+    id: "#2025-TYHKE",
+    detail: "ทดลองแจ้งเรื่องฝาท่อระบายน้ำที่ถนนหน้าหมู่บ้าน มีน้ำขังเยอะมาก",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFmeZPibDL4XbTA9wnhZCpCeK0bFg07Pf2cw&s",
+    category: "อื่นๆ",
+    datetime_in: "ต.ค. 4 เม.ย. 68 14:19 น.",
+    datetime_out: "ต.ค. 4 เม.ย. 68 14:19 น.",
+    location: "914 ถนน ตาดคำ",
+    responsible_unit: "ทีมพัฒนา",
+    status: "รอรับเรื่อง",
+    rating: null,
+  },
+  {
+    id: "#2025-ETNEZE",
+    detail: "มีต้นไม้กีดขวาง ทางเดินเท้า ทำให้คนเดินสัญจรไม่สะดวก",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_bRmXqJQOpLMvoKvL89IYlHse2LioPsA8sQ&s",
+    category: "ต้นไม้",
+    datetime_in: "พฤ. 13 มี.ค. 68 16:08 น.",
+    datetime_out: "ต.ค. 3 ส.ค. 69 15:23 น.",
+    location: "460 หมู่ 12 ถนน มิตรภาพ",
+    responsible_unit: "ทีมพัฒนา",
+    status: "เสร็จสิ้น",
+    rating: 4,
+  },
+];
 
 // ------------------------- Helper
 const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
@@ -343,40 +369,6 @@ const truncateText = (text, maxLength) => {
     return text;
   }
   return text.substring(0, maxLength) + "...";
-};
-
-// (*** ADDED ***)
-// Helper function to map API data to component data structure
-const mapApiDataToReport = (apiCase) => {
-  // Helper to format dates
-  const formatCaseDate = (dateString) => {
-    if (!dateString) return null;
-    return (
-      new Date(dateString).toLocaleDateString("th-TH", {
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }) + " น."
-    );
-  };
-
-  return {
-    id: apiCase.issue_cases_id, // ใช้ UUID สำหรับ React key
-    idText: apiCase.case_code, // ใช้ case_code สำหรับการแสดงผล ID
-    detail: apiCase.title, // แมพ title มาที่ detail
-    image: apiCase.cover_image_url || logo, // (*** MODIFIED ***) ใช้ logo เป็น fallback
-    category: apiCase.issue_type_name || apiCase.issue_type_id || "ไม่ระบุประเภท", // (*** NOTE ***) สมมติว่า API ส่ง issue_type_name มาให้
-    datetime_in: formatCaseDate(apiCase.created_at),
-    datetime_out: formatCaseDate(apiCase.updated_at),
-    location: `${apiCase.latitude}, ${apiCase.longitude}`, // ใช้พิกัด
-    responsible_unit: apiCase.organization_name || "ไม่ระบุหน่วยงาน", // (*** NOTE ***) สมมติว่า API ส่ง organization_name มาให้
-    status: apiCase.status,
-    rating: apiCase.rating || null, // (*** NOTE ***) สมมติว่า API อาจจะส่ง rating มา
-  };
 };
 
 // ------------------------- Date Filter
@@ -429,60 +421,9 @@ const DateFilter = () => {
 };
 
 // ------------------------- Report Table
-// (*** MODIFIED ***) แก้ไข signature ให้รับ organizationId
-const ReportTable = ({ subTab, organizationId }) => {
+const ReportTable = ({ subTab }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
-
-  // (*** ADDED ***) State สำหรับการดึงข้อมูล
-  const [reportData, setReportData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // (*** ADDED ***) useEffect สำหรับดึงข้อมูลจาก API
-  useEffect(() => {
-    const fetchReportData = async () => {
-      const API_BASE =
-        "https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases";
-
-      let url;
-
-      if (subTab === "เฉพาะหน่วยงาน") {
-        if (!organizationId) {
-          setIsLoading(false);
-          // ยังไม่มี ID หน่วยงาน ไม่ต้องทำอะไร
-          return;
-        }
-        url = `${API_BASE}?org_id=${organizationId}`;
-      } else {
-        // "รายการแจ้งรวม"
-        url = API_BASE;
-      }
-
-      setIsLoading(true);
-      setError(null);
-      setReportData([]); // เคลียร์ข้อมูลเก่าก่อน
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-        const apiCases = await response.json(); // สมมติว่า API คืนค่ามาเป็น Array
-
-        // (*** ADDED ***) แปลงข้อมูล
-        const formattedData = apiCases.map(mapApiDataToReport);
-        setReportData(formattedData);
-      } catch (err) {
-        setError(err.message);
-        console.error("Failed to fetch report data:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchReportData();
-  }, [subTab, organizationId]); // ดึงใหม่เมื่อ subTab หรือ organizationId เปลี่ยน
 
   const isAllReports = subTab === "รายการแจ้งรวม";
   const mainFilters = isAllReports
@@ -575,95 +516,75 @@ const ReportTable = ({ subTab, organizationId }) => {
 
       {/* Summary */}
       <div className={styles.reportSummary}>
-        <strong>{summaryTitle}</strong> (
-        {/* (*** MODIFIED ***) แสดงจำนวนรายการตามข้อมูลที่ดึงมา */}
-        {isLoading ? "..." : reportData.length} รายการ)
+        <strong>{summaryTitle}</strong> (.... รายการ)
       </div>
-
-      {/* (*** ADDED ***) Loading and Error handling */}
-      {isLoading && (
-        <div style={{ padding: "20px", textAlign: "center" }}>
-          กำลังโหลดข้อมูล...
-        </div>
-      )}
-      {error && (
-        <div
-          style={{ padding: "20px", textAlign: "center", color: "red" }}
-        >
-          เกิดข้อผิดพลาด: {error}
-        </div>
-      )}
 
       {/* Cards */}
       <div className={styles.reportTableContainer}>
-        {/* (*** MODIFIED ***) map จาก state reportData */}
-        {!isLoading &&
-          !error &&
-          reportData.map((report) => {
-            const isExpanded = expandedCardId === report.id;
-            return (
-              <div key={report.id} className={styles.reportTableRow}>
-                <img
-                  src={report.image}
-                  alt="Report"
-                  className={styles.reportImage}
-                />
-                <div className={styles.reportHeader}>
-                  {/* (*** MODIFIED ***) ใช้ report.idText สำหรับแสดงผล */}
-                  <span className={styles.reportIdText}>{report.idText}</span>
-                  <p className={styles.reportDetailText}>
-                    {truncateText(report.detail, 40)}
-                  </p>
-                </div>
-                <div className={styles.reportStatusGroup}>
-                  <span
-                    className={`${styles.statusTag} ${
-                      report.status === "รอรับเรื่อง"
-                        ? styles.pending
-                        : report.status === "เสร็จสิ้น"
-                        ? styles.completed
-                        : ""
-                    }`}
-                  >
-                    {report.status}
-                  </span>
-                  <div className={styles.rating}>
-                    {report.rating &&
-                      [...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          className={`${styles.ratingStar} ${
-                            i < report.rating ? styles.active : ""
-                          }`}
-                        >
-                          ★
-                        </span>
-                      ))}
-                  </div>
-                </div>
-
-                {isExpanded && (
-                  <>
-                    <div className={styles.mainDetails}>
-                      <span>ประเภท: {report.category}</span>
-                      <span>แจ้งเข้า: {report.datetime_in}</span>
-                      <span>อัพเดต: {report.datetime_out}</span>
-                    </div>
-                    <div className={styles.locationDetails}>
-                      <span>ที่ตั้ง: {report.location}</span>
-                      <span>ผู้รับผิดชอบ: {report.responsible_unit}</span>
-                    </div>
-                  </>
-                )}
-                <button
-                  className={styles.toggleDetailsButton}
-                  onClick={() => handleToggleDetails(report.id)}
-                >
-                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-                </button>
+        {reportData.map((report) => {
+          const isExpanded = expandedCardId === report.id;
+          return (
+            <div key={report.id} className={styles.reportTableRow}>
+              <img
+                src={report.image}
+                alt="Report"
+                className={styles.reportImage}
+              />
+              <div className={styles.reportHeader}>
+                <span className={styles.reportIdText}>{report.id}</span>
+                <p className={styles.reportDetailText}>
+                  {truncateText(report.detail, 40)}
+                </p>
               </div>
-            );
-          })}
+              <div className={styles.reportStatusGroup}>
+                <span
+                  className={`${styles.statusTag} ${
+                    report.status === "รอรับเรื่อง"
+                      ? styles.pending
+                      : report.status === "เสร็จสิ้น"
+                      ? styles.completed
+                      : ""
+                  }`}
+                >
+                  {report.status}
+                </span>
+                <div className={styles.rating}>
+                  {report.rating &&
+                    [...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`${styles.ratingStar} ${
+                          i < report.rating ? styles.active : ""
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                </div>
+              </div>
+
+              {isExpanded && (
+                <>
+                  <div className={styles.mainDetails}>
+                    <span>ประเภท: {report.category}</span>
+                    <span>แจ้งเข้า: {report.datetime_in}</span>
+                    <span>อัพเดต: {report.datetime_out}</span>
+                  </div>
+                  <div className={styles.locationDetails}>
+                    <span>ที่ตั้ง: {report.location}</span>
+                    <span>ผู้รับผิดชอบ: {report.responsible_unit}</span>
+                  </div>
+                </>
+              )}
+              <button
+                className={styles.toggleDetailsButton}
+                onClick={() => handleToggleDetails(report.id)}
+              >
+                {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </>
   );
@@ -1156,12 +1077,12 @@ const MapView = ({ subTab }) => {
               style={{ top: "50%", left: "60%", transform: "translate(15px, -110%)" }}
             >
               <img
-                src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFmeZPibDL4XbTA9wnhZCpCeK0bFg07Pf2cw&s"}
+                src={reportData[0].image}
                 alt="Mock"
                 className={styles.mockPopupImage}
               />
               <span className={styles.mockPopupText}>
-                {truncateText("ทดลองแจ้งเรื่องฝาท่อระบายน้ำที่ถนนหน้าหมู่บ้าน", 50)}
+                {truncateText(reportData[0].detail, 50)}
               </span>
               <span className={`${styles.statusTag} ${styles.pending}`}>
                 รอรับเรื่อง
@@ -1302,11 +1223,9 @@ const MapView = ({ subTab }) => {
 // ------------------------- (*** 5. Main Home - "อัปเดต" ***)
 const Home = () => {
   const navigate = useNavigate();
-  // (*** MODIFIED ***) เพิ่ม id: null
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
     logo: logo,
-    id: null,
   });
 
   const [activeTab, setActiveTab] = useState("รายการแจ้ง");
@@ -1353,23 +1272,18 @@ const Home = () => {
       try {
         const cachedOrg = localStorage.getItem("selectedOrg");
         const lastOrg = localStorage.getItem("lastSelectedOrg");
-
         if (cachedOrg) {
           const org = JSON.parse(cachedOrg);
-          // (*** MODIFIED ***) เก็บ id ด้วย
-          setOrganizationInfo({ name: org.name, logo: org.img, id: org.id });
+          setOrganizationInfo({ name: org.name, logo: org.img });
           localStorage.removeItem("selectedOrg");
-          // (*** MODIFIED ***) เก็บ object เดิมที่มี id ไว้
-          localStorage.setItem("lastSelectedOrg", cachedOrg);
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
         } else if (lastOrg) {
           const org = JSON.parse(lastOrg);
-          // (*** MODIFIED ***) เก็บ id ด้วย
-          setOrganizationInfo({ name: org.name, logo: org.img, id: org.id });
+          setOrganizationInfo({ name: org.name, logo: org.img });
         }
       } catch (error) {
         console.error(error);
-        // (*** MODIFIED ***)
-        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo, id: null });
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
       }
     };
     fetchOrg();
@@ -1421,11 +1335,7 @@ const Home = () => {
 
       <div className={styles.dashboardContent}>
         {activeTab === "รายการแจ้ง" && (
-          // (*** MODIFIED ***) ส่ง organizationId ไปด้วย
-          <ReportTable
-            subTab={activeSubTabs["รายการแจ้ง"]}
-            organizationId={organizationInfo.id}
-          />
+          <ReportTable subTab={activeSubTabs["รายการแจ้ง"]} />
         )}
 
         {/* (*** MODIFIED ***) นำ MapView Component กลับมาใช้งาน */}
