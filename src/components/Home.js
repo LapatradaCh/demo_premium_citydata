@@ -89,68 +89,41 @@ const ReportTable = ({ subTab }) => {
 
   // ✅ โหลดข้อมูลจริงทั้งหมด
   useEffect(() => {
-    const fetchCases = async () => {
-      try {
-        setLoading(true);
-        const lastOrg = localStorage.getItem("lastSelectedOrg");
-        if (!lastOrg) {
-          console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
-          setReports([]);
-          setLoading(false);
-          return;
-        }
-
-        const org = JSON.parse(lastOrg);
-        const orgId = org.id || org.organization_id;
-
-        // 1️⃣ ดึงข้อมูล issue_cases
-        const res = await fetch(
-          `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
-        );
-        if (!res.ok) throw new Error("Fetch issue_cases failed");
-        const cases = await res.json();
-
-        // 2️⃣ ดึงข้อมูลประกอบ
-        const [resTypes, resCaseOrg, resOrgs] = await Promise.all([
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/issue_types`),
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/case_organization`),
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/organizations`),
-        ]);
-
-        const [issueTypes, caseOrgs, orgs] = await Promise.all([
-          resTypes.ok ? resTypes.json() : [],
-          resCaseOrg.ok ? resCaseOrg.json() : [],
-          resOrgs.ok ? resOrgs.json() : [],
-        ]);
-
-        // 3️⃣ รวมข้อมูลเข้าด้วยกัน
-        const merged = cases.map((c) => {
-          const type = issueTypes.find((t) => t.issue_id === c.issue_type_id);
-          const caseOrg = caseOrgs.find(
-            (co) => co.issue_cases_id === c.issue_cases_id
-          );
-          const responsible =
-            orgs.find((o) => o.organization_id === caseOrg?.organization_id)
-              ?.organization_name || "-";
-
-          return {
-            ...c,
-            issue_type_name: type ? type.issue_name : "ไม่ทราบประเภท",
-            responsible_unit: responsible,
-          };
-        });
-
-        setReports(merged);
-      } catch (err) {
-        console.error("Error fetching data:", err);
+  const fetchCases = async () => {
+    try {
+      setLoading(true);
+      const lastOrg = localStorage.getItem("lastSelectedOrg");
+      if (!lastOrg) {
+        console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
         setReports([]);
-      } finally {
         setLoading(false);
+        return;
       }
-    };
 
-    fetchCases();
-  }, [subTab]);
+      const org = JSON.parse(lastOrg);
+      const orgId = org.id || org.organization_id;
+
+      // ✅ เรียก endpoint เดียว (backend รวมข้อมูลให้แล้ว)
+      const res = await fetch(
+        `https://premium-citydata-api-ab.vercel.app/api/cases?organization_id=${orgId}`
+      );
+      if (!res.ok) throw new Error("Fetch cases failed");
+
+      const data = await res.json();
+
+      // ✅ ข้อมูลที่ได้มี field: issue_type_name, responsible_unit, etc.
+      setReports(data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setReports([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCases();
+}, [subTab]);
+
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
