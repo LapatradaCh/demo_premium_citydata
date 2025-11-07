@@ -36,7 +36,9 @@ const Home1 = () => {
 
         if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
 
-        const data = await response.json();
+        const data = await response.json();      
+      // --- เพิ่มบรรทัดนี้เพื่อตรวจสอบ ---
+      console.log('Raw data from API:', data);
 
         const formattedData = data.map(item => ({
           id: item.organization_id, 
