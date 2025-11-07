@@ -114,7 +114,7 @@ const ReportTable = ({ subTab }) => {
         const [resTypes, resCaseOrg, resOrgs] = await Promise.all([
           fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/issue_types`),
           fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/case_organization`),
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/organization`),
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/organizations`),
         ]);
 
         const [issueTypes, caseOrgs, orgs] = await Promise.all([
