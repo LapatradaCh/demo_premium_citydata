@@ -104,6 +104,8 @@ const Home1 = () => {
   const handleAgencyClick = (agency) => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
+    localStorage.setItem('organization_id', agency.id);
+    console.log("select_org",agency.id)
     navigate('/home');
   };
 
