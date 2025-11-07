@@ -1,4 +1,74 @@
-// ------------------------- ✅ Report Table (เวอร์ชันใหม่สุด - ดึงประเภทและหน่วยงาน)
+import React, { useState, useEffect, useRef } from "react";
+import styles from "./css/Home.module.css";
+import logo from "./logo.png";
+import {
+  FaMapMarkedAlt,
+  FaClipboardList,
+  FaChartBar,
+  FaCog,
+  FaSignOutAlt,
+  FaSearch,
+  FaFilter,
+  FaTimes,
+  FaBuilding,
+  FaMap,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import liff from "@line/liff";
+import "cally";
+
+// ------------------------- Helper Functions
+const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
+const truncateText = (text, maxLength) =>
+  text && text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+
+// ------------------------- Date Filter
+const DateFilter = () => {
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const calendarRef = useRef(null);
+  const formatDate = (d) =>
+    d ? d.toLocaleDateString("th-TH") : "กดเพื่อเลือกช่วงเวลา";
+
+  useEffect(() => {
+    const node = calendarRef.current;
+    if (node && show) {
+      const handleChange = (e) => {
+        setDate(new Date(e.target.value));
+        setShow(false);
+      };
+      node.addEventListener("change", handleChange);
+      return () => node.removeEventListener("change", handleChange);
+    }
+  }, [show]);
+
+  return (
+    <div style={{ position: "relative" }}>
+      <button className={styles.timeRangeButton} onClick={() => setShow(!show)}>
+        {formatDate(date)}
+      </button>
+      {show && (
+        <div className={styles.calendarPopup}>
+          <calendar-date
+            ref={calendarRef}
+            value={toYYYYMMDD(date)}
+            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
+          >
+            <svg aria-label="Previous" slot="previous" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            <svg aria-label="Next" slot="next" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+            <calendar-month></calendar-month>
+          </calendar-date>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ------------------------- ✅ Report Table (พร้อมประเภทและหน่วยงานจริง)
 const ReportTable = ({ subTab }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
@@ -17,7 +87,7 @@ const ReportTable = ({ subTab }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // ✅ โหลดข้อมูลหลักจาก issue_cases
+  // ✅ โหลดข้อมูลจริงทั้งหมด
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -40,25 +110,20 @@ const ReportTable = ({ subTab }) => {
         if (!res.ok) throw new Error("Fetch issue_cases failed");
         const cases = await res.json();
 
-        // 2️⃣ ดึง issue_types ทั้งหมด (เพื่อ lookup ชื่อประเภท)
-        const resTypes = await fetch(
-          `https://premium-citydata-api-ab.vercel.app/api/cases/issue_types`
-        );
-        const issueTypes = resTypes.ok ? await resTypes.json() : [];
+        // 2️⃣ ดึงข้อมูลประกอบ
+        const [resTypes, resCaseOrg, resOrgs] = await Promise.all([
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/issue_types`),
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/case_organization`),
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/organization`),
+        ]);
 
-        // 3️⃣ ดึง case_organization เพื่อเชื่อม organization_id
-        const resCaseOrg = await fetch(
-          `https://premium-citydata-api-ab.vercel.app/api/cases/case_organization`
-        );
-        const caseOrgs = resCaseOrg.ok ? await resCaseOrg.json() : [];
+        const [issueTypes, caseOrgs, orgs] = await Promise.all([
+          resTypes.ok ? resTypes.json() : [],
+          resCaseOrg.ok ? resCaseOrg.json() : [],
+          resOrgs.ok ? resOrgs.json() : [],
+        ]);
 
-        // 4️⃣ ดึง organization ทั้งหมด
-        const resOrgs = await fetch(
-          `https://premium-citydata-api-ab.vercel.app/api/cases/organization`
-        );
-        const orgs = resOrgs.ok ? await resOrgs.json() : [];
-
-        // 5️⃣ รวมข้อมูลทั้งหมดเข้าด้วยกัน
+        // 3️⃣ รวมข้อมูลเข้าด้วยกัน
         const merged = cases.map((c) => {
           const type = issueTypes.find((t) => t.issue_id === c.issue_type_id);
           const caseOrg = caseOrgs.find(
@@ -248,3 +313,152 @@ const ReportTable = ({ subTab }) => {
     </>
   );
 };
+
+// ------------------------- Main Home Component
+const Home = () => {
+  const navigate = useNavigate();
+  const [organizationInfo, setOrganizationInfo] = useState({
+    name: "กำลังโหลด...",
+    logo: logo,
+  });
+
+  const [activeTab, setActiveTab] = useState("รายการแจ้ง");
+  const [openSubMenu, setOpenSubMenu] = useState(null);
+  const [activeSubTabs, setActiveSubTabs] = useState({
+    แผนที่: "แผนที่สาธารณะ",
+    รายการแจ้ง: "เฉพาะหน่วยงาน",
+    สถิติ: "สถิติ",
+    ตั้งค่า: "ตั้งค่า",
+  });
+
+  const menuItems = [
+    {
+      name: "แผนที่",
+      icon: FaMapMarkedAlt,
+      items: ["แผนที่สาธารณะ", "แผนที่ภายใน"],
+    },
+    {
+      name: "หน่วยงาน",
+      icon: FaBuilding,
+      items: null,
+      action: () => navigate("/home1"),
+    },
+    {
+      name: "รายการแจ้ง",
+      icon: FaClipboardList,
+      items: ["เฉพาะหน่วยงาน", "รายการแจ้งรวม"],
+    },
+    {
+      name: "สถิติ",
+      icon: FaChartBar,
+      items: ["สถิติ", "สถิติองค์กร"],
+    },
+    {
+      name: "ตั้งค่า",
+      icon: FaCog,
+      items: ["ตั้งค่า", "QRCode หน่วยงาน", "QRCode สร้างเอง"],
+    },
+  ];
+
+  useEffect(() => {
+    const fetchOrg = async () => {
+      try {
+        const cachedOrg = localStorage.getItem("selectedOrg");
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        if (cachedOrg) {
+          const org = JSON.parse(cachedOrg);
+          setOrganizationInfo({ name: org.name, logo: org.img });
+          localStorage.removeItem("selectedOrg");
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
+        } else if (lastOrg) {
+          const org = JSON.parse(lastOrg);
+          setOrganizationInfo({ name: org.name, logo: org.img });
+        }
+      } catch (error) {
+        console.error(error);
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
+      }
+    };
+    fetchOrg();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    if (liff.isLoggedIn()) liff.logout();
+    navigate("/");
+  };
+
+  const handleTabClick = (item) => {
+    if (item.action) {
+      item.action();
+    } else if (item.items) {
+      setActiveTab(item.name);
+      setOpenSubMenu(openSubMenu === item.name ? null : item.name);
+    } else {
+      setActiveTab(item.name);
+      setOpenSubMenu(null);
+    }
+  };
+
+  const handleSubMenuItemClick = (mainTabName, subItemName) => {
+    setActiveSubTabs({
+      ...activeSubTabs,
+      [mainTabName]: subItemName,
+    });
+    setOpenSubMenu(null);
+  };
+
+  return (
+    <div>
+      <div className={styles.logoSectionTop}>
+        <img src={organizationInfo.logo} alt="Logo" className={styles.logoImg} />
+        <span className={styles.unitName}>{organizationInfo.name}</span>
+
+        <div className={styles.logoutIcon}>
+          <button onClick={handleLogout} className={styles.logoutButton}>
+            <FaSignOutAlt />
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.dashboardContent}>
+        {activeTab === "รายการแจ้ง" && (
+          <ReportTable subTab={activeSubTabs["รายการแจ้ง"]} />
+        )}
+      </div>
+
+      {/* --- Bottom Nav --- */}
+      <div className={styles.bottomNav}>
+        {menuItems.map((item) => (
+          <div key={item.name} className={styles.bottomNavButtonContainer}>
+            {item.items && openSubMenu === item.name && (
+              <div className={styles.subMenuPopup}>
+                {item.items.map((subItem) => (
+                  <div
+                    key={subItem}
+                    className={`${styles.subMenuItem} ${
+                      activeSubTabs[item.name] === subItem ? styles.active : ""
+                    }`}
+                    onClick={() => handleSubMenuItemClick(item.name, subItem)}
+                  >
+                    {subItem}
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              className={activeTab === item.name ? styles.active : ""}
+              onClick={() => handleTabClick(item)}
+            >
+              <item.icon />
+              <span>{item.name}</span>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
