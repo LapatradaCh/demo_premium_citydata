@@ -38,7 +38,7 @@ const Home1 = () => {
 
         const data = await response.json();      
       // --- เพิ่มบรรทัดนี้เพื่อตรวจสอบ ---
-      console.log('Raw data from API:', data);
+      // console.log('Raw data from API:', data);
 
         const formattedData = data.map(item => ({
           id: item.organization_id,
@@ -107,8 +107,6 @@ const Home1 = () => {
   const handleAgencyClick = (agency) => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
-    // localStorage.setItem('organization_code', formattedData.organization_code); 
-    console.log("select_org",agency)
     navigate('/home');
   };
 
