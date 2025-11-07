@@ -46,6 +46,7 @@ const Home1 = () => {
           img: item.url_logo, 
           badge: null 
         }));
+         console.log('Raw data from API:', formattedData);
 
         setAllAgencies(formattedData);
         setFilteredAgencies(formattedData);
