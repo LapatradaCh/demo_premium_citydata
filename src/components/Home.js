@@ -331,37 +331,44 @@ const kpiFilters = [
 
 const compareFilters = ["2021", "2022", "2023", "2024"];
 
-// ------------------------- (*** DELETED ***)
-// (ลบตัวแปร reportData ทั้งหมด)
-// -------------------------
+// ------------------------- ตัวอย่าง Report Data
+const reportData = [
+  {
+    id: "#2025-TYHKE",
+    detail: "ทดลองแจ้งเรื่องฝาท่อระบายน้ำที่ถนนหน้าหมู่บ้าน มีน้ำขังเยอะมาก",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFmeZPibDL4XbTA9wnhZCpCeK0bFg07Pf2cw&s",
+    category: "อื่นๆ",
+    datetime_in: "ต.ค. 4 เม.ย. 68 14:19 น.",
+    datetime_out: "ต.ค. 4 เม.ย. 68 14:19 น.",
+    location: "914 ถนน ตาดคำ",
+    responsible_unit: "ทีมพัฒนา",
+    status: "รอรับเรื่อง",
+    rating: null,
+  },
+  {
+    id: "#2025-ETNEZE",
+    detail: "มีต้นไม้กีดขวาง ทางเดินเท้า ทำให้คนเดินสัญจรไม่สะดวก",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_bRmXqJQOpLMvoKvL89IYlHse2LioPsA8sQ&s",
+    category: "ต้นไม้",
+    datetime_in: "พฤ. 13 มี.ค. 68 16:08 น.",
+    datetime_out: "ต.ค. 3 ส.ค. 69 15:23 น.",
+    location: "460 หมู่ 12 ถนน มิตรภาพ",
+    responsible_unit: "ทีมพัฒนา",
+    status: "เสร็จสิ้น",
+    rating: 4,
+  },
+];
 
 // ------------------------- Helper
 const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
 
 const truncateText = (text, maxLength) => {
-  if (!text || text.length <= maxLength) {
-    return text || "";
+  if (text.length <= maxLength) {
+    return text;
   }
   return text.substring(0, maxLength) + "...";
-};
-
-// (*** ADDED ***) (Helper function สำหรับจัดรูปแบบวันที่จาก API)
-const formatApiDateTime = (isoString) => {
-  if (!isoString) return "-";
-  try {
-    const d = new Date(isoString);
-    // จัดรูปแบบเป็น "4 เม.ย. 68, 14:19"
-    return d.toLocaleString("th-TH", {
-      day: "numeric",
-      month: "short",
-      year: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Asia/Bangkok", // ปรับ Timezone ตามต้องการ
-    });
-  } catch (e) {
-    return "N/A";
-  }
 };
 
 // ------------------------- Date Filter
@@ -414,15 +421,9 @@ const DateFilter = () => {
 };
 
 // ------------------------- Report Table
-// (*** MODIFIED ***) (แก้ไขทั้ง Component เพื่อ fetch ข้อมูล)
-const ReportTable = ({ subTab, organizationId }) => {
+const ReportTable = ({ subTab }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
-
-  // (*** ADDED ***) State สำหรับเก็บข้อมูลและสถานะการโหลด
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const isAllReports = subTab === "รายการแจ้งรวม";
   const mainFilters = isAllReports
@@ -437,80 +438,6 @@ const ReportTable = ({ subTab, organizationId }) => {
   const summaryTitle = isAllReports
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
-
-  // (*** ADDED ***) useEffect สำหรับดึงข้อมูลจาก API
-  useEffect(() => {
-    const fetchReports = async () => {
-      setLoading(true);
-      setError(null);
-      
-      // (ดู "ข้อสมมติฐาน" ด้านล่างเกี่ยวกับ API URL นี้)
-      let apiUrl = "https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases";
-
-      try {
-        if (subTab === "เฉพาะหน่วยงาน") {
-          if (!organizationId) {
-            // ถ้าอยู่แท็บ "เฉพาะหน่วยงาน" แต่ยังไม่มี ID (เช่น โหลดไม่เสร็จ)
-            console.warn("No organization ID available, skipping fetch.");
-            setLoading(false);
-            setReports([]);
-            return;
-          }
-          // (ข้อสมมติฐาน) API รองรับการ filter ด้วย ?organization_id=...
-          apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${organizationId}`;
-        }
-        
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // แปลงข้อมูล API ให้ตรงกับ format ที่ UI คาดหวัง
-        const formattedData = data.map((apiCase) => ({
-          id: apiCase.case_code, // (SQL: case_code)
-          detail: apiCase.title, // (SQL: title)
-          full_description: apiCase.description, // (SQL: description)
-          image: apiCase.cover_image_url || null, // (SQL: cover_image_url)
-
-          // (ข้อสมมติฐาน) API ส่ง issue_type.name มาให้
-          // ถ้าไม่ ให้ลองใช้ tags[0] หรือ fallback ไปที่ issue_type_id
-          category:
-            apiCase.issue_type?.name ||
-            (apiCase.tags && apiCase.tags[0]) ||
-            apiCase.issue_type_id ||
-            "ไม่ระบุ",
-
-          datetime_in: formatApiDateTime(apiCase.created_at), // (SQL: created_at)
-          datetime_out: formatApiDateTime(apiCase.updated_at), // (SQL: updated_at)
-
-          // (ข้อสมมติฐาน) UI ต้องแสดง Lat/Lon ตาม SQL
-          location: `Lat: ${apiCase.latitude}, Lon: ${apiCase.longitude}`,
-
-          // (ข้อสมมติฐาน) API ส่ง organization.name มาให้
-          responsible_unit: apiCase.organization?.name || "ไม่ระบุหน่วยงาน",
-
-          status: apiCase.status, // (SQL: status)
-          
-          // (ข้อสมมติฐาน) SQL ไม่มี rating แต่ UI มี
-          rating: apiCase.rating || null,
-        }));
-        
-        setReports(formattedData);
-
-      } catch (err) {
-        console.error("Failed to fetch reports:", err);
-        setError(err.message);
-        setReports([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReports();
-  }, [subTab, organizationId]); // <-- Fetch ใหม่ เมื่อเปลี่ยนแท็บ หรือเมื่อ orgId โหลดเสร็จ
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
@@ -547,12 +474,16 @@ const ReportTable = ({ subTab, organizationId }) => {
           <div className={styles.filterModal}>
             <div className={styles.filterModalHeader}>
               <h3>{modalTitle}</h3>
+
+              {/* (*** นี่คือจุดที่แก้ไข ***) */}
               <button
                 className={styles.filterModalClose}
                 onClick={() => setShowFilters(false)}
               >
                 <FaTimes />
               </button>
+              {/* (*** จบจุดที่แก้ไข ***) */}
+
             </div>
             <div className={styles.filterModalContent}>
               <div className={styles.reportFilters}>
@@ -583,107 +514,78 @@ const ReportTable = ({ subTab, organizationId }) => {
         </>
       )}
 
-      {/* Summary (*** MODIFIED ***) */}
+      {/* Summary */}
       <div className={styles.reportSummary}>
-        <strong>{summaryTitle}</strong> ({loading ? "..." : reports.length}{" "}
-        รายการ)
+        <strong>{summaryTitle}</strong> (.... รายการ)
       </div>
 
-      {/* (*** ADDED ***) Loading / Error / Empty States */}
-      {loading && (
-        <div className={styles.loadingPlaceholder} style={{ padding: "20px", textAlign: "center" }}>
-          กำลังโหลดข้อมูล...
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className={styles.loadingPlaceholder} style={{ padding: "20px", textAlign: "center", color: "red" }}>
-          เกิดข้อผิดพลาด: {error}
-        </div>
-      )}
-
-      {!loading && !error && reports.length === 0 && (
-        <div className={styles.loadingPlaceholder} style={{ padding: "20px", textAlign: "center" }}>
-          ไม่พบข้อมูล
-        </div>
-      )}
-
-      {/* Cards (*** MODIFIED ***) */}
-      {!loading && !error && reports.length > 0 && (
-        <div className={styles.reportTableContainer}>
-          {reports.map((report) => { {/* (*** MODIFIED ***) ใช้ state 'reports' */}
-            const isExpanded = expandedCardId === report.id;
-            return (
-              <div key={report.id} className={styles.reportTableRow}>
-                <img
-                  // (*** MODIFIED ***) เพิ่ม fallback image
-                  src={report.image || logo} // ใช้วิธีแสดง logo ของหน่วยงานแทนถ้าไม่มีรูป
-                  alt="Report"
-                  className={styles.reportImage}
-                  // (*** ADDED ***) จัดการรูปที่ error
-                  onError={(e) => { e.target.onerror = null; e.target.src=logo; }}
-                />
-                <div className={styles.reportHeader}>
-                  <span className={styles.reportIdText}>{report.id}</span>
-                  <p className={styles.reportDetailText}>
-                    {truncateText(report.detail, 40)}
-                  </p>
-                </div>
-                <div className={styles.reportStatusGroup}>
-                  <span
-                    className={`${styles.statusTag} ${
-                      report.status === "รอรับเรื่อง"
-                        ? styles.pending
-                        : report.status === "เสร็จสิ้น"
-                        ? styles.completed
-                        : report.status === "กำลังดำเนินการ"
-                        ? styles.in_progress // (เพิ่ม 'in_progress' เผื่อไว้)
-                        : ""
-                    }`}
-                  >
-                    {report.status}
-                  </span>
-                  <div className={styles.rating}>
-                    {report.rating &&
-                      [...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          className={`${styles.ratingStar} ${
-                            i < report.rating ? styles.active : ""
-                          }`}
-                        >
-                          ★
-                        </span>
-                      ))}
-                  </div>
-                </div>
-
-                {isExpanded && (
-                  <>
-                    <div className={styles.mainDetails}>
-                      {/* (*** MODIFIED ***) แสดง full_description ถ้ามี */}
-                      <p style={{marginBottom: "10px"}}>{report.full_description || report.detail}</p>
-                      <span>ประเภท: {report.category}</span>
-                      <span>แจ้งเข้า: {report.datetime_in}</span>
-                      <span>อัพเดต: {report.datetime_out}</span>
-                    </div>
-                    <div className={styles.locationDetails}>
-                      <span>ที่ตั้ง: {report.location}</span>
-                      <span>ผู้รับผิดชอบ: {report.responsible_unit}</span>
-                    </div>
-                  </>
-                )}
-                <button
-                  className={styles.toggleDetailsButton}
-                  onClick={() => handleToggleDetails(report.id)}
-                >
-                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-                </button>
+      {/* Cards */}
+      <div className={styles.reportTableContainer}>
+        {reportData.map((report) => {
+          const isExpanded = expandedCardId === report.id;
+          return (
+            <div key={report.id} className={styles.reportTableRow}>
+              <img
+                src={report.image}
+                alt="Report"
+                className={styles.reportImage}
+              />
+              <div className={styles.reportHeader}>
+                <span className={styles.reportIdText}>{report.id}</span>
+                <p className={styles.reportDetailText}>
+                  {truncateText(report.detail, 40)}
+                </p>
               </div>
-            );
-          })}
-        </div>
-      )}
+              <div className={styles.reportStatusGroup}>
+                <span
+                  className={`${styles.statusTag} ${
+                    report.status === "รอรับเรื่อง"
+                      ? styles.pending
+                      : report.status === "เสร็จสิ้น"
+                      ? styles.completed
+                      : ""
+                  }`}
+                >
+                  {report.status}
+                </span>
+                <div className={styles.rating}>
+                  {report.rating &&
+                    [...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`${styles.ratingStar} ${
+                          i < report.rating ? styles.active : ""
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                </div>
+              </div>
+
+              {isExpanded && (
+                <>
+                  <div className={styles.mainDetails}>
+                    <span>ประเภท: {report.category}</span>
+                    <span>แจ้งเข้า: {report.datetime_in}</span>
+                    <span>อัพเดต: {report.datetime_out}</span>
+                  </div>
+                  <div className={styles.locationDetails}>
+                    <span>ที่ตั้ง: {report.location}</span>
+                    <span>ผู้รับผิดชอบ: {report.responsible_unit}</span>
+                  </div>
+                </>
+              )}
+              <button
+                className={styles.toggleDetailsButton}
+                onClick={() => handleToggleDetails(report.id)}
+              >
+                {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 };
@@ -911,40 +813,38 @@ const OrganizationStatisticsView = () => {
             <h4 className={styles.chartBoxTitle}>ตารางสถิติรายหน่วยงาน</h4>
             
             {/* (*** MODIFIED ***) อัปเดตตารางให้มีคอลัมน์มากขึ้น */}
-            <div className={styles.orgStatsTableWrapper}> {/* (ADDED WRAPPER for scrolling) */}
-              <table className={styles.orgStatsTable}>
-                <thead>
-                  <tr>
-                    <th>หน่วยงาน</th>
-                    <th>เรื่องทั้งหมด</th>
-                    <th>รอรับเรื่อง</th>
-                    <th>กำลังดำเนินการ</th>
-                    <th>เสร็จสิ้น</th>
-                    <th>ส่งต่อ(ใหม่)</th>
-                    <th>ไม่เกี่ยวข้อง</th>
-                    <th>เจ้าหน้าที่</th>
-                    <th>ความพึงพอใจ</th>
-                    <th>เวลาเฉลี่ย</th>
+            <table className={styles.orgStatsTable}>
+              <thead>
+                <tr>
+                  <th>หน่วยงาน</th>
+                  <th>เรื่องทั้งหมด</th>
+                  <th>รอรับเรื่อง</th>
+                  <th>กำลังดำเนินการ</th>
+                  <th>เสร็จสิ้น</th>
+                  <th>ส่งต่อ(ใหม่)</th>
+                  <th>ไม่เกี่ยวข้อง</th>
+                  <th>เจ้าหน้าที่</th>
+                  <th>ความพึงพอใจ</th>
+                  <th>เวลาเฉลี่ย</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orgTableData.map((org) => (
+                  <tr key={org.id}>
+                    <td className={styles.unitNameCell}>{org.name}</td>
+                    <td>{org.total}</td>
+                    <td>{org.pending}</td>
+                    <td>{org.inProgress}</td>
+                    <td>{org.completed}</td>
+                    <td>{org.forwarded}</td>
+                    <td>{org.rejected}</td>
+                    <td>{org.staffCount}</td>
+                    <td>{org.satisfaction}</td>
+                    <td>{org.avgTime}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {orgTableData.map((org) => (
-                    <tr key={org.id}>
-                      <td className={styles.unitNameCell}>{org.name}</td>
-                      <td>{org.total}</td>
-                      <td>{org.pending}</td>
-                      <td>{org.inProgress}</td>
-                      <td>{org.completed}</td>
-                      <td>{org.forwarded}</td>
-                      <td>{org.rejected}</td>
-                      <td>{org.staffCount}</td>
-                      <td>{org.satisfaction}</td>
-                      <td>{org.avgTime}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
         
@@ -1177,13 +1077,12 @@ const MapView = ({ subTab }) => {
               style={{ top: "50%", left: "60%", transform: "translate(15px, -110%)" }}
             >
               <img
-                // src={reportData[0].image} // (Can't use reportData anymore)
-                src={logo} // (Fallback to logo)
+                src={reportData[0].image}
                 alt="Mock"
                 className={styles.mockPopupImage}
               />
               <span className={styles.mockPopupText}>
-                {truncateText("ตัวอย่าง Mockup Popup", 50)}
+                {truncateText(reportData[0].detail, 50)}
               </span>
               <span className={`${styles.statusTag} ${styles.pending}`}>
                 รอรับเรื่อง
@@ -1325,8 +1224,6 @@ const MapView = ({ subTab }) => {
 const Home = () => {
   const navigate = useNavigate();
   const [organizationInfo, setOrganizationInfo] = useState({
-    // (*** MODIFIED ***) เพิ่ม id
-    id: null,
     name: "กำลังโหลด...",
     logo: logo,
   });
@@ -1375,34 +1272,18 @@ const Home = () => {
       try {
         const cachedOrg = localStorage.getItem("selectedOrg");
         const lastOrg = localStorage.getItem("lastSelectedOrg");
-        
-        let orgToSet = null; // (*** MODIFIED ***)
-
         if (cachedOrg) {
-          orgToSet = JSON.parse(cachedOrg); // (*** MODIFIED ***)
+          const org = JSON.parse(cachedOrg);
+          setOrganizationInfo({ name: org.name, logo: org.img });
           localStorage.removeItem("selectedOrg");
-          localStorage.setItem("lastSelectedOrg", JSON.stringify(orgToSet)); // (*** MODIFIED ***)
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
         } else if (lastOrg) {
-          orgToSet = JSON.parse(lastOrg); // (*** MODIFIED ***)
+          const org = JSON.parse(lastOrg);
+          setOrganizationInfo({ name: org.name, logo: org.img });
         }
-        
-        // (*** MODIFIED ***)
-        if (orgToSet) {
-          // (ข้อสมมติฐาน) object 'org' จาก localStorage มี 'id', 'name', 'img'
-          setOrganizationInfo({ 
-            id: orgToSet.id, // (*** ADDED ***)
-            name: orgToSet.name, 
-            logo: orgToSet.img 
-          });
-        } else {
-          // ถ้าไม่พบหน่วยงาน
-          setOrganizationInfo({ id: null, name: "ไม่พบหน่วยงาน", logo: logo });
-        }
-
       } catch (error) {
         console.error(error);
-        // (*** MODIFIED ***)
-        setOrganizationInfo({ id: null, name: "เกิดข้อผิดพลาด", logo: logo });
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
       }
     };
     fetchOrg();
@@ -1454,11 +1335,7 @@ const Home = () => {
 
       <div className={styles.dashboardContent}>
         {activeTab === "รายการแจ้ง" && (
-          // (*** MODIFIED ***) ส่ง organizationId เป็น prop
-          <ReportTable 
-            subTab={activeSubTabs["รายการแจ้ง"]} 
-            organizationId={organizationInfo.id} 
-          />
+          <ReportTable subTab={activeSubTabs["รายการแจ้ง"]} />
         )}
 
         {/* (*** MODIFIED ***) นำ MapView Component กลับมาใช้งาน */}
