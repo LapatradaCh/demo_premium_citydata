@@ -105,7 +105,7 @@ const Home1 = () => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
     localStorage.setItem('organization_id', agency.id);
-    console.log("select_org",agency.id)
+    console.log("select_org",agency)
     navigate('/home');
   };
 
