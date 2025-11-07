@@ -224,6 +224,15 @@ const ReportTable = ({ subTab }) => {
         ) : (
           reports.map((report) => {
             const isExpanded = expandedCardId === report.issue_cases_id;
+            
+            {/* --- ส่วนสำหรับดึงชื่อหน่วยงาน (ถ้ามี) --- */}
+            let orgNames = "-";
+            if (report.responsible_orgs && report.responsible_orgs.length > 0) {
+              orgNames = report.responsible_orgs.map(org => org.name).join(", ");
+            } else if (report.responsible_organization_names && report.responsible_organization_names.length > 0) {
+              orgNames = report.responsible_organization_names.join(", ");
+            }
+            
             return (
               <div key={report.issue_cases_id} className={styles.reportTableRow}>
                 <img
@@ -241,6 +250,13 @@ const ReportTable = ({ subTab }) => {
                   </p>
                 </div>
                 <div className={styles.reportStatusGroup}>
+                  
+                  {/* ===== 🚩 CHANGE 1: แสดงประเภทของปัญหา ===== */}
+                  <span className={`${styles.statusTag} ${styles.other}`}>
+                    {report.issue_type_name || (report.issue_type && report.issue_type.name) || "ไม่ระบุประเภท"}
+                  </span>
+                  {/* ========================================= */}
+
                   <span
                     className={`${styles.statusTag} ${
                       report.status === "รอรับเรื่อง"
@@ -273,9 +289,13 @@ const ReportTable = ({ subTab }) => {
                       <span>
                         พิกัด: {report.latitude}, {report.longitude}
                       </span>
-                      {report.tags && report.tags.length > 0 && (
-                        <span>แท็ก: {report.tags.join(", ")}</span>
-                      )}
+                      
+                      {/* ===== 🚩 CHANGE 2: เปลี่ยนจาก แท็ก เป็น หน่วยงานที่รับผิดชอบ ===== */}
+                      <span>
+                        หน่วยงานที่รับผิดชอบ: {orgNames}
+                      </span>
+                      {/* ======================================================== */}
+                      
                     </div>
                   </>
                 )}
