@@ -105,7 +105,7 @@ const ReportTable = ({ subTab }) => {
 
       // ✅ เรียก endpoint เดียว (backend รวมข้อมูลให้แล้ว)
       const res = await fetch(
-        `https://premium-citydata-api-ab.vercel.app/api/cases?organization_id=${orgId}`
+        `https://premium-citydata-api-ab.vercel.app/api/issue_cases?organization_id=${orgId}`
       );
       if (!res.ok) throw new Error("Fetch cases failed");
 
