@@ -41,7 +41,7 @@ const Home1 = () => {
       console.log('Raw data from API:', data);
 
         const formattedData = data.map(item => ({
-          organization_code: item.organization_code, 
+          id: item.organization_id,
           name: item.organization_name,
           img: item.url_logo, 
           badge: null 
@@ -107,8 +107,8 @@ const Home1 = () => {
   const handleAgencyClick = (agency) => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
-    localStorage.setItem('organization_code', formattedData.organization_code); 
-    console.log("select_org",formattedData.organization_code)
+    // localStorage.setItem('organization_code', formattedData.organization_code); 
+    console.log("select_org",agency)
     navigate('/home');
   };
 
