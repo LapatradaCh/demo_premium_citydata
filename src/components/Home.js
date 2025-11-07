@@ -89,42 +89,42 @@ const ReportTable = ({ subTab }) => {
 
   // ✅ โหลดข้อมูลจริงทั้งหมด
   useEffect(() => {
-  const fetchCases = async () => {
-    try {
-      setLoading(true);
-      const lastOrg = localStorage.getItem("lastSelectedOrg");
-      console.log("org:",lastOrg);
-      if (!lastOrg) {
-        console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
+    const fetchCases = async () => {
+      try {
+        setLoading(true);
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        console.log("org:", lastOrg);
+        if (!lastOrg) {
+          console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
+          setReports([]);
+          setLoading(false);
+          return;
+        }
+
+        const org = JSON.parse(lastOrg);
+        const orgId = org.id || org.organization_id;
+
+        // ✅ เรียก endpoint เดียว (backend รวมข้อมูลให้แล้ว)
+        const res = await fetch(
+          `https://premium-citydata-api-ab.vercel.app/api/issue_cases?organization_id=${orgId}`
+        );
+        if (!res.ok) throw new Error("Fetch cases failed");
+
+        const data = await res.json();
+
+        // --- (ที่แก้ไข) ---
+        // ✅ ข้อมูลที่ได้มี field: issue_type_name, organizations (array), etc.
+        setReports(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
         setReports([]);
+      } finally {
         setLoading(false);
-        return;
       }
+    };
 
-      const org = JSON.parse(lastOrg);
-      const orgId = org.id || org.organization_id;
-
-      // ✅ เรียก endpoint เดียว (backend รวมข้อมูลให้แล้ว)
-      const res = await fetch(
-        `https://premium-citydata-api-ab.vercel.app/api/issue_cases?organization_id=${orgId}`
-      );
-      if (!res.ok) throw new Error("Fetch cases failed");
-
-      const data = await res.json();
-
-      // ✅ ข้อมูลที่ได้มี field: issue_type_name, responsible_unit, etc.
-      setReports(data);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setReports([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchCases();
-}, [subTab]);
-
+    fetchCases();
+  }, [subTab]);
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
@@ -212,6 +212,17 @@ const ReportTable = ({ subTab }) => {
         ) : (
           reports.map((report) => {
             const isExpanded = expandedCardId === report.issue_cases_id;
+            
+            // --- (ที่แก้ไข) ---
+            // สร้าง list ของหน่วยงาน
+            const responsibleUnits =
+              report.organizations && report.organizations.length > 0
+                ? report.organizations
+                    .map((org) => org.responsible_unit)
+                    .join(", ")
+                : "-";
+            // --- (สิ้นสุดส่วนที่แก้ไข) ---
+
             return (
               <div key={report.issue_cases_id} className={styles.reportTableRow}>
                 <img
@@ -223,7 +234,9 @@ const ReportTable = ({ subTab }) => {
                   className={styles.reportImage}
                 />
                 <div className={styles.reportHeader}>
-                  <span className={styles.reportIdText}>#{report.case_code}</span>
+                  <span className={styles.reportIdText}>
+                    #{report.case_code}
+                  </span>
                   <p className={styles.reportDetailText}>
                     {truncateText(report.title || "-", 40)}
                   </p>
@@ -262,9 +275,10 @@ const ReportTable = ({ subTab }) => {
                       <span>
                         พิกัด: {report.latitude}, {report.longitude}
                       </span>
-                      <span>
-                        หน่วยงานที่รับผิดชอบ: {report.responsible_unit}
-                      </span>
+                      {/* --- (ที่แก้ไข) --- */}
+                      {/* แสดง list ของหน่วยงานที่สร้างไว้ */}
+                      <span>หน่วยงานที่รับผิดชอบ: {responsibleUnits}</span>
+                      {/* --- (สิ้นสุดส่วนที่แก้ไข) --- */}
                     </div>
                   </>
                 )}
