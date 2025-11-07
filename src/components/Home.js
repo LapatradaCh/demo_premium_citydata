@@ -93,6 +93,7 @@ const ReportTable = ({ subTab }) => {
       try {
         setLoading(true);
         const lastOrg = localStorage.getItem("lastSelectedOrg");
+        const Org = localStorage.getItem("selectedOrg");
         console.log("org:", lastOrg);
         if (!lastOrg) {
           console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
