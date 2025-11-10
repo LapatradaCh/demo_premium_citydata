@@ -6,8 +6,8 @@ import { jwtDecode } from "jwt-decode";
 import { auth, googleProvider, facebookProvider } from "./firebaseConfig";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { FaFacebookF, FaLine } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+// import { FaFacebookF, FaLine } from "react-icons/fa";
+// import { FcGoogle } from "react-icons/fc";
 
 
 const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users";
