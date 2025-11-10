@@ -11,7 +11,7 @@ import {
   FaFilter,
   FaTimes,
   FaBuilding,
-  FaMap,
+  // FaMap,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
@@ -93,7 +93,7 @@ const ReportTable = ({ subTab }) => {
       try {
         setLoading(true);
         const lastOrg = localStorage.getItem("lastSelectedOrg");
-        const Org = localStorage.getItem("selectedOrg");
+        // const Org = localStorage.getItem("selectedOrg");
         console.log("org:", lastOrg);
         if (!lastOrg) {
           console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
