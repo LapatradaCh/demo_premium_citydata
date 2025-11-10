@@ -23,8 +23,7 @@
   max-width: 300px;
 }
 
-/* Global body */
-:global(body) {
+body {
   font-family: 'Inter', sans-serif;
   color: var(--color-secondary);
   line-height: 1.6;
@@ -67,38 +66,16 @@
   min-height: 100vh;
 }
 
-/* Logout */
+/* Logout Button */
 .logoutIcon {
   position: absolute;
-  top: 25px;
-  right: 25px;
-  z-index: 10;
-
-    /* position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 1000; */
+  z-index: 1000;
 }
-
 .logoutBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  background: #ff4d4f;
-  border: none;
-  color: white;
-  border-radius: 0.75rem;
-  padding: 10px 45px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
-  transition: all 0.25s ease;
-  letter-spacing: 0.1px;
-  
-    /* display: flex;
-  width: 180px;             
+  display: flex;
+  width: 180px; 
   align-items: center;
   gap: 0.5rem;
   color: white;
@@ -110,32 +87,19 @@
   background: linear-gradient(135deg, #e63946, #c92632);
   box-shadow: 0 6px 20px rgba(230,57,70,0.35);
   transition: all 0.3s ease;
-  white-space: nowrap; */
+  white-space: nowrap;
 }
-
 .logoutBtn:hover {
-  transform: translateY(-1px);
-  background: #d9363e;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-    /* transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(230,57,70,0.45); */
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(230,57,70,0.45);
 }
-
 .logoutBtn svg {
-  display: inline-block;
-  width: 68px;
-  height: 25px;
-  stroke: currentColor;
-  fill: currentColor;
-  transition: transform 0.3s ease;
-  vertical-align: middle;
-    /* width: 18px;
+  width: 18px;
   height: 18px;
-  transition: transform 0.35s; */
+  transition: transform 0.35s;
 }
-
 .logoutBtn:hover svg {
-  transform: rotate(0deg);
+  transform: scale(1.15) rotate(-8deg);
 }
 
 /* Title */
@@ -471,19 +435,24 @@
   }
 }
 
+/* New Logout Responsive Styles */
+@media (min-width: 480px) {
+  .logoutBtn { width: 160px; font-size: 1rem; }
+}
+@media (min-width: 768px) {
+  .logoutBtn { width: 180px; font-size: 1.05rem; padding: 0.5rem 1rem; }
+}
+@media (min-width: 1024px) {
+  .logoutBtn { width: 180px; font-size: 1.1rem; }
+}
+
 @media (max-width: 480px) {
   .logoutIcon {
     top: 15px;
     right: 15px;
   }
-  .logoutIcon button {
-    padding: 8px 45px;
-    font-size: 13px;
-  }
-  .logoutIcon button svg {
-    width: 18px; 
-    height: 18px; 
-  }
+  /* Removed old .logoutIcon button styles */
+
   .title {
     font-size: 1.5rem;
     letter-spacing: 0.5px;
