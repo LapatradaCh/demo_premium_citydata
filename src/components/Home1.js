@@ -37,9 +37,6 @@ const Home1 = () => {
         if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
 
         const data = await response.json();      
-      // --- เพิ่มบรรทัดนี้เพื่อตรวจสอบ ---
-      // console.log('Raw data from API:', data);
-
         const formattedData = data.map(item => ({
           id: item.organization_id,
           name: item.organization_name,
@@ -61,6 +58,57 @@ const Home1 = () => {
 
     fetchAgencies(); 
   }, []);
+
+  // --- ฟังก์ชันสำหรับส่ง Log (ตามตัวเลือกที่ 1: JSONB) ---
+  const logAgencyEntry = async (agency) => {
+    const userId = localStorage.getItem('user_id');
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (!userId || !accessToken) {
+      console.error('ไม่สามารถส่ง log: ไม่พบ user_id หรือ accessToken');
+      return;
+    }
+
+    try {
+      // สร้างข้อมูล Log ให้ตรงกับตาราง (รวม details)
+      const logData = {
+        user_id: userId,
+        action_type: 'enter_organization',
+        provider: localStorage.getItem('provider') || null, 
+        user_agent: navigator.userAgent,
+        status: 'success',
+        
+        // --- ส่วนที่เพิ่มเข้ามาสำหรับเก็บชื่อและ ID หน่วยงาน ---
+        details: {
+          organization_id: agency.id,
+          organization_name: agency.name 
+        }
+        // ----------------------------------------------------
+      };
+
+      // [สำคัญ] Endpoint API ของคุณสำหรับ user_logs
+      const apiUrl = 'https://premium-citydata-api-ab.vercel.app/api/user_logs'; 
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(logData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ไม่สามารถบันทึก log การเข้าหน่วยงาน:', errorData);
+      } else {
+        console.log('บันทึกการเข้าหน่วยงานเรียบร้อย');
+      }
+
+    } catch (err) {
+      console.error('เกิดข้อผิดพลาดในการส่ง log:', err);
+    }
+  };
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -88,6 +136,7 @@ const Home1 = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id"); 
       localStorage.removeItem("selectedOrg"); 
+      localStorage.removeItem("provider"); // <-- อาจจะลบ provider ออกตอน logout ด้วย
       navigate("/"); 
     }
   };
@@ -104,9 +153,16 @@ const Home1 = () => {
     setFilteredAgencies(allAgencies);
   };
 
+  // --- ฟังก์ชันที่ปรับแก้ให้เรียก Log ---
   const handleAgencyClick = (agency) => {
+    // 1. บันทึกข้อมูลหน่วยงานที่เลือกลง localStorage
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
+
+    // 2. เรียกฟังก์ชันส่ง Log (แบบ fire-and-forget)
+    logAgencyEntry(agency); // <-- เรียกใช้ฟังก์ชัน Log ที่นี่
+
+    // 3. นำทางผู้ใช้ไปยังหน้า /home ทันที
     navigate('/home');
   };
 
@@ -168,7 +224,7 @@ const Home1 = () => {
                 <div
                   key={agency.id} 
                   className={styles.agencyItem}
-                  onClick={() => handleAgencyClick(agency)}
+                  onClick={() => handleAgencyClick(agency)} // <-- เรียกใช้ handleAgencyClick ที่นี่
                 >
                   <div className={styles.agencyImg}>
                     <img
