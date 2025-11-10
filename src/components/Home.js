@@ -371,10 +371,35 @@ const Home = () => {
     fetchOrg();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    if (liff.isLoggedIn()) liff.logout();
-    navigate("/");
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("user_id"); 
+    console.log("Initiating logout for token:", accessToken);
+
+    try {
+      if (accessToken && userId) { 
+        const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ user_id: userId }), 
+        });
+        console.log("Backend has been notified of the logout.");
+      }
+    } catch (error) {
+      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    } finally {
+      console.log("Executing client-side cleanup.");
+      if (liff.isLoggedIn()) liff.logout();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id"); 
+      localStorage.removeItem("selectedOrg"); 
+      localStorage.removeItem("provider"); // <-- อาจจะลบ provider ออกตอน logout ด้วย
+      navigate("/"); 
+    }
   };
 
   const handleTabClick = (item) => {
