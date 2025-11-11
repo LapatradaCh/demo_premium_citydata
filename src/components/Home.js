@@ -2044,20 +2044,4 @@ const Home = () => {
 };
 
 export default Home;
-```
 
----
-
-### 🚀 สรุปการแก้ไข (Quick Fix)
-
-1.  **ลบ `import { useAuth }`:**
-    ผมได้ลบบรรทัด `import { useAuth } from "./AuthContext";` ออกจากทั้ง 2 ไฟล์ (`Home.js` และ `Home1.js`) เพราะไฟล์นี้ไม่มีอยู่จริง
-
-2.  **อ่าน `localStorage` โดยตรง:**
-    ใน `useEffect` ของ Component ที่ต้องการ `accessToken` (คือ `StatisticsView` ใน `Home.js` และ `StatOverview` ใน `Home1.js`), ผมได้เปลี่ยนจาก:
-    ```javascript
-    const { accessToken } = useAuth();
-    ```
-    เป็น:
-    ```javascript
-    const accessToken = localStorage.getItem('accessToken');
