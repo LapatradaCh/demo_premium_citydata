@@ -55,73 +55,117 @@ const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => 
   </div>
 );
 
-// (*** NEW ***) (Component ย่อยสำหรับ Mockup Horizontal Bar Chart - #2 ประเภทปัญหา)
-const MockHorizontalBarChart = () => (
-  <div className={styles.mockHorizontalBarChart}>
-    <div className={styles.mockHBarItem}>
-      <span className={styles.mockHBarLabel}>ถนน/ทางเท้า</span>
-      <div className={styles.mockHBar}>
-        {/* (*** MODIFIED ***) ใส่สีตรงๆ */}
-        <div
-          className={styles.mockHBarFill}
-          style={{ width: "80%", background: "#007bff" }}
-        ></div>
-      </div>
-      <span className={styles.mockHBarValue}>42</span>
-    </div>
-    <div className={styles.mockHBarItem}>
-      <span className={styles.mockHBarLabel}>ไฟฟ้า/ประปา</span>
-      <div className={styles.mockHBar}>
-        {/* (*** MODIFIED ***) ใส่สีตรงๆ */}
-        <div
-          className={styles.mockHBarFill}
-          style={{ width: "65%", background: "#ffc107" }}
-        ></div>
-      </div>
-      <span className={styles.mockHBarValue}>31</span>
-    </div>
-    <div className={styles.mockHBarItem}>
-      <span className={styles.mockHBarLabel}>ต้นไม้/พื้นที่สีเขียว</span>
-      <div className={styles.mockHBar}>
-        {/* (*** MODIFIED ***) ใส่สีตรงๆ */}
-        <div
-          className={styles.mockHBarFill}
-          style={{ width: "40%", background: "#057A55" }}
-        ></div>
-      </div>
-      <span className={styles.mockHBarValue}>18</span>
-    </div>
-    <div className={styles.mockHBarItem}>
-      <span className={styles.mockHBarLabel}>อื่นๆ</span>
-      <div className={styles.mockHBar}>
-        {/* (*** MODIFIED ***) ใส่สีตรงๆ */}
-        <div
-          className={styles.mockHBarFill}
-          style={{ width: "25%", background: "#6c757d" }}
-        ></div>
-      </div>
-      <span className={styles.mockHBarValue}>10</span>
-    </div>
-  </div>
-);
+// (*** MODIFIED ***) (Component ย่อยสำหรับ Horizontal Bar Chart - รองรับข้อมูลจริง)
+// (แทนที่ MockHorizontalBarChart เดิม)
+const DynamicHorizontalBarChart = ({ data }) => {
+  // กำหนดสี (ถ้าข้อมูลมีมากกว่านี้ สีจะวนซ้ำ)
+  const colors = ["#007bff", "#ffc107", "#057A55", "#6c757d", "#dc3545", "#20c997"];
+  
+  // หาค่าสูงสุดเพื่อคำนวณ % ความกว้าง
+  const maxCount = Math.max(...data.map(item => item.count), 0);
+  
+  // ถ้าไม่มีข้อมูล ให้แสดงข้อความ
+  if (data.length === 0) {
+    return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลเรื่องแจ้ง</p>;
+  }
 
-// (Component ย่อยสำหรับกล่องที่มีแท็บ "ประเภทปัญหา")
-// (*** MODIFIED ***) ลบแท็บออก เปลี่ยนเป็นกราฟแนวนอน
-const ProblemTypeBox = () => {
+  return (
+    <div className={styles.mockHorizontalBarChart}>
+      {data.map((item, index) => {
+        const widthPercent = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
+        
+        return (
+          <div key={item.issue_type_name} className={styles.mockHBarItem}>
+            <span className={styles.mockHBarLabel}>{item.issue_type_name}</span>
+            <div className={styles.mockHBar}>
+              <div
+                className={styles.mockHBarFill}
+                style={{ 
+                  width: `${widthPercent}%`, 
+                  background: colors[index % colors.length] // วนสี
+                }}
+                title={`${item.issue_type_name}: ${item.count}`}
+              ></div>
+            </div>
+            <span className={styles.mockHBarValue}>{item.count}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// (*** MODIFIED ***) (Component ย่อยสำหรับกล่อง "ประเภทปัญหา" - ดึงข้อมูลจริง)
+// (แทนที่ ProblemTypeBox เดิม)
+const ProblemTypeStats = ({ organizationId }) => {
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !organizationId) {
+        setLoading(false); // ยังไม่พร้อม
+        return; // รอข้อมูล Token และ Org ID
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // (*** FIXED URL SCHEME ***)
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/by-type?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          // (Check for HTML error)
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
+          throw new Error(`Failed to fetch chart data: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // (ตัวเลขจาก neon-serverless อาจจะเป็น string -> แปลงเป็น number)
+        // และเรียงลำดับจากมากไปน้อย
+        const formattedData = data.map(item => ({
+          ...item,
+          count: parseInt(item.count, 10) 
+        })).sort((a, b) => b.count - a.count); // เรียงจากมากไปน้อย
+        
+        setChartData(formattedData);
+      } catch (err) {
+         if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+        } else {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChartData();
+  }, [organizationId]); // ให้ re-fetch เมื่อ organizationId เปลี่ยน
+
   return (
     <div className={styles.chartBox}>
-      {/* (*** MODIFIED ***) เปลี่ยนชื่อ Title */}
       <h4 className={styles.chartBoxTitle}>สัดส่วนเรื่องแจ้งตามประเภท</h4>
-
-      {/* (*** DELETED ***) ลบแท็บ .problemTypeTabs */}
-
       <div className={styles.problemTypeContent}>
-        {/* (*** MODIFIED ***) เปลี่ยนเป็น Horizontal Bar Chart */}
-        <MockHorizontalBarChart />
+        {loading && <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>}
+        {error && <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>}
+        {/* (*** MODIFIED ***) เรียกใช้ Dynamic Chart */}
+        {chartData && <DynamicHorizontalBarChart data={chartData} />}
       </div>
     </div>
   );
 };
+
 
 // --- (*** FIX 3/B ***) ---
 // นี่คือ Component 'SatisfactionBox' ที่แก้ไขใหม่ทั้งหมด
@@ -477,7 +521,7 @@ const ReportTable = ({ subTab }) => {
         const orgId = org.id || org.organization_id;
 
         // ✅ (*** MODIFIED ***) เรียก endpoint เดียว (backend รวมข้อมูลให้แล้ว)
-        // แก้ไข URL ให้ตรงกับ code2
+        // (*** FIXED URL SCHEME ***)
         const res = await fetch(
           `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
         );
@@ -963,7 +1007,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         setLoading(true);
         setError(null); // เคลียร์ Error เก่า (ถ้ามี)
         
-        // (*** MODIFIED: เพิ่ม organization_id เข้าไปใน URL ***)
+        // (*** FIXED URL SCHEME ***)
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -1103,7 +1147,8 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
       <div className={styles.statsBottomGrid}>
         {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
         <div className={styles.statsGridColumn}>
-          <ProblemTypeBox />
+          {/* (*** MODIFIED: เรียกใช้ Component ใหม่ และส่ง prop ***) */}
+          <ProblemTypeStats organizationId={organizationId} />
           <SatisfactionBox />
         </div>
 
