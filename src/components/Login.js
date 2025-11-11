@@ -56,7 +56,7 @@ const Login = () => {
           // 2.2 ค่อยนำทางไปหน้า Home
            setTimeout(() => {
                   navigate('/home');
-            }, 100);
+            }, 1000);
         } else {
           // 3. ไม่มีองค์กร
           navigate("/Signin");
