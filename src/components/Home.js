@@ -115,7 +115,7 @@ const ProblemTypeStats = ({ organizationId }) => {
         setError(null);
         
         // (*** FIXED URL SCHEME ***)
-        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/by-type?organization_id=${organizationId}`, {
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
           },
