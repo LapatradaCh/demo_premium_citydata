@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 import "cally";
 // (*** DELETED ***) ลบ import useAuth ที่ไม่มีอยู่จริง
-// import { useAuth } from "./AuthContext"; 
+// import { useAuth } from "./AuthContext";
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
 
@@ -953,8 +953,9 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         return;
       }
       if (!organizationId) {
-        setError("Organization ID not loaded"); // รอให้ ID ถูกส่งมาก่อน
-        setLoading(false);
+        // setError("Organization ID not loaded"); // รอให้ ID ถูกส่งมาก่อน
+        // เราจะไม่ตั้ง error แต่จะแค่รอเงียบๆ
+        setLoading(true); // ตั้งเป็น loading ค้างไว้จนกว่า organizationId จะมา
         return;
       }
 
@@ -970,6 +971,10 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         });
 
         if (!response.ok) {
+          // (*** ADDED: ตรวจจับ 404/HTML error ***)
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
           throw new Error(`Failed to fetch stats: ${response.statusText}`);
         }
 
@@ -985,7 +990,12 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         
         setStatsData(statsObject);
       } catch (err) {
-        setError(err.message);
+         // (*** ADDED: ตรวจจับ JSON Parse error ***)
+        if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+        } else {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -1006,6 +1016,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
       value = statsData?.[kpi.id] || 0;
     }
     
+    // (*** MODIFIED: ป้องกันการหารด้วย 0 ***)
     const percentage = totalCases > 0 ? ((value / totalCases) * 100).toFixed(2) : "0.00";
     
     // (หมายเหตุ: API ยังไม่ได้ส่งข้อมูล 'overdue' หรือ 'self')
@@ -1051,9 +1062,21 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
       {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
       {/* (*** MODIFIED: แสดง Loading/Error/Data ***) */}
       {loading ? (
-        <div className={styles.statsLoadingOrError}>
-          <FaSyncAlt className={styles.animateSpin} />
-          <span>กำลังโหลดสถิติ...</span>
+        // (*** MODIFIED: ปรับปรุง UI ตอน Loading ***)
+        <div className={styles.statsDetailGrid}>
+          {kpiStructure.map((kpi) => (
+             <div
+              key={kpi.id}
+              className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
+              style={{ borderTopColor: kpi.color, opacity: 0.5 }}
+            >
+              <div className={styles.statsDetailHeader}>
+                <span className={styles.statsDetailTitle}>{kpi.title}</span>
+                <span className={styles.statsDetailValue}>...</span>
+              </div>
+              <span className={styles.statsDetailPercentage}>(...)</span>
+            </div>
+          ))}
         </div>
       ) : error ? (
         <div className={styles.statsLoadingOrErrorError}>
@@ -2044,4 +2067,3 @@ const Home = () => {
 };
 
 export default Home;
-
