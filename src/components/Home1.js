@@ -8,7 +8,6 @@ import { FaSignOutAlt} from "react-icons/fa";
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-
   const [allAgencies, setAllAgencies] = useState([]); 
   const [filteredAgencies, setFilteredAgencies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
