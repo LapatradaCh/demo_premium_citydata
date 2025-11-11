@@ -53,10 +53,6 @@ const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => 
   </div>
 );
 
-// (*** DELETED ***)
-// const MockLineChart = () => ( ... )
-// (ลบ Component นี้ทิ้งเนื่องจากไม่มีการเรียกใช้งาน)
-
 // (*** NEW ***) (Component ย่อยสำหรับ Mockup Horizontal Bar Chart - #2 ประเภทปัญหา)
 const MockHorizontalBarChart = () => (
   <div className={styles.mockHorizontalBarChart}>
@@ -184,45 +180,52 @@ const SatisfactionBox = () => {
 };
 // --- (*** จบ FIX 3/B ***) ---
 
-// (*** NEW ***) (Component ย่อยสำหรับ Mockup Stacked Horizontal Bar Chart)
-// (*** MODIFIED: เพิ่มสถานะ 'ส่งต่อ(ใหม่)' และ 'ไม่เกี่ยวข้อง' ***)
+// (*** MODIFIED ***) (Component ย่อยสำหรับ Mockup Stacked Horizontal Bar Chart - รองรับ 7 สถานะใหม่)
 const MockOrgStackedBarChart = () => {
-  // ข้อมูลสมมติสำหรับกราฟแท่งแบบซ้อน (ปรับให้มี 5 สถานะ)
+  // ข้อมูลสมมติสำหรับกราฟแท่งแบบซ้อน (ปรับให้มี 7 สถานะ)
   const stackedData = [
     {
       name: "หน่วยงาน xx",
-      pending: 10, // 10% (รอรับเรื่อง)
-      inProgress: 20, // 20% (กำลังดำเนินการ)
-      forwarded: 5, // 5% (ส่งต่อ(ใหม่))
-      rejected: 5, // 5% (ไม่เกี่ยวข้อง)
-      completed: 60, // 60% (เสร็จสิ้น)
+      pending: 10, // 10% (รอรับเรื่อง - แดง)
+      coordinating: 5, // 5% (กำลังประสานงาน - ม่วง) (*** NEW ***)
+      inProgress: 20, // 20% (กำลังดำเนินการ - เหลือง)
+      forwarded: 5, // 5% (ส่งต่อ - น้ำเงิน)
+      rejected: 5, // 5% (ปฏิเสธ - เทา) (*** MODIFIED NAME ***)
+      invited: 5, // 5% (เชิญร่วม - เขียวมิ้นต์) (*** NEW ***)
+      completed: 50, // 50% (เสร็จสิ้น - เขียวเข้ม)
       total: 120,
     },
     {
       name: "หน่วยงาน xx",
-      pending: 30,
-      inProgress: 40,
-      forwarded: 10,
-      rejected: 0,
+      pending: 20,
+      coordinating: 10,
+      inProgress: 30,
+      forwarded: 5,
+      rejected: 5,
+      invited: 10,
       completed: 20,
       total: 85,
     },
     {
       name: "หน่วยงาน xx",
       pending: 5,
+      coordinating: 10,
       inProgress: 15,
       forwarded: 10,
       rejected: 10,
-      completed: 60,
+      invited: 10,
+      completed: 40,
       total: 40,
     },
     {
       name: "หน่วยงาน xx",
-      pending: 50,
+      pending: 40,
+      coordinating: 10,
       inProgress: 10,
       forwarded: 10,
       rejected: 10,
-      completed: 20,
+      invited: 5,
+      completed: 15,
       total: 15,
     },
   ];
@@ -241,50 +244,68 @@ const MockOrgStackedBarChart = () => {
               style={{ width: `${item.pending}%`, background: "#dc3545" }}
               title={`รอรับเรื่อง: ${item.pending}%`}
             ></div>
-            {/* 2. กำลังดำเนินการ (สีเหลือง) */}
+            {/* 2. กำลังประสานงาน (สีม่วง) (*** NEW ***) */}
+            <div
+              className={styles.mockStackedBarSegment}
+              style={{ width: `${item.coordinating}%`, background: "#9b59b6" }}
+              title={`กำลังประสานงาน: ${item.coordinating}%`}
+            ></div>
+            {/* 3. กำลังดำเนินการ (สีเหลือง) */}
             <div
               className={styles.mockStackedBarSegment}
               style={{ width: `${item.inProgress}%`, background: "#ffc107" }}
               title={`กำลังดำเนินการ: ${item.inProgress}%`}
             ></div>
-            {/* 3. ส่งต่อ(ใหม่) (สีน้ำเงิน) */}
-            <div
-              className={styles.mockStackedBarSegment}
-              style={{ width: `${item.forwarded}%`, background: "#007bff" }} // ใช้สีน้ำเงินจาก KPI
-              title={`ส่งต่อ(ใหม่): ${item.forwarded}%`}
-            ></div>
-            {/* 4. ไม่เกี่ยวข้อง (สีเทา) */}
-            <div
-              className={styles.mockStackedBarSegment}
-              style={{ width: `${item.rejected}%`, background: "#6c757d" }} // ใช้สีเทาจาก KPI
-              title={`ไม่เกี่ยวข้อง: ${item.rejected}%`}
-            ></div>
-            {/* 5. เสร็จสิ้น (สีเขียว) */}
+            {/* 4. เสร็จสิ้น (สีเขียวเข้ม) */}
             <div
               className={styles.mockStackedBarSegment}
               style={{ width: `${item.completed}%`, background: "#057A55" }}
               title={`เสร็จสิ้น: ${item.completed}%`}
             ></div>
+            {/* 5. ส่งต่อ (สีน้ำเงิน) (*** MODIFIED NAME ***) */}
+            <div
+              className={styles.mockStackedBarSegment}
+              style={{ width: `${item.forwarded}%`, background: "#007bff" }}
+              title={`ส่งต่อ: ${item.forwarded}%`}
+            ></div>
+            {/* 6. เชิญร่วม (สีเขียวมิ้นต์) (*** NEW ***) */}
+            <div
+              className={styles.mockStackedBarSegment}
+              style={{ width: `${item.invited}%`, background: "#20c997" }}
+              title={`เชิญร่วม: ${item.invited}%`}
+            ></div>
+            {/* 7. ปฏิเสธ (สีเทา) (*** MODIFIED NAME ***) */}
+            <div
+              className={styles.mockStackedBarSegment}
+              style={{ width: `${item.rejected}%`, background: "#6c757d" }}
+              title={`ปฏิเสธ: ${item.rejected}%`}
+            ></div>
           </div>
           <span className={styles.mockHBarValue}>{item.total}</span>
         </div>
       ))}
-      {/* คำอธิบายสัญลักษณ์ (Legend) - (*** MODIFIED ***) */}
+      {/* คำอธิบายสัญลักษณ์ (Legend) - (*** MODIFIED - 7 สถานะ ***) */}
       <div className={styles.mockStackedBarLegend}>
         <span>
           <span style={{ background: "#dc3545" }}></span> รอรับเรื่อง
         </span>
         <span>
-          <span style={{ background: "#ffc107" }}></span> กำลังดำเนินการ
+          <span style={{ background: "#9b59b6" }}></span> กำลังประสานงาน
         </span>
         <span>
-          <span style={{ background: "#007bff" }}></span> ส่งต่อ(ใหม่)
+          <span style={{ background: "#ffc107" }}></span> กำลังดำเนินการ
         </span>
         <span>
           <span style={{ background: "#057A55" }}></span> เสร็จสิ้น
         </span>
         <span>
-          <span style={{ background: "#6c757d" }}></span> ไม่เกี่ยวข้อง
+          <span style={{ background: "#007bff" }}></span> ส่งต่อ
+        </span>
+        <span>
+          <span style={{ background: "#20c997" }}></span> เชิญร่วม
+        </span>
+        <span>
+          <span style={{ background: "#6c757d" }}></span> ปฏิเสธ
         </span>
       </div>
     </div>
@@ -320,55 +341,70 @@ const MockSimpleBarChart = ({ data, barColor, valueSuffix, maxValue }) => {
   );
 };
 
-// (*** MODIFIED ***)
-// ข้อมูล KPI 6 รายการที่สำคัญ (ปรับปรุงตามคำขอ และใส่สีตรงๆ)
+// (*** MODIFIED: อัปเดตใหม่เพื่อรองรับ 7 สถานะ: 1.รอรับเรื่อง 2.กำลังประสานงาน 3.กำลังดำเนินการ 4.เสร็จสิ้น 5.ส่งต่อ 6.เชิญร่วม 7.ปฏิเสธ ***)
 const kpiDetails = [
   {
     title: "ทั้งหมด", // (#1)
-    value: 71,
+    value: 100, // อัปเดตจำนวนสมมติ
     percentage: "100%",
     note: null,
-    color: "#f39c12", // (*** MODIFIED ***)
+    color: "#f39c12", // ส้ม
     cssClass: "stats-cream",
   },
   {
     title: "รอรับเรื่อง", // (#3)
-    value: 21,
-    percentage: "29.58%",
-    note: "เกิน 1 เดือน 21 เรื่อง",
-    color: "#dc3545", // (*** MODIFIED ***)
+    value: 20,
+    percentage: "20.00%",
+    note: "เกิน 1 เดือน 20 เรื่อง",
+    color: "#dc3545", // แดง
     cssClass: "stats-red",
   },
   {
+    title: "กำลังประสานงาน", // (*** NEW ***) สถานะใหม่
+    value: 10,
+    percentage: "10.00%",
+    note: null,
+    color: "#9b59b6", // ม่วง
+    cssClass: "stats-purple",
+  },
+  {
     title: "กำลังดำเนินการ", // (#3)
-    value: 18,
-    percentage: "25.35%",
+    value: 25,
+    percentage: "25.00%",
     note: "เกิน 1 เดือน 18 เรื่อง",
-    color: "#ffc107", // (*** MODIFIED ***)
+    color: "#ffc107", // เหลือง
     cssClass: "stats-yellow",
   },
   {
     title: "เสร็จสิ้น", // (#3)
-    value: 23,
-    percentage: "32.39%",
-    note: "จัดการเอง 3 เรื่อง (13%)",
-    color: "#057A55", // (*** MODIFIED ***)
+    value: 30,
+    percentage: "30.00%",
+    note: "จัดการเอง 3 เรื่อง (10%)",
+    color: "#057A55", // เขียว
     cssClass: "stats-green",
   },
   {
-    title: "ส่งต่อ(ใหม่)",
-    value: 0,
-    percentage: "0.00%",
+    title: "ส่งต่อ", // (*** MODIFIED ***) เปลี่ยนชื่อจาก "ส่งต่อ(ใหม่)"
+    value: 5,
+    percentage: "5.00%",
     note: "(ส่งต่อหน่วยงานอื่น)",
-    color: "#007bff", // (*** MODIFIED ***)
+    color: "#007bff", // น้ำเงิน
     cssClass: "stats-blue",
   },
   {
-    title: "ไม่เกี่ยวข้อง",
-    value: 9,
-    percentage: "12.68%",
-    note: "จัดการเอง 1 เรื่อง (11%)",
-    color: "#6c757d", // (*** MODIFIED ***)
+    title: "เชิญร่วม", // (*** NEW ***) สถานะใหม่
+    value: 5,
+    percentage: "5.00%",
+    note: null,
+    color: "#20c997", // เขียวมิ้นต์
+    cssClass: "stats-mint",
+  },
+  {
+    title: "ปฏิเสธ", // (*** MODIFIED ***) เปลี่ยนชื่อจาก "ไม่เกี่ยวข้อง"
+    value: 5,
+    percentage: "5.00%",
+    note: "จัดการเอง 1 เรื่อง (20%)",
+    color: "#6c757d", // เทา
     cssClass: "stats-grey",
   },
 ];
@@ -463,7 +499,7 @@ const DateFilter = () => {
   );
 };
 
-// ------------------------- (*** ADDED BACK ***) Report Table (จากโค้ดเก่า)
+// ------------------------- (*** ADDED BACK / MODIFIED ***) Report Table (อัปเดตสถานะสี)
 const ReportTable = ({ subTab }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
@@ -526,6 +562,27 @@ const ReportTable = ({ subTab }) => {
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "รอรับเรื่อง":
+        return styles.pending;
+      case "กำลังประสานงาน": // *** NEW ***
+        return styles.coordinating;
+      case "กำลังดำเนินการ":
+        return styles.in_progress;
+      case "เสร็จสิ้น":
+        return styles.completed;
+      case "ส่งต่อ": // *** MODIFIED NAME ***
+        return styles.forwarded;
+      case "เชิญร่วม": // *** NEW ***
+        return styles.invited;
+      case "ปฏิเสธ": // *** MODIFIED NAME ***
+        return styles.rejected;
+      default:
+        return styles.other;
+    }
   };
 
   return (
@@ -640,17 +697,7 @@ const ReportTable = ({ subTab }) => {
                   </p>
                 </div>
                 <div className={styles.reportStatusGroup}>
-                  <span
-                    className={`${styles.statusTag} ${
-                      report.status === "รอรับเรื่อง"
-                        ? styles.pending
-                        : report.status === "กำลังดำเนินการ"
-                        ? styles.in_progress
-                        : report.status === "เสร็จสิ้น"
-                        ? styles.completed
-                        : styles.other
-                    }`}
-                  >
+                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
                     {report.status}
                   </span>
                 </div>
@@ -820,11 +867,6 @@ const ReportCardItem = ({ id, name, details }) => {
   );
 };
 
-// (*** DELETED ***)
-// ลบซากตัวแปรที่ลอยๆ อยู่ (จาก Component ที่ถูกลบไปแล้ว)
-// const menuItems = [ ... ];
-// const [activeMenu, setActiveMenu] = useState(menuItems[0].id);
-
 // (*** NEW COMPONENT: Simplified View สำหรับการแสดงผล Card List ภายใน ChartBox ***)
 // (*** นี่คือ Component ที่ "สถิติองค์กร" เรียกใช้ ***)
 const ReportCardViewSimplified = () => {
@@ -909,7 +951,7 @@ const StatisticsView = ({ subTab }) => {
         </span>
       </div>
 
-      {/* 4. Detailed KPI Grid (ตาราง KPI 6 กล่อง) - (#1 และ #3) */}
+      {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
       <div className={styles.statsDetailGrid}>
         {kpiDetails.map((kpi) => (
           <StatsDetailBox
@@ -1002,7 +1044,7 @@ const OrganizationStatisticsView = () => {
       return (
         <div className={styles.chartBox} key="ratio-chart">
           <h4 className={styles.chartBoxTitle}>
-            จำนวนเรื่องแจ้ง
+            จำนวนเรื่องแจ้ง (7 สถานะ)
           </h4>
           <MockOrgStackedBarChart />
         </div>
@@ -1189,9 +1231,9 @@ const GeneralSettingsContent = () => {
         </div>
       </div>
 
-      {/* (*** DELETED PER REQUEST ***) 
-        กล่อง "การแจ้งเตือน" และ "ทั่วไป (ภาษา)" ถูกลบออกจากหน้านี้
-      */}
+      {/* (*** DELETED PER REQUEST ***)
+          กล่อง "การแจ้งเตือน" และ "ทั่วไป (ภาษา)" ถูกลบออกจากหน้านี้
+        */}
     </>
   );
 };
@@ -1216,9 +1258,9 @@ const MapSettingsContent = () => {
         <MockToggle />
       </div>
 
-      {/* (*** DELETED ***) 
-        ลบ Toggle "แสดงหมุดสถานะที่เสร็จสิ้น" และ "แสดงหมายเหตุ" ออก
-      */}
+      {/* (*** DELETED ***)
+          ลบ Toggle "แสดงหมุดสถานะที่เสร็จสิ้น" และ "แสดงหมายเหตุ" ออก
+        */}
     </div>
   );
 };
@@ -1487,8 +1529,11 @@ const MapView = ({ subTab }) => {
               <label>สถานะ</label>
               <select defaultValue="all">
                 <option value="all">ทั้งหมด</option>
-                <option value="pending">xxxx รอรับเรื่อง</option>
-                <option value="completed">xxxx เสร็จสิ้น</option>
+                <option value="pending">รอรับเรื่อง</option>
+                <option value="in_progress">กำลังดำเนินการ</option>
+                <option value="completed">เสร็จสิ้น</option>
+                <option value="forwarded">ส่งต่อ</option>
+                <option value="rejected">ปฏิเสธ</option>
               </select>
             </div>
             <div className={styles.filterGroup}>
@@ -1506,15 +1551,15 @@ const MapView = ({ subTab }) => {
           <div className={styles.mapPlaceholder}>
             <span>(พื้นที่แผนที่สาธารณะ)</span>
 
-            {/* Mock Pin 1 */}
+            {/* Mock Pin 1 (รอรับเรื่อง - แดง) */}
             <FaMapMarkerAlt
-              className={styles.mockMapPin}
+              className={`${styles.mockMapPin} ${styles.pending}`}
               style={{ top: "30%", left: "40%" }}
             />
 
-            {/* Mock Pin 2 (With Popup) */}
+            {/* Mock Pin 2 (กำลังประสานงาน - ม่วง) */}
             <FaMapMarkerAlt
-              className={styles.mockMapPin}
+              className={`${styles.mockMapPin} ${styles.coordinating}`}
               style={{ top: "50%", left: "60%" }}
             />
             <div
@@ -1533,8 +1578,8 @@ const MapView = ({ subTab }) => {
               <span className={styles.mockPopupText}>
                 {truncateText(reportData[0].detail, 50)}
               </span>
-              <span className={`${styles.statusTag} ${styles.pending}`}>
-                รอรับเรื่อง
+              <span className={`${styles.statusTag} ${styles.coordinating}`}>
+                กำลังประสานงาน
               </span>
             </div>
           </div>
@@ -1583,9 +1628,12 @@ const MapView = ({ subTab }) => {
               <select defaultValue="all">
                 <option value="all">ทั้งหมด</option>
                 <option value="pending">รอรับเรื่อง</option>
+                <option value="coordinating">กำลังประสานงาน</option>
                 <option value="in_progress">กำลังดำเนินการ</option>
                 <option value="completed">เสร็จสิ้น</option>
-                <option value="rejected">ไม่เกี่ยวข้อง</option>
+                <option value="forwarded">ส่งต่อ</option>
+                <option value="invited">เชิญร่วม</option>
+                <option value="rejected">ปฏิเสธ</option>
               </select>
             </div>
             <div className={styles.filterGroup}>
@@ -1619,6 +1667,11 @@ const MapView = ({ subTab }) => {
                   title="รอรับเรื่อง"
                 />
                 <FaMapMarkerAlt
+                  className={`${styles.mockMapPin} ${styles.coordinating}`}
+                  style={{ top: "15%", left: "55%" }}
+                  title="กำลังประสานงาน"
+                />
+                <FaMapMarkerAlt
                   className={`${styles.mockMapPin} ${styles.in_progress}`}
                   style={{ top: "40%", left: "55%" }}
                   title="กำลังดำเนินการ"
@@ -1629,9 +1682,9 @@ const MapView = ({ subTab }) => {
                   title="เสร็จสิ้น"
                 />
                 <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.pending}`}
+                  className={`${styles.mockMapPin} ${styles.rejected}`}
                   style={{ top: "70%", left: "70%" }}
-                  title="รอรับเรื่อง"
+                  title="ปฏิเสธ"
                 />
 
                 {/* Legend */}
@@ -1641,12 +1694,20 @@ const MapView = ({ subTab }) => {
                     <span>รอรับเรื่อง</span>
                   </div>
                   <div className={styles.legendItem}>
+                    <FaMapMarkerAlt className={styles.coordinating} />
+                    <span>ประสานงาน</span>
+                  </div>
+                  <div className={styles.legendItem}>
                     <FaMapMarkerAlt className={styles.in_progress} />
                     <span>ดำเนินการ</span>
                   </div>
                   <div className={styles.legendItem}>
                     <FaMapMarkerAlt className={styles.completed} />
                     <span>เสร็จสิ้น</span>
+                  </div>
+                  <div className={styles.legendItem}>
+                    <FaMapMarkerAlt className={styles.rejected} />
+                    <span>ปฏิเสธ</span>
                   </div>
                 </div>
               </>
