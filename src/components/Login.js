@@ -49,8 +49,17 @@ const Login = () => {
           navigate("/home1");
         } else if (orgCount === 1) {
           // 2. (*** MODIFIED ***) มี 1 องค์กร
-          // 2.1 บันทึกองค์กรนั้นลง localStorage ให้ Home.js อ่าน
-          const singleOrg = orgData[0];
+          // 1. ดึงข้อมูลองค์กรแรกออกมา (เหมือนเดิม)
+          const sourceOrg = orgData[0];
+          
+          // 2. สร้าง object ใหม่ 'singleOrg' โดยจัดโครงสร้างให้เหมือนในรูป
+          //    โดยเลือกดึงค่ามาจาก sourceOrg
+          const singleOrg = {
+            badge: sourceOrg.badge || null, // ถ้า badge ไม่มีค่า (undefined) ให้ใช้ null แทน
+            id: sourceOrg.id,
+            img: sourceOrg.img,
+            name: sourceOrg.name
+          };
           localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
       
           // 2.2 ค่อยนำทางไปหน้า Home
