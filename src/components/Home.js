@@ -16,7 +16,6 @@ import {
   // ไอคอนสำหรับหน้าสถิติใหม่
   FaHourglassHalf, // (*** ADDED ***) สำหรับเมนูเวลาเฉลี่ย
   FaSyncAlt,
-  FaCheckCircle,
   // (*** ADDED ***) ไอคอนสำหรับ Dropdown และ Settings
   FaChevronDown,
   FaChevronUp,
@@ -25,10 +24,6 @@ import {
   // (*** ADDED ***) ไอคอนสำหรับแผนที่
   FaMapMarkerAlt,
   // (*** NEW ICONS ***) สำหรับ Report View ใหม่
-  FaThumbsUp,
-  FaSadTear,
-  FaRegStar,
-  FaRegClock,
   FaUnlockAlt, // ไอคอนสำหรับรหัสผ่าน
   FaUserCog, // ไอคอนสำหรับผู้ดูแล
   FaUserTie, // ไอคอนสำหรับเจ้าหน้าที่
