@@ -52,9 +52,11 @@ const Login = () => {
           // 2.1 บันทึกองค์กรนั้นลง localStorage ให้ Home.js อ่าน
           const singleOrg = orgData[0];
           localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
-
+      
           // 2.2 ค่อยนำทางไปหน้า Home
-          navigate("/home");
+           setTimeout(() => {
+                  navigate('/home');
+            }, 100);
         } else {
           // 3. ไม่มีองค์กร
           navigate("/Signin");
