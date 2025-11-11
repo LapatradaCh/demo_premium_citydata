@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Search, LogOut, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import liff from "@line/liff"; 
 import styles from './css/Home1.module.css';
+import { FaSignOutAlt} from "react-icons/fa";
 
 const Home1 = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -170,7 +171,7 @@ const Home1 = () => {
     <div className={styles.appBody}>
       <div className={styles.logoutIcon}>
          <button className={styles.logoutBtn} onClick={handleLogout}>
-           <LogOut size={18} />
+           <FaSignOutAlt size={18} />
            <span>ออกจากระบบ</span>
          </button>
        </div>
