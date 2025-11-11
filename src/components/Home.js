@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// (*** MODIFIED ***) นำเข้า CSS Module ที่ถูกต้อง
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./css/Home.module.css";
 import logo from "./logo.png";
 import {
@@ -10,37 +10,34 @@ import {
   FaBuilding,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 
-// (*** NEW ***) นำเข้า Component หน้าต่างๆ ที่เราแยกไฟล์ไป
+// Component ย่อย
 import ReportTable from "./ReportTable";
 import MapView from "./MapView";
 import StatisticsView from "./StatisticsView";
 import OrganizationStatisticsView from "./OrgStatisticsView";
 import SettingsView from "./SettingsView";
 
-
-
 const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
     logo: logo,
-    id: null, // (*** MODIFIED: เพิ่ม id เป็น null เริ่มต้น ***)
+    id: null,
   });
 
-  const [activeTab, setActiveTab] = useState("รายการแจ้ง"); // <-- (*** FIXED ***) เปลี่ยนค่าเริ่มต้นกลับไปที่ "รายการแจ้ง"
+  const [activeTab, setActiveTab] = useState("รายการแจ้ง");
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [activeSubTabs, setActiveSubTabs] = useState({
     แผนที่: "แผนที่สาธารณะ",
     รายการแจ้ง: "เฉพาะหน่วยงาน",
-    สถิติ: "สถิติ", // (*** MODIFIED ***) เปลี่ยนค่าเริ่มต้นเป็น "สถิติ" (หน้าหลัก)
+    สถิติ: "สถิติ",
     ผลลัพธ์: "แก้ปัญหาสูงสุด",
   });
 
-  // (*** MODIFIED ***)
-  // อัปเดตเมนูให้ครบถ้วน และ "ตั้งค่า" ไม่มีเมนูย่อย
   const menuItems = [
     {
       name: "แผนที่",
@@ -66,55 +63,72 @@ const Home = () => {
     {
       name: "ตั้งค่า",
       icon: FaCog,
-      items: null, // <--- ไม่มีเมนูย่อย
+      items: null,
     },
   ];
 
+  // 🧠 โหลดข้อมูลหน่วยงาน (อ่านจาก state ก่อน ถ้าไม่มีค่อยอ่านจาก localStorage)
   useEffect(() => {
-    const fetchOrg = async () => {
-      try {
-        const cachedOrg = localStorage.getItem("selectedOrg");
-        const lastOrg = localStorage.getItem("lastSelectedOrg");
-        let orgToSet = null;
+    const stateAgency = location.state?.agency;
+    if (stateAgency) {
+      // ✅ ถ้ามีค่า state จากหน้า login / home1 — แสดงทันที
+      setOrganizationInfo({
+        name: stateAgency.name,
+        logo: stateAgency.img || logo,
+        id: stateAgency.id || stateAgency.organization_id || null,
+      });
+      // เก็บไว้ใน localStorage เผื่อ refresh หน้า
+      localStorage.setItem("lastSelectedOrg", JSON.stringify(stateAgency));
+      return;
+    }
 
-        if (cachedOrg) {
-          orgToSet = JSON.parse(cachedOrg);
-          localStorage.removeItem("selectedOrg");
-          localStorage.setItem("lastSelectedOrg", JSON.stringify(orgToSet));
-        } else if (lastOrg) {
-          orgToSet = JSON.parse(lastOrg);
-        }
+    // 🔁 ถ้าไม่มี state ให้ลองอ่านจาก localStorage (และ retry เผื่อยังไม่พร้อม)
+    const tryReadOrg = (retry = 0) => {
+      const cachedOrg = localStorage.getItem("selectedOrg");
+      const lastOrg = localStorage.getItem("lastSelectedOrg");
+      let orgToSet = null;
 
-        if (orgToSet) {
-          // (*** MODIFIED: ตั้งค่า state พร้อม ID ***)
-          setOrganizationInfo({
-            name: orgToSet.name,
-            logo: orgToSet.img,
-            id: orgToSet.id || orgToSet.organization_id, // <-- [สำคัญ]
-          });
-        } else {
-          // กรณีไม่พบ Org ID เลย (ไม่ควรเกิดขึ้น แต่ป้องกันไว้)
-          setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo, id: null });
-        }
-      } catch (error) {
-        console.error(error);
-        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo, id: null });
+      if (cachedOrg) {
+        orgToSet = JSON.parse(cachedOrg);
+        localStorage.removeItem("selectedOrg");
+        localStorage.setItem("lastSelectedOrg", JSON.stringify(orgToSet));
+      } else if (lastOrg) {
+        orgToSet = JSON.parse(lastOrg);
+      }
+
+      if (orgToSet) {
+        setOrganizationInfo({
+          name: orgToSet.name,
+          logo: orgToSet.img || logo,
+          id: orgToSet.id || orgToSet.organization_id || null,
+        });
+      } else if (retry < 3) {
+        // ลองใหม่สูงสุด 3 ครั้ง (ทุก 300 มิลลิวินาที)
+        setTimeout(() => tryReadOrg(retry + 1), 300);
+      } else {
+        setOrganizationInfo({
+          name: "ไม่พบหน่วยงาน",
+          logo: logo,
+          id: null,
+        });
       }
     };
-    fetchOrg();
-  }, []);
 
+    tryReadOrg();
+  }, [location.state]);
+
+  // ออกจากระบบ
   const handleLogout = () => {
-    // (*** MODIFIED ***) ตรวจสอบให้แน่ใจว่าได้ล้าง Token ออกจาก localStorage ตอน Logout
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     localStorage.removeItem("lastSelectedOrg");
-    localStorage.clear(); // ล้างทั้งหมดเลยก็ได้
+    localStorage.clear();
 
     if (liff.isLoggedIn()) liff.logout();
     navigate("/");
   };
 
+  // สลับแท็บหลัก
   const handleTabClick = (item) => {
     if (item.action) {
       item.action();
@@ -127,6 +141,7 @@ const Home = () => {
     }
   };
 
+  // เปลี่ยนเมนูย่อย
   const handleSubMenuItemClick = (mainTabName, subItemName) => {
     setActiveSubTabs({
       ...activeSubTabs,
@@ -137,9 +152,10 @@ const Home = () => {
 
   return (
     <div>
+      {/* ===== ส่วนหัว ===== */}
       <div className={styles.logoSectionTop}>
         <img
-          src={organizationInfo.logo}
+          src={organizationInfo.logo || logo}
           alt="Logo"
           className={styles.logoImg}
         />
@@ -153,10 +169,8 @@ const Home = () => {
         </div>
       </div>
 
+      {/* ===== เนื้อหาหลัก ===== */}
       <div className={styles.dashboardContent}>
-        {/* (*** MODIFIED ***)
-              แสดง Component ที่ import เข้ามา
-           */}
         {activeTab === "รายการแจ้ง" && (
           <ReportTable subTab={activeSubTabs["รายการแจ้ง"]} />
         )}
@@ -168,7 +182,6 @@ const Home = () => {
         {activeTab === "สถิติ" && (
           <>
             {activeSubTabs["สถิติ"] === "สถิติ" && (
-              // (*** MODIFIED: ส่ง organizationId ลงไปเป็น prop ***)
               <StatisticsView
                 subTab={activeSubTabs["สถิติ"]}
                 organizationId={organizationInfo.id}
@@ -183,7 +196,7 @@ const Home = () => {
         {activeTab === "ตั้งค่า" && <SettingsView />}
       </div>
 
-      {/* --- Bottom Nav Bar --- */}
+      {/* ===== แถบเมนูด้านล่าง ===== */}
       <div className={styles.bottomNav}>
         {menuItems.map((item) => (
           <div key={item.name} className={styles.bottomNavButtonContainer}>
