@@ -57,9 +57,9 @@ const Login = () => {
           //    โดยเลือกดึงค่ามาจาก sourceOrg
           const singleOrg = {
             badge: sourceOrg.badge || null, // ถ้า badge ไม่มีค่า (undefined) ให้ใช้ null แทน
-            id: sourceOrg.id,
-            img: sourceOrg.img,
-            name: sourceOrg.name
+            id: sourceOrg.organization_id,
+            img: sourceOrg.url_logo,
+            name: sourceOrg.organization_name
           };
           localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
       
