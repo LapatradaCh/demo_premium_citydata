@@ -58,33 +58,9 @@ const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => 
   </div>
 );
 
-// (*** NEW ***) (Component ย่อยสำหรับ Mockup Line Chart - #4 แนวโน้ม)
-const MockLineChart = () => (
-  <div className={styles.mockLineChartContainer}>
-    <div className={styles.mockLineChartGrid}>
-      {/* ส่วนนี้เป็นแค่เส้นตารางพื้นหลัง CSS จะจัดการ */}
-      {[...Array(6)].map((_, i) => (
-        <span key={i}></span>
-      ))}
-    </div>
-    <svg
-      className={styles.mockLineChartPath}
-      viewBox="0 0 100 50"
-      preserveAspectRatio="none"
-    >
-      <path d="M 0 40 Q 10 10, 20 30 T 40 20 Q 50 10, 60 25 T 80 40 Q 90 50, 100 20" />
-    </svg>
-    <div className={styles.mockLineChartLabels}>
-      <span>จ.</span>
-      <span>อ.</span>
-      <span>พ.</span>
-      <span>พฤ.</span>
-      <span>ศ.</span>
-      <span>ส.</span>
-      <span>อา.</span>
-    </div>
-  </div>
-);
+// (*** DELETED ***)
+// const MockLineChart = () => ( ... )
+// (ลบ Component นี้ทิ้งเนื่องจากไม่มีการเรียกใช้งาน)
 
 // (*** NEW ***) (Component ย่อยสำหรับ Mockup Horizontal Bar Chart - #2 ประเภทปัญหา)
 const MockHorizontalBarChart = () => (
@@ -849,22 +825,10 @@ const ReportCardItem = ({ id, name, details }) => {
   );
 };
 
-  // Mock Menu/Filter options (เหมือนในรูป)
-  const menuItems = [
-    { id: "highest_solved", label: "แก้ปัญหาสูงสุด (%)", icon: FaCheckCircle },
-    { id: "least_complained", label: "เรื่องร้องเรียน้อยที่สุด", icon: FaSadTear },
-    { id: "most_liked", label: "เรื่องถูกใจสูงสุด", icon: FaThumbsUp },
-    { id: "highest_vote", label: "Vote สูงสุด", icon: FaRegStar },
-    { id: "newest_problem", label: "เปิดเรื่องใหม่มากที่สุด", icon: FaRegClock },
-    {
-      id: "most_type",
-      label: "ประเภทปัญหามาถึงมากที่สุด",
-      icon: FaClipboardList,
-    },
-  ];
-
-  const [activeMenu, setActiveMenu] = useState(menuItems[0].id);
-
+// (*** DELETED ***)
+// ลบซากตัวแปรที่ลอยๆ อยู่ (จาก Component ที่ถูกลบไปแล้ว)
+// const menuItems = [ ... ];
+// const [activeMenu, setActiveMenu] = useState(menuItems[0].id);
 
 // (*** NEW COMPONENT: Simplified View สำหรับการแสดงผล Card List ภายใน ChartBox ***)
 // (*** นี่คือ Component ที่ "สถิติองค์กร" เรียกใช้ ***)
