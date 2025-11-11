@@ -86,15 +86,6 @@ const MockLineChart = () => (
   </div>
 );
 
-// (*** NEW ***) (Component กล่องสำหรับ Line Chart - #4)
-const TrendChartBox = () => (
-  <div className={styles.chartBox}>
-    <h4 className={styles.chartBoxTitle}>แนวโน้มเรื่องแจ้งตามช่วงเวลา</h4>
-    <MockLineChart />
-    <span className={styles.chartNote}>(อ้างอิงข้อมูล 7 วันล่าสุด)</span>
-  </div>
-);
-
 // (*** NEW ***) (Component ย่อยสำหรับ Mockup Horizontal Bar Chart - #2 ประเภทปัญหา)
 const MockHorizontalBarChart = () => (
   <div className={styles.mockHorizontalBarChart}>
@@ -410,16 +401,6 @@ const kpiDetails = [
     cssClass: "stats-grey",
   },
 ];
-
-// (ข้อมูลฟิลเตอร์ - *เก็บไว้เผื่อใช้ แต่ไม่ได้แสดงผลแล้ว*)
-const kpiFilters = [
-  { id: "current", label: "ข้อมูลปัจจุบัน" },
-  { id: "month", label: "ย้อนหลัง 1 เดือน" },
-  { id: "year", label: "ย้อนหลัง 1 ปี" },
-];
-
-const compareFilters = ["2021", "2022", "2023", "2024"];
-
 // ------------------------- ตัวอย่าง Report Data
 const reportData = [
   {
@@ -867,52 +848,6 @@ const ReportCardItem = ({ id, name, details }) => {
     </div>
   );
 };
-
-// --- (*** NEW COMPONENT: หน้าแสดงผล Card List ***) ---
-const ReportCardView = ({ subTab }) => {
-  // ข้อมูลจำลองที่ปรับให้ตรงกับรูป (เขตยานนาวา, วัฒนา, บางขุนเทียน)
-  const reportData = [
-    {
-      id: 1,
-      name: "เขตยานนาวา",
-      details: {
-        score: 5.0,
-        reviews: 11,
-        likedPercent: "100%",
-        fastSolvedPercent: "15%",
-      },
-    },
-    {
-      id: 2,
-      name: "เขตวัฒนา",
-      details: {
-        score: 4.8,
-        reviews: 25,
-        likedPercent: "88%",
-        fastSolvedPercent: "14%",
-      },
-    },
-    {
-      id: 3,
-      name: "เขตบางขุนเทียน",
-      details: {
-        score: 5.0,
-        reviews: 6,
-        likedPercent: "100%",
-        fastSolvedPercent: "15%",
-      },
-    },
-    {
-      id: 4,
-      name: "เขตมีนบุรี",
-      details: {
-        score: 5.0,
-        reviews: 5,
-        likedPercent: "100%",
-        fastSolvedPercent: "14%",
-      },
-    },
-  ];
 
   // Mock Menu/Filter options (เหมือนในรูป)
   const menuItems = [
