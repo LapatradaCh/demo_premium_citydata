@@ -15,7 +15,7 @@ import {
   FaBuilding,
   // ไอคอนสำหรับหน้าสถิติใหม่
   FaHourglassHalf, // (*** ADDED ***) สำหรับเมนูเวลาเฉลี่ย
-  FaSyncAlt,
+  FaSyncAlt, // (*** USED FOR LOADING ***)
   // (*** ADDED ***) ไอคอนสำหรับ Dropdown และ Settings
   FaChevronDown,
   FaChevronUp,
@@ -34,6 +34,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 import "cally";
+import { useAuth } from "./AuthContext"; // (*** ADDED ***)
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
 
@@ -341,73 +342,10 @@ const MockSimpleBarChart = ({ data, barColor, valueSuffix, maxValue }) => {
   );
 };
 
-// (*** MODIFIED: อัปเดตใหม่เพื่อรองรับ 7 สถานะ: 1.รอรับเรื่อง 2.กำลังประสานงาน 3.กำลังดำเนินการ 4.เสร็จสิ้น 5.ส่งต่อ 6.เชิญร่วม 7.ปฏิเสธ ***)
-const kpiDetails = [
-  {
-    title: "ทั้งหมด", // (#1)
-    value: 100, // อัปเดตจำนวนสมมติ
-    percentage: "100%",
-    note: null,
-    color: "#f39c12", // ส้ม
-    cssClass: "stats-cream",
-  },
-  {
-    title: "รอรับเรื่อง", // (#3)
-    value: 20,
-    percentage: "20.00%",
-    note: "เกิน 1 เดือน 20 เรื่อง",
-    color: "#dc3545", // แดง
-    cssClass: "stats-red",
-  },
-  {
-    title: "กำลังประสานงาน", // (*** NEW ***) สถานะใหม่
-    value: 10,
-    percentage: "10.00%",
-    note: null,
-    color: "#9b59b6", // ม่วง
-    cssClass: "stats-purple",
-  },
-  {
-    title: "กำลังดำเนินการ", // (#3)
-    value: 25,
-    percentage: "25.00%",
-    note: "เกิน 1 เดือน 18 เรื่อง",
-    color: "#ffc107", // เหลือง
-    cssClass: "stats-yellow",
-  },
-  {
-    title: "เสร็จสิ้น", // (#3)
-    value: 30,
-    percentage: "30.00%",
-    note: "จัดการเอง 3 เรื่อง (10%)",
-    color: "#057A55", // เขียว
-    cssClass: "stats-green",
-  },
-  {
-    title: "ส่งต่อ", // (*** MODIFIED ***) เปลี่ยนชื่อจาก "ส่งต่อ(ใหม่)"
-    value: 5,
-    percentage: "5.00%",
-    note: "(ส่งต่อหน่วยงานอื่น)",
-    color: "#007bff", // น้ำเงิน
-    cssClass: "stats-blue",
-  },
-  {
-    title: "เชิญร่วม", // (*** NEW ***) สถานะใหม่
-    value: 5,
-    percentage: "5.00%",
-    note: null,
-    color: "#20c997", // เขียวมิ้นต์
-    cssClass: "stats-mint",
-  },
-  {
-    title: "ปฏิเสธ", // (*** MODIFIED ***) เปลี่ยนชื่อจาก "ไม่เกี่ยวข้อง"
-    value: 5,
-    percentage: "5.00%",
-    note: "จัดการเอง 1 เรื่อง (20%)",
-    color: "#6c757d", // เทา
-    cssClass: "stats-grey",
-  },
-];
+// (*** DELETED ***)
+// ลบ kpiDetails ที่เป็นข้อมูล Mock (ข้อมูลจริงจะถูกสร้างใน Component)
+// const kpiDetails = [ ... ];
+
 // ------------------------- ตัวอย่าง Report Data
 const reportData = [
   {
@@ -931,8 +869,162 @@ const ReportCardViewSimplified = () => {
 // --- (*** จบส่วนที่ ADDED BACK ***) ---
 
 // ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
-const StatisticsView = ({ subTab }) => {
+// (*** MODIFIED: นี่คือ Component ที่แก้ไขหลัก ***)
+const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: รับ organizationId ***)
   const [isOpsUnitsOpen, setIsOpsUnitsOpen] = useState(false);
+
+  // (*** NEW: State สำหรับดึงข้อมูลสถิติ ***)
+  const [statsData, setStatsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { accessToken } = useAuth(); // ดึง Token จาก Context
+
+  // (*** NEW: โครงสร้าง KPI (ย้ายมาจากข้างนอก) ***)
+  // เราใช้ ID ให้ตรงกับค่า 'status' ใน DB
+  const kpiStructure = [
+    {
+      id: "total", // ID พิเศษสำหรับยอดรวม
+      title: "ทั้งหมด",
+      note: null,
+      color: "#f39c12", // ส้ม
+      cssClass: "stats-cream",
+    },
+    {
+      id: "รอรับเรื่อง", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "รอรับเรื่อง",
+      note: "เกิน 1 เดือน {pending_overdue} เรื่อง",
+      color: "#dc3545", // แดง
+      cssClass: "stats-red",
+    },
+    {
+      id: "กำลังประสานงาน", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "กำลังประสานงาน",
+      note: null,
+      color: "#9b59b6", // ม่วง
+      cssClass: "stats-purple",
+    },
+    {
+      id: "กำลังดำเนินการ", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "กำลังดำเนินการ",
+      note: "เกิน 1 เดือน {inprogress_overdue} เรื่อง",
+      color: "#ffc107", // เหลือง
+      cssClass: "stats-yellow",
+    },
+    {
+      id: "เสร็จสิ้น", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "เสร็จสิ้น",
+      note: "จัดการเอง {completed_self} เรื่อง ({completed_self_perc}%)",
+      color: "#057A55", // เขียว
+      cssClass: "stats-green",
+    },
+    {
+      id: "ส่งต่อ", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "ส่งต่อ",
+      note: "(ส่งต่อหน่วยงานอื่น)",
+      color: "#007bff", // น้ำเงิน
+      cssClass: "stats-blue",
+    },
+    {
+      id: "เชิญร่วม", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "เชิญร่วม",
+      note: null,
+      color: "#20c997", // เขียวมิ้นต์
+      cssClass: "stats-mint",
+    },
+    {
+      id: "ปฏิเสธ", // (*** สำคัญ: ต้องตรงกับค่าใน DB ***)
+      title: "ปฏิเสธ",
+      note: "จัดการเอง {rejected_self} เรื่อง ({rejected_self_perc}%)",
+      color: "#6c757d", // เทา
+      cssClass: "stats-grey",
+    },
+  ];
+
+  // (*** NEW: useEffect สำหรับดึงข้อมูล ***)
+  useEffect(() => {
+    const fetchStats = async () => {
+      // (*** MODIFIED: เพิ่มการตรวจสอบ organizationId ***)
+      if (!accessToken) {
+        setError("Missing auth token");
+        setLoading(false);
+        return;
+      }
+      if (!organizationId) {
+        setError("Organization ID not loaded"); // รอให้ ID ถูกส่งมาก่อน
+        setLoading(false); // (หรือจะตั้ง Loading ค้างไว้ก็ได้)
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null); // เคลียร์ Error เก่า (ถ้ามี)
+        
+        // (*** MODIFIED: เพิ่ม organization_id เข้าไปใน URL ***)
+        const response = await fetch(`/api/stats/overview?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch stats: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // (*** แปลง Array เป็น Object เพื่อง่ายต่อการใช้งาน ***)
+        // ผลลัพธ์: { "รอรับเรื่อง": 15, "เสร็จสิ้น": 120, ... }
+        const statsObject = data.reduce((acc, item) => {
+          // (ตัวเลขจาก neon-serverless อาจจะเป็น string)
+          acc[item.status] = parseInt(item.count, 10);
+          return acc;
+        }, {});
+        
+        setStatsData(statsObject);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [accessToken, organizationId]); // (*** MODIFIED: เพิ่ม dependency ***)
+
+  // (*** NEW: สร้าง kpiDetails แบบไดนามิก ***)
+  const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
+    
+  const kpiDetailsWithData = kpiStructure.map(kpi => {
+    let value = 0;
+    if (kpi.id === 'total') {
+      value = totalCases;
+    } else {
+      // ใช้ค่าจาก statsData ที่ดึงมา, ถ้าไม่มีให้เป็น 0
+      value = statsData?.[kpi.id] || 0;
+    }
+    
+    const percentage = totalCases > 0 ? ((value / totalCases) * 100).toFixed(2) : "0.00";
+    
+    // (หมายเหตุ: API ยังไม่ได้ส่งข้อมูล 'overdue' หรือ 'self')
+    // (เราจะแสดง 0 ไปก่อน)
+    const note = kpi.note ? kpi.note
+      .replace("{pending_overdue}", 0)
+      .replace("{inprogress_overdue}", 0)
+      .replace("{completed_self}", 0)
+      .replace("{completed_self_perc}", 0)
+      .replace("{rejected_self}", 0)
+      .replace("{rejected_self_perc}", 0)
+      : null;
+
+    return {
+      ...kpi,
+      value: value,
+      percentage: `${percentage}%`,
+      note: note
+    };
+  });
+  // (*** END NEW DYNAMIC DATA ***)
+
 
   return (
     <div className={styles.statsContainer}>
@@ -944,7 +1036,9 @@ const StatisticsView = ({ subTab }) => {
       {/* 2. Sub-Header (วันที่ และ Subtitle) */}
       <div className={styles.statsSubHeader}>
         <span className={styles.statsCurrentDate}>
-          วันพุธที่ 5 พฤศจิกายน 2568
+          {new Date().toLocaleDateString("th-TH", {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          })}
         </span>
         <span className={styles.statsSubtitle}>
           ข้อมูลปัจจุบัน (จำนวนข้อมูลเรื่องทั้งหมด ที่ประชาชนแจ้งเข้ามา)
@@ -952,19 +1046,32 @@ const StatisticsView = ({ subTab }) => {
       </div>
 
       {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
-      <div className={styles.statsDetailGrid}>
-        {kpiDetails.map((kpi) => (
-          <StatsDetailBox
-            key={kpi.title}
-            title={kpi.title}
-            value={kpi.value}
-            percentage={kpi.percentage}
-            note={kpi.note}
-            color={kpi.color}
-            cssClass={kpi.cssClass}
-          />
-        ))}
-      </div>
+      {/* (*** MODIFIED: แสดง Loading/Error/Data ***) */}
+      {loading ? (
+        <div className={styles.statsLoadingOrError}>
+          <FaSyncAlt className={styles.animateSpin} />
+          <span>กำลังโหลดสถิติ...</span>
+        </div>
+      ) : error ? (
+        <div className={styles.statsLoadingOrErrorError}>
+          <FaTimes />
+          <span>ไม่สามารถโหลดสถิติได้: {error}</span>
+        </div>
+      ) : (
+        <div className={styles.statsDetailGrid}>
+          {kpiDetailsWithData.map((kpi) => (
+            <StatsDetailBox
+              key={kpi.title}
+              title={kpi.title}
+              value={kpi.value} // <-- (*** แสดงข้อมูลจริง ***)
+              percentage={kpi.percentage} // <-- (*** แสดงข้อมูลจริง ***)
+              note={kpi.note}
+              color={kpi.color}
+              cssClass={kpi.cssClass}
+            />
+          ))}
+        </div>
+      )}
 
       {/* 5. (*** MODIFIED ***) Main Chart Grid (ปรับเป็น 2 คอลัมน์ตามรูปที่ 2) */}
       <div className={styles.statsBottomGrid}>
@@ -1017,6 +1124,8 @@ const StatisticsView = ({ subTab }) => {
     </div>
   );
 };
+// (*** END MODIFIED StatisticsView ***)
+
 
 // ------------------------- (*** 2. OrganizationStatisticsView - "สถิติองค์กร (แสดงกราฟเดียว)" ***)
 const OrganizationStatisticsView = () => {
@@ -1734,6 +1843,7 @@ const Home = () => {
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
     logo: logo,
+    id: null, // (*** MODIFIED: เพิ่ม id เป็น null เริ่มต้น ***)
   });
 
   const [activeTab, setActiveTab] = useState("รายการแจ้ง"); // <-- (*** FIXED ***) เปลี่ยนค่าเริ่มต้นกลับไปที่ "รายการแจ้ง"
@@ -1741,7 +1851,7 @@ const Home = () => {
   const [activeSubTabs, setActiveSubTabs] = useState({
     แผนที่: "แผนที่สาธารณะ",
     รายการแจ้ง: "เฉพาะหน่วยงาน",
-    สถิติ: "สถิติองค์กร",
+    สถิติ: "สถิติ", // (*** MODIFIED ***) เปลี่ยนค่าเริ่มต้นเป็น "สถิติ" (หน้าหลัก)
     // (*** MODIFIED ***) ลบ "ตั้งค่า" ออกจากที่นี่ เพราะไม่จำเป็นแล้ว
     // ตั้งค่า: "ตั้งค่า",
     ผลลัพธ์: "แก้ปัญหาสูงสุด",
@@ -1783,18 +1893,30 @@ const Home = () => {
       try {
         const cachedOrg = localStorage.getItem("selectedOrg");
         const lastOrg = localStorage.getItem("lastSelectedOrg");
+        let orgToSet = null;
+
         if (cachedOrg) {
-          const org = JSON.parse(cachedOrg);
-          setOrganizationInfo({ name: org.name, logo: org.img });
+          orgToSet = JSON.parse(cachedOrg);
           localStorage.removeItem("selectedOrg");
-          localStorage.setItem("lastSelectedOrg", JSON.stringify(org));
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(orgToSet));
         } else if (lastOrg) {
-          const org = JSON.parse(lastOrg);
-          setOrganizationInfo({ name: org.name, logo: org.img });
+          orgToSet = JSON.parse(lastOrg);
+        }
+
+        if (orgToSet) {
+          // (*** MODIFIED: ตั้งค่า state พร้อม ID ***)
+          setOrganizationInfo({ 
+            name: orgToSet.name, 
+            logo: orgToSet.img,
+            id: orgToSet.id || orgToSet.organization_id // <-- [สำคัญ]
+          });
+        } else {
+           // กรณีไม่พบ Org ID เลย (ไม่ควรเกิดขึ้น แต่ป้องกันไว้)
+           setOrganizationInfo({ name: "ไม่พบหน่วยงาน", logo: logo, id: null });
         }
       } catch (error) {
         console.error(error);
-        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo });
+        setOrganizationInfo({ name: "เกิดข้อผิดพลาด", logo: logo, id: null });
       }
     };
     fetchOrg();
@@ -1860,7 +1982,11 @@ const Home = () => {
         {activeTab === "สถิติ" && (
           <>
             {activeSubTabs["สถิติ"] === "สถิติ" && (
-              <StatisticsView subTab={activeSubTabs["สถิติ"]} />
+              // (*** MODIFIED: ส่ง organizationId ลงไปเป็น prop ***)
+              <StatisticsView 
+                subTab={activeSubTabs["สถิติ"]} 
+                organizationId={organizationInfo.id} 
+              />
             )}
             {activeSubTabs["สถิติ"] === "สถิติองค์กร" && (
               <OrganizationStatisticsView />
