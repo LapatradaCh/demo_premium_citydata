@@ -865,67 +865,6 @@ const ReportCardItem = ({ id, name, details }) => {
 
   const [activeMenu, setActiveMenu] = useState(menuItems[0].id);
 
-  return (
-    <div className={styles.reportCardViewContainer}>
-      {/* 1. Sidebar Menu ด้านซ้าย */}
-      <div className={styles.reportCardSidebar}>
-        <h3 className={styles.reportCardSidebarTitle}>ผลโหมดการแก้ปัญหาล่าสุด</h3>
-        <nav className={styles.reportCardMenuNav}>
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`${styles.reportCardMenuButton} ${
-                activeMenu === item.id ? styles.active : ""
-              }`}
-              onClick={() => setActiveMenu(item.id)}
-            >
-              <item.icon />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {/* 2. Main Content ด้านขวา */}
-      <div className={styles.reportCardMainContent}>
-        {/* Filter Bar ด้านบน (Dropdowns) */}
-        <div className={styles.reportCardFilterBar}>
-          <div className={styles.filterGroup}>
-            <select defaultValue="highest_solved">
-              <option value="highest_solved">ถูกกด Vote มากที่สุด</option>
-              <option value="highest_solved">แก้ปัญหาสูงสุด</option>
-            </select>
-          </div>
-          <div
-            className={styles.filterGroup}
-            style={{ flexGrow: 0.5, minWidth: "180px" }}
-          >
-            <select defaultValue="month">
-              <option value="month">พฤศจิกายน 2568</option>
-              <option value="last_month">ตุลาคม 2568</option>
-            </select>
-          </div>
-          <button className={styles.searchButton}>
-            <FaSearch />
-            ค้นหา
-          </button>
-        </div>
-
-        {/* รายการ Card */}
-        <div className={styles.reportCardList}>
-          {reportData.map((item) => (
-            <ReportCardItem
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              details={item.details}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // (*** NEW COMPONENT: Simplified View สำหรับการแสดงผล Card List ภายใน ChartBox ***)
 // (*** นี่คือ Component ที่ "สถิติองค์กร" เรียกใช้ ***)
