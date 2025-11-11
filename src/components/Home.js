@@ -17,21 +17,10 @@ import {
   FaHourglassHalf, // (*** ADDED ***) สำหรับเมนูเวลาเฉลี่ย
   FaSyncAlt,
   FaCheckCircle,
-  FaChartLine, // เพิ่มสำหรับ Chart
-  FaChartPie, // ใช้สำหรับ Donut Chart Placeholder
-  FaShare,
-  FaTimesCircle,
-  FaBookmark,
-  FaTools,
-  FaTable, // เพิ่มไอคอนตารางสำหรับเมนูใหม่
-  FaMap, // ไอคอนสำหรับปุ่ม "ดูข้อมูลแผนที่"
   // (*** ADDED ***) ไอคอนสำหรับ Dropdown และ Settings
   FaChevronDown,
   FaChevronUp,
   FaQrcode,
-  FaChevronRight,
-  FaBell,
-  FaLanguage,
   FaLink,
   // (*** ADDED ***) ไอคอนสำหรับแผนที่
   FaMapMarkerAlt,
@@ -44,10 +33,6 @@ import {
   FaUserCog, // ไอคอนสำหรับผู้ดูแล
   FaUserTie, // ไอคอนสำหรับเจ้าหน้าที่
   // (*** ICONS FOR NEW SETTINGS ***)
-  FaUserAlt,
-  FaRocket,
-  FaCommentDots,
-  FaBook,
   FaEye, // (*** ADDED ***) ไอคอนสำหรับปุ่ม "ดู"
   FaEyeSlash, // <--- (*** ADDED ***) เพิ่มไอคอนนี้เข้าไป
 } from "react-icons/fa";
