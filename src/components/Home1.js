@@ -155,6 +155,7 @@ const Home1 = () => {
 
   // --- ฟังก์ชันที่ปรับแก้ให้เรียก Log ---
   const handleAgencyClick = (agency) => {
+    console.log("Clicked agency:", agency); // <--- เพิ่มบรรทัดนี้
     // 1. บันทึกข้อมูลหน่วยงานที่เลือกลง localStorage
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
