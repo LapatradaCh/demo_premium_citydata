@@ -964,7 +964,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         setError(null); // เคลียร์ Error เก่า (ถ้ามี)
         
         // (*** MODIFIED: เพิ่ม organization_id เข้าไปใน URL ***)
-        const response = await fetch(`/api/stats/overview?organization_id=${organizationId}`, {
+        const response = await fetch(`http://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
           },
