@@ -6,7 +6,7 @@ import "cally"; // (สำหรับ DateFilter)
 // ------------------------- Helper
 const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
 
-const truncateText = (text, maxLength) => {
+const truncateText = (text, maxLength) => { 
   if (!text) return ""; // (*** ADDED GUARD ***) เพิ่มการป้องกัน text เป็น null
   if (text.length <= maxLength) {
     return text;
