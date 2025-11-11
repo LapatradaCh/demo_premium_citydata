@@ -34,7 +34,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 import "cally";
-import { useAuth } from "./AuthContext"; // (*** ADDED ***)
+// (*** DELETED ***) ลบ import useAuth ที่ไม่มีอยู่จริง
+// import { useAuth } from "./AuthContext"; 
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
 
@@ -877,7 +878,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { accessToken } = useAuth(); // ดึง Token จาก Context
+  // (*** DELETED ***) ลบ const { accessToken } = useAuth();
 
   // (*** NEW: โครงสร้าง KPI (ย้ายมาจากข้างนอก) ***)
   // เราใช้ ID ให้ตรงกับค่า 'status' ใน DB
@@ -943,15 +944,17 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
   // (*** NEW: useEffect สำหรับดึงข้อมูล ***)
   useEffect(() => {
     const fetchStats = async () => {
-      // (*** MODIFIED: เพิ่มการตรวจสอบ organizationId ***)
+      // (*** MODIFIED ***) ดึง Token จาก localStorage โดยตรง
+      const accessToken = localStorage.getItem('accessToken');
+
       if (!accessToken) {
-        setError("Missing auth token");
+        setError("Missing auth token from localStorage");
         setLoading(false);
         return;
       }
       if (!organizationId) {
         setError("Organization ID not loaded"); // รอให้ ID ถูกส่งมาก่อน
-        setLoading(false); // (หรือจะตั้ง Loading ค้างไว้ก็ได้)
+        setLoading(false);
         return;
       }
 
@@ -989,7 +992,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
     };
 
     fetchStats();
-  }, [accessToken, organizationId]); // (*** MODIFIED: เพิ่ม dependency ***)
+  }, [organizationId]); // (*** MODIFIED: ลบ accessToken ออกจาก dependency ***)
 
   // (*** NEW: สร้าง kpiDetails แบบไดนามิก ***)
   const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
@@ -1923,7 +1926,12 @@ const Home = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    // (*** MODIFIED ***) ตรวจสอบให้แน่ใจว่าได้ล้าง Token ออกจาก localStorage ตอน Logout
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('lastSelectedOrg');
+    localStorage.clear(); // ล้างทั้งหมดเลยก็ได้
+    
     if (liff.isLoggedIn()) liff.logout();
     navigate("/");
   };
@@ -2036,3 +2044,20 @@ const Home = () => {
 };
 
 export default Home;
+```
+
+---
+
+### 🚀 สรุปการแก้ไข (Quick Fix)
+
+1.  **ลบ `import { useAuth }`:**
+    ผมได้ลบบรรทัด `import { useAuth } from "./AuthContext";` ออกจากทั้ง 2 ไฟล์ (`Home.js` และ `Home1.js`) เพราะไฟล์นี้ไม่มีอยู่จริง
+
+2.  **อ่าน `localStorage` โดยตรง:**
+    ใน `useEffect` ของ Component ที่ต้องการ `accessToken` (คือ `StatisticsView` ใน `Home.js` และ `StatOverview` ใน `Home1.js`), ผมได้เปลี่ยนจาก:
+    ```javascript
+    const { accessToken } = useAuth();
+    ```
+    เป็น:
+    ```javascript
+    const accessToken = localStorage.getItem('accessToken');
