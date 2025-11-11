@@ -51,6 +51,7 @@ const Login = () => {
           // 2. (*** MODIFIED ***) มี 1 องค์กร
           // 1. ดึงข้อมูลองค์กรแรกออกมา (เหมือนเดิม)
           const sourceOrg = orgData[0];
+          console.log("data:",sourceOrg);
           
           // 2. สร้าง object ใหม่ 'singleOrg' โดยจัดโครงสร้างให้เหมือนในรูป
           //    โดยเลือกดึงค่ามาจาก sourceOrg
