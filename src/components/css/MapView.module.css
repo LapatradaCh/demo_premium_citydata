@@ -1,6 +1,18 @@
 /* --- 3. css/MapView.module.css --- */
 /* (สำหรับ MapView.js) */
 
+/* === (SHARED) Calendar === */
+.calendarPopup {
+  position: absolute;
+  top: 120%;
+  z-index: 100;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  min-width: 280px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
 /* === (SHARED) Filter Group === */
 .filterGroup {
   flex: 1 1 auto;
@@ -152,7 +164,7 @@
   color: white;
 }
 
-/* --- MapView Specific --- */
+/* --- MapView Specific (PUBLIC) --- */
 .mapViewContainer {
   display: flex;
   flex-direction: row;
@@ -228,6 +240,7 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border: 1px solid #f0f0f0;
+  position: relative; /* (*** ADDED ***) */
 }
 
 .mapPlaceholder {
@@ -343,8 +356,361 @@
   font-size: 16px;
 }
 
+/* --- (*** ADDED: Styles for INTERNAL Map ***) --- */
+
+/* (Container หลักสำหรับ "แผนที่ภายใน") */
+.internalMapViewContainer {
+  display: flex;
+  flex-direction: column; /* (*** NEW ***) เรียงแนวตั้ง */
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  align-items: center; /* (*** NEW ***) ให้ Filter Bar อยู่ตรงกลาง */
+}
+
+/* (Layout 2 คอลัมน์สำหรับ Map + List) */
+.internalMapLayout {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  width: 100%;
+  height: 70vh; /* (*** NEW ***) กำหนดความสูง */
+  min-height: 500px;
+}
+
+/* (คอลัมน์ขวาสำหรับ List) */
+.mapReportList {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto; /* (*** NEW ***) ทำให้ List เลื่อนได้ */
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* (ปุ่ม Toggle ที่ย้ายมาลอยบนแผนที่) */
+.mapTogglesAbsolute {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.mapTogglesAbsolute .toggleButton,
+.mapTogglesAbsolute .toggleButtonActive {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+
+/* --- (*** ADDED: Styles from ReportTable.module.css ***) --- */
+
+.searchTop {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  /* (*** MODIFIED ***) ไม่ต้องมี margin-bottom */
+}
+
+.searchInputWrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 12px 18px 12px 52px;
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #000;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+}
+
+.filterToggleButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filterToggleButton:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+.filterToggleButton svg {
+  font-size: 16px;
+}
+
+.filterToggleButton span {
+  display: inline;
+}
+
+.filterModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  backdrop-filter: blur(4px);
+}
+
+.filterModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.filterModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.filterModalHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.filterModalClose {
+  background: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.filterModalClose:hover {
+  color: #fff;
+}
+
+.filterModalClose svg {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+  z-index: 2;
+}
+
+.filterModalContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+}
+
+.reportFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.reportSummary {
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+  padding-left: 4px;
+  width: 100%;
+  flex-shrink: 0; /* (*** NEW ***) ไม่ให้หด */
+}
+
+.reportTableContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr; /* (*** MODIFIED ***) List ในแผนที่จะเป็น 1 คอลัมน์เสมอ */
+  gap: 12px; /* (*** MODIFIED ***) */
+}
+
+.reportTableRow {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  grid-template-areas:
+    "image header status"
+    "image details details"
+    "image location location"
+    "image toggle toggle";
+  align-items: start;
+  gap: 4px 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reportTableRow:hover {
+  background: #f8f8f8;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+.reportImage {
+  grid-area: image;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.reportHeader {
+  grid-area: header;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+}
+
+.reportDetailText {
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  padding-top: 2px;
+}
+
+.mainDetails {
+  grid-area: details;
+  display: grid;
+  grid-template-columns: 1fr; /* (*** MODIFIED ***) 1 คอลัมน์ใน List ย่อย */
+  gap: 4px 10px;
+  font-size: 12px;
+  color: #666;
+}
+
+.locationDetails {
+  grid-area: location;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #777;
+  border-top: 1px dashed #ddd;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.reportStatusGroup {
+  grid-area: status;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.toggleDetailsButton {
+  grid-area: toggle;
+  background: none;
+  border: none;
+  border-top: 1px dashed #ddd;
+  padding-top: 8px;
+  margin-top: 8px;
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #007bff;
+  transition: all 0.2s ease;
+}
+
+.toggleDetailsButton:hover {
+  color: #0056b3;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+}
+
+/* --- (*** END: Added Styles from ReportTable ***) --- */
+
+
 /* --- Media Queries --- */
 @media screen and (max-width: 1024px) {
+  /* (Public Map) */
   .mapViewContainer {
     align-self: unset;
     flex-direction: column;
@@ -359,5 +725,31 @@
   .mapContent {
     height: 50vh;
     min-height: 400px;
+  }
+  
+  /* (Internal Map) */
+  .internalMapViewContainer {
+    align-self: unset;
+  }
+  .internalMapLayout {
+    flex-direction: column; /* (*** NEW ***) เปลี่ยน Map+List เป็นแนวตั้ง */
+    height: auto;
+  }
+  .mapContent {
+    height: 50vh; /* (*** NEW ***) จำกัดความสูงแผนที่ */
+  }
+  .mapReportList {
+    height: 60vh; /* (*** NEW ***) จำกัดความสูง List */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .searchTop {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .filterToggleButton {
+    max-width: 100%;
   }
 }
