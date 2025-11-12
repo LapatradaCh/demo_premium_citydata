@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import styles from "./css/MapView.module.css"; // (*** ตรวจสอบว่า import CSS ถูกต้อง ***)
+import React, { useState, useEffect } from "react"; // (*** REMOVED useRef ***)
+import styles from "./css/MapView.module.css";
 import {
   FaMapMarkerAlt,
   FaSearch,
   FaFilter,
   FaTimes,
 } from "react-icons/fa";
-import "cally";
+// (*** REMOVED 'cally' ***)
 
 // ------------------------- ตัวอย่าง Report Data
 const reportDataMock = [
@@ -36,58 +36,7 @@ const truncateText = (text, maxLength) => {
   return text.substring(0, maxLength) + "...";
 };
 
-// ------------------------- DateFilter Component
-const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
-
-const DateFilter = () => {
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const calendarRef = useRef(null);
-  const formatDate = (d) =>
-    d ? d.toLocaleDateString("th-TH") : "กดเพื่อเลือกช่วงเวลา";
-
-  useEffect(() => {
-    const node = calendarRef.current;
-    if (node && show) {
-      const handleChange = (e) => {
-        setDate(new Date(e.target.value));
-        setShow(false);
-      };
-      node.addEventListener("change", handleChange);
-      return () => node.removeEventListener("change", handleChange);
-    }
-  }, [show]);
-
-  return (
-    <div style={{ position: "relative" }}>
-      <button
-        className={styles.timeRangeButton}
-        onClick={() => setShow(!show)}
-      >
-        {formatDate(date)}
-      </button>
-      {show && (
-        <div className={styles.calendarPopup}>
-          <calendar-date
-            ref={calendarRef}
-            value={toYYYYMMDD(date)}
-            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
-          >
-            <svg aria-label="Previous" slot="previous" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5" />
-            </svg>
-            <svg aria-label="Next" slot="next" viewBox="0 0 24 24">
-              <path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-            </svg>
-            <calendar-month></calendar-month>
-          </calendar-date>
-        </div>
-      )}
-    </div>
-  );
-};
-// ------------------------- END: DateFilter Component
-
+// ------------------------- (*** REMOVED DateFilter Component ***)
 
 const MapView = ({ subTab }) => {
   const [mapMode, setMapMode] = useState("pins"); // 'pins' or 'heatmap'
@@ -98,9 +47,9 @@ const MapView = ({ subTab }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // --- Filter Logic ---
-  const mainFilters = ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
-  const locationFilters = ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
+  // --- (*** MODIFIED Filter Logic ***) ---
+  const mainFilters = ["ประเภท", "สถานะ"]; // (*** เหลือแค่ ประเภท, สถานะ ***)
+  const locationFilters = []; // (*** ลบฟิลเตอร์พื้นที่ออก ***)
   const modalTitle = "ตัวกรอง (แผนที่ภายใน)";
   const summaryTitle = "รายการแจ้ง (แผนที่ภายใน)";
 
@@ -182,6 +131,7 @@ const MapView = ({ subTab }) => {
             </div>
             <div className={styles.filterGroup}>
               <label>ช่วงเวลา</label>
+              {/* (DateFilter ถูกลบไปแล้ว แต่ปุ่ม Mockup ของ Public Map ยังอยู่) */}
               <button className={styles.timeRangeButton}>
                 กดเพื่อเลือกช่วงเวลา
               </button>
@@ -231,14 +181,13 @@ const MapView = ({ subTab }) => {
   // 2. หน้า "แผนที่ภายใน" (*** แก้ไข Layout ใหม่ ***)
   if (subTab === "แผนที่ภายใน") {
     return (
-      // (*** ใช้ Layout แถว เหมือนแผนที่สาธารณะ ***)
       <div className={styles.mapViewContainer}>
         
         {/* 2.1 Sidebar (Internal) */}
         <div className={styles.mapSidebar}>
           <h3 className={styles.mapSidebarTitle}>เครื่องมือแผนที่ภายใน</h3>
 
-          {/* (*** MOVED: ย้าย Filter Bar มาไว้ใน Sidebar ***) */}
+          {/* (Search + Filter Button) */}
           <div className={`${styles.searchTop} ${styles.sidebarSearchTop}`}>
             <div className={styles.searchInputWrapper}>
               <input
@@ -257,7 +206,7 @@ const MapView = ({ subTab }) => {
             </button>
           </div>
 
-          {/* (*** MOVED: Filter Modal (Logic) ***) */}
+          {/* (*** MODIFIED: Filter Modal ***) */}
           {showFilters && (
             <>
               <div
@@ -276,18 +225,63 @@ const MapView = ({ subTab }) => {
                 </div>
                 <div className={styles.filterModalContent}>
                   <div className={styles.reportFilters}>
+                    
+                    {/* (*** ADDED: รูปแบบแสดงผล ***) */}
+                    <div className={styles.filterGroup}>
+                      <label>รูปแบบแสดงผล</label>
+                      <div className={styles.mapToggles}>
+                        <button
+                          className={
+                            mapMode === "pins"
+                              ? styles.toggleButtonActive
+                              : styles.toggleButton
+                          }
+                          onClick={() => setMapMode("pins")}
+                        >
+                          หมุด
+                        </button>
+                        <button
+                          className={
+                            mapMode === "heatmap"
+                              ? styles.toggleButtonActive
+                              : styles.toggleButton
+                          }
+                          onClick={() => setMapMode("heatmap")}
+                        >
+                          Heatmap
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* (*** MODIFIED: เหลือแค่ ประเภท และ สถานะ ***) */}
                     {mainFilters.map((label, i) => (
                       <div className={styles.filterGroup} key={i}>
                         <label>{label}</label>
-                        {label === "ช่วงเวลา" ? (
-                          <DateFilter />
-                        ) : (
-                          <select defaultValue="all">
-                            <option value="all">ทั้งหมด</option>
-                          </select>
-                        )}
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                          {/* (เพิ่มตัวเลือก Mockup) */}
+                          {label === "ประเภท" && (
+                             <>
+                              <option value="type1">xxxx ไฟฟ้า/ประปา</option>
+                              <option value="type2">xxxx ถนน/ทางเท้า</option>
+                             </>
+                          )}
+                          {label === "สถานะ" && (
+                             <>
+                              <option value="pending">รอรับเรื่อง</option>
+                              <option value="coordinating">กำลังประสานงาน</option>
+                              <option value="in_progress">กำลังดำเนินการ</option>
+                              <option value="completed">เสร็จสิ้น</option>
+                              <option value="forwarded">ส่งต่อ</option>
+                              <option value="invited">เชิญร่วม</option>
+                              <option value="rejected">ปฏิเสธ</option>
+                             </>
+                          )}
+                        </select>
                       </div>
                     ))}
+                    
+                    {/* (*** locationFilters ถูกลบไปแล้ว (Array ว่าง) ***) */}
                     {locationFilters.map((label, i) => (
                       <div key={i} className={styles.filterGroup}>
                         <label>{label}</label>
@@ -303,7 +297,7 @@ const MapView = ({ subTab }) => {
             </>
           )}
 
-          {/* (*** MOVED: ย้าย Report List มาไว้ใน Sidebar ***) */}
+          {/* (Report List in Sidebar) */}
           <div className={styles.sidebarReportListContainer}>
             <div className={styles.reportSummary}>
               <strong>{summaryTitle}</strong>{" "}
@@ -392,28 +386,8 @@ const MapView = ({ subTab }) => {
         
         {/* 2.2 Map Content (Internal) */}
         <div className={styles.mapContent}>
-          <div className={styles.mapTogglesAbsolute}>
-             <button
-                className={
-                  mapMode === "pins"
-                    ? styles.toggleButtonActive
-                    : styles.toggleButton
-                }
-                onClick={() => setMapMode("pins")}
-              >
-                หมุด
-              </button>
-              <button
-                className={
-                  mapMode === "heatmap"
-                    ? styles.toggleButtonActive
-                    : styles.toggleButton
-                }
-                onClick={() => setMapMode("heatmap")}
-              >
-                Heatmap
-              </button>
-          </div>
+          
+          {/* (*** REMOVED: .mapTogglesAbsolute (ย้ายไปใน Modal) ***) */}
 
           <div className={styles.mapPlaceholder}>
             {mapMode === "pins" ? (
