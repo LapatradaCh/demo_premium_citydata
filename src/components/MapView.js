@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./css/Home.module.css";
+import styles from "./css/MapView.module.css";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 // ------------------------- ตัวอย่าง Report Data
