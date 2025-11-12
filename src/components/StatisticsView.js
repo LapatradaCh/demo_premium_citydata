@@ -210,7 +210,7 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
       id: "total", // ID พิเศษสำหรับยอดรวม
       title: "ทั้งหมด",
       note: null,
-      color: "#f39c12", // ส้ม
+      color: "#6c757d", // เทา
       cssClass: "stats-cream",
     },
     {
