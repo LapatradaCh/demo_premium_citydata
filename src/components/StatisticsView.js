@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./css/Home.module.css";
+import styles from "./css/StatisticsView.module.css";
 import { FaStar, FaChevronDown, FaChevronUp, FaTimes } from "react-icons/fa";
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
