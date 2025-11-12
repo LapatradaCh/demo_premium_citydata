@@ -107,9 +107,9 @@ const ProblemTypeStats = ({ organizationId }) => {
       } catch (err) {
          if (err instanceof SyntaxError) {
           setError("Failed to parse JSON. API might be returning HTML (404).");
-        } else {
+         } else {
           setError(err.message);
-        }
+         }
       } finally {
         setLoading(false);
       }
@@ -201,6 +201,11 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // (*** NEW: State สำหรับดึงข้อมูลเจ้าหน้าที่ ***)
+  const [staffCount, setStaffCount] = useState(null);
+  const [staffLoading, setStaffLoading] = useState(true);
+  const [staffError, setStaffError] = useState(null);
   // (*** DELETED ***) ลบ const { accessToken } = useAuth();
 
   // (*** NEW: โครงสร้าง KPI (ย้ายมาจากข้างนอก) ***)
@@ -327,6 +332,62 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
     fetchStats();
   }, [organizationId]); // (*** MODIFIED: ลบ accessToken ออกจาก dependency ***)
 
+  // (*** NEW: useEffect สำหรับดึงข้อมูล Staff Count ***)
+  useEffect(() => {
+    const fetchStaffCount = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        setStaffError("Missing auth token");
+        setStaffLoading(false);
+        return;
+      }
+      if (!organizationId) {
+        setStaffLoading(true); // รอ organizationId
+        return;
+      }
+
+      try {
+        setStaffLoading(true);
+        setStaffError(null);
+
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404).");
+          }
+          throw new Error(`Failed to fetch staff count: ${response.statusText}`);
+        }
+
+        const data = await response.json(); // สมมติว่า API คืนค่า { count: 12 }
+
+        if (data.count !== undefined) {
+           setStaffCount(parseInt(data.count, 10)); // แปลงเป็นตัวเลข
+        } else {
+           throw new Error("Invalid data structure from staff API");
+        }
+
+      } catch (err) {
+        if (err instanceof SyntaxError) {
+          setStaffError("Failed to parse JSON (API 404?).");
+        } else {
+          setStaffError(err.message);
+        }
+      } finally {
+        setStaffLoading(false);
+      }
+    };
+
+    fetchStaffCount();
+  }, [organizationId]); // ให้ re-fetch เมื่อ organizationId เปลี่ยน
+  // (*** END NEW useEffect for Staff Count ***)
+
+
   // (*** NEW: สร้าง kpiDetails แบบไดนามิก ***)
   const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
 
@@ -389,16 +450,16 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
         <div className={styles.statsDetailGrid}>
           {kpiStructure.map((kpi) => (
              <div
-              key={kpi.id}
-              className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
-              style={{ borderTopColor: kpi.color, opacity: 0.5 }}
-            >
-              <div className={styles.statsDetailHeader}>
-                <span className={styles.statsDetailTitle}>{kpi.title}</span>
-                <span className={styles.statsDetailValue}>...</span>
-              </div>
-              <span className={styles.statsDetailPercentage}>(...)</span>
-            </div>
+               key={kpi.id}
+               className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
+               style={{ borderTopColor: kpi.color, opacity: 0.5 }}
+             >
+               <div className={styles.statsDetailHeader}>
+                 <span className={styles.statsDetailTitle}>{kpi.title}</span>
+                 <span className={styles.statsDetailValue}>...</span>
+               </div>
+               <span className={styles.statsDetailPercentage}>(...)</span>
+             </div>
           ))}
         </div>
       ) : error ? (
@@ -437,7 +498,10 @@ const StatisticsView = ({ subTab, organizationId }) => { // (*** MODIFIED: ร�
           <div className={styles.opsContent}>
             <div className={styles.opsKpi}>
               <span>เจ้าหน้าที่ทั้งหมด</span>
-              <strong>12 (คน)</strong>
+              {/* (*** MODIFIED: แสดงผล Staff Count ที่ดึงมา ***) */}
+              <strong>
+                {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
+              </strong>
             </div>
             <div className={styles.opsDetail}>
               <span>ค่าเฉลี่ยโดยประมาณของระยะเวลาการทำงาน</span>
