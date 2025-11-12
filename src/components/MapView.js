@@ -102,7 +102,7 @@ const MapView = ({ subTab }) => {
   const [loading, setLoading] = useState(true);
 
   // Logic สำหรับ Filter (Hardcoded สำหรับ "แผนที่ภายใน" = "เฉพาะหน่วยงาน")
-  const isAllReports = false; // (แผนที่ภายในจะใช้ Filter แบบ "เฉพาะหน่วยงาน" เสมอ)
+  // (*** DELETED ***) ลบตัวแปร 'isAllReports' ที่ไม่ได้ใช้งาน
   const mainFilters = ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
   const locationFilters = ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
   const modalTitle = "ตัวกรอง (แผนที่ภายใน)";
