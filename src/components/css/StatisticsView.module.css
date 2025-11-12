@@ -353,10 +353,12 @@
     border-color 0.3s ease, background-color 0.3s ease;
 }
 
+/*
 .statsDetailBox.stats-cream {
   border-top-color: #f39c12;
   background-color: #fdf7e4;
 }
+*/
 .statsDetailBox.stats-red {
   border-top-color: #dc3545;
   background-color: #fdeeee;
@@ -381,6 +383,7 @@
   border-top-color: #20c997 !important;
   background-color: #e6f9f3;
 }
+/* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
 .statsDetailBox.stats-grey {
   border-top-color: #6c757d;
   background-color: #f8f9fa;
@@ -551,7 +554,6 @@
   font-size: 16px;
 }
 
-/* (Error Message) */
 .statsLoadingOrErrorError {
   background: #fdeeee;
   color: #dc3545;
