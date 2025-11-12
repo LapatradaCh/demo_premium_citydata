@@ -12,6 +12,7 @@
   min-width: 280px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
+
 /* === (SHARED) Filter Group === */
 .filterGroup {
   flex: 1 1 auto;
@@ -163,7 +164,7 @@
   color: white;
 }
 
-/* --- MapView Specific (PUBLIC) --- */
+/* --- MapView Specific (Container & Sidebar) --- */
 .mapViewContainer {
   display: flex;
   flex-direction: row;
@@ -177,7 +178,7 @@
 
 .mapSidebar {
   flex-shrink: 0;
-  width: 280px;
+  width: 340px; /* (*** ADJUSTED WIDTH ***) */
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -186,8 +187,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 100%;
-  overflow-y: auto;
+  height: 100%; /* (*** NEW ***) */
+  overflow-y: hidden; /* (*** NEW ***) */
 }
 
 .mapSidebarTitle {
@@ -197,14 +198,17 @@
   margin: 0;
   padding: 0 8px 12px 8px;
   border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0; /* (*** NEW ***) */
 }
 
+/* (Public Map Section) */
 .mapSidebarSection {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
 }
 .mapSidebarSection:last-child {
   border-bottom: none;
@@ -218,19 +222,7 @@
   margin-bottom: 0;
 }
 
-.mapToggles {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.mapToggles .toggleButton,
-.mapToggles .toggleButtonActive {
-  width: 100%;
-  text-align: center;
-  padding: 8px 10px;
-  font-size: 13px;
-}
-
+/* --- Map Content (Right Side) --- */
 .mapContent {
   flex-grow: 1;
   min-width: 0;
@@ -239,7 +231,7 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border: 1px solid #f0f0f0;
-  position: relative; /* (*** ADDED ***) */
+  position: relative;
 }
 
 .mapPlaceholder {
@@ -355,44 +347,6 @@
   font-size: 16px;
 }
 
-/* --- (*** ADDED: Styles for INTERNAL Map ***) --- */
-
-/* (Container หลักสำหรับ "แผนที่ภายใน") */
-.internalMapViewContainer {
-  display: flex;
-  flex-direction: column; /* (*** NEW ***) เรียงแนวตั้ง */
-  gap: 24px;
-  width: 100%;
-  max-width: 1200px;
-  align-items: center; /* (*** NEW ***) ให้ Filter Bar อยู่ตรงกลาง */
-}
-
-/* (Layout 2 คอลัมน์สำหรับ Map + List) */
-.internalMapLayout {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  width: 100%;
-  height: 70vh; /* (*** NEW ***) กำหนดความสูง */
-  min-height: 500px;
-}
-
-/* (คอลัมน์ขวาสำหรับ List) */
-.mapReportList {
-  flex: 1;
-  height: 100%;
-  overflow-y: auto; /* (*** NEW ***) ทำให้ List เลื่อนได้ */
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* (ปุ่ม Toggle ที่ย้ายมาลอยบนแผนที่) */
 .mapTogglesAbsolute {
   position: absolute;
   top: 16px;
@@ -413,17 +367,17 @@
 }
 
 
-/* --- (*** ADDED: Styles from ReportTable.module.css ***) --- */
+/* --- (*** ADDED: Styles for INTERNAL Map Sidebar ***) --- */
 
-.searchTop {
+/* (Container สำหรับ Search + Filter) */
+.sidebarSearchTop {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* (*** NEW ***) */
   align-items: stretch;
-  gap: 16px;
+  gap: 12px; /* (*** NEW ***) */
   position: relative;
   width: 100%;
-  max-width: 700px;
-  /* (*** MODIFIED ***) ไม่ต้องมี margin-bottom */
+  flex-shrink: 0; /* (*** NEW ***) */
 }
 
 .searchInputWrapper {
@@ -436,7 +390,7 @@
   width: 100%;
   flex-grow: 1;
   box-sizing: border-box;
-  padding: 12px 18px 12px 52px;
+  padding: 12px 18px 12px 45px; /* (*** ADJUSTED ***) */
   border-radius: 28px;
   border: 1px solid #e0e0e0;
   font-size: 14px;
@@ -455,7 +409,7 @@
 
 .searchIcon {
   position: absolute;
-  left: 20px;
+  left: 16px; /* (*** ADJUSTED ***) */
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
@@ -481,7 +435,7 @@
   transition: all 0.25s ease;
   white-space: nowrap;
   min-width: fit-content;
-  max-width: 120px;
+  max-width: 100%; /* (*** ADJUSTED ***) */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -586,33 +540,45 @@
   max-height: 50vh;
 }
 
+/* (Container สำหรับ List ใน Sidebar) */
+.sidebarReportListContainer {
+  flex-grow: 1; /* (*** NEW ***) */
+  overflow-y: auto; /* (*** NEW ***) */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* (*** NEW ***) เพิ่ม Padding/Margin สำหรับ Scrollbar */
+  padding-right: 5px; 
+  margin-right: -10px;
+}
+
 .reportSummary {
   font-weight: 600;
   color: #333;
   text-align: left;
   padding-left: 4px;
   width: 100%;
-  flex-shrink: 0; /* (*** NEW ***) ไม่ให้หด */
+  flex-shrink: 0;
 }
 
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr; /* (*** MODIFIED ***) List ในแผนที่จะเป็น 1 คอลัมน์เสมอ */
-  gap: 12px; /* (*** MODIFIED ***) */
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
 .reportTableRow {
   display: grid;
-  grid-template-columns: 70px 1fr auto;
+  grid-template-columns: 60px 1fr auto; /* (*** ADJUSTED ***) */
   grid-template-areas:
     "image header status"
     "image details details"
     "image location location"
     "image toggle toggle";
   align-items: start;
-  gap: 4px 10px;
-  padding: 14px 18px;
+  gap: 4px 8px; /* (*** ADJUSTED ***) */
+  padding: 12px; /* (*** ADJUSTED ***) */
   font-size: 13px;
   background: #ffffff;
   border-radius: 14px;
@@ -623,14 +589,14 @@
 
 .reportTableRow:hover {
   background: #f8f8f8;
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
 }
 
 .reportImage {
   grid-area: image;
-  width: 60px;
-  height: 60px;
+  width: 50px; /* (*** ADJUSTED ***) */
+  height: 50px; /* (*** ADJUSTED ***) */
   object-fit: cover;
   border-radius: 10px;
 }
@@ -638,14 +604,14 @@
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px; /* (*** ADJUSTED ***) */
   color: #000;
 }
 
 .reportDetailText {
   white-space: normal;
   word-break: break-word;
-  font-size: 13px;
+  font-size: 12px; /* (*** ADJUSTED ***) */
   font-weight: 400;
   color: #333;
   padding-top: 2px;
@@ -654,7 +620,7 @@
 .mainDetails {
   grid-area: details;
   display: grid;
-  grid-template-columns: 1fr; /* (*** MODIFIED ***) 1 คอลัมน์ใน List ย่อย */
+  grid-template-columns: 1fr;
   gap: 4px 10px;
   font-size: 12px;
   color: #666;
@@ -704,12 +670,9 @@
   text-decoration-thickness: 1.5px;
 }
 
-/* --- (*** END: Added Styles from ReportTable ***) --- */
-
 
 /* --- Media Queries --- */
 @media screen and (max-width: 1024px) {
-  /* (Public Map) */
   .mapViewContainer {
     align-self: unset;
     flex-direction: column;
@@ -718,37 +681,41 @@
   }
   .mapSidebar {
     width: 100%;
-    max-height: none;
-    overflow-y: visible;
+    height: 50vh; /* (*** ADJUSTED ***) */
+    min-height: 400px;
+    overflow-y: hidden; /* (*** ADJUSTED ***) */
   }
   .mapContent {
+    width: 100%; /* (*** NEW ***) */
     height: 50vh;
     min-height: 400px;
-  }
-  
-  /* (Internal Map) */
-  .internalMapViewContainer {
-    align-self: unset;
-  }
-  .internalMapLayout {
-    flex-direction: column; /* (*** NEW ***) เปลี่ยน Map+List เป็นแนวตั้ง */
-    height: auto;
-  }
-  .mapContent {
-    height: 50vh; /* (*** NEW ***) จำกัดความสูงแผนที่ */
-  }
-  .mapReportList {
-    height: 60vh; /* (*** NEW ***) จำกัดความสูง List */
   }
 }
 
 @media screen and (max-width: 768px) {
-  .searchTop {
-    flex-direction: column;
+  /* (*** ADJUSTED ***) */
+  .sidebarSearchTop {
+    flex-direction: row; /* กลับเป็นแนวนอนในจอมือถือ */
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }
   .filterToggleButton {
-    max-width: 100%;
+    max-width: 120px; /* จำกัดความกว้างปุ่ม */
+  }
+  .sidebarSearchTop .searchInput {
+    padding-left: 52px;
+  }
+  .sidebarSearchTop .searchIcon {
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .sidebarSearchTop {
+    flex-direction: column; /* กลับเป็นแนวตั้งในจอมือถือเล็ก */
+    gap: 12px;
+  }
+  .filterToggleButton {
+    max-width: 100%; /* ปุ่มเต็มความกว้าง */
   }
 }
