@@ -1,36 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./css/MapView.module.css";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaSearch, // (*** ADDED ***)
+  FaFilter, // (*** ADDED ***)
+  FaTimes, // (*** ADDED ***)
+} from "react-icons/fa";
+import "cally"; // (*** ADDED ***)
 
 // ------------------------- ตัวอย่าง Report Data
 // (ข้อมูล Mock นี้ถูกใช้ใน Popup ของแผนที่)
-const reportData = [
+const reportDataMock = [ // (*** Renamed to avoid conflict ***)
   {
     id: "#2025-TYHKE",
     detail:
       "ทดลองแจ้งเรื่องฝาท่อระบายน้ำที่ถนนหน้าหมู่บ้าน มีน้ำขังเยอะมาก",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFmeZPibDL4XbTA9wnhZCpCeK0bFg07Pf2cw&s",
-    category: "อื่นๆ",
-    datetime_in: "ต.ค. 4 เม.ย. 68 14:19 น.",
-    datetime_out: "ต.ค. 4 เม.ย. 68 14:19 น.",
-    location: "914 ถนน ตาดคำ",
-    responsible_unit: "ทีมพัฒนา",
     status: "รอรับเรื่อง",
-    rating: null,
   },
   {
     id: "#2025-ETNEZE",
     detail: "มีต้นไม้กีดขวาง ทางเดินเท้า ทำให้คนเดินสัญจรไม่สะดวก",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_bRmXqJQOpLMvoKvL89IYlHse2LioPsA8sQ&s",
-    category: "ต้นไม้",
-    datetime_in: "พฤ. 13 มี.ค. 68 16:08 น.",
-    datetime_out: "ต.ค. 3 ส.ค. 69 15:23 น.",
-    location: "460 หมู่ 12 ถนน มิตรภาพ",
-    responsible_unit: "ทีมพัฒนา",
     status: "เสร็จสิ้น",
-    rating: 4,
   },
 ];
 
@@ -43,13 +37,144 @@ const truncateText = (text, maxLength) => {
   return text.substring(0, maxLength) + "...";
 };
 
+// ------------------------- (*** ADDED: DateFilter Component ***)
+// (คัดลอกจาก ReportTable.js)
+const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
 
-// ------------------------- (*** 4. MapView - "เนื้อหาใหม่" ***)
-// (*** นี่คือ Component ที่นำกลับมาตามคำขอ ***)
+const DateFilter = () => {
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const calendarRef = useRef(null);
+  const formatDate = (d) =>
+    d ? d.toLocaleDateString("th-TH") : "กดเพื่อเลือกช่วงเวลา";
+
+  useEffect(() => {
+    const node = calendarRef.current;
+    if (node && show) {
+      const handleChange = (e) => {
+        setDate(new Date(e.target.value));
+        setShow(false);
+      };
+      node.addEventListener("change", handleChange);
+      return () => node.removeEventListener("change", handleChange);
+    }
+  }, [show]);
+
+  return (
+    <div style={{ position: "relative" }}>
+      <button
+        className={styles.timeRangeButton}
+        onClick={() => setShow(!show)}
+      >
+        {formatDate(date)}
+      </button>
+      {show && (
+        <div className={styles.calendarPopup}>
+          <calendar-date
+            ref={calendarRef}
+            value={toYYYYMMDD(date)}
+            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
+          >
+            <svg aria-label="Previous" slot="previous" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            <svg aria-label="Next" slot="next" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+            <calendar-month></calendar-month>
+          </calendar-date>
+        </div>
+      )}
+    </div>
+  );
+};
+// ------------------------- (*** END: DateFilter Component ***)
+
+
 const MapView = ({ subTab }) => {
   const [mapMode, setMapMode] = useState("pins"); // 'pins' or 'heatmap'
 
-  // 1. หน้า "แผนที่สาธารณะ"
+  // --- (*** ADDED: State for Report List ***) ---
+  // (คัดลอกจาก ReportTable.js)
+  const [showFilters, setShowFilters] = useState(false);
+  const [expandedCardId, setExpandedCardId] = useState(null);
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Logic สำหรับ Filter (Hardcoded สำหรับ "แผนที่ภายใน" = "เฉพาะหน่วยงาน")
+  const isAllReports = false; // (แผนที่ภายในจะใช้ Filter แบบ "เฉพาะหน่วยงาน" เสมอ)
+  const mainFilters = ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
+  const locationFilters = ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
+  const modalTitle = "ตัวกรอง (แผนที่ภายใน)";
+  const summaryTitle = "รายการแจ้ง (แผนที่ภายใน)";
+  // --- (*** END: State for Report List ***) ---
+
+  // --- (*** ADDED: Logic for Report List ***) ---
+  // (คัดลอกจาก ReportTable.js)
+  useEffect(() => {
+    // (ดึงข้อมูลเฉพาะเมื่อดู "แผนที่ภายใน")
+    if (subTab === "แผนที่ภายใน") {
+      const fetchCases = async () => {
+        try {
+          setLoading(true);
+          const lastOrg = localStorage.getItem("lastSelectedOrg");
+          if (!lastOrg) {
+            console.warn("ไม่พบข้อมูลหน่วยงานใน localStorage");
+            setReports([]);
+            setLoading(false);
+            return;
+          }
+
+          const org = JSON.parse(lastOrg);
+          const orgId = org.id || org.organization_id;
+
+          const res = await fetch(
+            `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
+          );
+          if (!res.ok) throw new Error("Fetch cases failed");
+
+          const data = await res.json();
+          setReports(data);
+        } catch (err) {
+          console.error("Error fetching data:", err);
+          setReports([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchCases();
+    }
+  }, [subTab]); // Re-fetch
+  
+  const handleToggleDetails = (id) => {
+    setExpandedCardId((prevId) => (prevId === id ? null : id));
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "รอรับเรื่อง":
+        return styles.pending;
+      case "กำลังประสานงาน":
+        return styles.coordinating;
+      case "กำลังดำเนินการ":
+        return styles.in_progress;
+      case "เสร็จสิ้น":
+        return styles.completed;
+      case "ส่งต่อ":
+        return styles.forwarded;
+      case "เชิญร่วม":
+        return styles.invited;
+      case "ปฏิเสธ":
+        return styles.rejected;
+      default:
+        return styles.other;
+    }
+  };
+  // --- (*** END: Logic for Report List ***) ---
+
+
+  // 1. หน้า "แผนที่สาธารณะ" (*** ไม่เปลี่ยนแปลง ***)
   if (subTab === "แผนที่สาธารณะ") {
     return (
       <div className={styles.mapViewContainer}>
@@ -111,12 +236,12 @@ const MapView = ({ subTab }) => {
               }}
             >
               <img
-                src={reportData[0].image}
+                src={reportDataMock[0].image}
                 alt="Mock"
                 className={styles.mockPopupImage}
               />
               <span className={styles.mockPopupText}>
-                {truncateText(reportData[0].detail, 50)}
+                {truncateText(reportDataMock[0].detail, 50)}
               </span>
               <span className={`${styles.statusTag} ${styles.coordinating}`}>
                 กำลังประสานงาน
@@ -128,17 +253,84 @@ const MapView = ({ subTab }) => {
     );
   }
 
-  // 2. หน้า "แผนที่ภายใน"
+  // 2. หน้า "แผนที่ภายใน" (*** แก้ไขใหม่ทั้งหมด ***)
   if (subTab === "แผนที่ภายใน") {
     return (
-      <div className={styles.mapViewContainer}>
-        {/* 2.1 Sidebar (Internal) */}
-        <div className={styles.mapSidebar}>
-          <h3 className={styles.mapSidebarTitle}>เครื่องมือแผนที่ภายใน</h3>
+      // (*** NEW: ใช้ Container ใหม่สำหรับ Layout แบบ Column ***)
+      <div className={styles.internalMapViewContainer}>
+        {/* (*** ADDED: 1. Filter Bar (จาก ReportTable) ***) */}
+        <div className={styles.searchTop}>
+          <div className={styles.searchInputWrapper}>
+            <input
+              type="text"
+              placeholder="ใส่คำที่ต้องการค้นหา"
+              className={styles.searchInput}
+            />
+            <FaSearch className={styles.searchIcon} />
+          </div>
+          <button
+            className={styles.filterToggleButton}
+            onClick={() => setShowFilters(true)}
+          >
+            <FaFilter />
+            <span>ตัวกรอง</span>
+          </button>
+        </div>
 
-          <div className={styles.mapSidebarSection}>
-            <label className={styles.filterGroup}>รูปแบบการแสดงผล</label>
-            <div className={styles.mapToggles}>
+        {/* (*** ADDED: 2. Filter Modal (จาก ReportTable) ***) */}
+        {showFilters && (
+          <>
+            <div
+              className={styles.filterModalBackdrop}
+              onClick={() => setShowFilters(false)}
+            ></div>
+            <div className={styles.filterModal}>
+              <div className={styles.filterModalHeader}>
+                <h3>{modalTitle}</h3>
+                <button
+                  className={styles.filterModalClose}
+                  onClick={() => setShowFilters(false)}
+                >
+                  <FaTimes />
+                </button>
+              </div>
+              <div className={styles.filterModalContent}>
+                <div className={styles.reportFilters}>
+                  {mainFilters.map((label, i) => (
+                    <div className={styles.filterGroup} key={i}>
+                      <label>{label}</label>
+                      {label === "ช่วงเวลา" ? (
+                        <DateFilter />
+                      ) : (
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                        </select>
+                      )}
+                    </div>
+                  ))}
+                  {locationFilters.map((label, i) => (
+                    <div key={i} className={styles.filterGroup}>
+                      <label>{label}</label>
+                      <select defaultValue="all">
+                        <option value="all">ทั้งหมด</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+                <button className={styles.filterApplyButton}>ตกลง</button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* (*** NEW: 3. Layout แบบ 2 คอลัมน์ (Map + List) ***) */}
+        <div className={styles.internalMapLayout}>
+          
+          {/* 3.1 คอลัมน์ซ้าย: แผนที่ (Map Content) */}
+          <div className={styles.mapContent}>
+            
+            {/* (*** MOVED: ย้าย Toggle (หมุด/Heatmap) มาไว้บนแผนที่ ***) */}
+            <div className={styles.mapTogglesAbsolute}>
               <button
                 className={
                   mapMode === "pins"
@@ -160,100 +352,145 @@ const MapView = ({ subTab }) => {
                 Heatmap
               </button>
             </div>
+
+            <div className={styles.mapPlaceholder}>
+              {mapMode === "pins" ? (
+                <>
+                  <span>(พื้นที่แผนที่ภายใน - หมุด)</span>
+                  {/* (... Mock Pins ... ) */}
+                  <FaMapMarkerAlt
+                    className={`${styles.mockMapPin} ${styles.pending}`}
+                    style={{ top: "25%", left: "30%" }}
+                    title="รอรับเรื่อง"
+                  />
+                  <FaMapMarkerAlt
+                    className={`${styles.mockMapPin} ${styles.coordinating}`}
+                    style={{ top: "15%", left: "55%" }}
+                    title="กำลังประสานงาน"
+                  />
+                  <FaMapMarkerAlt
+                    className={`${styles.mockMapPin} ${styles.in_progress}`}
+                    style={{ top: "40%", left: "55%" }}
+                    title="กำลังดำเนินการ"
+                  />
+                  <FaMapMarkerAlt
+                    className={`${styles.mockMapPin} ${styles.completed}`}
+                    style={{ top: "65%", left: "40%" }}
+                    title="เสร็จสิ้น"
+                  />
+                  
+                  {/* (*** MOVED: ย้าย Legend มาไว้บนแผนที่ ***) */}
+                  <div className={styles.mapLegend}>
+                    <div className={styles.legendItem}>
+                      <FaMapMarkerAlt className={styles.pending} />
+                      <span>รอรับเรื่อง</span>
+                    </div>
+                    <div className={styles.legendItem}>
+                      <FaMapMarkerAlt className={styles.coordinating} />
+                      <span>ประสานงาน</span>
+                    </div>
+                    <div className={styles.legendItem}>
+                      <FaMapMarkerAlt className={styles.in_progress} />
+                      <span>ดำเนินการ</span>
+                    </div>
+                    <div className={styles.legendItem}>
+                      <FaMapMarkerAlt className={styles.completed} />
+                      <span>เสร็จสิ้น</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <span>(Mockup Heatmap)</span>
+              )}
+            </div>
           </div>
 
-          <div className={styles.mapSidebarSection}>
-            <div className={styles.filterGroup}>
-              <label>สถานะ</label>
-              <select defaultValue="all">
-                <option value="all">ทั้งหมด</option>
-                <option value="pending">รอรับเรื่อง</option>
-                <option value="coordinating">กำลังประสานงาน</option>
-                <option value="in_progress">กำลังดำเนินการ</option>
-                <option value="completed">เสร็จสิ้น</option>
-                <option value="forwarded">ส่งต่อ</option>
-                <option value="invited">เชิญร่วม</option>
-                <option value="rejected">ปฏิเสธ</option>
-              </select>
+          {/* 3.2 คอลัมน์ขวา: รายการ Report (List Content) */}
+          <div className={styles.mapReportList}>
+            {/* (*** ADDED: Summary (จาก ReportTable) ***) */}
+            <div className={styles.reportSummary}>
+              <strong>{summaryTitle}</strong>{" "}
+              ({loading ? "กำลังโหลด..." : `${reports.length} รายการ`})
             </div>
-            <div className={styles.filterGroup}>
-              <label>หน่วยงานรับผิดชอบ</label>
-              <select defaultValue="all">
-                <option value="all">ทุกหน่วยงาน</option>
-                <option value="unit1">xxxx กองช่าง</option>
-                <option value="unit2">xxxx กองสาธารณสุข</option>
-              </select>
-            </div>
-            <div className={styles.filterGroup}>
-              <label>ผู้รับผิดชอบ</label>
-              <select defaultValue="all" disabled>
-                <option value="all">ทุกคน</option>
-              </select>
-            </div>
-          </div>
-          <button className={styles.filterApplyButton}>กรองข้อมูล</button>
-        </div>
 
-        {/* 2.2 Map Content (Internal) */}
-        <div className={styles.mapContent}>
-          <div className={styles.mapPlaceholder}>
-            {mapMode === "pins" ? (
-              <>
-                <span>(พื้นที่แผนที่ภายใน - หมุด)</span>
-                {/* Mock Pins (Internal) */}
-                <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.pending}`}
-                  style={{ top: "25%", left: "30%" }}
-                  title="รอรับเรื่อง"
-                />
-                <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.coordinating}`}
-                  style={{ top: "15%", left: "55%" }}
-                  title="กำลังประสานงาน"
-                />
-                <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.in_progress}`}
-                  style={{ top: "40%", left: "55%" }}
-                  title="กำลังดำเนินการ"
-                />
-                <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.completed}`}
-                  style={{ top: "65%", left: "40%" }}
-                  title="เสร็จสิ้น"
-                />
-                <FaMapMarkerAlt
-                  className={`${styles.mockMapPin} ${styles.rejected}`}
-                  style={{ top: "70%", left: "70%" }}
-                  title="ปฏิเสธ"
-                />
+            {/* (*** ADDED: Card List (จาก ReportTable) ***) */}
+            <div className={styles.reportTableContainer}>
+              {loading ? (
+                <p>กำลังโหลดข้อมูล...</p>
+              ) : reports.length === 0 ? (
+                <p>ไม่มีข้อมูลเรื่องแจ้ง</p>
+              ) : (
+                reports.map((report) => {
+                  const isExpanded = expandedCardId === report.issue_cases_id;
+                  const responsibleUnits =
+                    report.organizations && report.organizations.length > 0
+                      ? report.organizations
+                          .map((org) => org.responsible_unit)
+                          .join(", ")
+                      : "-";
 
-                {/* Legend */}
-                <div className={styles.mapLegend}>
-                  <div className={styles.legendItem}>
-                    <FaMapMarkerAlt className={styles.pending} />
-                    <span>รอรับเรื่อง</span>
-                  </div>
-                  <div className={styles.legendItem}>
-                    <FaMapMarkerAlt className={styles.coordinating} />
-                    <span>ประสานงาน</span>
-                  </div>
-                  <div className={styles.legendItem}>
-                    <FaMapMarkerAlt className={styles.in_progress} />
-                    <span>ดำเนินการ</span>
-                  </div>
-                  <div className={styles.legendItem}>
-                    <FaMapMarkerAlt className={styles.completed} />
-                    <span>เสร็จสิ้น</span>
-                  </div>
-                  <div className={styles.legendItem}>
-                    <FaMapMarkerAlt className={styles.rejected} />
-                    <span>ปฏิเสธ</span>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <span>(Mockup Heatmap)</span>
-            )}
+                  return (
+                    <div key={report.issue_cases_id} className={styles.reportTableRow}>
+                      <img
+                        src={
+                          report.cover_image_url ||
+                          "https://via.placeholder.com/120x80?text=No+Image"
+                        }
+                        alt="Report"
+                        className={styles.reportImage}
+                      />
+                      <div className={styles.reportHeader}>
+                        <span className={styles.reportIdText}>
+                          #{report.case_code}
+                        </span>
+                        <p className={styles.reportDetailText}>
+                          {truncateText(report.title || "-", 40)}
+                        </p>
+                      </div>
+                      <div className={styles.reportStatusGroup}>
+                        <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
+                          {report.status}
+                        </span>
+                      </div>
+
+                      {isExpanded && (
+                        <>
+                          <div className={styles.mainDetails}>
+                            <span>ประเภทปัญหา: {report.issue_type_name}</span>
+                            <span>รายละเอียด: {report.description || "-"}</span>
+                            <span>
+                              วันที่แจ้ง:{" "}
+                              {new Date(report.created_at).toLocaleString("th-TH")}
+                            </span>
+                            <span>
+                              อัปเดตล่าสุด:{" "}
+                              {new Date(report.updated_at).toLocaleString("th-TH")}
+                            </span>
+                          </div>
+                          <div className={styles.locationDetails}>
+                            <span>
+                              พิกัด: {report.latitude}, {report.longitude}
+                            </span>
+                            <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
+                          </div>
+                        </>
+                      )}
+
+                      <button
+                        className={styles.toggleDetailsButton}
+                        onClick={() =>
+                          handleToggleDetails(
+                            isExpanded ? null : report.issue_cases_id
+                          )
+                        }
+                      >
+                        {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </div>
