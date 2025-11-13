@@ -1,627 +1,637 @@
-:root {
---color-bg: #ffffff;
---color-surface: #f8f9fa;
---color-primary: #0b0b0b;
---color-secondary: #3a3a3a;
---color-muted: #6c757d;
---color-border: #e5e7eb;
---color-border-hover: #ced4da;
+/* * ==================================================================
+ * ตัวแปรทั้งหมดถูกย้ายจาก :root มาที่นี่
+ * ทำให้ตัวแปรเหล่านี้มีผลเฉพาะภายใน .my-app-wrapper
+ * ==================================================================
+ */
+.my-app-wrapper {
+  --color-bg: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-primary: #0b0b0b;
+  --color-secondary: #3a3a3a;
+  --color-muted: #6c757d;
+  --color-border: #e5e7eb;
+  --color-border-hover: #ced4da;
 
-/* --- Colors --- */
---color-green: #28a745;
---color-green-dark: #218838;
---color-red: #dc3545;
---color-red-dark: #c82333;
---shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
---shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
+  /* --- Colors --- */
+  --color-green: #28a745;
+  --color-green-dark: #218838;
+  --color-red: #dc3545;
+  --color-red-dark: #c82333;
+  --shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
+  --shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
 
-/* --- Base --- */
---color-focus-ring: rgba(0, 0, 0, 0.1);
---radius-card: 1rem;
---radius-input: 0.5rem; /* 8px */
---shadow-card: 0 4px 12px rgba(0,0,0,0.05);
---shadow-hover: 0 8px 20px rgba(0,0,0,0.08);
---shadow-button: 0 4px 10px rgba(0, 0, 0, 0.1);
---transition: all 0.2s ease-in-out;
+  /* --- Base --- */
+  --color-focus-ring: rgba(0, 0, 0, 0.1);
+  --radius-card: 1rem;
+  --radius-input: 0.5rem; /* 8px */
+  --shadow-card: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-hover: 0 8px 20px rgba(0,0,0,0.08);
+  --shadow-button: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease-in-out;
+}
+
+/* * ==================================================================
+ * สไตล์ทั้งหมดต่อจากนี้ ถูกเติม .my-app-wrapper นำหน้าแล้ว
+ * ==================================================================
+ */
+
+/* ==================================================================
+ * Global Container
+ * ================================================================== */
+.my-app-wrapper .container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Vertical centering */
+  min-height: 100vh;
+  padding: 1rem; /* Smaller padding for mobile */
+  background: var(--color-surface);
+  font-family: "Sarabun", sans-serif;
+  box-sizing: border-box;
 }
 
 /* ==================================================================
- * Global Container
- * ================================================================== */
-.container {
-display: flex;
-justify-content: center;
-align-items: center; /* Vertical centering */
-min-height: 100vh;
-padding: 1rem; /* Smaller padding for mobile */
-background: var(--color-surface);
-font-family: "Sarabun", sans-serif;
-box-sizing: border-box;
+ * Page Layout
+ * ================================================================== */
+.my-app-wrapper .page {
+  width: 100%;
+  background: var(--color-bg);
+  border-radius: var(--radius-card);
+  padding: 1.5rem; /* Smaller padding for mobile */
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  transition: var(--transition);
+}
+.my-app-wrapper .pageCreate { max-width: 500px; }
+.my-app-wrapper .pageSetup { max-width: 700px; }
+.my-app-wrapper .page:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
 /* ==================================================================
- * Page Layout
- * ================================================================== */
-.page {
-width: 100%;
-background: var(--color-bg);
-border-radius: var(--radius-card);
-padding: 1.5rem; /* Smaller padding for mobile */
-box-shadow: var(--shadow-card);
-border: 1px solid var(--color-border);
-transition: var(--transition);
+ * Page Header
+ * ================================================================== */
+.my-app-wrapper .pageHeader {
+  text-align: center;
+  margin-bottom: 2rem; /* Adjusted margin */
 }
-.pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; }
-.page:hover {
-box-shadow: var(--shadow-hover);
-transform: translateY(-2px);
+.my-app-wrapper .pageTitle {
+  font-size: 1.75rem; /* Adjusted for mobile */
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  line-height: 1.3;
+}
+.my-app-wrapper .pageSubtitle {
+  font-size: 1rem; /* Adjusted for mobile */
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-top: 0.5rem;
+}
+.my-app-wrapper .orgNameHighlight {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.my-app-wrapper .editNameButton {
+  background: none;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  color: var(--color-secondary);
+  font-size: 0.9rem; /* Adjusted */
+  font-weight: 500;
+  font-family: "Sarabun", sans-serif;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-input);
+  transition: var(--transition);
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  margin-top: 0.5rem; /* Add space when wrapped */
+}
+.my-app-wrapper .editNameButton:hover {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
 }
 
 /* ==================================================================
- * Page Header
- * ================================================================== */
-.pageHeader {
-text-align: center;
-margin-bottom: 2rem; /* Adjusted margin */
+ * Forms
+ * ================================================================== */
+.my-app-wrapper .form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
-.pageTitle {
-font-size: 1.75rem; /* Adjusted for mobile */
-font-weight: 700;
-color: var(--color-primary);
-margin: 0;
-display: flex;
-flex-wrap: wrap;
-align-items: center;
-justify-content: center;
-gap: 0.5rem 1rem;
-line-height: 1.3;
+.my-app-wrapper .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-.pageSubtitle {
-font-size: 1rem; /* Adjusted for mobile */
-font-weight: 400;
-color: var(--color-muted);
-margin-top: 0.5rem;
+.my-app-wrapper .label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-secondary);
 }
-.orgNameHighlight {
-color: var(--color-primary);
-font-weight: 700;
+.my-app-wrapper .label.required::after {
+  content: " *";
+  color: var(--color-red);
+  margin-left: 0.25rem;
 }
-
-.editNameButton {
-background: none;
-border: 1px solid var(--color-border);
-cursor: pointer;
-color: var(--color-secondary);
-font-size: 0.9rem; /* Adjusted */
-font-weight: 500;
-font-family: "Sarabun", sans-serif;
-padding: 0.4rem 0.8rem;
-border-radius: var(--radius-input);
-transition: var(--transition);
-white-space: nowrap;
-box-shadow: var(--shadow-card);
-margin-top: 0.5rem; /* Add space when wrapped */
+.my-app-wrapper .input, .my-app-wrapper .select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  transition: var(--transition);
+  box-sizing: border-box;
 }
-.editNameButton:hover {
-background-color: var(--color-surface);
-color: var(--color-primary);
-border-color: var(--color-primary);
-box-shadow: var(--shadow-hover);
-transform: translateY(-1px);
+.my-app-wrapper .input:hover, .my-app-wrapper .select:hover {
+  border-color: var(--color-border-hover);
 }
-
-/* ==================================================================
- * Forms
- * ================================================================== */
-.form {
-display: flex;
-flex-direction: column;
-gap: 1.5rem;
+.my-app-wrapper .input:focus, .my-app-wrapper .select:focus {
+  outline: none;
+  background: var(--color-bg);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
-.formGroup {
-display: flex;
-flex-direction: column;
-gap: 0.5rem;
+.my-app-wrapper .input::placeholder {
+  color: var(--color-muted);
+  font-style: italic;
+  opacity: 0.8;
 }
-.label {
-font-weight: 600;
-font-size: 0.95rem;
-color: var(--color-secondary);
+.my-app-wrapper .helpText {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  text-align: center;
+  margin-top: -0.5rem;
 }
-.label.required::after {
-content: " *";
-color: var(--color-red);
-margin-left: 0.25rem;
-}
-.input, .select {
-width: 100%;
-padding: 0.75rem 1rem;
-font-size: 1rem;
-border-radius: var(--radius-input);
-border: 1px solid var(--color-border);
-background: var(--color-surface);
-color: var(--color-primary);
-transition: var(--transition);
-box-sizing: border-box;
-}
-.input:hover, .select:hover {
-border-color: var(--color-border-hover);
-}
-.input:focus, .select:focus {
-outline: none;
-background: var(--color-bg);
-border-color: var(--color-primary);
-box-shadow: 0 0 0 3px var(--color-focus-ring);
-}
-.input::placeholder {
-color: var(--color-muted);
-font-style: italic;
-opacity: 0.8;
-}
-.helpText {
-font-size: 0.9rem;
-color: var(--color-muted);
-text-align: center;
-margin-top: -0.5rem;
-}
-.helpTextSmall {
-font-size: 0.85rem;
-color: var(--color-muted);
-margin-top: 0.5rem;
+.my-app-wrapper .helpTextSmall {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-top: 0.5rem;
 }
 
 /* ==================================================================
- * Buttons
- * (Mobile-First Styles: Styles for phones)
- * (สไตล์สำหรับมือถือ: ปุ่มจะเรียงแนวตั้ง)
- * ================================================================== */
-.buttonGroup {
-margin-top: 1rem;
-display: flex;
-flex-direction: column; /* Mobile-first: Stack buttons (เรียงแนวตั้งสำหรับมือถือ) */
-justify-content: center;
-gap: 0.75rem; /* Tighter gap for stacked buttons */
+ * Buttons
+ * (Mobile-First Styles: Styles for phones)
+ * (สไตล์สำหรับมือถือ: ปุ่มจะเรียงแนวตั้ง)
+ * ================================================================== */
+.my-app-wrapper .buttonGroup {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column; /* Mobile-first: Stack buttons (เรียงแนวตั้งสำหรับมือถือ) */
+  justify-content: center;
+  gap: 0.75rem; /* Tighter gap for stacked buttons */
 }
-.button {
-width: 100%;
-padding: 0.75rem 1.5rem;
-border-radius: var(--radius-input);
-font-weight: 600;
-font-size: 1rem;
-cursor: pointer;
-transition: var(--transition);
-border: 1px solid transparent;
-text-align: center;
-text-decoration: none;
-display: inline-flex;
-justify-content: center;
-align-items: center;
-gap: 0.5rem;
+.my-app-wrapper .button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-input);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
 }
 /* This targets buttons *only* inside .buttonGroup */
-.buttonGroup > .button {
-flex-grow: 1;
-flex-basis: 0;
+.my-app-wrapper .buttonGroup > .button {
+  flex-grow: 1;
+  flex-basis: 0;
 }
-.button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
+.my-app-wrapper .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Accessibility focus style */
-.button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-primary);
+.my-app-wrapper .button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-primary);
 }
 
 
 /* (Green Button) */
-.btnPrimary {
-background-color: var(--color-green);
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
+.my-app-wrapper .btnPrimary {
+  background-color: var(--color-green);
+  color: white;
+  border-color: var(--color-green);
+  box-shadow: var(--shadow-button-green);
 }
-.btnPrimary:hover:not(:disabled) {
-background-color: var(--color-green-dark);
-border-color: var(--color-green-dark);
-transform: translateY(-2px);
+.my-app-wrapper .btnPrimary:hover:not(:disabled) {
+  background-color: var(--color-green-dark);
+  border-color: var(--color-green-dark);
+  transform: translateY(-2px);
 }
 
 /* (Red Button) */
-.btnPrimaryBack {
-background-color: var(--color-red);
-color: white;
-border-color: var(--color-red);
-box-shadow: var(--shadow-button-red);
+.my-app-wrapper .btnPrimaryBack {
+  background-color: var(--color-red);
+  color: white;
+  border-color: var(--color-red);
+  box-shadow: var(--shadow-button-red);
 }
-.btnPrimaryBack:hover:not(:disabled) {
-background-color: var(--color-red-dark);
-border-color: var(--color-red-dark);
-transform: translateY(-2px);
+.my-app-wrapper .btnPrimaryBack:hover:not(:disabled) {
+  background-color: var(--color-red-dark);
+  border-color: var(--color-red-dark);
+  transform: translateY(-2px);
 }
 
 /* (Save Button - Accordion) - Set to Green */
-.btnSuccess {
-background-color: var(--color-green);
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
+.my-app-wrapper .btnSuccess {
+  background-color: var(--color-green);
+  color: white;
+  border-color: var(--color-green);
+  box-shadow: var(--shadow-button-green);
 }
-.btnSuccess:hover:not(:disabled) {
-background-color: var(--color-green-dark);
-border-color: var(--color-green-dark);
-transform: translateY(-2px);
+.my-app-wrapper .btnSuccess:hover:not(:disabled) {
+  background-color: var(--color-green-dark);
+  border-color: var(--color-green-dark);
+  transform: translateY(-2px);
 }
 
 /* (Choose File Button) - Set to White */
-.btnSecondary {
-background-color: var(--color-bg);
-color: var(--color-primary);
-border-color: var(--color-border-hover);
+.my-app-wrapper .btnSecondary {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+  border-color: var(--color-border-hover);
 }
-.btnSecondary:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
+.my-app-wrapper .btnSecondary:hover:not(:disabled) {
+  background-color: var(--color-surface);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
 /* ==================================================================
- * Setup Page: Accordion (Mobile-First Styles)
- * (สไตล์สำหรับมือถือ)
- * ================================================================== */
-.setupContainer {
-margin-top: 2rem; /* Adjusted margin */
+ * Setup Page: Accordion (Mobile-First Styles)
+ * (สไตล์สำหรับมือถือ)
+ * ================================================================== */
+.my-app-wrapper .setupContainer {
+  margin-top: 2rem; /* Adjusted margin */
 }
-.setupTitle {
-font-size: 1.25rem; /* Adjusted for mobile */
-font-weight: 600;
-color: var(--color-secondary);
-margin-bottom: 1.5rem;
-text-align: center;
+.my-app-wrapper .setupTitle {
+  font-size: 1.25rem; /* Adjusted for mobile */
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
-.accordion {
-display: flex;
-flex-direction: column;
-gap: 1rem;
+.my-app-wrapper .accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.accordionItem {
-border: 1px solid var(--color-border);
-border-radius: var(--radius-card); /* 1rem */
-overflow: hidden;
-background: var(--color-bg);
-transition: var(--transition);
-box-shadow: none;
+.my-app-wrapper .accordionItem {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card); /* 1rem */
+  overflow: hidden;
+  background: var(--color-bg);
+  transition: var(--transition);
+  box-shadow: none;
 }
-.accordionItem:hover {
-  border-color: var(--color-border-hover);
-}
-
-.accordionHeader {
-display: flex;
-align-items: center;
-gap: 1rem;
-width: 100%;
-padding: 1.25rem; /* Adjusted padding */
-background: var(--color-bg);
-border: none;
-cursor: pointer;
-text-align: left;
-transition: var(--transition);
-}
-.accordionHeader:hover {
-  background-color: var(--color-surface);
+.my-app-wrapper .accordionItem:hover {
+  border-color: var(--color-border-hover);
 }
 
-.accordionIcon {
-flex-shrink: 0;
-width: 2.5rem; /* Adjusted size */
-height: 2.5rem; /* Adjusted size */
-border-radius: var(--radius-input); /* 8px */
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.25rem; /* Adjusted size */
-transition: var(--transition);
+.my-app-wrapper .accordionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem; /* Adjusted padding */
+  background: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+.my-app-wrapper .accordionHeader:hover {
+  background-color: var(--color-surface);
+}
+
+.my-app-wrapper .accordionIcon {
+  flex-shrink: 0;
+  width: 2.5rem; /* Adjusted size */
+  height: 2.5rem; /* Adjusted size */
+  border-radius: var(--radius-input); /* 8px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem; /* Adjusted size */
+  transition: var(--transition);
 }
 
 /* Icon Background Colors */
-.iconBgCode {
-  background-color: #e6f7ff;
-  color: #0056b3;
+.my-app-wrapper .iconBgCode {
+  background-color: #e6f7ff;
+  color: #0056b3;
 }
-.iconBgLogo {
-  background-color: #e6fff0;
-  color: #006421;
+.my-app-wrapper .iconBgLogo {
+  background-color: #e6fff0;
+  color: #006421;
 }
-.iconBgLocation {
-  background-color: #fff0f0;
-  color: #c82333;
+.my-app-wrapper .iconBgLocation {
+  background-color: #fff0f0;
+  color: #c82333;
 }
-.iconBgType {
-  background-color: #fff8e6;
-  color: #b38000;
+.my-app-wrapper .iconBgType {
+  background-color: #fff8e6;
+  color: #b38000;
 }
 
 
-.accordionTitleBox {
-flex-grow: 1;
+.my-app-wrapper .accordionTitleBox {
+  flex-grow: 1;
 }
-.accordionTitle {
-font-size: 1.05rem; /* Adjusted size */
-font-weight: 600;
-color: var(--color-primary);
-margin: 0;
+.my-app-wrapper .accordionTitle {
+  font-size: 1.05rem; /* Adjusted size */
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
 }
-.accordionSubtitle {
-font-size: 0.9rem;
-color: var(--color-muted);
-margin: 0;
-margin-top: 0.2rem;
+.my-app-wrapper .accordionSubtitle {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  margin: 0;
+  margin-top: 0.2rem;
 }
-.accordionArrow {
-width: 1.25rem;
-height: 1.25rem;
-color: var(--color-muted);
-transition: transform 0.3s ease-in-out;
-flex-shrink: 0;
+.my-app-wrapper .accordionArrow {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-muted);
+  transition: transform 0.3s ease-in-out;
+  flex-shrink: 0;
 }
-.rotate180 {
-transform: rotate(180deg);
+.my-app-wrapper .rotate180 {
+  transform: rotate(180deg);
 }
 
 /* === Accordion Content === */
-.accordionContentWrapper {
-display: grid;
-grid-template-rows: 0fr;
-transition: grid-template-rows 0.4s ease-in-out;
+.my-app-wrapper .accordionContentWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease-in-out;
 }
-.accordionContentWrapper.open {
-grid-template-rows: 1fr;
+.my-app-wrapper .accordionContentWrapper.open {
+  grid-template-rows: 1fr;
 }
-.accordionContent {
-overflow: hidden;
-padding: 0 1.25rem; /* Adjusted padding */
-background: var(--color-bg);
+.my-app-wrapper .accordionContent {
+  overflow: hidden;
+  padding: 0 1.25rem; /* Adjusted padding */
+  background: var(--color-bg);
 }
 
 /* * Shared class for all accordion inner content
- * (Applied to forms, but not the code box)
- */
-.accordionInnerContent {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
+ * (Applied to forms, but not the code box)
+ */
+.my-app-wrapper .accordionInnerContent {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-top: 1px solid var(--color-border);
 }
 
 
-.contentTitle {
-font-size: 1.25rem; /* Adjusted size */
-font-weight: 600;
-color: var(--color-primary);
-margin-bottom: 1.5rem;
+.my-app-wrapper .contentTitle {
+  font-size: 1.25rem; /* Adjusted size */
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
 }
-.contentForm {
-display: flex;
-flex-direction: column;
-gap: 1.25rem;
+.my-app-wrapper .contentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 /* === Logo Upload (Mobile Style) === */
-.logoUploadBox {
-display: grid;
-grid-template-columns: 1fr; /* Mobile-first: Stack (เรียงแนวตั้ง) */
-align-items: center;
-gap: 1.5rem;
-padding: 0;
-border: none;
-background: none;
-justify-items: center; /* Center preview */
+.my-app-wrapper .logoUploadBox {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile-first: Stack (เรียงแนวตั้ง) */
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  justify-items: center; /* Center preview */
 }
 
-.logoPreview {
-width: 150px;
-height: 150px;
-object-fit: contain;
-border-radius: var(--radius-card); /* 1rem, square-ish */
-border: 2px solid var(--color-border);
-background-color: var(--color-surface);
+.my-app-wrapper .logoPreview {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: var(--radius-card); /* 1rem, square-ish */
+  border: 2px solid var(--color-border);
+  background-color: var(--color-surface);
 }
-.hiddenFileInput {
-display: none;
+.my-app-wrapper .hiddenFileInput {
+  display: none;
 }
-.logoUploadActions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  align-items: center; /* Mobile-first: Center buttons */
-  width: 100%;
+.my-app-wrapper .logoUploadActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center; /* Mobile-first: Center buttons */
+  width: 100%;
 }
-.logoUploadActions > .button {
-  width: 100%; /* Mobile-first: Full width */
+.my-app-wrapper .logoUploadActions > .button {
+  width: 100%; /* Mobile-first: Full width */
 }
-.btnSave {
-margin-top: 0;
+.my-app-wrapper .btnSave {
+  margin-top: 0;
 }
 
 
 /* === Code Box (in Accordion) - REDESIGNED === */
-.codeBoxContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem; /* Reduced gap */
-  /* This component now handles its own top border and padding */
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
+.my-app-wrapper .codeBoxContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Reduced gap */
+  /* This component now handles its own top border and padding */
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-top: 1px solid var(--color-border);
 }
 
-.codeBoxHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* NEW: Pill design for switch */
-  background-color: var(--color-surface);
-  border-radius: 9999px; /* Pill shape */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
+.my-app-wrapper .codeBoxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* NEW: Pill design for switch */
+  background-color: var(--color-surface);
+  border-radius: 9999px; /* Pill shape */
+  padding: 0.5rem;
+  min-height: 48px;
+  box-sizing: border-box;
 }
 
-.codeBoxType {
-  font-size: 0.9rem; /* Adjusted size */
-  font-weight: 600;
-  color: var(--color-primary);
-  padding: 0 0.75rem; /* Add padding */
+.my-app-wrapper .codeBoxType {
+  font-size: 0.9rem; /* Adjusted size */
+  font-weight: 600;
+  color: var(--color-primary);
+  padding: 0 0.75rem; /* Add padding */
 }
 
-.codeBoxSwitch {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  text-decoration: underline;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: "Sarabun", sans-serif;
-  /* NEW: Style as pill button */
-  background-color: var(--color-bg);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid var(--color-border);
-  transition: var(--transition);
+.my-app-wrapper .codeBoxSwitch {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: "Sarabun", sans-serif;
+  /* NEW: Style as pill button */
+  background-color: var(--color-bg);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid var(--color-border);
+  transition: var(--transition);
 }
-.codeBoxSwitch:hover {
-  color: var(--color-secondary);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
-}
-
-.codeBoxDisplayWrapper {
-  /* NEW: Pill design for display */
-  position: relative;
-  display: flex;
-  align-items: center;
-  /* justify-content: space-between; <-- ลบบรรทัดนี้ออกครับ */
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Pill shape */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
+.my-app-wrapper .codeBoxSwitch:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-border-hover);
+  background-color: #fdfdfd;
 }
 
-.codeBoxDisplay {
-  font-family: "Menlo", "Consolas", monospace;
-  font-size: 1rem; /* Adjusted size */
-  font-weight: 700;
-  text-align: left;
-  letter-spacing: 0.05em;
-  color: var(--color-primary);
-  padding: 0 0.75rem; /* Add padding */
-  /* NEW: Removed background/border */
-  background: none;
-  border: none;
-  padding-right: 0;
-  width: 0; /* <-- ★★★ เปลี่ยนจาก auto เป็น 0 ครับ ★★★ */
-  flex-grow: 1; /* Take up available space */
-  overflow-x: auto; /* Allow scrolling for long codes */
-  white-space: nowrap;
-  min-width: 0; /* <-- นี่คือส่วนที่เพิ่มเข้ามาครับ */
+.my-app-wrapper .codeBoxDisplayWrapper {
+  /* NEW: Pill design for display */
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; <-- ลบบรรทัดนี้ออกครับ */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px; /* Pill shape */
+  padding: 0.5rem;
+  min-height: 48px;
+  box-sizing: border-box;
 }
 
-.codeCopyButton {
-  /* NEW: Reset position, adjust style for pill */
-  position: static;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Pill shape */
-  cursor: pointer;
-  padding: 0.35rem 0.75rem;
-  color: var(--color-secondary);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: var(--transition);
-  flex-shrink: 0; /* Don't shrink */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+.my-app-wrapper .codeBoxDisplay {
+  font-family: "Menlo", "Consolas", monospace;
+  font-size: 1rem; /* Adjusted size */
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  padding: 0 0.75rem; /* Add padding */
+  /* NEW: Removed background/border */
+  background: none;
+  border: none;
+  padding-right: 0;
+  width: 0; /* <-- ★★★ เปลี่ยนจาก auto เป็น 0 ครับ ★★★ */
+  flex-grow: 1; /* Take up available space */
+  overflow-x: auto; /* Allow scrolling for long codes */
+  white-space: nowrap;
+  min-width: 0; /* <-- นี่คือส่วนที่เพิ่มเข้ามาครับ */
 }
-.codeCopyButton:hover {
-  background: var(--color-surface);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
+
+.my-app-wrapper .codeCopyButton {
+  /* NEW: Reset position, adjust style for pill */
+  position: static;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px; /* Pill shape */
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  color: var(--color-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  flex-shrink: 0; /* Don't shrink */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.codeCopyButton svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
+.my-app-wrapper .codeCopyButton:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border-hover);
+  background-color: #fdfdfd;
 }
-.codeCopyButton.copied {
-  color: var(--color-green);
-  border-color: var(--color-green);
-  background-color: #e6fff0;
+.my-app-wrapper .codeCopyButton svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
-.codeCopyButton.copied svg {
-  stroke: var(--color-green);
+.my-app-wrapper .codeCopyButton.copied {
+  color: var(--color-green);
+  border-color: var(--color-green);
+  background-color: #e6fff0;
+}
+.my-app-wrapper .codeCopyButton.copied svg {
+  stroke: var(--color-green);
 }
 
 
 /* === Form Grid (in Accordion) (Mobile Style) === */
-.formGrid {
-display: grid;
-grid-template-columns: 1fr; /* Mobile-first: 1 column (เรียงแนวตั้ง) */
-gap: 1.25rem;
+.my-app-wrapper .formGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile-first: 1 column (เรียงแนวตั้ง) */
+  gap: 1.25rem;
 }
-.submitRow {
-grid-column: 1 / -1;
-display: flex;
-justify-content: flex-end;
-margin-top: 1rem;
+.my-app-wrapper .submitRow {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
-.submitRow .button {
-width: 100%; /* Full width on mobile */
-flex-grow: 0;
-flex-basis: auto;
+.my-app-wrapper .submitRow .button {
+  width: 100%; /* Full width on mobile */
+  flex-grow: 0;
+  flex-basis: auto;
 }
 
 /* === Geo Button & Error (Mobile Style) === */
-.btnGeo {
-background-color: var(--color-bg);
-color: var(--color-primary);
-border: 1px solid var(--color-border-hover);
-flex-grow: 0;
-flex-basis: auto;
+.my-app-wrapper .btnGeo {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-hover);
+  flex-grow: 0;
+  flex-basis: auto;
 }
-.btnGeo:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
+.my-app-wrapper .btnGeo:hover:not(:disabled) {
+  background-color: var(--color-surface);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
-.errorMessage {
-color: var(--color-red);
-font-size: 0.9rem;
-margin-top: 0.5rem;
-text-align: center;
+.my-app-wrapper .errorMessage {
+  color: var(--color-red);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
 }
-.geoButtonContainer {
-grid-column: 1 / -1;
-text-align: center;
-display: flex;
-flex-direction: column;
-align-items: center;
+.my-app-wrapper .geoButtonContainer {
+  grid-column: 1 / -1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.geoButtonContainer .button {
-width: 100%; /* Full width on mobile */
-min-width: 200px;
-flex-grow: 0;
-flex-basis: auto;
+.my-app-wrapper .geoButtonContainer .button {
+  width: 100%; /* Full width on mobile */
+  min-width: 200px;
+  flex-grow: 0;
+  flex-basis: auto;
 }
 
 /* ==================================================================
@@ -630,90 +640,90 @@ flex-basis: auto;
 * (นี่คือสไตล์สำหรับแท็บเล็ต จอที่กว้างกว่า 768px)
 * ================================================================== */
 @media (min-width: 768px) {
-  .container {
-    padding: 3rem 1rem; /* Restore padding */
-  }
-  .page {
-    padding: 3rem;
-  }
-  .pageTitle {
-    font-size: 2.25rem;
-    gap: 0.75rem 1.5rem;
-  }
-  .pageSubtitle {
-    font-size: 1.1rem;
-  }
-  .editNameButton {
-    margin-top: 0; /* Reset margin */
-  }
+  .my-app-wrapper .container {
+    padding: 3rem 1rem; /* Restore padding */
+  }
+  .my-app-wrapper .page {
+    padding: 3rem;
+  }
+  .my-app-wrapper .pageTitle {
+    font-size: 2.25rem;
+    gap: 0.75rem 1.5rem;
+  }
+  .my-app-wrapper .pageSubtitle {
+    font-size: 1.1rem;
+  }
+  .my-app-wrapper .editNameButton {
+    margin-top: 0; /* Reset margin */
+  }
 
-  /* --- Forms (Tablet) --- */
-  .formGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์ */
-    gap: 1.5rem;
-  }
-  .geoButtonContainer {
-    grid-column: 1 / -1;
-  }
-  .geoButtonContainer .button {
-    width: auto; /* Auto width on desktop */
-  }
+  /* --- Forms (Tablet) --- */
+  .my-app-wrapper .formGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์ */
+    gap: 1.5rem;
+  }
+  .my-app-wrapper .geoButtonContainer {
+    grid-column: 1 / -1;
+  }
+  .my-app-wrapper .geoButtonContainer .button {
+    width: auto; /* Auto width on desktop */
+  }
 
-  /* --- Buttons (Tablet) --- */
-  .buttonGroup {
-    flex-direction: row; /* Side-by-side (เรียงแนวนอน) */
-    justify-content: center;
-    gap: 1rem;
-  }
-  .buttonGroup > .button {
-    width: auto;
-    min-width: 180px;
-    flex-grow: 0;
-    flex-basis: auto;
-  }
+  /* --- Buttons (Tablet) --- */
+  .my-app-wrapper .buttonGroup {
+    flex-direction: row; /* Side-by-side (เรียงแนวนอน) */
+    justify-content: center;
+    gap: 1rem;
+  }
+  .my-app-wrapper .buttonGroup > .button {
+    width: auto;
+    min-width: 180px;
+    flex-grow: 0;
+    flex-basis: auto;
+  }
 
-  /* --- Accordion (Tablet) --- */
-  .accordionHeader {
-    padding: 1.25rem 1.5rem;
-  }
-  .accordionContent {
-    padding: 0 1.5rem;
-  }
-  .accordionIcon {
-    width: 2.75rem;
-    height: 2.75rem;
-    font-size: 1.5rem;
-  }
-  .accordionTitle {
-    font-size: 1.1rem;
-  }
-  .contentTitle {
-    font-size: 1.5rem;
-  }
-  .codeBoxType {
-    font-size: 1rem;
-  }
-  .codeBoxDisplay {
-    font-size: 1.15rem;
-  }
+  /* --- Accordion (Tablet) --- */
+  .my-app-wrapper .accordionHeader {
+    padding: 1.25rem 1.5rem;
+  }
+  .my-app-wrapper .accordionContent {
+    padding: 0 1.5rem;
+  }
+  .my-app-wrapper .accordionIcon {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.5rem;
+  }
+  .my-app-wrapper .accordionTitle {
+    font-size: 1.1rem;
+  }
+  .my-app-wrapper .contentTitle {
+    font-size: 1.5rem;
+  }
+  .my-app-wrapper .codeBoxType {
+    font-size: 1rem;
+  }
+  .my-app-wrapper .codeBoxDisplay {
+    font-size: 1.15rem;
+  }
 
-  /* --- Logo Upload (Tablet) --- */
-  .logoUploadBox {
-    grid-template-columns: 150px 1fr; /* 2 columns (เรียงแนวนอน) */
-    justify-items: start;
-  }
-  .logoUploadActions {
-    align-items: flex-start; /* Align to start */
-    width: auto;
-  }
-  .logoUploadActions > .button {
-    width: auto; /* Auto width */
-  }
+  /* --- Logo Upload (Tablet) --- */
+  .my-app-wrapper .logoUploadBox {
+    grid-template-columns: 150px 1fr; /* 2 columns (เรียงแนวนอน) */
+    justify-items: start;
+  }
+  .my-app-wrapper .logoUploadActions {
+    align-items: flex-start; /* Align to start */
+    width: auto;
+  }
+  .my-app-wrapper .logoUploadActions > .button {
+    width: auto; /* Auto width */
+  }
 
-  /* --- Submit Row (Tablet) --- */
-  .submitRow .button {
-    width: auto; /* Auto width */
-  }
+  /* --- Submit Row (Tablet) --- */
+  .my-app-wrapper .submitRow .button {
+    width: auto; /* Auto width */
+  }
 }
 
 
@@ -723,10 +733,10 @@ flex-basis: auto;
 * (นี่คือสไตล์สำหรับจอใหญ่ โน้ตบุ๊ก/เดสก์ท็อป จอที่กว้างกว่า 1024px)
 * ================================================================== */
 @media (min-width: 1024px) {
-  .pageCreate {
-    max-width: 600px; /* Widen create page */
-  }
-  .pageSetup {
-    max-width: 900px; /* Widen setup page */
-  }
+  .my-app-wrapper .pageCreate {
+    max-width: 600px; /* Widen create page */
+  }
+  .my-app-wrapper .pageSetup {
+    max-width: 900px; /* Widen setup page */
+  }
 }
