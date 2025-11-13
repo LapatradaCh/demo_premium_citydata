@@ -1,6 +1,10 @@
 /* --- 1. css/Home.module.css --- */
 /* (สำหรับ Home.js) */
 
+/* ============================================ */
+/* --- สไตล์หลัก (Desktop / Notebook) --- */
+/* ============================================ */
+
 .logoSectionTop {
   display: flex;
   align-items: center;
@@ -28,7 +32,7 @@
   white-space: nowrap;
 }
 
-/* --- Logout Button --- */
+/* --- Logout Button (Desktop) --- */
 .logoutIcon {
   position: absolute;
   top: 1rem;
@@ -38,7 +42,7 @@
 
 .logoutIcon button {
   display: flex;
-  width: 150px;
+  width: 140px; /* ความกว้างสำหรับ Desktop/Notebook */
   align-items: center;
   gap: 0.5rem;
   color: white;
@@ -84,7 +88,7 @@
   padding-bottom: 120px;
 }
 
-/* --- Bottom Nav --- */
+/* --- Bottom Nav (Desktop/Notebook Style) --- */
 .bottomNav {
   position: fixed;
   bottom: 16px;
@@ -119,7 +123,7 @@
   border-radius: 20px;
   transition: all 0.25s ease;
   display: inline-flex;
-  flex-direction: row;
+  flex-direction: row; /* Icon กับ Text แนวนอน */
   align-items: center;
   gap: 6px;
 }
@@ -152,6 +156,7 @@
   white-space: nowrap;
 }
 
+/* --- Sub Menu (Popup) --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -189,7 +194,11 @@
   font-weight: 600;
 }
 
-/* --- Media Queries --- */
+/* ============================================ */
+/* --- Media Queries (Tablet & Phone) --- */
+/* ============================================ */
+
+/* --- 1. สำหรับแท็บเล็ต และ โทรศัพท์ (จอเล็กกว่า 768px) --- */
 @media screen and (max-width: 768px) {
   .logoSectionTop {
     padding: 12px 20px;
@@ -201,16 +210,22 @@
   .unitName {
     font-size: 15px;
   }
+
+  /* Logout Button (Mobile) */
   .logoutIcon button {
+    width: auto; /* ปล่อยให้ความกว้างอัตโนมัติ */
     gap: 4px;
     padding: 5px 10px;
     font-size: 12px;
   }
 
+  /* Main Layout (Mobile) */
   .dashboardContent {
     padding: 16px 12px 100px 12px; /* ลด Padding และเพิ่มสำหรับ Nav */
   }
 
+  /* Bottom Nav (Mobile) */
+  /* เปลี่ยนจาก "เม็ด" ลอยกลางจอ เป็น "บาร์" เต็มจอด้านล่าง */
   .bottomNav {
     bottom: 0;
     left: 0;
@@ -222,8 +237,10 @@
     gap: 2px;
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
   }
+
+  /* ปุ่ม Bottom Nav (Mobile) */
   .bottomNav button {
-    flex-direction: column;
+    flex-direction: column; /* Icon อยู่บน Text */
     padding: 6px 8px;
     gap: 2px;
     border-radius: 8px;
@@ -237,29 +254,10 @@
   }
 }
 
+/* --- 2. สำหรับโทรศัพท์จอเล็ก (จอเล็กกว่า 480px) --- */
 @media screen and (max-width: 480px) {
   .logoutIcon {
     top: 15px;
     right: 15px;
-  }
-}
-
-@media (min-width: 480px) {
-  .logoutIcon button {
-    width: 120px;
-    font-size: 0.9rem;
-  }
-}
-@media (min-width: 768px) {
-  .logoutIcon button {
-    width: 140px;
-    font-size: 0.95rem;
-    padding: 0.4rem 0.8rem;
-  }
-}
-@media (min-width: 1024px) {
-  .logoutIcon button {
-    width: 140px;
-    font-size: 0.95rem;
   }
 }
