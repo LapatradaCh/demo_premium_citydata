@@ -79,7 +79,7 @@
   flex-direction: column;
   gap: 16px;
   max-height: 70vh;
-  overflow-y: auto; /* ! เพิ่ม: ทำให้เนื้อหาที่ล้น สกอลล์ได้ */
+  overflow-y: auto; /* ! คงไว้: ทำให้เนื้อหาที่ล้น สกอลล์ได้ */
 }
 
 /* === (SHARED) Filter Group === */
@@ -226,8 +226,8 @@
   font-size: 15px;
   font-weight: 600;
   color: #333;
-  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
-  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
+  overflow-wrap: break-word; /* ! คงไว้: ตัดคำ */
+  word-break: break-word; /* ! คงไว้: ตัดคำ */
 }
 .settingsItemText svg {
   font-size: 16px;
@@ -241,8 +241,8 @@
   font-weight: 500;
   color: #666;
   cursor: pointer;
-  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
-  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
+  overflow-wrap: break-word; /* ! คงไว้: ตัดคำ */
+  word-break: break-word; /* ! คงไว้: ตัดคำ */
 }
 .settingsItemValue svg {
   color: #aaa;
@@ -373,8 +373,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
-  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
+  overflow-wrap: break-word; /* ! คงไว้: ตัดคำ */
+  word-break: break-word; /* ! คงไว้: ตัดคำ */
 }
 
 .passwordUserIcon {
@@ -388,8 +388,8 @@
   font-size: 13px;
   color: #555;
   margin-left: 24px;
-  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
-  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
+  overflow-wrap: break-word; /* ! คงไว้: ตัดคำ */
+  word-break: break-word; /* ! คงไว้: ตัดคำ */
 }
 
 .passwordButtonGroup {
@@ -485,7 +485,7 @@
   .passwordButton {
     padding: 10px 14px;
     white-space: normal; /* ! สำคัญ: อนุญาตให้ข้อความในปุ่มขึ้นบรรทัดใหม่ได้ */
-    word-break: break-word; /* ! เพิ่ม: ตัดคำในปุ่มหากจำเป็น */
+    word-break: break-word; /* ! เพิ่ม: ช่วยตัดคำ */
     text-align: center; /* จัดกลางเผื่อข้อความขึ้นบรรทัดใหม่ */
     justify-content: center;
   }
@@ -493,5 +493,13 @@
   .passwordButton:hover {
     transform: none;
     box-shadow: none;
+  }
+  
+  /* ! FIX: เพิ่มการตัดคำสำหรับข้อความที่อาจล้น */
+  .passwordUserInfo,
+  .passwordUserPass,
+  .settingsItemText,
+  .settingsItemValue {
+    word-break: break-word;
   }
 }
