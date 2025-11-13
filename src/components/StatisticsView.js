@@ -64,8 +64,8 @@ const ProblemTypeStats = ({ organizationId }) => {
     const fetchChartData = async () => {
       const accessToken = localStorage.getItem('accessToken');
       if (!accessToken || !organizationId) {
-        setLoading(false); 
-        return; 
+        setLoading(false);
+        return;
       }
 
       try {
@@ -90,7 +90,7 @@ const ProblemTypeStats = ({ organizationId }) => {
         const formattedData = data.map(item => ({
           ...item,
           count: parseInt(item.count, 10)
-        })).sort((a, b) => b.count - a.count); 
+        })).sort((a, b) => b.count - a.count);
 
         setChartData(formattedData);
       } catch (err) {
@@ -105,7 +105,7 @@ const ProblemTypeStats = ({ organizationId }) => {
     };
 
     fetchChartData();
-  }, [organizationId]); 
+  }, [organizationId]);
 
   return (
     <div className={styles.chartBox}>
@@ -132,7 +132,7 @@ const SatisfactionBox = ({ organizationId }) => {
       const accessToken = localStorage.getItem('accessToken');
       if (!accessToken || !organizationId) {
         setLoading(false);
-        return; 
+        return;
       }
 
       try {
@@ -236,7 +236,7 @@ const SatisfactionBox = ({ organizationId }) => {
     stars: item.score,
     count: item.count,
     // (คำนวณ % จาก total_count)
-    percent: total_count > 0 ? (item.count / total_count) * 100 : 0 
+    percent: total_count > 0 ? (item.count / total_count) * 100 : 0
   }));
 
   // (Render UI จริง)
@@ -248,7 +248,7 @@ const SatisfactionBox = ({ organizationId }) => {
           
           {/* (ใช้ overall_average) */}
           <span className={styles.satisfactionBreakdownScore}>
-            {overall_average.toFixed(2)}/5 
+            {overall_average.toFixed(2)}/5
           </span>
           
           {/* (ใช้ helper renderStars) */}
@@ -274,14 +274,14 @@ const SatisfactionBox = ({ organizationId }) => {
                 className={styles.satisfactionBreakdownBarFill}
                 style={{
                   // (ใช้ % ที่คำนวณได้)
-                  width: `${item.percent.toFixed(2)}%`, 
+                  width: `${item.percent.toFixed(2)}%`,
                   backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
                 }}
               ></div>
             </div>
             <span className={styles.satisfactionBreakdownPercent}>
               {/* (ปัดเศษ % สำหรับแสดงผล) */}
-              {item.percent.toFixed(0)}% 
+              {item.percent.toFixed(0)}%
             </span>
           </div>
         ))}
@@ -318,6 +318,35 @@ const StatisticsView = ({ subTab, organizationId }) => {
     { id: "ปฏิเสธ", title: "ปฏิเสธ", note: "จัดการเอง {rejected_self} เรื่อง ({rejected_self_perc}%)", color: "#6c757d", cssClass: "stats-grey" },
   ];
 
+  // ==========================================================
+  // === (*** ❗️❗️ เพิ่มโค้ดนี้เข้าไป ❗️❗️ ***) ===
+  // ==========================================================
+  useEffect(() => {
+    // 1. ค้นหาแท็ก viewport ที่อาจมีอยู่
+    let viewportMeta = document.querySelector("meta[name=viewport]");
+
+    if (!viewportMeta) {
+      // 2. ถ้าไม่มี ให้สร้างขึ้นมาใหม่
+      viewportMeta = document.createElement("meta");
+      viewportMeta.name = "viewport";
+      document.head.appendChild(viewportMeta); // ฉีดเข้าไปใน <head>
+    }
+
+    // 3. ตั้งค่า content (นี่คือหัวใจสำคัญ)
+    viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
+
+    // 4. (ทางเลือก) นี่คือโค้ดสำหรับล้างค่า เมื่อออกจากหน้านี้
+    //    หากคุณต้องการให้หน้าอื่นกลับไปเป็นเหมือนเดิม (ไม่แนะนำ)
+    // return () => {
+    //   viewportMeta.setAttribute("content", ""); // ล้างค่าเมื่อออกจากหน้า
+    // };
+    
+  }, []); // [] หมายถึง ให้ทำงานแค่ครั้งเดียวเมื่อหน้านี้โหลด
+  // ==========================================================
+  // === (*** ⭐️ จบส่วนที่เพิ่ม ⭐️ ***) ===
+  // ==========================================================
+
+
   // (useEffect สำหรับดึงสถิติหลัก)
   useEffect(() => {
     const fetchStats = async () => {
@@ -329,13 +358,13 @@ const StatisticsView = ({ subTab, organizationId }) => {
         return;
       }
       if (!organizationId) {
-        setLoading(true); 
+        setLoading(true);
         return;
       }
 
       try {
         setLoading(true);
-        setError(null); 
+        setError(null);
 
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
           headers: {
@@ -370,7 +399,7 @@ const StatisticsView = ({ subTab, organizationId }) => {
     };
 
     fetchStats();
-  }, [organizationId]); 
+  }, [organizationId]);
 
   // (useEffect สำหรับดึงข้อมูล Staff Count)
   useEffect(() => {
@@ -404,10 +433,10 @@ const StatisticsView = ({ subTab, organizationId }) => {
           throw new Error(`Failed to fetch staff count: ${response.statusText}`);
         }
         
-        const data = await response.json(); 
+        const data = await response.json();
 
-        if (data.staff_count !== undefined) { 
-            setStaffCount(parseInt(data.staff_count, 10)); 
+        if (data.staff_count !== undefined) {
+            setStaffCount(parseInt(data.staff_count, 10));
         } else {
             throw new Error("Invalid data structure from staff API (expected 'staff_count')");
         }
@@ -424,7 +453,7 @@ const StatisticsView = ({ subTab, organizationId }) => {
     };
 
     fetchStaffCount();
-  }, [organizationId]); 
+  }, [organizationId]);
   // (*** END NEW useEffect for Staff Count ***)
 
 
