@@ -527,7 +527,7 @@ margin-top: 0;
   background: none;
   border: none;
   padding-right: 0;
-  width: auto; /* Allow shrinking */
+  width: 0; /* <-- ★★★ เปลี่ยนจาก auto เป็น 0 ครับ ★★★ */
   flex-grow: 1; /* Take up available space */
   overflow-x: auto; /* Allow scrolling for long codes */
   white-space: nowrap;
