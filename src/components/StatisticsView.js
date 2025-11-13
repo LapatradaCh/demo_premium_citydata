@@ -177,7 +177,7 @@ const SatisfactionBox = ({ organizationId }) => {
   const renderStars = (average) => {
     const fullStars = Math.floor(average);
     const halfStar = average - fullStars >= 0.5; // (Backend API ไม่มีดาวครึ่ง แต่เผื่อไว้)
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    // const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
     
     // (API นี้ดูเหมือนจะให้คะแนนเต็ม)
     // (เราจะปัดเศษตามปกติ)
