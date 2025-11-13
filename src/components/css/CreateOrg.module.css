@@ -531,6 +531,7 @@ margin-top: 0;
   flex-grow: 1; /* Take up available space */
   overflow-x: auto; /* Allow scrolling for long codes */
   white-space: nowrap;
+  min-width: 0; /* <-- นี่คือส่วนที่เพิ่มเข้ามาครับ */
 }
 
 .codeCopyButton {
