@@ -120,31 +120,151 @@ const ProblemTypeStats = ({ organizationId }) => {
 };
 
 
-// (Component 'SatisfactionBox' - ข้อมูลสมมติ)
-const SatisfactionBox = () => {
-  const breakdownData = [
-    { stars: 5, percent: 100 },
-    { stars: 4, percent: 0 },
-    { stars: 3, percent: 0 },
-    { stars: 2, percent: 0 },
-    { stars: 1, percent: 0 },
-  ];
+// (*** MODIFIED: Component 'SatisfactionBox' - ดึงข้อมูลจริง ***)
+const SatisfactionBox = ({ organizationId }) => {
+  const [satisfactionData, setSatisfactionData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // (useEffect สำหรับดึงข้อมูลความพึงพอใจ)
+  useEffect(() => {
+    const fetchSatisfactionData = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !organizationId) {
+        setLoading(false);
+        return; 
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // (*** MODIFIED: เปลี่ยน URL ไปยัง API overall-rating ***)
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
+          throw new Error(`Failed to fetch satisfaction data: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // (*** MODIFIED: เก็บข้อมูลที่ได้จาก API ลง State ***)
+        // (ข้อมูลที่ได้: { overall_average, total_count, breakdown: [...] })
+        setSatisfactionData(data);
+
+      } catch (err) {
+         if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+         } else {
+          setError(err.message);
+         }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSatisfactionData();
+  }, [organizationId]); // (ให้ re-fetch เมื่อ organizationId เปลี่ยน)
+
+  // (Helper function สำหรับ Render ดาวตามคะแนนเฉลี่ย)
+  const renderStars = (average) => {
+    const fullStars = Math.floor(average);
+    const halfStar = average - fullStars >= 0.5; // (Backend API ไม่มีดาวครึ่ง แต่เผื่อไว้)
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    
+    // (API นี้ดูเหมือนจะให้คะแนนเต็ม)
+    // (เราจะปัดเศษตามปกติ)
+    const roundedAverage = Math.round(average);
+
+    return (
+      <>
+        {[...Array(roundedAverage)].map((_, i) => <FaStar key={`full-${i}`} />)}
+        {[...Array(5 - roundedAverage)].map((_, i) => <FaStar key={`empty-${i}`} style={{ color: '#e0e0e0' }} />)}
+      </>
+    );
+  };
+
+  // (*** MODIFIED: ส่วน Render ที่ใช้ข้อมูลจริง ***)
+  
+  // (1. Loading State)
+  if (loading) {
+    return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // (2. Error State)
+  if (error) {
+    return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // (3. No Data State)
+  if (!satisfactionData || satisfactionData.total_count === 0) {
+     return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel}>ไม่มีข้อมูลความพึงพอใจ</p>
+        </div>
+      </div>
+    );
+  }
+
+  // (4. Success State - คำนวณ % สำหรับ breakdown)
+  const { overall_average, total_count, breakdown } = satisfactionData;
+
+  const breakdownWithPercent = breakdown.map(item => ({
+    stars: item.score,
+    count: item.count,
+    // (คำนวณ % จาก total_count)
+    percent: total_count > 0 ? (item.count / total_count) * 100 : 0 
+  }));
+
+  // (Render UI จริง)
   return (
     <div className={styles.chartBox}>
       <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
       <div className={styles.satisfactionBreakdownContainer}>
         <div className={styles.satisfactionBreakdownHeader}>
-          <span className={styles.satisfactionBreakdownScore}>5.00/5</span>
+          
+          {/* (ใช้ overall_average) */}
+          <span className={styles.satisfactionBreakdownScore}>
+            {overall_average.toFixed(2)}/5 
+          </span>
+          
+          {/* (ใช้ helper renderStars) */}
           <span className={styles.satisfactionBreakdownStars}>
-            <FaStar /> <FaStar /> <FaStar /> <FaStar /> <FaStar />
+            {renderStars(overall_average)}
           </span>
+          
+          {/* (ใช้ total_count) */}
           <span className={styles.satisfactionBreakdownTotal}>
-            (11 ความเห็น)
+            ({total_count} ความเห็น)
           </span>
+
         </div>
 
-        {breakdownData.map((item) => (
+        {/* (ใช้ breakdownWithPercent ที่คำนวณแล้ว) */}
+        {breakdownWithPercent.map((item) => (
           <div key={item.stars} className={styles.satisfactionBreakdownRow}>
             <span className={styles.satisfactionBreakdownLabel}>
               {item.stars} <FaStar />
@@ -153,13 +273,15 @@ const SatisfactionBox = () => {
               <div
                 className={styles.satisfactionBreakdownBarFill}
                 style={{
-                  width: `${item.percent}%`,
+                  // (ใช้ % ที่คำนวณได้)
+                  width: `${item.percent.toFixed(2)}%`, 
                   backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
                 }}
               ></div>
             </div>
             <span className={styles.satisfactionBreakdownPercent}>
-              {item.percent}%
+              {/* (ปัดเศษ % สำหรับแสดงผล) */}
+              {item.percent.toFixed(0)}% 
             </span>
           </div>
         ))}
@@ -167,6 +289,7 @@ const SatisfactionBox = () => {
     </div>
   );
 };
+// (*** END MODIFIED SatisfactionBox ***)
 
 
 // ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
@@ -280,17 +403,13 @@ const StatisticsView = ({ subTab, organizationId }) => {
           }
           throw new Error(`Failed to fetch staff count: ${response.statusText}`);
         }
-
-        // (*** MODIFIED ***)
-        // (API backend คืนค่า { "staff_count": "12" } ตามไฟล์ที่คุณให้มา)
+        
         const data = await response.json(); 
 
-        // (*** MODIFIED: เปลี่ยนจาก data.count เป็น data.staff_count ***)
         if (data.staff_count !== undefined) { 
-           setStaffCount(parseInt(data.staff_count, 10)); // (*** MODIFIED ***)
+            setStaffCount(parseInt(data.staff_count, 10)); 
         } else {
-           // (*** MODIFIED: อัปเดตข้อความ Error ให้ตรงกับความเป็นจริง ***)
-           throw new Error("Invalid data structure from staff API (expected 'staff_count')");
+            throw new Error("Invalid data structure from staff API (expected 'staff_count')");
         }
 
       } catch (err) {
@@ -358,13 +477,13 @@ const StatisticsView = ({ subTab, organizationId }) => {
         <div className={styles.statsDetailGrid}>
           {kpiStructure.map((kpi) => (
              <div
-               key={kpi.id}
-               className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
-               style={{ borderTopColor: kpi.color, opacity: 0.5 }}
+                key={kpi.id}
+                className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
+                style={{ borderTopColor: kpi.color, opacity: 0.5 }}
              >
                <div className={styles.statsDetailHeader}>
-                 <span className={styles.statsDetailTitle}>{kpi.title}</span>
-                 <span className={styles.statsDetailValue}>...</span>
+                  <span className={styles.statsDetailTitle}>{kpi.title}</span>
+                  <span className={styles.statsDetailValue}>...</span>
                </div>
                <span className={styles.statsDetailPercentage}>(...)</span>
              </div>
@@ -396,7 +515,10 @@ const StatisticsView = ({ subTab, organizationId }) => {
         {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
         <div className={styles.statsGridColumn}>
           <ProblemTypeStats organizationId={organizationId} />
-          <SatisfactionBox />
+          
+          {/* (*** MODIFIED: ส่ง organizationId ไปให้ SatisfactionBox ***) */}
+          <SatisfactionBox organizationId={organizationId} />
+        
         </div>
 
         {/* คอลัมน์ที่ 2: การปฏิบัติงาน */}
