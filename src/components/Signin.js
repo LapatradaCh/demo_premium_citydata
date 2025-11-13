@@ -135,7 +135,23 @@ const JoinORG = () => {
         if (orgCount > 1) {
           navigate("/home1");
         } else if (orgCount === 1) {
-          navigate("/home");
+          const sourceOrg = orgData[0];
+          console.log("data:",sourceOrg);
+          
+          // 2. สร้าง object ใหม่ 'singleOrg' โดยจัดโครงสร้างให้เหมือนในรูป
+          //    โดยเลือกดึงค่ามาจาก sourceOrg
+          const singleOrg = {
+            badge: sourceOrg.badge || null, // ถ้า badge ไม่มีค่า (undefined) ให้ใช้ null แทน
+            id: sourceOrg.organization_id,
+            img: sourceOrg.url_logo,
+            name: sourceOrg.organization_name
+          };
+          localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
+      
+          // 2.2 ค่อยนำทางไปหน้า Home
+           setTimeout(() => {
+                  navigate('/home');
+            }, 100);
         } else {
           navigate("/Signin");
         }
