@@ -1,781 +1,617 @@
-:root {
---color-bg: #ffffff;
---color-surface: #f8f9fa;
---color-primary: #0b0b0b;
---color-secondary: #3a3a3a;
---color-muted: #6c757d;
---color-border: #e5e7eb;
---color-border-hover: #ced4da;
-/* --- Colors --- */
---color-green: #28a745;
---color-green-dark: #218838;
---color-red: #dc3545;
---color-red-dark: #c82333;
---shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
---shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
+/* --- 4. css/StatisticsView.module.css --- */
+/* (สำหรับ StatisticsView.js) */
 
-/* --- Base --- */
---color-focus-ring: rgba(0, 0, 0, 0.1);
---radius-card: 1rem;
---radius-input: 0.5rem; /* 8px */
---shadow-card: 0 4px 12px rgba(0,0,0,0.05);
---shadow-hover: 0 8px 20px rgba(0,0,0,0.08);
---shadow-button: 0 4px 10px rgba(0, 0, 0, 0.1);
---transition: all 0.2s ease-in-out;
-}
-
-/* ==================================================================
- * Global Container
- * ================================================================== */
-.container {
-display: flex;
-justify-content: center;
-align-items: center; /* Vertical centering */
-min-height: 100vh;
-padding: 1rem; /* Smaller padding for mobile */
-background: var(--color-surface);
-font-family: "Sarabun", sans-serif;
-box-sizing: border-box;
-}
-
-/* ==================================================================
- * Page Layout
- * ================================================================== */
-.page {
-width: 100%;
-background: var(--color-bg);
-border-radius: var(--radius-card);
-padding: 1.5rem; /* Smaller padding for mobile */
-box-shadow: var(--shadow-card);
-border: 1px solid var(--color-border);
-transition: var(--transition);
-}
-.pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; }
-.page:hover {
-box-shadow: var(--shadow-hover);
-transform: translateY(-2px);
-}
-
-/* ==================================================================
- * Page Header
- * ================================================================== */
-.pageHeader {
-text-align: center;
-margin-bottom: 2rem; /* Adjusted margin */
-}
-.pageTitle {
-font-size: 1.75rem; /* Adjusted for mobile */
-font-weight: 700;
-color: var(--color-primary);
-margin: 0;
-display: flex;
-flex-wrap: wrap;
-align-items: center;
-justify-content: center;
-gap: 0.5rem 1rem;
-line-height: 1.3;
-}
-.pageSubtitle {
-font-size: 1rem; /* Adjusted for mobile */
-font-weight: 400;
-color: var(--color-muted);
-margin-top: 0.5rem;
-}
-.orgNameHighlight {
-color: var(--color-primary);
-font-weight: 700;
-}
-
-.editNameButton {
-background: none;
-border: 1px solid var(--color-border);
-cursor: pointer;
-color: var(--color-secondary);
-font-size: 0.9rem; /* Adjusted */
-font-weight: 500;
-font-family: "Sarabun", sans-serif;
-padding: 0.4rem 0.8rem;
-border-radius: var(--radius-input);
-transition: var(--transition);
-white-space: nowrap;
-box-shadow: var(--shadow-card);
-margin-top: 0.5rem; /* Add space when wrapped */
-}
-.editNameButton:hover {
-background-color: var(--color-surface);
-color: var(--color-primary);
-border-color: var(--color-primary);
-box-shadow: var(--shadow-hover);
-transform: translateY(-1px);
-}
-
-/* ==================================================================
- * Forms
- * ================================================================== */
-.form {
-display: flex;
-flex-direction: column;
-gap: 1.5rem;
-}
-.formGroup {
-display: flex;
-flex-direction: column;
-gap: 0.5rem;
-}
-.label {
-font-weight: 600;
-font-size: 0.95rem;
-color: var(--color-secondary);
-}
-.label.required::after {
-content: " *";
-color: var(--color-red);
-margin-left: 0.25rem;
-}
-.input, .select {
-width: 100%;
-padding: 0.75rem 1rem;
-font-size: 1rem;
-border-radius: var(--radius-input);
-border: 1px solid var(--color-border);
-background: var(--color-surface);
-color: var(--color-primary);
-transition: var(--transition);
-box-sizing: border-box;
-}
-.input:hover, .select:hover {
-border-color: var(--color-border-hover);
-}
-.input:focus, .select:focus {
-outline: none;
-background: var(--color-bg);
-border-color: var(--color-primary);
-box-shadow: 0 0 0 3px var(--color-focus-ring);
-}
-.input::placeholder {
-color: var(--color-muted);
-font-style: italic;
-opacity: 0.8;
-}
-.helpText {
-font-size: 0.9rem;
-color: var(--color-muted);
-text-align: center;
-margin-top: -0.5rem;
-}
-.helpTextSmall {
-font-size: 0.85rem;
-color: var(--color-muted);
-margin-top: 0.5rem;
-}
-
-/* ==================================================================
- * Buttons
- * (Mobile-First Styles: Styles for phones)
- * (สไตล์สำหรับมือถือ: ปุ่มจะเรียงแนวตั้ง)
- * ================================================================== */
-.buttonGroup {
-margin-top: 1rem;
-display: flex;
-flex-direction: column; /* Mobile-first: Stack buttons (เรียงแนวตั้งสำหรับมือถือ) */
-justify-content: center;
-gap: 0.75rem; /* Tighter gap for stacked buttons */
-}
-.button {
-width: 100%;
-padding: 0.75rem 1.5rem;
-border-radius: var(--radius-input);
-font-weight: 600;
-font-size: 1rem;
-cursor: pointer;
-transition: var(--transition);
-border: 1px solid transparent;
-text-align: center;
-text-decoration: none;
-display: inline-flex;
-justify-content: center;
-align-items: center;
-gap: 0.5rem;
-}
-/* This targets buttons *only* inside .buttonGroup */
-.buttonGroup > .button {
-flex-grow: 1;
-flex-basis: 0;
-}
-.button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
-}
-
-/* Accessibility focus style */
-.button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-primary);
-}
-
-
-/* (Green Button) */
-.btnPrimary {
-background-color: var(--color-green);
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
-}
-.btnPrimary:hover:not(:disabled) {
-background-color: var(--color-green-dark);
-border-color: var(--color-green-dark);
-transform: translateY(-2px);
-}
-
-/* (Red Button) */
-.btnPrimaryBack {
-background-color: var(--color-red);
-color: white;
-border-color: var(--color-red);
-box-shadow: var(--shadow-button-red);
-}
-.btnPrimaryBack:hover:not(:disabled) {
-background-color: var(--color-red-dark);
-border-color: var(--color-red-dark);
-transform: translateY(-2px);
-}
-
-/* (Save Button - Accordion) - Set to Green */
-.btnSuccess {
-background-color: var(--color-green);
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
-}
-.btnSuccess:hover:not(:disabled) {
-background-color: var(--color-green-dark);
-border-color: var(--color-green-dark);
-transform: translateY(-2px);
-}
-
-/* (Choose File Button) - Set to White */
-.btnSecondary {
-background-color: var(--color-bg);
-color: var(--color-primary);
-border-color: var(--color-border-hover);
-}
-.btnSecondary:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
-}
-
-/* ==================================================================
- * Setup Page: Accordion (Mobile-First Styles)
- * (สไตล์สำหรับมือถือ)
- * ================================================================== */
-.setupContainer {
-margin-top: 2rem; /* Adjusted margin */
-}
-.setupTitle {
-font-size: 1.25rem; /* Adjusted for mobile */
-font-weight: 600;
-color: var(--color-secondary);
-margin-bottom: 1.5rem;
-text-align: center;
-}
-.accordion {
-display: flex;
-flex-direction: column;
-gap: 1rem;
-}
-.accordionItem {
-border: 1px solid var(--color-border);
-border-radius: var(--radius-card); /* 1rem */
-overflow: hidden;
-background: var(--color-bg);
-transition: var(--transition);
-box-shadow: none;
-}
-.accordionItem:hover {
-  border-color: var(--color-border-hover);
-}
-
-.accordionHeader {
-display: flex;
-align-items: center;
-gap: 1rem;
-width: 100%;
-padding: 1.25rem; /* Adjusted padding */
-background: var(--color-bg);
-border: none;
-cursor: pointer;
-text-align: left;
-transition: var(--transition);
-}
-.accordionHeader:hover {
-  background-color: var(--color-surface);
-}
-
-.accordionIcon {
-flex-shrink: 0;
-width: 2.5rem; /* Adjusted size */
-height: 2.5rem; /* Adjusted size */
-border-radius: var(--radius-input); /* 8px */
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.25rem; /* Adjusted size */
-transition: var(--transition);
-}
-
-/* Icon Background Colors */
-.iconBgCode {
-  background-color: #e6f7ff;
-  color: #0056b3;
-}
-.iconBgLogo {
-  background-color: #e6fff0;
-  color: #006421;
-}
-.iconBgLocation {
-  background-color: #fff0f0;
-  color: #c82333;
-}
-.iconBgType {
-  background-color: #fff8e6;
-  color: #b38000;
-}
-
-
-.accordionTitleBox {
-flex-grow: 1;
-}
-.accordionTitle {
-font-size: 1.05rem; /* Adjusted size */
-font-weight: 600;
-color: var(--color-primary);
-margin: 0;
-}
-.accordionSubtitle {
-font-size: 0.9rem;
-color: var(--color-muted);
-margin: 0;
-margin-top: 0.2rem;
-}
-.accordionArrow {
-width: 1.25rem;
-height: 1.25rem;
-color: var(--color-muted);
-transition: transform 0.3s ease-in-out;
-flex-shrink: 0;
-}
-.rotate180 {
-transform: rotate(180deg);
-}
-
-/* === Accordion Content === */
-.accordionContentWrapper {
-display: grid;
-grid-template-rows: 0fr;
-transition: grid-template-rows 0.4s ease-in-out;
-}
-.accordionContentWrapper.open {
-grid-template-rows: 1fr;
-}
-.accordionContent {
-overflow: hidden;
-padding: 0 1.25rem; /* Adjusted padding */
-background: var(--color-bg);
-}
-
-/* * Shared class for all accordion inner content
- * (Applied to forms, but not the code box)
- */
-.accordionInnerContent {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-
-.contentTitle {
-font-size: 1.25rem; /* Adjusted size */
-font-weight: 600;
-color: var(--color-primary);
-margin-bottom: 1.5rem;
-}
-.contentForm {
-display: flex;
-flex-direction: column;
-gap: 1.25rem;
-}
-
-/* === Logo Upload (Mobile Style) === */
-.logoUploadBox {
-display: grid;
-grid-template-columns: 1fr; /* Mobile-first: Stack (เรียงแนวตั้ง) */
-align-items: center;
-gap: 1.5rem;
-padding: 0;
-border: none;
-background: none;
-justify-items: center; /* Center preview */
-}
-
-.logoPreview {
-width: 150px;
-height: 150px;
-object-fit: contain;
-border-radius: var(--radius-card); /* 1rem, square-ish */
-border: 2px solid var(--color-border);
-background-color: var(--color-surface);
-}
-.hiddenFileInput {
-display: none;
-}
-.logoUploadActions {
+/* === (SHARED) Chart Box === */
+.chartBox {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  align-items: center; /* Mobile-first: Center buttons */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-grow: 1;
+}
+
+.chartBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+.chartBoxTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+/* === (SHARED) Horizontal Bar Chart === */
+.mockHorizontalBarChart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  flex-grow: 1;
+  justify-content: center;
+}
+.mockHBarItem {
+  display: grid;
+  grid-template-columns: 140px 1fr 60px;
+  gap: 12px;
+  align-items: center;
+}
+.mockHBarLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  padding-right: 8px;
+}
+.mockHBar {
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mockHBarFill {
+  height: 100%;
+  background: #007bff;
+  border-radius: 4px 0 0 4px;
+  transition: width 0.5s ease-out;
+}
+.mockHBar:hover .mockHBarFill {
+  filter: brightness(1.1);
+}
+.mockHBarValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* === (SHARED) Satisfaction Box === */
+.satisfactionBreakdownContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex-grow: 1;
+  padding-top: 10px;
+}
+
+.satisfactionBreakdownHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.satisfactionBreakdownScore {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+}
+
+.satisfactionBreakdownStars {
+  font-size: 20px;
+  color: #ffc107;
+  display: flex;
+  gap: 2px;
+}
+
+.satisfactionBreakdownTotal {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.satisfactionBreakdownRow {
+  display: grid;
+  grid-template-columns: 35px 1fr 50px; /* Label | Bar | Percent */
+  align-items: center;
+  gap: 10px;
+}
+
+.satisfactionBreakdownLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.satisfactionBreakdownLabel svg {
+  color: #ffc107;
+  font-size: 14px;
+}
+
+.satisfactionBreakdownBar {
+  height: 14px;
+  background: #f0f0f0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.satisfactionBreakdownBarFill {
+  height: 100%;
+  background: #ffc107;
+  border-radius: 7px;
+  transition: width 0.5s ease-out;
+}
+
+.satisfactionBreakdownPercent {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* --- StatisticsView Specific --- */
+.statsContainer {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
   width: 100%;
 }
-.logoUploadActions > .button {
-  width: 100%; /* Mobile-first: Full width */
-}
-.btnSave {
-margin-top: 0;
+
+.statsPageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
 }
 
+.statsSubHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
 
-/* === Code Box (in Accordion) - REDESIGNED === */
-.codeBoxContent {
+.statsCurrentDate {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.statsSubtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+}
+
+.statsFilterBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.kpiFilterToggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* (SHARED) Filter Group */
+.filterGroup {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; /* Reduced gap */
-  /* This component now handles its own top border and padding */
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  gap: 6px;
+  min-width: 0;
+  position: relative;
+}
+.filterGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
+}
+.filterGroup select {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
 }
 
-.codeBoxHeader {
+.statsFilterBar .filterGroup {
+  margin-bottom: 0;
+  min-width: 160px;
+}
+.statsFilterBar .filterGroup label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  padding-left: 0;
+}
+.statsFilterBar .filterGroup select {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 600;
+  border-radius: 10px;
+  border-color: #ddd;
+  background-color: #fff;
+}
+
+.compareFilterToggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.compareFilterToggles span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+/* (SHARED) Toggle Button */
+.toggleButton {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+.toggleButton:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+.toggleButtonActive {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: default;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statsDetailGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.statsDetailBox {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  border-top: 4px solid #007bff;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/*
+.statsDetailBox.stats-cream {
+  border-top-color: #f39c12;
+  background-color: #fdf7e4;
+}
+*/
+.statsDetailBox.stats-red {
+  border-top-color: #dc3545;
+  background-color: #fdeeee;
+}
+.statsDetailBox.stats-purple {
+  border-top-color: #9b59b6 !important;
+  background-color: #f2ebf5;
+}
+.statsDetailBox.stats-yellow {
+  border-top-color: #ffc107;
+  background-color: #fff8e6;
+}
+.statsDetailBox.stats-green {
+  border-top-color: #057a55;
+  background-color: #eaf7ec;
+}
+.statsDetailBox.stats-blue {
+  border-top-color: #007bff;
+  background-color: #e6f2ff;
+}
+.statsDetailBox.stats-mint {
+  border-top-color: #20c997 !important;
+  background-color: #e6f9f3;
+}
+/* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
+.statsDetailBox.stats-grey {
+  border-top-color: #6c757d;
+  background-color: #f8f9fa;
+}
+
+.statsDetailBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+.statsDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.statsDetailTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.statsDetailBox:hover .statsDetailTitle {
+  color: #000;
+}
+
+.statsDetailValue {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+}
+
+.statsDetailPercentage {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+}
+
+.statsDetailNote {
+  font-size: 11px;
+  color: #777;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statsBottomGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.statsGridColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.problemTypeContent {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
+.opsKpi {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* NEW: Pill design for switch */
-  background-color: var(--color-surface);
-  border-radius: 9999px; /* Pill shape */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
+  background: #e6f2ff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #d4e8ff;
 }
-
-.codeBoxType {
-  font-size: 0.9rem; /* Adjusted size */
+.opsKpi span {
+  font-size: 15px;
   font-weight: 600;
-  color: var(--color-primary);
-  padding: 0 0.75rem; /* Add padding */
+  color: #004a99;
+}
+.opsKpi strong {
+  font-size: 20px;
+  color: #000;
 }
 
-.codeBoxSwitch {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  text-decoration: underline;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: "Sarabun", sans-serif;
-  /* NEW: Style as pill button */
-  background-color: var(--color-bg);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid var(--color-border);
-  transition: var(--transition);
-}
-.codeBoxSwitch:hover {
-  color: var(--color-secondary);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
-}
-
-/*
- * === Code Box Wrapper (Mobile: Stacked) ===
- * (สำหรับจอมือถือเล็ก: เรียงแนวตั้ง)
- */
-.codeBoxDisplayWrapper {
-  position: relative;
+.opsDetail {
   display: flex;
-  flex-direction: column; /* Mobile-first: เรียงแนวตั้ง */
-  gap: 0.5rem; /* ช่องว่างระหว่างกล่องรหัสกับปุ่ม */
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-input); /* สี่เหลี่ยมมนธรรมดา */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 13px;
+  padding: 14px 16px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  gap: 4px;
 }
 
-/*
- * === Code Box Display (Mobile: Stacked) ===
- */
-.codeBoxDisplay {
-  font-family: "Menlo", "Consolas", monospace;
-  font-size: 1rem; /* Adjusted size */
-  font-weight: 700;
-  text-align: left;
-  letter-spacing: 0.05em;
-  color: var(--color-primary);
-  padding: 0.5rem 0.75rem; /* Padding ภายใน */
-  background: var(--color-bg); /* พื้นหลังสีขาว */
-  border: 1px solid var(--color-border); /* มีขอบของตัวเอง */
-  border-radius: var(--radius-input); /* ขอบมน */
-  width: 100%; /* กว้างเต็ม */
-  flex-grow: 1; /* Not really needed in column, but okay */
-  overflow-x: auto; /* Allow scrolling for long codes */
-  white-space: nowrap;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-/*
- * === Code Box Copy Button (Mobile: Stacked) ===
- */
-.codeCopyButton {
-  position: static;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-input); /* สี่เหลี่ยมมน */
+.opsDetail.clickable {
   cursor: pointer;
-  padding: 0.35rem 0.75rem;
-  color: var(--color-secondary);
-  display: inline-flex;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+.opsDetail.clickable:hover {
+  background: #f0f0f0;
+}
+.opsDetailHeader {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center; /* (Mobile) ปุ่มอยู่ตรงกลาง */
-  gap: 0.5rem;
+  width: 100%;
+}
+.opsDetailHeader span:first-child {
+  color: #555;
   font-weight: 500;
-  font-size: 0.9rem;
-  transition: var(--transition);
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  width: 100%; /* (Mobile) กว้างเต็ม */
+  font-size: 13px;
 }
-.codeCopyButton:hover {
-  background: var(--color-surface);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
+.opsDetailHeader span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
 }
-.codeCopyButton svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
+.opsToggleIcon {
+  font-size: 12px;
+  color: #555;
 }
-.codeCopyButton.copied {
-  color: var(--color-green);
-  border-color: var(--color-green);
-  background-color: #e6fff0;
+.opsUnitList {
+  width: 100%;
+  padding: 10px 0 0 0;
+  margin-top: 10px;
+  border-top: 1px dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-.codeCopyButton.copied svg {
-  stroke: var(--color-green);
-}
-
-
-/* === Form Grid (in Accordion) (Mobile Style) === */
-.formGrid {
-display: grid;
-grid-template-columns: 1fr; /* Mobile-first: 1 column (เรียงแนวตั้ง) */
-gap: 1.25rem;
-}
-.submitRow {
-grid-column: 1 / -1;
-display: flex;
-justify-content: flex-end;
-margin-top: 1rem;
-}
-.submitRow .button {
-width: 100%; /* Full width on mobile */
-flex-grow: 0;
-flex-basis: auto;
+.opsUnitItem {
+  font-size: 13px;
+  color: #666;
+  padding-left: 16px;
 }
 
-/* === Geo Button & Error (Mobile Style) === */
-.btnGeo {
-background-color: var(--color-bg);
-color: var(--color-primary);
-border: 1px solid var(--color-border-hover);
-flex-grow: 0;
-flex-basis: auto;
+.opsDetail span:first-child {
+  color: #555;
+  font-weight: 500;
+  font-size: 13px;
 }
-.btnGeo:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
+.opsDetail > span:last-child {
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
 }
 
-.errorMessage {
-color: var(--color-red);
-font-size: 0.9rem;
-margin-top: 0.5rem;
-text-align: center;
-}
-.geoButtonContainer {
-grid-column: 1 / -1;
-text-align: center;
-display: flex;
-flex-direction: column;
-align-items: center;
-}
-.geoButtonContainer .button {
-width: 100%; /* Full width on mobile */
-min-width: 200px;
-flex-grow: 0;
-flex-basis: auto;
+.statsLoadingOrErrorError {
+  background: #fdeeee;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
-/* ==================================================================
-* Media Queries (Phone landscape / Small Tablet)
-* (จอ 480px ขึ้นไป: เปลี่ยน Code Box เป็นแนวนอน)
-* ================================================================== */
-@media (min-width: 480px) {
-  /*
-  * === Code Box Wrapper (480px+: Horizontal) ===
-  * (จอ 480px ขึ้นไป: เปลี่ยนเป็นแนวนอนทรงแคปซูล)
-  */
-  .codeBoxDisplayWrapper {
-    flex-direction: row; /* (480px+) เรียงแนวนอน */
-    border-radius: 9999px; /* (480px+) ทรงแคปซูล */
-    gap: 0; /* (480px+) ไม่มีช่องว่าง */
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+/* --- Media Queries --- */
+@media screen and (max-width: 1024px) {
+  .statsContainer {
+    align-self: unset;
   }
-
-  /*
-  * === Code Box Display (480px+: Horizontal) ===
-  */
-  .codeBoxDisplay {
-    padding: 0 0.75rem; /* (480px+) Padding แนวนอน */
-    background: none; /* (480px+) ไม่มีพื้นหลัง */
-    border: none; /* (480px+) ไม่มีขอบ */
-    width: 0; /* (480px+) ★★★ สำคัญมาก ★★★ */
-    flex-grow: 1; /* (480px+) ยืดเต็มที่ */
-    font-size: 1.15rem;
+  .statsDetailGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
-
-  /*
-  * === Code Box Copy Button (480px+: Horizontal) ===
-  */
-  .codeCopyButton {
-    width: auto; /* (480px+) กว้างอัตโนมัติ */
-    border-radius: 9999px; /* (480px+) ทรงแคปซูล */
-    margin-left: 0.25rem; /* (480px+) ★★★ สร้างช่องว่าง ★★★ */
-    justify-content: center; /* (Reset) */
+  .statsBottomGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statsPageTitle,
+  .statsCurrentDate {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้หัวเรื่องตัดคำในจอแท็บเล็ต) */
   }
 }
 
-
-/* ==================================================================
-* Media Queries (TABLET Styles)
-* (These styles apply when screen width is 768px or wider)
-* (นี่คือสไตล์สำหรับแท็บเล็ต จอที่กว้างกว่า 768px)
-* ================================================================== */
-@media (min-width: 768px) {
-  .container {
-    padding: 3rem 1rem; /* Restore padding */
+@media screen and (max-width: 480px) {
+  .statsDetailGrid {
+    grid-template-columns: 1fr;
   }
-  .page {
-    padding: 3rem;
+  .statsPageTitle {
+    font-size: 24px;
   }
-  .pageTitle {
-    font-size: 2.25rem;
-    gap: 0.75rem 1.5rem;
+  .mockHBarItem {
+    grid-template-columns: 100px 1fr 50px;
+    gap: 8px;
   }
-  .pageSubtitle {
-    font-size: 1.1rem;
+  .mockHBarLabel {
+    font-size: 12px;
   }
-  .editNameButton {
-    margin-top: 0; /* Reset margin */
+  .chartBox {
+    padding: 16px;
   }
 
-  /* --- Forms (Tablet) --- */
-  .formGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์ */
-    gap: 1.5rem;
-  }
-  .geoButtonContainer {
-    grid-column: 1 / -1;
-  }
-  .geoButtonContainer .button {
-    width: auto; /* Auto width on desktop */
+  .statsDetailTitle {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
+    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
   }
 
-  /* --- Buttons (Tablet) --- */
-  .buttonGroup {
-    flex-direction: row; /* Side-by-side (เรียงแนวนอน) */
-    justify-content: center;
-    gap: 1rem;
-  }
-  .buttonGroup > .button {
-    width: auto;
-    min-width: 180px;
-    flex-grow: 0;
-    flex-basis: auto;
-  }
-
-  /* --- Accordion (Tablet) --- */
-  .accordionHeader {
-    padding: 1.25rem 1.5rem;
-  }
-  .accordionContent {
-    padding: 0 1.5rem;
-  }
-  .accordionIcon {
-    width: 2.75rem;
-    height: 2.75rem;
-    font-size: 1.5rem;
-  }
-  .accordionTitle {
-    font-size: 1.1rem;
-  }
-  .contentTitle {
-    font-size: 1.5rem;
-  }
-  .codeBoxType {
-    font-size: 1rem;
-  }
-  /* .codeBoxDisplay (Size is set at 480px) */
-
-
-  /* --- Logo Upload (Tablet) --- */
-  .logoUploadBox {
-    grid-template-columns: 150px 1fr; /* 2 columns (เรียงแนวนอน) */
-    justify-items: start;
-  }
-  .logoUploadActions {
-    align-items: flex-start; /* Align to start */
-    width: auto;
-  }
-  .logoUploadActions > .button {
-    width: auto; /* Auto width */
-  }
-
-  /* --- Submit Row (Tablet) --- */
-  .submitRow .button {
-    width: auto; /* Auto width */
-  }
-}
-
-
-/* ==================================================================
-* Media Queries (NOTEBOOK / DESKTOP Styles)
-* (These styles apply when screen width is 1024px or wider)
-* (นี่คือสไตล์สำหรับจอใหญ่ โน้ตบุ๊ก/เดสก์ท็อป จอที่กว้างกว่า 1024px)
-* ================================================================== */
-@media (min-width: 1024px) {
-  .pageCreate {
-    max-width: 600px; /* Widen create page */
-  }
-  .pageSetup {
-    max-width: 900px; /* Widen setup page */
+  .compareFilterToggles span {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ข้อความ "เปรียบเทียบ" ตัดคำ) */
   }
 }
