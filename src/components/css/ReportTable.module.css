@@ -462,4 +462,36 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
+
+  /* --- START: ส่วนที่เพิ่มเข้ามาแก้ Overflow --- */
+
+  /* 1. เปลี่ยน Layout ของการ์ดในมือถือ */
+  .reportTableRow {
+    grid-template-columns: 70px 1fr; /* เหลือ 2 คอลัมน์ (รูป + เนื้อหา) */
+    grid-template-areas:
+      "image header"
+      "image details"
+      "image location"
+      "status status"  /* ย้าย status มาแถวล่าง (เต็มความกว้าง) */
+      "toggle toggle";
+    gap: 6px 10px; /* ลดช่องว่างลงเล็กน้อย */
+  }
+
+  /* 2. จัดการ Status ที่ย้ายมาแถวล่าง */
+  .reportStatusGroup {
+    flex-direction: row; /* เรียงแนวนอน */
+    flex-wrap: wrap; /* แต่ให้ "ตัดคำ" ขึ้นบรรทัดใหม่ได้ถ้าไม่พอ */
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 8px;
+    border-top: 1px dashed #ddd; /* กั้นส่วน */
+    margin-top: 4px;
+  }
+
+  /* 3. บังคับให้รายละเอียด (เช่น ผู้แจ้ง, ประเภท) ซ้อนกันแนวตั้ง */
+  .mainDetails {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  /* --- END: ส่วนที่เพิ่มเข้ามาแก้ Overflow --- */
 }
