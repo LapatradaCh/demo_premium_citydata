@@ -1,5 +1,5 @@
-/* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (สำหรับ OrganizationStatisticsView.js) */
+/* --- 4. css/StatisticsView.module.css --- */
+/* (สำหรับ StatisticsView.js) */
 
 /* === (SHARED) Chart Box === */
 .chartBox {
@@ -13,10 +13,12 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex-grow: 1;
 }
+
 .chartBox:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
+
 .chartBoxTitle {
   font-size: 16px;
   font-weight: 600;
@@ -25,15 +27,6 @@
   padding-bottom: 12px;
   border-bottom: 1px solid #f0f0f0;
   flex-shrink: 0;
-}
-.chartNote {
-  font-size: 13px;
-  font-weight: 500;
-  color: #888;
-  font-style: italic;
-  text-align: right;
-  margin-top: -24px;
-  margin-bottom: 10px;
 }
 
 /* === (SHARED) Horizontal Bar Chart === */
@@ -85,13 +78,52 @@
   white-space: nowrap;
 }
 
-/* === (SHARED) Satisfaction Breakdown Row (for Card) === */
+/* === (SHARED) Satisfaction Box === */
+.satisfactionBreakdownContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex-grow: 1;
+  padding-top: 10px;
+}
+
+.satisfactionBreakdownHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.satisfactionBreakdownScore {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+}
+
+.satisfactionBreakdownStars {
+  font-size: 20px;
+  color: #ffc107;
+  display: flex;
+  gap: 2px;
+}
+
+.satisfactionBreakdownTotal {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
 .satisfactionBreakdownRow {
   display: grid;
   grid-template-columns: 35px 1fr 50px; /* Label | Bar | Percent */
   align-items: center;
   gap: 10px;
 }
+
 .satisfactionBreakdownLabel {
   font-size: 14px;
   font-weight: 600;
@@ -101,21 +133,26 @@
   gap: 4px;
   justify-content: flex-end;
 }
+
 .satisfactionBreakdownLabel svg {
-  display: none; /* (Hide star in card view) */
+  color: #ffc107;
+  font-size: 14px;
 }
+
 .satisfactionBreakdownBar {
-  height: 12px; /* (Thinner bar for card view) */
+  height: 14px;
   background: #f0f0f0;
-  border-radius: 6px;
+  border-radius: 7px;
   overflow: hidden;
 }
+
 .satisfactionBreakdownBarFill {
   height: 100%;
   background: #ffc107;
-  border-radius: 6px;
+  border-radius: 7px;
   transition: width 0.5s ease-out;
 }
+
 .satisfactionBreakdownPercent {
   font-size: 13px;
   font-weight: 600;
@@ -124,501 +161,440 @@
   white-space: nowrap;
 }
 
-/* --- OrgStatisticsView Specific --- */
-.orgStatsContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
+/* --- StatisticsView Specific --- */
+.statsContainer {
   width: 100%;
   max-width: 1200px;
-  align-items: flex-start;
-  min-height: 60vh;
-}
-
-.orgStatsSidebar {
-  flex-shrink: 0;
-  width: 240px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  padding: 16px;
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-.orgStatsMenuTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 12px 0;
-  padding: 0 8px 12px 8px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.orgStatsMenuNav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.orgStatsMenuButton {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  background: none;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-}
-
-.orgStatsMenuButton svg {
-  font-size: 16px;
-  color: #555;
-  transition: color 0.2s ease;
-}
-
-.orgStatsMenuButton:hover {
-  background-color: #f5f5f5;
-  color: #000;
-}
-
-.orgStatsMenuButton.active {
-  background-color: #000;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.orgStatsMenuButton.active svg {
-  color: #fff;
-}
-
-.orgStatsContent {
-  flex-grow: 1;
-  min-width: 0;
-}
-
-.orgGraphDashboard {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 100%;
-  flex-grow: 1;
-  align-items: stretch;
+  /* === FIX: ป้องกันการล้นแนวนอนที่ไม่คาดคิด === */
+  overflow-x: hidden;
 }
 
-/* --- Stacked Bar Chart --- */
-.mockStackedBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  padding: 10px 0;
-}
-
-.mockStackedHBar {
-  height: 24px;
-  background: #f0f0f0;
-  border-radius: 6px;
-  overflow: hidden;
-  display: flex;
-  width: 100%;
-}
-
-.mockStackedBarSegment {
-  height: 100%;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-.mockStackedBarSegment:hover {
-  filter: brightness(1.1);
-}
-
-.mockStackedBarLegend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 8px 16px;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-  font-size: 12px;
-  color: #555;
-}
-
-.mockStackedBarLegend span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.mockStackedBarLegend span span {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-}
-
-/* --- Report Card View --- */
-.reportCardViewContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  width: 100%;
-  max-width: 1200px;
-  align-items: flex-start;
-  min-height: 70vh;
-}
-
-.reportCardSidebar {
-  flex-shrink: 0;
-  width: 240px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  padding: 16px;
-}
-
-.reportCardSidebarTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 12px 0;
-  padding: 0 8px 12px 8px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.reportCardMenuNav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.reportCardMenuButton {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  background: none;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-}
-.reportCardMenuButton:hover {
-  background-color: #f5f5f5;
-  color: #000;
-}
-.reportCardMenuButton.active {
-  background-color: #f2f2ff;
-  color: #5d40db;
-  font-weight: 700;
-}
-.reportCardMenuButton svg {
-  font-size: 16px;
-  color: inherit;
-}
-
-.reportCardMainContent {
-  flex-grow: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.reportCardFilterBar {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  padding: 10px 0;
-}
-.reportCardFilterBar .filterGroup {
-  flex-grow: 1;
-  min-width: 150px;
-}
-.reportCardFilterBar select {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-}
-.searchButton {
-  background-color: #5d40db;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.2s;
-}
-.searchButton:hover {
-  background-color: #4a30b4;
-}
-
-.reportCardList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.reportCardItem {
-  background: #ffffff;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-.reportCardItem:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-}
-
-.reportCardHeader {
+.statsHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
 }
 
-.reportCardTitleGroup {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.reportCardRank {
-  font-size: 24px;
-  font-weight: 800;
-  color: #5d40db;
-  padding-right: 12px;
-  border-right: 2px solid #5d40db;
-}
-
-.reportCardTitle {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.reportCardName {
-  font-size: 18px;
+.statsPageTitle {
+  margin: 0;
+  font-size: 28px;
   font-weight: 700;
   color: #111;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.2s;
-}
-.reportCardName svg {
-  font-size: 14px;
-  color: #777;
-}
-.reportCardName:hover {
-  color: #5d40db;
-}
-
-.reportCardDetailTags {
-  display: none;
-}
-.reportCardDetailTags span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #057a55;
   white-space: nowrap;
 }
 
-.reportCardScoreGroup {
-  flex-shrink: 0;
+.statsSubHeader {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-.reportCardScoreText {
-  font-size: 24px;
-  font-weight: 700;
-  color: #ffc107;
-}
-.reportCardScoreStars {
-  color: #ffc107;
-  font-size: 16px;
-  display: flex;
-  gap: 1px;
-}
-.reportCardScoreReviews {
-  font-size: 12px;
-  color: #777;
-  font-weight: 500;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.reportCardExpandedContent {
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-  margin-top: 16px;
-  background-color: #fff8e6;
-  margin: 16px -16px -16px -16px;
-  padding: 16px;
-  border-radius: 0 0 16px 16px;
-}
-
-.satisfactionCardBreakdown {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 20px;
-  align-items: center;
-}
-
-.satisfactionCardHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  border-right: 1px solid #ffeeba;
-  padding-right: 20px;
-}
-.satisfactionCardScore {
-  font-size: 38px;
-  font-weight: 800;
-  color: #ffc107;
-  line-height: 1;
-}
-.satisfactionCardStarGroup {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.satisfactionCardStar {
-  color: #ffc107;
-  font-size: 18px;
-}
-.satisfactionCardTotal {
-  font-size: 13px;
+.statsCurrentDate {
+  font-size: 14px;
+  font-weight: 600;
   color: #555;
-  font-weight: 500;
-  margin-left: 8px;
+  white-space: nowrap;
 }
 
-.satisfactionCardRows {
+.statsSubtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+}
+
+.statsFilterBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.kpiFilterToggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* (SHARED) Filter Group */
+.filterGroup {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+  position: relative;
+}
+.filterGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
+}
+.filterGroup select {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+.statsFilterBar .filterGroup {
+  margin-bottom: 0;
+  min-width: 160px;
+}
+.statsFilterBar .filterGroup label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  padding-left: 0;
+}
+.statsFilterBar .filterGroup select {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 600;
+  border-radius: 10px;
+  border-color: #ddd;
+  background-color: #fff;
+}
+
+.compareFilterToggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.compareFilterToggles span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+/* (SHARED) Toggle Button */
+.toggleButton {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+.toggleButton:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+.toggleButtonActive {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: default;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statsDetailGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.statsDetailBox {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  border-top: 4px solid #007bff;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/*
+.statsDetailBox.stats-cream {
+  border-top-color: #f39c12;
+  background-color: #fdf7e4;
+}
+*/
+.statsDetailBox.stats-red {
+  border-top-color: #dc3545;
+  background-color: #fdeeee;
+}
+.statsDetailBox.stats-purple {
+  border-top-color: #9b59b6 !important;
+  background-color: #f2ebf5;
+}
+.statsDetailBox.stats-yellow {
+  border-top-color: #ffc107;
+  background-color: #fff8e6;
+}
+.statsDetailBox.stats-green {
+  border-top-color: #057a55;
+  background-color: #eaf7ec;
+}
+.statsDetailBox.stats-blue {
+  border-top-color: #007bff;
+  background-color: #e6f2ff;
+}
+.statsDetailBox.stats-mint {
+  border-top-color: #20c997 !important;
+  background-color: #e6f9f3;
+}
+/* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
+.statsDetailBox.stats-grey {
+  border-top-color: #6c757d;
+  background-color: #f8f9fa;
+}
+
+.statsDetailBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+.statsDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.statsDetailTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.statsDetailBox:hover .statsDetailTitle {
+  color: #000;
+}
+
+.statsDetailValue {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+}
+
+.statsDetailPercentage {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+}
+
+.statsDetailNote {
+  font-size: 11px;
+  color: #777;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statsBottomGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.statsGridColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.problemTypeContent {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
+.opsKpi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e6f2ff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #d4e8ff;
+}
+.opsKpi span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #004a99;
+}
+.opsKpi strong {
+  font-size: 20px;
+  color: #000;
+}
+
+.opsDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 13px;
+  padding: 14px 16px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  gap: 4px;
+}
+
+.opsDetail.clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+.opsDetail.clickable:hover {
+  background: #f0f0f0;
+}
+.opsDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.opsDetailHeader span:first-child {
+  color: #555;
+  font-weight: 500;
+  font-size: 13px;
+}
+.opsDetailHeader span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
+}
+.opsToggleIcon {
+  font-size: 12px;
+  color: #555;
+}
+.opsUnitList {
+  width: 100%;
+  padding: 10px 0 0 0;
+  margin-top: 10px;
+  border-top: 1px dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.opsUnitItem {
+  font-size: 13px;
+  color: #666;
+  padding-left: 16px;
+}
+
+.opsDetail span:first-child {
+  color: #555;
+  font-weight: 500;
+  font-size: 13px;
+}
+.opsDetail > span:last-child {
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.statsLoadingOrErrorError {
+  background: #fdeeee;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 1024px) {
-  .orgStatsContainer {
+  .statsContainer {
     align-self: unset;
   }
-  .reportCardViewContainer {
-    flex-direction: column;
-    align-self: unset;
+  .statsDetailGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .reportCardSidebar {
-    width: 100%;
-    max-height: 40vh;
-  }
-  .reportCardMenuNav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-  }
-  .reportCardMenuButton {
-    flex-shrink: 0;
-    width: auto;
-    white-space: nowrap;
-    padding: 8px 12px;
-  }
-  .reportCardMenuButton span {
-    display: inline;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .orgStatsContainer {
-    flex-direction: column;
-    min-height: unset;
-  }
-  .orgStatsSidebar {
-    width: 100%;
-    max-height: 120px;
-    overflow-x: auto;
-    padding: 12px;
-  }
-  .orgStatsMenuTitle {
-    display: none;
-  }
-  .orgStatsMenuNav {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 8px;
-    border-bottom: none;
-  }
-  .orgStatsMenuButton {
-    flex-shrink: 0;
-    padding: 8px 10px;
-    font-size: 13px;
-  }
-  .orgStatsContent {
-    padding: 0;
-  }
-  .reportCardFilterBar {
-    flex-wrap: wrap;
-  }
-  .reportCardFilterBar .filterGroup {
-    width: calc(50% - 8px);
-    min-width: unset;
-  }
-  .searchButton {
-    width: 100%;
-  }
-  .reportCardHeader {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .reportCardScoreGroup {
-    align-items: flex-start;
-  }
-  .reportCardRank {
-    font-size: 20px;
-  }
-  .reportCardName {
-    font-size: 16px;
-  }
-  .satisfactionCardBreakdown {
+  .statsBottomGrid {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
-  .satisfactionCardHeader {
-    border-right: none;
-    border-bottom: 1px solid #ffeeba;
-    padding-right: 0;
-    padding-bottom: 16px;
-    align-items: center;
+  
+  .statsPageTitle,
+  .statsCurrentDate {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้หัวเรื่องตัดคำในจอแท็บเล็ต) */
   }
 }
 
 @media screen and (max-width: 480px) {
+  .statsDetailGrid {
+    grid-template-columns: 1fr;
+  }
+  .statsPageTitle {
+    font-size: 24px;
+  }
   .mockHBarItem {
     grid-template-columns: 100px 1fr 50px;
     gap: 8px;
@@ -629,22 +605,38 @@
   .chartBox {
     padding: 16px;
   }
-  .reportCardRank {
-    font-size: 18px;
+
+  .statsDetailTitle {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
+    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
+    word-break: break-word; /* ! เพิ่ม: ช่วยตัดคำ */
   }
-  .reportCardName {
-    font-size: 15px;
+
+  .compareFilterToggles span {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ข้อความ "เปรียบเทียบ" ตัดคำ) */
   }
-  .reportCardFilterBar .filterGroup {
-    width: 100%;
+
+  /* === FIX: เพิ่มส่วนนี้เพื่อแก้ปัญหาล้นจอจาก `nowrap` ที่ตกค้าง === */
+  .mockHBarValue,
+  .satisfactionBreakdownScore,
+  .satisfactionBreakdownTotal,
+  .satisfactionBreakdownPercent,
+  .toggleButton,
+  .toggleButtonActive,
+  .statsDetailNote, /* ! FIX: เพิ่ม .statsDetailNote ที่ตกค้าง */
+  .mockHBarLabel /* ! FIX: เพิ่ม .mockHBarLabel เพื่อความปลอดภัย */
+  {
+    white-space: normal; /* อนุญาตให้ตัดคำได้ */
+    word-break: break-word; /* ! เพิ่ม: ช่วยตัดคำ */
   }
-  .satisfactionCardScore {
-    font-size: 32px;
+  /* === FIX: จบส่วนที่เพิ่ม === */
+
+  /* === FIX: แก้ปัญหา .filterGroup ที่มี min-width กว้างไป === */
+  .statsFilterBar .filterGroup {
+    min-width: 120px; /* ลดขนาดลง ให้ยืดหยุ่นมากขึ้น */
+    flex-grow: 1; /* อนุญาตให้ขยายเต็มเมื่อมีที่ว่าง */
   }
-  
-  /* ! เพิ่ม: แก้ไข nowrap ที่ล้นจอ */
-  .mockHBarValue,
-  .satisfactionBreakdownPercent {
-    white-space: normal;
-  }
+  /* === FIX: จบส่วนที่เพิ่ม === */
 }
