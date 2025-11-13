@@ -425,9 +425,9 @@
   grid-area: toggle;
   background: none;
   border: none;
-  border-top: 1px dashed #ddd;
-  padding-top: 8px;
-  margin-top: 8px;
+  /* border-top: 1px dashed #ddd;  <-- (ย้ายไป :last-child) */
+  /* padding-top: 8px;             <-- (ย้ายไป :last-child) */
+  /* margin-top: 8px;              <-- (ย้ายไป :last-child) */
   width: 100%;
   text-align: right;
   cursor: pointer;
@@ -501,9 +501,21 @@
    * ปัญหาเกิดจากปุ่ม "อ่านเพิ่มเติม" ไม่ได้ถูกกำหนด grid-area
    * คำสั่งนี้จะบังคับให้ "ลูกคนสุดท้าย" (last-child) ของการ์ด
    * (ซึ่งก็คือปุ่ม "อ่านเพิ่มเติม") ถูกจับไปใส่ในแถว "toggle" เสมอ
+   *
+   * (*** ADDED ***)
+   * เพิ่ม reset ค่าอื่นๆ เพื่อสู้กับ Global CSS ที่อาจจะมา override
+   * ให้ปุ่ม (ที่เป็น white pill) กลับเข้าสู่ layout
    */
   .reportTableRow > *:last-child {
     grid-area: toggle;
+    position: relative; /* สู้กับ position: absolute */
+    display: block; /* สู้กับ display: inline-block */
+    width: 100%; /* สู้กับ width: auto */
+    margin: 8px 0 0 0; /* reset margin ที่อาจจะทำให้ล้น */
+    padding: 8px 0; /* เพิ่ม padding (แทน border) */
+    box-sizing: border-box; /* ป้องกัน padding/border ทำล้น */
+    border-top: 1px dashed #ddd; /* ย้ายมาไว้ที่นี่ */
+    text-align: right; /* (เพิ่ม) บังคับให้ชิดขวาเหมือนเดิม */
   }
   /* --- END: Fix 2 --- */
 }
