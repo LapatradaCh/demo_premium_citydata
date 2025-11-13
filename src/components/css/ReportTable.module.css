@@ -3,476 +3,463 @@
 
 /* === (SHARED) Calendar === */
 .calendarPopup {
-  position: absolute;
-  top: 120%;
-  z-index: 100;
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 18px;
-  min-width: 280px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  top: 120%;
+  z-index: 100;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  min-width: 280px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* --- Report Table Specific --- */
 .searchTop {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 16px;
-  position: relative;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 24px;
 }
 
 .searchInputWrapper {
-  flex-grow: 1;
-  position: relative;
-  display: flex;
+  flex-grow: 1;
+  position: relative;
+  display: flex;
 }
 
 .searchInput {
-  width: 100%;
-  flex-grow: 1;
-  box-sizing: border-box;
-  padding: 12px 18px 12px 52px;
-  border-radius: 28px;
-  border: 1px solid #e0e0e0;
-  font-size: 14px;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #000;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 12px 18px 12px 52px;
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #000;
 }
 
 .searchInput:focus {
-  outline: none;
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  outline: none;
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .searchIcon {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: #555;
-  cursor: pointer;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
 }
 
 .filterToggleButton {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #000;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: all 0.25s ease;
-  white-space: nowrap;
-  min-width: fit-content;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .filterToggleButton:hover {
-  background-color: #333;
-  transform: translateY(-2px);
+  background-color: #333;
+  transform: translateY(-2px);
 }
 
 .filterToggleButton svg {
-  font-size: 16px;
+  font-size: 16px;
 }
 
 .filterToggleButton span {
-  display: inline;
+  display: inline;
 }
 
 /* === (SHARED) Modal === */
 .filterModalBackdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1999;
-  backdrop-filter: blur(4px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  backdrop-filter: blur(4px);
 }
 
 .filterModal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  background: #ffffff;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .filterModalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .filterModalHeader h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .filterModalClose {
-  background: #dc3545;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #fff;
-  transition: background-color 0.2s ease;
-  position: relative;
+  background: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  position: relative;
 }
 
 .filterModalClose:hover {
-  color: #fff;
+  color: #fff;
 }
 
 .filterModalClose svg {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  fill: #ffffff;
-  z-index: 2;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+  z-index: 2;
 }
 
 .filterModalContent {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: 70vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
 }
 
 .reportFilters {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
 }
 
 /* === (SHARED) Filter Group === */
 .filterGroup {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
 }
 
 .filterGroup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  padding-left: 4px;
-  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 
 .filterGroup select,
 .timeRangeButton {
-  width: 100%;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
-  padding: 10px 14px;
-  background-color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #111;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
 }
 
 .filterGroup select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
 }
 
 .filterGroup select:hover,
 .timeRangeButton:hover {
-  background-color: #f4f4f4;
-  border-color: #000;
+  background-color: #f4f4f4;
+  border-color: #000;
 }
 
 .filterGroup select:focus,
 .timeRangeButton:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .filterApplyButton {
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  background-color: #057a55;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  align-self: center;
-  min-width: 150px;
-  text-align: center;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #057a55;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: center;
+  min-width: 150px;
+  text-align: center;
 }
 
 .filterApplyButton:hover {
-  background-color: #046c4e;
+  background-color: #046c4e;
 }
 
 .filterApplyButton:active {
-  background-color: #02573d;
-  transform: scale(0.98);
+  background-color: #02573d;
+  transform: scale(0.98);
 }
 
 /* --- Report Table Specific --- */
 .reportSummary {
-  font-weight: 600;
-  margin-top: 28px;
-  margin-bottom: 16px;
-  color: #333;
-  text-align: left;
-  padding-left: 4px;
-  width: 100%;
-  max-width: 1200px;
+  font-weight: 600;
+  margin-top: 28px;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: left;
+  padding-left: 4px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .reportTableContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 18px;
-  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  max-width: 1200px;
 }
 
 .reportTableRow {
-  display: grid;
-  grid-template-columns: 70px 1fr auto;
-  grid-template-areas:
-    "image header status"
-    "image details details"
-    "image location location"
-    "image toggle toggle";
-  align-items: start;
-  gap: 4px 10px;
-  padding: 14px 18px;
-  font-size: 13px;
-  background: #ffffff;
-  border-radius: 14px;
-  border: 1px solid #e9e9e9;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  grid-template-areas:
+    "image header status"
+    "image details details"
+    "image location location"
+    "image toggle toggle";
+  align-items: start;
+  gap: 4px 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reportTableRow:hover {
-  background: #f8f8f8;
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  background: #f8f8f8;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
 
 .reportImage {
-  grid-area: image;
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 10px;
+  grid-area: image;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .reportHeader {
-  grid-area: header;
-  font-weight: 700;
-  font-size: 16px;
-  color: #000;
+  grid-area: header;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
 }
 
 .reportDetailText {
-  white-space: normal;
-  word-break: break-word;
-  font-size: 13px;
-  font-weight: 400;
-  color: #333;
-  padding-top: 2px;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  padding-top: 2px;
 }
 
 .mainDetails {
-  grid-area: details;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 4px 10px;
-  font-size: 12px;
-  color: #666;
+  grid-area: details;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 4px 10px;
+  font-size: 12px;
+  color: #666;
 }
 
 .locationDetails {
-  grid-area: location;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #777;
-  border-top: 1px dashed #ddd;
-  margin-top: 4px;
-  padding-top: 4px;
+  grid-area: location;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #777;
+  border-top: 1px dashed #ddd;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .reportStatusGroup {
-  grid-area: status;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 8px;
+  grid-area: status;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 4px 10px;
-  border-radius: 22px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
 }
 .statusTag.pending {
-  background: #dc3545;
+  background: #dc3545;
 }
 .statusTag.coordinating {
-  background-color: #9b59b6;
-  color: white;
+  background-color: #9b59b6;
+  color: white;
 }
 .statusTag.in_progress {
-  background: #ffc107;
-  color: #333;
+  background: #ffc107;
+  color: #333;
 }
 .statusTag.completed {
-  background: #057a55;
+  background: #057a55;
 }
 .statusTag.forwarded {
-  background-color: #007bff;
-  color: white;
+  background-color: #007bff;
+  color: white;
 }
 .statusTag.invited {
-  background-color: #20c997;
-  color: white;
+  background-color: #20c997;
+  color: white;
 }
 .statusTag.rejected {
-  background-color: #6c757d;
-  color: white;
+  background-color: #6c757d;
+  color: white;
 }
 
 /* --- Report Table Specific --- */
 .rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 16px;
-  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  color: #000;
 }
 
 .ratingStar {
-  color: #ccc;
+  color: #ccc;
 }
 
 .ratingStar.active {
-  color: #ffc107;
+  color: #ffc107;
 }
 
 .toggleDetailsButton {
-  grid-area: toggle;
-  background: none;
-  border: none;
-  border-top: 1px dashed #ddd;
-  padding-top: 8px;
-  margin-top: 8px;
-  width: 100%;
-  text-align: right;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-  color: #007bff;
-  transition: all 0.2s ease;
+  grid-area: toggle;
+  background: none;
+  border: none;
+  border-top: 1px dashed #ddd;
+  padding-top: 8px;
+  margin-top: 8px;
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #007bff;
+  transition: all 0.2s ease;
 }
 
 .toggleDetailsButton:hover {
-  color: #0056b3;
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
+  color: #0056b3;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 768px) {
-  .searchTop {
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .filterToggleButton {
-    max-width: 100%;
-  }
+  .searchTop {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .filterToggleButton {
+    max-width: 100%;
+  }
 
-  .reportSummary {
-    margin-top: 16px;
-  }
+  .reportSummary {
+    margin-top: 16px;
+  }
 
-  .reportTableContainer {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-}
-
-/* ! FIX: เพิ่ม Media Query สำหรับจอมือถือเล็ก */
-@media screen and (max-width: 480px) {
-  .filterToggleButton,
-  .statusTag {
-    white-space: normal; /* ! เพิ่ม: อนุญาตให้ปุ่มและแท็กตัดคำได้ */
-    word-break: break-word; /* ! เพิ่ม: ช่วยตัดคำ */
-  }
-
-  .reportTableRow {
-    padding: 12px;
-  }
+  .reportTableContainer {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
