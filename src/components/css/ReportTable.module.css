@@ -425,9 +425,6 @@
   grid-area: toggle;
   background: none;
   border: none;
-  /* border-top: 1px dashed #ddd;  <-- (ย้ายไป :last-child) */
-  /* padding-top: 8px;             <-- (ย้ายไป :last-child) */
-  /* margin-top: 8px;              <-- (ย้ายไป :last-child) */
   width: 100%;
   text-align: right;
   cursor: pointer;
@@ -435,6 +432,7 @@
   font-size: 13px;
   color: #007bff;
   transition: all 0.2s ease;
+  /* (ย้าย margin/padding/border ไปที่ *:last-child) */
 }
 
 .toggleDetailsButton:hover {
@@ -472,7 +470,7 @@
       "image header"
       "image details"
       "image location"
-      "status status"  /* ย้าย status มาแถวล่าง (เต็มความกว้าง) */
+      "status status" /* ย้าย status มาแถวล่าง (เต็มความกว้าง) */
       "toggle toggle";
     gap: 6px 10px; /* ลดช่องว่างลงเล็กน้อย */
   }
@@ -495,27 +493,37 @@
   }
   /* --- END: ส่วนที่เพิ่มเข้ามาแก้ Overflow --- */
 
-  /* --- START: Fix 2 (บังคับปุ่ม "อ่านเพิ่มเติม" ให้อยู่ใน Grid) --- */
+  /* --- (*** START: แก้ไขขั้นสูงสุด ***) --- */
   /*
-   * โค้ดส่วนนี้เพิ่มเข้ามาเพื่อแก้ปัญหาที่เห็นในรูปครับ
-   * ปัญหาเกิดจากปุ่ม "อ่านเพิ่มเติม" ไม่ได้ถูกกำหนด grid-area
-   * คำสั่งนี้จะบังคับให้ "ลูกคนสุดท้าย" (last-child) ของการ์ด
-   * (ซึ่งก็คือปุ่ม "อ่านเพิ่มเติม") ถูกจับไปใส่ในแถว "toggle" เสมอ
-   *
-   * (*** ADDED ***)
-   * เพิ่ม reset ค่าอื่นๆ เพื่อสู้กับ Global CSS ที่อาจจะมา override
-   * ให้ปุ่ม (ที่เป็น white pill) กลับเข้าสู่ layout
+   * นี่คือ "ไม้ตาย" แก้ปัญหาปุ่มเม็ดสีขาวล้น
+   * เราจะ "ล้าง" สไตล์ของปุ่มนั้นทิ้ง (all: unset)
+   * แล้ว "สร้าง" สไตล์ของ .toggleDetailsButton ขึ้นมาใหม่ทับทันที
    */
   .reportTableRow > *:last-child {
+    all: unset; /* <-- ล้างสไตล์ "เม็ดสีขาว" ที่มาจากไฟล์อื่นทิ้ง! */
+
+    /* -- สร้างสไตล์ .toggleDetailsButton ขึ้นมาใหม่ -- */
     grid-area: toggle;
-    position: relative; /* สู้กับ position: absolute */
-    display: block; /* สู้กับ display: inline-block */
-    width: 100%; /* สู้กับ width: auto */
-    margin: 8px 0 0 0; /* reset margin ที่อาจจะทำให้ล้น */
-    padding: 8px 0; /* เพิ่ม padding (แทน border) */
-    box-sizing: border-box; /* ป้องกัน padding/border ทำล้น */
-    border-top: 1px dashed #ddd; /* ย้ายมาไว้ที่นี่ */
-    text-align: right; /* (เพิ่ม) บังคับให้ชิดขวาเหมือนเดิม */
+    display: block; /* (จำเป็นสำหรับ Grid Area) */
+    width: 100%;
+    box-sizing: border-box; /* (จำเป็นสำหรับ Layout) */
+    text-align: right;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: #007bff;
+    transition: all 0.2s ease;
+
+    /* -- สร้าง Layout (เส้นประ) ขึ้นมาใหม่ -- */
+    margin: 8px 0 0 0;
+    padding: 8px 0;
+    border-top: 1px dashed #ddd;
   }
-  /* --- END: Fix 2 --- */
+
+  .reportTableRow > *:last-child:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+  /* --- (*** END: แก้ไขขั้นสูงสุด ***) --- */
 }
