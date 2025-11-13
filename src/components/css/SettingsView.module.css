@@ -3,473 +3,494 @@
 
 /* === (SHARED) Modal === */
 .filterModalBackdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1999;
-  backdrop-filter: blur(4px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  backdrop-filter: blur(4px);
 }
 
 .filterModal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  background: #ffffff;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .filterModalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .filterModalHeader h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .filterModalClose {
-  background: #dc3545;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #fff;
-  transition: background-color 0.2s ease;
-  position: relative;
+  background: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  position: relative;
 }
 
 .filterModalClose:hover {
-  color: #fff;
+  color: #fff;
 }
 
 .filterModalClose svg {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  fill: #ffffff;
-  z-index: 2;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+  z-index: 2;
 }
 
 .filterModalContent {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: 70vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+  overflow-y: auto; /* ! เพิ่ม: ทำให้เนื้อหาที่ล้น สกอลล์ได้ */
 }
 
 /* === (SHARED) Filter Group === */
 .filterGroup {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
 }
 
 .filterGroup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  padding-left: 4px;
-  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 
 .filterGroup select {
-  width: 100%;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
-  padding: 10px 14px;
-  background-color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #111;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 20px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
 }
 
 .filterGroup select:hover {
-  background-color: #f4f4f4;
-  border-color: #000;
+  background-color: #f4f4f4;
+  border-color: #000;
 }
 
 .filterGroup select:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 /* === (SHARED) Button === */
 .filterApplyButton {
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  background-color: #057a55;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  align-self: center;
-  min-width: 150px;
-  text-align: center;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #057a55;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: center;
+  min-width: 150px;
+  text-align: center;
 }
 
 .filterApplyButton:hover {
-  background-color: #046c4e;
+  background-color: #046c4e;
 }
 
 .filterApplyButton:active {
-  background-color: #02573d;
-  transform: scale(0.98);
+  background-color: #02573d;
+  transform: scale(0.98);
 }
 
 /* === (SHARED) Input === */
 .searchInput {
-  width: 100%;
-  flex-grow: 1;
-  box-sizing: border-box;
-  padding: 12px 18px 12px 18px; /* (No icon padding) */
-  border-radius: 28px;
-  border: 1px solid #e0e0e0;
-  font-size: 14px;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #000;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 12px 18px 12px 18px; /* (No icon padding) */
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #000;
 }
 .searchInput:focus {
-  outline: none;
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  outline: none;
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 /* --- SettingsView Specific --- */
 .settingsContainer {
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 .settingsSection {
-  width: 100%;
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 .settingsTitle {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex; /* (For icon) */
-  align-items: center; /* (For icon) */
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex; /* (For icon) */
+  align-items: center; /* (For icon) */
 }
 .settingsSubtitle {
-  font-size: 14px;
-  color: #555;
-  margin: -12px 0 16px 0;
+  font-size: 14px;
+  color: #555;
+  margin: -12px 0 16px 0;
 }
 .settingsItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 .settingsItem:last-child {
-  border-bottom: none;
+  border-bottom: none;
 }
 .settingsItemText {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
+  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
 }
 .settingsItemText svg {
-  font-size: 16px;
-  color: #555;
+  font-size: 16px;
+  color: #555;
 }
 .settingsItemValue {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
+  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
 }
 .settingsItemValue svg {
-  color: #aaa;
+  color: #aaa;
 }
 
 .mockToggle {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
 }
 .mockToggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 .mockSlider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 28px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
 }
 .mockSlider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 .mockToggle input:checked + .mockSlider {
-  background-color: #057a55;
+  background-color: #057a55;
 }
 .mockToggle input:checked + .mockSlider:before {
-  transform: translateX(22px);
+  transform: translateX(22px);
 }
 
 .qrCodePlaceholder {
-  width: 100%;
-  min-height: 250px;
-  background: #f9f9f9;
-  border: 2px dashed #e0e0e0;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: #aaa;
-  font-weight: 600;
-  margin-bottom: 20px;
+  width: 100%;
+  min-height: 250px;
+  background: #f9f9f9;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #aaa;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 .mockQrIcon {
-  font-size: 80px;
-  color: #e0e0e0;
+  font-size: 80px;
+  color: #e0e0e0;
 }
 
 .qrForm {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 .qrForm .filterGroup {
-  gap: 8px;
+  gap: 8px;
 }
 .qrForm .filterGroup label {
-  padding-left: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .qrForm input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
-  padding: 10px 14px;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 .qrForm input[type="text"]:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
-  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .settingsHeaderDropdown {
-  width: 100%;
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .settingsHeaderDropdown .filterGroup select {
-  width: 100%;
+  width: 100%;
 }
 
 .settingsContentArea {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 /* --- Password Section --- */
 .passwordUserItem {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .passwordUserInfo {
-  font-weight: 700;
-  font-size: 15px;
-  color: #000;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
+  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
 }
 
 .passwordUserIcon {
-  margin-right: 0;
-  color: #007bff;
-  font-size: 16px;
-  flex-shrink: 0;
+  margin-right: 0;
+  color: #007bff;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .passwordUserPass {
-  font-size: 13px;
-  color: #555;
-  margin-left: 24px;
+  font-size: 13px;
+  color: #555;
+  margin-left: 24px;
+  overflow-wrap: break-word; /* ! เพิ่ม: ตัดคำ */
+  word-break: break-word; /* ! เพิ่ม: ตัดคำ */
 }
 
 .passwordButtonGroup {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-  align-items: center;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
 }
 
 .passwordButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #fff;
-  line-height: 1;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .passwordButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .passwordButton svg {
-  font-size: 14px;
+  font-size: 14px;
 }
 
 .viewButton {
-  background-color: #6c757d;
-  border: 1px solid #5a6268;
+  background-color: #6c757d;
+  border: 1px solid #5a6268;
 }
 
 .viewButton:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
+  background-color: #5a6268;
+  border-color: #545b62;
 }
 
 .changeButton {
-  background-color: #007bff;
-  border: 1px solid #0069d9;
+  background-color: #007bff;
+  border: 1px solid #0069d9;
 }
 
 .changeButton:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #0069d9;
+  border-color: #0062cc;
 }
 
 .viewButtonActive {
-  background-color: #c82333;
-  border-color: #b21f2d;
+  background-color: #c82333;
+  border-color: #b21f2d;
 }
 
 .viewButtonActive:hover {
-  background-color: #b21f2d;
-  border-color: #a01c28;
+  background-color: #b21f2d;
+  border-color: #a01c28;
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 1024px) {
-  .settingsContainer {
-    align-self: unset;
-  }
+  .settingsContainer {
+    align-self: unset;
+  }
 }
 
+/* ! ============ (ปรับปรุงส่วนนี้) ============ ! */
 @media screen and (max-width: 480px) {
-  .settingsSection {
-    padding: 16px;
-  }
-  .settingsItem {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .passwordButtonGroup {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: flex-start;
-    gap: 8px;
-  }
-  .passwordButton {
-    padding: 10px 14px;
-  }
+  .settingsSection {
+    padding: 16px;
+  }
+  .settingsItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  /* ! แก้ไข: ทำให้กลุ่มปุ่ม responsive ยืดหยุ่นมากขึ้น */
+  .passwordButtonGroup {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px; /* เพิ่ม gap ระหว่างปุ่มเล็กน้อย */
+  }
+
+  /* ! แก้ไข: ทำให้ปุ่ม responsive */
+  .passwordButton {
+    padding: 10px 14px;
+    white-space: normal; /* ! สำคัญ: อนุญาตให้ข้อความในปุ่มขึ้นบรรทัดใหม่ได้ */
+    text-align: center; /* จัดกลางเผื่อข้อความขึ้นบรรทัดใหม่ */
+    justify-content: center;
+  }
+  
+  .passwordButton:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
