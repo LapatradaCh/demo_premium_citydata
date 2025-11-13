@@ -3,615 +3,635 @@
 
 /* === (SHARED) Chart Box === */
 .chartBox {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex-grow: 1;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-grow: 1;
 }
 
 .chartBox:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
 
 .chartBoxTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
 }
 
 /* === (SHARED) Horizontal Bar Chart === */
 .mockHorizontalBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  padding: 10px 0;
-  flex-grow: 1;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  flex-grow: 1;
+  justify-content: center;
 }
 .mockHBarItem {
-  display: grid;
-  grid-template-columns: 140px 1fr 60px;
-  gap: 12px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 140px 1fr 60px;
+  gap: 12px;
+  align-items: center;
 }
 .mockHBarLabel {
-  font-size: 13px;
-  font-weight: 600;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-  padding-right: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  padding-right: 8px;
 }
 .mockHBar {
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 6px;
-  overflow: hidden;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
 }
 .mockHBarFill {
-  height: 100%;
-  background: #007bff;
-  border-radius: 4px 0 0 4px;
-  transition: width 0.5s ease-out;
+  height: 100%;
+  background: #007bff;
+  border-radius: 4px 0 0 4px;
+  transition: width 0.5s ease-out;
 }
 .mockHBar:hover .mockHBarFill {
-  filter: brightness(1.1);
+  filter: brightness(1.1);
 }
 .mockHBarValue {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
-  text-align: right;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  text-align: right;
+  white-space: nowrap; /* <<< นี่คือหนึ่งในตัวการที่อาจล้นจอ */
 }
 
 /* === (SHARED) Satisfaction Box === */
 .satisfactionBreakdownContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  flex-grow: 1;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex-grow: 1;
+  padding-top: 10px;
 }
 
 .satisfactionBreakdownHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 12px;
-  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 8px;
 }
 
 .satisfactionBreakdownScore {
-  font-size: 24px;
-  font-weight: 700;
-  color: #111;
-  white-space: nowrap;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap; /* <<< ตัวการ */
 }
 
 .satisfactionBreakdownStars {
-  font-size: 20px;
-  color: #ffc107;
-  display: flex;
-  gap: 2px;
+  font-size: 20px;
+  color: #ffc107;
+  display: flex;
+  gap: 2px;
 }
 
 .satisfactionBreakdownTotal {
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap; /* <<< ตัวการ */
 }
 
 .satisfactionBreakdownRow {
-  display: grid;
-  grid-template-columns: 35px 1fr 50px; /* Label | Bar | Percent */
-  align-items: center;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 35px 1fr 50px; /* Label | Bar | Percent */
+  align-items: center;
+  gap: 10px;
 }
 
 .satisfactionBreakdownLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  justify-content: flex-end;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
 }
 
 .satisfactionBreakdownLabel svg {
-  color: #ffc107;
-  font-size: 14px;
+  color: #ffc107;
+  font-size: 14px;
 }
 
 .satisfactionBreakdownBar {
-  height: 14px;
-  background: #f0f0f0;
-  border-radius: 7px;
-  overflow: hidden;
+  height: 14px;
+  background: #f0f0f0;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
 .satisfactionBreakdownBarFill {
-  height: 100%;
-  background: #ffc107;
-  border-radius: 7px;
-  transition: width 0.5s ease-out;
+  height: 100%;
+  background: #ffc107;
+  border-radius: 7px;
+  transition: width 0.5s ease-out;
 }
 
 .satisfactionBreakdownPercent {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111;
-  text-align: right;
-  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  text-align: right;
+  white-space: nowrap; /* <<< ตัวการ */
 }
 
 /* --- StatisticsView Specific --- */
 .statsContainer {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* === FIX: ป้องกันการล้นแนวนอนที่ไม่คาดคิด === */
+  overflow-x: hidden;
 }
 
 .statsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
-  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
 }
 
 .statsPageTitle {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  color: #111;
-  white-space: nowrap;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
 }
 
 .statsSubHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  width: 100%;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .statsCurrentDate {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
 }
 
 .statsSubtitle {
-  font-size: 13px;
-  font-weight: 500;
-  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
 }
 
 .statsFilterBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
 }
 
 .kpiFilterToggles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 /* (SHARED) Filter Group */
 .filterGroup {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
 }
 .filterGroup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  padding-left: 4px;
-  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 .filterGroup select {
-  width: 100%;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
-  padding: 10px 14px;
-  background-color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #111;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 20px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
 }
 
 .statsFilterBar .filterGroup {
-  margin-bottom: 0;
-  min-width: 160px;
+  margin-bottom: 0;
+  min-width: 160px; /* <<< ตัวการ อาจทำให้ล้นในจอแคบๆ */
 }
 .statsFilterBar .filterGroup label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #555;
-  padding-left: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  padding-left: 0;
 }
 .statsFilterBar .filterGroup select {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  font-weight: 600;
-  border-radius: 10px;
-  border-color: #ddd;
-  background-color: #fff;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 600;
+  border-radius: 10px;
+  border-color: #ddd;
+  background-color: #fff;
 }
 
 .compareFilterToggles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 .compareFilterToggles span {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-right: 8px;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+  white-space: nowrap;
 }
 
 /* (SHARED) Toggle Button */
 .toggleButton {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* <<< ตัวการ */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 .toggleButton:hover {
-  background-color: #f5f5f5;
-  border-color: #ccc;
+  background-color: #f5f5f5;
+  border-color: #ccc;
 }
 .toggleButtonActive {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #000;
-  border: 1px solid #000;
-  border-radius: 10px;
-  cursor: default;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: default;
+  white-space: nowrap; /* <<< ตัวการ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .statsDetailGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
 }
 
 .statsDetailBox {
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  border-top: 4px solid #007bff;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease,
-    border-color 0.3s ease, background-color 0.3s ease;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  border-top: 4px solid #007bff;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease, background-color 0.3s ease;
 }
 
 /*
 .statsDetailBox.stats-cream {
-  border-top-color: #f39c12;
-  background-color: #fdf7e4;
+  border-top-color: #f39c12;
+  background-color: #fdf7e4;
 }
 */
 .statsDetailBox.stats-red {
-  border-top-color: #dc3545;
-  background-color: #fdeeee;
+  border-top-color: #dc3545;
+  background-color: #fdeeee;
 }
 .statsDetailBox.stats-purple {
-  border-top-color: #9b59b6 !important;
-  background-color: #f2ebf5;
+  border-top-color: #9b59b6 !important;
+  background-color: #f2ebf5;
 }
 .statsDetailBox.stats-yellow {
-  border-top-color: #ffc107;
-  background-color: #fff8e6;
+  border-top-color: #ffc107;
+  background-color: #fff8e6;
 }
 .statsDetailBox.stats-green {
-  border-top-color: #057a55;
-  background-color: #eaf7ec;
+  border-top-color: #057a55;
+  background-color: #eaf7ec;
 }
 .statsDetailBox.stats-blue {
-  border-top-color: #007bff;
-  background-color: #e6f2ff;
+  border-top-color: #007bff;
+  background-color: #e6f2ff;
 }
 .statsDetailBox.stats-mint {
-  border-top-color: #20c997 !important;
-  background-color: #e6f9f3;
+  border-top-color: #20c997 !important;
+  background-color: #e6f9f3;
 }
 /* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
 .statsDetailBox.stats-grey {
-  border-top-color: #6c757d;
-  background-color: #f8f9fa;
+  border-top-color: #6c757d;
+  background-color: #f8f9fa;
 }
 
 .statsDetailBox:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
 
 .statsDetailHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .statsDetailTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-  transition: color 0.2s ease;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 .statsDetailBox:hover .statsDetailTitle {
-  color: #000;
+  color: #000;
 }
 
 .statsDetailValue {
-  font-size: 26px;
-  font-weight: 700;
-  color: #111;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
 }
 
 .statsDetailPercentage {
-  font-size: 12px;
-  font-weight: 500;
-  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
 }
 
 .statsDetailNote {
-  font-size: 11px;
-  color: #777;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 11px;
+  color: #777;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .statsBottomGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  width: 100%;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
 }
 
 .statsGridColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
 }
 
 .problemTypeContent {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .opsContent {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 8px;
-  flex-grow: 1;
-  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+  flex-grow: 1;
+  justify-content: flex-start;
 }
 
 .opsKpi {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #e6f2ff;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #d4e8ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e6f2ff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #d4e8ff;
 }
 .opsKpi span {
-  font-size: 15px;
-  font-weight: 600;
-  color: #004a99;
+  font-size: 15px;
+  font-weight: 600;
+  color: #004a99;
 }
 .opsKpi strong {
-  font-size: 20px;
-  color: #000;
+  font-size: 20px;
+  color: #000;
 }
 
 .opsDetail {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 13px;
-  padding: 14px 16px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border: 1px solid #f0f0f0;
-  gap: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 13px;
+  padding: 14px 16px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  gap: 4px;
 }
 
 .opsDetail.clickable {
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
 }
 .opsDetail.clickable:hover {
-  background: #f0f0f0;
+  background: #f0f0f0;
 }
 .opsDetailHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 .opsDetailHeader span:first-child {
-  color: #555;
-  font-weight: 500;
-  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+  font-size: 13px;
 }
 .opsDetailHeader span:last-child {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #111;
-  font-weight: 700;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
 }
 .opsToggleIcon {
-  font-size: 12px;
-  color: #555;
+  font-size: 12px;
+  color: #555;
 }
 .opsUnitList {
-  width: 100%;
-  padding: 10px 0 0 0;
-  margin-top: 10px;
-  border-top: 1px dashed #ddd;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  width: 100%;
+  padding: 10px 0 0 0;
+  margin-top: 10px;
+  border-top: 1px dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .opsUnitItem {
-  font-size: 13px;
-  color: #666;
-  padding-left: 16px;
+  font-size: 13px;
+  color: #666;
+  padding-left: 16px;
 }
 
 .opsDetail span:first-child {
-  color: #555;
-  font-weight: 500;
-  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+  font-size: 13px;
 }
 .opsDetail > span:last-child {
-  color: #111;
-  font-weight: 700;
-  font-size: 16px;
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .statsLoadingOrErrorError {
-  background: #fdeeee;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  padding: 16px;
-  border-radius: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
+  background: #fdeeee;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 1024px) {
-  .statsContainer {
-    align-self: unset;
-  }
-  .statsDetailGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .statsBottomGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .statsPageTitle,
-  .statsCurrentDate {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้หัวเรื่องตัดคำในจอแท็บเล็ต) */
-  }
+  .statsContainer {
+    align-self: unset;
+  }
+  .statsDetailGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .statsBottomGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statsPageTitle,
+  .statsCurrentDate {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้หัวเรื่องตัดคำในจอแท็บเล็ต) */
+  }
 }
 
 @media screen and (max-width: 480px) {
-  .statsDetailGrid {
-    grid-template-columns: 1fr;
-  }
-  .statsPageTitle {
-    font-size: 24px;
-  }
-  .mockHBarItem {
-    grid-template-columns: 100px 1fr 50px;
-    gap: 8px;
-  }
-  .mockHBarLabel {
-    font-size: 12px;
-  }
-  .chartBox {
-    padding: 16px;
-  }
+  .statsDetailGrid {
+    grid-template-columns: 1fr;
+  }
+  .statsPageTitle {
+    font-size: 24px;
+  }
+  .mockHBarItem {
+    grid-template-columns: 100px 1fr 50px;
+    gap: 8px;
+  }
+  .mockHBarLabel {
+    font-size: 12px;
+  }
+  .chartBox {
+    padding: 16px;
+  }
 
-  .statsDetailTitle {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
-    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
-  }
+  .statsDetailTitle {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
+    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
+  }
 
-  .compareFilterToggles span {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้ข้อความ "เปรียบเทียบ" ตัดคำ) */
+  .compareFilterToggles span {
+    /* --- FIX OVERFLOW --- */
+    white-space: normal; /* (อนุญาตให้ข้อความ "เปรียบเทียบ" ตัดคำ) */
+  }
+
+  /* === FIX: เพิ่มส่วนนี้เพื่อแก้ปัญหาล้นจอจาก `nowrap` ที่ตกค้าง === */
+  .mockHBarValue,
+  .satisfactionBreakdownScore,
+  .satisfactionBreakdownTotal,
+  .satisfactionBreakdownPercent,
+  .toggleButton,
+  .toggleButtonActive {
+    white-space: normal; /* อนุญาตให้ตัดคำได้ */
   }
+  /* === FIX: จบส่วนที่เพิ่ม === */
+
+  /* === FIX: แก้ปัญหา .filterGroup ที่มี min-width กว้างไป === */
+  .statsFilterBar .filterGroup {
+    min-width: 120px; /* ลดขนาดลง ให้ยืดหยุ่นมากขึ้น */
+    flex-grow: 1; /* อนุญาตให้ขยายเต็มเมื่อมีที่ว่าง */
+  }
+  /* === FIX: จบส่วนที่เพิ่ม === */
 }
