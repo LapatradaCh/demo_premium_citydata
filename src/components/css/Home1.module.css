@@ -1,5 +1,6 @@
 /* ----------------------------------------------------------------
  * Modern White Theme CSS Design (CSS Module Compatible)
+ * (สำหรับหน้า SelectUnit ที่อยู่ในภาพ)
  * ---------------------------------------------------------------- */
 
 .appContainer {
@@ -501,7 +502,7 @@
 
 /* ============================================ */
 /* --- [เพิ่ม] สไตล์สำหรับ Bottom Nav Bar --- */
-/* (คัดลอกมาจาก Home.module.css) */
+/* (สไตล์นี้ใช้ร่วมกันทั้ง Home และ SelectUnit) */
 /* ============================================ */
 
 /* --- Bottom Nav (Desktop/Notebook Style) --- */
@@ -564,7 +565,7 @@
 }
 
 .bottomNav button svg {
-  display: none; /* <-- [แก้ไข] ซ่อน SVG ในโหมด Desktop */
+  display: none; /* <-- [สำคัญ] ซ่อน SVG ในโหมด Desktop (แก้ปุ่มสูง) */
   font-size: 34px;
 }
 
@@ -637,7 +638,7 @@
     border-radius: 8px;
   }
   .bottomNav button svg {
-    display: block; /* <-- [แก้ไข] แสดง SVG ในโหมด Mobile */
+    display: block; /* <-- [สำคัญ] แสดง SVG ในโหมด Mobile */
     font-size: 24px;
     height: 24px;
   }
