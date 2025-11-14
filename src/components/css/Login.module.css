@@ -147,6 +147,7 @@ button svg {
   h2 { font-size: 1.8rem; }
   h3 { font-size: 1.1rem; }
   button { width: 85%; font-size: 0.95rem; }
+  .bottomLinks { gap: 1rem; }
   .bottomLinks a { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
 }
 
@@ -163,10 +164,9 @@ button svg {
 }
 
 /* ========================= */
-/* Responsive Mobile (ปรับปรุง Bottom Links) */
+/* Responsive Mobile (ปรับปรุง Bottom Links เพื่อไม่ให้ตัดคำ) */
 @media (max-width: 480px) {
   .loginContainer {padding: 0.5rem;}
-  /* เพิ่ม padding ด้านบนเล็กน้อยเพื่อให้มีพื้นที่หายใจ */
   .loginColumn { width: 100%; padding: 1.5rem 1rem; border-radius: 15px;} 
   .logo { width: 60px; height: 60px; margin-bottom: 0.5rem;}
   h2 { font-size: 1.3rem; }
@@ -178,11 +178,10 @@ button svg {
     margin-top: 1.5rem;
     display: flex;
     flex-direction: row;
-    /* จัดให้มีช่องไฟระหว่างลิงก์ */
-    justify-content: space-between; 
-    gap: 0.5rem;
-    /* จำกัดความกว้างให้ตรงกับปุ่ม Login และจัดกึ่งกลาง */
-    width: 95%; 
+    justify-content: space-between;
+    /* ลด gap ลงเพื่อเพิ่มพื้นที่ให้ปุ่มกว้างขึ้น */
+    gap: 0.2rem; 
+    width: 95%;
     max-width: 450px;
     margin-left: auto;
     margin-right: auto;
@@ -192,23 +191,26 @@ button svg {
   .bottomLinks a {
     flex: 1; 
     text-align: center;
-    /* ลดขนาด font ลงเล็กน้อย */
-    font-size: 0.8rem; 
-    padding: 0.6rem 0.2rem;
+    /* บังคับไม่ให้ตัดคำ */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    
+    /* ปรับ font-size ให้ยืดหยุ่นขึ้น (ถ้าจำเป็น) */
+    font-size: clamp(0.75rem, 2.5vw, 0.8rem);
+    
+    /* เพิ่ม padding แนวนอนเล็กน้อย */
+    padding: 0.6rem 0.4rem; 
     border-radius: 10px;
     box-sizing: border-box;
-    /* ให้เด่นขึ้น */
-    font-weight: 600; 
-    /* สีพื้นหลังและขอบโปร่งแสงเพื่อให้เห็นชัดบนพื้นหลังเบลอ */
-    background-color: rgba(255, 255, 255, 0.1); 
-    border: 1px solid rgba(255, 255, 255, 0.2); 
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .bottomLinks a:hover {
-    /* ให้เด่นขึ้นเมื่อ hover */
-    transform: translateY(-2px) scale(1.02); 
+    transform: translateY(-2px) scale(1.02);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
-    /* พื้นหลังเข้มขึ้นเมื่อ hover */
-    background-color: rgba(255, 255, 255, 0.3); 
+    background-color: rgba(255, 255, 255, 0.3);
   }
 }
