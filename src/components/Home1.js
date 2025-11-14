@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import liff from "@line/liff"; 
+// import liff from "@line/liff"; // ลบ import นี้ออก
+// อัปเดต path การ import CSS ที่นี่ - แก้กลับไปเป็น path เดิม
 import styles from './css/Home1.module.css';
-import { FaSignOutAlt} from "react-icons/fa";
+// import { FaSignOutAlt} from "react-icons/fa"; // ลบ import นี้ออก
 
 
 const Home1 = () => {
@@ -37,7 +38,7 @@ const Home1 = () => {
 
         if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
 
-        const data = await response.json();      
+        const data = await response.json();     
         const formattedData = data.map(item => ({
           id: item.organization_id,
           name: item.organization_name,
@@ -133,7 +134,8 @@ const Home1 = () => {
       console.error("Failed to notify backend, but proceeding with client-side logout.", error);
     } finally {
       console.log("Executing client-side cleanup.");
-      if (liff.isLoggedIn()) liff.logout();
+      // แก้ไขการเรียก liff เป็น window.liff และเพิ่มการตรวจสอบ
+      if (window.liff && window.liff.isLoggedIn()) window.liff.logout();
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id"); 
       localStorage.removeItem("selectedOrg"); 
@@ -172,11 +174,26 @@ const Home1 = () => {
     <div className={styles.appBody}>
       <div className={styles.logoutIcon}>
          <button className={styles.logoutBtn} onClick={handleLogout}>
-           <FaSignOutAlt size={18} />
+           {/* แทนที่ FaSignOutAlt ด้วย inline SVG */}
+           <svg 
+            width="18" 
+            height="18" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
            <span>ออกจากระบบ</span>
          </button>
        </div>
- 
+
        <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
 
        <div className={styles.searchContainer}>
@@ -189,7 +206,8 @@ const Home1 = () => {
            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
          />
          {searchTerm && (
-           <button className={styles.searchButton} onClick={handleClear}>
+           // อัปเดตคลาสสำหรับปุ่ม Clear ที่นี่
+           <button className={styles.clearButton} onClick={handleClear}>
              <X size={16} />
            </button>
          )}
@@ -213,9 +231,11 @@ const Home1 = () => {
 
       <div className={styles.agencySection}>
         {isLoading ? (
-          <p className="loading-message">กำลังโหลดข้อมูลหน่วยงาน...</p>
+          // อัปเดตคลาสที่นี่
+          <p className={styles.loadingMessage}>กำลังโหลดข้อมูลหน่วยงาน...</p>
         ) : error ? (
-          <p className="error-message">เกิดข้อผิดพลาด: {error}</p>
+          // อัปเดตคลาสที่นี่
+          <p className={styles.errorMessage}>เกิดข้อผิดพลาด: {error}</p>
         ) : filteredAgencies.length === 0 ? (
           <p className={styles.noResults}>ไม่พบหน่วยงาน</p>
         ) : (
@@ -238,7 +258,8 @@ const Home1 = () => {
                         e.target.src = `https://placehold.co/100x100/A0AEC0/ffffff?text=${agency.name.charAt(0)}`;
                       }}
                     />
-                    {agency.badge && <div className="agency-badge">{agency.badge}</div>}
+                    {/* อัปเดตคลาสที่นี่ */}
+                    {agency.badge && <div className={styles.agencyBadge}>{agency.badge}</div>}
                   </div>
                   <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
                     {agency.name}
