@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// [แก้ไข] import แค่ไฟล์เดียว
 import styles from './css/Home1.module.css'; 
-// [เพิ่ม] Import ไอคอนสำหรับ Nav Bar
 import {
   FaMapMarkedAlt,
   FaClipboardList,
@@ -38,9 +36,8 @@ const Home1 = () => {
     { name: "ตั้งค่า", icon: FaCog, items: null },
   ];
 
-  // ... (โค้ด useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick ทั้งหมดเหมือนเดิม) ...
-  
-  /* (ส่วนโค้ดด้านล่างนี้คัดลอกมาเพื่อความสมบูรณ์ แต่ไม่ต้องแก้) */
+  // (useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick)
+  // ... (โค้ดส่วน Logic ทั้งหมดเหมือนเดิมทุกประการ) ...
 
   useEffect(() => {
     const fetchAgencies = async () => {
@@ -202,10 +199,13 @@ const Home1 = () => {
     setOpenSubMenu(null);
   };
 
+
   return (
     <>
       <div className={styles.appBody}>
-        {/* ... (ส่วนเนื้อหาของ Home1.js ทั้งหมด ... */}
+        {/* (ส่วนเนื้อหา: Logout, Title, Search, Cards, Agency Grid) */}
+        {/* ... (โค้ดส่วนเนื้อหาทั้งหมดเหมือนเดิม) ... */}
+        
         <div className={styles.logoutIcon}>
           <button className={styles.logoutBtn} onClick={handleLogout}>
             <svg 
@@ -293,7 +293,7 @@ const Home1 = () => {
         </div>
       </div>
 
-      {/* --- [แก้ไข] เปลี่ยน navStyles ทั้งหมดเป็น styles --- */}
+      {/* --- ส่วน Bottom Nav Bar (ใช้ styles) --- */}
       <div className={styles.bottomNav}>
         {menuItems.map((item) => (
           <div key={item.name} className={styles.bottomNavButtonContainer}>
