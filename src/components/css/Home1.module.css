@@ -2,18 +2,12 @@
  * Modern White Theme CSS Design (CSS Module Compatible)
  * ---------------------------------------------------------------- */
 
-/*
-  หมายเหตุ: :root variables ถูกลบออกและแทนที่ด้วยค่าจริง
-  สไตล์ 'body' ถูกย้ายไปยังคลาส '.appContainer' 
-  คุณควรใช้คลาสนี้กับอิลิเมนต์ (element) ครอบแอปพลิเคชันของคุณ
-*/
-
 .appContainer {
   font-family: 'Inter', sans-serif;
-  color: #333333; /* --color-secondary */
+  color: #333333;
   line-height: 1.6;
   min-height: 100vh;
-  background: #FFFFFF; /* --color-bg */
+  background: #FFFFFF;
   position: relative;
   overflow-x: hidden;
   padding: 0;
@@ -24,7 +18,7 @@
   text-align: center;
   color: #000000;
   background-color: #ffffff;
-  border: 2px solid #C7B299; /* --color-primary */
+  border: 2px solid #C7B299;
   border-radius: 12px;
   padding: 8px 18px;
   font-size: 16px;
@@ -59,7 +53,7 @@
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  /* [แก้ไข] เพิ่ม padding-bottom เพื่อไม่ให้โดน Nav Bar บัง */
+  /* เพิ่ม padding-bottom เพื่อไม่ให้โดน Nav Bar บัง */
   padding: 80px 20px 120px; 
   position: relative;
   z-index: 1;
@@ -132,7 +126,7 @@
   font-size: 14px;
   font-weight: 400;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
 }
 
 .searchInput:focus {
@@ -160,7 +154,7 @@
   color: white;
   cursor: pointer;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
 }
 
 .searchButton:hover {
@@ -188,7 +182,7 @@
   justify-content: center;
   cursor: pointer;
   opacity: 0.8;
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
 }
 
 .clearButton:hover {
@@ -219,13 +213,13 @@
   text-align: center;
   font-weight: 600;
   font-size: 15px;
-  color: #333333; /* --color-secondary */
+  color: #333333;
   cursor: pointer;
   flex: 1 1 180px;
   min-width: 160px;
   border: 1px solid #eeeeee;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
 }
 
 .cardIcon {
@@ -235,15 +229,15 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #F9F9F9; /* --color-accent */
-  color: #C7B299; /* --color-primary */
+  background: #F9F9F9;
+  color: #C7B299;
   margin-bottom: 4px;
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .extraCard:hover .cardIcon {
-  background: #C7B299; /* --color-primary */
+  background: #C7B299;
   color: white;
   box-shadow: 0 4px 12px rgba(199, 178, 153, 0.4);
   transform: translateY(-2px);
@@ -254,20 +248,20 @@
   height: 20px;
   stroke: currentColor;
   fill: none;
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
 }
 
 .cardTitle {
   font-size: 16px;
   letter-spacing: 0.3px;
   text-shadow: none;
-  color: #333333; /* --color-secondary */
+  color: #333333;
 }
 
 .extraCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(199, 178, 153, 0.1);
-  border-color: #C7B299; /* --color-primary */
+  border-color: #C7B299;
 }
 
 /* Agency Section */
@@ -294,9 +288,9 @@
   border-radius: 20px;
   padding: 25px;
   border: 1px solid #f5f5f5;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); /* --shadow-card */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   cursor: pointer;
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
   position: relative;
   overflow: hidden;
 }
@@ -329,14 +323,14 @@
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid #f0f0f0;
-  transition: all 0.3s ease-in-out; /* --transition */
+  transition: all 0.3s ease-in-out;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .agencyItem:hover .agencyImg {
   transform: scale(1.03);
-  border-color: #C7B299; /* --color-primary */
+  border-color: #C7B299;
   box-shadow: 0 4px 10px rgba(199, 178, 153, 0.2);
 }
 
@@ -355,14 +349,14 @@
   font-size: 17px;
   font-weight: 600;
   text-align: center;
-  color: #333333; /* --color-secondary */
+  color: #333333;
   letter-spacing: 0.5px;
   line-height: 1.3;
-  transition: color 0.3s ease-in-out; /* --transition */
+  transition: color 0.3s ease-in-out;
 }
 
 .agencyItem:hover .agencyName {
-  color: #C7B299; /* --color-primary */
+  color: #C7B299;
 }
 
 .agencyType {
@@ -451,8 +445,6 @@
     top: 15px;
     right: 15px;
   }
-  /* Removed old .logoutIcon button styles */
-
   .title {
     font-size: 1.5rem;
     letter-spacing: 0.5px;
@@ -504,5 +496,150 @@
   .noResults {
     font-size: 18px;
     margin-top: 30px;
+  }
+}
+
+/* ============================================ */
+/* --- [เพิ่ม] สไตล์สำหรับ Bottom Nav Bar --- */
+/* (คัดลอกมาจาก Home.module.css) */
+/* ============================================ */
+
+/* --- Bottom Nav (Desktop/Notebook Style) --- */
+.bottomNav {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  padding: 10px 16px;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.bottomNavButtonContainer {
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.bottomNav button {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  flex-direction: row; /* Icon กับ Text แนวนอน */
+  align-items: center;
+  gap: 6px;
+}
+
+.bottomNav button:not(.active):hover {
+  background: #e9e9e9;
+  color: #111;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.bottomNav .active {
+  color: #fff;
+  font-weight: 700;
+  background-color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+.bottomNav .active:hover {
+  transform: translateY(-2px);
+}
+
+.bottomNav button svg {
+  font-size: 34px;
+}
+
+.bottomNav button span {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* --- Sub Menu (Popup) --- */
+.subMenuPopup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  padding: 6px;
+  min-width: 160px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subMenuItem {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.subMenuItem:hover {
+  background: #f4f4f4;
+}
+
+.subMenuItem.active {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* --- Media Queries (Tablet & Phone) --- */
+@media screen and (max-width: 768px) {
+  /* ... (ส่วน Media Query ของ Theme เดิม) ... */
+
+  /* Bottom Nav (Mobile) */
+  /* เปลี่ยนจาก "เม็ด" ลอยกลางจอ เป็น "บาร์" เต็มจอด้านล่าง */
+  .bottomNav {
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 0;
+    padding: 6px 4px;
+    justify-content: space-around;
+    gap: 2px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ปุ่ม Bottom Nav (Mobile) */
+  .bottomNav button {
+    flex-direction: column; /* Icon อยู่บน Text */
+    padding: 6px 8px;
+    gap: 2px;
+    border-radius: 8px;
+  }
+  .bottomNav button svg {
+    font-size: 24px;
+    height: 24px;
+  }
+  .bottomNav button span {
+    font-size: 11px;
   }
 }
