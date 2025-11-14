@@ -211,6 +211,48 @@
     font-size: 15px;
   }
 
+  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) ที่รวมเข้ามา --- */
+  .title {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  .agencyGrid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 18px;
+  }
+  .searchInput {
+    font-size: 13px;
+    padding: 12px 90px 12px 18px;
+  }
+  .searchButton {
+    width: 36px;
+    height: 36px;
+  }
+  .clearButton {
+    right: 55px;
+    width: 32px;
+    height: 32px;
+  }
+  .extraCards {
+    gap: 15px;
+    max-width: 90%;
+  }
+  .extraCard {
+    padding: 20px;
+    min-width: 130px;
+    font-size: 14px;
+  }
+  .cardTitle {
+    font-size: 15px;
+  }
+  .agencyImg {
+    width: 100px;
+    height: 100px;
+  }
+  .agencyName {
+    font-size: 15px;
+  }
+
   /* Logout Button (Mobile) */
   .logoutIcon button {
     width: auto; /* ปล่อยให้ความกว้างอัตโนมัติ */
@@ -248,6 +290,7 @@
   .bottomNav button svg {
     font-size: 24px;
     height: 24px;
+    width: 24px; /* เพิ่ม width ตามตัวอย่าง */
   }
   .bottomNav button span {
     font-size: 11px;
@@ -256,8 +299,63 @@
 
 /* --- 2. สำหรับโทรศัพท์จอเล็ก (จอเล็กกว่า 480px) --- */
 @media screen and (max-width: 480px) {
+  /* Logout Icon (Mobile) */
   .logoutIcon {
     top: 15px;
     right: 15px;
+  }
+
+  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) ที่รวมเข้ามา --- */
+  .title {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+  .searchContainer {
+    max-width: 90%;
+  }
+  .searchInput {
+    padding: 10px 80px 10px 15px;
+    font-size: 12px;
+  }
+  .searchButton {
+    width: 32px;
+    height: 32px;
+  }
+  .clearButton {
+    right: 50px;
+    width: 30px;
+    height: 30px;
+  }
+  .extraCards {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .extraCard {
+    padding: 15px;
+    width: 80%;
+    min-width: unset;
+  }
+  .agencyGrid {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0 15px;
+  }
+  .agencyItem {
+    width: 90%;
+    max-width: 250px;
+  }
+  .agencyImg {
+    width: 80px;
+    height: 80px;
+  }
+  .agencyName {
+    font-size: 14px;
+  }
+  .agencyType {
+    font-size: 12px;
+  }
+  .noResults {
+    font-size: 18px;
+    margin-top: 30px;
   }
 }
