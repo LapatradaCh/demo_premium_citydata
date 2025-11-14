@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------
  * Home1.module.css (Select Unit Page)
- * (รวมสไตล์เนื้อหา + สไตล์ Logout/Nav จาก Home.js)
+ * (รวมสไตล์เนื้อหาจาก Home1 เดิม + สไตล์ Logout/Nav จาก Home.js เป๊ะๆ)
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
@@ -352,10 +352,9 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 1001; /* Z-index สูงกว่า .appBody */
+  z-index: 1001;
 }
 
-/* ใช้ .logoutIcon button เพื่อให้เหมือน Home.js */
 .logoutIcon button {
   display: flex;
   width: 140px; /* ความกว้างสำหรับ Desktop/Notebook */
@@ -391,7 +390,7 @@
 
 
 /* ============================================ */
-/* --- [สไตล์จาก Home.js] Bottom Nav (Desktop) --- */
+/* --- [สไตล์จาก Home.js] Bottom Nav (Desktop/Notebook Style) --- */
 /* ============================================ */
 .bottomNav {
   position: fixed;
@@ -452,11 +451,9 @@
 }
 
 .bottomNav button svg {
-  display: block; 
-  font-size: 16px; 
-  height: 16px;
-  width: 16px;
-  /* font-size: 34px; (ของเดิมใหญ่ไป) */
+  font-size: 34px; /* นี่คือขนาดไอคอนที่ถูกต้องจาก Home.js */
+  height: 34px; /* เพิ่ม height ให้สอดคล้อง */
+  width: 34px; /* เพิ่ม width ให้สอดคล้อง */
 }
 
 .bottomNav button span {
