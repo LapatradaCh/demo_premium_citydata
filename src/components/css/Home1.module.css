@@ -1,19 +1,30 @@
 /* ----------------------------------------------------------------
  * Modern White Theme CSS Design (CSS Module Compatible)
  * ---------------------------------------------------------------- */
-:root {
-  --color-primary: #C7B299;
-  --color-secondary: #333333;
-  --color-bg: #FFFFFF;
-  --color-accent: #F9F9F9;
-  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.04);
-  --transition: 0.3s ease-in-out;
+
+/*
+  หมายเหตุ: :root variables ถูกลบออกและแทนที่ด้วยค่าจริง
+  สไตล์ 'body' ถูกย้ายไปยังคลาส '.appContainer' 
+  คุณควรใช้คลาสนี้กับอิลิเมนต์ (element) ครอบแอปพลิเคชันของคุณ
+*/
+
+.appContainer {
+  font-family: 'Inter', sans-serif;
+  color: #333333; /* --color-secondary */
+  line-height: 1.6;
+  min-height: 100vh;
+  background: #FFFFFF; /* --color-bg */
+  position: relative;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
 }
+
 .sectionTitle {
   text-align: center;
   color: #000000;
   background-color: #ffffff;
-  border: 2px solid #C7B299;
+  border: 2px solid #C7B299; /* --color-primary */
   border-radius: 12px;
   padding: 8px 18px;
   font-size: 16px;
@@ -21,18 +32,6 @@
   margin: 0 auto 20px auto;
   box-shadow: 0 3px 8px rgba(0,0,0,0.08);
   max-width: 300px;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  color: var(--color-secondary);
-  line-height: 1.6;
-  min-height: 100vh;
-  background: var(--color-bg);
-  position: relative;
-  overflow-x: hidden;
-  padding: 0;
-  margin: 0;
 }
 
 /* Texture Overlay */
@@ -75,7 +74,7 @@ body {
 }
 .logoutBtn {
   display: flex;
-  width: 180px; 
+  width: 180px;  
   align-items: center;
   gap: 0.5rem;
   color: white;
@@ -132,7 +131,7 @@ body {
   font-size: 14px;
   font-weight: 400;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
 }
 
 .searchInput:focus {
@@ -160,7 +159,7 @@ body {
   color: white;
   cursor: pointer;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
 }
 
 .searchButton:hover {
@@ -188,7 +187,7 @@ body {
   justify-content: center;
   cursor: pointer;
   opacity: 0.8;
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
 }
 
 .clearButton:hover {
@@ -219,13 +218,13 @@ body {
   text-align: center;
   font-weight: 600;
   font-size: 15px;
-  color: var(--color-secondary);
+  color: #333333; /* --color-secondary */
   cursor: pointer;
   flex: 1 1 180px;
   min-width: 160px;
   border: 1px solid #eeeeee;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
 }
 
 .cardIcon {
@@ -235,15 +234,15 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-primary);
+  background: #F9F9F9; /* --color-accent */
+  color: #C7B299; /* --color-primary */
   margin-bottom: 4px;
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .extraCard:hover .cardIcon {
-  background: var(--color-primary);
+  background: #C7B299; /* --color-primary */
   color: white;
   box-shadow: 0 4px 12px rgba(199, 178, 153, 0.4);
   transform: translateY(-2px);
@@ -254,20 +253,20 @@ body {
   height: 20px;
   stroke: currentColor;
   fill: none;
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
 }
 
 .cardTitle {
   font-size: 16px;
   letter-spacing: 0.3px;
   text-shadow: none;
-  color: var(--color-secondary);
+  color: #333333; /* --color-secondary */
 }
 
 .extraCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(199, 178, 153, 0.1);
-  border-color: var(--color-primary);
+  border-color: #C7B299; /* --color-primary */
 }
 
 /* Agency Section */
@@ -294,9 +293,9 @@ body {
   border-radius: 20px;
   padding: 25px;
   border: 1px solid #f5f5f5;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); /* --shadow-card */
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
   position: relative;
   overflow: hidden;
 }
@@ -329,14 +328,14 @@ body {
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid #f0f0f0;
-  transition: all var(--transition);
+  transition: all 0.3s ease-in-out; /* --transition */
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .agencyItem:hover .agencyImg {
   transform: scale(1.03);
-  border-color: var(--color-primary);
+  border-color: #C7B299; /* --color-primary */
   box-shadow: 0 4px 10px rgba(199, 178, 153, 0.2);
 }
 
@@ -355,14 +354,14 @@ body {
   font-size: 17px;
   font-weight: 600;
   text-align: center;
-  color: var(--color-secondary);
+  color: #333333; /* --color-secondary */
   letter-spacing: 0.5px;
   line-height: 1.3;
-  transition: color var(--transition);
+  transition: color 0.3s ease-in-out; /* --transition */
 }
 
 .agencyItem:hover .agencyName {
-  color: var(--color-primary);
+  color: #C7B299; /* --color-primary */
 }
 
 .agencyType {
