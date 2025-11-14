@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// อัปเดต path การ import CSS ที่นี่ - แก้กลับไปเป็น path เดิม
-import styles from './css/Home1.module.css';
-// --- [เพิ่ม] Import สไตล์ของ Nav Bar ---
-import navStyles from './css/Home.module.css'; 
-// --- [เพิ่ม] Import ไอคอนสำหรับ Nav Bar ---
+// [แก้ไข] import แค่ไฟล์เดียว
+import styles from './css/Home1.module.css'; 
+// [เพิ่ม] Import ไอคอนสำหรับ Nav Bar
 import {
   FaMapMarkedAlt,
   FaClipboardList,
@@ -22,8 +20,8 @@ const Home1 = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- [เพิ่ม] State และข้อมูลสำหรับ Nav Bar (จาก Home.js) ---
-  const [activeTab, setActiveTab] = useState("หน่วยงาน"); // <--- ตั้งค่าเริ่มต้นเป็น "หน่วยงาน"
+  // --- State และข้อมูลสำหรับ Nav Bar ---
+  const [activeTab, setActiveTab] = useState("หน่วยงาน"); 
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [activeSubTabs, setActiveSubTabs] = useState({
     แผนที่: "แผนที่สาธารณะ",
@@ -33,38 +31,18 @@ const Home1 = () => {
   });
 
   const menuItems = [
-    {
-      name: "แผนที่",
-      icon: FaMapMarkedAlt,
-      items: ["แผนที่สาธารณะ", "แผนที่ภายใน"],
-    },
-    {
-      name: "หน่วยงาน",
-      icon: FaBuilding,
-      items: null,
-      action: () => navigate("/home1"), // <-- คลิกที่นี่จะอยู่ที่หน้า Home1
-    },
-    {
-      name: "รายการแจ้ง",
-      icon: FaClipboardList,
-      items: ["เฉพาะหน่วยงาน", "รายการแจ้งรวม"],
-    },
-    {
-      name: "สถิติ",
-      icon: FaChartBar,
-      items: ["สถิติ", "สถิติองค์กร"],
-    },
-    {
-      name: "ตั้งค่า",
-      icon: FaCog,
-      items: null,
-    },
+    { name: "แผนที่", icon: FaMapMarkedAlt, items: ["แผนที่สาธารณะ", "แผนที่ภายใน"] },
+    { name: "หน่วยงาน", icon: FaBuilding, items: null, action: () => navigate("/home1") },
+    { name: "รายการแจ้ง", icon: FaClipboardList, items: ["เฉพาะหน่วยงาน", "รายการแจ้งรวม"] },
+    { name: "สถิติ", icon: FaChartBar, items: ["สถิติ", "สถิติองค์กร"] },
+    { name: "ตั้งค่า", icon: FaCog, items: null },
   ];
-  // --- จบส่วนที่เพิ่ม ---
 
+  // ... (โค้ด useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick ทั้งหมดเหมือนเดิม) ...
+  
+  /* (ส่วนโค้ดด้านล่างนี้คัดลอกมาเพื่อความสมบูรณ์ แต่ไม่ต้องแก้) */
 
   useEffect(() => {
-    // ... (โค้ด fetchAgencies เดิม) ...
     const fetchAgencies = async () => {
       setIsLoading(true);
       setError(null);
@@ -110,7 +88,6 @@ const Home1 = () => {
     fetchAgencies(); 
   }, []);
 
-  // --- ฟังก์ชันสำหรับส่ง Log (โค้ดเดิม) ---
   const logAgencyEntry = async (agency) => {
     const userId = localStorage.getItem('user_id');
     const accessToken = localStorage.getItem('accessToken');
@@ -155,7 +132,6 @@ const Home1 = () => {
     }
   };
 
-  // --- (โค้ดเดิม) ---
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id"); 
@@ -204,65 +180,46 @@ const Home1 = () => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
     logAgencyEntry(agency); 
-    navigate('/home'); // <-- ไปหน้า /home
+    navigate('/home'); 
   };
 
-  // --- [เพิ่ม] ฟังก์ชันสำหรับ Nav Bar (ปรับแก้เล็กน้อย) ---
+  // --- ฟังก์ชันสำหรับ Nav Bar ---
   const handleTabClick = (item) => {
     if (item.action) {
-      // นี่คือปุ่ม "หน่วยงาน"
-      item.action(); // เรียก navigate("/home1")
+      item.action(); 
       setActiveTab(item.name);
       setOpenSubMenu(null);
     } else if (item.items) {
-      // แท็บที่มีเมนูย่อย (แผนที่, รายการแจ้ง, สถิติ)
-      // ในหน้านี้ เราจะเปิด/ปิดเมนูย่อย
       setActiveTab(item.name);
       setOpenSubMenu(openSubMenu === item.name ? null : item.name);
     } else {
-      // แท็บที่ไม่มีเมนูย่อย (ตั้งค่า)
-      // เมื่อคลิก ให้ไปที่ /home
       navigate("/home");
     }
   };
 
-  // เปลี่ยนเมนูย่อย (ปรับแก้)
   const handleSubMenuItemClick = (mainTabName, subItemName) => {
-    // เมื่อคลิกเมนูย่อยใดๆ ให้ไปที่ /home
     navigate("/home");
-    // ไม่ต้องเซ็ต activeSubTabs เพราะหน้านี้ไม่ได้ใช้แสดงผล
     setOpenSubMenu(null);
   };
-  // --- จบส่วนฟังก์ชันที่เพิ่ม ---
-
 
   return (
-    // [แก้ไข] ใช้ React.Fragment <>...</> ครอบทั้งหมด
     <>
       <div className={styles.appBody}>
+        {/* ... (ส่วนเนื้อหาของ Home1.js ทั้งหมด ... */}
         <div className={styles.logoutIcon}>
           <button className={styles.logoutBtn} onClick={handleLogout}>
-            {/* ... (โค้ดปุ่ม Logout เดิม) ... */}
-           <svg 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
-          <span>ออกจากระบบ</span>
-         </button>
+            <svg 
+              width="18" height="18" viewBox="0 0 24 24" fill="none" 
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
+              strokeLinejoin="round" aria-hidden="true" >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>ออกจากระบบ</span>
+          </button>
         </div>
 
-        {/* ... (โค้ดส่วนที่เหลือของ Home1.js เดิม) ... */}
         <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
 
         <div className={styles.searchContainer}>
@@ -336,18 +293,17 @@ const Home1 = () => {
         </div>
       </div>
 
-      {/* --- [เพิ่ม] JSX ของ Bottom Nav Bar (จาก Home.js) --- */}
-      {/* สังเกตว่าใช้ navStyles แทน styles */}
-      <div className={navStyles.bottomNav}>
+      {/* --- [แก้ไข] เปลี่ยน navStyles ทั้งหมดเป็น styles --- */}
+      <div className={styles.bottomNav}>
         {menuItems.map((item) => (
-          <div key={item.name} className={navStyles.bottomNavButtonContainer}>
+          <div key={item.name} className={styles.bottomNavButtonContainer}>
             {item.items && openSubMenu === item.name && (
-              <div className={navStyles.subMenuPopup}>
+              <div className={styles.subMenuPopup}>
                 {item.items.map((subItem) => (
                   <div
                     key={subItem}
-                    className={`${navStyles.subMenuItem} ${
-                      activeSubTabs[item.name] === subItem ? navStyles.active : ""
+                    className={`${styles.subMenuItem} ${
+                      activeSubTabs[item.name] === subItem ? styles.active : ""
                     }`}
                     onClick={() =>
                       handleSubMenuItemClick(item.name, subItem)
@@ -359,7 +315,7 @@ const Home1 = () => {
               </div>
             )}
             <button
-              className={activeTab === item.name ? navStyles.active : ""}
+              className={activeTab === item.name ? styles.active : ""}
               onClick={() => handleTabClick(item)}
             >
               <item.icon />
