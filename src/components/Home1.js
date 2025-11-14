@@ -1,277 +1,375 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// import liff from "@line/liff"; // ลบ import นี้ออก
 // อัปเดต path การ import CSS ที่นี่ - แก้กลับไปเป็น path เดิม
 import styles from './css/Home1.module.css';
-// import { FaSignOutAlt} from "react-icons/fa"; // ลบ import นี้ออก
-
+// --- [เพิ่ม] Import สไตล์ของ Nav Bar ---
+import navStyles from './css/Home.module.css'; 
+// --- [เพิ่ม] Import ไอคอนสำหรับ Nav Bar ---
+import {
+  FaMapMarkedAlt,
+  FaClipboardList,
+  FaChartBar,
+  FaCog,
+  FaBuilding,
+} from "react-icons/fa";
 
 const Home1 = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
-  const [allAgencies, setAllAgencies] = useState([]); 
-  const [filteredAgencies, setFilteredAgencies] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+  const [allAgencies, setAllAgencies] = useState([]); 
+  const [filteredAgencies, setFilteredAgencies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchAgencies = async () => {
-      setIsLoading(true);
-      setError(null);
+  // --- [เพิ่ม] State และข้อมูลสำหรับ Nav Bar (จาก Home.js) ---
+  const [activeTab, setActiveTab] = useState("หน่วยงาน"); // <--- ตั้งค่าเริ่มต้นเป็น "หน่วยงาน"
+  const [openSubMenu, setOpenSubMenu] = useState(null);
+  const [activeSubTabs, setActiveSubTabs] = useState({
+    แผนที่: "แผนที่สาธารณะ",
+    รายการแจ้ง: "เฉพาะหน่วยงาน",
+    สถิติ: "สถิติ",
+    ผลลัพธ์: "แก้ปัญหาสูงสุด",
+  });
 
-      try {
-        const userId = localStorage.getItem('user_id'); 
-        const accessToken = localStorage.getItem('accessToken');
+  const menuItems = [
+    {
+      name: "แผนที่",
+      icon: FaMapMarkedAlt,
+      items: ["แผนที่สาธารณะ", "แผนที่ภายใน"],
+    },
+    {
+      name: "หน่วยงาน",
+      icon: FaBuilding,
+      items: null,
+      action: () => navigate("/home1"), // <-- คลิกที่นี่จะอยู่ที่หน้า Home1
+    },
+    {
+      name: "รายการแจ้ง",
+      icon: FaClipboardList,
+      items: ["เฉพาะหน่วยงาน", "รายการแจ้งรวม"],
+    },
+    {
+      name: "สถิติ",
+      icon: FaChartBar,
+      items: ["สถิติ", "สถิติองค์กร"],
+    },
+    {
+      name: "ตั้งค่า",
+      icon: FaCog,
+      items: null,
+    },
+  ];
+  // --- จบส่วนที่เพิ่ม ---
 
-        if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
-        if (!accessToken) throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
 
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
+  useEffect(() => {
+    // ... (โค้ด fetchAgencies เดิม) ...
+    const fetchAgencies = async () => {
+      setIsLoading(true);
+      setError(null);
 
-        const response = await fetch(apiUrl, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
+      try {
+        const userId = localStorage.getItem('user_id'); 
+        const accessToken = localStorage.getItem('accessToken');
 
-        if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
+        if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
+        if (!accessToken) throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
 
-        const data = await response.json();     
-        const formattedData = data.map(item => ({
-          id: item.organization_id,
-          name: item.organization_name,
-          img: item.url_logo, 
-          badge: null 
-        }));
-         console.log('data select:', formattedData);
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
 
-        setAllAgencies(formattedData);
-        setFilteredAgencies(formattedData);
+        const response = await fetch(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      } catch (err) {
-        console.error("เกิดข้อผิดพลาดในการดึงข้อมูลหน่วยงาน:", err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
 
-    fetchAgencies(); 
-  }, []);
+        const data = await response.json();     
+        const formattedData = data.map(item => ({
+          id: item.organization_id,
+          name: item.organization_name,
+          img: item.url_logo, 
+          badge: null 
+        }));
+         console.log('data select:', formattedData);
 
-  // --- ฟังก์ชันสำหรับส่ง Log (ตามตัวเลือกที่ 1: JSONB) ---
-  const logAgencyEntry = async (agency) => {
-    const userId = localStorage.getItem('user_id');
-    const accessToken = localStorage.getItem('accessToken');
+        setAllAgencies(formattedData);
+        setFilteredAgencies(formattedData);
 
-    if (!userId || !accessToken) {
-      console.error('ไม่สามารถส่ง log: ไม่พบ user_id หรือ accessToken');
-      return;
-    }
+      } catch (err) {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูลหน่วยงาน:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    try {
-      // สร้างข้อมูล Log ให้ตรงกับตาราง (รวม details)
-      const logData = {
-        user_id: userId,
-        action_type: 'enter_organization',
-        provider: localStorage.getItem('provider') || null, 
-        user_agent: navigator.userAgent,
-        status: 'success',
-        
-        // --- ส่วนที่เพิ่มเข้ามาสำหรับเก็บชื่อและ ID หน่วยงาน ---
-        details: {
-          organization_id: agency.id,
-          organization_name: agency.name 
-        }
-        // ----------------------------------------------------
-      };
+    fetchAgencies(); 
+  }, []);
 
-      // [สำคัญ] Endpoint API ของคุณสำหรับ user_logs
-      const apiUrl = 'https://premium-citydata-api-ab.vercel.app/api/user_logs'; 
+  // --- ฟังก์ชันสำหรับส่ง Log (โค้ดเดิม) ---
+  const logAgencyEntry = async (agency) => {
+    const userId = localStorage.getItem('user_id');
+    const accessToken = localStorage.getItem('accessToken');
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(logData)
-      });
+    if (!userId || !accessToken) {
+      console.error('ไม่สามารถส่ง log: ไม่พบ user_id หรือ accessToken');
+      return;
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('ไม่สามารถบันทึก log การเข้าหน่วยงาน:', errorData);
-      } else {
-        console.log('บันทึกการเข้าหน่วยงานเรียบร้อย');
-      }
+    try {
+      const logData = {
+        user_id: userId,
+        action_type: 'enter_organization',
+        provider: localStorage.getItem('provider') || null, 
+        user_agent: navigator.userAgent,
+        status: 'success',
+        details: {
+          organization_id: agency.id,
+          organization_name: agency.name 
+        }
+      };
+      const apiUrl = 'https://premium-citydata-api-ab.vercel.app/api/user_logs'; 
 
-    } catch (err) {
-      console.error('เกิดข้อผิดพลาดในการส่ง log:', err);
-    }
-  };
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(logData)
+      });
 
-  const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    const userId = localStorage.getItem("user_id"); 
-    console.log("Initiating logout for token:", accessToken);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ไม่สามารถบันทึก log การเข้าหน่วยงาน:', errorData);
+      } else {
+        console.log('บันทึกการเข้าหน่วยงานเรียบร้อย');
+      }
 
-    try {
-      if (accessToken && userId) { 
-        const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
-        await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ user_id: userId }), 
-        });
-        console.log("Backend has been notified of the logout.");
-      }
-    } catch (error) {
-      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
-    } finally {
-      console.log("Executing client-side cleanup.");
-      // แก้ไขการเรียก liff เป็น window.liff และเพิ่มการตรวจสอบ
-      if (window.liff && window.liff.isLoggedIn()) window.liff.logout();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user_id"); 
-      localStorage.removeItem("selectedOrg"); 
-      localStorage.removeItem("provider"); // <-- อาจจะลบ provider ออกตอน logout ด้วย
-      navigate("/"); 
-    }
-  };
+    } catch (err) {
+      console.error('เกิดข้อผิดพลาดในการส่ง log:', err);
+    }
+  };
 
-  const handleSearch = () => {
-    const filtered = allAgencies.filter((agency) =>
-      agency.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredAgencies(filtered);
-  };
+  // --- (โค้ดเดิม) ---
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("user_id"); 
+    console.log("Initiating logout for token:", accessToken);
 
-  const handleClear = () => {
-    setSearchTerm('');
-    setFilteredAgencies(allAgencies);
-  };
+    try {
+      if (accessToken && userId) { 
+        const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ user_id: userId }), 
+        });
+        console.log("Backend has been notified of the logout.");
+      }
+    } catch (error) {
+      console.error("Failed to notify backend, but proceeding with client-side logout.", error);
+    } finally {
+      console.log("Executing client-side cleanup.");
+      if (window.liff && window.liff.isLoggedIn()) window.liff.logout();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user_id"); 
+      localStorage.removeItem("selectedOrg"); 
+      localStorage.removeItem("provider"); 
+      navigate("/"); 
+    }
+  };
 
-  // --- ฟังก์ชันที่ปรับแก้ให้เรียก Log ---
-  const handleAgencyClick = (agency) => {
-    console.log("Clicked agency:", agency); // <--- เพิ่มบรรทัดนี้
-    // 1. บันทึกข้อมูลหน่วยงานที่เลือกลง localStorage
-    localStorage.setItem('selectedOrg', JSON.stringify(agency));
-    localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
+  const handleSearch = () => {
+    const filtered = allAgencies.filter((agency) =>
+      agency.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredAgencies(filtered);
+  };
 
-    // 2. เรียกฟังก์ชันส่ง Log (แบบ fire-and-forget)
-    logAgencyEntry(agency); // <-- เรียกใช้ฟังก์ชัน Log ที่นี่
+  const handleClear = () => {
+    setSearchTerm('');
+    setFilteredAgencies(allAgencies);
+  };
 
-    // 3. นำทางผู้ใช้ไปยังหน้า /home ทันที
-    navigate('/home');
-  };
+  const handleAgencyClick = (agency) => {
+    console.log("Clicked agency:", agency); 
+    localStorage.setItem('selectedOrg', JSON.stringify(agency));
+    localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
+    logAgencyEntry(agency); 
+    navigate('/home'); // <-- ไปหน้า /home
+  };
 
-  return (
-    <div className={styles.appBody}>
-      <div className={styles.logoutIcon}>
-         <button className={styles.logoutBtn} onClick={handleLogout}>
-           {/* แทนที่ FaSignOutAlt ด้วย inline SVG */}
-           <svg 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
-           <span>ออกจากระบบ</span>
-         </button>
-       </div>
+  // --- [เพิ่ม] ฟังก์ชันสำหรับ Nav Bar (ปรับแก้เล็กน้อย) ---
+  const handleTabClick = (item) => {
+    if (item.action) {
+      // นี่คือปุ่ม "หน่วยงาน"
+      item.action(); // เรียก navigate("/home1")
+      setActiveTab(item.name);
+      setOpenSubMenu(null);
+    } else if (item.items) {
+      // แท็บที่มีเมนูย่อย (แผนที่, รายการแจ้ง, สถิติ)
+      // ในหน้านี้ เราจะเปิด/ปิดเมนูย่อย
+      setActiveTab(item.name);
+      setOpenSubMenu(openSubMenu === item.name ? null : item.name);
+    } else {
+      // แท็บที่ไม่มีเมนูย่อย (ตั้งค่า)
+      // เมื่อคลิก ให้ไปที่ /home
+      navigate("/home");
+    }
+  };
 
-       <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
+  // เปลี่ยนเมนูย่อย (ปรับแก้)
+  const handleSubMenuItemClick = (mainTabName, subItemName) => {
+    // เมื่อคลิกเมนูย่อยใดๆ ให้ไปที่ /home
+    navigate("/home");
+    // ไม่ต้องเซ็ต activeSubTabs เพราะหน้านี้ไม่ได้ใช้แสดงผล
+    setOpenSubMenu(null);
+  };
+  // --- จบส่วนฟังก์ชันที่เพิ่ม ---
 
-       <div className={styles.searchContainer}>
-         <input
-           type="text"
-           className={styles.searchInput}
-           placeholder="ค้นหาหน่วยงาน..."
-           value={searchTerm}
-           onChange={(e) => setSearchTerm(e.target.value)}
-           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-         />
-         {searchTerm && (
-           // อัปเดตคลาสสำหรับปุ่ม Clear ที่นี่
-           <button className={styles.clearButton} onClick={handleClear}>
-             <X size={16} />
-           </button>
-         )}
-         <button className={styles.searchButton} onClick={handleSearch}>
-           <Search size={18} />
-         </button>
-       </div>
 
-       {/* --- Card ใหม่ 3 อัน --- */}
-       <div className={styles.extraCards}>
-         <div className={styles.extraCard} onClick={() => navigate('/request-code')}>
-           <p>ขอรหัสเพื่อเริ่มใช้งาน</p>
-         </div>
-         <div className={styles.extraCard} onClick={() => navigate('/Signin')}>
-           <p>ใส่รหัสเพื่อเริ่มใช้งาน</p>
-         </div>
-         <div className={styles.extraCard} onClick={() => navigate('/CreateOrg')}>
-           <p>สร้างหน่วยงาน</p>
-         </div>
-       </div>
+  return (
+    // [แก้ไข] ใช้ React.Fragment <>...</> ครอบทั้งหมด
+    <>
+      <div className={styles.appBody}>
+        <div className={styles.logoutIcon}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            {/* ... (โค้ดปุ่ม Logout เดิม) ... */}
+           <svg 
+            width="18" 
+            height="18" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>ออกจากระบบ</span>
+         </button>
+        </div>
 
-      <div className={styles.agencySection}>
-        {isLoading ? (
-          // อัปเดตคลาสที่นี่
-          <p className={styles.loadingMessage}>กำลังโหลดข้อมูลหน่วยงาน...</p>
-        ) : error ? (
-          // อัปเดตคลาสที่นี่
-          <p className={styles.errorMessage}>เกิดข้อผิดพลาด: {error}</p>
-        ) : filteredAgencies.length === 0 ? (
-          <p className={styles.noResults}>ไม่พบหน่วยงาน</p>
-        ) : (
-          <>
-            <h2 className={styles.sectionTitle}>หน่วยงานทั้งหมด</h2>
-            <div className={styles.agencyGrid}>
-              {filteredAgencies.map((agency) => (
-                <div
-                  key={agency.id} 
-                  className={styles.agencyItem}
-                  onClick={() => handleAgencyClick(agency)} // <-- เรียกใช้ handleAgencyClick ที่นี่
-                >
-                  <div className={styles.agencyImg}>
-                    <img
-                      src={agency.img}
-                      alt={agency.name} 
-                      title={agency.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = `https://placehold.co/100x100/A0AEC0/ffffff?text=${agency.name.charAt(0)}`;
-                      }}
-                    />
-                    {/* อัปเดตคลาสที่นี่ */}
-                    {agency.badge && <div className={styles.agencyBadge}>{agency.badge}</div>}
-                  </div>
-                  <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
-                    {agency.name}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+        {/* ... (โค้ดส่วนที่เหลือของ Home1.js เดิม) ... */}
+        <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
+
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="ค้นหาหน่วยงาน..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          {searchTerm && (
+            <button className={styles.clearButton} onClick={handleClear}>
+              <X size={16} />
+            </button>
+          )}
+          <button className={styles.searchButton} onClick={handleSearch}>
+            <Search size={18} />
+          </button>
+        </div>
+
+        <div className={styles.extraCards}>
+          <div className={styles.extraCard} onClick={() => navigate('/request-code')}>
+            <p>ขอรหัสเพื่อเริ่มใช้งาน</p>
+          </div>
+          <div className={styles.extraCard} onClick={() => navigate('/Signin')}>
+            <p>ใส่รหัสเพื่อเริ่มใช้งาน</p>
+          </div>
+          <div className={styles.extraCard} onClick={() => navigate('/CreateOrg')}>
+            <p>สร้างหน่วยงาน</p>
+          </div>
+        </div>
+
+        <div className={styles.agencySection}>
+          {isLoading ? (
+            <p className={styles.loadingMessage}>กำลังโหลดข้อมูลหน่วยงาน...</p>
+          ) : error ? (
+            <p className={styles.errorMessage}>เกิดข้อผิดพลาด: {error}</p>
+          ) : filteredAgencies.length === 0 ? (
+            <p className={styles.noResults}>ไม่พบหน่วยงาน</p>
+          ) : (
+            <>
+              <h2 className={styles.sectionTitle}>หน่วยงานทั้งหมด</h2>
+              <div className={styles.agencyGrid}>
+                {filteredAgencies.map((agency) => (
+                  <div
+                    key={agency.id} 
+                    className={styles.agencyItem}
+                    onClick={() => handleAgencyClick(agency)} 
+                  >
+                    <div className={styles.agencyImg}>
+                      <img
+                        src={agency.img}
+                        alt={agency.name} 
+                        title={agency.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://placehold.co/100x100/A0AEC0/ffffff?text=${agency.name.charAt(0)}`;
+                        }}
+                      />
+                      {agency.badge && <div className={styles.agencyBadge}>{agency.badge}</div>}
+                    </div>
+                    <div className={styles.agencyName} title="คลิกเพื่อเข้าหน่วยงานนี้">
+                      {agency.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* --- [เพิ่ม] JSX ของ Bottom Nav Bar (จาก Home.js) --- */}
+      {/* สังเกตว่าใช้ navStyles แทน styles */}
+      <div className={navStyles.bottomNav}>
+        {menuItems.map((item) => (
+          <div key={item.name} className={navStyles.bottomNavButtonContainer}>
+            {item.items && openSubMenu === item.name && (
+              <div className={navStyles.subMenuPopup}>
+                {item.items.map((subItem) => (
+                  <div
+                    key={subItem}
+                    className={`${navStyles.subMenuItem} ${
+                      activeSubTabs[item.name] === subItem ? navStyles.active : ""
+                    }`}
+                    onClick={() =>
+                      handleSubMenuItemClick(item.name, subItem)
+                    }
+                  >
+                    {subItem}
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              className={activeTab === item.name ? navStyles.active : ""}
+              onClick={() => handleTabClick(item)}
+            >
+              <item.icon />
+              <span>{item.name}</span>
+            </button>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default Home1;
