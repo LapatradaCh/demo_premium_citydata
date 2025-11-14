@@ -1,6 +1,11 @@
 /* ----------------------------------------------------------------
- * Modern White Theme CSS Design (CSS Module Compatible)
+ * Home1.module.css (Select Unit Page)
+ * (รวมสไตล์เนื้อหา + สไตล์ Logout/Nav ใหม่)
  * ---------------------------------------------------------------- */
+
+/* ============================================ */
+/* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
+/* ============================================ */
 
 .appContainer {
   font-family: 'Inter', sans-serif;
@@ -58,42 +63,6 @@
   position: relative;
   z-index: 1;
   min-height: 100vh;
-}
-
-/* Logout Button */
-.logoutIcon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
-}
-.logoutBtn {
-  display: flex;
-  width: 180px; 
-  align-items: center;
-  gap: 0.5rem;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #e63946, #c92632);
-  box-shadow: 0 6px 20px rgba(230,57,70,0.35);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-.logoutBtn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(230,57,70,0.45);
-}
-.logoutBtn svg {
-  width: 18px;
-  height: 18px;
-  transition: transform 0.35s;
-}
-.logoutBtn:hover svg {
-  transform: scale(1.15) rotate(-8deg);
 }
 
 /* Title */
@@ -375,18 +344,179 @@
   letter-spacing: 0.5px;
 }
 
-/* Responsive (ส่วนเนื้อหา) */
-@media (max-width: 1024px) {
-  .agencyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 20px;
-  }
-  .extraCard {
-    flex: 1 1 150px;
-  }
+
+/* ============================================ */
+/* --- [ใหม่] Logout Button (Desktop) --- */
+/* (จาก Home.module.css) */
+/* ============================================ */
+.logoutIcon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1001; /* Z-index สูงกว่า .appBody */
 }
 
-@media (max-width: 768px) {
+/* นี่คือสไตล์ใหม่สำหรับปุ่ม Logout
+  มันจะทำงานเพราะเราลบ .logoutBtn ออกจาก .js แล้ว
+  CSS จึงเลือก .logoutIcon ที่อยู่ข้างนอก และ <button> ที่อยู่ข้างใน
+*/
+.logoutIcon button {
+  display: flex;
+  width: 140px; /* ความกว้างสำหรับ Desktop/Notebook */
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #e63946, #c92632);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.35);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.logoutIcon button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(230, 57, 70, 0.45);
+}
+
+.logoutIcon button svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.35s;
+}
+
+.logoutIcon button:hover svg {
+  transform: scale(1.15) rotate(-8deg);
+}
+
+
+/* ============================================ */
+/* --- [ใหม่] Bottom Nav (Desktop/Notebook Style) --- */
+/* (จาก Home.module.css) */
+/* ============================================ */
+.bottomNav {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  padding: 10px 16px;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.bottomNavButtonContainer {
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.bottomNav button {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  flex-direction: row; /* Icon กับ Text แนวนอน */
+  align-items: center;
+  gap: 6px;
+}
+
+.bottomNav button:not(.active):hover {
+  background: #e9e9e9;
+  color: #111;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.bottomNav .active {
+  color: #fff;
+  font-weight: 700;
+  background-color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+.bottomNav .active:hover {
+  transform: translateY(-2px);
+}
+
+.bottomNav button svg {
+  /* [แก้ไข] ทำให้ไอคอนแสดงใน .js ที่ใช้ react-icons */
+  display: block; 
+  font-size: 16px; /* ปรับขนาดไอคอนให้พอดี */
+  height: 16px;
+  width: 16px;
+  /* font-size: 34px; (ของเดิมใหญ่ไปสำหรับดีไซน์นี้) */
+}
+
+.bottomNav button span {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* --- Sub Menu (Popup) --- */
+.subMenuPopup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  padding: 6px;
+  min-width: 160px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subMenuItem {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.subMenuItem:hover {
+  background: #f4f4f4;
+}
+
+.subMenuItem.active {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ============================================ */
+/* --- Media Queries (Tablet & Phone) --- */
+/* (รวมของเก่าและของใหม่) */
+/* ============================================ */
+
+/* --- 1. สำหรับแท็บเล็ต และ โทรศัพท์ (จอเล็กกว่า 768px) --- */
+@media screen and (max-width: 768px) {
+  
+  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
   .title {
     font-size: 1.8rem;
     letter-spacing: 1px;
@@ -427,24 +557,50 @@
   .agencyName {
     font-size: 15px;
   }
-}
 
-/* New Logout Responsive Styles */
-@media (min-width: 480px) {
-  .logoutBtn { width: 160px; font-size: 1rem; }
-}
-@media (min-width: 768px) {
-  .logoutBtn { width: 180px; font-size: 1.05rem; padding: 0.5rem 1rem; }
-}
-@media (min-width: 1024px) {
-  .logoutBtn { width: 180px; font-size: 1.1rem; }
-}
-
-@media (max-width: 480px) {
-  .logoutIcon {
-    top: 15px;
-    right: 15px;
+  /* --- [ใหม่] Logout Button (Mobile) --- */
+  .logoutIcon button {
+    width: auto; /* ปล่อยให้ความกว้างอัตโนมัติ */
+    gap: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
   }
+
+  /* --- [ใหม่] Bottom Nav (Mobile) --- */
+  /* เปลี่ยนจาก "เม็ด" ลอยกลางจอ เป็น "บาร์" เต็มจอด้านล่าง */
+  .bottomNav {
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 0;
+    padding: 6px 4px;
+    justify-content: space-around;
+    gap: 2px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  /* --- [ใหม่] ปุ่ม Bottom Nav (Mobile) --- */
+  .bottomNav button {
+    flex-direction: column; /* Icon อยู่บน Text */
+    padding: 6px 8px;
+    gap: 2px;
+    border-radius: 8px;
+  }
+  .bottomNav button svg {
+    font-size: 24px;
+    height: 24px;
+    width: 24px; /* เพิ่มความกว้าง */
+  }
+  .bottomNav button span {
+    font-size: 11px;
+  }
+}
+
+/* --- 2. สำหรับโทรศัพท์จอเล็ก (จอเล็กกว่า 480px) --- */
+@media screen and (max-width: 480px) {
+  
+  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
   .title {
     font-size: 1.5rem;
     letter-spacing: 0.5px;
@@ -497,124 +653,10 @@
     font-size: 18px;
     margin-top: 30px;
   }
+
+  /* --- [ใหม่] Logout Icon (Mobile) --- */
+  .logoutIcon {
+    top: 15px;
+    right: 15px;
+  }
 }
-
-/* ============================================================== */
-/* --- [แก้ไข] สไตล์สำหรับ Bottom Nav Bar (แบบในรูป) --- */
-/* (ดีไซน์นี้จะแสดงผลเหมือนกันทั้งหมด ทั้งมือถือและเดสก์ท็อป) */
-/* ============================================================== */
-
-/* --- กรอบแคปซูลด้านนอก --- */
-.bottomNav {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px; /* ลดช่องว่างระหว่างปุ่ม */
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(14px);
-  padding: 8px 10px; /* ปรับขนาดกรอบให้กระชับขึ้น */
-  border-radius: 32px; /* ความโค้งของแคปซูล */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-}
-
-.bottomNavButtonContainer {
-  position: relative;
-  display: block;
-  text-align: center;
-}
-
-/* --- ปุ่มเมนู (แคปซูลด้านใน) --- */
-.bottomNav button {
-  background: none;
-  border: none;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #333; /* สีตัวอักษร/ไอคอน (ปุ่มปกติ) */
-  padding: 8px 14px; /* ขนาดของปุ่มด้านใน */
-  border-radius: 20px; /* ความโค้งของปุ่มด้านใน */
-  transition: all 0.25s ease;
-  display: inline-flex;
-  flex-direction: row; /* [สำคัญ] ไอคอนและข้อความ แนวนอน */
-  align-items: center;
-  gap: 6px; /* ช่องว่างระหว่างไอคอนกับข้อความ */
-}
-
-/* --- [แก้ไข] ทำให้ไอคอนแสดงผล --- */
-.bottomNav button svg {
-  display: block; 
-  font-size: 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.bottomNav button span {
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-/* --- เอฟเฟกต์เมื่อเมาส์ชี้ (ปุ่มปกติ) --- */
-.bottomNav button:not(.active):hover {
-  background: #f0f0f0; /* สีพื้นหลังเมื่อชี้ */
-  color: #000;
-}
-
-/* --- สไตล์ปุ่มที่กำลัง Active (สีดำ) --- */
-.bottomNav .active {
-  color: #fff; /* สีตัวอักษร/ไอคอน (ปุ่ม Active) */
-  font-weight: 700;
-  background-color: #111; /* สีพื้นหลัง (ปุ่ม Active) */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.bottomNav .active:hover {
-  background-color: #222; /* สีเข้มขึ้นเล็กน้อยเมื่อชี้ */
-}
-
-
-/* --- Sub Menu (Popup) --- */
-/* (ยังเก็บไว้เผื่อได้ใช้) */
-.subMenuPopup {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
-  padding: 6px;
-  min-width: 160px;
-  border: 1px solid #eee;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.subMenuItem {
-  padding: 10px 14px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-}
-
-.subMenuItem:hover {
-  background: #f4f4f4;
-}
-
-.subMenuItem.active {
-  background: #000;
-  color: #fff;
-  font-weight: 600;
-}
-
-/* --- [ลบออก] Media Query ที่สลับดีไซน์ตอนจอมือถือ --- */
-/* (เราลบส่วน @media screen and (max-width: 768px) ที่เกี่ยวกับ .bottomNav ทิ้งไป) */
