@@ -21,8 +21,9 @@
   gap: 16px;
   position: relative;
   width: 100%;
-  max-width: 1100px; /* <--- ปรับปรุง */
-  margin: 0 auto 24px auto; /* <--- ปรับปรุง: จัดกึ่งกลางและเว้นระยะด้านล่าง */
+  /* ปรับปรุง: จำกัดความกว้างสูงสุดและจัดกึ่งกลาง */
+  max-width: 1100px; 
+  margin: 0 auto 24px auto; 
 }
 
 .searchInputWrapper {
@@ -275,18 +276,20 @@
   text-align: left;
   padding-left: 4px;
   width: 100%;
-  max-width: 1100px; /* <--- ปรับปรุง */
-  margin-left: auto; /* <--- ปรับปรุง */
-  margin-right: auto; /* <--- ปรับปรุง */
+  /* ปรับปรุง: จำกัดความกว้างสูงสุดและจัดกึ่งกลาง */
+  max-width: 1100px; 
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 .reportTableContainer {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px; /* <--- ปรับปรุง: เพิ่มช่องว่าง */
-  max-width: 1100px; /* <--- ปรับปรุง: จำกัดความกว้างสูงสุด */
-  margin: 0 auto; /* <--- ปรับปรุง: จัดกึ่งกลาง */
+  /* ปรับปรุง: เพิ่มช่องว่างระหว่างการ์ดและจำกัดความกว้างสูงสุด */
+  gap: 24px; 
+  max-width: 1100px; 
+  margin: 0 auto; /* จัดกึ่งกลาง */
 }
 
 .reportTableRow {
