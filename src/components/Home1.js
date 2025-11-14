@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// [แก้ไข] import แค่ไฟล์เดียว
 import styles from './css/Home1.module.css'; 
+// [เพิ่ม] Import ไอคอนสำหรับ Nav Bar
 import {
   FaMapMarkedAlt,
   FaClipboardList,
@@ -35,33 +37,28 @@ const Home1 = () => {
     { name: "สถิติ", icon: FaChartBar, items: ["สถิติ", "สถิติองค์กร"] },
     { name: "ตั้งค่า", icon: FaCog, items: null },
   ];
+  
+  // ( ... โค้ดส่วน useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick ... )
+  // ( ... วางโค้ดส่วน Logic ทั้งหมดไว้ที่นี่เหมือนเดิม ... )
 
-  // (useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick)
-  // ... (โค้ดส่วน Logic ทั้งหมดเหมือนเดิมทุกประการ) ...
-
+  /* (วางโค้ดส่วน Logic ที่นี่) */
   useEffect(() => {
     const fetchAgencies = async () => {
       setIsLoading(true);
       setError(null);
-
       try {
         const userId = localStorage.getItem('user_id'); 
         const accessToken = localStorage.getItem('accessToken');
-
         if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
         if (!accessToken) throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
-
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
-
         const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
           }
         });
-
         if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
-
         const data = await response.json(); 
         const formattedData = data.map(item => ({
           id: item.organization_id,
@@ -70,10 +67,8 @@ const Home1 = () => {
           badge: null 
         }));
          console.log('data select:', formattedData);
-
         setAllAgencies(formattedData);
         setFilteredAgencies(formattedData);
-
       } catch (err) {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูลหน่วยงาน:", err);
         setError(err.message);
@@ -81,19 +76,16 @@ const Home1 = () => {
         setIsLoading(false);
       }
     };
-
     fetchAgencies(); 
   }, []);
 
   const logAgencyEntry = async (agency) => {
     const userId = localStorage.getItem('user_id');
     const accessToken = localStorage.getItem('accessToken');
-
     if (!userId || !accessToken) {
       console.error('ไม่สามารถส่ง log: ไม่พบ user_id หรือ accessToken');
       return;
     }
-
     try {
       const logData = {
         user_id: userId,
@@ -107,7 +99,6 @@ const Home1 = () => {
         }
       };
       const apiUrl = 'https://premium-citydata-api-ab.vercel.app/api/user_logs'; 
-
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -116,14 +107,12 @@ const Home1 = () => {
         },
         body: JSON.stringify(logData)
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ไม่สามารถบันทึก log การเข้าหน่วยงาน:', errorData);
       } else {
         console.log('บันทึกการเข้าหน่วยงานเรียบร้อย');
       }
-
     } catch (err) {
       console.error('เกิดข้อผิดพลาดในการส่ง log:', err);
     }
@@ -133,7 +122,6 @@ const Home1 = () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id"); 
     console.log("Initiating logout for token:", accessToken);
-
     try {
       if (accessToken && userId) { 
         const apiUrl = "https://premium-citydata-api-ab.vercel.app/api/logout";
@@ -180,7 +168,6 @@ const Home1 = () => {
     navigate('/home'); 
   };
 
-  // --- ฟังก์ชันสำหรับ Nav Bar ---
   const handleTabClick = (item) => {
     if (item.action) {
       item.action(); 
@@ -203,11 +190,13 @@ const Home1 = () => {
   return (
     <>
       <div className={styles.appBody}>
-        {/* (ส่วนเนื้อหา: Logout, Title, Search, Cards, Agency Grid) */}
-        {/* ... (โค้ดส่วนเนื้อหาทั้งหมดเหมือนเดิม) ... */}
-        
         <div className={styles.logoutIcon}>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
+          
+          {/* [--- นี่คือจุดที่แก้ไข ---]
+            เราลบ className={styles.logoutBtn} ออกจาก <button>
+            เพื่อให้ CSS ใหม่ ( .logoutIcon button ) ทำงานได้ 
+          */}
+          <button onClick={handleLogout}>
             <svg 
               width="18" height="18" viewBox="0 0 24 24" fill="none" 
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
@@ -222,6 +211,8 @@ const Home1 = () => {
 
         <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
 
+        {/* ( ... โค้ดส่วน .searchContainer, .extraCards, .agencySection ... ) */}
+        {/* ( ... วางโค้ดส่วนเนื้อหาที่เหลือเหมือนเดิม ... ) */}
         <div className={styles.searchContainer}>
           <input
             type="text"
@@ -293,7 +284,7 @@ const Home1 = () => {
         </div>
       </div>
 
-      {/* --- ส่วน Bottom Nav Bar (ใช้ styles) --- */}
+      {/* --- Bottom Nav Bar (ใช้โค้ดเดิม) --- */}
       <div className={styles.bottomNav}>
         {menuItems.map((item) => (
           <div key={item.name} className={styles.bottomNavButtonContainer}>
