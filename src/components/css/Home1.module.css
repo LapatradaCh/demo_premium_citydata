@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------
  * Home1.module.css (Select Unit Page)
- * (รวมสไตล์เนื้อหา + สไตล์ Logout/Nav ใหม่)
+ * (รวมสไตล์เนื้อหา + สไตล์ Logout/Nav จาก Home.js)
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
@@ -346,8 +346,7 @@
 
 
 /* ============================================ */
-/* --- [ใหม่] Logout Button (Desktop) --- */
-/* (จาก Home.module.css) */
+/* --- [สไตล์จาก Home.js] Logout Button (Desktop) --- */
 /* ============================================ */
 .logoutIcon {
   position: absolute;
@@ -356,10 +355,7 @@
   z-index: 1001; /* Z-index สูงกว่า .appBody */
 }
 
-/* นี่คือสไตล์ใหม่สำหรับปุ่ม Logout
-  มันจะทำงานเพราะเราลบ .logoutBtn ออกจาก .js แล้ว
-  CSS จึงเลือก .logoutIcon ที่อยู่ข้างนอก และ <button> ที่อยู่ข้างใน
-*/
+/* ใช้ .logoutIcon button เพื่อให้เหมือน Home.js */
 .logoutIcon button {
   display: flex;
   width: 140px; /* ความกว้างสำหรับ Desktop/Notebook */
@@ -395,8 +391,7 @@
 
 
 /* ============================================ */
-/* --- [ใหม่] Bottom Nav (Desktop/Notebook Style) --- */
-/* (จาก Home.module.css) */
+/* --- [สไตล์จาก Home.js] Bottom Nav (Desktop) --- */
 /* ============================================ */
 .bottomNav {
   position: fixed;
@@ -457,12 +452,11 @@
 }
 
 .bottomNav button svg {
-  /* [แก้ไข] ทำให้ไอคอนแสดงใน .js ที่ใช้ react-icons */
   display: block; 
-  font-size: 16px; /* ปรับขนาดไอคอนให้พอดี */
+  font-size: 16px; 
   height: 16px;
   width: 16px;
-  /* font-size: 34px; (ของเดิมใหญ่ไปสำหรับดีไซน์นี้) */
+  /* font-size: 34px; (ของเดิมใหญ่ไป) */
 }
 
 .bottomNav button span {
@@ -510,7 +504,6 @@
 
 /* ============================================ */
 /* --- Media Queries (Tablet & Phone) --- */
-/* (รวมของเก่าและของใหม่) */
 /* ============================================ */
 
 /* --- 1. สำหรับแท็บเล็ต และ โทรศัพท์ (จอเล็กกว่า 768px) --- */
@@ -558,16 +551,15 @@
     font-size: 15px;
   }
 
-  /* --- [ใหม่] Logout Button (Mobile) --- */
+  /* --- [สไตล์จาก Home.js] Logout Button (Mobile) --- */
   .logoutIcon button {
-    width: auto; /* ปล่อยให้ความกว้างอัตโนมัติ */
+    width: auto; 
     gap: 4px;
     padding: 5px 10px;
     font-size: 12px;
   }
 
-  /* --- [ใหม่] Bottom Nav (Mobile) --- */
-  /* เปลี่ยนจาก "เม็ด" ลอยกลางจอ เป็น "บาร์" เต็มจอด้านล่าง */
+  /* --- [สไตล์จาก Home.js] Bottom Nav (Mobile) --- */
   .bottomNav {
     bottom: 0;
     left: 0;
@@ -580,9 +572,9 @@
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
   }
 
-  /* --- [ใหม่] ปุ่ม Bottom Nav (Mobile) --- */
+  /* --- [สไตล์จาก Home.js] ปุ่ม Bottom Nav (Mobile) --- */
   .bottomNav button {
-    flex-direction: column; /* Icon อยู่บน Text */
+    flex-direction: column; 
     padding: 6px 8px;
     gap: 2px;
     border-radius: 8px;
@@ -590,7 +582,7 @@
   .bottomNav button svg {
     font-size: 24px;
     height: 24px;
-    width: 24px; /* เพิ่มความกว้าง */
+    width: 24px; 
   }
   .bottomNav button span {
     font-size: 11px;
@@ -654,7 +646,7 @@
     margin-top: 30px;
   }
 
-  /* --- [ใหม่] Logout Icon (Mobile) --- */
+  /* --- [สไตล์จาก Home.js] Logout Icon (Mobile) --- */
   .logoutIcon {
     top: 15px;
     right: 15px;
