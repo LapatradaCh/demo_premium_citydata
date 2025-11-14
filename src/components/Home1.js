@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// [แก้ไข] import แค่ไฟล์เดียว
 import styles from './css/Home1.module.css'; 
-// [เพิ่ม] Import ไอคอนสำหรับ Nav Bar
+
+// [แก้ไข] เพิ่ม FaSignOutAlt เข้ามา
 import {
   FaMapMarkedAlt,
   FaClipboardList,
   FaChartBar,
   FaCog,
   FaBuilding,
+  FaSignOutAlt, // <-- เพิ่มไอคอนนี้
 } from "react-icons/fa";
 
 const Home1 = () => {
@@ -38,10 +39,9 @@ const Home1 = () => {
     { name: "ตั้งค่า", icon: FaCog, items: null },
   ];
   
-  // ( ... โค้ดส่วน useEffect, logAgencyEntry, handleLogout, handleSearch, handleClear, handleAgencyClick ... )
-  // ( ... วางโค้ดส่วน Logic ทั้งหมดไว้ที่นี่เหมือนเดิม ... )
+  // ( ... โค้ดส่วน Logic ทั้งหมดเหมือนเดิม ... )
+  // ( ... (useEffect, logAgencyEntry, handleLogout, ฯลฯ) ... )
 
-  /* (วางโค้ดส่วน Logic ที่นี่) */
   useEffect(() => {
     const fetchAgencies = async () => {
       setIsLoading(true);
@@ -193,26 +193,17 @@ const Home1 = () => {
         <div className={styles.logoutIcon}>
           
           {/* [--- นี่คือจุดที่แก้ไข ---]
-            เราลบ className={styles.logoutBtn} ออกจาก <button>
-            เพื่อให้ CSS ใหม่ ( .logoutIcon button ) ทำงานได้ 
+             เปลี่ยนจาก <svg> มาเป็น <FaSignOutAlt /> ให้เหมือน Home.js
           */}
           <button onClick={handleLogout}>
-            <svg 
-              width="18" height="18" viewBox="0 0 24 24" fill="none" 
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" 
-              strokeLinejoin="round" aria-hidden="true" >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
+            <FaSignOutAlt /> 
             <span>ออกจากระบบ</span>
           </button>
         </div>
 
         <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
 
-        {/* ( ... โค้ดส่วน .searchContainer, .extraCards, .agencySection ... ) */}
-        {/* ( ... วางโค้ดส่วนเนื้อหาที่เหลือเหมือนเดิม ... ) */}
+        {/* ( ... โค้ดส่วนเนื้อหาที่เหลือเหมือนเดิม ... ) */}
         <div className={styles.searchContainer}>
           <input
             type="text"
