@@ -327,7 +327,7 @@
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
-  left: 50%;
+  left: 70%;
   transform: translateX(-50%);
   background: #ffffff;
   border-radius: 12px;
