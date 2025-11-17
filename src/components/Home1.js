@@ -10,7 +10,7 @@ import OrgStatisticsView from './components/OrgStatisticsView';
 import SettingsView from './components/SettingsView';
 
 // Import CSS ของ Home หลัก
-import styles from './css/Home.module.css'; 
+import styles from './css/Home1.module.css'; 
 import { FaMapMarkedAlt, FaClipboardList, FaChartBar, FaCog, FaBuilding } from "react-icons/fa";
 
 const Home = () => {
