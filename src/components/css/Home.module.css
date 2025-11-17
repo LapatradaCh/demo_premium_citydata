@@ -429,26 +429,31 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (แก้ไขใหม่ ใช้ Grid) --- */
+  /* --- Bottom Nav Mobile (แก้ไขเรื่องล้นขอบ + เท่ากันเป๊ะ) --- */
   /* ==================================================== */
   
   .bottomNav {
     position: fixed;
     bottom: 0;
     left: 0;
+    right: 0; /* ตรึงขอบขวา */
     width: 100%;
+    
+    /* สำคัญ: ป้องกัน Padding ดันจนล้นจอ */
+    box-sizing: border-box;
+    
     background: #ffffff;
     
-    /* ใช้ Grid เพื่อแบ่ง 5 ช่องเท่ากันเป๊ะๆ ไม่สนความยาวตัวอักษร */
+    /* Grid แบ่ง 5 ช่องเท่ากัน */
     display: grid;
     grid-template-columns: repeat(5, 1fr); 
-    gap: 6px; 
+    gap: 4px; /* ระยะห่างเล็กน้อย */
     
-    padding: 12px 8px 24px 8px; /* ด้านล่างเผื่อ iPhone รุ่นไม่มีปุ่มโฮม */
-    border-radius: 24px 24px 0 0; /* มนเฉพาะมุมบน */
+    padding: 12px 10px 24px 10px; /* เผื่อพื้นที่ด้านล่างและด้านข้าง */
+    border-radius: 24px 24px 0 0; 
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     z-index: 1000;
-    transform: none; /* ยกเลิก translate ของ desktop */
+    transform: none; 
   }
 
   /* --- ปุ่มทั่วไป (Inactive) --- */
@@ -462,11 +467,10 @@
     align-items: center;
     justify-content: center;
     
-    /* ล็อคความสูงให้เท่ากันทุกปุ่ม เพื่อให้พื้นหลังสีดำเท่ากัน */
-    height: 60px; 
+    height: 56px; /* ความสูงปุ่ม */
     width: 100%; 
     
-    border-radius: 16px; /* ความมนของปุ่มสีดำ */
+    border-radius: 16px; 
     padding: 0;
     margin: 0; 
     transition: all 0.2s ease;
@@ -477,7 +481,7 @@
     font-size: 22px;
     width: 22px;
     height: 22px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     color: #9CA3AF;
     transition: all 0.2s ease;
   }
@@ -489,13 +493,15 @@
     font-weight: 500;
     line-height: 1;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* --- สถานะเลือก (Active) --- */
   .bottomNav button.active {
     background-color: #000000 !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
-    transform: none !important; /* ห้ามขยับ */
+    transform: none !important; 
   }
 
   /* ไอคอนสีขาว */
