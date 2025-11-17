@@ -260,12 +260,12 @@ const SatisfactionBox = ({ organizationId }) => {
 };
 
 // ====================================================================
-// === (*** NEW COMPONENT: TopStaffStats (แก้ไขตามสถานะใหม่ 7 อย่าง) ***) ===
+// === (*** MODIFIED COMPONENT: TopStaffStats (ดึงข้อมูลจริง) ***) ===
 // ====================================================================
 const TopStaffStats = ({ organizationId }) => {
   // 1. กำหนดค่า Config ของสถานะ (ชื่อ, Key, สี Pastel)
   const statusConfig = [
-      { key: 'pending', label: 'รอรับเรื่อง', color: '#ef9a9a' },      // แดงอ่อน (เข้มขึ้นนิดหน่อยเพื่อให้อ่านง่าย)
+      { key: 'pending', label: 'รอรับเรื่อง', color: '#ef9a9a' },      // แดงอ่อน
       { key: 'coordinating', label: 'กำลังประสานงาน', color: '#ce93d8' }, // ม่วงอ่อน
       { key: 'inProgress', label: 'กำลังดำเนินการ', color: '#fff59d' },  // เหลืองอ่อน
       { key: 'completed', label: 'เสร็จสิ้น', color: '#a5d6a7' },      // เขียวอ่อน
@@ -275,28 +275,107 @@ const TopStaffStats = ({ organizationId }) => {
   ];
 
   const [staffData, setStaffData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-      // *** จำลองข้อมูล (Mock Data) ให้ตรงกับสถานะใหม่ ***
-      // (ในอนาคตถ้าต่อ API ต้อง Map key จาก API ให้ตรงกับ statusConfig ด้านบน)
-      const mockData = [
-          { name: "กมนัช พรหมบำรุง", pending: 1, coordinating: 1, inProgress: 6, completed: 4, forwarded: 2, invited: 0, rejected: 0 },
-          { name: "กมนัช traffy fondue", pending: 1, coordinating: 0, inProgress: 4, completed: 1, forwarded: 1, invited: 1, rejected: 0 },
-          { name: "Phumchai Siriphanpor...", pending: 0, coordinating: 2, inProgress: 2, completed: 2, forwarded: 0, invited: 0, rejected: 0 },
-          { name: "AbuDaHBeE Tubtim", pending: 1, coordinating: 0, inProgress: 3, completed: 0, forwarded: 0, invited: 0, rejected: 1 },
-          { name: "Traffy-testkk NECTEC,...", pending: 0, coordinating: 0, inProgress: 3, completed: 1, forwarded: 0, invited: 0, rejected: 0 },
-          { name: "SuperToy Noppadol", pending: 0, coordinating: 0, inProgress: 2, completed: 0, forwarded: 0, invited: 0, rejected: 0 },
-          { name: "Taned Wongpoo", pending: 0, coordinating: 0, inProgress: 0, completed: 2, forwarded: 0, invited: 0, rejected: 0 },
-      ];
-      setStaffData(mockData);
-  }, []);
+  // 2. Helper Function: แปลงชื่อสถานะ (DB) เป็น Key (Component)
+  const mapStatusToKey = (statusName) => {
+      const mapping = {
+          'รอรับเรื่อง': 'pending',
+          'กำลังประสานงาน': 'coordinating',
+          'กำลังดำเนินการ': 'inProgress',
+          'เสร็จสิ้น': 'completed',
+          'ส่งต่อ': 'forwarded',
+          'เชิญร่วม': 'invited',
+          'ปฏิเสธ': 'rejected'
+      };
+      // คืนค่า key ที่ตรงกัน, หรือ null ถ้าไม่รู้จักสถานะนี้
+      return mapping[statusName] || null; 
+  };
 
-  // ฟังก์ชันคำนวณยอดรวมของแต่ละคน
+  // 3. Helper Function: คำนวณยอดรวม (สำหรับเรียงลำดับ)
   const calculateTotal = (staff) => {
       return statusConfig.reduce((sum, config) => sum + (staff[config.key] || 0), 0);
   };
 
-  // หาค่า Max Total เพื่อนำไปคำนวณความกว้างของกราฟ 100%
+  useEffect(() => {
+      const fetchStaffActivities = async () => {
+          const accessToken = localStorage.getItem('accessToken');
+          if (!accessToken || !organizationId) {
+              setLoading(false);
+              return;
+          }
+
+          try {
+              setLoading(true);
+              setError(null);
+
+              // 4. เรียก API ที่เราสร้างขึ้น
+              const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, {
+                  headers: {
+                      'Authorization': `Bearer ${accessToken}`,
+                  },
+              });
+
+              if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(errorData.message || `Failed to fetch staff activities: ${response.statusText}`);
+              }
+
+              const rawData = await response.json();
+              
+              // 5. *** Data Transformation ***
+              // (แปลงข้อมูลจาก [ {name, status, count}, ... ] 
+              // เป็น [ {name, pending: N, completed: M, ...}, ... ])
+              
+              const groupedData = {};
+
+              rawData.forEach(item => {
+                  const name = item.staff_name || "Unknown Staff";
+                  const statusKey = mapStatusToKey(item.new_status); // แปลง "เสร็จสิ้น" -> "completed"
+                  const count = parseInt(item.count, 10) || 0;
+
+                  if (!groupedData[name]) {
+                      // ถ้าเจอชื่อนี้ครั้งแรก, สร้าง object เริ่มต้นให้
+                      groupedData[name] = { 
+                          name: name, 
+                          pending: 0, coordinating: 0, inProgress: 0, completed: 0, 
+                          forwarded: 0, invited: 0, rejected: 0 
+                      };
+                  }
+
+                  // ถ้าเป็นสถานะที่เรารู้จัก, ให้บวกยอดเข้าไป
+                  if (statusKey) {
+                      groupedData[name][statusKey] += count;
+                  }
+              });
+
+              // 6. แปลง Object กลับเป็น Array, เรียงลำดับ, และเอา 10 อันดับแรก
+              const processedArray = Object.values(groupedData)
+                .sort((a, b) => calculateTotal(b) - calculateTotal(a)) // เรียงจากมากไปน้อย
+                .slice(0, 10); // เอา 10 อันดับ
+
+              setStaffData(processedArray);
+
+          } catch (err) {
+              console.error("Error fetching staff stats:", err);
+              setError(err.message);
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchStaffActivities();
+  }, [organizationId]); // ทำงานใหม่เมื่อ organizationId เปลี่ยน
+
+  // 7. Render: แสดงผล Loading / Error / No Data
+  if (loading) return <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูลเจ้าหน้าที่...</p>;
+  if (error) return <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>;
+  if (staffData.length === 0) return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</p>;
+
+
+  // 8. Render: แสดงผลกราฟ
+  // (หาค่าสูงสุดเพื่อกำหนดความกว้าง 100% ของกราฟ)
   const maxTotal = Math.max(...staffData.map(s => calculateTotal(s)), 0);
 
   return (
@@ -349,8 +428,6 @@ const TopStaffStats = ({ organizationId }) => {
                                       );
                                   })}
                               </div>
-                              {/* แสดงตัวเลขยอดรวมท้ายกราฟ (Optional) */}
-                              {/* <span style={{ marginLeft: '8px', fontSize: '0.8rem', color: '#999' }}>{total}</span> */}
                           </div>
                       </div>
                   );
@@ -589,7 +666,7 @@ const StatisticsView = ({ subTab, organizationId }) => {
               </strong>
             </div>
 
-            {/* *** แสดงกราฟ Top Staff ตามสถานะ 7 อย่าง *** */}
+            {/* *** แสดงกราฟ Top Staff (ที่ตอนนี้ดึงข้อมูลจริง) *** */}
             <TopStaffStats organizationId={organizationId} />
 
           </div>
