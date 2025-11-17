@@ -32,7 +32,7 @@
   white-space: nowrap;
 }
 
-/* --- Logout Button (Desktop) --- */
+/* --- Logout Button --- */
 .logoutIcon {
   position: absolute;
   top: 1rem;
@@ -73,14 +73,14 @@
   transform: scale(1.15) rotate(-8deg);
 }
 
-/* --- Main Layout (Wrapper แทน Body) --- */
+/* --- Main Wrapper (แทน Body) --- */
 .dashboardContent {
-  /* กำหนดขอบเขตหน้าจอหลัก */
+  /* กำหนดกรอบหลัก Desktop */
   width: 100%;
-  max-width: 1280px; /* ความกว้างสูงสุดบน Desktop */
-  margin: 0 auto; /* จัดกึ่งกลาง */
+  max-width: 1280px; 
+  margin: 0 auto; 
   
-  /* Padding สำหรับ Desktop */
+  /* Padding Desktop */
   padding: 30px 40px 120px 40px;
   
   display: flex;
@@ -90,14 +90,14 @@
   background-color: #ffffff;
   color: #1a1a1a;
   
-  /* --- สำคัญ: ป้องกันจอล้น --- */
-  overflow-x: hidden; 
+  /* ป้องกันล้นแนวนอน */
+  overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
   min-height: 100vh;
 }
 
-/* --- Title --- */
+/* --- Elements ทั่วไป --- */
 .title {
   font-size: 2rem;
   font-weight: 700;
@@ -106,10 +106,8 @@
   line-height: 1.2;
   color: #000000;
   margin-bottom: 20px;
-  text-shadow: none;
 }
 
-/* --- Search Container --- */
 .searchContainer {
   width: 100%;
   max-width: 500px;
@@ -128,7 +126,7 @@
   font-weight: 400;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
   transition: all 0.3s ease-in-out;
-  box-sizing: border-box; /* สำคัญ */
+  box-sizing: border-box;
 }
 
 .searchButton {
@@ -161,10 +159,9 @@
   justify-content: center;
   cursor: pointer;
   opacity: 0.8;
-  transition: all 0.3s ease-in-out;
 }
 
-/* --- Extra Cards (เมนูเสริม) --- */
+/* --- Extra Cards --- */
 .extraCards {
   display: flex;
   flex-wrap: wrap;
@@ -201,7 +198,7 @@
   color: #333333;
 }
 
-/* --- Agency Section (เนื้อหาหลัก) --- */
+/* --- Agency Section --- */
 .agencySection {
   width: 100%;
   padding: 20px 0;
@@ -210,7 +207,7 @@
 
 .agencyGrid {
   display: grid;
-  /* Desktop: ปรับอัตโนมัติ */
+  /* Desktop ใช้ auto-fill ปกติ */
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 25px;
   justify-items: center;
@@ -268,7 +265,6 @@
   font-size: 20px;
   color: #aaa;
   margin-top: 40px;
-  font-weight: 500;
 }
 
 /* --- Bottom Nav (Desktop) --- */
@@ -338,7 +334,7 @@
   white-space: nowrap;
 }
 
-/* --- Sub Menu (Popup) --- */
+/* --- Sub Menu --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -362,7 +358,6 @@
   color: #333;
   cursor: pointer;
   border-radius: 8px;
-  transition: background-color 0.2s ease;
   font-weight: 500;
 }
 
@@ -373,21 +368,35 @@
 .subMenuItem.active {
   background: #000;
   color: #fff;
-  font-weight: 600;
 }
 
 /* ============================================ */
-/* --- 2. Media Queries (Tablet & Phone) --- */
+/* --- 2. Media Queries (ส่วนสำคัญที่แก้ปัญหา) --- */
 /* ============================================ */
 
-/* --- สำหรับจอเล็กกว่า 768px (Tablet & Mobile) --- */
 @media screen and (max-width: 768px) {
   
-  /* --- Header Mobile --- */
+  /* --- 1. แก้ปัญหาล้นขอบ (Safety Wrapper) --- */
+  .dashboardContent {
+    width: 100%;
+    max-width: 100vw; /* ห้ามเกินจอ */
+    padding: 16px 16px 100px 16px;
+    overflow-x: hidden; /* ตัดส่วนเกินแนวนอนทิ้ง */
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  /* --- 2. ยาแรง: บังคับทุกอย่างห้ามกว้างเกินพ่อมัน --- */
+  .dashboardContent * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* แก้ไข Header */
   .logoSectionTop {
     padding: 12px 16px;
     width: 100%;
-    box-sizing: border-box; /* กันล้น */
+    box-sizing: border-box;
   }
   .logoImg {
     width: 36px;
@@ -397,146 +406,103 @@
     font-size: 15px;
   }
 
-  /* --- Main Layout Mobile (แก้จอล้นที่นี่) --- */
-  .dashboardContent {
-    /* ปรับ padding ให้ชิดขอบมากขึ้นในมือถือ */
-    padding: 16px 12px 100px 12px;
+  /* --- แก้ไข Input/Select/Form ที่มักดันจอ --- */
+  input, select, textarea, button {
     width: 100%;
-    overflow-x: hidden; /* ตัดส่วนเกินแนวนอนทิ้ง */
+    max-width: 100%;
   }
-
-  /* --- Elements Styling --- */
-  .title {
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-  }
-  
   .searchContainer {
     width: 100%;
-    max-width: 100%;
+    padding: 0;
   }
-  
   .searchInput {
-    font-size: 13px;
-    padding: 12px 90px 12px 18px;
     width: 100%;
-  }
-  
-  .searchButton {
-    width: 36px;
-    height: 36px;
-  }
-  .clearButton {
-    right: 55px;
-    width: 32px;
-    height: 32px;
-  }
-
-  .extraCards {
-    gap: 15px;
-    max-width: 100%;
-  }
-  .extraCard {
-    padding: 20px;
-    min-width: 130px;
-    font-size: 14px;
+    padding: 12px 90px 12px 18px;
   }
 
   /* --- Grid Mobile --- */
   .agencyGrid {
-    /* ปรับเป็น 1 คอลัมน์เต็ม เพื่อความปลอดภัยไม่ให้ตกขอบ */
+    /* เรียง 1 แถวเพื่อความปลอดภัย */
     grid-template-columns: 1fr; 
     gap: 16px;
     width: 100%;
+    margin: 0;
   }
   
   .agencyItem {
     width: 100%;
-    max-width: 100%; /* เต็มความกว้าง Grid */
-    box-sizing: border-box;
+    margin: 0;
+  }
+  
+  .extraCards {
+    gap: 15px;
+    width: 100%;
+  }
+  .extraCard {
+    padding: 20px;
+    min-width: 0; /* ยกเลิก min-width ที่อาจดันจอ */
+    width: 100%;
   }
 
-  .agencyImg {
-    width: 100px;
-    height: 100px;
-  }
-  .agencyName {
-    font-size: 15px;
+  /* --- Bottom Nav Mobile (แก้ไอคอนใหญ่) --- */
+  .bottomNav {
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    transform: none;
+    border-radius: 0;
+    padding: 8px 0;
+    justify-content: space-around; /* กระจายปุ่ม */
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    gap: 0;
   }
 
-  /* --- Logout Mobile --- */
+  .bottomNav button {
+    flex: 1; /* ให้ปุ่มกินพื้นที่เท่ากัน */
+    flex-direction: column;
+    padding: 4px 0;
+    width: auto;
+    min-width: 0;
+    gap: 2px;
+    border-radius: 8px;
+  }
+
+  /* ปรับขนาดไอคอนตรงนี้ */
+  .bottomNav button svg {
+    font-size: 20px; /* ลดขนาดลง */
+    height: 20px;
+    width: 20px;
+    margin-bottom: 2px;
+  }
+
+  .bottomNav button span {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  
+  /* Logout Mobile */
   .logoutIcon button {
     width: auto;
     gap: 4px;
     padding: 5px 10px;
     font-size: 12px;
   }
-
-  /* --- Bottom Nav Mobile (ปรับลดขนาดไอคอน) --- */
-  .bottomNav {
-    bottom: 0;
-    left: 0;
-    transform: none;
-    width: 100%;
-    border-radius: 0;
-    padding: 6px 0; /* ลดระยะห่าง */
-    justify-content: space-evenly; /* กระจายปุ่ม */
-    gap: 0;
-    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
-    background: #ffffff;
-  }
-
-  .bottomNav button {
-    flex-direction: column;
-    padding: 4px 8px;
-    gap: 4px;
-    border-radius: 8px;
-    width: auto;
-    min-width: 60px; /* ให้พื้นที่สัมผัสพอดีนิ้ว */
-  }
-  
-  /* **ลดขนาดไอคอนมือถือที่นี่** */
-  .bottomNav button svg {
-    font-size: 20px; 
-    height: 20px;
-    width: 20px;
-  }
-  
-  .bottomNav button span {
-    font-size: 10px;
-  }
 }
 
-/* --- สำหรับจอเล็กมาก (เช่น iPhone SE รุ่นเก่า) --- */
+/* --- จอเล็กมาก (Small Phone) --- */
 @media screen and (max-width: 480px) {
   .logoutIcon {
     top: 15px;
     right: 15px;
   }
-
+  
   .title {
     font-size: 1.5rem;
-    letter-spacing: 0.5px;
   }
   
-  .extraCards {
-    flex-direction: column;
-    align-items: stretch; /* ยืดเต็มจอ */
-    width: 100%;
-  }
-  .extraCard {
-    width: 100%; /* เต็มจอ */
-    box-sizing: border-box;
-    padding: 15px;
-  }
-  
-  .agencyGrid {
-    padding: 0; /* เอา padding ออกเพื่อให้การ์ดเต็มจอ */
-  }
-
-  /* ลดขนาดไอคอน Nav ลงอีกนิดถ้าจอเล็กจัด */
   .bottomNav button svg {
-    font-size: 18px;
+    font-size: 18px; /* ลดลงอีกนิด */
     width: 18px;
     height: 18px;
   }
