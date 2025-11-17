@@ -1,16 +1,17 @@
-/* --- 1. css/Home.module.css --- */
-/* (สำหรับ Home.js) */
+/* --- css/Home.module.css --- */
 
 /* ============================================ */
 /* --- สไตล์หลัก (Desktop / Notebook) --- */
 /* ============================================ */
 
-/* --- Logo Section Top (ไม่เปลี่ยนแปลง) --- */
+/* --- Logo Section Top --- */
+/* ส่วนหัวยังคงเต็มจอตามปกติ */
 .logoSectionTop {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 40px;
+  /* Padding ซ้ายขวา Desktop */
+  padding: 14px 40px; 
   background: #ffffff;
   position: relative;
   z-index: 1000;
@@ -33,7 +34,7 @@
   white-space: nowrap;
 }
 
-/* --- Logout Button (Desktop) (ไม่เปลี่ยนแปลง) --- */
+/* --- Logout Button (Desktop) --- */
 .logoutIcon {
   position: absolute;
   top: 1rem;
@@ -74,25 +75,28 @@
   transform: scale(1.15) rotate(-8deg);
 }
 
-/* --- Main Layout (ปรับปรุง Padding) --- */
+/* --- Main Layout (เปลี่ยน dashboardContent เป็น Container ในตัว) --- */
 .dashboardContent {
-  /* ปรับ padding แนวตั้งให้สอดคล้องกับ Home1 (80px) แต่ยังคงเดิม */
-  padding: 30px 40px;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
+  /* 1. กำหนดความกว้างสูงสุดที่นี่เลย (ไม่ให้เกินสายตา) */
+  max-width: 1280px; 
+  
+  /* 2. จัดกึ่งกลางหน้าจอ */
+  margin: 0 auto; 
+  
+  /* 3. ความกว้างเต็มพื้นที่ก่อนจะชน max-width */
+  width: 100%; 
+  
+  /* 4. ระยะขอบซ้ายขวา (Safe Area) สำหรับ Desktop */
+  padding: 30px 40px 120px 40px; /* บน ขวา ล่าง ซ้าย */
+  
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
   background-color: #ffffff;
   color: #1a1a1a;
-  padding-bottom: 120px;
-  /* เพิ่ม: เพื่อป้องกันเนื้อหาแนวนอนล้นจากองค์ประกอบภายใน */
   overflow-x: hidden; 
 }
-
-/* --- เนื้อหาที่คัดลอกมาจาก Home1.module.css --- */
 
 /* Title */
 .title {
@@ -109,7 +113,7 @@
 /* Search Container */
 .searchContainer {
   width: 100%;
-  max-width: 500px; /* จำกัดความกว้าง Search Bar */
+  max-width: 500px;
   position: relative;
   display: flex;
   align-items: center;
@@ -167,7 +171,7 @@
   gap: 20px;
   justify-content: center;
   width: 100%;
-  max-width: 800px; /* จำกัดความกว้าง Extra Cards */
+  max-width: 900px; /* ปรับให้กว้างขึ้นเล็กน้อยให้สมดุลกับ dashboardContent */
   margin-top: 15px;
 }
 
@@ -194,20 +198,20 @@
 .cardTitle {
   font-size: 16px;
   letter-spacing: 0.3px;
-  text-shadow: none;
   color: #333333;
 }
 
 /* Agency Section (เนื้อหาหลัก) */
 .agencySection {
   width: 100%;
-  max-width: 1100px; /* จำกัดความกว้าง Agency Section */
-  padding: 50px 0; /* เอา padding แนวนอนออก เพราะถูกคุมโดย dashboardContent แล้ว */
+  /* ลบ max-width ออก เพราะ dashboardContent คุมขอบเขตแล้ว */
+  padding: 40px 0; 
   position: relative;
 }
 
 .agencyGrid {
   display: grid;
+  /* ใช้ auto-fill + minmax เพื่อความยืดหยุ่นสูงสุด */
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 25px;
   justify-items: center;
@@ -228,8 +232,8 @@
   transition: all 0.3s ease-in-out;
   position: relative;
   overflow: hidden;
-  width: 100%; /* ให้เต็มพื้นที่ Grid ที่กำหนด */
-  max-width: 250px; /* ช่วยให้การ์ดไม่กว้างเกินไปบน Grid ที่ใหญ่ */
+  width: 100%;
+  max-width: 260px; /* กันการ์ดใหญ่เกินไปเวลาเหลือการ์ดเดียวกลางจอ */
 }
 
 .agencyImg {
@@ -266,11 +270,10 @@
   color: #aaa;
   margin-top: 40px;
   font-weight: 500;
-  letter-spacing: 0.5px;
 }
 
 
-/* --- Bottom Nav (Desktop/Notebook Style) (ไม่เปลี่ยนแปลง) --- */
+/* --- Bottom Nav (Desktop/Notebook Style) --- */
 .bottomNav {
   position: fixed;
   bottom: 16px;
@@ -288,12 +291,6 @@
   z-index: 1000;
 }
 
-.bottomNavButtonContainer {
-  position: relative;
-  display: block;
-  text-align: center;
-}
-
 .bottomNav button {
   background: none;
   border: none;
@@ -305,7 +302,7 @@
   border-radius: 20px;
   transition: all 0.25s ease;
   display: inline-flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
   gap: 6px;
 }
@@ -322,7 +319,6 @@
   font-weight: 700;
   background-color: #111;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: all 0.25s ease;
 }
 
 .bottomNav .active:hover {
@@ -333,12 +329,7 @@
   font-size: 34px;
 }
 
-.bottomNav button span {
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-/* --- Sub Menu (Popup) (ไม่เปลี่ยนแปลง) --- */
+/* --- Sub Menu (Popup) --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -373,16 +364,14 @@
 .subMenuItem.active {
   background: #000;
   color: #fff;
-  font-weight: 600;
 }
 
 /* ============================================ */
-/* --- Media Queries (Tablet & Phone) --- */
+/* --- Media Queries (Responsive Logic) --- */
 /* ============================================ */
 
-/* --- 1. สำหรับแท็บเล็ต และ โทรศัพท์ (จอเล็กกว่า 768px) --- */
+/* --- 1. Tablet & Phone (จอเล็กกว่า 768px) --- */
 @media screen and (max-width: 768px) {
-  /* ... โค้ดส่วนบน (Logo, Nav) ไม่เปลี่ยนแปลง ... */
   .logoSectionTop {
     padding: 12px 20px;
   }
@@ -394,15 +383,24 @@
     font-size: 15px;
   }
 
-  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
+  /* ปรับ Container ในมือถือ */
+  .dashboardContent {
+    /* ลด Padding ด้านข้างลงไม่ให้กินพื้นที่เนื้อหา */
+    padding: 20px 16px 100px 16px; 
+    gap: 20px;
+  }
+
+  /* Fonts & Elements */
   .title {
     font-size: 1.8rem;
-    letter-spacing: 1px;
   }
+  
+  /* Grid: อนุญาตให้เป็น 2 คอลัมน์ได้ถ้าจอพอ (140px) */
   .agencyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
   }
+  
   .searchInput {
     font-size: 13px;
     padding: 12px 90px 12px 18px;
@@ -416,27 +414,20 @@
     width: 32px;
     height: 32px;
   }
+  
   .extraCards {
-    gap: 15px;
-    max-width: 90%;
+    gap: 12px;
   }
   .extraCard {
-    padding: 20px;
-    min-width: 130px;
-    font-size: 14px;
-  }
-  .cardTitle {
-    font-size: 15px;
+    padding: 15px;
+    min-width: 120px; /* ยอมให้เล็กลงได้นิดหน่อยในมือถือ */
   }
   .agencyImg {
     width: 100px;
     height: 100px;
   }
-  .agencyName {
-    font-size: 15px;
-  }
 
-  /* Logout Button (Mobile) */
+  /* Logout Mobile */
   .logoutIcon button {
     width: auto;
     gap: 4px;
@@ -444,12 +435,7 @@
     font-size: 12px;
   }
 
-  /* Main Layout (Mobile) */
-  .dashboardContent {
-    padding: 16px 12px 100px 12px; /* ลด Padding และเพิ่มสำหรับ Nav */
-  }
-
-  /* Bottom Nav (Mobile) */
+  /* Bottom Nav Mobile */
   .bottomNav {
     bottom: 0;
     left: 0;
@@ -458,11 +444,8 @@
     border-radius: 0;
     padding: 6px 4px;
     justify-content: space-around;
-    gap: 2px;
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
   }
-
-  /* ปุ่ม Bottom Nav (Mobile) */
   .bottomNav button {
     flex-direction: column;
     padding: 6px 8px;
@@ -479,65 +462,36 @@
   }
 }
 
-/* --- 2. สำหรับโทรศัพท์จอเล็ก (จอเล็กกว่า 480px) --- */
+/* --- 2. Small Phone (จอเล็กกว่า 480px) --- */
 @media screen and (max-width: 480px) {
-  /* Logout Icon (Mobile) */
   .logoutIcon {
     top: 15px;
     right: 15px;
   }
-
-  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
+  
   .title {
     font-size: 1.5rem;
-    letter-spacing: 0.5px;
   }
+  
   .searchContainer {
-    max-width: 90%;
+    max-width: 100%;
   }
-  .searchInput {
-    padding: 10px 80px 10px 15px;
-    font-size: 12px;
-  }
-  .searchButton {
-    width: 32px;
-    height: 32px;
-  }
-  .clearButton {
-    right: 50px;
-    width: 30px;
-    height: 30px;
-  }
+  
+  /* ในจอเล็กมาก ให้เมนูเสริมเรียงแนวดิ่ง */
   .extraCards {
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    align-items: stretch; /* ยืดเต็มความกว้าง */
   }
   .extraCard {
-    padding: 15px;
-    width: 80%;
-    min-width: unset;
+    width: 100%;
+    flex: unset; /* ยกเลิก flex grow/shrink */
   }
-  .agencyGrid {
-    grid-template-columns: repeat(1, 1fr);
-    padding: 0 15px;
-  }
+  
+  /* ถ้าต้องการบังคับ 1 คอลัมน์จริงๆ สำหรับจอเล็กจิ๋ว */
+  /* .agencyGrid { grid-template-columns: 1fr; } */
+  /* แต่แนะนำให้ปล่อย auto-fill ข้างบนทำงาน เพราะ iPhone รุ่นใหม่จอใหญ่พอสำหรับ 2 คอลัมน์ */
+
   .agencyItem {
-    width: 90%;
-    max-width: 250px;
-  }
-  .agencyImg {
-    width: 80px;
-    height: 80px;
-  }
-  .agencyName {
-    font-size: 14px;
-  }
-  .agencyType {
-    font-size: 12px;
-  }
-  .noResults {
-    font-size: 18px;
-    margin-top: 30px;
+    max-width: 100%; /* ให้เต็มพื้นที่ถ้าเหลือคอลัมน์เดียว */
   }
 }
