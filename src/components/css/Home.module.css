@@ -76,17 +76,15 @@
 /* --- Main Wrapper (ป้องกันจอล้น) --- */
 .dashboardContent {
   width: 100%;
-  max-width: 1280px; 
-  margin: 0 auto; 
+  max-width: 1280px;
+  margin: 0 auto;
   padding: 30px 40px 120px 40px;
-  
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
   background-color: #ffffff;
   color: #1a1a1a;
-  
   overflow-x: hidden;
   box-sizing: border-box;
   position: relative;
@@ -120,7 +118,7 @@
   background-color: #FFFFFF;
   font-size: 14px;
   font-weight: 400;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease-in-out;
   box-sizing: border-box;
 }
@@ -365,7 +363,7 @@
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
-  
+
   /* --- Layout Safety (แก้จอล้น) --- */
   .dashboardContent {
     width: 100%;
@@ -429,31 +427,29 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (แก้ไขเรื่องล้นขอบ + เท่ากันเป๊ะ) --- */
+  /* --- Bottom Nav Mobile (Fixed Overflow) --- */
   /* ==================================================== */
-  
+
   .bottomNav {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0; /* ตรึงขอบขวา */
+    right: 0;
     width: 100%;
     
-    /* สำคัญ: ป้องกัน Padding ดันจนล้นจอ */
+    /* ป้องกัน Padding ดันจนล้นจอ */
     box-sizing: border-box;
     
     background: #ffffff;
-    
-    /* Grid แบ่ง 5 ช่องเท่ากัน */
     display: grid;
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 4px; /* ระยะห่างเล็กน้อย */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
     
-    padding: 12px 10px 24px 10px; /* เผื่อพื้นที่ด้านล่างและด้านข้าง */
-    border-radius: 24px 24px 0 0; 
+    padding: 12px 10px 24px 10px;
+    border-radius: 24px 24px 0 0;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     z-index: 1000;
-    transform: none; 
+    transform: none;
   }
 
   /* --- ปุ่มทั่วไป (Inactive) --- */
@@ -461,18 +457,15 @@
     background: transparent !important;
     border: none;
     box-shadow: none !important;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
-    height: 56px; /* ความสูงปุ่ม */
-    width: 100%; 
-    
-    border-radius: 16px; 
+    height: 56px;
+    width: 100%;
+    border-radius: 16px;
     padding: 0;
-    margin: 0; 
+    margin: 0;
     transition: all 0.2s ease;
   }
 
@@ -500,17 +493,15 @@
   /* --- สถานะเลือก (Active) --- */
   .bottomNav button.active {
     background-color: #000000 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
-    transform: none !important; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    transform: none !important;
   }
 
-  /* ไอคอนสีขาว */
   .bottomNav button.active svg {
     color: #ffffff;
-    transform: scale(1.05); 
+    transform: scale(1.05);
   }
-  
-  /* ตัวหนังสือสีขาว */
+
   .bottomNav button.active span {
     color: #ffffff;
     font-weight: 600;
