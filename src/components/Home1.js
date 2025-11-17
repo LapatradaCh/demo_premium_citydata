@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom'; // 1. อย่า�
 
 // --- 2. Import Components ของแต่ละหน้า (ตามชื่อไฟล์ CSS ของคุณ) ---
 // * ตรวจสอบ path ให้ถูกต้องว่าไฟล์ .js เก็บอยู่ที่ไหน (เช่น ./components/)
-import MapView from './components/MapView'; 
-import ReportTable from './components/ReportTable'; 
-import StatisticsView from './components/StatisticsView';
-import OrgStatisticsView from './components/OrgStatisticsView';
-import SettingsView from './components/SettingsView';
+import MapView from './MapView'; 
+import ReportTable from './ReportTable'; 
+import StatisticsView from './StatisticsView';
+import OrgStatisticsView from './OrgStatisticsView';
+import SettingsView from './SettingsView';
 
 // Import CSS ของ Home หลัก
 import styles from './css/Home1.module.css'; 
