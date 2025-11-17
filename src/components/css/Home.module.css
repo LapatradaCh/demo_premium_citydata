@@ -326,7 +326,7 @@
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
-  left: 30%;
+  left: 50%;
   transform: translateX(-50%);
   background: #ffffff;
   border-radius: 12px;
@@ -428,7 +428,7 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (Grid + Fixed Popup) --- */
+  /* --- Bottom Nav Mobile --- */
   /* ==================================================== */
 
   .bottomNav {
@@ -438,7 +438,7 @@
     right: 0;
     width: 100%;
     
-    box-sizing: border-box; /* ป้องกันล้น */
+    box-sizing: border-box;
     
     background: #ffffff;
     display: grid;
@@ -456,7 +456,7 @@
   .bottomNav button {
     /* สำคัญ: เป็นสมอเรือให้ Popup */
     position: relative;
-    overflow: visible; /* สำคัญ: ยอมให้ Popup ลอยทะลุขอบ */
+    overflow: visible; 
 
     background: transparent !important;
     border: none;
@@ -517,16 +517,24 @@
   /* --- แก้ไขตำแหน่ง Popup ในมือถือ --- */
   /* override class .subMenuPopup ที่ประกาศไว้ข้างบน */
   .subMenuPopup {
-    bottom: calc(100% + 12px); /* ดันขึ้นไปเหนือปุ่ม */
-    left: 50% !important;      /* บังคับให้อยู่ตรงกลางแนวนอนเทียบกับปุ่ม */
-    transform: translateX(-50%) !important; /* จัดกึ่งกลาง */
+    /* ปรับจาก +12px เหลือ +8px ให้ลูกศรแตะขอบปุ่มพอดี */
+    bottom: calc(100% + 8px);
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     
     min-width: 140px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
     z-index: 1002;
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   
-  /* เพิ่มลูกศรชี้ลงเล็กน้อย (ถ้าต้องการ) */
+  /* ลูกศรชี้ลง */
   .subMenuPopup::after {
     content: '';
     position: absolute;
