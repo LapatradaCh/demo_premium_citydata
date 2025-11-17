@@ -39,14 +39,12 @@
   flex-grow: 1;
   justify-content: center;
 }
-
 .mockHBarItem {
   display: grid;
   grid-template-columns: 140px 1fr 60px;
   gap: 12px;
   align-items: center;
 }
-
 .mockHBarLabel {
   font-size: 13px;
   font-weight: 600;
@@ -57,25 +55,21 @@
   text-align: left;
   padding-right: 8px;
 }
-
 .mockHBar {
   height: 20px;
   background: #f0f0f0;
   border-radius: 6px;
   overflow: hidden;
 }
-
 .mockHBarFill {
   height: 100%;
   background: #007bff;
   border-radius: 4px 0 0 4px;
   transition: width 0.5s ease-out;
 }
-
 .mockHBar:hover .mockHBarFill {
   filter: brightness(1.1);
 }
-
 .mockHBarValue {
   font-size: 14px;
   font-weight: 700;
@@ -248,7 +242,6 @@
   min-width: 0;
   position: relative;
 }
-
 .filterGroup label {
   font-size: 13px;
   font-weight: 600;
@@ -256,7 +249,6 @@
   padding-left: 4px;
   margin-bottom: 2px;
 }
-
 .filterGroup select {
   width: 100%;
   font-size: 14px;
@@ -282,14 +274,12 @@
   margin-bottom: 0;
   min-width: 160px;
 }
-
 .statsFilterBar .filterGroup label {
   font-size: 12px;
   font-weight: 500;
   color: #555;
   padding-left: 0;
 }
-
 .statsFilterBar .filterGroup select {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -305,7 +295,6 @@
   align-items: center;
   gap: 8px;
 }
-
 .compareFilterToggles span {
   font-size: 14px;
   font-weight: 600;
@@ -328,12 +317,10 @@
   white-space: nowrap;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
-
 .toggleButton:hover {
   background-color: #f5f5f5;
   border-color: #ccc;
 }
-
 .toggleButtonActive {
   padding: 10px 16px;
   font-size: 14px;
@@ -364,7 +351,8 @@
   flex-direction: column;
   gap: 2px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease, background-color 0.3s ease;
 }
 
 /*
@@ -377,32 +365,26 @@
   border-top-color: #dc3545;
   background-color: #fdeeee;
 }
-
 .statsDetailBox.stats-purple {
   border-top-color: #9b59b6 !important;
   background-color: #f2ebf5;
 }
-
 .statsDetailBox.stats-yellow {
   border-top-color: #ffc107;
   background-color: #fff8e6;
 }
-
 .statsDetailBox.stats-green {
   border-top-color: #057a55;
   background-color: #eaf7ec;
 }
-
 .statsDetailBox.stats-blue {
   border-top-color: #007bff;
   background-color: #e6f2ff;
 }
-
 .statsDetailBox.stats-mint {
   border-top-color: #20c997 !important;
   background-color: #e6f9f3;
 }
-
 /* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
 .statsDetailBox.stats-grey {
   border-top-color: #6c757d;
@@ -428,7 +410,6 @@
   white-space: nowrap;
   transition: color 0.2s ease;
 }
-
 .statsDetailBox:hover .statsDetailTitle {
   color: #000;
 }
@@ -496,13 +477,11 @@
   border-radius: 10px;
   border: 1px solid #d4e8ff;
 }
-
 .opsKpi span {
   font-size: 15px;
   font-weight: 600;
   color: #004a99;
 }
-
 .opsKpi strong {
   font-size: 20px;
   color: #000;
@@ -525,24 +504,20 @@
   user-select: none;
   transition: background-color 0.2s ease;
 }
-
 .opsDetail.clickable:hover {
   background: #f0f0f0;
 }
-
 .opsDetailHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
-
 .opsDetailHeader span:first-child {
   color: #555;
   font-weight: 500;
   font-size: 13px;
 }
-
 .opsDetailHeader span:last-child {
   display: flex;
   align-items: center;
@@ -551,12 +526,10 @@
   font-weight: 700;
   font-size: 16px;
 }
-
 .opsToggleIcon {
   font-size: 12px;
   color: #555;
 }
-
 .opsUnitList {
   width: 100%;
   padding: 10px 0 0 0;
@@ -566,7 +539,6 @@
   flex-direction: column;
   gap: 6px;
 }
-
 .opsUnitItem {
   font-size: 13px;
   color: #666;
@@ -578,7 +550,6 @@
   font-weight: 500;
   font-size: 13px;
 }
-
 .opsDetail > span:last-child {
   color: #111;
   font-weight: 700;
@@ -603,15 +574,13 @@
   .statsContainer {
     align-self: unset;
   }
-
   .statsDetailGrid {
     grid-template-columns: repeat(2, 1fr);
   }
-
   .statsBottomGrid {
     grid-template-columns: 1fr;
   }
-
+  
   .statsPageTitle,
   .statsCurrentDate {
     /* --- FIX OVERFLOW --- */
@@ -623,20 +592,16 @@
   .statsDetailGrid {
     grid-template-columns: 1fr;
   }
-
   .statsPageTitle {
     font-size: 24px;
   }
-
   .mockHBarItem {
     grid-template-columns: 100px 1fr 50px;
     gap: 8px;
   }
-
   .mockHBarLabel {
     font-size: 12px;
   }
-
   .chartBox {
     padding: 16px;
   }
@@ -644,7 +609,7 @@
   .statsDetailTitle {
     /* --- FIX OVERFLOW --- */
     white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
-    min-height: 2.4em; /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
+    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
   }
 
   .compareFilterToggles span {
