@@ -8,11 +8,11 @@
 .bodyhome {
   width: 100%;
   min-height: 100vh;
-  background-color: #ffffff; /* สีพื้นหลังหลัก */
+  background-color: #ffffff;
   color: #333;
-  font-family: 'Sarabun', sans-serif; /* หรือฟอนต์ที่คุณใช้ */
+  font-family: 'Sarabun', sans-serif;
   position: relative;
-  padding-bottom: 140px; /* สำคัญ! กันเนื้อหาตกไปอยู่ใต้เมนูล่าง */
+  padding-bottom: 140px; /* กันเนื้อหาตกไปอยู่ใต้เมนูล่าง */
 }
 
 /* คอนเทนเนอร์กลางสำหรับจัดหน้า */
@@ -31,7 +31,7 @@
 /* ============================================ */
 
 .logoSectionTop {
-  position: sticky; /* ให้หัวติดด้านบนเวลาเลื่อน */
+  position: sticky;
   top: 0;
   z-index: 900;
   display: flex;
@@ -57,7 +57,7 @@
   color: #111;
 }
 
-/* ปุ่มออกจากระบบ */
+/* ⭐️ [แก้ไข] ปุ่มออกจากระบบ (ให้เหมือนในรูป) */
 .logoutIcon {
   margin-left: auto; /* ดันไปขวาสุด */
 }
@@ -65,22 +65,27 @@
 .logoutIcon button {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: #ff4757;
+  gap: 8px; /* เพิ่มระยะห่าง icon กับ text */
+  background: #e63946; /* สีแดงตามรูป */
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 30px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700; /* ตัวหนาขึ้น */
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+  white-space: nowrap; /* กันข้อความตก */
 }
 
 .logoutIcon button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+}
+
+.logoutIcon button svg {
+  font-size: 16px;
 }
 
 /* ============================================ */
@@ -92,7 +97,7 @@
   gap: 10px;
   width: 100%;
   max-width: 800px;
-  margin: 0 auto; /* จัดกึ่งกลาง */
+  margin: 0 auto;
 }
 
 .searchInputWrapper {
@@ -102,7 +107,7 @@
 
 .searchInput {
   width: 100%;
-  padding: 12px 16px 12px 40px; /* เว้นซ้ายไว้ใส่ icon แว่นขยาย */
+  padding: 12px 16px 12px 40px;
   border-radius: 50px;
   border: 1px solid #e1e1e1;
   background: #f9f9f9;
@@ -117,7 +122,6 @@
   box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
 }
 
-/* ปุ่มตัวกรอง (Filter) สีดำ */
 .filterButton {
   background: #000;
   color: #fff;
@@ -135,8 +139,6 @@
 /* ============================================ */
 /* 4. JOB CARDS GRID (การ์ดงานซ่อม) */
 /* ============================================ */
-/* หมายเหตุ: Class พวกนี้ต้องตรงกับใน ReportTable.js ของคุณ */
-
 .jobListHeader {
   font-size: 16px;
   color: #555;
@@ -145,7 +147,6 @@
 
 .jobGrid {
   display: grid;
-  /* จัดเรียงอัตโนมัติ ขั้นต่ำ 300px ต่อการ์ด */
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
@@ -199,7 +200,6 @@
   color: #666;
 }
 
-/* ป้ายสถานะ (Badge) */
 .statusBadge {
   padding: 4px 10px;
   border-radius: 20px;
@@ -207,15 +207,13 @@
   font-weight: 700;
   color: white;
 }
-/* ตัวอย่างสีสถานะ */
-.statusPending { background: #e74c3c; } /* แดง */
-.statusProgress { background: #f1c40f; color: #333; } /* เหลือง */
-.statusDone { background: #2ecc71; } /* เขียว */
-.statusCoord { background: #9b59b6; } /* ม่วง */
+.statusPending { background: #e74c3c; }
+.statusProgress { background: #f1c40f; color: #333; }
+.statusDone { background: #2ecc71; }
+.statusCoord { background: #9b59b6; }
 
-/* ปุ่มอ่านเพิ่มเติม */
 .readMoreButton {
-  margin-top: auto; /* ดันไปล่างสุดของการ์ด */
+  margin-top: auto;
   width: 100%;
   padding: 10px;
   border: 1px solid #eee;
@@ -234,53 +232,62 @@
 }
 
 /* ============================================ */
-/* 5. BOTTOM NAVIGATION (เมนูล่าง) */
+/* 5. ⭐️ [แก้ไข] BOTTOM NAVIGATION (เมนูล่าง) */
 /* ============================================ */
 
+/* กรอบสีขาวใหญ่ (Container) */
 .bottomNav {
-  position: fixed; /* บังคับให้ติดหน้าจอ */
-  bottom: 24px;
+  position: fixed;
+  bottom: 24px; /* ลอยจากขอบล่าง 24px */
   left: 50%;
   transform: translateX(-50%);
   
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px; /* ระยะห่างระหว่างปุ่ม */
   
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98); /* พื้นหลังสีขาว (ตามรูป) */
   backdrop-filter: blur(12px);
-  padding: 8px 12px;
-  border-radius: 40px;
+  padding: 8px; /* Padding รอบกรอบขาว */
+  border-radius: 40px; /* ความโค้งกรอบขาว */
   
   box-shadow: 0 10px 40px rgba(0,0,0,0.15);
   border: 1px solid rgba(255,255,255,0.5);
-  z-index: 1000; /* ให้อยู่บนสุด */
+  z-index: 1000;
 }
 
 .bottomNavButtonContainer {
   position: relative;
 }
 
+/* ปุ่มเมนู (ปุ่มปกติ สีเทาอ่อน) */
 .bottomNav button {
-  background: transparent;
+  background: #f1f3f5; /* ⭐️ สีเทาอ่อน (ตามรูป) */
   border: none;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
   border-radius: 30px;
-  color: #888;
+  color: #333; /* ⭐️ สีตัวหนังสือ (ตามรูป) */
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap; /* กันข้อความตก */
 }
 
 .bottomNav button svg {
   font-size: 18px;
 }
 
-/* สถานะ Active (ปุ่มดำ ตัวหนังสือขาว) */
+/* เอาเมาส์ชี้ปุ่มปกติ */
+.bottomNav button:not(.active):hover {
+  background: #e9ecef; /* สีเทาเข้มขึ้นเล็กน้อย */
+  transform: translateY(-2px);
+}
+
+/* ⭐️ สถานะ Active (ปุ่มดำ ตัวหนังสือขาว) */
 .bottomNav .active {
   background: #000;
   color: #fff;
@@ -290,18 +297,16 @@
 /* --- Popup Menu (เมนูย่อย) --- */
 .subMenuPopup {
   position: absolute;
-  bottom: 100%; /* โผล่ขึ้นด้านบน */
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 12px;
-  
   background: #fff;
   border-radius: 12px;
   padding: 6px;
   min-width: 160px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.12);
   border: 1px solid #eee;
-  
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -326,7 +331,7 @@
 }
 
 /* ============================================ */
-/* 6. RESPONSIVE (สำหรับมือถือ) */
+/* 6. ⭐️ [แก้ไข] RESPONSIVE (สำหรับมือถือ) */
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
@@ -335,8 +340,16 @@
     padding: 12px 16px;
   }
   .unitName { font-size: 16px; }
-  .logoutIcon button span { display: none; } /* ซ่อนคำว่าออกจากระบบ เหลือแต่ไอคอน */
-  .logoutIcon button { padding: 8px; border-radius: 50%; }
+
+  /* ⭐️ แก้ปุ่ม Logout บนมือถือ */
+  .logoutIcon button {
+    padding: 6px 12px; /* ลดขนาด padding ลง */
+    font-size: 12px; /* ลดขนาดฟอนต์ */
+    gap: 6px;
+  }
+  .logoutIcon button svg {
+    font-size: 14px;
+  }
 
   /* ปรับ Grid */
   .dashboardContent {
@@ -346,58 +359,39 @@
     grid-template-columns: 1fr; /* เรียงแถวเดียว */
   }
   
-  /* ปรับ Bottom Nav ให้ชิดขอบล่างแบบ App มือถือ */
+  /* ⭐️ แก้ Bottom Nav บนมือถือ */
+  /* (ให้ลอยเหมือนเดิม แต่ปรับขนาด) */
   .bottomNav {
-    bottom: 0;
-    left: 0;
-    transform: none;
-    width: 100%;
-    border-radius: 20px 20px 0 0; /* มนแค่ข้างบน */
-    padding: 10px 0;
-    justify-content: space-around;
-    gap: 0;
-    border-bottom: none;
+    bottom: 16px; /* ลดระยะห่างจากขอบล่าง */
+    gap: 4px; /* ลดช่องว่างระหว่างปุ่ม */
+    padding: 6px; /* ลด padding กรอบขาว */
+    width: 95%; /* จำกัดความกว้างไม่ให้ล้น */
   }
 
+  /* ⭐️ แก้ปุ่ม Bottom Nav บนมือถือ */
   .bottomNav button {
-    flex-direction: column; /* ไอคอนบน ตัวหนังสือล่าง */
-    gap: 4px;
-    padding: 6px;
-    border-radius: 8px;
-    background: transparent !important; /* ไม่เอาพื้นหลังดำบนมือถือ */
-    color: #999;
-    box-shadow: none !important;
-  }
-
-  .bottomNav button svg {
-    font-size: 22px;
-    margin-bottom: 2px;
-  }
-
-  .bottomNav button span {
-    font-size: 10px;
-  }
-
-  .bottomNav .active {
-    color: #000 !important; /* แค่เปลี่ยนสีไอคอนเป็นดำ */
+    gap: 6px;
+    padding: 8px 10px; /* ลด padding ปุ่ม */
+    border-radius: 20px;
+    font-size: 12px; /* ลดขนาดฟอนต์ */
   }
   
-  /* ทำให้ปุ่ม Active บนมือถือมีจุดบอกสถานะ */
-  .bottomNav .active::after {
-    content: '';
-    display: block;
-    width: 4px;
-    height: 4px;
-    background: #000;
-    border-radius: 50%;
-    margin-top: 2px;
+  .bottomNav button svg {
+    font-size: 16px; /* ลดขนาดไอคอน */
   }
-
-  /* ปรับ Search Bar */
-  .searchContainer {
-    flex-direction: row; /* ยังคงแนวนอน */
-  }
-  .filterButton span {
-    display: none; /* ซ่อนคำว่า "ตัวกรอง" บนมือถือ */
+  
+  /* ซ่อนข้อความ เหลือแต่ไอคอน (ถ้าจอมันเล็กมากๆ) */
+  @media screen and (max-width: 420px) {
+    .bottomNav button span {
+      display: none; /* ซ่อนข้อความ */
+    }
+    .bottomNav button {
+      padding: 8px; /* ทำให้เป็นปุ่มกลมๆ */
+      border-radius: 50%;
+    }
+    .bottomNav button svg {
+      font-size: 18px;
+      margin: 0;
+    }
   }
 }
