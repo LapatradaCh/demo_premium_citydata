@@ -1,617 +1,571 @@
-/* --- 4. css/StatisticsView.module.css --- */
-/* (สำหรับ StatisticsView.js) */
+import React, { useState, useEffect } from "react";
+import styles from "./css/StatisticsView.module.css";
+import { FaStar, FaChevronDown, FaChevronUp, FaTimes } from "react-icons/fa";
 
-/* === (SHARED) Chart Box === */
-.chartBox {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex-grow: 1;
-}
+// ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
 
-.chartBox:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
-}
+// (Component ย่อยสำหรับกล่อง KPI แบบละเอียด 8 กล่อง)
+const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => (
+  <div
+    className={`${styles.statsDetailBox} ${styles[cssClass] || ""}`}
+    style={{ borderTopColor: color }}
+  >
+    <div className={styles.statsDetailHeader}>
+      <span className={styles.statsDetailTitle}>{title}</span>
+      <span className={styles.statsDetailValue}>{value}</span>
+    </div>
+    <span className={styles.statsDetailPercentage}>({percentage})</span>
+    {note && <span className={styles.statsDetailNote}>{note}</span>}
+  </div>
+);
 
-.chartBoxTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  flex-shrink: 0;
-}
+// (Component ย่อยสำหรับ Horizontal Bar Chart - รองรับข้อมูลจริง)
+const DynamicHorizontalBarChart = ({ data }) => {
+  const colors = ["#007bff", "#ffc107", "#057A55", "#6c757d", "#dc3545", "#20c997"];
+  const maxCount = Math.max(...data.map(item => item.count), 0);
 
-/* === (SHARED) Horizontal Bar Chart === */
-.mockHorizontalBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  padding: 10px 0;
-  flex-grow: 1;
-  justify-content: center;
-}
-.mockHBarItem {
-  display: grid;
-  grid-template-columns: 140px 1fr 60px;
-  gap: 12px;
-  align-items: center;
-}
-.mockHBarLabel {
-  font-size: 13px;
-  font-weight: 600;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-  padding-right: 8px;
-}
-.mockHBar {
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.mockHBarFill {
-  height: 100%;
-  background: #007bff;
-  border-radius: 4px 0 0 4px;
-  transition: width 0.5s ease-out;
-}
-.mockHBar:hover .mockHBarFill {
-  filter: brightness(1.1);
-}
-.mockHBarValue {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* === (SHARED) Satisfaction Box === */
-.satisfactionBreakdownContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  flex-grow: 1;
-  padding-top: 10px;
-}
-
-.satisfactionBreakdownHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 12px;
-  margin-bottom: 8px;
-}
-
-.satisfactionBreakdownScore {
-  font-size: 24px;
-  font-weight: 700;
-  color: #111;
-  white-space: nowrap;
-}
-
-.satisfactionBreakdownStars {
-  font-size: 20px;
-  color: #ffc107;
-  display: flex;
-  gap: 2px;
-}
-
-.satisfactionBreakdownTotal {
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-  white-space: nowrap;
-}
-
-.satisfactionBreakdownRow {
-  display: grid;
-  grid-template-columns: 35px 1fr 50px; /* Label | Bar | Percent */
-  align-items: center;
-  gap: 10px;
-}
-
-.satisfactionBreakdownLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  justify-content: flex-end;
-}
-
-.satisfactionBreakdownLabel svg {
-  color: #ffc107;
-  font-size: 14px;
-}
-
-.satisfactionBreakdownBar {
-  height: 14px;
-  background: #f0f0f0;
-  border-radius: 7px;
-  overflow: hidden;
-}
-
-.satisfactionBreakdownBarFill {
-  height: 100%;
-  background: #ffc107;
-  border-radius: 7px;
-  transition: width 0.5s ease-out;
-}
-
-.satisfactionBreakdownPercent {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111;
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* --- StatisticsView Specific --- */
-.statsContainer {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.statsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
-  width: 100%;
-}
-
-.statsPageTitle {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  color: #111;
-  white-space: nowrap;
-}
-
-.statsSubHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  width: 100%;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.statsCurrentDate {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  white-space: nowrap;
-}
-
-.statsSubtitle {
-  font-size: 13px;
-  font-weight: 500;
-  color: #666;
-}
-
-.statsFilterBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-}
-
-.kpiFilterToggles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-/* (SHARED) Filter Group */
-.filterGroup {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  position: relative;
-}
-.filterGroup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  padding-left: 4px;
-  margin-bottom: 2px;
-}
-.filterGroup select {
-  width: 100%;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
-  padding: 10px 14px;
-  background-color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-  color: #111;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 20px;
-}
-
-.statsFilterBar .filterGroup {
-  margin-bottom: 0;
-  min-width: 160px;
-}
-.statsFilterBar .filterGroup label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #555;
-  padding-left: 0;
-}
-.statsFilterBar .filterGroup select {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  font-weight: 600;
-  border-radius: 10px;
-  border-color: #ddd;
-  background-color: #fff;
-}
-
-.compareFilterToggles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.compareFilterToggles span {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-right: 8px;
-  white-space: nowrap;
-}
-
-/* (SHARED) Toggle Button */
-.toggleButton {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-}
-.toggleButton:hover {
-  background-color: #f5f5f5;
-  border-color: #ccc;
-}
-.toggleButtonActive {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #000;
-  border: 1px solid #000;
-  border-radius: 10px;
-  cursor: default;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.statsDetailGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  width: 100%;
-}
-
-.statsDetailBox {
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  border-top: 4px solid #007bff;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease,
-    border-color 0.3s ease, background-color 0.3s ease;
-}
-
-/*
-.statsDetailBox.stats-cream {
-  border-top-color: #f39c12;
-  background-color: #fdf7e4;
-}
-*/
-.statsDetailBox.stats-red {
-  border-top-color: #dc3545;
-  background-color: #fdeeee;
-}
-.statsDetailBox.stats-purple {
-  border-top-color: #9b59b6 !important;
-  background-color: #f2ebf5;
-}
-.statsDetailBox.stats-yellow {
-  border-top-color: #ffc107;
-  background-color: #fff8e6;
-}
-.statsDetailBox.stats-green {
-  border-top-color: #057a55;
-  background-color: #eaf7ec;
-}
-.statsDetailBox.stats-blue {
-  border-top-color: #007bff;
-  background-color: #e6f2ff;
-}
-.statsDetailBox.stats-mint {
-  border-top-color: #20c997 !important;
-  background-color: #e6f9f3;
-}
-/* (*** MODIFIED ***) ใช้สำหรับ "ทั้งหมด" และ "ปฏิเสธ" */
-.statsDetailBox.stats-grey {
-  border-top-color: #6c757d;
-  background-color: #f8f9fa;
-}
-
-.statsDetailBox:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
-}
-
-.statsDetailHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.statsDetailTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-.statsDetailBox:hover .statsDetailTitle {
-  color: #000;
-}
-
-.statsDetailValue {
-  font-size: 26px;
-  font-weight: 700;
-  color: #111;
-}
-
-.statsDetailPercentage {
-  font-size: 12px;
-  font-weight: 500;
-  color: #555;
-}
-
-.statsDetailNote {
-  font-size: 11px;
-  color: #777;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed #eee;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.statsBottomGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  width: 100%;
-  align-items: stretch;
-}
-
-.statsGridColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex-grow: 1;
-}
-
-.problemTypeContent {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.opsContent {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 8px;
-  flex-grow: 1;
-  justify-content: flex-start;
-}
-
-.opsKpi {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #e6f2ff;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #d4e8ff;
-}
-.opsKpi span {
-  font-size: 15px;
-  font-weight: 600;
-  color: #004a99;
-}
-.opsKpi strong {
-  font-size: 20px;
-  color: #000;
-}
-
-.opsDetail {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 13px;
-  padding: 14px 16px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border: 1px solid #f0f0f0;
-  gap: 4px;
-}
-
-.opsDetail.clickable {
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease;
-}
-.opsDetail.clickable:hover {
-  background: #f0f0f0;
-}
-.opsDetailHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-.opsDetailHeader span:first-child {
-  color: #555;
-  font-weight: 500;
-  font-size: 13px;
-}
-.opsDetailHeader span:last-child {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #111;
-  font-weight: 700;
-  font-size: 16px;
-}
-.opsToggleIcon {
-  font-size: 12px;
-  color: #555;
-}
-.opsUnitList {
-  width: 100%;
-  padding: 10px 0 0 0;
-  margin-top: 10px;
-  border-top: 1px dashed #ddd;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.opsUnitItem {
-  font-size: 13px;
-  color: #666;
-  padding-left: 16px;
-}
-
-.opsDetail span:first-child {
-  color: #555;
-  font-weight: 500;
-  font-size: 13px;
-}
-.opsDetail > span:last-child {
-  color: #111;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.statsLoadingOrErrorError {
-  background: #fdeeee;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  padding: 16px;
-  border-radius: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-/* --- Media Queries --- */
-@media screen and (max-width: 1024px) {
-  .statsContainer {
-    align-self: unset;
+  if (data.length === 0) {
+    return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลเรื่องแจ้ง</p>;
   }
-  .statsDetailGrid {
-    grid-template-columns: repeat(2, 1fr);
+
+  return (
+    <div className={styles.mockHorizontalBarChart}>
+      {data.map((item, index) => {
+        const widthPercent = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
+
+        return (
+          <div key={item.issue_type_name} className={styles.mockHBarItem}>
+            <span className={styles.mockHBarLabel}>{item.issue_type_name}</span>
+            <div className={styles.mockHBar}>
+              <div
+                className={styles.mockHBarFill}
+                style={{
+                  width: `${widthPercent}%`,
+                  background: colors[index % colors.length]
+                }}
+                title={`${item.issue_type_name}: ${item.count}`}
+              ></div>
+            </div>
+            <span className={styles.mockHBarValue}>{item.count}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// (Component ย่อยสำหรับกล่อง "ประเภทปัญหา" - ดึงข้อมูลจริง)
+const ProblemTypeStats = ({ organizationId }) => {
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !organizationId) {
+        setLoading(false); 
+        return; 
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
+          throw new Error(`Failed to fetch chart data: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        const formattedData = data.map(item => ({
+          ...item,
+          count: parseInt(item.count, 10)
+        })).sort((a, b) => b.count - a.count); 
+
+        setChartData(formattedData);
+      } catch (err) {
+         if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+         } else {
+          setError(err.message);
+         }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChartData();
+  }, [organizationId]); 
+
+  return (
+    <div className={styles.chartBox}>
+      <h4 className={styles.chartBoxTitle}>สัดส่วนเรื่องแจ้งตามประเภท</h4>
+      <div className={styles.problemTypeContent}>
+        {loading && <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>}
+        {error && <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>}
+        {chartData && <DynamicHorizontalBarChart data={chartData} />}
+      </div>
+    </div>
+  );
+};
+
+
+// (*** MODIFIED: Component 'SatisfactionBox' - ดึงข้อมูลจริง ***)
+const SatisfactionBox = ({ organizationId }) => {
+  const [satisfactionData, setSatisfactionData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // (useEffect สำหรับดึงข้อมูลความพึงพอใจ)
+  useEffect(() => {
+    const fetchSatisfactionData = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !organizationId) {
+        setLoading(false);
+        return; 
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // (*** MODIFIED: เปลี่ยน URL ไปยัง API overall-rating ***)
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
+          throw new Error(`Failed to fetch satisfaction data: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // (*** MODIFIED: เก็บข้อมูลที่ได้จาก API ลง State ***)
+        // (ข้อมูลที่ได้: { overall_average, total_count, breakdown: [...] })
+        setSatisfactionData(data);
+
+      } catch (err) {
+         if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+         } else {
+          setError(err.message);
+         }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSatisfactionData();
+  }, [organizationId]); // (ให้ re-fetch เมื่อ organizationId เปลี่ยน)
+
+  // (Helper function สำหรับ Render ดาวตามคะแนนเฉลี่ย)
+  const renderStars = (average) => {
+    // const fullStars = Math.floor(average);
+    // const halfStar = average - fullStars >= 0.5; // (Backend API ไม่มีดาวครึ่ง แต่เผื่อไว้)
+    // const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    
+    // (API นี้ดูเหมือนจะให้คะแนนเต็ม)
+    // (เราจะปัดเศษตามปกติ)
+    const roundedAverage = Math.round(average);
+
+    return (
+      <>
+        {[...Array(roundedAverage)].map((_, i) => <FaStar key={`full-${i}`} />)}
+        {[...Array(5 - roundedAverage)].map((_, i) => <FaStar key={`empty-${i}`} style={{ color: '#e0e0e0' }} />)}
+      </>
+    );
+  };
+
+  // (*** MODIFIED: ส่วน Render ที่ใช้ข้อมูลจริง ***)
+  
+  // (1. Loading State)
+  if (loading) {
+    return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>
+        </div>
+      </div>
+    );
   }
-  .statsBottomGrid {
-    grid-template-columns: 1fr;
+
+  // (2. Error State)
+  if (error) {
+    return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>
+        </div>
+      </div>
+    );
   }
   
-  .statsPageTitle,
-  .statsCurrentDate {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้หัวเรื่องตัดคำในจอแท็บเล็ต) */
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .statsDetailGrid {
-    grid-template-columns: 1fr;
-  }
-  .statsPageTitle {
-    font-size: 24px;
-  }
-  .mockHBarItem {
-    grid-template-columns: 100px 1fr 50px;
-    gap: 8px;
-  }
-  .mockHBarLabel {
-    font-size: 12px;
-  }
-  .chartBox {
-    padding: 16px;
+  // (3. No Data State)
+  if (!satisfactionData || satisfactionData.total_count === 0) {
+     return (
+      <div className={styles.chartBox}>
+        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+        <div className={styles.satisfactionBreakdownContainer}>
+           <p className={styles.mockHBarLabel}>ไม่มีข้อมูลความพึงพอใจ</p>
+        </div>
+      </div>
+    );
   }
 
-  .statsDetailTitle {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้ชื่อ KPI ตัดคำในจอมือถือ) */
-    min-height: 2.4em;  /* (จองที่ไว้ 2 บรรทัด กัน layout กระโดด) */
-  }
+  // (4. Success State - คำนวณ % สำหรับ breakdown)
+  const { overall_average, total_count, breakdown } = satisfactionData;
 
-  .compareFilterToggles span {
-    /* --- FIX OVERFLOW --- */
-    white-space: normal; /* (อนุญาตให้ข้อความ "เปรียบเทียบ" ตัดคำ) */
-  }
-}
+  const breakdownWithPercent = breakdown.map(item => ({
+    stars: item.score,
+    count: item.count,
+    // (คำนวณ % จาก total_count)
+    percent: total_count > 0 ? (item.count / total_count) * 100 : 0 
+  }));
+
+  // (Render UI จริง)
+  return (
+    <div className={styles.chartBox}>
+      <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
+      <div className={styles.satisfactionBreakdownContainer}>
+        <div className={styles.satisfactionBreakdownHeader}>
+          
+          {/* (ใช้ overall_average) */}
+          <span className={styles.satisfactionBreakdownScore}>
+            {overall_average.toFixed(2)}/5 
+          </span>
+          
+          {/* (ใช้ helper renderStars) */}
+          <span className={styles.satisfactionBreakdownStars}>
+            {renderStars(overall_average)}
+          </span>
+          
+          {/* (ใช้ total_count) */}
+          <span className={styles.satisfactionBreakdownTotal}>
+            ({total_count} ความเห็น)
+          </span>
+
+        </div>
+
+        {/* (ใช้ breakdownWithPercent ที่คำนวณแล้ว) */}
+        {breakdownWithPercent.map((item) => (
+          <div key={item.stars} className={styles.satisfactionBreakdownRow}>
+            <span className={styles.satisfactionBreakdownLabel}>
+              {item.stars} <FaStar />
+            </span>
+            <div className={styles.satisfactionBreakdownBar}>
+              <div
+                className={styles.satisfactionBreakdownBarFill}
+                style={{
+                  // (ใช้ % ที่คำนวณได้)
+                  width: `${item.percent.toFixed(2)}%`, 
+                  backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
+                }}
+              ></div>
+            </div>
+            <span className={styles.satisfactionBreakdownPercent}>
+              {/* (ปัดเศษ % สำหรับแสดงผล) */}
+              {item.percent.toFixed(0)}% 
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+// (*** END MODIFIED SatisfactionBox ***)
+
+
+// ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
+const StatisticsView = ({ subTab, organizationId }) => {
+  const [isOpsUnitsOpen, setIsOpsUnitsOpen] = useState(false);
+
+  // (State สำหรับสถิติหลัก)
+  const [statsData, setStatsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // (State สำหรับจำนวนเจ้าหน้าที่)
+  const [staffCount, setStaffCount] = useState(null);
+  const [staffLoading, setStaffLoading] = useState(true);
+  const [staffError, setStaffError] = useState(null);
+
+  // (โครงสร้าง KPI)
+  const kpiStructure = [
+    { id: "total", title: "ทั้งหมด", note: null, color: "#6c757d", cssClass: "stats-cream" },
+    { id: "รอรับเรื่อง", title: "รอรับเรื่อง", note: "เกิน 1 เดือน {pending_overdue} เรื่อง", color: "#dc3545", cssClass: "stats-red" },
+    { id: "กำลังประสานงาน", title: "กำลังประสานงาน", note: null, color: "#9b59b6", cssClass: "stats-purple" },
+    { id: "กำลังดำเนินการ", title: "กำลังดำเนินการ", note: "เกิน 1 เดือน {inprogress_overdue} เรื่อง", color: "#ffc107", cssClass: "stats-yellow" },
+    { id: "เสร็จสิ้น", title: "เสร็จสิ้น", note: "จัดการเอง {completed_self} เรื่อง ({completed_self_perc}%)", color: "#057A55", cssClass: "stats-green" },
+    { id: "ส่งต่อ", title: "ส่งต่อ", note: "(ส่งต่อหน่วยงานอื่น)", color: "#007bff", cssClass: "stats-blue" },
+    { id: "เชิญร่วม", title: "เชิญร่วม", note: null, color: "#20c997", cssClass: "stats-mint" },
+    { id: "ปฏิเสธ", title: "ปฏิเสธ", note: "จัดการเอง {rejected_self} เรื่อง ({rejected_self_perc}%)", color: "#6c757d", cssClass: "stats-grey" },
+  ];
+
+  // (useEffect สำหรับดึงสถิติหลัก)
+  useEffect(() => {
+    const fetchStats = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        setError("Missing auth token from localStorage");
+        setLoading(false);
+        return;
+      }
+      if (!organizationId) {
+        setLoading(true); 
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null); 
+
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404). Server returned HTML.");
+          }
+          throw new Error(`Failed to fetch stats: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        const statsObject = data.reduce((acc, item) => {
+          acc[item.status] = parseInt(item.count, 10);
+          return acc;
+        }, {});
+
+        setStatsData(statsObject);
+      } catch (err) {
+        if (err instanceof SyntaxError) {
+          setError("Failed to parse JSON. API might be returning HTML (404).");
+        } else {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [organizationId]); 
+
+  // (useEffect สำหรับดึงข้อมูล Staff Count)
+  useEffect(() => {
+    const fetchStaffCount = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        setStaffError("Missing auth token");
+        setStaffLoading(false);
+        return;
+      }
+      if (!organizationId) {
+        setStaffLoading(true); // รอ organizationId
+        return;
+      }
+
+      try {
+        setStaffLoading(true);
+        setStaffError(null);
+
+        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.headers.get("content-type")?.includes("text/html")) {
+            throw new Error("API not found (404).");
+          }
+          throw new Error(`Failed to fetch staff count: ${response.statusText}`);
+        }
+        
+        const data = await response.json(); 
+
+        if (data.staff_count !== undefined) { 
+            setStaffCount(parseInt(data.staff_count, 10)); 
+        } else {
+            throw new Error("Invalid data structure from staff API (expected 'staff_count')");
+        }
+
+      } catch (err) {
+        if (err instanceof SyntaxError) {
+          setStaffError("Failed to parse JSON (API 404?).");
+        } else {
+          setStaffError(err.message);
+        }
+      } finally {
+        setStaffLoading(false);
+      }
+    };
+
+    fetchStaffCount();
+  }, [organizationId]); 
+  // (*** END NEW useEffect for Staff Count ***)
+
+
+  // (สร้าง kpiDetails แบบไดนามิก)
+  const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
+
+  const kpiDetailsWithData = kpiStructure.map(kpi => {
+    let value = 0;
+    if (kpi.id === 'total') {
+      value = totalCases;
+    } else {
+      value = statsData?.[kpi.id] || 0;
+    }
+    const percentage = totalCases > 0 ? ((value / totalCases) * 100).toFixed(2) : "0.00";
+    const note = kpi.note ? kpi.note
+      .replace("{pending_overdue}", 0)
+      .replace("{inprogress_overdue}", 0)
+      .replace("{completed_self}", 0)
+      .replace("{completed_self_perc}", 0)
+      .replace("{rejected_self}", 0)
+      .replace("{rejected_self_perc}", 0)
+      : null;
+
+    return { ...kpi, value, percentage, note };
+  });
+
+
+  // (ส่วน Render)
+  return (
+    <div className={styles.statsContainer}>
+      {/* 1. Header (ชื่อหน้า) */}
+      <div className={styles.statsHeader}>
+        <h1 className={styles.statsPageTitle}>ภาพรวมสถิติ</h1>
+      </div>
+
+      {/* 2. Sub-Header (วันที่ และ Subtitle) */}
+      <div className={styles.statsSubHeader}>
+        <span className={styles.statsCurrentDate}>
+          {new Date().toLocaleDateString("th-TH", {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          })}
+        </span>
+        <span className={styles.statsSubtitle}>
+          ข้อมูลปัจจุบัน (จำนวนข้อมูลเรื่องทั้งหมด ที่ประชาชนแจ้งเข้ามา)
+        </span>
+      </div>
+
+      {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
+      {loading ? (
+        <div className={styles.statsDetailGrid}>
+          {kpiStructure.map((kpi) => (
+             <div
+                key={kpi.id}
+                className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
+                style={{ borderTopColor: kpi.color, opacity: 0.5 }}
+             >
+               <div className={styles.statsDetailHeader}>
+                  <span className={styles.statsDetailTitle}>{kpi.title}</span>
+                  <span className={styles.statsDetailValue}>...</span>
+               </div>
+               <span className={styles.statsDetailPercentage}>(...)</span>
+             </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className={styles.statsLoadingOrErrorError}>
+          <FaTimes />
+          <span>ไม่สามารถโหลดสถิติได้: {error}</span>
+        </div>
+      ) : (
+        <div className={styles.statsDetailGrid}>
+          {kpiDetailsWithData.map((kpi) => (
+            <StatsDetailBox
+              key={kpi.title}
+              title={kpi.title}
+              value={kpi.value}
+              percentage={kpi.percentage}
+              note={kpi.note}
+              color={kpi.color}
+              cssClass={kpi.cssClass}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* 5. Main Chart Grid (2 คอลัมน์) */}
+      <div className={styles.statsBottomGrid}>
+        {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
+        <div className={styles.statsGridColumn}>
+          <ProblemTypeStats organizationId={organizationId} />
+          
+          {/* (*** MODIFIED: ส่ง organizationId ไปให้ SatisfactionBox ***) */}
+          <SatisfactionBox organizationId={organizationId} />
+        
+        </div>
+
+        {/* คอลัมน์ที่ 2: การปฏิบัติงาน */}
+        <div className={styles.chartBox}>
+          <h4 className={styles.chartBoxTitle}>การปฏิบัติงานของเจ้าหน้าที่</h4>
+          <div className={styles.opsContent}>
+            <div className={styles.opsKpi}>
+              <span>เจ้าหน้าที่ทั้งหมด</span>
+              {/* (แสดงผล Staff Count ที่ดึงมา) */}
+              <strong>
+                {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
+              </strong>
+            </div>
+            <div className={styles.opsDetail}>
+              <span>ค่าเฉลี่ยโดยประมาณของระยะเวลาการทำงาน</span>
+              <span>3.2 วัน</span>
+            </div>
+            <div
+              className={`${styles.opsDetail} ${styles.clickable}`}
+              onClick={() => setIsOpsUnitsOpen(!isOpsUnitsOpen)}
+            >
+              <div className={styles.opsDetailHeader}>
+                <span>หน่วยงานที่ร่วมรับผิดชอบ</span>
+                <span>
+                  5 หน่วยงาน
+                  {isOpsUnitsOpen ? (
+                    <FaChevronUp className={styles.opsToggleIcon} />
+                  ) : (
+                    <FaChevronDown className={styles.opsToggleIcon} />
+                  )}
+                </span>
+              </div>
+              {isOpsUnitsOpen && (
+                <div className={styles.opsUnitList}>
+                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 1</div>
+                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 2</div>
+                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 3</div>
+                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 4</div>
+                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 5</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StatisticsView;
