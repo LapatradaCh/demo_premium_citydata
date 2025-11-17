@@ -1,17 +1,15 @@
 /* --- css/Home.module.css --- */
 
 /* ============================================ */
-/* --- สไตล์หลัก (Desktop / Notebook) --- */
+/* --- 1. สไตล์หลัก (Desktop / Notebook) --- */
 /* ============================================ */
 
 /* --- Logo Section Top --- */
-/* ส่วนหัวยังคงเต็มจอตามปกติ */
 .logoSectionTop {
   display: flex;
   align-items: center;
   gap: 12px;
-  /* Padding ซ้ายขวา Desktop */
-  padding: 14px 40px; 
+  padding: 14px 40px;
   background: #ffffff;
   position: relative;
   z-index: 1000;
@@ -75,19 +73,15 @@
   transform: scale(1.15) rotate(-8deg);
 }
 
-/* --- Main Layout (เปลี่ยน dashboardContent เป็น Container ในตัว) --- */
+/* --- Main Layout (Wrapper แทน Body) --- */
 .dashboardContent {
-  /* 1. กำหนดความกว้างสูงสุดที่นี่เลย (ไม่ให้เกินสายตา) */
-  max-width: 1280px; 
+  /* กำหนดขอบเขตหน้าจอหลัก */
+  width: 100%;
+  max-width: 1280px; /* ความกว้างสูงสุดบน Desktop */
+  margin: 0 auto; /* จัดกึ่งกลาง */
   
-  /* 2. จัดกึ่งกลางหน้าจอ */
-  margin: 0 auto; 
-  
-  /* 3. ความกว้างเต็มพื้นที่ก่อนจะชน max-width */
-  width: 100%; 
-  
-  /* 4. ระยะขอบซ้ายขวา (Safe Area) สำหรับ Desktop */
-  padding: 30px 40px 120px 40px; /* บน ขวา ล่าง ซ้าย */
+  /* Padding สำหรับ Desktop */
+  padding: 30px 40px 120px 40px;
   
   display: flex;
   flex-direction: column;
@@ -95,10 +89,15 @@
   gap: 24px;
   background-color: #ffffff;
   color: #1a1a1a;
+  
+  /* --- สำคัญ: ป้องกันจอล้น --- */
   overflow-x: hidden; 
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
 }
 
-/* Title */
+/* --- Title --- */
 .title {
   font-size: 2rem;
   font-weight: 700;
@@ -110,7 +109,7 @@
   text-shadow: none;
 }
 
-/* Search Container */
+/* --- Search Container --- */
 .searchContainer {
   width: 100%;
   max-width: 500px;
@@ -129,6 +128,7 @@
   font-weight: 400;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
   transition: all 0.3s ease-in-out;
+  box-sizing: border-box; /* สำคัญ */
 }
 
 .searchButton {
@@ -164,14 +164,14 @@
   transition: all 0.3s ease-in-out;
 }
 
-/* Extra Cards */
+/* --- Extra Cards (เมนูเสริม) --- */
 .extraCards {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
   width: 100%;
-  max-width: 900px; /* ปรับให้กว้างขึ้นเล็กน้อยให้สมดุลกับ dashboardContent */
+  max-width: 800px;
   margin-top: 15px;
 }
 
@@ -201,17 +201,16 @@
   color: #333333;
 }
 
-/* Agency Section (เนื้อหาหลัก) */
+/* --- Agency Section (เนื้อหาหลัก) --- */
 .agencySection {
   width: 100%;
-  /* ลบ max-width ออก เพราะ dashboardContent คุมขอบเขตแล้ว */
-  padding: 40px 0; 
+  padding: 20px 0;
   position: relative;
 }
 
 .agencyGrid {
   display: grid;
-  /* ใช้ auto-fill + minmax เพื่อความยืดหยุ่นสูงสุด */
+  /* Desktop: ปรับอัตโนมัติ */
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 25px;
   justify-items: center;
@@ -233,7 +232,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  max-width: 260px; /* กันการ์ดใหญ่เกินไปเวลาเหลือการ์ดเดียวกลางจอ */
+  max-width: 250px;
 }
 
 .agencyImg {
@@ -272,8 +271,7 @@
   font-weight: 500;
 }
 
-
-/* --- Bottom Nav (Desktop/Notebook Style) --- */
+/* --- Bottom Nav (Desktop) --- */
 .bottomNav {
   position: fixed;
   bottom: 16px;
@@ -289,6 +287,12 @@
   border-radius: 32px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+}
+
+.bottomNavButtonContainer {
+  position: relative;
+  display: block;
+  text-align: center;
 }
 
 .bottomNav button {
@@ -326,7 +330,12 @@
 }
 
 .bottomNav button svg {
-  font-size: 34px;
+  font-size: 34px; /* Desktop Icon Size */
+}
+
+.bottomNav button span {
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 /* --- Sub Menu (Popup) --- */
@@ -364,16 +373,21 @@
 .subMenuItem.active {
   background: #000;
   color: #fff;
+  font-weight: 600;
 }
 
 /* ============================================ */
-/* --- Media Queries (Responsive Logic) --- */
+/* --- 2. Media Queries (Tablet & Phone) --- */
 /* ============================================ */
 
-/* --- 1. Tablet & Phone (จอเล็กกว่า 768px) --- */
+/* --- สำหรับจอเล็กกว่า 768px (Tablet & Mobile) --- */
 @media screen and (max-width: 768px) {
+  
+  /* --- Header Mobile --- */
   .logoSectionTop {
-    padding: 12px 20px;
+    padding: 12px 16px;
+    width: 100%;
+    box-sizing: border-box; /* กันล้น */
   }
   .logoImg {
     width: 36px;
@@ -383,28 +397,31 @@
     font-size: 15px;
   }
 
-  /* ปรับ Container ในมือถือ */
+  /* --- Main Layout Mobile (แก้จอล้นที่นี่) --- */
   .dashboardContent {
-    /* ลด Padding ด้านข้างลงไม่ให้กินพื้นที่เนื้อหา */
-    padding: 20px 16px 100px 16px; 
-    gap: 20px;
+    /* ปรับ padding ให้ชิดขอบมากขึ้นในมือถือ */
+    padding: 16px 12px 100px 12px;
+    width: 100%;
+    overflow-x: hidden; /* ตัดส่วนเกินแนวนอนทิ้ง */
   }
 
-  /* Fonts & Elements */
+  /* --- Elements Styling --- */
   .title {
     font-size: 1.8rem;
+    letter-spacing: 1px;
   }
   
-  /* Grid: อนุญาตให้เป็น 2 คอลัมน์ได้ถ้าจอพอ (140px) */
-  .agencyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+  .searchContainer {
+    width: 100%;
+    max-width: 100%;
   }
   
   .searchInput {
     font-size: 13px;
     padding: 12px 90px 12px 18px;
+    width: 100%;
   }
+  
   .searchButton {
     width: 36px;
     height: 36px;
@@ -414,20 +431,40 @@
     width: 32px;
     height: 32px;
   }
-  
+
   .extraCards {
-    gap: 12px;
+    gap: 15px;
+    max-width: 100%;
   }
   .extraCard {
-    padding: 15px;
-    min-width: 120px; /* ยอมให้เล็กลงได้นิดหน่อยในมือถือ */
+    padding: 20px;
+    min-width: 130px;
+    font-size: 14px;
   }
+
+  /* --- Grid Mobile --- */
+  .agencyGrid {
+    /* ปรับเป็น 1 คอลัมน์เต็ม เพื่อความปลอดภัยไม่ให้ตกขอบ */
+    grid-template-columns: 1fr; 
+    gap: 16px;
+    width: 100%;
+  }
+  
+  .agencyItem {
+    width: 100%;
+    max-width: 100%; /* เต็มความกว้าง Grid */
+    box-sizing: border-box;
+  }
+
   .agencyImg {
     width: 100px;
     height: 100px;
   }
+  .agencyName {
+    font-size: 15px;
+  }
 
-  /* Logout Mobile */
+  /* --- Logout Mobile --- */
   .logoutIcon button {
     width: auto;
     gap: 4px;
@@ -435,63 +472,72 @@
     font-size: 12px;
   }
 
-  /* Bottom Nav Mobile */
+  /* --- Bottom Nav Mobile (ปรับลดขนาดไอคอน) --- */
   .bottomNav {
     bottom: 0;
     left: 0;
     transform: none;
     width: 100%;
     border-radius: 0;
-    padding: 6px 4px;
-    justify-content: space-around;
+    padding: 6px 0; /* ลดระยะห่าง */
+    justify-content: space-evenly; /* กระจายปุ่ม */
+    gap: 0;
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
   }
+
   .bottomNav button {
     flex-direction: column;
-    padding: 6px 8px;
-    gap: 2px;
+    padding: 4px 8px;
+    gap: 4px;
     border-radius: 8px;
+    width: auto;
+    min-width: 60px; /* ให้พื้นที่สัมผัสพอดีนิ้ว */
   }
+  
+  /* **ลดขนาดไอคอนมือถือที่นี่** */
   .bottomNav button svg {
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
+    font-size: 20px; 
+    height: 20px;
+    width: 20px;
   }
+  
   .bottomNav button span {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
 
-/* --- 2. Small Phone (จอเล็กกว่า 480px) --- */
+/* --- สำหรับจอเล็กมาก (เช่น iPhone SE รุ่นเก่า) --- */
 @media screen and (max-width: 480px) {
   .logoutIcon {
     top: 15px;
     right: 15px;
   }
-  
+
   .title {
     font-size: 1.5rem;
+    letter-spacing: 0.5px;
   }
   
-  .searchContainer {
-    max-width: 100%;
-  }
-  
-  /* ในจอเล็กมาก ให้เมนูเสริมเรียงแนวดิ่ง */
   .extraCards {
     flex-direction: column;
-    align-items: stretch; /* ยืดเต็มความกว้าง */
+    align-items: stretch; /* ยืดเต็มจอ */
+    width: 100%;
   }
   .extraCard {
-    width: 100%;
-    flex: unset; /* ยกเลิก flex grow/shrink */
+    width: 100%; /* เต็มจอ */
+    box-sizing: border-box;
+    padding: 15px;
   }
   
-  /* ถ้าต้องการบังคับ 1 คอลัมน์จริงๆ สำหรับจอเล็กจิ๋ว */
-  /* .agencyGrid { grid-template-columns: 1fr; } */
-  /* แต่แนะนำให้ปล่อย auto-fill ข้างบนทำงาน เพราะ iPhone รุ่นใหม่จอใหญ่พอสำหรับ 2 คอลัมน์ */
+  .agencyGrid {
+    padding: 0; /* เอา padding ออกเพื่อให้การ์ดเต็มจอ */
+  }
 
-  .agencyItem {
-    max-width: 100%; /* ให้เต็มพื้นที่ถ้าเหลือคอลัมน์เดียว */
+  /* ลดขนาดไอคอน Nav ลงอีกนิดถ้าจอเล็กจัด */
+  .bottomNav button svg {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
