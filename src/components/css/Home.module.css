@@ -11,7 +11,7 @@
   color: #333;
   font-family: 'Sarabun', sans-serif;
   position: relative;
-  padding-bottom: 140px; /* กันเนื้อหาตกไปอยู่ใต้เมนูล่าง */
+  padding-bottom: 120px; /* ลดพื้นที่ด้านล่างลงเล็กน้อย */
 }
 
 .dashboardContent {
@@ -35,60 +35,65 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 24px;
+  padding: 14px 24px; /* ลด padding บนล่างนิดนึง */
   background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(10px);
 }
 
 .logoImg {
-  width: 48px;
-  height: 48px;
+  width: 44px; /* ลดขนาดโลโก้ลงนิดหน่อย */
+  height: 44px;
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .unitName {
-  font-size: 18px;
+  font-size: 17px; /* ลดขนาดฟอนต์ชื่อหน่วยงาน */
   font-weight: 700;
   color: #111;
   white-space: nowrap;
 }
 
-/* --- ปุ่มออกจากระบบ (แก้ไม่ให้ยืด) --- */
+/* --- ⭐️ แก้ไข: ปุ่มออกจากระบบ (ให้เล็กและเพรียวขึ้น) --- */
 .logoutIcon {
-  margin-left: auto; /* ดันไปขวาสุด */
+  margin-left: auto;
   display: flex;
   align-items: center;
 }
 
 .logoutIcon button {
-  width: auto; /* 🔴 สำคัญ: ห้ามยืด */
+  width: auto;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #e63946; /* สีแดง */
+  gap: 6px; /* ลดช่องว่างไอคอนกับตัวหนังสือ */
+  
+  background: #e63946;
   color: white;
   border: none;
-  padding: 8px 20px;
+  
+  /* ปรับขนาดให้เล็กลง */
+  padding: 6px 16px; 
+  height: 36px; /* กำหนดความสูงที่แน่นอนให้ดูเพรียว */
+  
   border-radius: 30px;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13px; /* ลดขนาดตัวหนังสือ */
+  font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+  box-shadow: 0 4px 10px rgba(230, 57, 70, 0.25);
   white-space: nowrap;
 }
 
 .logoutIcon button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4);
+  box-shadow: 0 6px 14px rgba(230, 57, 70, 0.35);
 }
 
 .logoutIcon button svg {
-  font-size: 16px;
+  font-size: 14px; /* ลดขนาดไอคอน */
 }
 
 /* ============================================ */
@@ -137,13 +142,12 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  flex-shrink: 0; /* ห้ามหด */
+  flex-shrink: 0;
 }
 
 /* ============================================ */
 /* 4. JOB CARDS GRID (การ์ดงานซ่อม) */
 /* ============================================ */
-/* หมายเหตุ: ถ้า ReportTable.js ไม่ได้ import css นี้ อาจต้องก๊อปส่วนนี้ไปใส่ไฟล์นั้น */
 
 .jobListHeader {
   font-size: 16px;
@@ -238,31 +242,35 @@
 }
 
 /* ============================================ */
-/* 5. BOTTOM NAVIGATION (เมนูล่าง - แก้ไม่ให้ยืด) */
+/* 5. ⭐️ แก้ไข: BOTTOM NAVIGATION (ให้เล็กและไม่ยืด) */
 /* ============================================ */
 
 .bottomNav {
   position: fixed;
   bottom: 24px;
   left: 50%;
-  transform: translateX(-50%); /* จัดกึ่งกลางจอ */
+  transform: translateX(-50%);
   
-  /* 🔴 Key Fix: ให้กล่องกว้างเท่าเนื้อหาข้างในเท่านั้น */
   width: fit-content;
   min-width: auto;
-  max-width: 95vw; /* กันล้นจอ */
+  max-width: 95vw;
   
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* ช่องว่างระหว่างปุ่ม */
+  
+  /* ลดช่องว่างระหว่างปุ่มลงจาก 8px เหลือ 5px */
+  gap: 5px; 
   
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
-  padding: 6px 8px; /* Padding รอบนอก */
-  border-radius: 50px; /* ทรงแคปซูล */
   
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  /* ลด Padding รอบนอกให้กรอบขาวเล็กลง */
+  padding: 5px; 
+  
+  border-radius: 100px; /* ทำให้กลมมนสุดๆ */
+  
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12); /* ลดเงาลงนิดนึงให้ดูเบา */
   border: 1px solid rgba(255,255,255,0.5);
   z-index: 1000;
 }
@@ -273,28 +281,32 @@
 }
 
 .bottomNav button {
-  /* 🔴 Key Fix: ปุ่มห้ามยืด */
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   width: auto;
   
-  background: #f1f3f5; /* สีพื้นหลังปุ่มปกติ */
+  background: #f1f3f5;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px; /* ขนาดปุ่ม */
+  gap: 6px;
+  
+  /* 🔴 ลดขนาดปุ่มลงอย่างชัดเจน */
+  padding: 8px 16px; /* เดิม 10px 20px */
+  
   border-radius: 30px;
   color: #555;
-  font-size: 14px;
+  
+  /* ลดขนาดตัวหนังสือ */
+  font-size: 13px; /* เดิม 14px */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
+  white-space: nowrap;
 }
 
 .bottomNav button svg {
-  font-size: 18px;
+  font-size: 16px; /* ลดขนาดไอคอนนิดนึง */
 }
 
 /* Hover State */
@@ -303,11 +315,11 @@
   transform: translateY(-2px);
 }
 
-/* Active State (สีดำ) */
+/* Active State */
 .bottomNav .active {
   background: #000;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 /* Popup Menu */
@@ -316,11 +328,11 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   background: #fff;
   border-radius: 12px;
-  padding: 6px;
-  min-width: 150px;
+  padding: 4px;
+  min-width: 140px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.12);
   border: 1px solid #eee;
   display: flex;
@@ -330,7 +342,7 @@
 
 .subMenuItem {
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 13px;
   color: #333;
   cursor: pointer;
   border-radius: 8px;
@@ -346,25 +358,25 @@
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
-  .logoSectionTop { padding: 12px 16px; }
-  .unitName { font-size: 16px; }
+  .logoSectionTop { padding: 10px 16px; }
+  .unitName { font-size: 15px; }
 
   /* ปรับปุ่ม Logout ในมือถือ */
   .logoutIcon button {
-    padding: 6px 12px;
+    padding: 5px 12px;
     font-size: 12px;
+    height: 32px;
   }
   
-  /* ปรับ Grid */
   .dashboardContent { padding: 16px; }
   .jobGrid { grid-template-columns: 1fr; }
   
   /* ปรับ Bottom Nav มือถือ */
   .bottomNav {
     bottom: 16px;
-    width: fit-content; /* ห้ามยืดเหมือนกัน */
+    width: fit-content;
     gap: 4px;
-    padding: 6px;
+    padding: 4px;
   }
 
   .bottomNav button {
@@ -379,13 +391,8 @@
 }
 
 @media screen and (max-width: 400px) {
-  /* ถ้าจอเล็กมากจริงๆ ให้ซ่อนข้อความในปุ่มล่าง เหลือแต่ไอคอน */
-  .bottomNav button span {
-    display: none;
-  }
-  .bottomNav button {
-    padding: 10px;
-    border-radius: 50%;
-  }
+  /* ซ่อนข้อความถ้าจอเล็กมากจริงๆ */
+  .bottomNav button span { display: none; }
+  .bottomNav button { padding: 10px; border-radius: 50%; }
   .bottomNav button svg { margin: 0; }
 }
