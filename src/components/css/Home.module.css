@@ -1,555 +1,403 @@
-/* --- 1. css/Home.module.css --- */
-/* (สำหรับ Home.js) */
+/* --- src/css/Home.module.css --- */
 
 /* ============================================ */
-/* --- สไตล์หลัก (Desktop / Notebook) --- */
+/* 1. MAIN LAYOUT (โครงสร้างหลัก) */
 /* ============================================ */
 
-/* --- Logo Section Top (ไม่เปลี่ยนแปลง) --- */
+/* พื้นหลังและฟอนต์หลัก */
+.bodyhome {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff; /* สีพื้นหลังหลัก */
+  color: #333;
+  font-family: 'Sarabun', sans-serif; /* หรือฟอนต์ที่คุณใช้ */
+  position: relative;
+  padding-bottom: 140px; /* สำคัญ! กันเนื้อหาตกไปอยู่ใต้เมนูล่าง */
+}
+
+/* คอนเทนเนอร์กลางสำหรับจัดหน้า */
+.dashboardContent {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ============================================ */
+/* 2. HEADER & LOGO (ส่วนหัว) */
+/* ============================================ */
+
 .logoSectionTop {
+  position: sticky; /* ให้หัวติดด้านบนเวลาเลื่อน */
+  top: 0;
+  z-index: 900;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 40px;
-  background: #ffffff;
-  position: relative;
-  z-index: 1000;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
-  justify-content: flex-start;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .logoImg {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .unitName {
-  font-weight: 700;
   font-size: 18px;
-  color: #111111;
-  white-space: nowrap;
+  font-weight: 700;
+  color: #111;
 }
 
-/* --- Logout Button (Desktop) (ไม่เปลี่ยนแปลง) --- */
+/* ปุ่มออกจากระบบ */
 .logoutIcon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1001;
+  margin-left: auto; /* ดันไปขวาสุด */
 }
 
 .logoutIcon button {
   display: flex;
-  width: 140px;
   align-items: center;
-  gap: 0.5rem;
+  gap: 6px;
+  background: #ff4757;
   color: white;
-  padding: 0.4rem 0.8rem;
   border: none;
-  border-radius: 0.75rem;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 30px;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  background: linear-gradient(135deg, #e63946, #c92632);
-  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.35);
-  transition: all 0.3s ease;
-  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
 }
 
 .logoutIcon button:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(230, 57, 70, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
 }
 
-.logoutIcon button svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.35s;
-}
+/* ============================================ */
+/* 3. SEARCH BAR (แถบค้นหาตามรูป) */
+/* ============================================ */
 
-.logoutIcon button:hover svg {
-  transform: scale(1.15) rotate(-8deg);
-}
-
-/* --- Main Layout: ตัวหุ้มหลัก (bodyhome) --- */
-.bodyhome {
-  /* กำหนด Layout ทั่วไปของหน้า */
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  color: #1a1a1a;
-  /* padding แนวนอน (40px) */
-  padding: 0 40px;
-  padding-bottom: 120px; /* เพิ่มพื้นที่ด้านล่างสำหรับ BottomNav */
-  overflow-x: hidden;
-}
-
-/* --- Content Container: คอนเทนเนอร์เนื้อหาภายใน bodyhome --- */
-.dashboardContent {
-  /* ให้ dashboardContent จัดการการจัดเรียงภายในและ spacing */
-  padding: 30px 0; /* Padding แนวตั้ง 30px บนล่าง */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-
-/* --- เนื้อหาที่คัดลอกมาจาก Home1.module.css --- */
-
-/* Title */
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 0.8px;
-  line-height: 1.2;
-  color: #000000;
-  margin-bottom: 20px;
-  text-shadow: none;
-}
-
-/* Search Container */
 .searchContainer {
-  width: 100%;
-  max-width: 500px; /* จำกัดความกว้าง Search Bar */
-  position: relative;
   display: flex;
-  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* จัดกึ่งกลาง */
+}
+
+.searchInputWrapper {
+  flex: 1;
+  position: relative;
 }
 
 .searchInput {
   width: 100%;
-  padding: 14px 100px 14px 20px;
-  border: 1px solid #e5e5e5;
-  border-radius: 40px;
-  background-color: #FFFFFF;
+  padding: 12px 16px 12px 40px; /* เว้นซ้ายไว้ใส่ icon แว่นขยาย */
+  border-radius: 50px;
+  border: 1px solid #e1e1e1;
+  background: #f9f9f9;
   font-size: 14px;
-  font-weight: 400;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
-  transition: all 0.3s ease-in-out;
+  outline: none;
+  transition: all 0.3s;
 }
 
-.searchButton {
-  position: absolute;
-  right: 6px;
-  background: linear-gradient(135deg, #444444, #222222);
+.searchInput:focus {
+  background: #fff;
+  border-color: #333;
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+}
+
+/* ปุ่มตัวกรอง (Filter) สีดำ */
+.filterButton {
+  background: #000;
+  color: #fff;
   border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
-}
-
-.clearButton {
-  position: absolute;
-  right: 60px;
-  background: #f5f5f5;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Extra Cards */
-.extraCards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  max-width: 800px; /* จำกัดความกว้าง Extra Cards */
-  margin-top: 15px;
-}
-
-.extraCard {
-  background: #FFFFFF;
-  border-radius: 15px;
-  padding: 25px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  text-align: center;
+  border-radius: 50px;
+  padding: 0 20px;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 15px;
-  color: #333333;
-  cursor: pointer;
-  flex: 1 1 180px;
-  min-width: 160px;
-  border: 1px solid #eeeeee;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease-in-out;
-}
-
-.cardTitle {
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  text-shadow: none;
-  color: #333333;
-}
-
-/* Agency Section (เนื้อหาหลัก) */
-.agencySection {
-  width: 100%;
-  max-width: 1100px; /* จำกัดความกว้าง Agency Section */
-  padding: 50px 0; /* เอา padding แนวนอนออก เพราะถูกคุมโดย bodyhome แล้ว */
-  position: relative;
-}
-
-.agencyGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 25px;
-  justify-items: center;
-  width: 100%;
-}
-
-.agencyItem {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 25px;
-  border: 1px solid #f5f5f5;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  overflow: hidden;
-  width: 100%; /* ให้เต็มพื้นที่ Grid ที่กำหนด */
-  max-width: 250px; /* ช่วยให้การ์ดไม่กว้างเกินไปบน Grid ที่ใหญ่ */
-}
-
-.agencyImg {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid #f0f0f0;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-.agencyName {
-  font-size: 17px;
-  font-weight: 600;
-  text-align: center;
-  color: #333333;
-  letter-spacing: 0.5px;
-  line-height: 1.3;
-  transition: color 0.3s ease-in-out;
-}
-
-.agencyType {
-  font-size: 13px;
-  color: #888;
-  font-weight: 400;
-  margin-top: -3px;
-}
-
-.noResults {
-  text-align: center;
-  font-size: 20px;
-  color: #aaa;
-  margin-top: 40px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-
-/* --- Bottom Nav (Desktop/Notebook Style) (ไม่เปลี่ยนแปลง) --- */
-.bottomNav {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(14px);
-  padding: 10px 16px;
-  border-radius: 32px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  cursor: pointer;
+}
+
+/* ============================================ */
+/* 4. JOB CARDS GRID (การ์ดงานซ่อม) */
+/* ============================================ */
+/* หมายเหตุ: Class พวกนี้ต้องตรงกับใน ReportTable.js ของคุณ */
+
+.jobListHeader {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.jobGrid {
+  display: grid;
+  /* จัดเรียงอัตโนมัติ ขั้นต่ำ 300px ต่อการ์ด */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.jobCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.jobCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-color: #ddd;
+}
+
+.jobCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.jobCardInfo {
+  display: flex;
+  gap: 12px;
+}
+
+.jobCardIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.jobCardText h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.jobCardText p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* ป้ายสถานะ (Badge) */
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+/* ตัวอย่างสีสถานะ */
+.statusPending { background: #e74c3c; } /* แดง */
+.statusProgress { background: #f1c40f; color: #333; } /* เหลือง */
+.statusDone { background: #2ecc71; } /* เขียว */
+.statusCoord { background: #9b59b6; } /* ม่วง */
+
+/* ปุ่มอ่านเพิ่มเติม */
+.readMoreButton {
+  margin-top: auto; /* ดันไปล่างสุดของการ์ด */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #eee;
+  background: #fff;
+  border-radius: 30px;
+  color: #007aff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.readMoreButton:hover {
+  background: #f0f8ff;
+  border-color: #007aff;
+}
+
+/* ============================================ */
+/* 5. BOTTOM NAVIGATION (เมนูล่าง) */
+/* ============================================ */
+
+.bottomNav {
+  position: fixed; /* บังคับให้ติดหน้าจอ */
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 8px 12px;
+  border-radius: 40px;
+  
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.5);
+  z-index: 1000; /* ให้อยู่บนสุด */
 }
 
 .bottomNavButtonContainer {
   position: relative;
-  display: block;
-  text-align: center;
 }
 
 .bottomNav button {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #555;
-  padding: 8px 12px;
-  border-radius: 20px;
-  transition: all 0.25s ease;
-  display: inline-flex;
-  flex-direction: row;
+  display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.bottomNav button:not(.active):hover {
-  background: #e9e9e9;
-  color: #111;
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-.bottomNav .active {
-  color: #fff;
-  font-weight: 700;
-  background-color: #111;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: all 0.25s ease;
-}
-
-.bottomNav .active:hover {
-  transform: translateY(-2px);
+  padding: 10px 16px;
+  border-radius: 30px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .bottomNav button svg {
-  font-size: 34px;
+  font-size: 18px;
 }
 
-.bottomNav button span {
-  font-size: 13px;
-  white-space: nowrap;
+/* สถานะ Active (ปุ่มดำ ตัวหนังสือขาว) */
+.bottomNav .active {
+  background: #000;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* --- Sub Menu (Popup) (ไม่เปลี่ยนแปลง) --- */
+/* --- Popup Menu (เมนูย่อย) --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: 100%; /* โผล่ขึ้นด้านบน */
   left: 50%;
   transform: translateX(-50%);
-  background: #ffffff;
+  margin-bottom: 12px;
+  
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
   padding: 6px;
   min-width: 160px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.12);
   border: 1px solid #eee;
+  
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .subMenuItem {
-  padding: 10px 14px;
+  padding: 10px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
   border-radius: 8px;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
+  text-align: center;
 }
 
 .subMenuItem:hover {
-  background: #f4f4f4;
+  background: #f5f5f5;
 }
 
 .subMenuItem.active {
   background: #000;
   color: #fff;
-  font-weight: 600;
 }
 
 /* ============================================ */
-/* --- Media Queries (Tablet & Phone) --- */
+/* 6. RESPONSIVE (สำหรับมือถือ) */
 /* ============================================ */
 
-/* --- 1. สำหรับแท็บเล็ต และ โทรศัพท์ (จอเล็กกว่า 768px) --- */
 @media screen and (max-width: 768px) {
-  /* ... โค้ดส่วนบน (Logo, Nav) ไม่เปลี่ยนแปลง ... */
+  /* ปรับ Header */
   .logoSectionTop {
-    padding: 12px 20px;
+    padding: 12px 16px;
   }
-  .logoImg {
-    width: 36px;
-    height: 36px;
-  }
-  .unitName {
-    font-size: 15px;
-  }
+  .unitName { font-size: 16px; }
+  .logoutIcon button span { display: none; } /* ซ่อนคำว่าออกจากระบบ เหลือแต่ไอคอน */
+  .logoutIcon button { padding: 8px; border-radius: 50%; }
 
-  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
-  .title {
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-  }
-  .agencyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 18px;
-  }
-  .searchInput {
-    font-size: 13px;
-    padding: 12px 90px 12px 18px;
-  }
-  .searchButton {
-    width: 36px;
-    height: 36px;
-  }
-  .clearButton {
-    right: 55px;
-    width: 32px;
-    height: 32px;
-  }
-  .extraCards {
-    gap: 15px;
-    max-width: 90%;
-  }
-  .extraCard {
-    padding: 20px;
-    min-width: 130px;
-    font-size: 14px;
-  }
-  .cardTitle {
-    font-size: 15px;
-  }
-  .agencyImg {
-    width: 100px;
-    height: 100px;
-  }
-  .agencyName {
-    font-size: 15px;
-  }
-
-  /* Logout Button (Mobile) */
-  .logoutIcon button {
-    width: auto;
-    gap: 4px;
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-
-  /* Main Layout (Mobile) */
-  .bodyhome {
-    /* ปรับ padding แนวนอน (12px) และคง padding ล่างสำหรับ Nav (100px) */
-    padding: 0 12px 100px 12px;
-  }
+  /* ปรับ Grid */
   .dashboardContent {
-    /* DashboardContent บน mobile (padding แนวตั้ง 16px) */
-    padding: 16px 0;
+    padding: 16px;
   }
-
-  /* Bottom Nav (Mobile) */
+  .jobGrid {
+    grid-template-columns: 1fr; /* เรียงแถวเดียว */
+  }
+  
+  /* ปรับ Bottom Nav ให้ชิดขอบล่างแบบ App มือถือ */
   .bottomNav {
     bottom: 0;
     left: 0;
     transform: none;
     width: 100%;
-    border-radius: 0;
-    padding: 6px 4px;
+    border-radius: 20px 20px 0 0; /* มนแค่ข้างบน */
+    padding: 10px 0;
     justify-content: space-around;
-    gap: 2px;
-    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+    gap: 0;
+    border-bottom: none;
   }
 
-  /* ปุ่ม Bottom Nav (Mobile) */
   .bottomNav button {
-    flex-direction: column;
-    padding: 6px 8px;
-    gap: 2px;
+    flex-direction: column; /* ไอคอนบน ตัวหนังสือล่าง */
+    gap: 4px;
+    padding: 6px;
     border-radius: 8px;
+    background: transparent !important; /* ไม่เอาพื้นหลังดำบนมือถือ */
+    color: #999;
+    box-shadow: none !important;
   }
+
   .bottomNav button svg {
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
+    font-size: 22px;
+    margin-bottom: 2px;
   }
+
   .bottomNav button span {
-    font-size: 11px;
-  }
-}
-
-/* --- 2. สำหรับโทรศัพท์จอเล็ก (จอเล็กกว่า 480px) --- */
-@media screen and (max-width: 480px) {
-  /* Logout Icon (Mobile) */
-  .logoutIcon {
-    top: 15px;
-    right: 15px;
+    font-size: 10px;
   }
 
-  /* --- สไตล์เนื้อหา (จาก Home1 เดิม) --- */
-  .title {
-    font-size: 1.5rem;
-    letter-spacing: 0.5px;
+  .bottomNav .active {
+    color: #000 !important; /* แค่เปลี่ยนสีไอคอนเป็นดำ */
   }
+  
+  /* ทำให้ปุ่ม Active บนมือถือมีจุดบอกสถานะ */
+  .bottomNav .active::after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: #000;
+    border-radius: 50%;
+    margin-top: 2px;
+  }
+
+  /* ปรับ Search Bar */
   .searchContainer {
-    max-width: 90%;
+    flex-direction: row; /* ยังคงแนวนอน */
   }
-  .searchInput {
-    padding: 10px 80px 10px 15px;
-    font-size: 12px;
-  }
-  .searchButton {
-    width: 32px;
-    height: 32px;
-  }
-  .clearButton {
-    right: 50px;
-    width: 30px;
-    height: 30px;
-  }
-  .extraCards {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  .extraCard {
-    padding: 15px;
-    width: 80%;
-    min-width: unset;
-  }
-  .agencyGrid {
-    grid-template-columns: repeat(1, 1fr);
-    padding: 0 15px;
-  }
-  .agencyItem {
-    width: 90%;
-    max-width: 250px;
-  }
-  .agencyImg {
-    width: 80px;
-    height: 80px;
-  }
-  .agencyName {
-    font-size: 14px;
-  }
-  .agencyType {
-    font-size: 12px;
-  }
-  .noResults {
-    font-size: 18px;
-    margin-top: 30px;
+  .filterButton span {
+    display: none; /* ซ่อนคำว่า "ตัวกรอง" บนมือถือ */
   }
 }
