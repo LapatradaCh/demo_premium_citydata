@@ -4,7 +4,6 @@
 /* 1. MAIN LAYOUT (โครงสร้างหลัก) */
 /* ============================================ */
 
-/* พื้นหลังและฟอนต์หลัก */
 .bodyhome {
   width: 100%;
   min-height: 100vh;
@@ -15,7 +14,6 @@
   padding-bottom: 140px; /* กันเนื้อหาตกไปอยู่ใต้เมนูล่าง */
 }
 
-/* คอนเทนเนอร์กลางสำหรับจัดหน้า */
 .dashboardContent {
   width: 100%;
   max-width: 1200px;
@@ -55,28 +53,33 @@
   font-size: 18px;
   font-weight: 700;
   color: #111;
+  white-space: nowrap;
 }
 
-/* ⭐️ [แก้ไข] ปุ่มออกจากระบบ (ให้เหมือนในรูป) */
+/* --- ปุ่มออกจากระบบ (แก้ไม่ให้ยืด) --- */
 .logoutIcon {
   margin-left: auto; /* ดันไปขวาสุด */
+  display: flex;
+  align-items: center;
 }
 
 .logoutIcon button {
+  width: auto; /* 🔴 สำคัญ: ห้ามยืด */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px; /* เพิ่มระยะห่าง icon กับ text */
-  background: #e63946; /* สีแดงตามรูป */
+  gap: 8px;
+  background: #e63946; /* สีแดง */
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 8px 20px;
   border-radius: 30px;
   font-size: 14px;
-  font-weight: 700; /* ตัวหนาขึ้น */
+  font-weight: 700;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
-  white-space: nowrap; /* กันข้อความตก */
+  white-space: nowrap;
 }
 
 .logoutIcon button:hover {
@@ -89,7 +92,7 @@
 }
 
 /* ============================================ */
-/* 3. SEARCH BAR (แถบค้นหาตามรูป) */
+/* 3. SEARCH BAR (แถบค้นหา) */
 /* ============================================ */
 
 .searchContainer {
@@ -134,11 +137,14 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  flex-shrink: 0; /* ห้ามหด */
 }
 
 /* ============================================ */
 /* 4. JOB CARDS GRID (การ์ดงานซ่อม) */
 /* ============================================ */
+/* หมายเหตุ: ถ้า ReportTable.js ไม่ได้ import css นี้ อาจต้องก๊อปส่วนนี้ไปใส่ไฟล์นั้น */
+
 .jobListHeader {
   font-size: 16px;
   color: #555;
@@ -232,69 +238,79 @@
 }
 
 /* ============================================ */
-/* 5. ⭐️ [แก้ไข] BOTTOM NAVIGATION (เมนูล่าง) */
+/* 5. BOTTOM NAVIGATION (เมนูล่าง - แก้ไม่ให้ยืด) */
 /* ============================================ */
 
-/* กรอบสีขาวใหญ่ (Container) */
 .bottomNav {
   position: fixed;
-  bottom: 24px; /* ลอยจากขอบล่าง 24px */
+  bottom: 24px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* จัดกึ่งกลางจอ */
+  
+  /* 🔴 Key Fix: ให้กล่องกว้างเท่าเนื้อหาข้างในเท่านั้น */
+  width: fit-content;
+  min-width: auto;
+  max-width: 95vw; /* กันล้นจอ */
   
   display: flex;
   align-items: center;
-  gap: 6px; /* ระยะห่างระหว่างปุ่ม */
+  justify-content: center;
+  gap: 8px; /* ช่องว่างระหว่างปุ่ม */
   
-  background: rgba(255, 255, 255, 0.98); /* พื้นหลังสีขาว (ตามรูป) */
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
-  padding: 8px; /* Padding รอบกรอบขาว */
-  border-radius: 40px; /* ความโค้งกรอบขาว */
+  padding: 6px 8px; /* Padding รอบนอก */
+  border-radius: 50px; /* ทรงแคปซูล */
   
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   border: 1px solid rgba(255,255,255,0.5);
   z-index: 1000;
 }
 
 .bottomNavButtonContainer {
   position: relative;
+  display: flex;
 }
 
-/* ปุ่มเมนู (ปุ่มปกติ สีเทาอ่อน) */
 .bottomNav button {
-  background: #f1f3f5; /* ⭐️ สีเทาอ่อน (ตามรูป) */
+  /* 🔴 Key Fix: ปุ่มห้ามยืด */
+  flex: 0 0 auto; 
+  width: auto;
+  
+  background: #f1f3f5; /* สีพื้นหลังปุ่มปกติ */
   border: none;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px; /* ขนาดปุ่ม */
   border-radius: 30px;
-  color: #333; /* ⭐️ สีตัวหนังสือ (ตามรูป) */
+  color: #555;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap; /* กันข้อความตก */
+  transition: all 0.2s ease;
+  white-space: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
 }
 
 .bottomNav button svg {
   font-size: 18px;
 }
 
-/* เอาเมาส์ชี้ปุ่มปกติ */
+/* Hover State */
 .bottomNav button:not(.active):hover {
-  background: #e9ecef; /* สีเทาเข้มขึ้นเล็กน้อย */
+  background: #e9ecef;
   transform: translateY(-2px);
 }
 
-/* ⭐️ สถานะ Active (ปุ่มดำ ตัวหนังสือขาว) */
+/* Active State (สีดำ) */
 .bottomNav .active {
   background: #000;
   color: #fff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* --- Popup Menu (เมนูย่อย) --- */
+/* Popup Menu */
 .subMenuPopup {
   position: absolute;
   bottom: 100%;
@@ -304,7 +320,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 6px;
-  min-width: 160px;
+  min-width: 150px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.12);
   border: 1px solid #eee;
   display: flex;
@@ -313,85 +329,63 @@
 }
 
 .subMenuItem {
-  padding: 10px;
+  padding: 8px 12px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
   border-radius: 8px;
   text-align: center;
+  white-space: nowrap;
 }
 
-.subMenuItem:hover {
-  background: #f5f5f5;
-}
-
-.subMenuItem.active {
-  background: #000;
-  color: #fff;
-}
+.subMenuItem:hover { background: #f5f5f5; }
+.subMenuItem.active { background: #000; color: #fff; }
 
 /* ============================================ */
-/* 6. ⭐️ [แก้ไข] RESPONSIVE (สำหรับมือถือ) */
+/* 6. RESPONSIVE (มือถือ) */
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
-  /* ปรับ Header */
-  .logoSectionTop {
-    padding: 12px 16px;
-  }
+  .logoSectionTop { padding: 12px 16px; }
   .unitName { font-size: 16px; }
 
-  /* ⭐️ แก้ปุ่ม Logout บนมือถือ */
+  /* ปรับปุ่ม Logout ในมือถือ */
   .logoutIcon button {
-    padding: 6px 12px; /* ลดขนาด padding ลง */
-    font-size: 12px; /* ลดขนาดฟอนต์ */
-    gap: 6px;
-  }
-  .logoutIcon button svg {
-    font-size: 14px;
-  }
-
-  /* ปรับ Grid */
-  .dashboardContent {
-    padding: 16px;
-  }
-  .jobGrid {
-    grid-template-columns: 1fr; /* เรียงแถวเดียว */
+    padding: 6px 12px;
+    font-size: 12px;
   }
   
-  /* ⭐️ แก้ Bottom Nav บนมือถือ */
-  /* (ให้ลอยเหมือนเดิม แต่ปรับขนาด) */
+  /* ปรับ Grid */
+  .dashboardContent { padding: 16px; }
+  .jobGrid { grid-template-columns: 1fr; }
+  
+  /* ปรับ Bottom Nav มือถือ */
   .bottomNav {
-    bottom: 16px; /* ลดระยะห่างจากขอบล่าง */
-    gap: 4px; /* ลดช่องว่างระหว่างปุ่ม */
-    padding: 6px; /* ลด padding กรอบขาว */
-    width: 95%; /* จำกัดความกว้างไม่ให้ล้น */
+    bottom: 16px;
+    width: fit-content; /* ห้ามยืดเหมือนกัน */
+    gap: 4px;
+    padding: 6px;
   }
 
-  /* ⭐️ แก้ปุ่ม Bottom Nav บนมือถือ */
   .bottomNav button {
-    gap: 6px;
-    padding: 8px 10px; /* ลด padding ปุ่ม */
-    border-radius: 20px;
-    font-size: 12px; /* ลดขนาดฟอนต์ */
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 4px;
   }
   
   .bottomNav button svg {
-    font-size: 16px; /* ลดขนาดไอคอน */
+    font-size: 16px;
   }
-  
-  /* ซ่อนข้อความ เหลือแต่ไอคอน (ถ้าจอมันเล็กมากๆ) */
-  @media screen and (max-width: 420px) {
-    .bottomNav button span {
-      display: none; /* ซ่อนข้อความ */
-    }
-    .bottomNav button {
-      padding: 8px; /* ทำให้เป็นปุ่มกลมๆ */
-      border-radius: 50%;
-    }
-    .bottomNav button svg {
-      font-size: 18px;
-      margin: 0;
-    }
+}
+
+@media screen and (max-width: 400px) {
+  /* ถ้าจอเล็กมากจริงๆ ให้ซ่อนข้อความในปุ่มล่าง เหลือแต่ไอคอน */
+  .bottomNav button span {
+    display: none;
   }
+  .bottomNav button {
+    padding: 10px;
+    border-radius: 50%;
+  }
+  .bottomNav button svg { margin: 0; }
 }
