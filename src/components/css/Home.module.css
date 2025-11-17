@@ -4,7 +4,6 @@
 /* --- 1. สไตล์หลัก (Desktop / PC) --- */
 /* ============================================ */
 
-
 /* --- Logo Section Top --- */
 .logoSectionTop {
   display: flex;
@@ -293,6 +292,7 @@
   flex-direction: row;
   align-items: center;
   gap: 6px;
+  position: relative; /* เพื่อให้ Popup อ้างอิง */
 }
 
 .bottomNav button:not(.active):hover {
@@ -322,11 +322,11 @@
   white-space: nowrap;
 }
 
-/* --- Sub Menu --- */
+/* --- Sub Menu Desktop --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
-  left: 70%;
+  left: 50%;
   transform: translateX(-50%);
   background: #ffffff;
   border-radius: 12px;
@@ -428,7 +428,7 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (Fixed Overflow) --- */
+  /* --- Bottom Nav Mobile (Grid + Fixed Popup) --- */
   /* ==================================================== */
 
   .bottomNav {
@@ -438,8 +438,7 @@
     right: 0;
     width: 100%;
     
-    /* ป้องกัน Padding ดันจนล้นจอ */
-    box-sizing: border-box;
+    box-sizing: border-box; /* ป้องกันล้น */
     
     background: #ffffff;
     display: grid;
@@ -455,13 +454,19 @@
 
   /* --- ปุ่มทั่วไป (Inactive) --- */
   .bottomNav button {
+    /* สำคัญ: เป็นสมอเรือให้ Popup */
+    position: relative;
+    overflow: visible; /* สำคัญ: ยอมให้ Popup ลอยทะลุขอบ */
+
     background: transparent !important;
     border: none;
     box-shadow: none !important;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    
     height: 56px;
     width: 100%;
     border-radius: 16px;
@@ -489,6 +494,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   /* --- สถานะเลือก (Active) --- */
@@ -506,6 +512,30 @@
   .bottomNav button.active span {
     color: #ffffff;
     font-weight: 600;
+  }
+
+  /* --- แก้ไขตำแหน่ง Popup ในมือถือ --- */
+  /* override class .subMenuPopup ที่ประกาศไว้ข้างบน */
+  .subMenuPopup {
+    bottom: calc(100% + 12px); /* ดันขึ้นไปเหนือปุ่ม */
+    left: 50% !important;      /* บังคับให้อยู่ตรงกลางแนวนอนเทียบกับปุ่ม */
+    transform: translateX(-50%) !important; /* จัดกึ่งกลาง */
+    
+    min-width: 140px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    z-index: 1002;
+  }
+  
+  /* เพิ่มลูกศรชี้ลงเล็กน้อย (ถ้าต้องการ) */
+  .subMenuPopup::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
   }
 
   /* Logout Mobile */
