@@ -120,13 +120,12 @@ const ProblemTypeStats = ({ organizationId }) => {
 };
 
 
-// (*** MODIFIED: Component 'SatisfactionBox' - ดึงข้อมูลจริง ***)
+// (*** Component 'SatisfactionBox' ***)
 const SatisfactionBox = ({ organizationId }) => {
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // (useEffect สำหรับดึงข้อมูลความพึงพอใจ)
   useEffect(() => {
     const fetchSatisfactionData = async () => {
       const accessToken = localStorage.getItem('accessToken');
@@ -138,8 +137,6 @@ const SatisfactionBox = ({ organizationId }) => {
       try {
         setLoading(true);
         setError(null);
-
-        // (*** MODIFIED: เปลี่ยน URL ไปยัง API overall-rating ***)
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -154,9 +151,6 @@ const SatisfactionBox = ({ organizationId }) => {
         }
 
         const data = await response.json();
-        
-        // (*** MODIFIED: เก็บข้อมูลที่ได้จาก API ลง State ***)
-        // (ข้อมูลที่ได้: { overall_average, total_count, breakdown: [...] })
         setSatisfactionData(data);
 
       } catch (err) {
@@ -171,18 +165,10 @@ const SatisfactionBox = ({ organizationId }) => {
     };
 
     fetchSatisfactionData();
-  }, [organizationId]); // (ให้ re-fetch เมื่อ organizationId เปลี่ยน)
+  }, [organizationId]);
 
-  // (Helper function สำหรับ Render ดาวตามคะแนนเฉลี่ย)
   const renderStars = (average) => {
-    // const fullStars = Math.floor(average);
-    // const halfStar = average - fullStars >= 0.5; // (Backend API ไม่มีดาวครึ่ง แต่เผื่อไว้)
-    // const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    
-    // (API นี้ดูเหมือนจะให้คะแนนเต็ม)
-    // (เราจะปัดเศษตามปกติ)
     const roundedAverage = Math.round(average);
-
     return (
       <>
         {[...Array(roundedAverage)].map((_, i) => <FaStar key={`full-${i}`} />)}
@@ -191,9 +177,6 @@ const SatisfactionBox = ({ organizationId }) => {
     );
   };
 
-  // (*** MODIFIED: ส่วน Render ที่ใช้ข้อมูลจริง ***)
-  
-  // (1. Loading State)
   if (loading) {
     return (
       <div className={styles.chartBox}>
@@ -205,7 +188,6 @@ const SatisfactionBox = ({ organizationId }) => {
     );
   }
 
-  // (2. Error State)
   if (error) {
     return (
       <div className={styles.chartBox}>
@@ -217,7 +199,6 @@ const SatisfactionBox = ({ organizationId }) => {
     );
   }
   
-  // (3. No Data State)
   if (!satisfactionData || satisfactionData.total_count === 0) {
      return (
       <div className={styles.chartBox}>
@@ -229,41 +210,29 @@ const SatisfactionBox = ({ organizationId }) => {
     );
   }
 
-  // (4. Success State - คำนวณ % สำหรับ breakdown)
   const { overall_average, total_count, breakdown } = satisfactionData;
-
   const breakdownWithPercent = breakdown.map(item => ({
     stars: item.score,
     count: item.count,
-    // (คำนวณ % จาก total_count)
     percent: total_count > 0 ? (item.count / total_count) * 100 : 0
   }));
 
-  // (Render UI จริง)
   return (
     <div className={styles.chartBox}>
       <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
       <div className={styles.satisfactionBreakdownContainer}>
         <div className={styles.satisfactionBreakdownHeader}>
-          
-          {/* (ใช้ overall_average) */}
           <span className={styles.satisfactionBreakdownScore}>
             {overall_average.toFixed(2)}/5
           </span>
-          
-          {/* (ใช้ helper renderStars) */}
           <span className={styles.satisfactionBreakdownStars}>
             {renderStars(overall_average)}
           </span>
-          
-          {/* (ใช้ total_count) */}
           <span className={styles.satisfactionBreakdownTotal}>
             ({total_count} ความเห็น)
           </span>
-
         </div>
 
-        {/* (ใช้ breakdownWithPercent ที่คำนวณแล้ว) */}
         {breakdownWithPercent.map((item) => (
           <div key={item.stars} className={styles.satisfactionBreakdownRow}>
             <span className={styles.satisfactionBreakdownLabel}>
@@ -273,14 +242,12 @@ const SatisfactionBox = ({ organizationId }) => {
               <div
                 className={styles.satisfactionBreakdownBarFill}
                 style={{
-                  // (ใช้ % ที่คำนวณได้)
                   width: `${item.percent.toFixed(2)}%`,
                   backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
                 }}
               ></div>
             </div>
             <span className={styles.satisfactionBreakdownPercent}>
-              {/* (ปัดเศษ % สำหรับแสดงผล) */}
               {item.percent.toFixed(0)}%
             </span>
           </div>
@@ -289,13 +256,134 @@ const SatisfactionBox = ({ organizationId }) => {
     </div>
   );
 };
-// (*** END MODIFIED SatisfactionBox ***)
+
+// ==========================================================
+// === (*** 🆕 START NEW COMPONENT: StaffRankingChart ***) ===
+// ==========================================================
+const StaffRankingChart = ({ organizationId }) => {
+  // (ในที่นี้ใช้ Mock Data เพื่อให้ตรงตามรูปภาพตัวอย่าง)
+  // (ในระบบจริง คุณอาจจะ fetch จาก API /api/stats/staff-ranking หรือดึงข้อมูล log)
+  const mockStaffData = [
+    { name: "กมนัช พรหมบำรุง", processing: 6, completed: 4, forwarded: 3, irrelevant: 2 },
+    { name: "กมนัช traffy fondue", processing: 4, completed: 1, forwarded: 1, irrelevant: 1 },
+    { name: "Phumchai Siriphanpor...", processing: 2, completed: 2, forwarded: 0, irrelevant: 0 },
+    { name: "AbuDaHBeE Tubtim", processing: 4, completed: 0, forwarded: 0, irrelevant: 0 },
+    { name: "Traffy-testkk NECTEC,...", processing: 3, completed: 1, forwarded: 0, irrelevant: 0 },
+    { name: "SuperToy Noppadol", processing: 2, completed: 0, forwarded: 0, irrelevant: 0 },
+    { name: "Taned Wongpoo", processing: 0, completed: 2, forwarded: 0, irrelevant: 0 },
+  ];
+
+  // สีตามภาพตัวอย่าง (Pastel)
+  const colors = {
+    processing: "#fef3c7", // เหลืองอ่อน
+    completed: "#bef264",  // เขียวอ่อน
+    forwarded: "#dbeafe",  // ฟ้าอ่อน
+    irrelevant: "#e0f2f1"  // เขียวฟ้าจางๆ
+  };
+
+  // คำนวณค่า Max Total เพื่อทำ Scaling กราฟ
+  const maxTotal = Math.max(
+    ...mockStaffData.map(d => d.processing + d.completed + d.forwarded + d.irrelevant), 
+    1 // ป้องกันหารด้วย 0
+  );
+
+  return (
+    <div style={{ marginTop: "20px", width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+        <h5 style={{ fontSize: "16px", fontWeight: "bold", margin: 0 }}>10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด</h5>
+        {/* <span style={{ fontSize: "12px", color: "#666" }}>ข้อมูลแบบตาราง</span> (Toggle Switch placeholder) */}
+      </div>
+
+      {/* Legend */}
+      <div style={{ display: "flex", gap: "10px", fontSize: "12px", marginBottom: "15px", color: "#555", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.processing }}></div> กำลังดำเนินการ
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.completed }}></div> เสร็จสิ้น
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.forwarded }}></div> ส่งต่อ
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.irrelevant }}></div> ไม่เกี่ยวข้อง
+        </div>
+      </div>
+
+      {/* Chart Rows */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        {mockStaffData.map((staff, index) => {
+          const total = staff.processing + staff.completed + staff.forwarded + staff.irrelevant;
+          // ความกว้างรวมของแท่งนี้ เทียบกับค่าสูงสุดในกราฟ
+          const barWidthPercent = (total / maxTotal) * 100; 
+          
+          // คำนวณ % ย่อยภายในแท่ง (เทียบกับ Total ของคนนั้นๆ เพื่อให้รวมกันได้ barWidthPercent ไม่ใช่ 100% ของ container)
+          // วิธีที่ง่ายกว่า: ใช้ Flexbox ภายใน container ที่มีความกว้างเท่ากับ barWidthPercent
+          
+          return (
+            <div key={index} style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+              {/* ชื่อเจ้าหน้าที่ */}
+              <div style={{ width: "160px", flexShrink: 0, paddingRight: "10px", color: "#555", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={staff.name}>
+                {staff.name}
+              </div>
+
+              {/* พื้นที่กราฟ (เส้น Grid จางๆ แนวตั้งจะทำยากถ้าใช้ CSS Inline ง่ายๆ ดังนั้นข้าม Grid ไปก่อน เน้นแท่งกราฟ) */}
+              <div style={{ flexGrow: 1, position: "relative", height: "24px", display: "flex", alignItems: "center" }}>
+                {/* Container ของแท่งกราฟจริง */}
+                <div style={{ width: `${barWidthPercent}%`, height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden" }}>
+                  
+                  {/* Segment: กำลังดำเนินการ */}
+                  {staff.processing > 0 && (
+                    <div 
+                      style={{ flex: staff.processing, backgroundColor: colors.processing }} 
+                      title={`กำลังดำเนินการ: ${staff.processing}`}
+                    />
+                  )}
+                   {/* Segment: เสร็จสิ้น */}
+                  {staff.completed > 0 && (
+                    <div 
+                      style={{ flex: staff.completed, backgroundColor: colors.completed }} 
+                      title={`เสร็จสิ้น: ${staff.completed}`}
+                    />
+                  )}
+                   {/* Segment: ส่งต่อ */}
+                  {staff.forwarded > 0 && (
+                    <div 
+                      style={{ flex: staff.forwarded, backgroundColor: colors.forwarded }} 
+                      title={`ส่งต่อ: ${staff.forwarded}`}
+                    />
+                  )}
+                   {/* Segment: ไม่เกี่ยวข้อง */}
+                  {staff.irrelevant > 0 && (
+                    <div 
+                      style={{ flex: staff.irrelevant, backgroundColor: colors.irrelevant }} 
+                      title={`ไม่เกี่ยวข้อง: ${staff.irrelevant}`}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      {/* แกน X (ตัวเลขสเกล) - Optional แบบง่ายๆ */}
+      <div style={{ display: "flex", marginLeft: "160px", marginTop: "5px", borderTop: "1px solid #eee", paddingTop: "5px", justifyContent: "space-between", fontSize: "12px", color: "#999" }}>
+        <span>0</span>
+        <span>{Math.round(maxTotal * 0.5)}</span>
+        <span>{maxTotal}</span>
+      </div>
+
+    </div>
+  );
+};
+// ==========================================================
+// === (*** 🆕 END NEW COMPONENT ***) ===
+// ==========================================================
 
 
 // ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
 const StatisticsView = ({ subTab, organizationId }) => {
-  const [isOpsUnitsOpen, setIsOpsUnitsOpen] = useState(false);
-
   // (State สำหรับสถิติหลัก)
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -318,34 +406,15 @@ const StatisticsView = ({ subTab, organizationId }) => {
     { id: "ปฏิเสธ", title: "ปฏิเสธ", note: "จัดการเอง {rejected_self} เรื่อง ({rejected_self_perc}%)", color: "#6c757d", cssClass: "stats-grey" },
   ];
 
-  // ==========================================================
-  // === (*** ❗️❗️ เพิ่มโค้ดนี้เข้าไป ❗️❗️ ***) ===
-  // ==========================================================
   useEffect(() => {
-    // 1. ค้นหาแท็ก viewport ที่อาจมีอยู่
     let viewportMeta = document.querySelector("meta[name=viewport]");
-
     if (!viewportMeta) {
-      // 2. ถ้าไม่มี ให้สร้างขึ้นมาใหม่
       viewportMeta = document.createElement("meta");
       viewportMeta.name = "viewport";
-      document.head.appendChild(viewportMeta); // ฉีดเข้าไปใน <head>
+      document.head.appendChild(viewportMeta); 
     }
-
-    // 3. ตั้งค่า content (นี่คือหัวใจสำคัญ)
     viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
-
-    // 4. (ทางเลือก) นี่คือโค้ดสำหรับล้างค่า เมื่อออกจากหน้านี้
-    //    หากคุณต้องการให้หน้าอื่นกลับไปเป็นเหมือนเดิม (ไม่แนะนำ)
-    // return () => {
-    //   viewportMeta.setAttribute("content", ""); // ล้างค่าเมื่อออกจากหน้า
-    // };
-    
-  }, []); // [] หมายถึง ให้ทำงานแค่ครั้งเดียวเมื่อหน้านี้โหลด
-  // ==========================================================
-  // === (*** ⭐️ จบส่วนที่เพิ่ม ⭐️ ***) ===
-  // ==========================================================
-
+  }, []); 
 
   // (useEffect สำหรับดึงสถิติหลัก)
   useEffect(() => {
@@ -412,7 +481,7 @@ const StatisticsView = ({ subTab, organizationId }) => {
         return;
       }
       if (!organizationId) {
-        setStaffLoading(true); // รอ organizationId
+        setStaffLoading(true);
         return;
       }
 
@@ -454,7 +523,6 @@ const StatisticsView = ({ subTab, organizationId }) => {
 
     fetchStaffCount();
   }, [organizationId]);
-  // (*** END NEW useEffect for Staff Count ***)
 
 
   // (สร้าง kpiDetails แบบไดนามิก)
@@ -544,52 +612,27 @@ const StatisticsView = ({ subTab, organizationId }) => {
         {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
         <div className={styles.statsGridColumn}>
           <ProblemTypeStats organizationId={organizationId} />
-          
-          {/* (*** MODIFIED: ส่ง organizationId ไปให้ SatisfactionBox ***) */}
           <SatisfactionBox organizationId={organizationId} />
-        
         </div>
 
         {/* คอลัมน์ที่ 2: การปฏิบัติงาน */}
         <div className={styles.chartBox}>
           <h4 className={styles.chartBoxTitle}>การปฏิบัติงานของเจ้าหน้าที่</h4>
-          <div className={styles.opsContent}>
-            <div className={styles.opsKpi}>
+          
+          <div className={styles.opsContent} style={{display: 'block'}}> 
+            {/* Display Block เพื่อให้กราฟแสดงผลเต็มความกว้าง */}
+            
+            {/* ส่วนแสดงจำนวนเจ้าหน้าที่รวม */}
+            <div className={styles.opsKpi} style={{marginBottom: '10px', borderBottom: '1px solid #eee', paddingBottom: '10px'}}>
               <span>เจ้าหน้าที่ทั้งหมด</span>
-              {/* (แสดงผล Staff Count ที่ดึงมา) */}
               <strong>
                 {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
               </strong>
             </div>
-            <div className={styles.opsDetail}>
-              <span>ค่าเฉลี่ยโดยประมาณของระยะเวลาการทำงาน</span>
-              <span>3.2 วัน</span>
-            </div>
-            <div
-              className={`${styles.opsDetail} ${styles.clickable}`}
-              onClick={() => setIsOpsUnitsOpen(!isOpsUnitsOpen)}
-            >
-              <div className={styles.opsDetailHeader}>
-                <span>หน่วยงานที่ร่วมรับผิดชอบ</span>
-                <span>
-                  5 หน่วยงาน
-                  {isOpsUnitsOpen ? (
-                    <FaChevronUp className={styles.opsToggleIcon} />
-                  ) : (
-                    <FaChevronDown className={styles.opsToggleIcon} />
-                  )}
-                </span>
-              </div>
-              {isOpsUnitsOpen && (
-                <div className={styles.opsUnitList}>
-                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 1</div>
-                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 2</div>
-                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 3</div>
-                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 4</div>
-                  <div className={styles.opsUnitItem}>xxxx หน่วยงานที่ 5</div>
-                </div>
-              )}
-            </div>
+            
+            {/* (*** 🆕 แทนที่ส่วนค่าเฉลี่ยและหน่วยงานด้วย StaffRankingChart ***) */}
+            <StaffRankingChart organizationId={organizationId} />
+
           </div>
         </div>
       </div>
