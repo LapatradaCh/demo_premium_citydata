@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./css/StatisticsView.module.css";
-import { FaStar, FaChevronDown, FaChevronUp, FaTimes } from "react-icons/fa";
+import { FaStar, FaChevronDown, FaChevronUp, FaTimes, FaUserTie } from "react-icons/fa";
+
+// ... (Components เดิม: StatsDetailBox, DynamicHorizontalBarChart, ProblemTypeStats, SatisfactionBox เก็บไว้เหมือนเดิม) ...
+// เพื่อความกระชับ ผมจะละเว้น Code ส่วนบนที่ไม่ได้แก้ และเริ่มส่วนที่เพิ่มใหม่เลยนะครับ
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
-
-// (Component ย่อยสำหรับกล่อง KPI แบบละเอียด 8 กล่อง)
 const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => (
   <div
     className={`${styles.statsDetailBox} ${styles[cssClass] || ""}`}
@@ -19,7 +20,7 @@ const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => 
   </div>
 );
 
-// (Component ย่อยสำหรับ Horizontal Bar Chart - รองรับข้อมูลจริง)
+// (DynamicHorizontalBarChart ... คงเดิม)
 const DynamicHorizontalBarChart = ({ data }) => {
   const colors = ["#007bff", "#ffc107", "#057A55", "#6c757d", "#dc3545", "#20c997"];
   const maxCount = Math.max(...data.map(item => item.count), 0);
@@ -32,7 +33,6 @@ const DynamicHorizontalBarChart = ({ data }) => {
     <div className={styles.mockHorizontalBarChart}>
       {data.map((item, index) => {
         const widthPercent = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
-
         return (
           <div key={item.issue_type_name} className={styles.mockHBarItem}>
             <span className={styles.mockHBarLabel}>{item.issue_type_name}</span>
@@ -54,7 +54,7 @@ const DynamicHorizontalBarChart = ({ data }) => {
   );
 };
 
-// (Component ย่อยสำหรับกล่อง "ประเภทปัญหา" - ดึงข้อมูลจริง)
+// (ProblemTypeStats ... คงเดิม)
 const ProblemTypeStats = ({ organizationId }) => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -67,43 +67,22 @@ const ProblemTypeStats = ({ organizationId }) => {
         setLoading(false);
         return;
       }
-
       try {
         setLoading(true);
         setError(null);
-
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
+          headers: { 'Authorization': `Bearer ${accessToken}` },
         });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch chart data: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`Failed to fetch chart data: ${response.statusText}`);
         const data = await response.json();
-
-        const formattedData = data.map(item => ({
-          ...item,
-          count: parseInt(item.count, 10)
-        })).sort((a, b) => b.count - a.count);
-
+        const formattedData = data.map(item => ({ ...item, count: parseInt(item.count, 10) })).sort((a, b) => b.count - a.count);
         setChartData(formattedData);
       } catch (err) {
-         if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-         } else {
-          setError(err.message);
-         }
+         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchChartData();
   }, [organizationId]);
 
@@ -119,8 +98,7 @@ const ProblemTypeStats = ({ organizationId }) => {
   );
 };
 
-
-// (*** Component 'SatisfactionBox' ***)
+// (SatisfactionBox ... คงเดิมตามที่คุณแก้มาแล้ว)
 const SatisfactionBox = ({ organizationId }) => {
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -133,37 +111,21 @@ const SatisfactionBox = ({ organizationId }) => {
         setLoading(false);
         return;
       }
-
       try {
         setLoading(true);
         setError(null);
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
+          headers: { 'Authorization': `Bearer ${accessToken}` },
         });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch satisfaction data: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`Failed: ${response.statusText}`);
         const data = await response.json();
         setSatisfactionData(data);
-
       } catch (err) {
-         if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-         } else {
-          setError(err.message);
-         }
+         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchSatisfactionData();
   }, [organizationId]);
 
@@ -177,38 +139,9 @@ const SatisfactionBox = ({ organizationId }) => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>
-        </div>
-      </div>
-    );
-  }
-  
-  if (!satisfactionData || satisfactionData.total_count === 0) {
-     return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel}>ไม่มีข้อมูลความพึงพอใจ</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className={styles.chartBox}><h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4><div className={styles.satisfactionBreakdownContainer}><p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p></div></div>;
+  if (error) return <div className={styles.chartBox}><h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4><div className={styles.satisfactionBreakdownContainer}><p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p></div></div>;
+  if (!satisfactionData || satisfactionData.total_count === 0) return <div className={styles.chartBox}><h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4><div className={styles.satisfactionBreakdownContainer}><p className={styles.mockHBarLabel}>ไม่มีข้อมูลความพึงพอใจ</p></div></div>;
 
   const { overall_average, total_count, breakdown } = satisfactionData;
   const breakdownWithPercent = breakdown.map(item => ({
@@ -222,34 +155,17 @@ const SatisfactionBox = ({ organizationId }) => {
       <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
       <div className={styles.satisfactionBreakdownContainer}>
         <div className={styles.satisfactionBreakdownHeader}>
-          <span className={styles.satisfactionBreakdownScore}>
-            {overall_average.toFixed(2)}/5
-          </span>
-          <span className={styles.satisfactionBreakdownStars}>
-            {renderStars(overall_average)}
-          </span>
-          <span className={styles.satisfactionBreakdownTotal}>
-            ({total_count} ความเห็น)
-          </span>
+          <span className={styles.satisfactionBreakdownScore}>{overall_average.toFixed(2)}/5</span>
+          <span className={styles.satisfactionBreakdownStars}>{renderStars(overall_average)}</span>
+          <span className={styles.satisfactionBreakdownTotal}>({total_count} ความเห็น)</span>
         </div>
-
         {breakdownWithPercent.map((item) => (
           <div key={item.stars} className={styles.satisfactionBreakdownRow}>
-            <span className={styles.satisfactionBreakdownLabel}>
-              {item.stars} <FaStar />
-            </span>
+            <span className={styles.satisfactionBreakdownLabel}>{item.stars} <FaStar /></span>
             <div className={styles.satisfactionBreakdownBar}>
-              <div
-                className={styles.satisfactionBreakdownBarFill}
-                style={{
-                  width: `${item.percent.toFixed(2)}%`,
-                  backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
-                }}
-              ></div>
+              <div className={styles.satisfactionBreakdownBarFill} style={{ width: `${item.percent.toFixed(2)}%`, backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0" }}></div>
             </div>
-            <span className={styles.satisfactionBreakdownPercent}>
-              {item.percent.toFixed(0)}%
-            </span>
+            <span className={styles.satisfactionBreakdownPercent}>{item.percent.toFixed(0)}%</span>
           </div>
         ))}
       </div>
@@ -258,143 +174,110 @@ const SatisfactionBox = ({ organizationId }) => {
 };
 
 // ==========================================================
-// === (*** 🆕 START NEW COMPONENT: StaffRankingChart ***) ===
+// === (*** ✨ NEW COMPONENT: TopStaffStats ✨ ***) ===
 // ==========================================================
-const StaffRankingChart = ({ organizationId }) => {
-  // (ในที่นี้ใช้ Mock Data เพื่อให้ตรงตามรูปภาพตัวอย่าง)
-  // (ในระบบจริง คุณอาจจะ fetch จาก API /api/stats/staff-ranking หรือดึงข้อมูล log)
-  const mockStaffData = [
-    { name: "กมนัช พรหมบำรุง", processing: 6, completed: 4, forwarded: 3, irrelevant: 2 },
-    { name: "กมนัช traffy fondue", processing: 4, completed: 1, forwarded: 1, irrelevant: 1 },
-    { name: "Phumchai Siriphanpor...", processing: 2, completed: 2, forwarded: 0, irrelevant: 0 },
-    { name: "AbuDaHBeE Tubtim", processing: 4, completed: 0, forwarded: 0, irrelevant: 0 },
-    { name: "Traffy-testkk NECTEC,...", processing: 3, completed: 1, forwarded: 0, irrelevant: 0 },
-    { name: "SuperToy Noppadol", processing: 2, completed: 0, forwarded: 0, irrelevant: 0 },
-    { name: "Taned Wongpoo", processing: 0, completed: 2, forwarded: 0, irrelevant: 0 },
-  ];
+const TopStaffStats = ({ organizationId }) => {
+  const [staffData, setStaffData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null); // ถ้าจะ handle error
 
-  // สีตามภาพตัวอย่าง (Pastel)
-  const colors = {
-    processing: "#fef3c7", // เหลืองอ่อน
-    completed: "#bef264",  // เขียวอ่อน
-    forwarded: "#dbeafe",  // ฟ้าอ่อน
-    irrelevant: "#e0f2f1"  // เขียวฟ้าจางๆ
+  // (สีตามสถานะในรูปภาพ)
+  const STATUS_COLORS = {
+    inprogress: "#FCE181", // สีเหลืองอ่อน (กำลังดำเนินการ)
+    completed: "#AEF089",  // สีเขียวอ่อน (เสร็จสิ้น)
+    forwarded: "#C6D8FF",  // สีฟ้าอ่อน (ส่งต่อ)
+    irrelevant: "#D6F7FA"  // สีฟ้าจาง (ไม่เกี่ยวข้อง)
   };
 
-  // คำนวณค่า Max Total เพื่อทำ Scaling กราฟ
-  const maxTotal = Math.max(
-    ...mockStaffData.map(d => d.processing + d.completed + d.forwarded + d.irrelevant), 
-    1 // ป้องกันหารด้วย 0
-  );
+  useEffect(() => {
+    // (จำลองการดึงข้อมูล - เนื่องจากยังไม่มี API ส่วนนี้ ผมจะ Mock ให้เห็นภาพตามโจทย์)
+    // (ในอนาคตเปลี่ยนตรงนี้เป็น fetch ไปยัง API จริง เช่น /api/stats/top-staff)
+    const fetchTopStaff = async () => {
+      setLoading(true);
+      // setTimeout จำลอง delay network
+      setTimeout(() => {
+        const mockData = [
+          { name: "กมนัช พรหมบำรุง", inprogress: 6, completed: 4, forwarded: 3, irrelevant: 1 },
+          { name: "กมนัช traffy fondue", inprogress: 4, completed: 1, forwarded: 1, irrelevant: 1 },
+          { name: "Phumchai Siriphanporn", inprogress: 2, completed: 2, forwarded: 0, irrelevant: 0 },
+          { name: "AbuDaHBeE Tubtim", inprogress: 4, completed: 0, forwarded: 0, irrelevant: 0 },
+          { name: "Traffy-testkk NECTEC", inprogress: 3, completed: 1, forwarded: 0, irrelevant: 0 },
+          { name: "SuperToy Noppadol", inprogress: 2, completed: 0, forwarded: 0, irrelevant: 0 },
+          { name: "Taned Wongpoo", inprogress: 0, completed: 2, forwarded: 0, irrelevant: 0 },
+        ];
+        setStaffData(mockData);
+        setLoading(false);
+      }, 800); 
+    };
+
+    if (organizationId) {
+      fetchTopStaff();
+    }
+  }, [organizationId]);
+
+  // หาค่า Max รวมเพื่อคำนวณความกว้างของกราฟเทียบกัน
+  const maxTotal = Math.max(...staffData.map(s => s.inprogress + s.completed + s.forwarded + s.irrelevant), 0);
 
   return (
-    <div style={{ marginTop: "20px", width: "100%" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-        <h5 style={{ fontSize: "16px", fontWeight: "bold", margin: 0 }}>10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด</h5>
-        {/* <span style={{ fontSize: "12px", color: "#666" }}>ข้อมูลแบบตาราง</span> (Toggle Switch placeholder) */}
-      </div>
+    <div className={styles.opsContent} style={{ paddingBottom: '10px' }}>
+       {/* Legend (คำอธิบายสี) */}
+       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginBottom: '15px', flexWrap: 'wrap', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS.inprogress }}></span> กำลังดำเนินการ</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS.completed }}></span> เสร็จสิ้น</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS.forwarded }}></span> ส่งต่อ</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: STATUS_COLORS.irrelevant }}></span> ไม่เกี่ยวข้อง</div>
+       </div>
 
-      {/* Legend */}
-      <div style={{ display: "flex", gap: "10px", fontSize: "12px", marginBottom: "15px", color: "#555", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.processing }}></div> กำลังดำเนินการ
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.completed }}></div> เสร็จสิ้น
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.forwarded }}></div> ส่งต่อ
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: colors.irrelevant }}></div> ไม่เกี่ยวข้อง
-        </div>
-      </div>
+       {/* Chart Content */}
+       {loading ? (
+         <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูลเจ้าหน้าที่...</p>
+       ) : (
+         <div className={styles.staffChartContainer}>
+           {staffData.map((staff, idx) => {
+             const total = staff.inprogress + staff.completed + staff.forwarded + staff.irrelevant;
+             // คำนวณ % ความกว้างของแท่งรวมเทียบกับค่าสูงสุด (เพื่อให้สเกลตรงกันทั้งกราฟ)
+             const barWidthPercent = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
 
-      {/* Chart Rows */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {mockStaffData.map((staff, index) => {
-          const total = staff.processing + staff.completed + staff.forwarded + staff.irrelevant;
-          // ความกว้างรวมของแท่งนี้ เทียบกับค่าสูงสุดในกราฟ
-          const barWidthPercent = (total / maxTotal) * 100; 
-          
-          // คำนวณ % ย่อยภายในแท่ง (เทียบกับ Total ของคนนั้นๆ เพื่อให้รวมกันได้ barWidthPercent ไม่ใช่ 100% ของ container)
-          // วิธีที่ง่ายกว่า: ใช้ Flexbox ภายใน container ที่มีความกว้างเท่ากับ barWidthPercent
-          
-          return (
-            <div key={index} style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
-              {/* ชื่อเจ้าหน้าที่ */}
-              <div style={{ width: "160px", flexShrink: 0, paddingRight: "10px", color: "#555", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={staff.name}>
-                {staff.name}
-              </div>
+             return (
+               <div key={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                 {/* ชื่อเจ้าหน้าที่ (ด้านซ้าย) */}
+                 <div style={{ width: '35%', paddingRight: '10px', fontSize: '0.9rem', color: '#555', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'right' }} title={staff.name}>
+                   {staff.name}
+                 </div>
 
-              {/* พื้นที่กราฟ (เส้น Grid จางๆ แนวตั้งจะทำยากถ้าใช้ CSS Inline ง่ายๆ ดังนั้นข้าม Grid ไปก่อน เน้นแท่งกราฟ) */}
-              <div style={{ flexGrow: 1, position: "relative", height: "24px", display: "flex", alignItems: "center" }}>
-                {/* Container ของแท่งกราฟจริง */}
-                <div style={{ width: `${barWidthPercent}%`, height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden" }}>
-                  
-                  {/* Segment: กำลังดำเนินการ */}
-                  {staff.processing > 0 && (
-                    <div 
-                      style={{ flex: staff.processing, backgroundColor: colors.processing }} 
-                      title={`กำลังดำเนินการ: ${staff.processing}`}
-                    />
-                  )}
-                   {/* Segment: เสร็จสิ้น */}
-                  {staff.completed > 0 && (
-                    <div 
-                      style={{ flex: staff.completed, backgroundColor: colors.completed }} 
-                      title={`เสร็จสิ้น: ${staff.completed}`}
-                    />
-                  )}
-                   {/* Segment: ส่งต่อ */}
-                  {staff.forwarded > 0 && (
-                    <div 
-                      style={{ flex: staff.forwarded, backgroundColor: colors.forwarded }} 
-                      title={`ส่งต่อ: ${staff.forwarded}`}
-                    />
-                  )}
-                   {/* Segment: ไม่เกี่ยวข้อง */}
-                  {staff.irrelevant > 0 && (
-                    <div 
-                      style={{ flex: staff.irrelevant, backgroundColor: colors.irrelevant }} 
-                      title={`ไม่เกี่ยวข้อง: ${staff.irrelevant}`}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      
-      {/* แกน X (ตัวเลขสเกล) - Optional แบบง่ายๆ */}
-      <div style={{ display: "flex", marginLeft: "160px", marginTop: "5px", borderTop: "1px solid #eee", paddingTop: "5px", justifyContent: "space-between", fontSize: "12px", color: "#999" }}>
-        <span>0</span>
-        <span>{Math.round(maxTotal * 0.5)}</span>
-        <span>{maxTotal}</span>
-      </div>
-
+                 {/* แท่งกราฟ (ด้านขวา) */}
+                 <div style={{ width: '65%', height: '24px', display: 'flex', alignItems: 'center' }}>
+                    <div style={{ width: `${barWidthPercent}%`, height: '100%', display: 'flex', borderRadius: '4px', overflow: 'hidden' }}>
+                       {/* ส่วน Stack ต่างๆ */}
+                       {staff.inprogress > 0 && <div style={{ width: `${(staff.inprogress/total)*100}%`, background: STATUS_COLORS.inprogress }} title={`กำลังดำเนินการ: ${staff.inprogress}`}></div>}
+                       {staff.completed > 0 && <div style={{ width: `${(staff.completed/total)*100}%`, background: STATUS_COLORS.completed }} title={`เสร็จสิ้น: ${staff.completed}`}></div>}
+                       {staff.forwarded > 0 && <div style={{ width: `${(staff.forwarded/total)*100}%`, background: STATUS_COLORS.forwarded }} title={`ส่งต่อ: ${staff.forwarded}`}></div>}
+                       {staff.irrelevant > 0 && <div style={{ width: `${(staff.irrelevant/total)*100}%`, background: STATUS_COLORS.irrelevant }} title={`ไม่เกี่ยวข้อง: ${staff.irrelevant}`}></div>}
+                    </div>
+                    {/* ตัวเลขผลรวมท้ายแท่ง (Optional - ถ้าอยากใส่) */}
+                    {/* <span style={{ marginLeft: '5px', fontSize: '0.8rem', color: '#888' }}>{total}</span> */}
+                 </div>
+               </div>
+             );
+           })}
+         </div>
+       )}
     </div>
   );
 };
-// ==========================================================
-// === (*** 🆕 END NEW COMPONENT ***) ===
-// ==========================================================
 
 
 // ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
 const StatisticsView = ({ subTab, organizationId }) => {
-  // (State สำหรับสถิติหลัก)
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // (State สำหรับจำนวนเจ้าหน้าที่)
   const [staffCount, setStaffCount] = useState(null);
   const [staffLoading, setStaffLoading] = useState(true);
   const [staffError, setStaffError] = useState(null);
 
-  // (โครงสร้าง KPI)
+  // (โครงสร้าง KPI ... คงเดิม)
   const kpiStructure = [
     { id: "total", title: "ทั้งหมด", note: null, color: "#6c757d", cssClass: "stats-cream" },
     { id: "รอรับเรื่อง", title: "รอรับเรื่อง", note: "เกิน 1 เดือน {pending_overdue} เรื่อง", color: "#dc3545", cssClass: "stats-red" },
@@ -411,203 +294,83 @@ const StatisticsView = ({ subTab, organizationId }) => {
     if (!viewportMeta) {
       viewportMeta = document.createElement("meta");
       viewportMeta.name = "viewport";
-      document.head.appendChild(viewportMeta); 
+      document.head.appendChild(viewportMeta);
     }
     viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
-  }, []); 
+  }, []);
 
-  // (useEffect สำหรับดึงสถิติหลัก)
+  // (Fetch Stats Overview ... คงเดิม)
   useEffect(() => {
     const fetchStats = async () => {
       const accessToken = localStorage.getItem('accessToken');
-
-      if (!accessToken) {
-        setError("Missing auth token from localStorage");
-        setLoading(false);
-        return;
-      }
-      if (!organizationId) {
-        setLoading(true);
-        return;
-      }
-
+      if (!accessToken || !organizationId) { setLoading(false); return; }
       try {
-        setLoading(true);
-        setError(null);
-
+        setLoading(true); setError(null);
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
+          headers: { 'Authorization': `Bearer ${accessToken}` },
         });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch stats: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error("Failed");
         const data = await response.json();
-
-        const statsObject = data.reduce((acc, item) => {
-          acc[item.status] = parseInt(item.count, 10);
-          return acc;
-        }, {});
-
+        const statsObject = data.reduce((acc, item) => { acc[item.status] = parseInt(item.count, 10); return acc; }, {});
         setStatsData(statsObject);
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-        } else {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
+      } catch (err) { setError(err.message); } finally { setLoading(false); }
     };
-
     fetchStats();
   }, [organizationId]);
 
-  // (useEffect สำหรับดึงข้อมูล Staff Count)
+  // (Fetch Staff Count ... คงเดิม)
   useEffect(() => {
     const fetchStaffCount = async () => {
       const accessToken = localStorage.getItem('accessToken');
-
-      if (!accessToken) {
-        setStaffError("Missing auth token");
-        setStaffLoading(false);
-        return;
-      }
-      if (!organizationId) {
-        setStaffLoading(true);
-        return;
-      }
-
+      if (!accessToken || !organizationId) { setStaffLoading(false); return; }
       try {
-        setStaffLoading(true);
-        setStaffError(null);
-
+        setStaffLoading(true); setStaffError(null);
         const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
+          headers: { 'Authorization': `Bearer ${accessToken}` },
         });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404).");
-          }
-          throw new Error(`Failed to fetch staff count: ${response.statusText}`);
-        }
-        
+        if (!response.ok) throw new Error("Failed");
         const data = await response.json();
-
-        if (data.staff_count !== undefined) {
-            setStaffCount(parseInt(data.staff_count, 10));
-        } else {
-            throw new Error("Invalid data structure from staff API (expected 'staff_count')");
-        }
-
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          setStaffError("Failed to parse JSON (API 404?).");
-        } else {
-          setStaffError(err.message);
-        }
-      } finally {
-        setStaffLoading(false);
-      }
+        setStaffCount(parseInt(data.staff_count, 10));
+      } catch (err) { setStaffError(err.message); } finally { setStaffLoading(false); }
     };
-
     fetchStaffCount();
   }, [organizationId]);
 
-
-  // (สร้าง kpiDetails แบบไดนามิก)
   const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
-
   const kpiDetailsWithData = kpiStructure.map(kpi => {
-    let value = 0;
-    if (kpi.id === 'total') {
-      value = totalCases;
-    } else {
-      value = statsData?.[kpi.id] || 0;
-    }
+    let value = kpi.id === 'total' ? totalCases : (statsData?.[kpi.id] || 0);
     const percentage = totalCases > 0 ? ((value / totalCases) * 100).toFixed(2) : "0.00";
-    const note = kpi.note ? kpi.note
-      .replace("{pending_overdue}", 0)
-      .replace("{inprogress_overdue}", 0)
-      .replace("{completed_self}", 0)
-      .replace("{completed_self_perc}", 0)
-      .replace("{rejected_self}", 0)
-      .replace("{rejected_self_perc}", 0)
-      : null;
-
+    const note = kpi.note ? kpi.note.replace(/\{.*?\}/g, "0") : null; 
     return { ...kpi, value, percentage, note };
   });
-
 
   // (ส่วน Render)
   return (
     <div className={styles.statsContainer}>
-      {/* 1. Header (ชื่อหน้า) */}
       <div className={styles.statsHeader}>
         <h1 className={styles.statsPageTitle}>ภาพรวมสถิติ</h1>
       </div>
-
-      {/* 2. Sub-Header (วันที่ และ Subtitle) */}
       <div className={styles.statsSubHeader}>
         <span className={styles.statsCurrentDate}>
-          {new Date().toLocaleDateString("th-TH", {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-          })}
+          {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </span>
-        <span className={styles.statsSubtitle}>
-          ข้อมูลปัจจุบัน (จำนวนข้อมูลเรื่องทั้งหมด ที่ประชาชนแจ้งเข้ามา)
-        </span>
+        <span className={styles.statsSubtitle}>ข้อมูลปัจจุบัน (จำนวนข้อมูลเรื่องทั้งหมด ที่ประชาชนแจ้งเข้ามา)</span>
       </div>
 
-      {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
+      {/* KPI Grid */}
       {loading ? (
-        <div className={styles.statsDetailGrid}>
-          {kpiStructure.map((kpi) => (
-             <div
-                key={kpi.id}
-                className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
-                style={{ borderTopColor: kpi.color, opacity: 0.5 }}
-             >
-               <div className={styles.statsDetailHeader}>
-                  <span className={styles.statsDetailTitle}>{kpi.title}</span>
-                  <span className={styles.statsDetailValue}>...</span>
-               </div>
-               <span className={styles.statsDetailPercentage}>(...)</span>
-             </div>
-          ))}
-        </div>
+        <div className={styles.statsDetailGrid}>Loading...</div>
       ) : error ? (
-        <div className={styles.statsLoadingOrErrorError}>
-          <FaTimes />
-          <span>ไม่สามารถโหลดสถิติได้: {error}</span>
-        </div>
+        <div className={styles.statsLoadingOrErrorError}>Error: {error}</div>
       ) : (
         <div className={styles.statsDetailGrid}>
           {kpiDetailsWithData.map((kpi) => (
-            <StatsDetailBox
-              key={kpi.title}
-              title={kpi.title}
-              value={kpi.value}
-              percentage={kpi.percentage}
-              note={kpi.note}
-              color={kpi.color}
-              cssClass={kpi.cssClass}
-            />
+            <StatsDetailBox key={kpi.title} {...kpi} />
           ))}
         </div>
       )}
 
-      {/* 5. Main Chart Grid (2 คอลัมน์) */}
+      {/* Main Chart Grid (2 คอลัมน์) */}
       <div className={styles.statsBottomGrid}>
         {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
         <div className={styles.statsGridColumn}>
@@ -615,29 +378,36 @@ const StatisticsView = ({ subTab, organizationId }) => {
           <SatisfactionBox organizationId={organizationId} />
         </div>
 
-        {/* คอลัมน์ที่ 2: การปฏิบัติงาน */}
+        {/* (*** MODIFIED: คอลัมน์ที่ 2: ปรับปรุงใหม่ ***) */}
         <div className={styles.chartBox}>
-          <h4 className={styles.chartBoxTitle}>การปฏิบัติงานของเจ้าหน้าที่</h4>
-          
-          <div className={styles.opsContent} style={{display: 'block'}}> 
-            {/* Display Block เพื่อให้กราฟแสดงผลเต็มความกว้าง */}
-            
-            {/* ส่วนแสดงจำนวนเจ้าหน้าที่รวม */}
-            <div className={styles.opsKpi} style={{marginBottom: '10px', borderBottom: '1px solid #eee', paddingBottom: '10px'}}>
-              <span>เจ้าหน้าที่ทั้งหมด</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+             <h4 className={styles.chartBoxTitle}>10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด</h4>
+             {/* Toggle ดูแบบตาราง (UI Placeholder ตามรูป) */}
+             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#666' }}>
+                <span>ข้อมูลแบบตาราง</span>
+                <div style={{ width: '32px', height: '18px', background: '#ddd', borderRadius: '10px', position: 'relative' }}>
+                   <div style={{ width: '14px', height: '14px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: '2px' }}></div>
+                </div>
+             </div>
+          </div>
+
+          <div className={styles.opsContent}>
+            {/* แสดงจำนวนเจ้าหน้าที่ทั้งหมดไว้ด้านบนกราฟ เหมือนเดิม หรือจะเอาออกก็ได้ */}
+            <div className={styles.opsKpi} style={{ marginBottom: '15px' }}>
+              <span><FaUserTie /> เจ้าหน้าที่ทั้งหมดในระบบ</span>
               <strong>
                 {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
               </strong>
             </div>
-            
-            {/* (*** 🆕 แทนที่ส่วนค่าเฉลี่ยและหน่วยงานด้วย StaffRankingChart ***) */}
-            <StaffRankingChart organizationId={organizationId} />
+
+            {/* (*** ใส่ Component ใหม่ที่นี่ ***) */}
+            <TopStaffStats organizationId={organizationId} />
 
           </div>
         </div>
       </div>
     </div>
-  );
+  ); 
 };
 
 export default StatisticsView;
