@@ -1,7 +1,7 @@
 /* --- css/Home.module.css --- */
 
 /* ============================================ */
-/* --- 1. สไตล์หลัก (Desktop / Notebook) --- */
+/* --- 1. สไตล์หลัก (Desktop / PC) --- */
 /* ============================================ */
 
 /* --- Logo Section Top --- */
@@ -429,48 +429,57 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (ตามรูปอ้างอิงเป๊ะๆ) --- */
+  /* --- Bottom Nav Mobile (แก้ไขใหม่ ใช้ Grid) --- */
   /* ==================================================== */
   
   .bottomNav {
-    width: 100%;
-    /* พื้นหลังขาวเรียบ */
-    background: #ffffff; 
-    /* เงาฟุ้งด้านบน */
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06); 
+    position: fixed;
     bottom: 0;
     left: 0;
-    transform: none;
-    border-radius: 20px 20px 0 0; /* มนเฉพาะขอบบน */
-    padding: 8px 4px; /* ระยะห่างภายใน */
-    justify-content: space-around; /* กระจายปุ่ม */
-    gap: 0;
+    width: 100%;
+    background: #ffffff;
+    
+    /* ใช้ Grid เพื่อแบ่ง 5 ช่องเท่ากันเป๊ะๆ ไม่สนความยาวตัวอักษร */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 6px; 
+    
+    padding: 12px 8px 24px 8px; /* ด้านล่างเผื่อ iPhone รุ่นไม่มีปุ่มโฮม */
+    border-radius: 24px 24px 0 0; /* มนเฉพาะมุมบน */
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transform: none; /* ยกเลิก translate ของ desktop */
   }
 
-  /* --- สถานะปกติ (Inactive) --- */
+  /* --- ปุ่มทั่วไป (Inactive) --- */
   .bottomNav button {
-    background: transparent !important; /* พื้นหลังใส */
-    box-shadow: none !important; /* ไม่มีเงา */
+    background: transparent !important;
     border: none;
-    flex: 1;
+    box-shadow: none !important;
+    
+    display: flex;
     flex-direction: column;
-    padding: 6px 2px;
-    width: auto;
-    min-width: 0;
     align-items: center;
     justify-content: center;
+    
+    /* ล็อคความสูงให้เท่ากันทุกปุ่ม เพื่อให้พื้นหลังสีดำเท่ากัน */
+    height: 60px; 
+    width: 100%; 
+    
+    border-radius: 16px; /* ความมนของปุ่มสีดำ */
+    padding: 0;
+    margin: 0; 
     transition: all 0.2s ease;
-    border-radius: 12px;
-    margin: 0 4px; /* ระยะห่างระหว่างปุ่มนิดหน่อย */
   }
 
   /* ไอคอนสีเทา */
   .bottomNav button svg {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    margin-bottom: 4px;
-    color: #9CA3AF; /* สีเทากลางๆ สบายตา */
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 6px;
+    color: #9CA3AF;
+    transition: all 0.2s ease;
   }
 
   /* ตัวหนังสือสีเทา */
@@ -478,19 +487,21 @@
     font-size: 10px;
     color: #9CA3AF;
     font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
   }
 
-  /* --- สถานะเลือก (Active) - ปุ่มดำเหมือนรูป --- */
+  /* --- สถานะเลือก (Active) --- */
   .bottomNav button.active {
-    background-color: #000000 !important; /* พื้นหลังดำ */
-    transform: translateY(0); /* ไม่ต้องลอย */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important; /* เงาเบาๆ */
+    background-color: #000000 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+    transform: none !important; /* ห้ามขยับ */
   }
 
   /* ไอคอนสีขาว */
   .bottomNav button.active svg {
-    color: #ffffff; 
-    transform: none; /* ไม่ต้องขยาย */
+    color: #ffffff;
+    transform: scale(1.05); 
   }
   
   /* ตัวหนังสือสีขาว */
