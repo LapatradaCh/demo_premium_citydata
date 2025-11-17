@@ -556,48 +556,61 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (อัปเดตให้เหมือน Home หลัก) --- */
+  /* --- Bottom Nav Mobile (เหมือน Home เป๊ะ ใช้ Grid) --- */
   /* ==================================================== */
   
   .bottomNav {
-    width: 100%;
-    /* พื้นหลังขาวเรียบ */
-    background: #ffffff; 
-    /* เงาฟุ้งด้านบน */
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06); 
+    position: fixed;
     bottom: 0;
     left: 0;
-    transform: none;
-    border-radius: 20px 20px 0 0; /* มนเฉพาะขอบบน */
-    padding: 8px 4px; /* ระยะห่างภายใน */
-    justify-content: space-around; /* กระจายปุ่ม */
-    gap: 0;
+    right: 0; /* สั่งให้เต็มความกว้าง */
+    width: 100%;
+    
+    /* ป้องกัน Padding ดันจนล้นจอ */
+    box-sizing: border-box;
+    
+    background: #ffffff;
+    
+    /* ใช้ Grid แบ่ง 5 ช่องเท่ากัน */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 4px; 
+    
+    padding: 12px 10px 24px 10px; /* เผื่อพื้นที่ด้านล่าง */
+    border-radius: 24px 24px 0 0; 
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transform: none; 
   }
 
-  /* --- สถานะปกติ (Inactive) --- */
+  /* --- ปุ่มทั่วไป (Inactive) --- */
   .bottomNav button {
-    background: transparent !important; /* พื้นหลังใส */
-    box-shadow: none !important; /* ไม่มีเงา */
+    background: transparent !important; 
+    box-shadow: none !important; 
     border: none;
-    flex: 1;
-    flex-direction: column; /* เรียงแนวตั้ง */
-    padding: 6px 2px;
-    width: auto;
-    min-width: 0;
+    
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    
+    height: 56px; /* ความสูงปุ่ม */
+    width: 100%; 
+    
+    border-radius: 16px;
+    padding: 0;
+    margin: 0;
     transition: all 0.2s ease;
-    border-radius: 12px;
-    margin: 0 4px;
   }
 
   /* ไอคอนสีเทา */
   .bottomNav button svg {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
     margin-bottom: 4px;
-    color: #9CA3AF; /* สีเทากลางๆ สบายตา */
+    color: #9CA3AF; 
+    transition: all 0.2s ease;
   }
 
   /* ตัวหนังสือสีเทา */
@@ -605,19 +618,23 @@
     font-size: 10px;
     color: #9CA3AF;
     font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* --- สถานะเลือก (Active) - ปุ่มดำเหมือนรูปอ้างอิง --- */
+  /* --- สถานะเลือก (Active) --- */
   .bottomNav button.active {
-    background-color: #000000 !important; /* พื้นหลังดำ */
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    background-color: #000000 !important; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+    transform: none !important; 
   }
 
   /* ไอคอนสีขาว */
   .bottomNav button.active svg {
     color: #ffffff; 
-    transform: none;
+    transform: scale(1.05);
   }
   
   /* ตัวหนังสือสีขาว */
