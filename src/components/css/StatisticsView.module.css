@@ -7,7 +7,6 @@
   padding-bottom: 80px;
 }
 
-/* Header Styles */
 .header {
   background-color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -43,13 +42,13 @@
 
 /* Status Cards */
 .statusCard {
-  background-color: #ffffff; /* Default fallback */
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s;
   cursor: default;
-  border: 1px solid #e5e7eb; /* Default fallback */
+  border: 1px solid #e5e7eb;
   border-top-width: 4px;
   border-top-style: solid;
 }
@@ -89,6 +88,10 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   margin-bottom: 24px;
+  /* Ensure container doesn't collapse */
+  min-height: 300px; 
+  display: flex;
+  flex-direction: column;
 }
 
 .sectionHeader {
@@ -114,13 +117,18 @@
   margin: 4px 0 0 0;
 }
 
-/* Chart Container */
+/* Charts */
 .chartContainer {
   height: 250px;
   width: 100%;
 }
 
-/* Legend */
+.staffChartContainer {
+  height: 400px; /* สูงขึ้นเพื่อให้แสดงรายชื่อ 10 คนได้สวยงาม */
+  width: 100%;
+}
+
+/* Legend & Badges */
 .legendContainer {
   display: flex;
   gap: 8px;
@@ -137,100 +145,6 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-}
-
-/* Summary Badge */
-.summaryBadge {
-  margin-bottom: 16px;
-  padding: 12px;
-  background-color: #fff7ed;
-  border-radius: 8px;
-  border: 1px solid #ffedd5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.summaryText {
-  font-size: 14px;
-  color: #9a3412;
-  font-weight: 500;
-}
-
-.summaryTag {
-  font-size: 12px;
-  color: #16a34a;
-  background-color: #dcfce7;
-  padding: 4px 8px;
-  border-radius: 9999px;
-  font-weight: bold;
-}
-
-/* Staff Table */
-.staffRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
-}
-
-.staffRow:hover {
-  background-color: #f9fafb;
-}
-
-.staffInfo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.staffAvatar {
-  width: 32px;
-  height: 32px;
-  background-color: #e5e7eb;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  color: #4b5563;
-}
-
-.staffName {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-}
-
-.staffStats {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.barContainer {
-  width: 96px;
-  height: 16px;
-  background-color: #e9d5ff;
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-}
-
-.barFill {
-  background-color: #c084fc;
-  height: 100%;
-}
-
-.staffCount {
-  font-size: 12px;
-  font-weight: bold;
-  color: #4b5563;
-  min-width: 20px;
-  text-align: right;
 }
 
 /* Satisfaction */
@@ -280,6 +194,7 @@
   color: #6b7280;
 }
 
+/* Top Staff Header */
 .topHeader {
   display: flex;
   justify-content: space-between;
@@ -290,10 +205,12 @@
 .topBadge {
   background-color: #eff6ff;
   color: #1d4ed8;
-  padding: 4px 12px;
+  padding: 6px 12px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 /* Empty State */
@@ -302,6 +219,7 @@
   text-align: center;
   color: #9ca3af;
   font-size: 12px;
+  margin: auto;
 }
 
 /* Responsive Grids */
