@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   Activity,
-  Clock
+  Clock,
+  Users // เพิ่ม icon สำหรับจำนวนเจ้าหน้าที่
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -20,6 +21,33 @@ import {
 
 import styles from './css/StatisticsView.module.css';
 
+// --- Configuration ---
+
+// กำหนดสีตามสถานะ (Map ให้ตรงกับรูปภาพและ Card ด้านบน)
+const STATUS_COLORS = {
+  'รอรับเรื่อง': '#dc3545',       // แดง
+  'กำลังประสานงาน': '#9b59b6',    // ม่วง
+  'กำลังดำเนินการ': '#ffc107',   // เหลือง
+  'เสร็จสิ้น': '#057A55',        // เขียว
+  'ส่งต่อ': '#007bff',           // ฟ้า
+  'เชิญร่วม': '#20c997',         // เขียวมิ้นต์
+  'ปฏิเสธ': '#6b7280',           // เทา
+  'NULL': '#cbd5e1'              // สีสำรองสำหรับ null
+};
+
+// รายชื่อสถานะที่จะนำมา Stack (เรียงตามลำดับที่ต้องการแสดง)
+const STACK_KEYS = [
+  'รอรับเรื่อง',
+  'กำลังประสานงาน',
+  'กำลังดำเนินการ',
+  'เสร็จสิ้น',
+  'ส่งต่อ',
+  'เชิญร่วม',
+  'ปฏิเสธ',
+  'NULL'
+];
+
+// --- Mock Data (ส่วนที่ไม่เปลี่ยน) ---
 const trendData = [
   { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
   { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
@@ -40,7 +68,8 @@ const efficiencyData = [
 
 const StatisticsView = ({ organizationId }) => {
   const [statsData, setStatsData] = useState(null);
-  const [staffData, setStaffData] = useState([]);
+  const [staffData, setStaffData] = useState([]); // ข้อมูลสำหรับกราฟ Stack
+  const [totalStaffCount, setTotalStaffCount] = useState(0); // ข้อมูลจำนวนเจ้าหน้าที่ทั้งหมด
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +79,7 @@ const StatisticsView = ({ organizationId }) => {
       const accessToken = localStorage.getItem('accessToken');
       if (!accessToken || !organizationId) {
         setLoading(false);
+        return;
       }
 
       setLoading(true);
@@ -57,6 +87,7 @@ const StatisticsView = ({ organizationId }) => {
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
 
+        // 1. Overview Stats
         const statsRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -67,6 +98,7 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
+        // 2. Problem Types
         const typeRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
@@ -78,27 +110,52 @@ const StatisticsView = ({ organizationId }) => {
           setProblemTypeData(formatted);
         }
 
+        // 3. Satisfaction
         const satRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, { headers });
         if (satRes.ok) {
           const data = await satRes.json();
           setSatisfactionData(data);
         }
 
+        // 4. Staff Activities (สำหรับ Stacked Chart)
         const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
-          const grouped = {};
-          rawData.forEach(item => {
-             const name = item.staff_name || "Unknown";
-             const count = parseInt(item.count, 10) || 0;
-             if (!grouped[name]) grouped[name] = 0;
-             grouped[name] += count;
-          });
-          const staffArray = Object.entries(grouped)
-            .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 10);
+          
+          // Process Data: Group by Name -> Break down by Status
+          const grouped = rawData.reduce((acc, item) => {
+            const name = item.staff_name || "Unknown";
+            const status = item.status || "NULL";
+            const count = parseInt(item.count, 10) || 0;
+
+            if (!acc[name]) {
+              acc[name] = { name: name, total: 0 };
+            }
+            
+            // สะสมค่าตาม Status key
+            if (!acc[name][status]) acc[name][status] = 0;
+            acc[name][status] += count;
+            acc[name].total += count; // นับยอดรวมเพื่อใช้ sort
+            
+            return acc;
+          }, {});
+
+          // แปลง Object เป็น Array แล้ว Sort ตามยอดรวม
+          const staffArray = Object.values(grouped)
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 10); // เอาแค่ Top 10
+
           setStaffData(staffArray);
+        }
+
+        // 5. Staff Count (API ใหม่ตาม Request)
+        const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
+        if (staffCountRes.ok) {
+            const data = await staffCountRes.json();
+            // สมมติ API return { count: 50 } หรือ format ที่คล้ายกัน
+            // เช็ค response จริงหน้างานอีกที แต่ code นี้รองรับ { count: N } หรือตัวเลขดิบ
+            const count = data.count !== undefined ? data.count : (typeof data === 'number' ? data : 0);
+            setTotalStaffCount(count);
         }
 
       } catch (err) {
@@ -115,18 +172,10 @@ const StatisticsView = ({ organizationId }) => {
     }
   }, [organizationId]);
 
-  const getTotalCases = () => {
-    if (!statsData) return 0;
-    return Object.values(statsData).reduce((a, b) => a + b, 0);
-  };
-
-  const getStatusCount = (statusKey) => {
-    return statsData?.[statusKey] || 0;
-  };
-
-  const getPercent = (val, total) => {
-    return total > 0 ? (val / total) * 100 : 0;
-  };
+  // Helpers
+  const getTotalCases = () => statsData ? Object.values(statsData).reduce((a, b) => a + b, 0) : 0;
+  const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
+  const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
   const statusCardConfig = [
     { title: 'ทั้งหมด', count: getTotalCases(), color: '#6c757d', bg: '#ffffff', border: '#e5e7eb' },
@@ -138,8 +187,6 @@ const StatisticsView = ({ organizationId }) => {
     { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), color: '#20c997', bg: '#ecfeff', border: '#cffafe' },
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), color: '#6b7280', bg: '#f9fafb', border: '#f3f4f6' },
   ];
-
-  const maxStaffCount = Math.max(...staffData.map(s => s.count), 0);
 
   return (
     <div className={styles.container}>
@@ -155,6 +202,7 @@ const StatisticsView = ({ organizationId }) => {
 
       <main className={styles.main}>
         
+        {/* 1. Status Cards */}
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af'}}>กำลังโหลดข้อมูล...</p>
         ) : (
@@ -184,6 +232,7 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
+        {/* 2. Trend Analysis */}
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
             <div>
@@ -225,6 +274,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
+          {/* 3. Efficiency */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -257,6 +307,7 @@ const StatisticsView = ({ organizationId }) => {
             </div>
           </section>
 
+          {/* 4. Problem Types */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -290,6 +341,7 @@ const StatisticsView = ({ organizationId }) => {
         </div>
 
         <div className={styles.responsiveGrid2}>
+            {/* 5. Satisfaction */}
             <section className={styles.sectionCard}>
                 <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', marginTop: 0}}>ความพึงพอใจของประชาชน</h3>
                 {satisfactionData ? (
@@ -335,35 +387,60 @@ const StatisticsView = ({ organizationId }) => {
                 )}
             </section>
 
+            {/* 6. Staff Performance (Stacked Bar & Count API) */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>10 อันดับเจ้าหน้าที่</h3>
-                    <div className={styles.topBadge}>Top 10</div>
+                    {/* แสดงจำนวนเจ้าหน้าที่ทั้งหมดที่ดึงจาก API */}
+                    <div className={styles.topBadge} style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
+                       <Users size={14} />
+                       <span>เจ้าหน้าที่ทั้งหมด: {totalStaffCount}</span>
+                    </div>
                 </div>
                 
-                <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
-                    {staffData.length > 0 ? staffData.map((staff, i) => (
-                        <div key={i} className={styles.staffRow}>
-                            <div className={styles.staffInfo}>
-                                <div className={styles.staffAvatar}>
-                                    {staff.name.charAt(0)}
-                                </div>
-                                <span className={styles.staffName}>{staff.name}</span>
-                            </div>
-                            <div className={styles.staffStats}>
-                                <div className={styles.barContainer}>
-                                    <div 
-                                      className={styles.barFill} 
-                                      style={{ width: `${(staff.count / maxStaffCount) * 100}%` }}
-                                    ></div> 
-                                </div>
-                                <span className={styles.staffCount}>{staff.count}</span>
-                            </div>
-                        </div>
-                    )) : (
-                       <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
-                    )}
-                </div>
+                {staffData.length > 0 ? (
+                    <div className={styles.chartContainer} style={{height: '400px'}}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart 
+                                data={staffData} 
+                                layout="vertical" 
+                                margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                                <XAxis type="number" hide />
+                                <YAxis 
+                                    dataKey="name" 
+                                    type="category" 
+                                    width={100} 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{fontSize: 12, fill: '#374151', fontWeight: 500}} 
+                                />
+                                <Tooltip 
+                                    cursor={{fill: 'transparent'}} 
+                                    contentStyle={{ borderRadius: '8px' }}
+                                />
+                                <Legend iconType="circle" wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
+                                
+                                {/* Loop สร้าง Bar ตาม Status Key ที่กำหนด */}
+                                {STACK_KEYS.map((key, index) => (
+                                    <Bar 
+                                        key={key}
+                                        dataKey={key} 
+                                        stackId="staff" 
+                                        fill={STATUS_COLORS[key]} 
+                                        name={key}
+                                        barSize={20}
+                                        // ใส่ radius แค่แท่งแรกกับแท่งสุดท้าย (แบบง่ายๆ คือใส่ทุกอันแต่อาจจะซ้อนกัน หรือไม่ใส่เลย)
+                                        // การใส่ radius ใน Stacked Bar ต้องระวัง แต่ถ้า BarSize เล็กอาจจะไม่ต้องใส่ก็ได้
+                                    />
+                                ))}
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                ) : (
+                   <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
+                )}
             </section>
         </div>
 
