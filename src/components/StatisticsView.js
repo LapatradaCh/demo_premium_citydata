@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "./css/StatisticsView.module.css";
-import { FaStar, FaChevronDown, FaChevronUp, FaTimes } from "react-icons/fa";
+import { 
+  FaStar, 
+  FaChevronDown, 
+  FaChevronUp, 
+  FaTimes, 
+  FaRegClock, 
+  FaArrowDown, 
+  FaArrowUp 
+} from "react-icons/fa";
 
 // ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
 
@@ -260,25 +268,23 @@ const SatisfactionBox = ({ organizationId }) => {
 };
 
 // ====================================================================
-// === (*** MODIFIED COMPONENT: TopStaffStats (ดึงข้อมูลจริง) ***) ===
+// === (*** Component: TopStaffStats (ดึงข้อมูลจริง) ***) ===
 // ====================================================================
 const TopStaffStats = ({ organizationId }) => {
-  // 1. กำหนดค่า Config ของสถานะ (ชื่อ, Key, สี Pastel)
   const statusConfig = [
-      { key: 'pending', label: 'รอรับเรื่อง', color: '#ef9a9a' },      // แดงอ่อน
-      { key: 'coordinating', label: 'กำลังประสานงาน', color: '#ce93d8' }, // ม่วงอ่อน
-      { key: 'inProgress', label: 'กำลังดำเนินการ', color: '#fff59d' },  // เหลืองอ่อน
-      { key: 'completed', label: 'เสร็จสิ้น', color: '#a5d6a7' },      // เขียวอ่อน
-      { key: 'forwarded', label: 'ส่งต่อ', color: '#90caf9' },         // ฟ้าอ่อน
-      { key: 'invited', label: 'เชิญร่วม', color: '#80cbc4' },         // เขียวมิ้นต์
-      { key: 'rejected', label: 'ปฏิเสธ', color: '#b0bec5' }           // เทาเงิน
+      { key: 'pending', label: 'รอรับเรื่อง', color: '#ef9a9a' },      
+      { key: 'coordinating', label: 'กำลังประสานงาน', color: '#ce93d8' }, 
+      { key: 'inProgress', label: 'กำลังดำเนินการ', color: '#fff59d' },  
+      { key: 'completed', label: 'เสร็จสิ้น', color: '#a5d6a7' },      
+      { key: 'forwarded', label: 'ส่งต่อ', color: '#90caf9' },         
+      { key: 'invited', label: 'เชิญร่วม', color: '#80cbc4' },         
+      { key: 'rejected', label: 'ปฏิเสธ', color: '#b0bec5' }           
   ];
 
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 2. Helper Function: แปลงชื่อสถานะ (DB) เป็น Key (Component)
   const mapStatusToKey = (statusName) => {
       const mapping = {
           'รอรับเรื่อง': 'pending',
@@ -289,11 +295,9 @@ const TopStaffStats = ({ organizationId }) => {
           'เชิญร่วม': 'invited',
           'ปฏิเสธ': 'rejected'
       };
-      // คืนค่า key ที่ตรงกัน, หรือ null ถ้าไม่รู้จักสถานะนี้
       return mapping[statusName] || null; 
   };
 
-  // 3. Helper Function: คำนวณยอดรวม (สำหรับเรียงลำดับ)
   const calculateTotal = (staff) => {
       return statusConfig.reduce((sum, config) => sum + (staff[config.key] || 0), 0);
   };
@@ -310,7 +314,6 @@ const TopStaffStats = ({ organizationId }) => {
               setLoading(true);
               setError(null);
 
-              // 4. เรียก API ที่เราสร้างขึ้น
               const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, {
                   headers: {
                       'Authorization': `Bearer ${accessToken}`,
@@ -324,19 +327,14 @@ const TopStaffStats = ({ organizationId }) => {
 
               const rawData = await response.json();
               
-              // 5. *** Data Transformation ***
-              // (แปลงข้อมูลจาก [ {name, status, count}, ... ] 
-              // เป็น [ {name, pending: N, completed: M, ...}, ... ])
-              
               const groupedData = {};
 
               rawData.forEach(item => {
                   const name = item.staff_name || "Unknown Staff";
-                  const statusKey = mapStatusToKey(item.new_status); // แปลง "เสร็จสิ้น" -> "completed"
+                  const statusKey = mapStatusToKey(item.new_status); 
                   const count = parseInt(item.count, 10) || 0;
 
                   if (!groupedData[name]) {
-                      // ถ้าเจอชื่อนี้ครั้งแรก, สร้าง object เริ่มต้นให้
                       groupedData[name] = { 
                           name: name, 
                           pending: 0, coordinating: 0, inProgress: 0, completed: 0, 
@@ -344,16 +342,14 @@ const TopStaffStats = ({ organizationId }) => {
                       };
                   }
 
-                  // ถ้าเป็นสถานะที่เรารู้จัก, ให้บวกยอดเข้าไป
                   if (statusKey) {
                       groupedData[name][statusKey] += count;
                   }
               });
 
-              // 6. แปลง Object กลับเป็น Array, เรียงลำดับ, และเอา 10 อันดับแรก
               const processedArray = Object.values(groupedData)
-                .sort((a, b) => calculateTotal(b) - calculateTotal(a)) // เรียงจากมากไปน้อย
-                .slice(0, 10); // เอา 10 อันดับ
+                .sort((a, b) => calculateTotal(b) - calculateTotal(a)) 
+                .slice(0, 10); 
 
               setStaffData(processedArray);
 
@@ -366,21 +362,18 @@ const TopStaffStats = ({ organizationId }) => {
       };
 
       fetchStaffActivities();
-  }, [organizationId]); // ทำงานใหม่เมื่อ organizationId เปลี่ยน
+  }, [organizationId]);
 
-  // 7. Render: แสดงผล Loading / Error / No Data
   if (loading) return <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูลเจ้าหน้าที่...</p>;
   if (error) return <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>;
   if (staffData.length === 0) return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</p>;
 
 
-  // 8. Render: แสดงผลกราฟ
-  // (หาค่าสูงสุดเพื่อกำหนดความกว้าง 100% ของกราฟ)
   const maxTotal = Math.max(...staffData.map(s => calculateTotal(s)), 0);
 
   return (
       <div style={{ marginTop: '20px', width: '100%' }}>
-          {/* --- Legend (อธิบายสี) --- */}
+          {/* --- Legend --- */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '15px', fontSize: '0.75rem', color: '#555' }}>
               {statusConfig.map((item) => (
                   <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: '4px', marginRight: '4px' }}>
@@ -395,8 +388,6 @@ const TopStaffStats = ({ organizationId }) => {
               {staffData.map((staff, index) => {
                   const total = calculateTotal(staff);
                   const totalWidthPercent = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
-
-                  // คำนวณ % ความกว้างของแต่ละส่วนภายในแท่งกราฟ
                   const getPercent = (val) => (total > 0 ? (val / total) * 100 : 0);
 
                   return (
@@ -434,6 +425,111 @@ const TopStaffStats = ({ organizationId }) => {
               })}
           </div>
       </div>
+  );
+};
+
+// ====================================================================
+// === (*** NEW COMPONENT: Mockup เวลาทำงานโดยเฉลี่ย ***) ===
+// ====================================================================
+const AverageWorkTimeMock = () => {
+  // Mock Data (สามารถเปลี่ยนเป็น Prop หรือ State ได้เมื่อต่อ API)
+  const data = {
+    totalTime: "1 วัน 4 ชม.",
+    comparePercent: 12.5,
+    isFaster: true, // true = เร็วขึ้น (ดี), false = ช้าลง
+    breakdown: [
+      { label: "รอรับเรื่อง", time: "30 นาที", color: "#ef9a9a", width: "10%" },
+      { label: "ประสานงาน", time: "3.5 ชม.", color: "#ce93d8", width: "30%" },
+      { label: "ดำเนินการแก้ไข", time: "24 ชม.", color: "#fff59d", width: "60%" },
+    ]
+  };
+
+  return (
+    <div className={styles.chartBox} style={{ marginBottom: '20px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+        <div>
+          <h4 className={styles.chartBoxTitle} style={{ marginBottom: '5px' }}>
+             เวลาเฉลี่ยในการปิดงาน
+          </h4>
+          <span style={{ fontSize: '0.85rem', color: '#6c757d' }}>
+            เฉลี่ยจากเรื่องที่สถานะ "เสร็จสิ้น" ในเดือนนี้
+          </span>
+        </div>
+        <div style={{ 
+            backgroundColor: '#e3f2fd', 
+            color: '#1976d2', 
+            padding: '8px', 
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+          <FaRegClock size={20} />
+        </div>
+      </div>
+
+      {/* Main Stats Row */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '20px' }}>
+        <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
+          {data.totalTime}
+        </span>
+        
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '4px',
+          fontSize: '0.85rem',
+          fontWeight: '600',
+          color: data.isFaster ? '#057A55' : '#dc3545',
+          backgroundColor: data.isFaster ? '#def7ec' : '#fde8e8',
+          padding: '2px 8px',
+          borderRadius: '12px'
+        }}>
+          {data.isFaster ? <FaArrowDown size={10}/> : <FaArrowUp size={10}/>}
+          <span>{data.comparePercent}% {data.isFaster ? "เร็วขึ้น" : "ช้าลง"}</span>
+          <span style={{ fontWeight: 'normal', color: '#6c757d', marginLeft: '4px' }}>เทียบเดือนก่อน</span>
+        </div>
+      </div>
+
+      {/* Visual Timeline Bar */}
+      <div style={{ marginBottom: '15px' }}>
+        <div style={{ 
+          display: 'flex', 
+          width: '100%', 
+          height: '12px', 
+          borderRadius: '6px', 
+          overflow: 'hidden', 
+          backgroundColor: '#f0f0f0',
+          marginBottom: '10px'
+        }}>
+          {data.breakdown.map((item, index) => (
+            <div 
+              key={index} 
+              style={{ 
+                width: item.width, 
+                backgroundColor: item.color,
+                borderRight: index !== data.breakdown.length - 1 ? '2px solid #fff' : 'none'
+              }} 
+              title={`${item.label}: ${item.time}`}
+            />
+          ))}
+        </div>
+        
+        {/* Legend / Details */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+           {data.breakdown.map((item, index) => (
+             <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color }}></div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#6c757d' }}>{item.label}</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#333' }}>{item.time}</span>
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -611,9 +707,9 @@ const StatisticsView = ({ subTab, organizationId }) => {
         <div className={styles.statsDetailGrid}>
           {kpiStructure.map((kpi) => (
              <div
-                key={kpi.id}
-                className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
-                style={{ borderTopColor: kpi.color, opacity: 0.5 }}
+               key={kpi.id}
+               className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
+               style={{ borderTopColor: kpi.color, opacity: 0.5 }}
              >
                <div className={styles.statsDetailHeader}>
                   <span className={styles.statsDetailTitle}>{kpi.title}</span>
@@ -652,24 +748,29 @@ const StatisticsView = ({ subTab, organizationId }) => {
           <SatisfactionBox organizationId={organizationId} />
         </div>
 
-        {/* คอลัมน์ที่ 2: การปฏิบัติงาน */}
-        <div className={styles.chartBox}>
-          <h4 className={styles.chartBoxTitle}>
-             10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด
-          </h4>
-          <div className={styles.opsContent}>
-            {/* แสดงจำนวนเจ้าหน้าที่ทั้งหมด */}
-            <div className={styles.opsKpi} style={{marginBottom: 0}}>
-              <span>เจ้าหน้าที่ทั้งหมด</span>
-              <strong>
-                {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
-              </strong>
+        {/* คอลัมน์ที่ 2: เวลาทำงาน + การปฏิบัติงานเจ้าหน้าที่ */}
+        {/* ปรับ Class เป็น statsGridColumn เพื่อให้วางซ้อนกันในแนวตั้งได้ */}
+        <div className={styles.statsGridColumn}> 
+          
+          {/* (A) Mockup เวลาทำงานเฉลี่ย */}
+          <AverageWorkTimeMock />
+
+          {/* (B) Top Staff Stats (ในกล่องเดิม) */}
+          <div className={styles.chartBox}>
+            <h4 className={styles.chartBoxTitle}>
+               10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด
+            </h4>
+            <div className={styles.opsContent}>
+              <div className={styles.opsKpi} style={{marginBottom: 0}}>
+                <span>เจ้าหน้าที่ทั้งหมด</span>
+                <strong>
+                  {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
+                </strong>
+              </div>
+              <TopStaffStats organizationId={organizationId} />
             </div>
-
-            {/* *** แสดงกราฟ Top Staff (ที่ตอนนี้ดึงข้อมูลจริง) *** */}
-            <TopStaffStats organizationId={organizationId} />
-
           </div>
+
         </div>
       </div>
     </div>
