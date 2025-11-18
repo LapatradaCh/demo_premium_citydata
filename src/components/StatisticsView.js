@@ -420,19 +420,12 @@ const StatisticsView = ({ organizationId }) => {
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
-          <div style={styles.avatar}>
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" style={{width: '100%', height: '100%'}} />
-          </div>
           <div>
-            <h1 style={styles.headerTitle}>ภาพรวมสถิติ (Analytical View)</h1>
             <p style={styles.headerSubtitle}>
               {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลปัจจุบัน
             </p>
           </div>
         </div>
-        <button style={styles.logoutBtn}>
-          <LogOut size={16} /> ออกจากระบบ
-        </button>
       </header>
 
       <main style={styles.main}>
@@ -637,29 +630,7 @@ const StatisticsView = ({ organizationId }) => {
 
       </main>
 
-      {/* Bottom Navigation */}
-      <div style={styles.bottomNav}>
-        <button style={styles.navItem}>
-            <Map size={20} />
-            <span style={styles.navText}>แผนที่</span>
-        </button>
-        <button style={styles.navItem}>
-            <User size={20} />
-            <span style={styles.navText}>หน่วยงาน</span>
-        </button>
-        <button style={styles.navItem}>
-            <FileText size={20} />
-            <span style={styles.navText}>รายงาน</span>
-        </button>
-        <button style={styles.navItemActive}>
-            <LayoutDashboard size={20} />
-            <span style={styles.navTextActive}>สถิติ</span>
-        </button>
-        <button style={styles.navItem}>
-            <Settings size={20} />
-            <span style={styles.navText}>ตั้งค่า</span>
-        </button>
-      </div>
+
     </div>
   );
 };
