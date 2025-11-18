@@ -3,7 +3,7 @@ import {
   TrendingUp, 
   Activity,
   Clock,
-  Users // เพิ่ม icon สำหรับจำนวน Staff
+  Users 
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -22,7 +22,6 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// กำหนดสีตาม Status ที่ระบุในภาพ
 const STATUS_COLORS = {
   'รอรับเรื่อง': '#ef4444',      // Red
   'กำลังประสานงาน': '#a855f7',   // Purple
@@ -34,7 +33,7 @@ const STATUS_COLORS = {
   'NULL': '#d1d5db'              // Light Gray
 };
 
-// --- Mock Data (ส่วนที่ยังไม่มี API) ---
+// --- Mock Data (For other sections) ---
 const trendData = [
   { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
   { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
@@ -56,7 +55,7 @@ const efficiencyData = [
 const StatisticsView = ({ organizationId }) => {
   const [statsData, setStatsData] = useState(null);
   const [staffData, setStaffData] = useState([]);
-  const [totalStaffCount, setTotalStaffCount] = useState(0); // State สำหรับ API ใหม่
+  const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -104,40 +103,42 @@ const StatisticsView = ({ organizationId }) => {
           setSatisfactionData(data);
         }
 
-        // 4. Staff Count (New API Requirement)
+        // 4. Staff Count (UPDATED to match backend: { staff_count: "12" })
         const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
-          // สมมติ API return { count: 50 } หรือ เป็นตัวเลขตรงๆ
-          const count = data.count ? parseInt(data.count, 10) : (parseInt(data, 10) || 0);
+          // Use 'staff_count' field
+          const count = data.staff_count ? parseInt(data.staff_count, 10) : 0;
           setTotalStaffCount(count);
         }
 
-        // 5. Staff Activities (Adjusted for Stacked Bar)
+        // 5. Staff Activities (UPDATED to match backend: field 'new_status' and 'staff_name')
         const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
           
-          // Process Data: Group by Staff Name AND Status
+          // Grouping Logic
           const grouped = {};
-          rawData.forEach(item => {
-             const name = item.staff_name || "Unknown";
-             const status = item.status || "NULL"; // ต้องมั่นใจว่า API return field status หรือ field ที่เทียบเคียง
-             const count = parseInt(item.count, 10) || 0;
+          
+          if (Array.isArray(rawData)) {
+            rawData.forEach(item => {
+               const name = item.staff_name || "Unknown";
+               // BACKEND uses 'new_status', NOT 'status'
+               const status = item.new_status || "NULL"; 
+               const count = item.count || 0; // Backend already returns int
 
-             if (!grouped[name]) {
-               grouped[name] = { name: name, total: 0 };
-             }
-             
-             // เก็บค่าตาม Status Key
-             if (!grouped[name][status]) {
-               grouped[name][status] = 0;
-             }
-             grouped[name][status] += count;
-             grouped[name].total += count;
-          });
+               if (!grouped[name]) {
+                 grouped[name] = { name: name, total: 0 };
+               }
+               
+               if (!grouped[name][status]) {
+                 grouped[name][status] = 0;
+               }
+               grouped[name][status] += count;
+               grouped[name].total += count;
+            });
+          }
 
-          // Convert to Array, Sort by Total, Limit Top 10
           const staffArray = Object.values(grouped)
             .sort((a, b) => b.total - a.total)
             .slice(0, 10);
@@ -198,7 +199,6 @@ const StatisticsView = ({ organizationId }) => {
 
       <main className={styles.main}>
         
-        {/* 1. Status Cards */}
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af'}}>กำลังโหลดข้อมูล...</p>
         ) : (
@@ -228,7 +228,6 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
-        {/* 2. Trend Analysis */}
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
             <div>
@@ -261,7 +260,6 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
-          {/* 3. Efficiency Breakdown */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -288,7 +286,6 @@ const StatisticsView = ({ organizationId }) => {
             </div>
           </section>
 
-          {/* 4. Correlation */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -322,7 +319,6 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
             
-            {/* 5. Satisfaction */}
             <section className={styles.sectionCard}>
                 <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px'}}>ความพึงพอใจ</h3>
                 {satisfactionData ? (
@@ -350,11 +346,9 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
-            {/* 6. Staff Performance (UPDATED: Stacked Bar + Count API) */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพเจ้าหน้าที่</h3>
-                    {/* แสดงจำนวน Staff จาก API staff-count */}
                     <div className={styles.topBadge}>
                        <Users size={14} style={{marginRight: '4px'}}/>
                        เจ้าหน้าที่ทั้งหมด: {totalStaffCount} คน
@@ -383,8 +377,7 @@ const StatisticsView = ({ organizationId }) => {
                             cursor={{fill: 'transparent'}}
                             contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
                           />
-                          {/* Stacked Bars for each status */}
-                          {Object.keys(STATUS_COLORS).map((status, index) => (
+                          {Object.keys(STATUS_COLORS).map((status) => (
                             <Bar 
                               key={status} 
                               dataKey={status} 
