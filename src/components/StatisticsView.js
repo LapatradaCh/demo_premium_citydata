@@ -18,7 +18,7 @@ import {
   ComposedChart
 } from 'recharts';
 
-import styles from './StatisticsView.module.css';
+import styles from './css/StatisticsView.module.css';
 
 const trendData = [
   { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
