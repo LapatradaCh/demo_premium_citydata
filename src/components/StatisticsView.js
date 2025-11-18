@@ -1,777 +1,664 @@
-import React, { useState, useEffect } from "react";
-import styles from "./css/StatisticsView.module.css";
+import React, { useState, useEffect } from 'react';
 import { 
-  FaStar, 
-  FaChevronDown, 
-  FaChevronUp, 
-  FaTimes, 
-  FaRegClock, 
-  FaArrowDown, 
-  FaArrowUp 
-} from "react-icons/fa";
+  LayoutDashboard, 
+  Map, 
+  FileText, 
+  Settings, 
+  LogOut, 
+  Clock, 
+  User, 
+  TrendingUp, 
+  Activity,
+  AlertCircle
+} from 'lucide-react';
+import { 
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer, 
+  ComposedChart
+} from 'recharts';
 
-// ------------------------- (*** ข้อมูลและ Component ย่อยสำหรับหน้าสถิติเดิม ***)
+// --- Mock Data for sections without API endpoints yet ---
 
-// (Component ย่อยสำหรับกล่อง KPI แบบละเอียด 8 กล่อง)
-const StatsDetailBox = ({ title, value, percentage, note, color, cssClass }) => (
-  <div
-    className={`${styles.statsDetailBox} ${styles[cssClass] || ""}`}
-    style={{ borderTopColor: color }}
-  >
-    <div className={styles.statsDetailHeader}>
-      <span className={styles.statsDetailTitle}>{title}</span>
-      <span className={styles.statsDetailValue}>{value}</span>
-    </div>
-    <span className={styles.statsDetailPercentage}>({percentage})</span>
-    {note && <span className={styles.statsDetailNote}>{note}</span>}
-  </div>
-);
+const trendData = [
+  { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
+  { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
+  { date: '14/11', total: 1, pending: 0, coordinating: 1, completed: 0 },
+  { date: '15/11', total: 4, pending: 1, coordinating: 3, completed: 0 },
+  { date: '16/11', total: 2, pending: 1, coordinating: 1, completed: 0 },
+  { date: '17/11', total: 5, pending: 2, coordinating: 3, completed: 0 }, 
+  { date: '18/11', total: 5, pending: 2, coordinating: 3, completed: 0 }, 
+];
 
-// (Component ย่อยสำหรับ Horizontal Bar Chart - รองรับข้อมูลจริง)
-const DynamicHorizontalBarChart = ({ data }) => {
-  const colors = ["#007bff", "#ffc107", "#057A55", "#6c757d", "#dc3545", "#20c997"];
-  const maxCount = Math.max(...data.map(item => item.count), 0);
+const efficiencyData = [
+  { id: 'Ticket-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' },
+  { id: 'Ticket-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
+  { id: 'Ticket-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
+  { id: 'Ticket-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
+  { id: 'Ticket-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
+];
 
-  if (data.length === 0) {
-    return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลเรื่องแจ้ง</p>;
-  }
-
-  return (
-    <div className={styles.mockHorizontalBarChart}>
-      {data.map((item, index) => {
-        const widthPercent = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
-
-        return (
-          <div key={item.issue_type_name} className={styles.mockHBarItem}>
-            <span className={styles.mockHBarLabel}>{item.issue_type_name}</span>
-            <div className={styles.mockHBar}>
-              <div
-                className={styles.mockHBarFill}
-                style={{
-                  width: `${widthPercent}%`,
-                  background: colors[index % colors.length]
-                }}
-                title={`${item.issue_type_name}: ${item.count}`}
-              ></div>
-            </div>
-            <span className={styles.mockHBarValue}>{item.count}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+// --- Styles Object ---
+const styles = {
+  container: {
+    minHeight: '100vh',
+    backgroundColor: '#f9fafb',
+    fontFamily: "'Sarabun', 'Prompt', sans-serif",
+    paddingBottom: '80px',
+  },
+  header: {
+    backgroundColor: '#ffffff',
+    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    padding: '16px 24px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+  },
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+  },
+  avatar: {
+    width: '40px',
+    height: '40px',
+    backgroundColor: '#ffedd5',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    border: '2px solid #fed7aa',
+  },
+  headerTitle: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    margin: 0,
+  },
+  headerSubtitle: {
+    fontSize: '14px',
+    color: '#6b7280',
+    margin: 0,
+  },
+  logoutBtn: {
+    backgroundColor: '#ef4444',
+    color: '#ffffff',
+    padding: '8px 16px',
+    borderRadius: '8px',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  },
+  main: {
+    padding: '24px',
+    maxWidth: '1280px',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+  },
+  statusCard: (color, bg, border) => ({
+    backgroundColor: bg || '#ffffff',
+    border: `1px solid ${border || '#e5e7eb'}`,
+    borderRadius: '12px',
+    padding: '16px',
+    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    transition: 'box-shadow 0.2s',
+    borderTop: `4px solid ${color}`, // Added top border from original req
+    cursor: 'default',
+  }),
+  sectionCard: {
+    backgroundColor: '#ffffff',
+    padding: '24px',
+    borderRadius: '12px',
+    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    border: '1px solid #f3f4f6',
+    marginBottom: '24px',
+  },
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '24px',
+  },
+  sectionTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    margin: 0,
+  },
+  sectionSubtitle: {
+    fontSize: '14px',
+    color: '#6b7280',
+    margin: '4px 0 0 0',
+  },
+  legendContainer: {
+    display: 'flex',
+    gap: '8px',
+    fontSize: '12px',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  dot: (color) => ({
+    width: '12px',
+    height: '12px',
+    backgroundColor: color,
+    borderRadius: '50%',
+  }),
+  summaryBadge: {
+    marginBottom: '16px',
+    padding: '12px',
+    backgroundColor: '#fff7ed',
+    borderRadius: '8px',
+    border: '1px solid #ffedd5',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  bottomNav: {
+    position: 'fixed',
+    bottom: '24px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: '#ffffff',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    border: '1px solid #e5e7eb',
+    borderRadius: '16px',
+    padding: '12px 24px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '32px',
+    zIndex: 50,
+  },
+  navItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '4px',
+    color: '#9ca3af',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'color 0.2s',
+  },
+  navItemActive: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '4px',
+    color: '#111827',
+    backgroundColor: '#f3f4f6',
+    padding: '8px 16px',
+    borderRadius: '12px',
+    marginTop: '-24px',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  },
+  navText: {
+    fontSize: '10px',
+  },
+  navTextActive: {
+    fontSize: '10px',
+    fontWeight: 'bold',
+  },
+  staffRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '8px',
+    borderRadius: '8px',
+    transition: 'background-color 0.2s',
+  },
+  staffAvatar: {
+    width: '32px',
+    height: '32px',
+    backgroundColor: '#e5e7eb',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: '#4b5563',
+  },
+  barContainer: {
+    width: '96px',
+    height: '16px',
+    backgroundColor: '#e9d5ff',
+    borderRadius: '4px',
+    overflow: 'hidden',
+    display: 'flex',
+  },
+  barFill: (percent) => ({
+    backgroundColor: '#c084fc',
+    height: '100%',
+    width: `${percent}%`,
+  }),
 };
 
-// (Component ย่อยสำหรับกล่อง "ประเภทปัญหา" - ดึงข้อมูลจริง)
-const ProblemTypeStats = ({ organizationId }) => {
-  const [chartData, setChartData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchChartData = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken || !organizationId) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch chart data: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        const formattedData = data.map(item => ({
-          ...item,
-          count: parseInt(item.count, 10)
-        })).sort((a, b) => b.count - a.count);
-
-        setChartData(formattedData);
-      } catch (err) {
-         if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-         } else {
-          setError(err.message);
-         }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChartData();
-  }, [organizationId]);
-
-  return (
-    <div className={styles.chartBox}>
-      <h4 className={styles.chartBoxTitle}>สัดส่วนเรื่องแจ้งตามประเภท</h4>
-      <div className={styles.problemTypeContent}>
-        {loading && <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>}
-        {error && <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>}
-        {chartData && <DynamicHorizontalBarChart data={chartData} />}
-      </div>
-    </div>
-  );
-};
-
-
-// (Component 'SatisfactionBox' - ดึงข้อมูลจริง)
-const SatisfactionBox = ({ organizationId }) => {
-  const [satisfactionData, setSatisfactionData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchSatisfactionData = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken || !organizationId) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch satisfaction data: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setSatisfactionData(data);
-
-      } catch (err) {
-         if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-         } else {
-          setError(err.message);
-         }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSatisfactionData();
-  }, [organizationId]);
-
-  const renderStars = (average) => {
-    const roundedAverage = Math.round(average);
-    return (
-      <>
-        {[...Array(roundedAverage)].map((_, i) => <FaStar key={`full-${i}`} />)}
-        {[...Array(5 - roundedAverage)].map((_, i) => <FaStar key={`empty-${i}`} style={{ color: '#e0e0e0' }} />)}
-      </>
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูล...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>
-        </div>
-      </div>
-    );
-  }
-  
-  if (!satisfactionData || satisfactionData.total_count === 0) {
-     return (
-      <div className={styles.chartBox}>
-        <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-        <div className={styles.satisfactionBreakdownContainer}>
-           <p className={styles.mockHBarLabel}>ไม่มีข้อมูลความพึงพอใจ</p>
-        </div>
-      </div>
-    );
-  }
-
-  const { overall_average, total_count, breakdown } = satisfactionData;
-
-  const breakdownWithPercent = breakdown.map(item => ({
-    stars: item.score,
-    count: item.count,
-    percent: total_count > 0 ? (item.count / total_count) * 100 : 0
-  }));
-
-  return (
-    <div className={styles.chartBox}>
-      <h4 className={styles.chartBoxTitle}>ความพึงพอใจของประชาชน</h4>
-      <div className={styles.satisfactionBreakdownContainer}>
-        <div className={styles.satisfactionBreakdownHeader}>
-          <span className={styles.satisfactionBreakdownScore}>
-            {overall_average.toFixed(2)}/5
-          </span>
-          <span className={styles.satisfactionBreakdownStars}>
-            {renderStars(overall_average)}
-          </span>
-          <span className={styles.satisfactionBreakdownTotal}>
-            ({total_count} ความเห็น)
-          </span>
-        </div>
-
-        {breakdownWithPercent.map((item) => (
-          <div key={item.stars} className={styles.satisfactionBreakdownRow}>
-            <span className={styles.satisfactionBreakdownLabel}>
-              {item.stars} <FaStar />
-            </span>
-            <div className={styles.satisfactionBreakdownBar}>
-              <div
-                className={styles.satisfactionBreakdownBarFill}
-                style={{
-                  width: `${item.percent.toFixed(2)}%`,
-                  backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
-                }}
-              ></div>
-            </div>
-            <span className={styles.satisfactionBreakdownPercent}>
-              {item.percent.toFixed(0)}%
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// ====================================================================
-// === (*** Component: TopStaffStats (ดึงข้อมูลจริง) ***) ===
-// ====================================================================
-const TopStaffStats = ({ organizationId }) => {
-  const statusConfig = [
-      { key: 'pending', label: 'รอรับเรื่อง', color: '#ef9a9a' },      
-      { key: 'coordinating', label: 'กำลังประสานงาน', color: '#ce93d8' }, 
-      { key: 'inProgress', label: 'กำลังดำเนินการ', color: '#fff59d' },  
-      { key: 'completed', label: 'เสร็จสิ้น', color: '#a5d6a7' },      
-      { key: 'forwarded', label: 'ส่งต่อ', color: '#90caf9' },         
-      { key: 'invited', label: 'เชิญร่วม', color: '#80cbc4' },         
-      { key: 'rejected', label: 'ปฏิเสธ', color: '#b0bec5' }           
-  ];
-
-  const [staffData, setStaffData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const mapStatusToKey = (statusName) => {
-      const mapping = {
-          'รอรับเรื่อง': 'pending',
-          'กำลังประสานงาน': 'coordinating',
-          'กำลังดำเนินการ': 'inProgress',
-          'เสร็จสิ้น': 'completed',
-          'ส่งต่อ': 'forwarded',
-          'เชิญร่วม': 'invited',
-          'ปฏิเสธ': 'rejected'
-      };
-      return mapping[statusName] || null; 
-  };
-
-  const calculateTotal = (staff) => {
-      return statusConfig.reduce((sum, config) => sum + (staff[config.key] || 0), 0);
-  };
-
-  useEffect(() => {
-      const fetchStaffActivities = async () => {
-          const accessToken = localStorage.getItem('accessToken');
-          if (!accessToken || !organizationId) {
-              setLoading(false);
-              return;
-          }
-
-          try {
-              setLoading(true);
-              setError(null);
-
-              const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, {
-                  headers: {
-                      'Authorization': `Bearer ${accessToken}`,
-                  },
-              });
-
-              if (!response.ok) {
-                  const errorData = await response.json();
-                  throw new Error(errorData.message || `Failed to fetch staff activities: ${response.statusText}`);
-              }
-
-              const rawData = await response.json();
-              
-              const groupedData = {};
-
-              rawData.forEach(item => {
-                  const name = item.staff_name || "Unknown Staff";
-                  const statusKey = mapStatusToKey(item.new_status); 
-                  const count = parseInt(item.count, 10) || 0;
-
-                  if (!groupedData[name]) {
-                      groupedData[name] = { 
-                          name: name, 
-                          pending: 0, coordinating: 0, inProgress: 0, completed: 0, 
-                          forwarded: 0, invited: 0, rejected: 0 
-                      };
-                  }
-
-                  if (statusKey) {
-                      groupedData[name][statusKey] += count;
-                  }
-              });
-
-              const processedArray = Object.values(groupedData)
-                .sort((a, b) => calculateTotal(b) - calculateTotal(a)) 
-                .slice(0, 10); 
-
-              setStaffData(processedArray);
-
-          } catch (err) {
-              console.error("Error fetching staff stats:", err);
-              setError(err.message);
-          } finally {
-              setLoading(false);
-          }
-      };
-
-      fetchStaffActivities();
-  }, [organizationId]);
-
-  if (loading) return <p className={styles.mockHBarLabel}>กำลังโหลดข้อมูลเจ้าหน้าที่...</p>;
-  if (error) return <p className={styles.mockHBarLabel} style={{color: '#dc3545'}}>เกิดข้อผิดพลาด: {error}</p>;
-  if (staffData.length === 0) return <p className={styles.mockHBarLabel}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</p>;
-
-
-  const maxTotal = Math.max(...staffData.map(s => calculateTotal(s)), 0);
-
-  return (
-      <div style={{ marginTop: '20px', width: '100%' }}>
-          {/* --- Legend --- */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '15px', fontSize: '0.75rem', color: '#555' }}>
-              {statusConfig.map((item) => (
-                  <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: '4px', marginRight: '4px' }}>
-                      <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: item.color }}></div>
-                      <span>{item.label}</span>
-                  </div>
-              ))}
-          </div>
-
-          {/* --- Chart Rows --- */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {staffData.map((staff, index) => {
-                  const total = calculateTotal(staff);
-                  const totalWidthPercent = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
-                  const getPercent = (val) => (total > 0 ? (val / total) * 100 : 0);
-
-                  return (
-                      <div key={index} style={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
-                          {/* ชื่อเจ้าหน้าที่ */}
-                          <div style={{ width: '35%', paddingRight: '10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#333' }} title={staff.name}>
-                              {staff.name}
-                          </div>
-
-                          {/* Stacked Bar */}
-                          <div style={{ width: '65%', display: 'flex', alignItems: 'center' }}>
-                              <div style={{ 
-                                  width: `${totalWidthPercent}%`, 
-                                  height: '24px', 
-                                  display: 'flex', 
-                                  borderRadius: '4px', 
-                                  overflow: 'hidden',
-                                  backgroundColor: '#f8f9fa' 
-                              }}>
-                                  {statusConfig.map((config) => {
-                                      const val = staff[config.key] || 0;
-                                      if (val <= 0) return null;
-                                      return (
-                                          <div 
-                                              key={config.key}
-                                              style={{ width: `${getPercent(val)}%`, backgroundColor: config.color }} 
-                                              title={`${config.label}: ${val}`}
-                                          ></div>
-                                      );
-                                  })}
-                              </div>
-                          </div>
-                      </div>
-                  );
-              })}
-          </div>
-      </div>
-  );
-};
-
-// ====================================================================
-// === (*** NEW COMPONENT: Mockup เวลาทำงานโดยเฉลี่ย ***) ===
-// ====================================================================
-const AverageWorkTimeMock = () => {
-  // Mock Data (สามารถเปลี่ยนเป็น Prop หรือ State ได้เมื่อต่อ API)
-  const data = {
-    totalTime: "1 วัน 4 ชม.",
-    comparePercent: 12.5,
-    isFaster: true, // true = เร็วขึ้น (ดี), false = ช้าลง
-    breakdown: [
-      { label: "รอรับเรื่อง", time: "30 นาที", color: "#ef9a9a", width: "10%" },
-      { label: "ประสานงาน", time: "3.5 ชม.", color: "#ce93d8", width: "30%" },
-      { label: "ดำเนินการแก้ไข", time: "24 ชม.", color: "#fff59d", width: "60%" },
-    ]
-  };
-
-  return (
-    <div className={styles.chartBox} style={{ marginBottom: '20px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-        <div>
-          <h4 className={styles.chartBoxTitle} style={{ marginBottom: '5px' }}>
-             เวลาเฉลี่ยในการปิดงาน
-          </h4>
-          <span style={{ fontSize: '0.85rem', color: '#6c757d' }}>
-            เฉลี่ยจากเรื่องที่สถานะ "เสร็จสิ้น" ในเดือนนี้
-          </span>
-        </div>
-        <div style={{ 
-            backgroundColor: '#e3f2fd', 
-            color: '#1976d2', 
-            padding: '8px', 
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
-          <FaRegClock size={20} />
-        </div>
-      </div>
-
-      {/* Main Stats Row */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '20px' }}>
-        <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
-          {data.totalTime}
-        </span>
-        
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '4px',
-          fontSize: '0.85rem',
-          fontWeight: '600',
-          color: data.isFaster ? '#057A55' : '#dc3545',
-          backgroundColor: data.isFaster ? '#def7ec' : '#fde8e8',
-          padding: '2px 8px',
-          borderRadius: '12px'
-        }}>
-          {data.isFaster ? <FaArrowDown size={10}/> : <FaArrowUp size={10}/>}
-          <span>{data.comparePercent}% {data.isFaster ? "เร็วขึ้น" : "ช้าลง"}</span>
-          <span style={{ fontWeight: 'normal', color: '#6c757d', marginLeft: '4px' }}>เทียบเดือนก่อน</span>
-        </div>
-      </div>
-
-      {/* Visual Timeline Bar */}
-      <div style={{ marginBottom: '15px' }}>
-        <div style={{ 
-          display: 'flex', 
-          width: '100%', 
-          height: '12px', 
-          borderRadius: '6px', 
-          overflow: 'hidden', 
-          backgroundColor: '#f0f0f0',
-          marginBottom: '10px'
-        }}>
-          {data.breakdown.map((item, index) => (
-            <div 
-              key={index} 
-              style={{ 
-                width: item.width, 
-                backgroundColor: item.color,
-                borderRight: index !== data.breakdown.length - 1 ? '2px solid #fff' : 'none'
-              }} 
-              title={`${item.label}: ${item.time}`}
-            />
-          ))}
-        </div>
-        
-        {/* Legend / Details */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-           {data.breakdown.map((item, index) => (
-             <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color }}></div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#6c757d' }}>{item.label}</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#333' }}>{item.time}</span>
-                </div>
-             </div>
-           ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-// ------------------------- (*** 1. StatisticsView - "ภาพรวมสถิติ" ***)
-const StatisticsView = ({ subTab, organizationId }) => {
-  // (State สำหรับสถิติหลัก)
+const StatisticsView = ({ organizationId }) => {
+  // --- State for API Data ---
   const [statsData, setStatsData] = useState(null);
+  const [staffData, setStaffData] = useState([]);
+  const [satisfactionData, setSatisfactionData] = useState(null);
+  const [problemTypeData, setProblemTypeData] = useState([]);
+  
+  // Loading States
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // (State สำหรับจำนวนเจ้าหน้าที่)
-  const [staffCount, setStaffCount] = useState(null);
-  const [staffLoading, setStaffLoading] = useState(true);
-  const [staffError, setStaffError] = useState(null);
+  // --- API Fetching Logic (Preserved from Requirement) ---
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !organizationId) {
+        setLoading(false);
+        // For Demo purposes if no auth/orgId, we might want to show mock or empty
+        // return; 
+      }
 
-  // (โครงสร้าง KPI)
-  const kpiStructure = [
-    { id: "total", title: "ทั้งหมด", note: null, color: "#6c757d", cssClass: "stats-cream" },
-    { id: "รอรับเรื่อง", title: "รอรับเรื่อง", note: "เกิน 1 เดือน {pending_overdue} เรื่อง", color: "#dc3545", cssClass: "stats-red" },
-    { id: "กำลังประสานงาน", title: "กำลังประสานงาน", note: null, color: "#9b59b6", cssClass: "stats-purple" },
-    { id: "กำลังดำเนินการ", title: "กำลังดำเนินการ", note: "เกิน 1 เดือน {inprogress_overdue} เรื่อง", color: "#ffc107", cssClass: "stats-yellow" },
-    { id: "เสร็จสิ้น", title: "เสร็จสิ้น", note: "จัดการเอง {completed_self} เรื่อง ({completed_self_perc}%)", color: "#057A55", cssClass: "stats-green" },
-    { id: "ส่งต่อ", title: "ส่งต่อ", note: "(ส่งต่อหน่วยงานอื่น)", color: "#007bff", cssClass: "stats-blue" },
-    { id: "เชิญร่วม", title: "เชิญร่วม", note: null, color: "#20c997", cssClass: "stats-mint" },
-    { id: "ปฏิเสธ", title: "ปฏิเสธ", note: "จัดการเอง {rejected_self} เรื่อง ({rejected_self_perc}%)", color: "#6c757d", cssClass: "stats-grey" },
+      setLoading(true);
+      setError(null);
+
+      try {
+        const headers = { 'Authorization': `Bearer ${accessToken}` };
+
+        // 1. Fetch Overview Stats
+        const statsRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, { headers });
+        if (statsRes.ok) {
+          const data = await statsRes.json();
+          const statsObject = data.reduce((acc, item) => {
+            acc[item.status] = parseInt(item.count, 10);
+            return acc;
+          }, {});
+          setStatsData(statsObject);
+        }
+
+        // 2. Fetch Problem Types (For Why Analysis)
+        const typeRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, { headers });
+        if (typeRes.ok) {
+          const data = await typeRes.json();
+          // Transform for Recharts: { name: 'Type', count: 10, avgTime: mock }
+          // Note: API doesn't return time yet, so we mock avgTime for visual consistency
+          const formatted = data.map(item => ({
+            name: item.issue_type_name,
+            count: parseInt(item.count, 10),
+            avgTime: Math.floor(Math.random() * 30) + 5 // Mock data for visualization
+          })).sort((a, b) => b.count - a.count);
+          setProblemTypeData(formatted);
+        }
+
+        // 3. Fetch Satisfaction
+        const satRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, { headers });
+        if (satRes.ok) {
+          const data = await satRes.json();
+          setSatisfactionData(data);
+        }
+
+        // 4. Fetch Staff Activities
+        const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
+        if (staffRes.ok) {
+          const rawData = await staffRes.json();
+          // Process Staff Data similar to original code
+          const grouped = {};
+          rawData.forEach(item => {
+             const name = item.staff_name || "Unknown";
+             const count = parseInt(item.count, 10) || 0;
+             if (!grouped[name]) grouped[name] = 0;
+             grouped[name] += count;
+          });
+          // Convert to array and sort
+          const staffArray = Object.entries(grouped)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10);
+          setStaffData(staffArray);
+        }
+
+      } catch (err) {
+        console.error("API Error:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (organizationId) {
+      fetchData();
+    } else {
+      // Fallback mock fetch for UI preview if no ID provided
+      setLoading(false);
+    }
+  }, [organizationId]);
+
+
+  // --- Data Processing Helpers ---
+
+  const getTotalCases = () => {
+    if (!statsData) return 0;
+    return Object.values(statsData).reduce((a, b) => a + b, 0);
+  };
+
+  const getStatusCount = (statusKey) => {
+    return statsData?.[statusKey] || 0;
+  };
+
+  const getPercent = (val, total) => {
+    return total > 0 ? (val / total) * 100 : 0;
+  };
+
+  // Config for Status Cards based on API keys
+  const statusCardConfig = [
+    { title: 'ทั้งหมด', count: getTotalCases(), color: '#6c757d', bg: '#ffffff', border: '#e5e7eb' },
+    { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), color: '#dc3545', bg: '#fef2f2', border: '#fee2e2' },
+    { title: 'กำลังประสานงาน', count: getStatusCount('กำลังประสานงาน'), color: '#9b59b6', bg: '#faf5ff', border: '#f3e8ff' },
+    { title: 'กำลังดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), color: '#ffc107', bg: '#fefce8', border: '#fef9c3' },
+    { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), color: '#057A55', bg: '#f0fdf4', border: '#dcfce7' },
+    { title: 'ส่งต่อ', count: getStatusCount('ส่งต่อ'), color: '#007bff', bg: '#eff6ff', border: '#dbeafe' },
+    { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), color: '#20c997', bg: '#ecfeff', border: '#cffafe' },
+    { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), color: '#6b7280', bg: '#f9fafb', border: '#f3f4f6' },
   ];
 
-  useEffect(() => {
-    let viewportMeta = document.querySelector("meta[name=viewport]");
-    if (!viewportMeta) {
-      viewportMeta = document.createElement("meta");
-      viewportMeta.name = "viewport";
-      document.head.appendChild(viewportMeta);
-    }
-    viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
-  }, []);
+  // Staff Max for Bar Calculation
+  const maxStaffCount = Math.max(...staffData.map(s => s.count), 0);
 
-  // (useEffect สำหรับดึงสถิติหลัก)
-  useEffect(() => {
-    const fetchStats = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken) {
-        setError("Missing auth token from localStorage");
-        setLoading(false);
-        return;
-      }
-      if (!organizationId) {
-        setLoading(true);
-        return;
-      }
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404). Server returned HTML.");
-          }
-          throw new Error(`Failed to fetch stats: ${response.statusText}`);
-        }
-        const data = await response.json();
-        const statsObject = data.reduce((acc, item) => {
-          acc[item.status] = parseInt(item.count, 10);
-          return acc;
-        }, {});
-        setStatsData(statsObject);
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          setError("Failed to parse JSON. API might be returning HTML (404).");
-        } else {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-  }, [organizationId]);
-
-  // (useEffect สำหรับดึงข้อมูล Staff Count)
-  useEffect(() => {
-    const fetchStaffCount = async () => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken) {
-        setStaffError("Missing auth token");
-        setStaffLoading(false);
-        return;
-      }
-      if (!organizationId) {
-        setStaffLoading(true);
-        return;
-      }
-      try {
-        setStaffLoading(true);
-        setStaffError(null);
-        const response = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-        if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("text/html")) {
-            throw new Error("API not found (404).");
-          }
-          throw new Error(`Failed to fetch staff count: ${response.statusText}`);
-        }
-        const data = await response.json();
-        if (data.staff_count !== undefined) {
-            setStaffCount(parseInt(data.staff_count, 10));
-        } else {
-            throw new Error("Invalid data structure from staff API (expected 'staff_count')");
-        }
-      } catch (err) {
-        if (err instanceof SyntaxError) {
-          setStaffError("Failed to parse JSON (API 404?).");
-        } else {
-          setStaffError(err.message);
-        }
-      } finally {
-        setStaffLoading(false);
-      }
-    };
-    fetchStaffCount();
-  }, [organizationId]);
-
-  const totalCases = statsData ? Object.values(statsData).reduce((sum, count) => sum + count, 0) : 0;
-
-  const kpiDetailsWithData = kpiStructure.map(kpi => {
-    let value = 0;
-    if (kpi.id === 'total') {
-      value = totalCases;
-    } else {
-      value = statsData?.[kpi.id] || 0;
-    }
-    const percentage = totalCases > 0 ? ((value / totalCases) * 100).toFixed(2) : "0.00";
-    const note = kpi.note ? kpi.note
-      .replace("{pending_overdue}", 0)
-      .replace("{inprogress_overdue}", 0)
-      .replace("{completed_self}", 0)
-      .replace("{completed_self_perc}", 0)
-      .replace("{rejected_self}", 0)
-      .replace("{rejected_self_perc}", 0)
-      : null;
-
-    return { ...kpi, value, percentage, note };
-  });
-
-  // (ส่วน Render)
   return (
-    <div className={styles.statsContainer}>
-      {/* 1. Header (ชื่อหน้า) */}
-      <div className={styles.statsHeader}>
-        <h1 className={styles.statsPageTitle}>ภาพรวมสถิติ</h1>
-      </div>
+    <div style={styles.container}>
+      {/* CSS for Grid/Responsive */}
+      <style>{`
+        .responsive-grid-4 {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .responsive-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        @media (min-width: 768px) {
+          .responsive-grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (min-width: 1024px) {
+          .responsive-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+          }
+          .responsive-grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        .hover-shadow:hover {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .staff-row:hover {
+          background-color: #f9fafb;
+        }
+      `}</style>
 
-      {/* 2. Sub-Header (วันที่ และ Subtitle) */}
-      <div className={styles.statsSubHeader}>
-        <span className={styles.statsCurrentDate}>
-          {new Date().toLocaleDateString("th-TH", {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-          })}
-        </span>
-        <span className={styles.statsSubtitle}>
-          ข้อมูลปัจจุบัน (จำนวนข้อมูลเรื่องทั้งหมด ที่ประชาชนแจ้งเข้ามา)
-        </span>
-      </div>
-
-      {/* 4. Detailed KPI Grid (ตาราง KPI 8 กล่อง) */}
-      {loading ? (
-        <div className={styles.statsDetailGrid}>
-          {kpiStructure.map((kpi) => (
-             <div
-               key={kpi.id}
-               className={`${styles.statsDetailBox} ${styles[kpi.cssClass] || ""}`}
-               style={{ borderTopColor: kpi.color, opacity: 0.5 }}
-             >
-               <div className={styles.statsDetailHeader}>
-                  <span className={styles.statsDetailTitle}>{kpi.title}</span>
-                  <span className={styles.statsDetailValue}>...</span>
-               </div>
-               <span className={styles.statsDetailPercentage}>(...)</span>
-             </div>
-          ))}
+      {/* Header */}
+      <header style={styles.header}>
+        <div style={styles.headerLeft}>
+          <div style={styles.avatar}>
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" style={{width: '100%', height: '100%'}} />
+          </div>
+          <div>
+            <h1 style={styles.headerTitle}>ภาพรวมสถิติ (Analytical View)</h1>
+            <p style={styles.headerSubtitle}>
+              {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลปัจจุบัน
+            </p>
+          </div>
         </div>
-      ) : error ? (
-        <div className={styles.statsLoadingOrErrorError}>
-          <FaTimes />
-          <span>ไม่สามารถโหลดสถิติได้: {error}</span>
-        </div>
-      ) : (
-        <div className={styles.statsDetailGrid}>
-          {kpiDetailsWithData.map((kpi) => (
-            <StatsDetailBox
-              key={kpi.title}
-              title={kpi.title}
-              value={kpi.value}
-              percentage={kpi.percentage}
-              note={kpi.note}
-              color={kpi.color}
-              cssClass={kpi.cssClass}
-            />
-          ))}
-        </div>
-      )}
+        <button style={styles.logoutBtn}>
+          <LogOut size={16} /> ออกจากระบบ
+        </button>
+      </header>
 
-      {/* 5. Main Chart Grid (2 คอลัมน์) */}
-      <div className={styles.statsBottomGrid}>
-        {/* คอลัมน์ที่ 1: ประเภทปัญหา + ความพึงพอใจ */}
-        <div className={styles.statsGridColumn}>
-          <ProblemTypeStats organizationId={organizationId} />
-          <SatisfactionBox organizationId={organizationId} />
-        </div>
+      <main style={styles.main}>
+        
+        {/* 1. STATUS CARDS (Using Real API Data) */}
+        {loading && !statsData ? (
+           <p style={{textAlign: 'center', color: '#9ca3af'}}>กำลังโหลดข้อมูล...</p>
+        ) : (
+          <section className="responsive-grid-4">
+            {statusCardConfig.map((card, idx) => {
+              const percent = getPercent(card.count, getTotalCases());
+              return (
+                <div key={idx} style={styles.statusCard(card.color, card.bg, card.border)} className="hover-shadow">
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px'}}>
+                    <span style={{fontSize: '14px', fontWeight: '600', color: '#374151'}}>{card.title}</span>
+                    <span style={{fontSize: '24px', fontWeight: 'bold', color: card.color}}>{card.count}</span>
+                  </div>
+                  <div style={{fontSize: '12px', color: '#6b7280'}}>({percent.toFixed(2)}%)</div>
+                </div>
+              );
+            })}
+          </section>
+        )}
 
-        {/* คอลัมน์ที่ 2: เวลาทำงาน + การปฏิบัติงานเจ้าหน้าที่ */}
-        {/* ปรับ Class เป็น statsGridColumn เพื่อให้วางซ้อนกันในแนวตั้งได้ */}
-        <div className={styles.statsGridColumn}> 
-          
-          {/* (A) Mockup เวลาทำงานเฉลี่ย */}
-          <AverageWorkTimeMock />
-
-          {/* (B) Top Staff Stats (ในกล่องเดิม) */}
-          <div className={styles.chartBox}>
-            <h4 className={styles.chartBoxTitle}>
-               10 อันดับเจ้าหน้าที่ ที่มีการทำงานมากที่สุด
-            </h4>
-            <div className={styles.opsContent}>
-              <div className={styles.opsKpi} style={{marginBottom: 0}}>
-                <span>เจ้าหน้าที่ทั้งหมด</span>
-                <strong>
-                  {staffLoading ? "..." : (staffError ? "-" : staffCount)} (คน)
-                </strong>
-              </div>
-              <TopStaffStats organizationId={organizationId} />
+        {/* 2. TREND ANALYSIS (Mock Data - API Not Available yet) */}
+        <section style={styles.sectionCard}>
+          <div style={styles.sectionHeader}>
+            <div>
+              <h2 style={styles.sectionTitle}>
+                <TrendingUp color="#3b82f6" size={20} />
+                แนวโน้มเรื่องร้องเรียน (Trend Analysis)
+              </h2>
+              <p style={styles.sectionSubtitle}>เปรียบเทียบยอดรับเรื่อง vs สถานะในช่วง 7 วันที่ผ่านมา (Mockup)</p>
+            </div>
+            <div style={styles.legendContainer}>
+               <span style={styles.legendItem}><div style={styles.dot('#3b82f6')}></div> ทั้งหมด</span>
+               <span style={styles.legendItem}><div style={styles.dot('#f87171')}></div> รอรับเรื่อง</span>
+               <span style={styles.legendItem}><div style={styles.dot('#c084fc')}></div> กำลังประสาน</span>
             </div>
           </div>
+          <div style={{height: '250px', width: '100%'}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trendData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                  cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
+                />
+                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 6}} name="เรื่องทั้งหมด" />
+                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 3}} name="รอรับเรื่อง" />
+                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 3}} name="กำลังประสานงาน" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        <div className="responsive-grid-2">
+          
+          {/* 3. BREAKDOWN ANALYSIS (Mock Data - API Not Available yet) */}
+          <section style={styles.sectionCard}>
+            <div style={styles.sectionHeader}>
+              <div>
+                <h2 style={styles.sectionTitle}>
+                  <Clock color="#f97316" size={20} />
+                  เจาะลึกประสิทธิภาพ (Time Breakdown)
+                </h2>
+                <p style={styles.sectionSubtitle}>วิเคราะห์คอขวดของเวลาในแต่ละขั้นตอน (Mockup)</p>
+              </div>
+            </div>
+            
+            <div style={styles.summaryBadge}>
+                <span style={{fontSize: '14px', color: '#9a3412', fontWeight: '500'}}>ค่าเฉลี่ยรวม: 1 วัน 4 ชม.</span>
+                <span style={{fontSize: '12px', color: '#16a34a', backgroundColor: '#dcfce7', padding: '4px 8px', borderRadius: '9999px', fontWeight: 'bold'}}>เร็วขึ้น 12.5%</span>
+            </div>
+
+            <div style={{height: '250px', width: '100%'}}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={efficiencyData} layout="vertical" margin={{ left: 0, right: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                  <XAxis type="number" hide />
+                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#6b7280'}} />
+                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px' }} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '10px'}} />
+                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง (ชม.)" radius={[4, 0, 0, 4]} barSize={20} />
+                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน (ชม.)" barSize={20} />
+                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ (ชม.)" radius={[0, 4, 4, 0]} barSize={20} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+
+          {/* 4. CORRELATION ANALYSIS (Using API Data for Counts) */}
+          <section style={styles.sectionCard}>
+            <div style={styles.sectionHeader}>
+              <div>
+                <h2 style={styles.sectionTitle}>
+                  <Activity color="#6366f1" size={20} />
+                  ความสัมพันธ์ ประเภท vs เวลา (Why Analysis)
+                </h2>
+                <p style={styles.sectionSubtitle}>ประเภทปัญหาเทียบกับเวลาแก้ไข (Count Real / Time Mock)</p>
+              </div>
+            </div>
+
+            {problemTypeData.length > 0 ? (
+              <div style={{height: '250px', width: '100%'}}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ left: 20, right: 20 }}>
+                    <CartesianGrid stroke="#f3f4f6" horizontal={true} vertical={true} />
+                    <XAxis type="number" axisLine={false} tickLine={false} />
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={80} tick={{fontSize: 12, fontWeight: 600}} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="count" name="จำนวนเรื่อง" barSize={20} fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    {/* avgTime mocked because API doesn't provide it yet */}
+                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย (Mock ชม.)" barSize={20} fill="#f97316" radius={[0, 4, 4, 0]} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <p style={{fontSize: '12px', color: '#9ca3af', textAlign: 'center', padding: '20px'}}>ไม่มีข้อมูลประเภทปัญหา</p>
+            )}
+          </section>
 
         </div>
+
+        <div className="responsive-grid-2">
+            {/* 5. Satisfaction (Using Real API Data) */}
+            <section style={styles.sectionCard}>
+                <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', marginTop: 0}}>ความพึงพอใจของประชาชน</h3>
+                {satisfactionData ? (
+                  <>
+                    <div style={{display: 'flex', alignItems: 'flex-end', gap: '16px', marginBottom: '24px'}}>
+                        <span style={{fontSize: '36px', fontWeight: 'bold', color: '#111827', lineHeight: 1}}>
+                          {satisfactionData.overall_average.toFixed(2)}
+                        </span>
+                        <span style={{color: '#9ca3af', paddingBottom: '4px'}}>/ 5</span>
+                        <div style={{color: '#facc15', paddingBottom: '4px'}}>
+                            {'★'.repeat(Math.round(satisfactionData.overall_average))}
+                            {'☆'.repeat(5 - Math.round(satisfactionData.overall_average))}
+                        </div>
+                        <span style={{fontSize: '12px', color: '#9ca3af', paddingBottom: '4px'}}>
+                          ({satisfactionData.total_count} ความเห็น)
+                        </span>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                        {/* Create 5 bars for 1-5 stars, mapping API breakdown if exists */}
+                        {[5, 4, 3, 2, 1].map((star) => {
+                           const item = satisfactionData.breakdown.find(b => b.score === star);
+                           const count = item ? item.count : 0;
+                           const percent = satisfactionData.total_count > 0 ? (count / satisfactionData.total_count) * 100 : 0;
+                           return (
+                            <div key={star} style={{display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px'}}>
+                                <span style={{width: '20px', fontWeight: 'bold', color: '#4b5563'}}>{star}★</span>
+                                <div style={{flex: 1, height: '8px', backgroundColor: '#f3f4f6', borderRadius: '9999px', overflow: 'hidden'}}>
+                                    <div style={{height: '100%', backgroundColor: percent > 0 ? '#facc15' : '#e5e7eb', width: `${percent}%`, borderRadius: '9999px'}}></div>
+                                </div>
+                                <span style={{width: '32px', textAlign: 'right', color: '#6b7280'}}>{Math.round(percent)}%</span>
+                            </div>
+                           );
+                        })}
+                    </div>
+                  </>
+                ) : (
+                   <div style={{padding: '20px', textAlign: 'center', color: '#9ca3af'}}>ไม่มีข้อมูลความพึงพอใจ</div>
+                )}
+            </section>
+
+            {/* 6. Staff Performance (Using Real API Data) */}
+            <section style={styles.sectionCard}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
+                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>10 อันดับเจ้าหน้าที่</h3>
+                    <div style={{backgroundColor: '#eff6ff', color: '#1d4ed8', padding: '4px 12px', borderRadius: '8px', fontSize: '14px', fontWeight: 'bold'}}>
+                      Top 10
+                    </div>
+                </div>
+                
+                <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                    {staffData.length > 0 ? staffData.map((staff, i) => (
+                        <div key={i} className="staff-row" style={styles.staffRow}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                <div style={styles.staffAvatar}>
+                                    {staff.name.charAt(0)}
+                                </div>
+                                <span style={{fontSize: '14px', fontWeight: '500', color: '#374151'}}>{staff.name}</span>
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                <div style={styles.barContainer}>
+                                    {/* Calculate width relative to max performer */}
+                                    <div style={styles.barFill((staff.count / maxStaffCount) * 100)}></div> 
+                                </div>
+                                <span style={{fontSize: '12px', fontWeight: 'bold', color: '#4b5563', minWidth: '20px', textAlign: 'right'}}>{staff.count}</span>
+                            </div>
+                        </div>
+                    )) : (
+                       <div style={{padding: '20px', textAlign: 'center', color: '#9ca3af'}}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
+                    )}
+                </div>
+            </section>
+        </div>
+
+      </main>
+
+      {/* Bottom Navigation */}
+      <div style={styles.bottomNav}>
+        <button style={styles.navItem}>
+            <Map size={20} />
+            <span style={styles.navText}>แผนที่</span>
+        </button>
+        <button style={styles.navItem}>
+            <User size={20} />
+            <span style={styles.navText}>หน่วยงาน</span>
+        </button>
+        <button style={styles.navItem}>
+            <FileText size={20} />
+            <span style={styles.navText}>รายงาน</span>
+        </button>
+        <button style={styles.navItemActive}>
+            <LayoutDashboard size={20} />
+            <span style={styles.navTextActive}>สถิติ</span>
+        </button>
+        <button style={styles.navItem}>
+            <Settings size={20} />
+            <span style={styles.navText}>ตั้งค่า</span>
+        </button>
       </div>
     </div>
   );
