@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "./css/Home.module.css"; // CSS เดิม
+import styles from "./css/Home.module.css"; // import CSS ที่แก้ไขแล้ว
 import logo from "./logo.png";
 import {
   FaMapMarkedAlt,
@@ -137,7 +137,7 @@ const Home = () => {
     if (item.action) {
       item.action();
     } else {
-      // เมื่อเปลี่ยน Tab หลัก ให้เคลียร์ข้อมูล Report ที่เลือกไว้ (ให้กลับไปหน้าตาราง)
+      // เมื่อเปลี่ยน Tab หลัก ให้เคลียร์ข้อมูล Report ที่เลือกไว้
       setSelectedReport(null);
       
       if (item.items) {
@@ -157,7 +157,6 @@ const Home = () => {
       [mainTabName]: subItemName,
     });
     
-    // เมื่อเปลี่ยนเมนูย่อยใน Tab รายการแจ้ง ก็ควรเคลียร์การเลือกด้วย
     if (mainTabName === "รายการแจ้ง") {
       setSelectedReport(null);
     }
@@ -187,22 +186,17 @@ const Home = () => {
       {/* ===== เนื้อหาหลัก ===== */}
       <div className={styles.dashboardContent}>
         
-        {/* --- ส่วนจัดการ รายการแจ้ง (Table vs Detail) --- */}
+        {/* --- ส่วนจัดการ รายการแจ้ง --- */}
         {activeTab === "รายการแจ้ง" && (
           <>
             {selectedReport ? (
-              // 1. ถ้ามีการเลือกรายงาน -> แสดงหน้า Detail (ไฟล์ใหม่)
               <ReportDetail 
                 data={selectedReport}
-                onBack={() => setSelectedReport(null)} // กดกลับ -> ล้างค่า -> กลับไปหน้าตาราง
+                onBack={() => setSelectedReport(null)} 
               />
             ) : (
-              // 2. ถ้าไม่มีการเลือก -> แสดงตาราง (ไฟล์เดิม)
               <ReportTable 
                 subTab={activeSubTabs["รายการแจ้ง"]} 
-                // หมายเหตุ: ใน ReportTable ต้องมีการส่ง props onClick หรือ onSelectRow กลับมา
-                // ตัวอย่าง: onRowClick={(item) => setSelectedReport(item)}
-                // หาก ReportTable ของคุณยังไม่ได้ทำส่วนนี้ ให้เพิ่ม prop นี้เข้าไปใน ReportTable ครับ
                 onRowClick={(item) => setSelectedReport(item)} 
               />
             )}
