@@ -1,0 +1,188 @@
+/* --- css/ReportDetail.module.css --- */
+
+/* Container หลักของหน้านี้ */
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: 'Sarabun', sans-serif; /* หรือฟอนต์ที่คุณใช้อยู่ */
+  color: #333;
+}
+
+/* ============================== */
+/* ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) */
+/* ============================== */
+.topSection {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; /* แบ่งสัดส่วน ซ้ายใหญ่กว่าขวานิดหน่อย */
+  gap: 20px;
+}
+
+/* การ์ดข้อมูล (สีครีม) */
+.infoCard {
+  background-color: #F5EFE6; /* สีครีม */
+  padding: 25px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.stars {
+  color: #F5A623; /* สีส้มทอง */
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+/* ปุ่มสถานะ (กรอบสีน้ำตาล) */
+.statusBox {
+  margin-top: 10px;
+  border: 2px solid #5D4037;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 15px;
+  gap: 10px;
+  background: #D7CCC8; /* สีพื้นหลังปุ่ม */
+  font-weight: 700;
+  color: #000;
+  width: fit-content;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+}
+
+/* การ์ดรูปภาพ (สีชมพูอ่อน กรอบแดง) */
+.imageCard {
+  background-color: #FADBD8; /* สีชมพูอ่อน */
+  border: 2px solid #C0392B; /* กรอบแดง */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  position: relative;
+}
+
+.imageText {
+  color: #C0392B;
+  font-size: 24px;
+  font-family: 'Brush Script MT', cursive, sans-serif; /* ฟอนต์ลายมือจำลอง */
+  transform: rotate(-5deg);
+}
+
+.realImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ============================== */
+/* ส่วนที่ 2: ตำแหน่ง + หน่วยงาน (กลาง) */
+/* ============================== */
+.middleSection {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* ซ้ายเล็ก ขวาใหญ่ */
+  gap: 20px;
+}
+
+/* กล่องตำแหน่ง (สีครีม กรอบดำ) */
+.locationCard {
+  background-color: #F5EFE6;
+  border: 1px solid #000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.15); /* เงาแข็ง */
+}
+
+.purpleText {
+  color: #8E44AD; /* สีม่วง */
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.linkText {
+  font-size: 14px;
+  color: #8B4513; /* สีน้ำตาลเข้ม */
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.linkText:hover {
+  text-decoration: underline;
+}
+
+/* กล่องหน่วยงาน */
+.agencyWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.agencyHeader {
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 8px 15px;
+  font-weight: 700;
+  color: #8B4513;
+  text-align: center;
+  width: fit-content;
+  margin-bottom: -1px; /* ให้เส้นซ้อนกัน */
+  z-index: 1;
+}
+
+.agencyBox {
+  border: 1px solid #000;
+  background-color: #F8F9FA; /* สีขาวอมเทา */
+  height: 100%;
+  min-height: 100px;
+  padding: 15px;
+}
+
+/* ============================== */
+/* ส่วนที่ 3: รายงานสถานะ (ล่าง) */
+/* ============================== */
+.bottomSection {
+  background-color: #F5EFE6;
+  padding: 20px;
+  min-height: 200px;
+  border-radius: 4px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5D4037;
+  margin-bottom: 15px;
+}
+
+/* --- Responsive Mobile --- */
+@media (max-width: 768px) {
+  .topSection, .middleSection {
+    grid-template-columns: 1fr; /* เรียงเป็นแนวตั้งในมือถือ */
+  }
+  
+  .imageCard {
+    height: 200px;
+  }
+}
