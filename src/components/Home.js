@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import styles from "./css/Home.module.css";
+import styles from "./css/Home.module.css"; // CSS เดิม
 import logo from "./logo.png";
 import {
   FaMapMarkedAlt,
@@ -12,23 +12,28 @@ import {
 } from "react-icons/fa";
 import liff from "@line/liff";
 
-// Component ย่อย
+// Component ย่อยเดิม
 import ReportTable from "./ReportTable";
 import MapView from "./MapView";
 import StatisticsView from "./StatisticsView";
 import OrganizationStatisticsView from "./OrgStatisticsView";
 import SettingsView from "./SettingsView";
 
+// Component ใหม่ (หน้าแจ้งเรื่องตามรูป)
+import ReportDetail from "./ReportDetail"; 
+
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // --- State ข้อมูลองค์กร ---
   const [organizationInfo, setOrganizationInfo] = useState({
     name: "กำลังโหลด...",
     logo: logo,
     id: null,
   });
 
+  // --- State การจัดการ Tab และ Menu ---
   const [activeTab, setActiveTab] = useState("รายการแจ้ง");
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [activeSubTabs, setActiveSubTabs] = useState({
@@ -37,6 +42,9 @@ const Home = () => {
     สถิติ: "สถิติ",
     ผลลัพธ์: "แก้ปัญหาสูงสุด",
   });
+
+  // --- State สำหรับเลือกดูรายละเอียดแจ้งเรื่อง (เพิ่มใหม่) ---
+  const [selectedReport, setSelectedReport] = useState(null);
 
   const menuItems = [
     {
@@ -67,22 +75,19 @@ const Home = () => {
     },
   ];
 
-  // 🧠 โหลดข้อมูลหน่วยงาน (อ่านจาก state ก่อน ถ้าไม่มีค่อยอ่านจาก localStorage)
+  // 🧠 โหลดข้อมูลหน่วยงาน
   useEffect(() => {
     const stateAgency = location.state?.agency;
     if (stateAgency) {
-      // ✅ ถ้ามีค่า state จากหน้า login / home1 — แสดงทันที
       setOrganizationInfo({
         name: stateAgency.name,
         logo: stateAgency.img || logo,
         id: stateAgency.id || stateAgency.organization_id || null,
       });
-      // เก็บไว้ใน localStorage เผื่อ refresh หน้า
       localStorage.setItem("lastSelectedOrg", JSON.stringify(stateAgency));
       return;
     }
 
-    // 🔁 ถ้าไม่มี state ให้ลองอ่านจาก localStorage (และ retry เผื่อยังไม่พร้อม)
     const tryReadOrg = (retry = 0) => {
       const cachedOrg = localStorage.getItem("selectedOrg");
       const lastOrg = localStorage.getItem("lastSelectedOrg");
@@ -103,7 +108,6 @@ const Home = () => {
           id: orgToSet.id || orgToSet.organization_id || null,
         });
       } else if (retry < 3) {
-        // ลองใหม่สูงสุด 3 ครั้ง (ทุก 300 มิลลิวินาที)
         setTimeout(() => tryReadOrg(retry + 1), 300);
       } else {
         setOrganizationInfo({
@@ -132,12 +136,17 @@ const Home = () => {
   const handleTabClick = (item) => {
     if (item.action) {
       item.action();
-    } else if (item.items) {
-      setActiveTab(item.name);
-      setOpenSubMenu(openSubMenu === item.name ? null : item.name);
     } else {
-      setActiveTab(item.name);
-      setOpenSubMenu(null);
+      // เมื่อเปลี่ยน Tab หลัก ให้เคลียร์ข้อมูล Report ที่เลือกไว้ (ให้กลับไปหน้าตาราง)
+      setSelectedReport(null);
+      
+      if (item.items) {
+        setActiveTab(item.name);
+        setOpenSubMenu(openSubMenu === item.name ? null : item.name);
+      } else {
+        setActiveTab(item.name);
+        setOpenSubMenu(null);
+      }
     }
   };
 
@@ -147,6 +156,12 @@ const Home = () => {
       ...activeSubTabs,
       [mainTabName]: subItemName,
     });
+    
+    // เมื่อเปลี่ยนเมนูย่อยใน Tab รายการแจ้ง ก็ควรเคลียร์การเลือกด้วย
+    if (mainTabName === "รายการแจ้ง") {
+      setSelectedReport(null);
+    }
+    
     setOpenSubMenu(null);
   };
 
@@ -171,8 +186,27 @@ const Home = () => {
 
       {/* ===== เนื้อหาหลัก ===== */}
       <div className={styles.dashboardContent}>
+        
+        {/* --- ส่วนจัดการ รายการแจ้ง (Table vs Detail) --- */}
         {activeTab === "รายการแจ้ง" && (
-          <ReportTable subTab={activeSubTabs["รายการแจ้ง"]} />
+          <>
+            {selectedReport ? (
+              // 1. ถ้ามีการเลือกรายงาน -> แสดงหน้า Detail (ไฟล์ใหม่)
+              <ReportDetail 
+                data={selectedReport}
+                onBack={() => setSelectedReport(null)} // กดกลับ -> ล้างค่า -> กลับไปหน้าตาราง
+              />
+            ) : (
+              // 2. ถ้าไม่มีการเลือก -> แสดงตาราง (ไฟล์เดิม)
+              <ReportTable 
+                subTab={activeSubTabs["รายการแจ้ง"]} 
+                // หมายเหตุ: ใน ReportTable ต้องมีการส่ง props onClick หรือ onSelectRow กลับมา
+                // ตัวอย่าง: onRowClick={(item) => setSelectedReport(item)}
+                // หาก ReportTable ของคุณยังไม่ได้ทำส่วนนี้ ให้เพิ่ม prop นี้เข้าไปใน ReportTable ครับ
+                onRowClick={(item) => setSelectedReport(item)} 
+              />
+            )}
+          </>
         )}
 
         {activeTab === "แผนที่" && (
