@@ -24,11 +24,14 @@
 
 .main {
   padding: 16px;
-  max-width: 1280px;
-  margin: 0 auto;
+  /* FIX: ปรับให้เต็มจอ */
+  width: 100%;
+  max-width: 100%; 
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  box-sizing: border-box; /* สำคัญ: เพื่อให้ padding ไม่ดัน width เกิน 100% */
 }
 
 /* Status Cards */
@@ -112,17 +115,17 @@
   margin: 4px 0 0 0;
 }
 
-/* Charts Containers - สำคัญมาก: ต้องกำหนดความสูงที่นี่เพื่อให้ Recharts ทำงาน */
+/* Charts Containers */
 .chartContainer {
   width: 100%;
-  height: 300px;      /* ความสูงพื้นฐาน */
-  min-height: 300px;  /* ป้องกันการยุบตัว */
-  position: relative; /* เพื่อให้ ResponsiveContainer จับขนาดได้ */
+  height: 300px;      
+  min-height: 300px;  
+  position: relative; 
 }
 
 .staffChartContainer {
   width: 100%;
-  height: 500px;      /* กราฟรายชื่อต้องการพื้นที่เยอะกว่า */
+  height: 500px;      
   min-height: 500px;
   position: relative;
 }
@@ -239,7 +242,7 @@
 /* Tablet & Desktop Adjustments */
 @media (min-width: 768px) {
   .main {
-    padding: 24px;
+    padding: 32px; /* เพิ่ม Padding สำหรับจอใหญ่ขึ้น */
   }
 
   .sectionHeader {
@@ -260,6 +263,10 @@
 }
 
 @media (min-width: 1024px) {
+  .main {
+    padding: 32px 48px; /* เพิ่ม Padding ด้านข้างให้ดูสมดุล */
+  }
+
   .responsiveGrid4 {
     grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columns */
     gap: 24px;
