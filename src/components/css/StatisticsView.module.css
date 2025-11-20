@@ -90,6 +90,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  /* FIX: ให้คำนวณความกว้าง / ความสูงถูกบนมือถือ */
+  min-width: 0;
+  min-height: 1px;
 }
 
 .sectionHeader {
@@ -120,13 +124,17 @@
 .chartContainer {
   height: 300px;
   width: 100%;
-  min-width: 0; /* ป้องกัน Recharts ดัน layout แตก */
+
+  /* FIX สำคัญสุดสำหรับมือถือ */
+  min-width: 250px;
+  min-height: 250px;
 }
 
 .staffChartContainer {
   height: 500px;
   width: 100%;
-  min-width: 0;
+  min-width: 250px;
+  min-height: 300px;
 }
 
 /* Legend */
@@ -226,12 +234,14 @@
   margin: auto;
 }
 
-/* --- Responsive Grids --- */
+/* Responsive Grids */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   width: 100%;
+  min-width: 100%;
+  overflow: visible; /* ป้องกันบีบกราฟ */
 }
 
 .responsiveGrid2 {
@@ -239,9 +249,11 @@
   grid-template-columns: 1fr;
   gap: 24px;
   width: 100%;
+  min-width: 100%;
+  overflow: visible; /* FIX กราฟหาย */
 }
 
-/* Mobile XS — ต่ำกว่า 380px */
+/* มือถือจอเล็กกว่า 380px */
 @media (max-width: 380px) {
   .statusCard {
     padding: 10px 12px;
