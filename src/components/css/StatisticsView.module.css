@@ -24,14 +24,16 @@
 
 .main {
   padding: 16px;
-  /* FIX: ปรับให้เต็มจอ */
+  
+  /* FIX: ปลดล็อคความกว้างให้เต็มจอ 100% ไม่มีการจำกัด pixel */
   width: 100%;
-  max-width: 100%; 
+  max-width: none !important; /* ใส่ !important เพื่อบังคับทับค่าเก่าแน่นอน */
   margin: 0;
+  
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-sizing: border-box; /* สำคัญ: เพื่อให้ padding ไม่ดัน width เกิน 100% */
+  box-sizing: border-box;
 }
 
 /* Status Cards */
@@ -242,7 +244,7 @@
 /* Tablet & Desktop Adjustments */
 @media (min-width: 768px) {
   .main {
-    padding: 32px; /* เพิ่ม Padding สำหรับจอใหญ่ขึ้น */
+    padding: 24px 32px; /* Tablet Padding */
   }
 
   .sectionHeader {
@@ -264,7 +266,7 @@
 
 @media (min-width: 1024px) {
   .main {
-    padding: 32px 48px; /* เพิ่ม Padding ด้านข้างให้ดูสมดุล */
+    padding: 32px 48px; /* Desktop Padding: เพิ่มระยะขอบให้ดูสบายตา แต่เนื้อหาจะยืดเต็มที่เหลือ */
   }
 
   .responsiveGrid4 {
