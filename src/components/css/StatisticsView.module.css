@@ -1,4 +1,4 @@
-/* --- StatisticsView.module.css --- */
+/* StatisticsView.module.css */
 
 .container {
   min-height: 100vh;
@@ -91,7 +91,7 @@
 
 .sectionHeader {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Mobile: Stack vertical */
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -112,9 +112,19 @@
   margin: 4px 0 0 0;
 }
 
-/* Charts - เราใช้ Inline style ใน JS เป็นหลัก แต่เก็บ class นี้ไว้สำหรับ width */
+/* Charts Containers - สำคัญมาก: ต้องกำหนดความสูงที่นี่เพื่อให้ Recharts ทำงาน */
 .chartContainer {
   width: 100%;
+  height: 300px;      /* ความสูงพื้นฐาน */
+  min-height: 300px;  /* ป้องกันการยุบตัว */
+  position: relative; /* เพื่อให้ ResponsiveContainer จับขนาดได้ */
+}
+
+.staffChartContainer {
+  width: 100%;
+  height: 500px;      /* กราฟรายชื่อต้องการพื้นที่เยอะกว่า */
+  min-height: 500px;
+  position: relative;
 }
 
 /* Legend */
@@ -216,17 +226,17 @@
 /* Responsive Grids */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
   gap: 12px;
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Mobile: 1 column */
   gap: 24px;
 }
 
-/* Tablet */
+/* Tablet & Desktop Adjustments */
 @media (min-width: 768px) {
   .main {
     padding: 24px;
@@ -249,14 +259,13 @@
   }
 }
 
-/* Desktop */
 @media (min-width: 1024px) {
   .responsiveGrid4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columns */
     gap: 24px;
   }
   
   .responsiveGrid2 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Desktop: 2 columns */
   }
 }
