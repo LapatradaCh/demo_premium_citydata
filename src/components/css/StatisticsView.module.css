@@ -5,6 +5,7 @@
   background-color: #f9fafb;
   font-family: 'Sarabun', 'Prompt', sans-serif;
   padding-bottom: 80px;
+  width: 100%; /* มั่นใจว่า container เต็มจอ */
 }
 
 .header {
@@ -14,6 +15,8 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .headerSubtitle {
@@ -23,15 +26,20 @@
 }
 
 .main {
-  padding: 16px;
+  /* FIX: บังคับเต็มจอ */
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
   
-  /* FIX: ปลดล็อคความกว้างให้เต็มจอ 100% ไม่มีการจำกัด pixel */
-  width: 100%;
-  max-width: none !important; /* ใส่ !important เพื่อบังคับทับค่าเก่าแน่นอน */
-  margin: 0;
+  /* จัด Padding ให้สวยงาม แต่ไม่กินที่เยอะ */
+  padding: 16px; 
   
   display: flex;
   flex-direction: column;
+  
+  /* FIX: บังคับให้ลูกๆ ยืดเต็มความกว้าง */
+  align-items: stretch !important; 
+  
   gap: 24px;
   box-sizing: border-box;
 }
@@ -50,6 +58,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%; /* ยืดเต็ม Grid */
 }
 
 .hoverShadow:hover {
@@ -92,11 +101,12 @@
   border: 1px solid #f3f4f6;
   display: flex;
   flex-direction: column;
+  width: 100%; /* ยืดเต็มพื้นที่ */
 }
 
 .sectionHeader {
   display: flex;
-  flex-direction: column; /* Mobile: Stack vertical */
+  flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -231,20 +241,23 @@
 /* Responsive Grids */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Mobile: 2 columns */
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  width: 100%; /* ยืดเต็ม */
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 column */
+  grid-template-columns: 1fr;
   gap: 24px;
+  width: 100%; /* ยืดเต็ม */
 }
 
 /* Tablet & Desktop Adjustments */
 @media (min-width: 768px) {
   .main {
-    padding: 24px 32px; /* Tablet Padding */
+    /* FIX: ปรับ Padding ของ Main ให้เท่ากับ Header (24px) เพื่อให้แนวตรงกัน */
+    padding: 24px; 
   }
 
   .sectionHeader {
@@ -265,16 +278,17 @@
 }
 
 @media (min-width: 1024px) {
+  /* ลบ Padding พิเศษออก เพื่อให้เต็มจอจริงๆ ตามที่ Header เป็น */
   .main {
-    padding: 32px 48px; /* Desktop Padding: เพิ่มระยะขอบให้ดูสบายตา แต่เนื้อหาจะยืดเต็มที่เหลือ */
+    padding: 24px; 
   }
 
   .responsiveGrid4 {
-    grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columns */
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
   }
   
   .responsiveGrid2 {
-    grid-template-columns: repeat(2, 1fr); /* Desktop: 2 columns */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
