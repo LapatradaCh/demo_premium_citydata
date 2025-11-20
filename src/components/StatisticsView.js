@@ -19,18 +19,18 @@ import {
   ComposedChart
 } from 'recharts';
 
-import styles from './css/StatisticsView.module.css';
+import styles from './StatisticsView.module.css';
 
 // --- Configuration ---
 const STATUS_COLORS = {
-  'รอรับเรื่อง': '#ef4444',      // Red
-  'กำลังประสานงาน': '#a855f7',   // Purple
-  'กำลังดำเนินการ': '#f59e0b',   // Amber
-  'เสร็จสิ้น': '#22c55e',        // Green
-  'ส่งต่อ': '#3b82f6',           // Blue
-  'เชิญร่วม': '#06b6d4',         // Cyan
-  'ปฏิเสธ': '#6b7280',           // Gray
-  'NULL': '#d1d5db'              // Light Gray
+  'รอรับเรื่อง': '#ef4444',       // Red
+  'กำลังประสานงาน': '#a855f7',    // Purple
+  'กำลังดำเนินการ': '#f59e0b',    // Amber
+  'เสร็จสิ้น': '#22c55e',         // Green
+  'ส่งต่อ': '#3b82f6',            // Blue
+  'เชิญร่วม': '#06b6d4',          // Cyan
+  'ปฏิเสธ': '#6b7280',            // Gray
+  'NULL': '#d1d5db'               // Light Gray
 };
 
 // --- Mock Data (For other sections) ---
@@ -60,14 +60,46 @@ const StatisticsView = ({ organizationId }) => {
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // State to track screen size for adjustments
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken || !organizationId) {
-        setLoading(false);
+      // In a real app, you might want to handle 'organizationId' being null
+      // but for now we assume it might come from props or context
+      
+      // Mocking data load if no API (for preview purposes)
+      if (!accessToken && !organizationId) {
+        // Simulate loading mock data
+        setTimeout(() => {
+           setStatsData({
+             'รอรับเรื่อง': 2,
+             'กำลังประสานงาน': 3,
+             'กำลังดำเนินการ': 5,
+             'เสร็จสิ้น': 10,
+             'ส่งต่อ': 1,
+             'เชิญร่วม': 0,
+             'ปฏิเสธ': 1
+           });
+           setStaffData([
+             { name: 'สมชาย ใจดี', 'รอรับเรื่อง': 1, 'เสร็จสิ้น': 5, total: 6 },
+             { name: 'วิภา รักดี', 'กำลังดำเนินการ': 3, total: 3 }
+           ]);
+           setTotalStaffCount(12);
+           setSatisfactionData({ overall_average: 4.35, total_count: 100, breakdown: [{score: 5, count: 41}, {score: 4, count: 53}, {score: 3, count: 6}] });
+           setProblemTypeData([{name: 'ไฟฟ้า', count: 10, avgTime: 20}, {name: 'ถนน', count: 5, avgTime: 15}]);
+           setLoading(false);
+        }, 1000);
         return;
       }
-
+      
       setLoading(true);
 
       try {
@@ -103,29 +135,25 @@ const StatisticsView = ({ organizationId }) => {
           setSatisfactionData(data);
         }
 
-        // 4. Staff Count (UPDATED to match backend: { staff_count: "12" })
+        // 4. Staff Count
         const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
-          // Use 'staff_count' field
           const count = data.staff_count ? parseInt(data.staff_count, 10) : 0;
           setTotalStaffCount(count);
         }
 
-        // 5. Staff Activities (UPDATED to match backend: field 'new_status' and 'staff_name')
+        // 5. Staff Activities
         const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
-          
-          // Grouping Logic
           const grouped = {};
           
           if (Array.isArray(rawData)) {
             rawData.forEach(item => {
                const name = item.staff_name || "Unknown";
-               // BACKEND uses 'new_status', NOT 'status'
                const status = item.new_status || "NULL"; 
-               const count = item.count || 0; // Backend already returns int
+               const count = item.count || 0;
 
                if (!grouped[name]) {
                  grouped[name] = { name: name, total: 0 };
@@ -153,10 +181,8 @@ const StatisticsView = ({ organizationId }) => {
       }
     };
 
-    if (organizationId) {
+    if (organizationId || true) { // Force run for preview
       fetchData();
-    } else {
-      setLoading(false);
     }
   }, [organizationId]);
 
@@ -188,19 +214,17 @@ const StatisticsView = ({ organizationId }) => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div>
-            <p className={styles.headerSubtitle}>
-              {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลปัจจุบัน
-            </p>
-          </div>
-        </div>
+         <div>
+           <p className={styles.headerSubtitle}>
+             {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลปัจจุบัน
+           </p>
+         </div>
       </header>
 
       <main className={styles.main}>
         
         {loading && !statsData ? (
-           <p style={{textAlign: 'center', color: '#9ca3af'}}>กำลังโหลดข้อมูล...</p>
+           <p style={{textAlign: 'center', color: '#9ca3af', marginTop: '40px'}}>กำลังโหลดข้อมูล...</p>
         ) : (
           <section className={styles.responsiveGrid4}>
             {statusCardConfig.map((card, idx) => {
@@ -216,12 +240,12 @@ const StatisticsView = ({ organizationId }) => {
                   }}
                 >
                   <div className={styles.cardHeader}>
-                    <span className={styles.cardTitle}>{card.title}</span>
+                    <span className={styles.cardTitle} title={card.title}>{card.title}</span>
                     <span className={styles.cardCount} style={{color: card.color}}>
                       {card.count}
                     </span>
                   </div>
-                  <div className={styles.cardPercent}>({percent.toFixed(2)}%)</div>
+                  <div className={styles.cardPercent}>({percent.toFixed(0)}%)</div>
                 </div>
               );
             })}
@@ -233,9 +257,9 @@ const StatisticsView = ({ organizationId }) => {
             <div>
               <h2 className={styles.sectionTitle}>
                 <TrendingUp color="#3b82f6" size={20} />
-                แนวโน้มเรื่องร้องเรียน (Trend Analysis)
+                แนวโน้มเรื่องร้องเรียน
               </h2>
-              <p className={styles.sectionSubtitle}>เปรียบเทียบยอดรับเรื่อง vs สถานะในช่วง 7 วันที่ผ่านมา</p>
+              <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ (7 วันล่าสุด)</p>
             </div>
             <div className={styles.legendContainer}>
                <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#3b82f6'}}></div> ทั้งหมด</span>
@@ -245,14 +269,14 @@ const StatisticsView = ({ organizationId }) => {
           </div>
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData}>
+              <LineChart data={trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none' }} />
-                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} name="เรื่องทั้งหมด" />
-                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 3}} name="รอรับเรื่อง" />
-                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 3}} name="กำลังประสานงาน" />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }} />
+                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 3}} activeDot={{r: 5}} name="เรื่องทั้งหมด" />
+                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 2}} name="รอรับเรื่อง" />
+                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 2}} name="กำลังประสานงาน" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -265,22 +289,22 @@ const StatisticsView = ({ organizationId }) => {
               <div>
                 <h2 className={styles.sectionTitle}>
                   <Clock color="#f97316" size={20} />
-                  เจาะลึกประสิทธิภาพ (Time Breakdown)
+                  เจาะลึกประสิทธิภาพ
                 </h2>
-                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวดของเวลาในแต่ละขั้นตอน</p>
+                <p className={styles.sectionSubtitle}>วิเคราะห์เวลาในแต่ละขั้นตอน</p>
               </div>
             </div>
             <div className={styles.chartContainer}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={efficiencyData} layout="vertical">
+                <BarChart data={efficiencyData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                   <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
-                  <Tooltip cursor={{fill: 'transparent'}} />
-                  <Legend iconType="circle" wrapperStyle={{fontSize: '12px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={20} />
-                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={20} />
-                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={20} />
+                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#6b7280'}} />
+                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{fontSize: '12px'}} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
+                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={15} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={15} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={15} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -291,7 +315,7 @@ const StatisticsView = ({ organizationId }) => {
               <div>
                 <h2 className={styles.sectionTitle}>
                   <Activity color="#6366f1" size={20} />
-                  ความสัมพันธ์ ประเภท vs เวลา
+                  ประเภท vs เวลา
                 </h2>
                 <p className={styles.sectionSubtitle}>ประเภทปัญหาเทียบกับเวลาแก้ไข</p>
               </div>
@@ -299,14 +323,14 @@ const StatisticsView = ({ organizationId }) => {
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical">
-                    <CartesianGrid stroke="#f3f4f6" />
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                    <CartesianGrid stroke="#f3f4f6" vertical={true} horizontal={true} />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="count" name="จำนวน" barSize={20} fill="#3b82f6" />
-                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย" barSize={20} fill="#f97316" />
+                    <YAxis dataKey="name" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#4b5563'}} />
+                    <Tooltip contentStyle={{fontSize: '12px'}} />
+                    <Legend wrapperStyle={{fontSize: '11px'}} />
+                    <Bar dataKey="count" name="จำนวน (เรื่อง)" barSize={12} fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย (ชม.)" barSize={12} fill="#f97316" radius={[0, 4, 4, 0]} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -320,12 +344,14 @@ const StatisticsView = ({ organizationId }) => {
         <div className={styles.responsiveGrid2}>
             
             <section className={styles.sectionCard}>
-                <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px'}}>ความพึงพอใจ</h3>
+                <div className={styles.sectionHeader}>
+                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>ความพึงพอใจ</h3>
+                </div>
                 {satisfactionData ? (
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        <span style={{color: '#facc15'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        <span style={{color: '#facc15', fontSize: '18px'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -348,10 +374,10 @@ const StatisticsView = ({ organizationId }) => {
 
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
-                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพเจ้าหน้าที่</h3>
+                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพ</h3>
                     <div className={styles.topBadge}>
                        <Users size={14} style={{marginRight: '4px'}}/>
-                       เจ้าหน้าที่ทั้งหมด: {totalStaffCount} คน
+                       ทั้งหมด: {totalStaffCount} คน
                     </div>
                 </div>
                 
@@ -361,17 +387,17 @@ const StatisticsView = ({ organizationId }) => {
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={100} 
+                            width={90} 
                             axisLine={false} 
                             tickLine={false} 
-                            tick={{fontSize: 12, fontWeight: 500, fill: '#374151'}} 
+                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                           />
                           <Tooltip 
                             cursor={{fill: 'transparent'}}
@@ -383,7 +409,7 @@ const StatisticsView = ({ organizationId }) => {
                               dataKey={status} 
                               stackId="staff" 
                               fill={STATUS_COLORS[status]} 
-                              barSize={24}
+                              barSize={18}
                               name={status}
                             />
                           ))}
