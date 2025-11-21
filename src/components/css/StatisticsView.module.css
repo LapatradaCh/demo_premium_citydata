@@ -134,6 +134,16 @@
   position: relative;
 }
 
+/* --- ส่วนที่เพิ่ม: แก้ปัญหา Global CSS ตีกราฟ --- */
+.chartContainer *,
+.staffChartContainer * {
+  /* บังคับปลดล็อก max-width ที่ติดมาจาก Global CSS */
+  max-width: none !important; 
+  /* ป้องกันการคำนวณขนาดผิดพลาดในบาง Browser */
+  box-sizing: border-box; 
+}
+/* --------------------------------------------- */
+
 /* Legend & Badges */
 .legendContainer {
   display: flex;
