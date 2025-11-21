@@ -3,7 +3,7 @@
    ========================================= */
 .dashboardWrapper {
   width: 100%;
-  max-width: 1380px; /* ขยายให้กว้างขึ้นเล็กน้อยสำหรับจอ Modern */
+  max-width: 1380px;
   margin: 0 auto;
   padding: 24px;
   box-sizing: border-box;
@@ -14,22 +14,27 @@
   gap: 32px;
 }
 
+.container {
+  /* Alias for dashboardWrapper if needed, or just wrap everything in dashboardWrapper */
+  composes: dashboardWrapper;
+}
+
 /* =========================================
    2. Header Section (Glassmorphism)
    ========================================= */
 .header {
   background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px); /* เอฟเฟกต์เบลอพื้นหลัง */
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  border-radius: 16px; /* ทำ Header ให้ลอยและมน */
+  border-radius: 16px;
   padding: 20px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
-  top: 20px; /* เว้นระยะจากขอบบนเล็กน้อยให้ดูสวย */
+  top: 20px;
   z-index: 40;
 }
 
@@ -64,8 +69,6 @@
   position: relative;
   overflow: hidden;
   height: 100%;
-  
-  /* เส้นสีด้านบน (Border Top) จะจัดการผ่าน Inline Style ใน React */
   border-top-width: 4px;
   border-top-style: solid;
 }
@@ -86,6 +89,9 @@
   font-size: 15px;
   font-weight: 600;
   color: #4b5563;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardCount {
@@ -127,7 +133,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .sectionTitle {
@@ -150,13 +156,14 @@
    5. Charts Areas
    ========================================= */
 .chartContainer {
-  height: 350px; /* เพิ่มความสูงให้อ่านง่าย */
+  height: 400px; /* เพิ่มความสูงเล็กน้อย */
   width: 100%;
   position: relative;
 }
 
 .staffChartContainer {
-  height: 550px;
+  /* เอา height: 550px ออก เพื่อให้มันยืดตาม Content จริง */
+  min-height: 300px;
   width: 100%;
   position: relative;
 }
@@ -167,8 +174,8 @@
   gap: 16px;
   font-size: 13px;
   color: #4b5563;
-  margin-top: 20px;
-  justify-content: center; /* จัดกึ่งกลาง Legend */
+  margin-top: 10px;
+  justify-content: center;
 }
 
 .legendItem {
@@ -179,6 +186,7 @@
   padding: 6px 12px;
   border-radius: 8px;
   transition: background 0.2s;
+  font-weight: 500;
 }
 
 .legendItem:hover {
@@ -217,7 +225,7 @@
   align-items: center;
   gap: 16px;
   font-size: 13px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .starLabel {
@@ -228,7 +236,7 @@
 
 .progressTrack {
   flex: 1;
-  height: 12px; /* หลอดหนาขึ้น */
+  height: 12px;
   background-color: #f3f4f6;
   border-radius: 99px;
   overflow: hidden;
@@ -295,7 +303,7 @@
    ========================================= */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: 1fr; /* มือถือ 1 คอลัมน์ */
+  grid-template-columns: 1fr;
   gap: 20px;
 }
 
@@ -318,7 +326,7 @@
   }
 
   .responsiveGrid4 {
-    grid-template-columns: repeat(2, 1fr); /* Tablet 2 คอลัมน์ */
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
 }
@@ -326,12 +334,12 @@
 /* Desktop (lg) */
 @media (min-width: 1024px) {
   .responsiveGrid4 {
-    grid-template-columns: repeat(4, 1fr); /* Desktop 4 คอลัมน์ */
+    grid-template-columns: repeat(4, 1fr);
     gap: 32px;
   }
   
   .responsiveGrid2 {
-    grid-template-columns: repeat(2, 1fr); /* Desktop 2 คอลัมน์ */
+    grid-template-columns: repeat(2, 1fr);
     gap: 32px;
   }
 }
