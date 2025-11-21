@@ -1,665 +1,410 @@
-:root {
---color-bg: #ffffff;
---color-surface: #f8f9fa;
---color-primary: #0b0b0b;
---color-secondary: #3a3a3a;
---color-muted: #6c757d; 
---color-border: #e5e7eb; 
---color-border-hover: #ced4da;
+/* ==================================================================
+ * CSS Module - Preserved Class Names (oc- prefix)
+ * ================================================================== */
 
-/* --- Colors --- */
---color-green: #28a745;
---color-green-dark: #218838;
---color-red: #dc3545;
---color-red-dark: #c82333;
---shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
---shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
+.org-create-wrapper {
+  /* Local Variables */
+  --oc-color-bg: #ffffff;
+  --oc-color-surface: #f8f9fa;
+  --oc-color-primary: #0b0b0b;
+  --oc-color-secondary: #3a3a3a;
+  --oc-color-muted: #6c757d; 
+  --oc-color-border: #e5e7eb; 
+  --oc-color-border-hover: #ced4da;
+  --oc-color-gold: #c59a65;
 
-/* --- Base --- */
---color-focus-ring: rgba(0, 0, 0, 0.1); 
---radius-card: 1rem; 
---radius-input: 0.5rem; /* 8px */
---shadow-card: 0 4px 12px rgba(0,0,0,0.05); 
---shadow-hover: 0 8px 20px rgba(0,0,0,0.08); 
---shadow-button: 0 4px 10px rgba(0, 0, 0, 0.1); 
---transition: all 0.2s ease-in-out; 
+  /* Colors from Image */
+  --oc-bg-icon-key: #eaf8ff;
+  --oc-bg-icon-img: #e6fff0;
+  --oc-bg-icon-pin: #fff0f0;
+  --oc-bg-icon-tag: #fff8e6;
+
+  --oc-color-red: #dc3545;
+  --oc-color-red-dark: #c82333;
+  --oc-shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
+  --oc-shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
+  --oc-color-green: #28a745;
+  --oc-color-green-dark: #218838;
+
+  /* Base Dimensions */
+  --oc-radius-card: 1rem; 
+  --oc-radius-pill: 9999px;
+  --oc-radius-input: 0.5rem; 
+  --oc-shadow-card: 0 4px 12px rgba(0,0,0,0.05); 
+  --oc-shadow-hover: 0 8px 20px rgba(0,0,0,0.08); 
+  --oc-shadow-button: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --oc-color-focus-ring: rgba(0, 0, 0, 0.1);
+  --oc-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Layout */
+  font-family: "Sarabun", sans-serif; 
+  box-sizing: border-box;
+  background: var(--oc-color-surface); 
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
 }
 
-/* ==================================================================
- * Global Container
- * ================================================================== */
-.container {
-display: flex;
-justify-content: center;
-align-items: center; /* Vertical centering */
-min-height: 100vh;
-padding: 3rem 1rem; 
-background: var(--color-surface); 
-font-family: "Sarabun", sans-serif; 
-box-sizing: border-box;
+/* Ensure box-sizing inheritance */
+.org-create-wrapper *, 
+.org-create-wrapper *::before, 
+.org-create-wrapper *::after {
+  box-sizing: inherit;
 }
 
 /* ==================================================================
  * Page Layout
  * ================================================================== */
-.page {
-width: 100%;
-background: var(--color-bg);
-border-radius: var(--radius-card);
-padding: 2.5rem; 
-box-shadow: var(--shadow-card);
-border: 1px solid var(--color-border); 
-transition: var(--transition);
-}
-.pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; }
-.page:hover {
-box-shadow: var(--shadow-hover);
-transform: translateY(-2px); 
-}
-
-/* ==================================================================
- * Page Header
- * ================================================================== */
-.pageHeader {
-text-align: center;
-margin-bottom: 2.5rem; 
-}
-.pageTitle {
-font-size: 2rem; 
-font-weight: 700;
-color: var(--color-primary);
-margin: 0;
-display: flex;
-flex-wrap: wrap;
-align-items: center;
-justify-content: center;
-gap: 0.5rem 1rem; 
-line-height: 1.3;
-}
-.pageSubtitle {
-font-size: 1.1rem; 
-font-weight: 400; 
-color: var(--color-muted);
-margin-top: 0.5rem; 
-}
-.orgNameHighlight {
-color: var(--color-primary); 
-font-weight: 700;
-}
-
-.editNameButton {
-background: none;
-border: 1px solid var(--color-border); 
-cursor: pointer;
-color: var(--color-secondary); 
-font-size: 0.95rem; 
-font-weight: 500;
-font-family: "Sarabun", sans-serif;
-padding: 0.4rem 0.8rem; 
-border-radius: var(--radius-input); 
-transition: var(--transition);
-white-space: nowrap; 
-box-shadow: var(--shadow-card); 
-}
-.editNameButton:hover {
-background-color: var(--color-surface); 
-color: var(--color-primary);
-border-color: var(--color-primary);
-box-shadow: var(--shadow-hover);
-transform: translateY(-1px); 
-}
-
-/* ==================================================================
- * Forms
- * ================================================================== */
-.form {
-display: flex;
-flex-direction: column;
-gap: 1.5rem; 
-}
-.formGroup {
-display: flex;
-flex-direction: column;
-gap: 0.5rem; 
-}
-.label {
-font-weight: 600;
-font-size: 0.95rem; 
-color: var(--color-secondary);
-}
-.label.required::after {
-content: " *";
-color: var(--color-red);
-margin-left: 0.25rem; 
-}
-.input, .select {
-width: 100%;
-padding: 0.75rem 1rem; 
-font-size: 1rem;
-border-radius: var(--radius-input); 
-border: 1px solid var(--color-border);
-background: var(--color-surface);
-color: var(--color-primary);
-transition: var(--transition);
-box-sizing: border-box;
-}
-.input:hover, .select:hover {
-border-color: var(--color-border-hover);
-}
-.input:focus, .select:focus {
-outline: none;
-background: var(--color-bg);
-border-color: var(--color-primary); 
-box-shadow: 0 0 0 3px var(--color-focus-ring); 
-}
-.input::placeholder {
-color: var(--color-muted);
-font-style: italic;
-opacity: 0.8;
-}
-.helpText {
-font-size: 0.9rem; 
-color: var(--color-muted);
-text-align: center;
-margin-top: -0.5rem; 
-}
-.helpTextSmall {
-font-size: 0.85rem; 
-color: var(--color-muted);
-margin-top: 0.5rem; 
-}
-
-/* ==================================================================
- * Buttons
- * ================================================================== */
-.buttonGroup {
-margin-top: 1rem; 
-display: flex;
-flex-direction: row; /* Horizontal */
-justify-content: center;
-gap: 1rem; 
-}
-.button {
-width: 100%;
-padding: 0.75rem 1.5rem; 
-border-radius: var(--radius-input); 
-font-weight: 600; 
-font-size: 1rem; 
-cursor: pointer;
-transition: var(--transition);
-border: 1px solid transparent; 
-text-align: center;
-text-decoration: none;
-display: inline-flex; 
-justify-content: center;
-align-items: center;
-gap: 0.5rem; 
-}
-/* This targets buttons *only* inside .buttonGroup */
-.buttonGroup > .button {
-flex-grow: 1; 
-flex-basis: 0; 
-}
-.button:disabled {
-opacity: 0.5; 
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
-}
-
-/* Accessibility focus style */
-.button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-primary);
-}
-
-
-/* (Green Button) */
-.btnPrimary {
-background-color: var(--color-green); 
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
-}
-.btnPrimary:hover:not(:disabled) {
-background-color: var(--color-green-dark); 
-border-color: var(--color-green-dark);
-transform: translateY(-2px); 
-}
-
-/* (Red Button) */
-.btnPrimaryBack {
-background-color: var(--color-red); 
-color: white;
-border-color: var(--color-red); 
-box-shadow: var(--shadow-button-red);
-}
-.btnPrimaryBack:hover:not(:disabled) {
-background-color: var(--color-red-dark); 
-border-color: var(--color-red-dark); 
-transform: translateY(-2px); 
-}
-
-/* (Save Button - Accordion) - Set to Green */
-.btnSuccess {
-background-color: var(--color-green); 
-color: white;
-border-color: var(--color-green);
-box-shadow: var(--shadow-button-green);
-}
-.btnSuccess:hover:not(:disabled) {
-background-color: var(--color-green-dark); 
-border-color: var(--color-green-dark);
-transform: translateY(-2px);
-}
-
-/* (Choose File Button) - Set to White */
-.btnSecondary {
-background-color: var(--color-bg); 
-color: var(--color-primary); 
-border-color: var(--color-border-hover); 
-}
-.btnSecondary:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
-}
-
-/* ==================================================================
- * Setup Page: Accordion
- * ================================================================== */
-.setupContainer {
-margin-top: 3rem; 
-}
-.setupTitle {
-font-size: 1.35rem; 
-font-weight: 600;
-color: var(--color-secondary);
-margin-bottom: 1.5rem; 
-text-align: center; 
-}
-.accordion {
-display: flex;
-flex-direction: column;
-gap: 1rem; 
-}
-.accordionItem {
-border: 1px solid var(--color-border);
-border-radius: var(--radius-card); /* 1rem */
-overflow: hidden;
-background: var(--color-bg);
-transition: var(--transition);
-box-shadow: none; 
-}
-.accordionItem:hover {
-  border-color: var(--color-border-hover); 
-}
-
-.accordionHeader {
-display: flex;
-align-items: center;
-gap: 1rem; 
-width: 100%;
-padding: 1.25rem 1.5rem; 
-background: var(--color-bg);
-border: none;
-cursor: pointer;
-text-align: left;
-transition: var(--transition);
-}
-.accordionHeader:hover {
-  background-color: var(--color-surface); 
-}
-
-.accordionIcon {
-flex-shrink: 0;
-width: 2.75rem; 
-height: 2.75rem; 
-border-radius: var(--radius-input); /* 8px */
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.5rem;
-transition: var(--transition);
-}
-
-/* Icon Background Colors */
-.iconBgCode {
-  background-color: #e6f7ff;
-  color: #0056b3;
-}
-.iconBgLogo {
-  background-color: #e6fff0;
-  color: #006421;
-}
-.iconBgLocation {
-  background-color: #fff0f0;
-  color: #c82333;
-}
-.iconBgType {
-  background-color: #fff8e6;
-  color: #b38000;
-}
-
-
-.accordionTitleBox {
-flex-grow: 1;
-}
-.accordionTitle {
-font-size: 1.1rem; 
-font-weight: 600;
-color: var(--color-primary);
-margin: 0;
-}
-.accordionSubtitle {
-font-size: 0.9rem; 
-color: var(--color-muted);
-margin: 0;
-margin-top: 0.2rem; 
-}
-.accordionArrow {
-width: 1.25rem; 
-height: 1.25rem;
-color: var(--color-muted);
-transition: transform 0.3s ease-in-out;
-}
-.rotate180 {
-transform: rotate(180deg);
-}
-
-/* === Accordion Content === */
-.accordionContentWrapper {
-display: grid;
-grid-template-rows: 0fr;
-transition: grid-template-rows 0.4s ease-in-out;
-}
-.accordionContentWrapper.open {
-grid-template-rows: 1fr;
-}
-.accordionContent {
-overflow: hidden;
-padding: 0 1.5rem; 
-background: var(--color-bg); 
-}
-
-/* * Shared class for all accordion inner content 
- * (Applied to forms, but not the code box)
- */
-.accordionInnerContent {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-
-.contentTitle {
-font-size: 1.5rem; 
-font-weight: 600;
-color: var(--color-primary);
-margin-bottom: 1.5rem; 
-}
-.contentForm {
-display: flex;
-flex-direction: column;
-gap: 1.25rem; 
-}
-
-/* === Logo Upload === */
-.logoUploadBox {
-display: grid;
-grid-template-columns: 150px 1fr; /* 2 columns */
-align-items: center;
-gap: 1.5rem; 
-padding: 0;
-border: none; 
-background: none; 
-}
-
-.logoPreview {
-width: 150px; 
-height: 150px; 
-object-fit: contain; 
-border-radius: var(--radius-card); /* 1rem, square-ish */
-border: 2px solid var(--color-border); 
-background-color: var(--color-surface);
-}
-.hiddenFileInput {
-display: none;
-}
-.logoUploadActions {
+.oc-page {
+  width: 100%;
+  max-width: 480px;
+  background: var(--oc-color-bg);
+  border-radius: var(--oc-radius-card);
+  padding: 2.5rem 2rem; 
+  box-shadow: var(--oc-shadow-card);
+  border: 1px solid var(--oc-color-border); 
+  transition: var(--oc-transition);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  align-items: flex-start; 
-}
-.logoUploadActions > .button {
-  width: auto; 
-}
-.btnSave {
-margin-top: 0; 
+  gap: 2rem;
 }
 
-
-/* === Code Box (in Accordion) - REDESIGNED === */
-.codeBoxContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem; /* Reduced gap */
-  /* This component now handles its own top border and padding */
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-top: 1px solid var(--color-border);
+.oc-page:hover {
+  box-shadow: var(--oc-shadow-hover);
+  transform: translateY(-2px); 
 }
 
-.codeBoxHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* NEW: Pill design for switch */
-  background-color: var(--color-surface);
-  border-radius: 9999px; /* Pill shape */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
+/* ==================================================================
+ * Header Section
+ * ================================================================== */
+.oc-header {
+  text-align: center;
 }
 
-.codeBoxType {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  padding: 0 0.75rem; /* Add padding */
-}
-
-.codeBoxSwitch {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  text-decoration: underline;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: "Sarabun", sans-serif;
-  /* NEW: Style as pill button */
-  background-color: var(--color-bg);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid var(--color-border);
-  transition: var(--transition);
-}
-.codeBoxSwitch:hover {
-  color: var(--color-secondary);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
-}
-
-.codeBoxDisplayWrapper {
-  /* NEW: Pill design for display */
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Pill shape */
-  padding: 0.5rem;
-  min-height: 48px;
-  box-sizing: border-box;
-}
-
-.codeBoxDisplay {
-  font-family: "Menlo", "Consolas", monospace;
-  font-size: 1.15rem; /* Slightly smaller */
+.oc-title {
+  font-size: 1.75rem;
   font-weight: 700;
-  text-align: left; 
-  letter-spacing: 0.05em;
-  color: var(--color-primary);
-  padding: 0 0.75rem; /* Add padding */
-  /* NEW: Removed background/border */
-  background: none;
-  border: none;
-  padding-right: 0; 
-  width: auto; /* Allow shrinking */
-  flex-grow: 1; /* Take up available space */
+  color: var(--oc-color-gold);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
 }
 
-.codeCopyButton {
-  /* NEW: Reset position, adjust style for pill */
-  position: static; 
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Pill shape */
-  cursor: pointer;
-  padding: 0.35rem 0.75rem;
-  color: var(--color-secondary);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: var(--transition);
-  flex-shrink: 0; /* Don't shrink */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.codeCopyButton:hover {
-  background: var(--color-surface);
-  border-color: var(--color-border-hover);
-  background-color: #fdfdfd;
-}
-.codeCopyButton svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}
-.codeCopyButton.copied {
-  color: var(--color-green);
-  border-color: var(--color-green);
-  background-color: #e6fff0;
-}
-.codeCopyButton.copied svg {
-  stroke: var(--color-green);
+.oc-subtitle {
+  font-size: 0.95rem;
+  color: var(--oc-color-muted);
+  margin: 0;
 }
 
-
-/* === Form Grid (in Accordion) === */
-.formGrid {
-display: grid;
-grid-template-columns: 1fr;
-gap: 1.25rem;
-}
-.submitRow {
-grid-column: 1 / -1;
-display: flex;
-justify-content: flex-end;
-margin-top: 1rem;
-}
-.submitRow .button {
-width: auto;
-flex-grow: 0; 
-flex-basis: auto;
-}
-
-/* === Geo Button & Error === */
-.btnGeo {
-background-color: var(--color-bg);
-color: var(--color-primary);
-border: 1px solid var(--color-border-hover);
-flex-grow: 0; 
-flex-basis: auto;
-}
-.btnGeo:hover:not(:disabled) {
-background-color: var(--color-surface);
-border-color: var(--color-primary);
-transform: translateY(-2px);
-}
-
-.errorMessage {
-color: var(--color-red);
-font-size: 0.9rem; 
-margin-top: 0.5rem;
-text-align: center;
-}
-.geoButtonContainer {
-grid-column: 1 / -1;
-text-align: center;
-display: flex;
-flex-direction: column;
-align-items: center;
-}
-.geoButtonContainer .button {
-width: auto;
-min-width: 200px;
-flex-grow: 0; 
-flex-basis: auto;
+.oc-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--oc-color-primary);
+  margin: 0.5rem 0 0 0;
+  text-align: center;
 }
 
 /* ==================================================================
- * Media Queries
+ * Accordion List
  * ================================================================== */
-@media (min-width: 768px) {
-  .page {
-  padding: 3rem; 
-  }
-  .formGrid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  }
-  .geoButtonContainer {
-  grid-column: 1 / -1;
-  }
-
-  /* Desktop button layout */
-  .buttonGroup {
-  flex-direction: row; 
-  justify-content: center;
+.oc-accordion {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  }
-
-  .buttonGroup > .button {
-  width: auto; 
-  min-width: 180px; 
-  flex-grow: 0; 
-  flex-basis: auto; 
-  }
-
-  .pageTitle {
-  font-size: 2.25rem;
-  gap: 0.75rem 1.5rem;
-  }
 }
 
-/* Media Query for Logo Upload Box */
-@media (max-width: 500px) {
-  .logoUploadBox {
-    grid-template-columns: 1fr; /* Stack on mobile */
-    justify-items: center; /* Center preview */
-  }
-  .logoUploadActions {
-    align-items: center; /* Center buttons */
+.oc-card {
+  background: white;
+  border: 1px solid var(--oc-color-border);
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  overflow: hidden;
+  transition: var(--oc-transition);
+}
+
+.oc-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border-color: var(--oc-color-border-hover);
+}
+
+/* State: Open (handled via class toggling) */
+.oc-card.open .oc-arrow {
+  transform: rotate(180deg);
+}
+.oc-card.open .oc-card-content {
+  max-height: 500px;
+  border-top: 1px solid var(--oc-color-border);
+}
+
+.oc-card-header {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  cursor: pointer;
+  gap: 1rem;
+  background: white;
+  user-select: none;
+}
+
+/* Icon Box */
+.oc-icon-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.75rem;
+}
+
+/* Specific Icon Colors */
+.oc-icon-key { background-color: #e0f4ff; color: #ffc107; }
+.oc-icon-img { background-color: #e6fff2; color: #28a745; }
+.oc-icon-pin { background-color: #fff0f2; color: #dc3545; }
+.oc-icon-tag { background-color: #fff8e1; color: #fd7e14; }
+
+/* Text Content */
+.oc-card-text {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.oc-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--oc-color-gold);
+  margin-bottom: 0.25rem;
+}
+
+.oc-card-desc {
+  font-size: 0.85rem;
+  color: var(--oc-color-muted);
+  line-height: 1.4;
+}
+
+/* Arrow */
+.oc-arrow {
+  color: var(--oc-color-muted);
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+/* Content Area */
+.oc-card-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+  background-color: #fafafa;
+}
+
+.oc-content-inner {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* ==================================================================
+ * Code Display Specifics (Pill Design)
+ * ================================================================== */
+.oc-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #f3f3f3;
+  border-radius: 999px;
+  padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.oc-code-label-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.oc-code-label {
+  font-weight: 700;
+  color: var(--oc-color-gold);
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.oc-code-switch {
+  font-size: 0.8rem;
+  color: var(--oc-color-gold);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.oc-code-switch:hover {
+  color: var(--oc-color-secondary);
+}
+
+.oc-code-value-box {
+  background: white;
+  border: 1px solid var(--oc-color-border);
+  border-radius: 999px;
+  padding: 0.4rem 0.5rem 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 160px;
+  justify-content: space-between;
+}
+
+.oc-code-value {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--oc-color-secondary);
+  letter-spacing: 0.5px;
+}
+
+.oc-btn-copy {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--oc-color-primary);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+.oc-btn-copy:hover {
+  background-color: #f0f0f0;
+}
+
+/* ==================================================================
+ * Footer Button & Inputs (From Previous Steps included for completeness)
+ * ================================================================== */
+.oc-footer-btn {
+  width: 100%;
+  background-color: var(--oc-color-red);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--oc-shadow-button-red);
+  transition: var(--oc-transition);
+}
+
+.oc-footer-btn:hover {
+  background-color: var(--oc-color-red-dark);
+  transform: translateY(-2px);
+}
+
+/* Inputs and Form Controls (from Step 1) */
+.oc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+}
+
+.oc-formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+}
+
+.oc-label {
+    font-weight: 700;
+    font-size: 0.95rem; 
+    color: var(--oc-color-secondary);
+}
+
+.oc-label.required::after {
+    content: " *";
+    color: var(--oc-color-red);
+    margin-left: 0.25rem; 
+}
+
+.oc-input {
     width: 100%;
-  }
-  .logoUploadActions > .button {
-    width: 100%; /* Full width buttons on mobile */
-  }
+    padding: 0.75rem 1rem; 
+    font-size: 1rem;
+    border-radius: var(--oc-radius-input); 
+    border: 1px solid var(--oc-color-border);
+    background: var(--oc-color-surface);
+    color: var(--oc-color-primary);
+    transition: var(--oc-transition);
+    font-family: "Sarabun", sans-serif;
+}
+
+.oc-input:hover {
+    border-color: var(--oc-color-border-hover);
+}
+
+.oc-input:focus {
+    outline: none;
+    background: var(--oc-color-bg);
+    border-color: var(--oc-color-primary); 
+    box-shadow: 0 0 0 3px var(--oc-color-focus-ring); 
+}
+
+.oc-buttonGroup {
+    margin-top: 1rem; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    gap: 1rem; 
+}
+
+.oc-button {
+    width: 100%;
+    padding: 0.75rem 1rem; 
+    border-radius: var(--oc-radius-input); 
+    font-weight: 700; 
+    font-size: 1rem; 
+    cursor: pointer;
+    transition: var(--oc-transition);
+    border: 1px solid transparent; 
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    line-height: 1.2;
+    height: 3rem;
+    flex: 1;
+}
+
+.oc-btnPrimary {
+    background-color: var(--oc-color-green); 
+    color: white;
+    border-color: var(--oc-color-green);
+    box-shadow: var(--oc-shadow-button-green);
+}
+.oc-btnPrimary:hover {
+    background-color: var(--oc-color-green-dark); 
+    border-color: var(--oc-color-green-dark);
+    transform: translateY(-2px); 
+}
+
+.oc-btnBack {
+    background-color: var(--oc-color-red); 
+    color: white;
+    border-color: var(--oc-color-red); 
+    box-shadow: var(--oc-shadow-button-red);
+}
+.oc-btnBack:hover {
+    background-color: var(--oc-color-red-dark); 
+    border-color: var(--oc-color-red-dark); 
+    transform: translateY(-2px); 
 }
