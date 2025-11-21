@@ -103,29 +103,25 @@ const StatisticsView = ({ organizationId }) => {
           setSatisfactionData(data);
         }
 
-        // 4. Staff Count (UPDATED to match backend: { staff_count: "12" })
+        // 4. Staff Count
         const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
-          // Use 'staff_count' field
           const count = data.staff_count ? parseInt(data.staff_count, 10) : 0;
           setTotalStaffCount(count);
         }
 
-        // 5. Staff Activities (UPDATED to match backend: field 'new_status' and 'staff_name')
+        // 5. Staff Activities
         const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
           
-          // Grouping Logic
           const grouped = {};
-          
           if (Array.isArray(rawData)) {
             rawData.forEach(item => {
                const name = item.staff_name || "Unknown";
-               // BACKEND uses 'new_status', NOT 'status'
                const status = item.new_status || "NULL"; 
-               const count = item.count || 0; // Backend already returns int
+               const count = item.count || 0;
 
                if (!grouped[name]) {
                  grouped[name] = { name: name, total: 0 };
@@ -185,6 +181,13 @@ const StatisticsView = ({ organizationId }) => {
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), color: '#6b7280', bg: '#f9fafb', border: '#f3f4f6' },
   ];
 
+  // --- Dynamic Height Calculation Helper ---
+  // คำนวณความสูงกราฟตามจำนวนข้อมูล (ขั้นต่ำ 250px, เพิ่มทีละ 60px ต่อ item)
+  const calculateHeight = (dataLength, minHeight = 250, itemHeight = 60) => {
+      if (!dataLength) return minHeight;
+      return Math.max(dataLength * itemHeight, minHeight);
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -243,9 +246,9 @@ const StatisticsView = ({ organizationId }) => {
                <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#c084fc'}}></div> กำลังประสาน</span>
             </div>
           </div>
-          <div className={styles.chartContainer}>
+          <div className={styles.chartContainer} style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData}>
+              <LineChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
@@ -270,12 +273,17 @@ const StatisticsView = ({ organizationId }) => {
                 <p className={styles.sectionSubtitle}>วิเคราะห์คอขวดของเวลาในแต่ละขั้นตอน</p>
               </div>
             </div>
-            <div className={styles.chartContainer}>
+            {/* Dynamic Height Calculation */}
+            <div className={styles.chartContainer} style={{ height: `${calculateHeight(efficiencyData.length, 250, 70)}px` }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={efficiencyData} layout="vertical">
+                <BarChart 
+                  data={efficiencyData} 
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 40, bottom: 5 }} /* เพิ่ม left margin เพื่อให้ชื่อแกน Y ไม่โดนตัด */
+                >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                   <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
+                  <YAxis dataKey="id" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 11}} />
                   <Tooltip cursor={{fill: 'transparent'}} />
                   <Legend iconType="circle" wrapperStyle={{fontSize: '12px'}} />
                   <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={20} />
@@ -297,12 +305,16 @@ const StatisticsView = ({ organizationId }) => {
               </div>
             </div>
             {problemTypeData.length > 0 ? (
-              <div className={styles.chartContainer}>
+              <div className={styles.chartContainer} style={{ height: `${calculateHeight(problemTypeData.length, 250, 60)}px` }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical">
+                  <ComposedChart 
+                    data={problemTypeData.slice(0, 10)} // Limit top 10 if too many
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
+                  >
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 12}} />
+                    <YAxis dataKey="name" type="category" width={90} axisLine={false} tickLine={false} tick={{fontSize: 12}} />
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="count" name="จำนวน" barSize={20} fill="#3b82f6" />
@@ -355,13 +367,13 @@ const StatisticsView = ({ organizationId }) => {
                     </div>
                 </div>
                 
-                <div className={styles.staffChartContainer}>
-                    {staffData.length > 0 ? (
+                {staffData.length > 0 ? (
+                  <div className={styles.chartContainer} style={{ height: `${calculateHeight(staffData.length, 300, 60)}px` }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
@@ -390,10 +402,10 @@ const StatisticsView = ({ organizationId }) => {
                           <Legend iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : (
-                       <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
-                    )}
-                </div>
+                  </div>
+                ) : (
+                   <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
+                )}
             </section>
         </div>
 
