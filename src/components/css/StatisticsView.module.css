@@ -5,7 +5,7 @@
   background-color: #f9fafb;
   font-family: 'Sarabun', 'Prompt', sans-serif;
   padding-bottom: 80px;
-  width: 100%; /* มั่นใจว่า container เต็มจอ */
+  width: 100%;
 }
 
 .header {
@@ -26,20 +26,14 @@
 }
 
 .main {
-  /* FIX: บังคับเต็มจอ */
+  /* FIX: Force Full Width - บังคับเต็มจอ */
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: none !important;
   margin: 0 !important;
-  
-  /* จัด Padding ให้สวยงาม แต่ไม่กินที่เยอะ */
-  padding: 16px; 
-  
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  
-  /* FIX: บังคับให้ลูกๆ ยืดเต็มความกว้าง */
-  align-items: stretch !important; 
-  
+  align-items: stretch !important;
   gap: 24px;
   box-sizing: border-box;
 }
@@ -58,7 +52,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%; /* ยืดเต็ม Grid */
+  width: 100%;
 }
 
 .hoverShadow:hover {
@@ -101,7 +95,7 @@
   border: 1px solid #f3f4f6;
   display: flex;
   flex-direction: column;
-  width: 100%; /* ยืดเต็มพื้นที่ */
+  width: 100%;
 }
 
 .sectionHeader {
@@ -130,15 +124,13 @@
 /* Charts Containers */
 .chartContainer {
   width: 100%;
-  height: 300px;      
   min-height: 300px;  
   position: relative; 
 }
 
 .staffChartContainer {
   width: 100%;
-  height: 500px;      
-  min-height: 500px;
+  min-height: 300px;
   position: relative;
 }
 
@@ -243,21 +235,20 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  width: 100%; /* ยืดเต็ม */
+  width: 100%;
 }
 
 .responsiveGrid2 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  width: 100%; /* ยืดเต็ม */
+  width: 100%;
 }
 
 /* Tablet & Desktop Adjustments */
 @media (min-width: 768px) {
   .main {
-    /* FIX: ปรับ Padding ของ Main ให้เท่ากับ Header (24px) เพื่อให้แนวตรงกัน */
-    padding: 24px; 
+    padding: 24px;
   }
 
   .sectionHeader {
@@ -278,7 +269,6 @@
 }
 
 @media (min-width: 1024px) {
-  /* ลบ Padding พิเศษออก เพื่อให้เต็มจอจริงๆ ตามที่ Header เป็น */
   .main {
     padding: 24px; 
   }
