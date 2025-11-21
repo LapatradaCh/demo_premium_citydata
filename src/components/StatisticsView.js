@@ -11,7 +11,7 @@ import {
   Tooltip, Legend, ResponsiveContainer, ComposedChart
 } from 'recharts';
 
-import styles from './StatisticsView.module.css';
+import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
 const STATUS_COLORS = {
