@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // เปลี่ยนการ import ให้ตรงกับไฟล์ CSS ของคุณ
-import "./css/CreateOrg.css"; 
+import "./css/CreateOrg.module.css"; 
 
 /**
  * =================================================================
