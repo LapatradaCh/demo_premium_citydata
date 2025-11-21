@@ -17,15 +17,12 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  flex-wrap: wrap; /* เพิ่มเพื่อให้ Header ไม่ล้นจอเล็ก */
-  gap: 10px;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .headerSubtitle {
@@ -41,8 +38,6 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 100%; /* มั่นใจว่าไม่เกินจอ */
-  box-sizing: border-box;
 }
 
 /* Status Cards */
@@ -56,9 +51,6 @@
   border: 1px solid #e5e7eb;
   border-top-width: 4px;
   border-top-style: solid;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 .hoverShadow:hover {
@@ -88,7 +80,7 @@
   color: #6b7280;
 }
 
-/* Section Cards - จุดสำคัญที่แก้เรื่อง Responsive */
+/* Section Cards */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -96,13 +88,10 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   margin-bottom: 24px;
-  min-height: 300px;
+  /* Ensure container doesn't collapse */
+  min-height: 300px; 
   display: flex;
   flex-direction: column;
-  
-  /* สำคัญมาก: ยอมให้ Grid item หดตัวได้ */
-  min-width: 0; 
-  overflow: hidden; /* ป้องกันกราฟทะลุ */
 }
 
 .sectionHeader {
@@ -110,8 +99,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  flex-wrap: wrap; /* ให้หัวข้อกับ Legend ตบลงบรรทัดใหม่ได้ถ้าจอเล็ก */
-  gap: 12px;
 }
 
 .sectionTitle {
@@ -122,31 +109,23 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  white-space: nowrap; /* ข้อความหัวข้อไม่ตัดคำมั่ว */
 }
 
 .sectionSubtitle {
   font-size: 14px;
   color: #6b7280;
   margin: 4px 0 0 0;
-  white-space: normal;
 }
 
 /* Charts */
 .chartContainer {
   height: 250px;
   width: 100%;
-  position: relative; /* ช่วย Recharts คำนวณขนาด */
-  flex: 1;
-  min-width: 0; /* ช่วยเรื่อง flex layout */
 }
 
 .staffChartContainer {
-  height: 400px; 
+  height: 400px; /* สูงขึ้นเพื่อให้แสดงรายชื่อ 10 คนได้สวยงาม */
   width: 100%;
-  position: relative;
-  flex: 1;
-  min-width: 0;
 }
 
 /* Legend & Badges */
@@ -154,7 +133,6 @@
   display: flex;
   gap: 8px;
   font-size: 12px;
-  flex-wrap: wrap; /* Legend พับได้ */
 }
 
 .legendItem {
@@ -222,8 +200,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  flex-wrap: wrap; /* ป้องกัน badge ทับ title */
-  gap: 8px;
 }
 
 .topBadge {
@@ -235,7 +211,6 @@
   font-weight: bold;
   display: flex;
   align-items: center;
-  white-space: nowrap;
 }
 
 /* Empty State */
