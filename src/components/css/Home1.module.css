@@ -1,9 +1,9 @@
 /* ----------------------------------------------------------------
- * Home1.module.css (Final Fix: New Content + Original Nav)
+ * Home1.module.css
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
-/* --- 1. ส่วน Layout หลัก (ปรับให้กระชับขึ้น) --- */
+/* --- 1. ส่วน Layout หลัก --- */
 /* ============================================ */
 
 .appContainer {
@@ -39,8 +39,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px; /* ระยะห่างเนื้อหา */
-  padding: 60px 20px 140px; /* Padding ล่างเยอะหน่อยกันเมนูบัง */
+  gap: 20px;
+  padding: 60px 20px 140px;
   position: relative;
   z-index: 1;
   min-height: 100vh;
@@ -115,15 +115,15 @@
 }
 
 /* ============================================ */
-/* --- 3. เมนูหลัก 3 อัน (ปรับเป็นแนวนอน List Style) --- */
+/* --- 3. เมนูหลัก 3 อัน (แนวนอน List Style) --- */
 /* ============================================ */
 
 .extraCards {
   display: flex;
-  flex-direction: column; /* เรียงลงมาแนวตั้ง */
+  flex-direction: column;
   gap: 14px;
   width: 100%;
-  max-width: 600px; /* คุมความกว้างไม่ให้ยืดเกิน */
+  max-width: 600px;
   margin-top: 10px;
 }
 
@@ -171,6 +171,7 @@
   color: white;
 }
 
+/* จัดการ SVG ภายใน icon */
 .cardIcon svg {
   width: 22px;
   height: 22px;
@@ -329,10 +330,9 @@
 }
 
 /* ============================================ */
-/* --- 6. Bottom Nav (คืนค่าแบบเดิม Original) --- */
+/* --- 6. Bottom Nav --- */
 /* ============================================ */
 
-/* Desktop/Notebook Style */
 .bottomNav {
   position: fixed;
   bottom: 16px;
@@ -386,12 +386,12 @@
 }
 
 .bottomNav button svg {
-  font-size: 24px; /* ปรับขนาดไอคอนให้พอดี */
+  font-size: 24px;
   height: 24px;
   width: 24px;
 }
 
-/* Sub Menu (Popup) */
+/* --- Sub Menu (Popup) ปรับเป็นแนวนอน --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -402,11 +402,14 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   padding: 6px;
-  min-width: 160px;
+  min-width: auto; /* ปล่อยอิสระ */
   border: 1px solid #eee;
+  
+  /* KEY CHANGE: เรียงแนวนอน */
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  gap: 6px;
+  white-space: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
 }
 
 .subMenuItem {
@@ -444,7 +447,7 @@
     font-size: 12px;
   }
 
-  /* --- Bottom Nav Mobile (คืนค่าเดิม) --- */
+  /* --- Bottom Nav Mobile --- */
   .bottomNav {
     position: fixed;
     bottom: 0;
@@ -455,7 +458,6 @@
     box-sizing: border-box;
     background: #ffffff;
     
-    /* ใช้ Grid แบ่ง 5 ช่องเท่ากันตามเดิม */
     display: grid;
     grid-template-columns: repeat(5, 1fr); 
     gap: 4px; 
@@ -520,20 +522,23 @@
     color: #ffffff; 
     transform: scale(1.05);
   }
-  
+   
   .bottomNav button.active span {
     color: #ffffff;
   }
 
-  /* แก้ไข Popup บนมือถือ */
+  /* แก้ไข Popup บนมือถือให้เป็นแนวนอน */
   .subMenuPopup {
     bottom: calc(100% + 8px);
     left: 50% !important;
     transform: translateX(-50%) !important;
-    min-width: 140px;
+    min-width: auto;
+    
+    /* ยืนยันแนวนอน */
+    flex-direction: row; 
   }
 
-  /* Logic ป้องกัน Popup ล้นจอซ้าย/ขวา */
+  /* ป้องกัน Popup ล้นจอซ้าย/ขวา */
   .bottomNav > div:first-child .subMenuPopup {
     left: 4px !important;
     right: auto !important;
