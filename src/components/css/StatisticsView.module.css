@@ -88,10 +88,12 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   margin-bottom: 24px;
-  /* Ensure container doesn't collapse */
   min-height: 300px; 
   display: flex;
   flex-direction: column;
+  
+  /* --- สำคัญ: เพิ่ม min-width: 0 เพื่อให้ ResponsiveContainer ทำงานใน Grid ได้ --- */
+  min-width: 0; 
 }
 
 .sectionHeader {
@@ -99,6 +101,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  flex-wrap: wrap; /* ยอมให้ตกบรรทัดถ้าจอเล็ก */
+  gap: 12px;
 }
 
 .sectionTitle {
@@ -117,15 +121,13 @@
   margin: 4px 0 0 0;
 }
 
-/* Charts */
+/* Charts Containers */
+/* ปรับให้เป็น Class กลางที่ยืดหยุ่น */
 .chartContainer {
-  height: 250px;
   width: 100%;
-}
-
-.staffChartContainer {
-  height: 400px; /* สูงขึ้นเพื่อให้แสดงรายชื่อ 10 คนได้สวยงาม */
-  width: 100%;
+  /* เอา height fixed ออก เพื่อกำหนด dynamic height ใน JS หรือใช้ min-height */
+  min-height: 250px;
+  position: relative;
 }
 
 /* Legend & Badges */
@@ -133,6 +135,7 @@
   display: flex;
   gap: 8px;
   font-size: 12px;
+  flex-wrap: wrap;
 }
 
 .legendItem {
@@ -167,6 +170,7 @@
   align-items: center;
   gap: 12px;
   font-size: 12px;
+  margin-bottom: 8px; /* เพิ่มระยะห่างเล็กน้อย */
 }
 
 .starLabel {
@@ -200,6 +204,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .topBadge {
