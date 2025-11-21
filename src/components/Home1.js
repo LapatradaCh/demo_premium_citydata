@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import styles from './css/Home1.module.css'; 
+import styles from './css/Home1.module.css'; // ตรวจสอบ path ให้ถูกต้อง
 
-// [แก้ไข] เพิ่ม FaSignOutAlt เข้ามา
+// นำเข้าไอคอนจาก Lucide (สำหรับปุ่มเมนู และ Search)
+import { Search, X, Key, LogIn, Building2 } from 'lucide-react';
+
+// นำเข้าไอคอนจาก React Icons (สำหรับเมนูบาร์ และ Logout)
 import {
   FaMapMarkedAlt,
   FaClipboardList,
   FaChartBar,
   FaCog,
   FaBuilding,
-  FaSignOutAlt, // <-- เพิ่มไอคอนนี้
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 const Home1 = () => {
@@ -39,9 +41,6 @@ const Home1 = () => {
     { name: "ตั้งค่า", icon: FaCog, items: null },
   ];
   
-  // ( ... โค้ดส่วน Logic ทั้งหมดเหมือนเดิม ... )
-  // ( ... (useEffect, logAgencyEntry, handleLogout, ฯลฯ) ... )
-
   useEffect(() => {
     const fetchAgencies = async () => {
       setIsLoading(true);
@@ -51,6 +50,7 @@ const Home1 = () => {
         const accessToken = localStorage.getItem('accessToken');
         if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้ (user_id) กรุณาเข้าสู่ระบบใหม่');
         if (!accessToken) throw new Error('ไม่พบ Access Token กรุณาเข้าสู่ระบบใหม่');
+        
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
         const response = await fetch(apiUrl, {
           headers: {
@@ -59,6 +59,7 @@ const Home1 = () => {
           }
         });
         if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูลได้: ${response.statusText}`);
+        
         const data = await response.json(); 
         const formattedData = data.map(item => ({
           id: item.organization_id,
@@ -66,7 +67,8 @@ const Home1 = () => {
           img: item.url_logo, 
           badge: null 
         }));
-         console.log('data select:', formattedData);
+        
+        console.log('data select:', formattedData);
         setAllAgencies(formattedData);
         setFilteredAgencies(formattedData);
       } catch (err) {
@@ -175,6 +177,7 @@ const Home1 = () => {
       setOpenSubMenu(null);
     } else if (item.items) {
       setActiveTab(item.name);
+      // ถ้ากดแท็บเดิม ให้ปิด ถ้ากดใหม่ให้เปิด
       setOpenSubMenu(openSubMenu === item.name ? null : item.name);
     } else {
       navigate("/home");
@@ -182,19 +185,23 @@ const Home1 = () => {
   };
 
   const handleSubMenuItemClick = (mainTabName, subItemName) => {
-    navigate("/home");
+    // ตั้งค่า Active SubTab
+    setActiveSubTabs(prev => ({
+      ...prev,
+      [mainTabName]: subItemName
+    }));
+    // ปิดเมนู
     setOpenSubMenu(null);
+    // Navigate ไปหน้า Home (หรือจะแก้ Logic ตามต้องการ)
+    navigate("/home");
   };
 
 
   return (
     <>
       <div className={styles.appBody}>
+        {/* ปุ่ม Logout */}
         <div className={styles.logoutIcon}>
-          
-          {/* [--- นี่คือจุดที่แก้ไข ---]
-             เปลี่ยนจาก <svg> มาเป็น <FaSignOutAlt /> ให้เหมือน Home.js
-          */}
           <button onClick={handleLogout}>
             <FaSignOutAlt /> 
             <span>ออกจากระบบ</span>
@@ -203,7 +210,7 @@ const Home1 = () => {
 
         <h1 className={styles.title}>เลือกหน่วยงานที่คุณต้องการ</h1>
 
-        {/* ( ... โค้ดส่วนเนื้อหาที่เหลือเหมือนเดิม ... ) */}
+        {/* ช่องค้นหา */}
         <div className={styles.searchContainer}>
           <input
             type="text"
@@ -223,18 +230,33 @@ const Home1 = () => {
           </button>
         </div>
 
+        {/* 3 ปุ่มหลักพร้อมไอคอน */}
         <div className={styles.extraCards}>
+          
           <div className={styles.extraCard} onClick={() => navigate('/request-code')}>
-            <p>ขอรหัสเพื่อเริ่มใช้งาน</p>
+            <div className={styles.cardIcon}>
+              <Key size={20} />
+            </div>
+            <span className={styles.cardTitle}>ขอรหัสเพื่อเริ่มใช้งาน</span>
           </div>
+
           <div className={styles.extraCard} onClick={() => navigate('/Signin')}>
-            <p>ใส่รหัสเพื่อเริ่มใช้งาน</p>
+             <div className={styles.cardIcon}>
+              <LogIn size={20} />
+            </div>
+            <span className={styles.cardTitle}>ใส่รหัสเพื่อเริ่มใช้งาน</span>
           </div>
+
           <div className={styles.extraCard} onClick={() => navigate('/CreateOrg')}>
-            <p>สร้างหน่วยงาน</p>
+             <div className={styles.cardIcon}>
+              <Building2 size={20} />
+            </div>
+            <span className={styles.cardTitle}>สร้างหน่วยงาน</span>
           </div>
+
         </div>
 
+        {/* รายชื่อหน่วยงาน */}
         <div className={styles.agencySection}>
           {isLoading ? (
             <p className={styles.loadingMessage}>กำลังโหลดข้อมูลหน่วยงาน...</p>
@@ -275,10 +297,12 @@ const Home1 = () => {
         </div>
       </div>
 
-      {/* --- Bottom Nav Bar (ใช้โค้ดเดิม) --- */}
+      {/* --- Bottom Nav Bar --- */}
       <div className={styles.bottomNav}>
         {menuItems.map((item) => (
           <div key={item.name} className={styles.bottomNavButtonContainer}>
+            
+            {/* Popup Menu (แสดงเมื่อ openSubMenu ตรงกับ item.name) */}
             {item.items && openSubMenu === item.name && (
               <div className={styles.subMenuPopup}>
                 {item.items.map((subItem) => (
@@ -296,6 +320,7 @@ const Home1 = () => {
                 ))}
               </div>
             )}
+
             <button
               className={activeTab === item.name ? styles.active : ""}
               onClick={() => handleTabClick(item)}
