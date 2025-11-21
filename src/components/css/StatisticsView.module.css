@@ -1,17 +1,21 @@
+/* StatisticsView.module.css */
+
 /* =========================================
-   1. Layout & Main Wrapper
+   1. Global & Layout
    ========================================= */
 .dashboardWrapper {
   width: 100%;
-  max-width: 1380px;
+  max-width: 1440px; /* ขยายความกว้างสูงสุดเพื่อให้กราฟไม่อึดอัด */
   margin: 0 auto;
-  padding: 16px; /* Mobile: ลด padding รอบนอก */
+  padding: 24px;
   box-sizing: border-box;
   font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #1f2937;
+  color: #1e293b; /* สีเทาเข้ม Slate-800 */
   display: flex;
   flex-direction: column;
   gap: 24px;
+  background-color: #f8fafc; /* พื้นหลังสีเทาอ่อนจางๆ ช่วยให้ Card เด่น */
+  min-height: 100vh;
 }
 
 .container {
@@ -22,106 +26,104 @@
    2. Header Section
    ========================================= */
 .header {
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border-radius: 16px;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 16px;
-  z-index: 40;
+  margin-bottom: 8px;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
 }
 
 .headerSubtitle {
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0;
+  font-size: 14px;
+  color: #64748b; /* Slate-500 */
   font-weight: 400;
 }
 
 /* =========================================
-   3. Status Cards
+   3. Card Styles (Base)
    ========================================= */
-.statusCard {
+.cardBase {
   background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: 16px;
+  /* Shadow นุ่มนวลแบบ Modern UI */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.cardBase:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Status Card (4 Cards บน) --- */
+.statusCard {
+  composes: cardBase;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(229, 231, 235, 0.5);
-  cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
-  height: 100%;
   border-top-width: 4px;
   border-top-style: solid;
+  min-height: 110px;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .cardTitle {
   font-size: 14px;
   font-weight: 600;
-  color: #4b5563;
+  color: #64748b;
+}
+
+.cardPercentBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background-color: #f1f5f9;
+  color: #64748b;
 }
 
 .cardCount {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
-  color: #111827;
-  line-height: 1;
+  color: #0f172a;
+  line-height: 1.1;
 }
 
-.cardPercent {
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
-  background-color: #f3f4f6;
-  padding: 4px 10px;
-  border-radius: 99px;
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-}
-
-/* =========================================
-   4. Section Cards (Charts) - จุดที่แก้สำคัญ
-   ========================================= */
+/* --- Section Card (กราฟต่างๆ) --- */
 .sectionCard {
-  background-color: #ffffff;
-  padding: 20px; /* Mobile: ลด Padding ให้มีที่เหลือให้กราฟ */
-  border-radius: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-  border: 1px solid #f3f4f6;
-  height: 100%;
+  composes: cardBase;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* ป้องกัน Card ยืดออกด้านข้าง */
+  height: 100%;
+  min-height: 420px; /* ความสูงขั้นต่ำเพื่อให้กราฟดูสง่า */
 }
 
 .sectionHeader {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .sectionTitle {
   font-size: 18px;
   font-weight: 700;
-  color: #1f2937;
+  color: #1e293b;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -130,196 +132,173 @@
 
 .sectionSubtitle {
   font-size: 13px;
-  color: #9ca3af;
-  margin: 0;
+  color: #94a3b8;
+  margin-top: 4px;
+  margin-left: 28px; /* จัดให้ตรงกับ Text ของ Title */
 }
 
 /* =========================================
-   5. Charts Containers - แก้กราฟหาย
+   4. Charts Areas
    ========================================= */
 .chartContainer {
-  height: 300px; /* Mobile: ความสูงพอประมาณ */
+  flex: 1;
   width: 100%;
+  min-height: 300px;
   position: relative;
-  min-width: 0; /* FIX: สำคัญมากสำหรับ Grid/Flex บนมือถือ */
 }
 
+/* กราฟ Trend ให้เตี้ยกว่าเพื่อนได้นิดหน่อย เพราะกว้าง */
+.trendChartContainer {
+  composes: chartContainer;
+  min-height: 280px;
+}
+
+/* กราฟ Staff (ความสูง Dynamic) */
 .staffChartContainer {
-  min-height: 300px; /* Mobile */
   width: 100%;
   position: relative;
-  min-width: 0; /* FIX: สำคัญมาก */
+  /* Height จะถูก set จาก inline style ใน React */
 }
 
+/* Legend (คำอธิบายสี) */
 .legendContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
   font-size: 12px;
-  color: #4b5563;
-  margin-top: 8px;
 }
 
 .legendItem {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #f9fafb;
-  padding: 4px 10px;
-  border-radius: 8px;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 /* =========================================
-   6. Satisfaction
+   5. Satisfaction Specifics
    ========================================= */
-.satisfactionHeader {
+.satisfactionContent {
   display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px dashed #e5e7eb;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.satisfactionOverview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px dashed #e2e8f0;
 }
 
 .scoreBig {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: 800;
-  color: #111827;
+  color: #0f172a;
   line-height: 1;
+  letter-spacing: -2px;
+}
+
+.totalReviewLabel {
+  text-align: center;
 }
 
 .starRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
-  margin-bottom: 10px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  color: #475569;
 }
 
 .starLabel {
-  width: 20px;
+  width: 30px;
   font-weight: 600;
-  color: #4b5563;
 }
 
 .progressTrack {
   flex: 1;
-  height: 10px;
-  background-color: #f3f4f6;
-  border-radius: 99px;
+  height: 8px;
+  background-color: #f1f5f9;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  border-radius: 99px;
+  border-radius: 4px;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .starPercent {
-  width: 40px;
+  width: 35px;
   text-align: right;
-  color: #6b7280;
-}
-
-/* =========================================
-   7. Utilities
-   ========================================= */
-.topHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.topBadge {
-  background-color: #eff6ff;
-  color: #2563eb;
-  padding: 6px 12px;
-  border-radius: 99px;
   font-size: 12px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  border: 1px solid #dbeafe;
-}
-
-.emptyState {
-  padding: 60px 20px;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 14px;
-  background-color: #f9fafb;
-  border-radius: 16px;
-  border: 2px dashed #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  color: #94a3b8;
 }
 
 /* =========================================
-   8. Responsive Grid Systems
+   6. Responsive Grid System
    ========================================= */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 column */
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 column */
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
-/* Tablet & Desktop Overrides */
+/* Tablet (iPad) */
 @media (min-width: 768px) {
+  .responsiveGrid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
   .dashboardWrapper {
     padding: 32px;
-    gap: 32px;
-  }
-
-  .sectionCard {
-    padding: 32px; /* Desktop: เพิ่ม Padding กลับ */
-  }
-
-  .chartContainer {
-    height: 400px; /* Desktop: สูงขึ้น */
-  }
-
-  .header {
-    padding: 20px 32px;
-  }
-
-  .sectionHeader, .topHeader {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .responsiveGrid4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .responsiveGrid2 {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
 }
 
-@media (min-width: 1024px) {
-  .responsiveGrid4 {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-  }
-  
-  .responsiveGrid2 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
+/* Utilities */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  font-size: 14px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+  min-height: 200px;
 }
