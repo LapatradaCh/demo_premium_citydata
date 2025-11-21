@@ -33,7 +33,7 @@ const STATUS_COLORS = {
   'NULL': '#d1d5db'              // Light Gray
 };
 
-// --- Mock Data ---
+// --- Mock Data (For other sections) ---
 const trendData = [
   { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
   { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
@@ -45,11 +45,11 @@ const trendData = [
 ];
 
 const efficiencyData = [
-  { id: 'T-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' }, // ย่อ ID ให้สั้นลงเพื่อการแสดงผลที่ดีบนมือถือ
-  { id: 'T-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
-  { id: 'T-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
-  { id: 'T-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
-  { id: 'T-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
+  { id: 'Ticket-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' },
+  { id: 'Ticket-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
+  { id: 'Ticket-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
+  { id: 'Ticket-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
+  { id: 'Ticket-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
 ];
 
 const StatisticsView = ({ organizationId }) => {
@@ -103,25 +103,29 @@ const StatisticsView = ({ organizationId }) => {
           setSatisfactionData(data);
         }
 
-        // 4. Staff Count
+        // 4. Staff Count (UPDATED to match backend: { staff_count: "12" })
         const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
+          // Use 'staff_count' field
           const count = data.staff_count ? parseInt(data.staff_count, 10) : 0;
           setTotalStaffCount(count);
         }
 
-        // 5. Staff Activities
+        // 5. Staff Activities (UPDATED to match backend: field 'new_status' and 'staff_name')
         const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
           
+          // Grouping Logic
           const grouped = {};
+          
           if (Array.isArray(rawData)) {
             rawData.forEach(item => {
                const name = item.staff_name || "Unknown";
+               // BACKEND uses 'new_status', NOT 'status'
                const status = item.new_status || "NULL"; 
-               const count = item.count || 0;
+               const count = item.count || 0; // Backend already returns int
 
                if (!grouped[name]) {
                  grouped[name] = { name: name, total: 0 };
@@ -224,15 +228,14 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
-        {/* Trend Chart */}
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeader}>
             <div>
               <h2 className={styles.sectionTitle}>
                 <TrendingUp color="#3b82f6" size={20} />
-                แนวโน้มเรื่องร้องเรียน
+                แนวโน้มเรื่องร้องเรียน (Trend Analysis)
               </h2>
-              <p className={styles.sectionSubtitle}>เปรียบเทียบยอดรับเรื่อง vs สถานะ 7 วันล่าสุด</p>
+              <p className={styles.sectionSubtitle}>เปรียบเทียบยอดรับเรื่อง vs สถานะในช่วง 7 วันที่ผ่านมา</p>
             </div>
             <div className={styles.legendContainer}>
                <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#3b82f6'}}></div> ทั้งหมด</span>
@@ -241,13 +244,12 @@ const StatisticsView = ({ organizationId }) => {
             </div>
           </div>
           <div className={styles.chartContainer}>
-            {/* ใช้ width 99% เพื่อกระตุ้นให้ resize คำนวณใหม่ในบาง browser */}
-            <ResponsiveContainer width="99%" height="100%">
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none' }} />
                 <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} name="เรื่องทั้งหมด" />
                 <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 3}} name="รอรับเรื่อง" />
                 <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 3}} name="กำลังประสานงาน" />
@@ -258,53 +260,51 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
-          {/* Efficiency Chart */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
                 <h2 className={styles.sectionTitle}>
                   <Clock color="#f97316" size={20} />
-                  เจาะลึกประสิทธิภาพ
+                  เจาะลึกประสิทธิภาพ (Time Breakdown)
                 </h2>
-                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวดเวลา (ชม.)</p>
+                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวดของเวลาในแต่ละขั้นตอน</p>
               </div>
             </div>
             <div className={styles.chartContainer}>
-              <ResponsiveContainer width="99%" height="100%">
-                <BarChart data={efficiencyData} layout="vertical" margin={{ left: -20 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={efficiencyData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                   <XAxis type="number" hide />
                   <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
-                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{fontSize: '12px'}}/>
-                  <Legend iconType="circle" wrapperStyle={{fontSize: '11px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับ" barSize={20} />
-                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสาน" barSize={20} />
-                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนิน" barSize={20} />
+                  <Tooltip cursor={{fill: 'transparent'}} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '12px'}} />
+                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={20} />
+                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={20} />
+                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={20} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </section>
 
-          {/* Problem Type Chart */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
                 <h2 className={styles.sectionTitle}>
                   <Activity color="#6366f1" size={20} />
-                  ประเภทปัญหา vs เวลา
+                  ความสัมพันธ์ ประเภท vs เวลา
                 </h2>
-                <p className={styles.sectionSubtitle}>จำนวนเรื่องเทียบกับเวลาแก้ไขเฉลี่ย</p>
+                <p className={styles.sectionSubtitle}>ประเภทปัญหาเทียบกับเวลาแก้ไข</p>
               </div>
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
-                <ResponsiveContainer width="99%" height="100%">
-                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ left: -10 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical">
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 11}} />
-                    <Tooltip contentStyle={{fontSize: '12px'}} />
-                    <Legend wrapperStyle={{fontSize: '11px'}} />
+                    <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 12}} />
+                    <Tooltip />
+                    <Legend />
                     <Bar dataKey="count" name="จำนวน" barSize={20} fill="#3b82f6" />
                     <Bar dataKey="avgTime" name="เวลาเฉลี่ย" barSize={20} fill="#f97316" />
                   </ComposedChart>
@@ -319,7 +319,6 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
             
-            {/* Satisfaction - เดิมดีอยู่แล้ว แต่ปรับให้สอดคล้อง */}
             <section className={styles.sectionCard}>
                 <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px'}}>ความพึงพอใจ</h3>
                 {satisfactionData ? (
@@ -347,33 +346,32 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
-            {/* Staff Efficiency Chart */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
-                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพ</h3>
+                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพเจ้าหน้าที่</h3>
                     <div className={styles.topBadge}>
                        <Users size={14} style={{marginRight: '4px'}}/>
-                       {totalStaffCount} คน
+                       เจ้าหน้าที่ทั้งหมด: {totalStaffCount} คน
                     </div>
                 </div>
                 
                 <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
-                      <ResponsiveContainer width="99%" height="100%">
+                      <ResponsiveContainer width="100%" height="100%">
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
+                          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={90} 
+                            width={100} 
                             axisLine={false} 
                             tickLine={false} 
-                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
+                            tick={{fontSize: 12, fontWeight: 500, fill: '#374151'}} 
                           />
                           <Tooltip 
                             cursor={{fill: 'transparent'}}
