@@ -60,24 +60,12 @@ const StatisticsView = ({ organizationId }) => {
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // State to track screen size for adjustments
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
-      // In a real app, you might want to handle 'organizationId' being null
-      // but for now we assume it might come from props or context
       
       // Mocking data load if no API (for preview purposes)
       if (!accessToken && !organizationId) {
-        // Simulate loading mock data
         setTimeout(() => {
            setStatsData({
              'รอรับเรื่อง': 2,
@@ -90,11 +78,12 @@ const StatisticsView = ({ organizationId }) => {
            });
            setStaffData([
              { name: 'สมชาย ใจดี', 'รอรับเรื่อง': 1, 'เสร็จสิ้น': 5, total: 6 },
-             { name: 'วิภา รักดี', 'กำลังดำเนินการ': 3, total: 3 }
+             { name: 'วิภา รักดี', 'กำลังดำเนินการ': 3, total: 3 },
+             { name: 'กมลวรรณ', 'ส่งต่อ': 2, 'กำลังประสานงาน': 1, total: 3 }
            ]);
            setTotalStaffCount(12);
            setSatisfactionData({ overall_average: 4.35, total_count: 100, breakdown: [{score: 5, count: 41}, {score: 4, count: 53}, {score: 3, count: 6}] });
-           setProblemTypeData([{name: 'ไฟฟ้า', count: 10, avgTime: 20}, {name: 'ถนน', count: 5, avgTime: 15}]);
+           setProblemTypeData([{name: 'ไฟฟ้าส่องสว่าง', count: 10, avgTime: 20}, {name: 'ถนนชำรุด', count: 5, avgTime: 15}]);
            setLoading(false);
         }, 1000);
         return;
@@ -181,7 +170,7 @@ const StatisticsView = ({ organizationId }) => {
       }
     };
 
-    if (organizationId || true) { // Force run for preview
+    if (organizationId || true) { 
       fetchData();
     }
   }, [organizationId]);
@@ -198,6 +187,15 @@ const StatisticsView = ({ organizationId }) => {
 
   const getPercent = (val, total) => {
     return total > 0 ? (val / total) * 100 : 0;
+  };
+
+  // Helper to calculate dynamic height for Staff Chart
+  const calculateStaffChartHeight = () => {
+    const baseHeight = 100; // Header & Legend space
+    const itemHeight = 70;  // Space per staff member
+    const calculated = (staffData.length * itemHeight) + baseHeight;
+    // Ensure minimum height of 400px, otherwise stretch to fit content
+    return Math.max(calculated, 400);
   };
 
   const statusCardConfig = [
@@ -269,14 +267,14 @@ const StatisticsView = ({ organizationId }) => {
           </div>
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }} />
-                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 3}} activeDot={{r: 5}} name="เรื่องทั้งหมด" />
-                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 2}} name="รอรับเรื่อง" />
-                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 2}} name="กำลังประสานงาน" />
+                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} name="เรื่องทั้งหมด" />
+                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 3}} name="รอรับเรื่อง" />
+                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 3}} name="กำลังประสานงาน" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -284,6 +282,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
+          {/* Efficiency Chart */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -296,20 +295,28 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             <div className={styles.chartContainer}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={efficiencyData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={efficiencyData} layout="vertical" margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                   <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#6b7280'}} />
-                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{fontSize: '12px'}} />
-                  <Legend iconType="circle" wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={15} radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={15} radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={15} radius={[0, 4, 4, 0]} />
+                  <YAxis 
+                    dataKey="id" 
+                    type="category" 
+                    width={100} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fontSize: 12, fill: '#4b5563', fontWeight: 500}} 
+                  />
+                  <Tooltip cursor={{fill: '#f9fafb'}} contentStyle={{fontSize: '13px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '10px'}} />
+                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={24} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={24} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={24} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </section>
 
+          {/* Problem Type vs Time Chart */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -326,11 +333,18 @@ const StatisticsView = ({ organizationId }) => {
                   <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" vertical={true} horizontal={true} />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#4b5563'}} />
-                    <Tooltip contentStyle={{fontSize: '12px'}} />
-                    <Legend wrapperStyle={{fontSize: '11px'}} />
-                    <Bar dataKey="count" name="จำนวน (เรื่อง)" barSize={12} fill="#3b82f6" radius={[0, 4, 4, 0]} />
-                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย (ชม.)" barSize={12} fill="#f97316" radius={[0, 4, 4, 0]} />
+                    <YAxis 
+                      dataKey="name" 
+                      type="category" 
+                      width={110} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 12, fill: '#4b5563', fontWeight: 500}} 
+                    />
+                    <Tooltip contentStyle={{fontSize: '13px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}} />
+                    <Legend wrapperStyle={{fontSize: '12px'}} />
+                    <Bar dataKey="count" name="จำนวน (เรื่อง)" barSize={14} fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย (ชม.)" barSize={14} fill="#f97316" radius={[0, 4, 4, 0]} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -343,6 +357,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
             
+            {/* Satisfaction Score */}
             <section className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
                     <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>ความพึงพอใจ</h3>
@@ -372,6 +387,7 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
+            {/* Staff Performance Ranking (Updated Logic) */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>อันดับประสิทธิภาพ</h3>
@@ -381,27 +397,28 @@ const StatisticsView = ({ organizationId }) => {
                     </div>
                 </div>
                 
-                <div className={styles.staffChartContainer}>
+                {/* Dynamic Height Applied Here */}
+                <div className={styles.staffChartContainer} style={{ height: `${calculateStaffChartHeight()}px` }}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                          margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={90} 
+                            width={120} 
                             axisLine={false} 
                             tickLine={false} 
-                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
+                            tick={{fontSize: 13, fontWeight: 500, fill: '#374151'}} 
                           />
                           <Tooltip 
-                            cursor={{fill: 'transparent'}}
-                            contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
+                            cursor={{fill: '#f9fafb'}}
+                            contentStyle={{ borderRadius: '8px', fontSize: '13px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                           />
                           {Object.keys(STATUS_COLORS).map((status) => (
                             <Bar 
@@ -409,11 +426,11 @@ const StatisticsView = ({ organizationId }) => {
                               dataKey={status} 
                               stackId="staff" 
                               fill={STATUS_COLORS[status]} 
-                              barSize={18}
+                              barSize={24}
                               name={status}
                             />
                           ))}
-                          <Legend iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
+                          <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '15px'}} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
