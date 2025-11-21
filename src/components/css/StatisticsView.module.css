@@ -1,25 +1,39 @@
-/* =========================================
-   1. Layout หลัก (Main Content)
-   ========================================= */
+.container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: 'Sarabun', 'Prompt', sans-serif;
+  padding-bottom: 80px;
+}
+
+.header {
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
 .main {
-  /* Mobile: ให้กว้างเต็มจอและมีขอบนิดหน่อย */
-  width: 100%;
-  max-width: 100%;
-  padding: 16px; 
+  padding: 16px; /* ลด padding ในมือถือลงเล็กน้อย */
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-sizing: border-box; /* สำคัญ: ป้องกัน Padding ดันเฟรมแตก */
+  gap: 24px;
 }
 
-/* =========================================
-   2. Status Cards (การ์ดเล็ก 4 ใบ)
-   ========================================= */
+/* Status Cards */
 .statusCard {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 12px; /* Mobile: ลด padding ลงนิดหน่อย */
+  padding: 12px 16px; /* ปรับ padding ให้กระชับขึ้น */
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s;
   cursor: default;
@@ -29,7 +43,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 90px;
 }
 
 .hoverShadow:hover {
@@ -44,12 +57,12 @@
 }
 
 .cardTitle {
-  font-size: 12px;
+  font-size: 13px; /* ลดขนาดตัวอักษรชื่อการ์ดลงเล็กน้อยเพื่อให้พอดี 2 คอลัมน์ */
   font-weight: 600;
   color: #374151;
-  /* Mobile: ยอมให้ตัดบรรทัดใหม่ได้ ถ้าชื่อยาว */
-  white-space: normal; 
-  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardCount {
@@ -63,30 +76,27 @@
   color: #6b7280;
 }
 
-/* =========================================
-   3. Section Cards (กล่องกราฟใหญ่)
-   ========================================= */
+/* Section Cards */
 .sectionCard {
   background-color: #ffffff;
-  padding: 16px;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
+  /* นำ margin-bottom ออกเพื่อให้ Grid จัดการระยะห่าง */
 }
 
 .sectionHeader {
   display: flex;
-  flex-direction: column; /* Mobile: หัวข้อเรียงแนวตั้ง */
-  gap: 8px;
-  margin-bottom: 16px;
+  flex-direction: column; /* บนมือถือให้เรียงลงมา */
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .sectionTitle {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #1f2937;
   display: flex;
@@ -98,27 +108,26 @@
 .sectionSubtitle {
   font-size: 14px;
   color: #6b7280;
-  margin: 0;
+  margin: 4px 0 0 0;
 }
 
-/* --- Components ย่อยภายใน --- */
+/* Charts */
 .chartContainer {
-  height: 250px; /* Mobile: ลดความสูงให้ดูง่าย */
+  height: 300px; /* เพิ่มความสูงขั้นต่ำของกราฟให้อ่านง่ายขึ้น */
   width: 100%;
 }
 
 .staffChartContainer {
-  height: auto;
-  min-height: 300px;
+  height: 500px; /* สูงขึ้นเพื่อให้แสดงรายชื่อได้ชัดเจน */
   width: 100%;
 }
 
+/* Legend */
 .legendContainer {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* ยอมให้ปัดบรรทัดใหม่ได้ */
   gap: 12px;
   font-size: 12px;
-  margin-top: 8px;
 }
 
 .legendItem {
@@ -133,12 +142,12 @@
   border-radius: 50%;
 }
 
-/* Satisfaction & Top Header */
+/* Satisfaction */
 .satisfactionHeader {
   display: flex;
   align-items: flex-end;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .scoreBig {
@@ -148,6 +157,39 @@
   line-height: 1;
 }
 
+.starRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.starLabel {
+  width: 20px;
+  font-weight: bold;
+  color: #4b5563;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 8px;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.starPercent {
+  width: 32px;
+  text-align: right;
+  color: #6b7280;
+}
+
+/* Top Staff Header */
 .topHeader {
   display: flex;
   flex-direction: column;
@@ -163,9 +205,11 @@
   font-size: 13px;
   font-weight: bold;
   display: inline-flex;
+  align-items: center;
   align-self: flex-start;
 }
 
+/* Empty State */
 .emptyState {
   padding: 40px 20px;
   text-align: center;
@@ -174,74 +218,54 @@
   margin: auto;
 }
 
-/* =========================================
-   4. Responsive Grid System (หัวใจสำคัญ)
-   ========================================= */
+/* Responsive Grids - หัวใจสำคัญของการแก้ปัญหานี้ */
 
-/* Grid สำหรับ Status Cards */
+/* Grid 4 ช่อง (สำหรับการ์ดสถานะ) */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Mobile: 2 คอลัมน์ */
-  gap: 8px; /* Mobile: ช่องว่างแคบลง */
+  grid-template-columns: repeat(2, 1fr); /* เริ่มต้นที่ 2 คอลัมน์สำหรับมือถือ */
+  gap: 12px;
 }
 
-/* Grid สำหรับ Section กราฟ */
+/* Grid 2 ช่อง (สำหรับกราฟใหญ่) */
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 คอลัมน์ (เรียงลงมา) */
-  gap: 16px;
+  grid-template-columns: 1fr; /* มือถือ 1 คอลัมน์ */
+  gap: 24px;
 }
 
-/* =========================================
-   5. Desktop Adjustments (แก้ปัญหาอัดตรงกลาง)
-   ========================================= */
-@media (min-width: 1024px) {
+/* Tablet ขึ้นไป */
+@media (min-width: 768px) {
   .main {
-    /* Desktop: ขยายกว้างขึ้นมาก (จากเดิม 1280px) */
-    max-width: 1600px; 
-    padding: 24px 32px; /* เพิ่มระยะห่างขอบจอ */
-    gap: 24px;
-  }
-
-  /* ปรับ Status Cards เป็น 4 ช่อง */
-  .responsiveGrid4 {
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 24px;
-  }
-
-  /* ปรับกราฟแบ่งครึ่งซ้ายขวา */
-  .responsiveGrid2 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
-  /* ปรับหน้าตาการ์ดให้เหมาะกับจอใหญ่ */
-  .statusCard {
-    padding: 16px 20px;
-  }
-
-  .cardTitle {
-    font-size: 14px;
-    white-space: nowrap; /* Desktop: บรรทัดเดียวสวยๆ */
-  }
-
-  .sectionCard {
     padding: 24px;
   }
 
   .sectionHeader {
-    flex-direction: row;
+    flex-direction: row; /* กลับมาเรียงแนวนอน */
     justify-content: space-between;
     align-items: center;
   }
-
+  
   .topHeader {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
 
-  .chartContainer {
-    height: 350px; /* Desktop: เพิ่มความสูงกราฟ */
+  /* status cards ขยาย grid gap หน่อย */
+  .responsiveGrid4 {
+    gap: 16px; 
+  }
+}
+
+/* Desktop ขึ้นไป */
+@media (min-width: 1024px) {
+  .responsiveGrid4 {
+    grid-template-columns: repeat(4, 1fr); /* จอใหญ่ 4 คอลัมน์ */
+    gap: 24px;
+  }
+  
+  .responsiveGrid2 {
+    grid-template-columns: repeat(2, 1fr); /* จอใหญ่ 2 คอลัมน์ */
   }
 }
