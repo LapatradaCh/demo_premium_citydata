@@ -36,18 +36,17 @@ const STATUS_COLORS = {
 const StatisticsView = ({ organizationId }) => {
   // --- State ---
   const [statsData, setStatsData] = useState(null);
-  const [trendData, setTrendData] = useState([]); // เพิ่ม State สำหรับกราฟเส้น
+  const [trendData, setTrendData] = useState([]); 
   const [staffData, setStaffData] = useState([]);
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
-  const [efficiencyData, setEfficiencyData] = useState([]); // เพิ่ม State สำหรับกราฟแท่งซ้าย
+  const [efficiencyData, setEfficiencyData] = useState([]);
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ฟังก์ชันสำหรับโหลดข้อมูลจำลอง (Mock Data) เพื่อให้กราฟแสดงผลเเน่นอน
+    // ฟังก์ชันโหลดข้อมูลจำลอง (Mock Data)
     const loadMockData = () => {
-        console.log("Loading Mock Data...");
         
         // 1. ข้อมูลการ์ดด้านบน
         setStatsData({
@@ -117,20 +116,13 @@ const StatisticsView = ({ organizationId }) => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
       
-      // --- FORCE MOCK DATA ---
-      // แก้ตรงนี้: ถ้าไม่มี token หรือ organizationId หรือต้องการทดสอบ ให้โหลด Mock เลย
+      // ใช้ Mock Data เสมอเพื่อทดสอบการแสดงผล
       if (!accessToken || !organizationId || true) { 
-        // ใส่ setTimeout เพื่อจำลองการโหลดเล็กน้อยให้ดูสมจริง
         setTimeout(() => {
             loadMockData();
-        }, 800);
+        }, 500);
         return;
       }
-
-      // --- Real API Logic (Code เดิม) ---
-      /* ... ส่วนเชื่อมต่อ API เดิม ... 
-         (ถ้าจะใช้จริง ให้ลบ || true ใน condition ด้านบนออก)
-      */
     };
 
     fetchData();
@@ -174,12 +166,12 @@ const StatisticsView = ({ organizationId }) => {
 
       <main>
         {loading && !statsData ? (
-           <div className={styles.emptyState}>
+           <div className={styles.emptyState} style={{ marginTop: '50px' }}>
               <p>กำลังโหลดข้อมูล...</p>
            </div>
         ) : (
           <>
-            {/* 1. Status Cards */}
+            {/* 1. Status Cards Grid */}
             <section className={styles.responsiveGrid4}>
                 {statusCardConfig.map((card, idx) => {
                 const percent = getPercent(card.count, getTotalCases());
@@ -205,7 +197,7 @@ const StatisticsView = ({ organizationId }) => {
                 })}
             </section>
 
-            {/* 2. Trend Chart Section (Big Chart) */}
+            {/* 2. Trend Chart Section (FIXED HEIGHT) */}
             <div style={{ marginTop: '24px' }}>
                 <section className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
@@ -222,8 +214,8 @@ const StatisticsView = ({ organizationId }) => {
                         <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#c084fc'}}></div> กำลังประสาน</span>
                     </div>
                 </div>
-                {/* เพิ่ม style explicit height เพื่อความชัวร์ */}
-                <div className={styles.trendChartContainer} style={{ height: '300px' }}>
+                {/* *** สำคัญ: ใส่ style height และ width ตรงนี้เพื่อให้กราฟขึ้น *** */}
+                <div className={styles.trendChartContainer} style={{ height: '300px', width: '100%' }}>
                     <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -252,7 +244,8 @@ const StatisticsView = ({ organizationId }) => {
                     <p className={styles.sectionSubtitle}>วิเคราะห์เวลาในแต่ละขั้นตอน</p>
                 </div>
                 </div>
-                <div className={styles.chartContainer} style={{ height: '300px' }}>
+                {/* *** ใส่ Height ตรงนี้ *** */}
+                <div className={styles.chartContainer} style={{ height: '300px', width: '100%' }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={efficiencyData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
@@ -279,7 +272,8 @@ const StatisticsView = ({ organizationId }) => {
                     <p className={styles.sectionSubtitle}>ประเภทปัญหาเทียบกับเวลาแก้ไข</p>
                 </div>
                 </div>
-                <div className={styles.chartContainer} style={{ height: '300px' }}>
+                {/* *** ใส่ Height ตรงนี้ *** */}
+                <div className={styles.chartContainer} style={{ height: '300px', width: '100%' }}>
                 {problemTypeData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart data={problemTypeData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
@@ -351,8 +345,8 @@ const StatisticsView = ({ organizationId }) => {
                             ทั้งหมด: {totalStaffCount} คน
                         </div>
                     </div>
-                    
-                    <div className={styles.staffChartContainer} style={{ height: '300px' }}>
+                    {/* *** ใส่ Height ตรงนี้ *** */}
+                    <div className={styles.staffChartContainer} style={{ height: '300px', width: '100%' }}>
                         {staffData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart 
