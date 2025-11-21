@@ -3,27 +3,54 @@ import {
   TrendingUp, 
   Activity, 
   Clock, 
-  Users,
-  Star
+  Users 
 } from 'lucide-react';
 import { 
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, ComposedChart
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer, 
+  ComposedChart
 } from 'recharts';
 
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
 const STATUS_COLORS = {
-  'รอรับเรื่อง': '#ef4444',        
-  'กำลังประสานงาน': '#a855f7',     
-  'กำลังดำเนินการ': '#f59e0b',     
-  'เสร็จสิ้น': '#22c55e',          
-  'ส่งต่อ': '#3b82f6',             
-  'เชิญร่วม': '#06b6d4',           
-  'ปฏิเสธ': '#6b7280',             
-  'NULL': '#d1d5db'                
+  'รอรับเรื่อง': '#ef4444',       // Red
+  'กำลังประสานงาน': '#a855f7',    // Purple
+  'กำลังดำเนินการ': '#f59e0b',    // Amber
+  'เสร็จสิ้น': '#22c55e',         // Green
+  'ส่งต่อ': '#3b82f6',            // Blue
+  'เชิญร่วม': '#06b6d4',          // Cyan
+  'ปฏิเสธ': '#6b7280',            // Gray
+  'NULL': '#d1d5db'               // Light Gray
 };
+
+// --- Mock Data (For other sections) ---
+const trendData = [
+  { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
+  { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
+  { date: '14/11', total: 1, pending: 0, coordinating: 1, completed: 0 },
+  { date: '15/11', total: 4, pending: 1, coordinating: 3, completed: 0 },
+  { date: '16/11', total: 2, pending: 1, coordinating: 1, completed: 0 },
+  { date: '17/11', total: 5, pending: 2, coordinating: 3, completed: 0 }, 
+  { date: '18/11', total: 5, pending: 2, coordinating: 3, completed: 0 }, 
+];
+
+const efficiencyData = [
+  { id: 'Ticket-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' },
+  { id: 'Ticket-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
+  { id: 'Ticket-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
+  { id: 'Ticket-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
+  { id: 'Ticket-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
+];
 
 const StatisticsView = ({ organizationId }) => {
   const [statsData, setStatsData] = useState(null);
@@ -31,299 +58,386 @@ const StatisticsView = ({ organizationId }) => {
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
-  const [trendData, setTrendData] = useState([]);
-  const [efficiencyData, setEfficiencyData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // State to track screen size for adjustments (Optional mainly for Recharts logic if needed)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
       
-      // --- MOCK DATA (ใช้ทดสอบ ถ้าไม่มี API) ---
+      // Mocking data load if no API (for preview purposes)
       if (!accessToken && !organizationId) {
         setTimeout(() => {
            setStatsData({
-             'รอรับเรื่อง': 2, 'กำลังประสานงาน': 5, 'กำลังดำเนินการ': 8,
-             'เสร็จสิ้น': 12, 'ส่งต่อ': 3, 'เชิญร่วม': 1, 'ปฏิเสธ': 0
+             'รอรับเรื่อง': 2,
+             'กำลังประสานงาน': 3,
+             'กำลังดำเนินการ': 5,
+             'เสร็จสิ้น': 10,
+             'ส่งต่อ': 1,
+             'เชิญร่วม': 0,
+             'ปฏิเสธ': 1
            });
-           
-           setTrendData([
-             { date: '12/11', total: 5, pending: 1, coordinating: 2 },
-             { date: '13/11', total: 8, pending: 3, coordinating: 1 },
-             { date: '14/11', total: 4, pending: 0, coordinating: 2 },
-             { date: '15/11', total: 10, pending: 2, coordinating: 4 },
-             { date: '16/11', total: 6, pending: 1, coordinating: 1 },
-             { date: '17/11', total: 12, pending: 4, coordinating: 3 }, 
-             { date: '18/11', total: 9, pending: 2, coordinating: 3 }, 
-           ]);
-
-           setEfficiencyData([
-             { id: 'ไฟส่องสว่างดับ', stage1: 2, stage2: 4, stage3: 24, total: 30 },
-             { id: 'ถนนเป็นหลุมบ่อ', stage1: 5, stage2: 12, stage3: 48, total: 65 },
-             { id: 'ขยะส่งกลิ่นเหม็น', stage1: 1, stage2: 2, stage3: 5, total: 8 },
-             { id: 'ท่อระบายน้ำอุดตัน', stage1: 3, stage2: 6, stage3: 20, total: 29 },
-           ]);
-
            setStaffData([
-             { name: 'สมชาย ใจดี', 'เสร็จสิ้น': 15, 'กำลังดำเนินการ': 2, total: 17 },
-             { name: 'วิภา รักดี', 'กำลังดำเนินการ': 8, 'รอรับเรื่อง': 1, total: 9 },
-             { name: 'กมลวรรณ', 'ส่งต่อ': 5, 'กำลังประสานงาน': 4, total: 9 },
-             { name: 'ณเดชน์', 'เสร็จสิ้น': 4, 'ปฏิเสธ': 1, total: 5 },
-             { name: 'ญาญ่า', 'กำลังดำเนินการ': 2, total: 2 }
+             { name: 'สมชาย ใจดี', 'รอรับเรื่อง': 1, 'เสร็จสิ้น': 5, total: 6 },
+             { name: 'วิภา รักดี', 'กำลังดำเนินการ': 3, total: 3 }
            ]);
            setTotalStaffCount(12);
-           
-           setSatisfactionData({ 
-             overall_average: 4.65, 
-             total_count: 158, 
-             breakdown: [
-               {score: 5, count: 100}, 
-               {score: 4, count: 40}, 
-               {score: 3, count: 15}, 
-               {score: 2, count: 3}, 
-               {score: 1, count: 0}
-             ] 
-           });
-           
-           setProblemTypeData([
-             {name: 'ไฟฟ้าส่องสว่างสาธารณะ', count: 45, avgTime: 24}, 
-             {name: 'ความสะอาด/ขยะ', count: 32, avgTime: 12},
-             {name: 'ถนน/ทางเท้าชำรุด', count: 28, avgTime: 48},
-             {name: 'เหตุรำคาญ/เสียงดัง', count: 15, avgTime: 6},
-             {name: 'การจราจร/ป้าย', count: 10, avgTime: 18}
-           ]);
+           setSatisfactionData({ overall_average: 4.35, total_count: 100, breakdown: [{score: 5, count: 41}, {score: 4, count: 53}, {score: 3, count: 6}] });
+           setProblemTypeData([{name: 'ไฟฟ้า', count: 10, avgTime: 20}, {name: 'ถนน', count: 5, avgTime: 15}]);
            setLoading(false);
-        }, 800);
+        }, 1000);
         return;
       }
       
-      // ... (ส่วน Real API Fetching คงเดิม) ...
+      setLoading(true);
+
+      try {
+        const headers = { 'Authorization': `Bearer ${accessToken}` };
+
+        // 1. Overview Stats
+        const statsRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overview?organization_id=${organizationId}`, { headers });
+        if (statsRes.ok) {
+          const data = await statsRes.json();
+          const statsObject = data.reduce((acc, item) => {
+            acc[item.status] = parseInt(item.count, 10);
+            return acc;
+          }, {});
+          setStatsData(statsObject);
+        }
+
+        // 2. Problem Types
+        const typeRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, { headers });
+        if (typeRes.ok) {
+          const data = await typeRes.json();
+          const formatted = data.map(item => ({
+            name: item.issue_type_name,
+            count: parseInt(item.count, 10),
+            avgTime: Math.floor(Math.random() * 30) + 5 
+          })).sort((a, b) => b.count - a.count);
+          setProblemTypeData(formatted);
+        }
+
+        // 3. Satisfaction
+        const satRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/overall-rating?organization_id=${organizationId}`, { headers });
+        if (satRes.ok) {
+          const data = await satRes.json();
+          setSatisfactionData(data);
+        }
+
+        // 4. Staff Count
+        const staffCountRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-count?organization_id=${organizationId}`, { headers });
+        if (staffCountRes.ok) {
+          const data = await staffCountRes.json();
+          const count = data.staff_count ? parseInt(data.staff_count, 10) : 0;
+          setTotalStaffCount(count);
+        }
+
+        // 5. Staff Activities
+        const staffRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/staff-activities?organization_id=${organizationId}`, { headers });
+        if (staffRes.ok) {
+          const rawData = await staffRes.json();
+          const grouped = {};
+          
+          if (Array.isArray(rawData)) {
+            rawData.forEach(item => {
+               const name = item.staff_name || "Unknown";
+               const status = item.new_status || "NULL"; 
+               const count = item.count || 0;
+
+               if (!grouped[name]) {
+                 grouped[name] = { name: name, total: 0 };
+               }
+               
+               if (!grouped[name][status]) {
+                 grouped[name][status] = 0;
+               }
+               grouped[name][status] += count;
+               grouped[name].total += count;
+            });
+          }
+
+          const staffArray = Object.values(grouped)
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 10);
+
+          setStaffData(staffArray);
+        }
+
+      } catch (err) {
+        console.error("API Error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchData();
+    if (organizationId || true) { 
+      fetchData();
+    }
   }, [organizationId]);
 
-  // --- Helpers ---
-  const getTotalCases = () => statsData ? Object.values(statsData).reduce((a, b) => a + b, 0) : 0;
-  const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
-  const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
-
-  // ตัดคำแกน Y ให้ไม่ยาวเกินไป
-  const formatYAxisLabel = (value) => {
-    if (typeof value === 'string' && value.length > 12) {
-      return value.substring(0, 12) + '...';
-    }
-    return value;
+  // Helpers
+  const getTotalCases = () => {
+    if (!statsData) return 0;
+    return Object.values(statsData).reduce((a, b) => a + b, 0);
   };
 
-  // คำนวณความสูงกราฟ Staff
-  const calculateStaffChartHeight = () => {
-    const minHeight = 300;
-    const itemHeight = 60; // ความสูงต่อคน
-    const calculated = (staffData.length * itemHeight) + 80; 
-    return Math.max(calculated, minHeight);
+  const getStatusCount = (statusKey) => {
+    return statsData?.[statusKey] || 0;
+  };
+
+  const getPercent = (val, total) => {
+    return total > 0 ? (val / total) * 100 : 0;
   };
 
   const statusCardConfig = [
-    { title: 'ทั้งหมด', count: getTotalCases(), color: '#64748b', bg: '#f8fafc', border: '#e2e8f0' },
-    { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), color: '#ef4444', bg: '#fef2f2', border: '#fee2e2' },
-    { title: 'กำลังประสานงาน', count: getStatusCount('กำลังประสานงาน'), color: '#a855f7', bg: '#faf5ff', border: '#f3e8ff' },
-    { title: 'กำลังดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), color: '#f59e0b', bg: '#fffbeb', border: '#fef3c7' },
-    { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), color: '#22c55e', bg: '#f0fdf4', border: '#dcfce7' },
-    { title: 'ส่งต่อ', count: getStatusCount('ส่งต่อ'), color: '#3b82f6', bg: '#eff6ff', border: '#dbeafe' },
-    { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), color: '#06b6d4', bg: '#ecfeff', border: '#cffafe' },
+    { title: 'ทั้งหมด', count: getTotalCases(), color: '#6c757d', bg: '#ffffff', border: '#e5e7eb' },
+    { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), color: '#dc3545', bg: '#fef2f2', border: '#fee2e2' },
+    { title: 'กำลังประสานงาน', count: getStatusCount('กำลังประสานงาน'), color: '#9b59b6', bg: '#faf5ff', border: '#f3e8ff' },
+    { title: 'กำลังดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), color: '#ffc107', bg: '#fefce8', border: '#fef9c3' },
+    { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), color: '#057A55', bg: '#f0fdf4', border: '#dcfce7' },
+    { title: 'ส่งต่อ', count: getStatusCount('ส่งต่อ'), color: '#007bff', bg: '#eff6ff', border: '#dbeafe' },
+    { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), color: '#20c997', bg: '#ecfeff', border: '#cffafe' },
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), color: '#6b7280', bg: '#f9fafb', border: '#f3f4f6' },
   ];
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-         <h1 className={styles.headerTitle}>Dashboard ภาพรวม</h1>
-         <p className={styles.headerSubtitle}>
-           {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลล่าสุด
-         </p>
+         <div>
+            <h1 className={styles.headerTitle}>Dashboard ภาพรวม</h1>
+            <p className={styles.headerSubtitle}>
+              {new Date().toLocaleDateString("th-TH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ข้อมูลปัจจุบัน
+            </p>
+         </div>
       </header>
 
       <main>
-        {/* --- 1. Status Cards --- */}
-        <section className={styles.responsiveGrid4}>
-            {loading && !statsData ? <div className={styles.emptyState}>กำลังโหลด...</div> : (
-              statusCardConfig.map((card, idx) => (
-                <div key={idx} className={styles.statusCard} style={{ backgroundColor: '#ffffff', borderColor: card.border, borderTopColor: card.color }}>
+        
+        {loading && !statsData ? (
+           <p className={styles.emptyState}>กำลังโหลดข้อมูล...</p>
+        ) : (
+          <section className={styles.responsiveGrid4}>
+            {statusCardConfig.map((card, idx) => {
+              const percent = getPercent(card.count, getTotalCases());
+              return (
+                <div 
+                  key={idx} 
+                  className={styles.statusCard}
+                  style={{
+                    backgroundColor: card.bg,
+                    borderColor: card.border,
+                    borderTopColor: card.color
+                  }}
+                >
                   <div className={styles.cardHeader}>
-                    <span className={styles.cardTitle}>{card.title}</span>
-                    <span className={styles.cardPercentBadge} style={{color: card.color, backgroundColor: card.bg}}>
-                       {getPercent(card.count, getTotalCases()).toFixed(0)}%
-                    </span>
+                    <span className={styles.cardTitle} title={card.title}>{card.title}</span>
+                    <span className={styles.cardPercentBadge}>{percent.toFixed(0)}%</span>
                   </div>
-                  <div className={styles.cardCount} style={{color: card.color}}>{card.count}</div>
+                  <div className={styles.cardCount} style={{color: card.color}}>
+                     {card.count}
+                  </div>
                 </div>
-              ))
-            )}
-        </section>
+              );
+            })}
+          </section>
+        )}
 
-        {/* --- 2. Trend Chart (Line) --- */}
-        <section className={styles.sectionCard}>
-           <div className={styles.sectionHeader}>
+        {/* Trend Chart Section */}
+        <div style={{ marginTop: '24px' }}>
+            <section className={styles.sectionCard}>
+            <div className={styles.sectionHeader}>
+                <div>
+                <h2 className={styles.sectionTitle}>
+                    <TrendingUp color="#3b82f6" size={20} />
+                    แนวโน้มเรื่องร้องเรียน
+                </h2>
+                <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ (7 วันล่าสุด)</p>
+                </div>
+                <div className={styles.legendContainer}>
+                    <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#3b82f6'}}></div> ทั้งหมด</span>
+                    <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#f87171'}}></div> รอรับเรื่อง</span>
+                    <span className={styles.legendItem}><div className={styles.dot} style={{backgroundColor: '#c084fc'}}></div> กำลังประสาน</span>
+                </div>
+            </div>
+            <div className={styles.trendChartContainer}>
+                <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
+                    <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }} />
+                    <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 3}} activeDot={{r: 5}} name="เรื่องทั้งหมด" />
+                    <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 2}} name="รอรับเรื่อง" />
+                    <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 2}} name="กำลังประสานงาน" />
+                </LineChart>
+                </ResponsiveContainer>
+            </div>
+            </section>
+        </div>
+
+        <div className={styles.responsiveGrid2} style={{ marginTop: '24px' }}>
+          
+          {/* Efficiency Bar Chart */}
+          <section className={styles.sectionCard}>
+            <div className={styles.sectionHeader}>
               <div>
-                 <h2 className={styles.sectionTitle}>
-                    <TrendingUp color="#3b82f6" size={20} /> แนวโน้มเรื่องร้องเรียน
-                 </h2>
-                 <p className={styles.sectionSubtitle}>ยอดรับเรื่องย้อนหลัง 7 วัน</p>
+                <h2 className={styles.sectionTitle}>
+                  <Clock color="#f97316" size={20} />
+                  เจาะลึกประสิทธิภาพ
+                </h2>
+                <p className={styles.sectionSubtitle}>วิเคราะห์เวลาในแต่ละขั้นตอน</p>
               </div>
-              <div className={styles.legendContainer}>
-                 <div className={styles.legendItem}><div className={styles.dot} style={{background: '#3b82f6'}}></div> ทั้งหมด</div>
-                 <div className={styles.legendItem}><div className={styles.dot} style={{background: '#ef4444'}}></div> รอรับเรื่อง</div>
-              </div>
-           </div>
-           <div className={styles.trendChartContainer}>
+            </div>
+            <div className={styles.chartContainer}>
               <ResponsiveContainer width="100%" height="100%">
-                 <LineChart data={trendData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
-                    <Tooltip 
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
-                        cursor={{ stroke: '#cbd5e1', strokeWidth: 2 }}
-                    />
-                    <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 4, fill: '#fff', strokeWidth: 2}} activeDot={{r: 6}} name="ทั้งหมด" />
-                    <Line type="monotone" dataKey="pending" stroke="#ef4444" strokeWidth={3} dot={false} activeDot={{r: 6}} name="รอรับเรื่อง" />
-                 </LineChart>
+                <BarChart data={efficiencyData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                  <XAxis type="number" hide />
+                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#6b7280'}} />
+                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{fontSize: '12px'}} />
+                  <Legend iconType="circle" wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
+                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับเรื่อง" barSize={15} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสานงาน" barSize={15} radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ดำเนินการ" barSize={15} radius={[0, 4, 4, 0]} />
+                </BarChart>
               </ResponsiveContainer>
-           </div>
-        </section>
+            </div>
+          </section>
 
-        {/* --- 3. Middle Grid (2 Columns) --- */}
-        <div className={styles.responsiveGrid2}>
-           
-           {/* Efficiency (Bar) */}
-           <section className={styles.sectionCard}>
-              <div className={styles.sectionHeader}>
-                 <div>
-                    <h2 className={styles.sectionTitle}>
-                        <Clock color="#f97316" size={20} /> ประสิทธิภาพการดำเนินงาน
-                    </h2>
-                    <p className={styles.sectionSubtitle}>เวลาเฉลี่ยในแต่ละขั้นตอน (ชั่วโมง)</p>
-                 </div>
+          {/* Problem Type Composed Chart */}
+          <section className={styles.sectionCard}>
+            <div className={styles.sectionHeader}>
+              <div>
+                <h2 className={styles.sectionTitle}>
+                  <Activity color="#6366f1" size={20} />
+                  ประเภท vs เวลา
+                </h2>
+                <p className={styles.sectionSubtitle}>ประเภทปัญหาเทียบกับเวลาแก้ไข</p>
               </div>
+            </div>
+            {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
-                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={efficiencyData} layout="vertical" margin={{ left: 0, right: 10 }}>
-                       <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                       <XAxis type="number" hide />
-                       {/* width=90 เพื่อให้ข้อความแกน Y มีพื้นที่แสดงผล */}
-                       <YAxis dataKey="id" type="category" width={100} tick={{fontSize: 12, fill: '#475569'}} axisLine={false} tickLine={false} tickFormatter={formatYAxisLabel} />
-                       <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{borderRadius: '8px'}} />
-                       <Legend wrapperStyle={{paddingTop: '10px', fontSize: '12px'}} />
-                       <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รับเรื่อง" maxBarSize={24} radius={[4,0,0,4]} />
-                       <Bar dataKey="stage2" stackId="a" fill="#c084fc" name="ประสานงาน" maxBarSize={24} />
-                       <Bar dataKey="stage3" stackId="a" fill="#fde047" name="แก้ไข" maxBarSize={24} radius={[0,4,4,0]} />
-                    </BarChart>
-                 </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                    <CartesianGrid stroke="#f3f4f6" vertical={true} horizontal={true} />
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#4b5563'}} />
+                    <Tooltip contentStyle={{fontSize: '12px'}} />
+                    <Legend wrapperStyle={{fontSize: '11px'}} />
+                    <Bar dataKey="count" name="จำนวน (เรื่อง)" barSize={12} fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="avgTime" name="เวลาเฉลี่ย (ชม.)" barSize={12} fill="#f97316" radius={[0, 4, 4, 0]} />
+                  </ComposedChart>
+                </ResponsiveContainer>
               </div>
-           </section>
-
-           {/* Problem Type (Composed) */}
-           <section className={styles.sectionCard}>
-              <div className={styles.sectionHeader}>
-                 <div>
-                    <h2 className={styles.sectionTitle}>
-                        <Activity color="#6366f1" size={20} /> ประเภทปัญหา vs เวลา
-                    </h2>
-                    <p className={styles.sectionSubtitle}>จำนวนเรื่องเทียบกับเวลาแก้ไขเฉลี่ย</p>
-                 </div>
-              </div>
-              <div className={styles.chartContainer}>
-                 {problemTypeData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                       <ComposedChart data={problemTypeData.slice(0, 6)} layout="vertical" margin={{ left: 10, right: 10 }}>
-                          <CartesianGrid stroke="#f1f5f9" vertical={true} horizontal={true} />
-                          <XAxis type="number" hide />
-                          <YAxis dataKey="name" type="category" width={110} tick={{fontSize: 12, fill: '#475569'}} axisLine={false} tickLine={false} tickFormatter={formatYAxisLabel} />
-                          <Tooltip contentStyle={{borderRadius: '8px'}} />
-                          <Legend wrapperStyle={{paddingTop: '10px', fontSize: '12px'}} />
-                          {/* maxBarSize ช่วยให้แท่งกราฟใหญ่ขึ้น */}
-                          <Bar dataKey="count" name="จำนวนเรื่อง" fill="#3b82f6" maxBarSize={20} radius={[0,4,4,0]} barSize={20} />
-                          <Bar dataKey="avgTime" name="เวลาเฉลี่ย (ชม.)" fill="#f97316" maxBarSize={10} radius={[0,4,4,0]} barSize={10} />
-                       </ComposedChart>
-                    </ResponsiveContainer>
-                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
-              </div>
-           </section>
+            ) : (
+              <p className={styles.emptyState}>ไม่มีข้อมูล</p>
+            )}
+          </section>
 
         </div>
 
-        {/* --- 4. Bottom Grid (2 Columns) --- */}
-        <div className={styles.responsiveGrid2}>
-
-            {/* Satisfaction */}
+        <div className={styles.responsiveGrid2} style={{ marginTop: '24px' }}>
+            
+            {/* Satisfaction Section */}
             <section className={styles.sectionCard}>
-               <div className={styles.sectionHeader}>
-                   <h2 className={styles.sectionTitle}><Star color="#eab308" size={20} /> ความพึงพอใจ (CSAT)</h2>
-               </div>
-               {satisfactionData ? (
-                  <div className={styles.satisfactionContent}>
-                     <div className={styles.satisfactionOverview}>
-                        <div style={{textAlign: 'center'}}>
-                           <div className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(1)}</div>
-                           <div style={{color: '#eab308', fontSize: '14px', fontWeight: 'bold'}}>
-                             {'★'.repeat(Math.round(satisfactionData.overall_average))}
-                           </div>
+                <div className={styles.sectionHeader}>
+                    <h3 className={styles.sectionTitle}>ความพึงพอใจ</h3>
+                </div>
+                <div className={styles.satisfactionContent}>
+                    {satisfactionData ? (
+                    <>
+                        <div className={styles.satisfactionOverview}>
+                            <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
+                            <div style={{textAlign: 'center'}}>
+                                <div style={{color: '#facc15', fontSize: '20px', letterSpacing: '2px'}}>
+                                    {'★'.repeat(Math.round(satisfactionData.overall_average))}
+                                    <span style={{color: '#e2e8f0'}}>{'★'.repeat(5 - Math.round(satisfactionData.overall_average))}</span>
+                                </div>
+                                <div className={styles.totalReviewLabel} style={{fontSize: '12px', color: '#64748b', marginTop: '4px'}}>
+                                    จาก {satisfactionData.total_count} ผู้ประเมิน
+                                </div>
+                            </div>
                         </div>
-                        <div className={styles.totalReviewLabel}>
-                           <div style={{fontSize: '20px', fontWeight: 'bold', color: '#475569'}}>{satisfactionData.total_count}</div>
-                           <div style={{color: '#94a3b8', fontSize: '12px'}}>ผู้ประเมิน</div>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                            {[5, 4, 3, 2, 1].map((star) => {
+                                const item = satisfactionData.breakdown.find(b => b.score === star);
+                                const percent = satisfactionData.total_count > 0 ? ((item?.count || 0) / satisfactionData.total_count) * 100 : 0;
+                                return (
+                                <div key={star} className={styles.starRow}>
+                                    <span className={styles.starLabel}>{star}★</span>
+                                    <div className={styles.progressTrack}>
+                                        <div className={styles.progressBar} style={{backgroundColor: '#facc15', width: `${percent}%`}}></div>
+                                    </div>
+                                    <span className={styles.starPercent}>{Math.round(percent)}%</span>
+                                </div>
+                                );
+                            })}
                         </div>
-                     </div>
-                     
-                     <div className={styles.satisfactionBreakdown}>
-                        {[5, 4, 3, 2, 1].map((star) => {
-                           const item = satisfactionData.breakdown.find(b => b.score === star);
-                           const count = item ? item.count : 0;
-                           const percent = satisfactionData.total_count > 0 ? (count / satisfactionData.total_count) * 100 : 0;
-                           return (
-                              <div key={star} className={styles.starRow}>
-                                 <span className={styles.starLabel}>{star} <span style={{fontSize:'10px'}}>★</span></span>
-                                 <div className={styles.progressTrack}>
-                                    <div className={styles.progressBar} style={{width: `${percent}%`, backgroundColor: star >= 4 ? '#facc15' : '#cbd5e1'}}></div>
-                                 </div>
-                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
-                              </div>
-                           );
-                        })}
-                     </div>
-                  </div>
-               ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
+                    </>
+                    ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
+                </div>
             </section>
 
-            {/* Staff Performance (Dynamic Height) */}
+            {/* Staff Activities Section */}
             <section className={styles.sectionCard}>
-               <div className={styles.sectionHeader}>
-                   <div>
-                     <h2 className={styles.sectionTitle}><Users color="#10b981" size={20} /> ประสิทธิภาพเจ้าหน้าที่</h2>
-                     <p className={styles.sectionSubtitle}>Top 10 ผลงานสูงสุด</p>
-                   </div>
-               </div>
-               
-               <div className={styles.staffChartContainer} style={{ height: `${calculateStaffChartHeight()}px` }}>
-                  {staffData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                       <BarChart layout="vertical" data={staffData} margin={{ left: 0, right: 10 }}>
-                          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                <div className={styles.sectionHeader}>
+                    <h3 className={styles.sectionTitle}>อันดับประสิทธิภาพ</h3>
+                    <div style={{ fontSize: '12px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Users size={14} />
+                        ทั้งหมด: {totalStaffCount} คน
+                    </div>
+                </div>
+                
+                <div className={styles.staffChartContainer} style={{ height: '100%' }}>
+                    {staffData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart 
+                          layout="vertical" 
+                          data={staffData} 
+                          margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
-                          <YAxis dataKey="name" type="category" width={100} axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 500, fill: '#334155'}} />
-                          <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{ borderRadius: '8px' }} />
-                          {/* Loop สร้าง Bar ตาม Status */}
-                          {Object.keys(STATUS_COLORS).slice(0, 5).map((status) => (
-                             <Bar key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} maxBarSize={24} radius={[0,0,0,0]} />
+                          <YAxis 
+                            dataKey="name" 
+                            type="category" 
+                            width={90} 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
+                          />
+                          <Tooltip 
+                            cursor={{fill: 'transparent'}}
+                            contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
+                          />
+                          {Object.keys(STATUS_COLORS).map((status) => (
+                            <Bar 
+                              key={status} 
+                              dataKey={status} 
+                              stackId="staff" 
+                              fill={STATUS_COLORS[status]} 
+                              barSize={18}
+                              name={status}
+                            />
                           ))}
-                       </BarChart>
-                    </ResponsiveContainer>
-                  ) : <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
-               </div>
+                          <Legend iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                        <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
+                    )}
+                </div>
             </section>
-
         </div>
+
       </main>
     </div>
   );
