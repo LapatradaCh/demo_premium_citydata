@@ -176,7 +176,6 @@
 .buttonGroup {
   margin-top: 1rem; 
   display: flex;
-  /* --- FIX 1: เปลี่ยนเป็น column สำหรับมือถือ เพื่อให้ปุ่มเรียงลงมา --- */
   flex-direction: column; 
   justify-content: center;
   gap: 1rem; 
@@ -196,7 +195,6 @@
   justify-content: center;
   align-items: center;
   gap: 0.5rem; 
-  /* --- FIX 2: บังคับไม่ให้ตัดบรรทัด --- */
   white-space: nowrap; 
 }
 
@@ -469,6 +467,7 @@
   font-weight: 600;
   color: var(--color-primary);
   padding: 0 0.75rem; 
+  white-space: nowrap; /* Fix title wrap */
 }
 
 .codeBoxSwitch {
@@ -486,6 +485,7 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   border: 1px solid var(--color-border);
   transition: var(--transition);
+  white-space: nowrap; /* Prevent text wrapping */
 }
 .codeBoxSwitch:hover {
   color: var(--color-secondary);
@@ -537,6 +537,7 @@
   transition: var(--transition);
   flex-shrink: 0; 
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  white-space: nowrap; /* Prevent button wrap */
 }
 .codeCopyButton:hover {
   background: var(--color-surface);
@@ -611,7 +612,7 @@
 }
 
 /* ==================================================================
-* Media Queries
+* Media Queries (Improved for Mobile Fixes)
 * ================================================================== */
 @media (min-width: 768px) {
   .page {
@@ -647,6 +648,76 @@
 
 /* Media Query for Logo Upload Box */
 @media (max-width: 500px) {
+  /* 1. Reduce Padding on Mobile */
+  .page {
+      padding: 1.25rem; /* ลด padding ลงครึ่งหนึ่ง */
+  }
+  
+  .container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+  }
+
+  /* 2. Adjust Headings */
+  .pageTitle {
+      font-size: 1.5rem; /* เล็กลงจาก 2rem */
+  }
+  .contentTitle {
+      font-size: 1.25rem; /* เล็กลง */
+      margin-bottom: 1rem;
+  }
+  
+  .accordionHeader {
+      padding: 1rem; /* กระชับพื้นที่ */
+      gap: 0.75rem;
+  }
+  .accordionTitle {
+      font-size: 1rem;
+  }
+
+  /* 3. Fix Code Box (Stack on Mobile) - แก้ปัญหาปุ่มแตก */
+  .codeBoxHeader {
+      flex-direction: column; /* เรียงแนวตั้ง */
+      gap: 0.5rem;
+      align-items: stretch; /* ขยายเต็มความกว้าง */
+      height: auto;
+      padding: 0.75rem;
+      border-radius: var(--radius-card);
+  }
+  
+  .codeBoxType {
+      text-align: center;
+      padding-bottom: 0.25rem;
+  }
+  
+  .codeBoxSwitch {
+      width: 100%;
+      text-align: center;
+      display: block; /* เต็มบรรทัด */
+  }
+
+  /* 4. Fix Copy Code Box (Stack on Mobile) */
+  .codeBoxDisplayWrapper {
+      flex-direction: column; /* เรียงแนวตั้ง */
+      gap: 0.5rem;
+      align-items: stretch;
+      height: auto;
+      padding: 0.75rem;
+      border-radius: var(--radius-card);
+  }
+  
+  .codeBoxDisplay {
+      text-align: center;
+      padding: 0.25rem 0;
+      font-size: 1.25rem; /* ใหญ่ขึ้นให้อ่านง่าย */
+  }
+  
+  .codeCopyButton {
+      justify-content: center;
+      width: 100%;
+  }
+
+  /* 5. Logo Upload */
   .logoUploadBox {
       grid-template-columns: 1fr; /* Stack on mobile */
       justify-items: center; /* Center preview */
