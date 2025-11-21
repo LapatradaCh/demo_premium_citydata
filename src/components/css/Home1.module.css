@@ -1,9 +1,9 @@
 /* ----------------------------------------------------------------
- * Home1.module.css (Final Combined Version)
+ * Home1.module.css
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
-/* --- 1. ส่วน Layout หลัก (Main Layout) --- */
+/* --- 1. ส่วน Layout หลัก & เนื้อหา (คงเดิม) --- */
 /* ============================================ */
 
 .appContainer {
@@ -40,7 +40,8 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 60px 20px 140px; /* เว้นด้านล่างเผื่อเมนู */
+  /* เว้นด้านล่าง 120px เพื่อไม่ให้เมนูบังเนื้อหา (ตามต้นฉบับ Home) */
+  padding: 60px 20px 120px; 
   position: relative;
   z-index: 1;
   min-height: 100vh;
@@ -132,7 +133,7 @@
   border-radius: 16px;
   padding: 20px 24px;
   display: flex;
-  flex-direction: row; /* จัดไอคอนซ้าย ตัวหนังสือขวา */
+  flex-direction: row;
   align-items: center;
   gap: 20px;
   text-align: left;
@@ -152,7 +153,6 @@
   border-color: #C7B299;
 }
 
-/* --- ส่วนไอคอน (ใส่เพิ่มเพื่อให้รองรับไอคอนใน React) --- */
 .cardIcon {
   width: 42px;
   height: 42px;
@@ -180,7 +180,6 @@
   flex-grow: 1;
 }
 
-/* ลูกศร > ด้านขวา */
 .extraCard::after {
   content: '›';
   font-size: 26px;
@@ -328,11 +327,11 @@
   transform: translateY(-2px) scale(1.05);
 }
 
-/* ============================================ */
-/* --- 6. Bottom Nav (Desktop Style) --- */
-/* ============================================ */
+/* ========================================================= */
+/* --- 6. Bottom Nav (คัดลอกมาจาก Home.module.css เป๊ะๆ) --- */
+/* ========================================================= */
 
-/* Style ตามโค้ดที่คุณให้มา */
+/* --- Desktop Style --- */
 .bottomNav {
   position: fixed;
   bottom: 16px;
@@ -389,9 +388,9 @@
 }
 
 .bottomNav button svg {
-  font-size: 24px;
-  height: 24px;
-  width: 24px;
+  font-size: 34px; /* ตามต้นฉบับ Home.js */
+  height: 34px;
+  width: 34px;
 }
 
 .bottomNav button span {
@@ -399,8 +398,7 @@
   white-space: nowrap;
 }
 
-/* --- Sub Menu Desktop (Popup) --- */
-/* ตกแต่งเนื้อหาให้สวยงาม (แนวตั้ง + สีดำเมื่อ active) */
+/* --- Sub Menu Desktop --- */
 .subMenuPopup {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -413,8 +411,6 @@
   padding: 6px;
   min-width: 160px;
   border: 1px solid #eee;
-  
-  /* Vertical Flex */
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -428,18 +424,15 @@
   border-radius: 8px;
   transition: background-color 0.2s ease;
   font-weight: 500;
-  text-align: center;
 }
 
 .subMenuItem:hover {
   background: #f4f4f4;
 }
 
-/* Active Menu Item = สีดำ */
 .subMenuItem.active {
   background: #000;
   color: #fff;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
 /* ============================================ */
@@ -459,7 +452,7 @@
     font-size: 12px;
   }
 
-  /* --- Bottom Nav Mobile (โค้ดตามที่คุณให้มา) --- */
+  /* --- Bottom Nav Mobile (คัดลอกมาจาก Home.module.css เป๊ะๆ) --- */
   .bottomNav {
     position: fixed;
     bottom: 0;
@@ -488,9 +481,8 @@
   }
 
   .bottomNav button {
-    position: relative !important; 
-    overflow: visible !important; 
-
+    position: relative !important;
+    overflow: visible !important;
     background: transparent !important;
     border: none;
     box-shadow: none !important;
@@ -544,7 +536,7 @@
     font-weight: 600;
   }
 
-  /* --- Popup Mobile (ปรับตำแหน่งตามโค้ดคุณ) --- */
+  /* --- Sub Menu Popup Mobile (ตามต้นฉบับ Home.module.css) --- */
   .subMenuPopup {
     position: absolute;
     bottom: calc(100% + 8px);
@@ -559,7 +551,6 @@
     padding: 6px;
     border: 1px solid #f0f0f0;
     
-    /* คง Style Vertical ไว้ */
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -577,7 +568,7 @@
     border-color: #ffffff transparent transparent transparent;
   }
 
-  /* Logic ป้องกัน Popup ล้นจอ */
+  /* Logic ป้องกันเมนูล้นจอ (ซ้าย/ขวา) */
   .bottomNav > div:first-child .subMenuPopup {
     left: 4px !important;
     transform: none !important;
