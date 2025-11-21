@@ -26,18 +26,18 @@
 }
 
 .headerSubtitle {
-  font-size: 14px;
+  font-size: 12px; /* ปรับให้เล็กหน่อยบนมือถือ */
   color: #6b7280;
   margin: 0;
 }
 
 .main {
-  padding: 24px;
+  padding: 16px; /* ลด padding รวมเพื่อให้เนื้อหาชิดขอบมากขึ้นในมือถือ */
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 /* Status Cards */
@@ -51,6 +51,9 @@
   border: 1px solid #e5e7eb;
   border-top-width: 4px;
   border-top-style: solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .hoverShadow:hover {
@@ -65,48 +68,45 @@
 }
 
 .cardTitle {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #374151;
 }
 
 .cardCount {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 .cardPercent {
-  font-size: 12px;
+  font-size: 11px;
   color: #6b7280;
 }
 
 /* Section Cards */
 .sectionCard {
   background-color: #ffffff;
-  padding: 24px;
+  padding: 16px; /* Mobile First: padding น้อยหน่อย */
   border-radius: 12px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
-  margin-bottom: 24px;
-  min-height: 300px; 
   display: flex;
   flex-direction: column;
-  
-  /* --- สำคัญ: เพิ่ม min-width: 0 เพื่อให้ ResponsiveContainer ทำงานใน Grid ได้ --- */
+  /* สำคัญ! ป้องกัน Grid item ล้น */
   min-width: 0; 
+  overflow: hidden; 
 }
 
 .sectionHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap; /* ยอมให้ตกบรรทัดถ้าจอเล็ก */
+  flex-direction: column; /* Mobile First: เรียงลงมา */
+  align-items: flex-start;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
 .sectionTitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #1f2937;
   display: flex;
@@ -116,26 +116,30 @@
 }
 
 .sectionSubtitle {
-  font-size: 14px;
+  font-size: 12px;
   color: #6b7280;
   margin: 4px 0 0 0;
 }
 
-/* Charts Containers */
-/* ปรับให้เป็น Class กลางที่ยืดหยุ่น */
+/* Charts */
 .chartContainer {
+  height: 300px; /* เพิ่มความสูงเล็กน้อยเพื่อให้ดูง่ายในมือถือ */
   width: 100%;
-  /* เอา height fixed ออก เพื่อกำหนด dynamic height ใน JS หรือใช้ min-height */
-  min-height: 250px;
+  position: relative;
+}
+
+.staffChartContainer {
+  height: 500px; /* สูงเป็นพิเศษสำหรับแนวดิ่งหลายคน */
+  width: 100%;
   position: relative;
 }
 
 /* Legend & Badges */
 .legendContainer {
   display: flex;
+  flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
   gap: 8px;
-  font-size: 12px;
-  flex-wrap: wrap;
+  font-size: 11px;
 }
 
 .legendItem {
@@ -145,8 +149,8 @@
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 
@@ -154,12 +158,12 @@
 .satisfactionHeader {
   display: flex;
   align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .scoreBig {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: bold;
   color: #111827;
   line-height: 1;
@@ -168,20 +172,19 @@
 .starRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   font-size: 12px;
-  margin-bottom: 8px; /* เพิ่มระยะห่างเล็กน้อย */
 }
 
 .starLabel {
-  width: 20px;
+  width: 24px;
   font-weight: bold;
   color: #4b5563;
 }
 
 .progressTrack {
   flex: 1;
-  height: 8px;
+  height: 6px;
   background-color: #f3f4f6;
   border-radius: 9999px;
   overflow: hidden;
@@ -193,27 +196,27 @@
 }
 
 .starPercent {
-  width: 32px;
+  width: 28px;
   text-align: right;
   color: #6b7280;
+  font-size: 11px;
 }
 
 /* Top Staff Header */
 .topHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Mobile First */
+  gap: 8px;
+  align-items: flex-start;
   margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 .topBadge {
   background-color: #eff6ff;
   color: #1d4ed8;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -231,20 +234,44 @@
 /* Responsive Grids */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr; /* Mobile: 1 แถว */
+  gap: 12px;
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr; /* Mobile: 1 แถว */
+  gap: 16px;
 }
 
+/* Tablet & Desktop Overrides */
 @media (min-width: 768px) {
+  .main { padding: 24px; gap: 24px; }
+  .sectionCard { padding: 24px; }
+  .headerSubtitle { font-size: 14px; }
+  .cardTitle { font-size: 14px; }
+  .cardCount { font-size: 24px; }
+  
+  .sectionHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .topHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .responsiveGrid4 {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
+  
+  /* ปรับความสูงกราฟให้เหมาะสมกับจอใหญ่ */
+  .chartContainer { height: 280px; }
+  .staffChartContainer { height: 450px; }
 }
 
 @media (min-width: 1024px) {
@@ -253,5 +280,6 @@
   }
   .responsiveGrid2 {
     grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 }
