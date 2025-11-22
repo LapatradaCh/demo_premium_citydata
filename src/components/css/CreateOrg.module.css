@@ -2,30 +2,24 @@
   --color-bg: #ffffff;
   --color-surface: #f8f9fa;
   
-  /* --- Main Text Colors (Black & White Theme) --- */
-  --color-primary: #000000;       /* ดำสนิท (หัวข้อ, ข้อความหลัก) */
-  --color-secondary: #222222;     /* ดำเกือบสนิท (ฉลาก) */
-  --color-muted: #555555;         /* เทาเข้ม (คำอธิบาย) */
-  --color-border: #e0e0e0;        /* เทาอ่อน (เส้นแบ่ง) */
-  
-  /* --- Button Colors (Restored Original Colors) --- */
+  /* --- Button Colors (Original Green/Red) --- */
   --color-green: #28a745;
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
 
-  /* Shadows */
-  --shadow-button: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  --shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
-  --shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.05); 
-  --shadow-hover: 0 6px 12px rgba(0,0,0,0.08); 
-  
   /* --- Base --- */
+  --color-border: #e0e0e0;
   --color-focus-ring: rgba(0, 0, 0, 0.1); 
   --radius-card: 1rem; 
   --radius-input: 0.5rem; 
   --transition: all 0.2s ease-in-out; 
+  
+  /* Shadows */
+  --shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
+  --shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.05); 
+  --shadow-hover: 0 6px 12px rgba(0,0,0,0.08); 
 }
 
 /* ==================================================================
@@ -40,7 +34,7 @@
   background: var(--color-surface); 
   font-family: "Sarabun", sans-serif; 
   box-sizing: border-box;
-  color: var(--color-primary);
+  color: #000000; /* บังคับสีดำเป็นค่าเริ่มต้น */
 }
 
 /* ==================================================================
@@ -71,7 +65,7 @@
 .pageTitle {
   font-size: 2rem; 
   font-weight: 700;
-  color: var(--color-primary); /* หัวข้อสีดำ */
+  color: #000000 !important; /* บังคับดำ */
   margin: 0;
   display: flex;
   flex-wrap: wrap;
@@ -83,11 +77,11 @@
 .pageSubtitle {
   font-size: 1.1rem; 
   font-weight: 400; 
-  color: var(--color-muted); /* คำอธิบายสีเทาเข้ม */
+  color: #555555 !important; /* เทาเข้ม */
   margin-top: 0.5rem; 
 }
 .orgNameHighlight {
-  color: var(--color-primary); 
+  color: #000000 !important; /* บังคับดำ */
   font-weight: 700;
   text-decoration: underline;
 }
@@ -96,7 +90,7 @@
   background: none;
   border: 1px solid var(--color-border); 
   cursor: pointer;
-  color: var(--color-secondary); 
+  color: #222222; /* ดำเกือบสนิท */
   font-size: 0.95rem; 
   font-weight: 500;
   font-family: "Sarabun", sans-serif;
@@ -106,9 +100,9 @@
   white-space: nowrap; 
 }
 .editNameButton:hover {
-  background-color: var(--color-primary); 
+  background-color: #000000; 
   color: #ffffff; 
-  border-color: var(--color-primary);
+  border-color: #000000;
 }
 
 /* ==================================================================
@@ -127,11 +121,11 @@
 .label {
   font-weight: 600;
   font-size: 0.95rem; 
-  color: var(--color-primary); /* ฉลากสีดำ */
+  color: #000000 !important; /* ฉลากสีดำ */
 }
 .label.required::after {
   content: " *";
-  color: var(--color-red); /* ดอกจันสีแดง (เพื่อให้เห็นชัดว่าจำเป็น) */
+  color: var(--color-red); /* ดอกจันสีแดง */
   margin-left: 0.25rem; 
 }
 .input, .select {
@@ -141,18 +135,18 @@
   border-radius: var(--radius-input); 
   border: 1px solid var(--color-border);
   background: var(--color-bg);
-  color: var(--color-primary); /* พิมพ์ตัวหนังสือสีดำ */
+  color: #000000; /* พิมพ์สีดำ */
   transition: var(--transition);
   box-sizing: border-box;
 }
 .input:hover, .select:hover {
-  border-color: var(--color-muted);
+  border-color: #555555;
 }
 .input:focus, .select:focus {
   outline: none;
   background: var(--color-bg);
-  border-color: var(--color-primary); /* Focus ขอบดำ */
-  box-shadow: 0 0 0 1px var(--color-primary);
+  border-color: #000000; /* Focus ขอบดำ */
+  box-shadow: 0 0 0 1px #000000;
 }
 .input::placeholder {
   color: #999999; 
@@ -160,12 +154,12 @@
 }
 .helpText, .helpTextSmall {
   font-size: 0.85rem; 
-  color: var(--color-muted);
+  color: #555555;
   margin-top: 0.5rem; 
 }
 
 /* ==================================================================
-* Buttons (Original Colors: Green/Red)
+* Buttons
 * ================================================================== */
 .buttonGroup {
   margin-top: 1rem; 
@@ -201,7 +195,7 @@
   box-shadow: none;
 }
 
-/* --- 1. Primary/Save Buttons (GREEN) --- */
+/* --- Primary/Save Buttons (GREEN) --- */
 .btnPrimary, .btnSuccess {
   background-color: var(--color-green); 
   color: white;
@@ -214,7 +208,7 @@
   transform: translateY(-2px); 
 }
 
-/* --- 2. Back Buttons (RED) --- */
+/* --- Back Buttons (RED) --- */
 .btnPrimaryBack {
   background-color: var(--color-red); 
   color: white;
@@ -227,16 +221,16 @@
   transform: translateY(-2px);
 }
 
-/* --- 3. Secondary/Choose File Buttons (White) --- */
+/* --- Secondary Buttons (White) --- */
 .btnSecondary, .btnGeo {
   background-color: white; 
-  color: var(--color-primary); 
+  color: #000000; 
   border: 1px solid var(--color-border); 
 }
 .btnSecondary:hover:not(:disabled), .btnGeo:hover:not(:disabled) {
   background-color: #f9f9f9;
-  border-color: var(--color-primary); 
-  color: var(--color-primary);
+  border-color: #000000; 
+  color: #000000;
   transform: translateY(-2px);
 }
 
@@ -249,7 +243,7 @@
 .setupTitle {
   font-size: 1.35rem; 
   font-weight: 600;
-  color: var(--color-primary); /* หัวข้อดำ */
+  color: #000000 !important; /* หัวข้อดำ */
   margin-bottom: 1.5rem; 
   text-align: center; 
 }
@@ -266,7 +260,7 @@
   transition: var(--transition);
 }
 .accordionItem:hover {
-  border-color: var(--color-primary); /* กรอบดำเมื่อ Hover */
+  border-color: #000000; /* กรอบดำเมื่อ Hover */
 }
 
 .accordionHeader {
@@ -297,19 +291,18 @@
   font-size: 1.5rem;
   transition: var(--transition);
   
-  /* พื้นขาว ขอบเทา (คุมโทน B/W) */
+  /* พื้นขาว ขอบเทา */
   background-color: #ffffff;
   border: 1px solid var(--color-border); 
-  color: var(--color-primary);
+  color: #000000;
 }
 .accordionHeader:hover .accordionIcon {
-  border-color: var(--color-primary);
+  border-color: #000000;
 }
 
-/* สีพื้นหลังเดิมถูกยกเลิกเพื่อคุมโทน */
 .iconBgCode, .iconBgLogo, .iconBgLocation, .iconBgType {
   background-color: transparent; 
-  color: var(--color-primary); 
+  color: #000000; 
 }
 
 .accordionTitleBox {
@@ -318,19 +311,19 @@
 .accordionTitle {
   font-size: 1.1rem; 
   font-weight: 600;
-  color: var(--color-primary); /* ข้อสีดำ */
+  color: #000000 !important; /* ข้อสีดำ */
   margin: 0;
 }
 .accordionSubtitle {
   font-size: 0.9rem; 
-  color: var(--color-muted); /* คำอธิบายเทาเข้ม */
+  color: #555555 !important; /* คำอธิบายเทาเข้ม */
   margin: 0;
   margin-top: 0.2rem; 
 }
 .accordionArrow {
   width: 1.25rem; 
   height: 1.25rem;
-  color: var(--color-primary); 
+  color: #000000; 
   transition: transform 0.3s ease-in-out;
 }
 .rotate180 {
@@ -359,7 +352,7 @@
 .contentTitle {
   font-size: 1.5rem; 
   font-weight: 600;
-  color: var(--color-primary);
+  color: #000000 !important; /* บังคับดำ */
   margin-bottom: 1.5rem; 
 }
 .contentForm {
@@ -434,7 +427,7 @@
 .codeBoxType {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: #000000;
   padding: 0 0.75rem; 
   white-space: nowrap; 
 }
@@ -442,7 +435,7 @@
 .codeBoxSwitch {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--color-primary);
+  color: #000000;
   text-decoration: underline;
   cursor: pointer;
   background: none;
@@ -467,7 +460,7 @@
   align-items: center;
   justify-content: space-between;
   background: white;
-  border: 1px solid var(--color-primary); /* ขอบดำ */
+  border: 1px solid #000000; /* ขอบดำ */
   border-radius: 9999px; 
   padding: 0.5rem;
   min-height: 48px;
@@ -480,7 +473,7 @@
   font-weight: 700;
   text-align: left; 
   letter-spacing: 0.05em;
-  color: var(--color-primary);
+  color: #000000;
   padding: 0 0.75rem; 
   background: none;
   border: none;
@@ -496,7 +489,7 @@
   border-radius: 9999px; 
   cursor: pointer;
   padding: 0.35rem 0.75rem;
-  color: var(--color-primary);
+  color: #000000;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -509,7 +502,7 @@
 }
 .codeCopyButton:hover {
   background: #f9f9f9;
-  border-color: var(--color-primary);
+  border-color: #000000;
 }
 .codeCopyButton svg {
   width: 16px;
@@ -517,7 +510,7 @@
   stroke-width: 2;
 }
 .codeCopyButton.copied {
-  background-color: var(--color-green); /* Copy แล้วเป็นสีเขียว */
+  background-color: var(--color-green); 
   color: white;
   border-color: var(--color-green);
 }
@@ -546,7 +539,7 @@
 }
 
 .errorMessage {
-  color: var(--color-red); /* Error สีแดง */
+  color: var(--color-red); 
   font-size: 0.9rem; 
   margin-top: 0.5rem;
   text-align: center;
