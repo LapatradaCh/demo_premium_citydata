@@ -2,15 +2,22 @@
   --color-bg: #ffffff;
   --color-surface: #f8f9fa;
   
-  /* --- Main Tone Colors (Strictly Black & White) --- */
-  --color-primary: #000000;       /* ดำสนิท (หัวข้อ, ปุ่มหลัก) */
-  --color-secondary: #222222;     /* ดำเกือบสนิท (เนื้อหา, ฉลาก) */
-  --color-muted: #555555;         /* เทาเข้ม (คำอธิบายรอง) - ปรับให้เข้มขึ้น */
-  --color-border: #e0e0e0;        /* เทาอ่อน (เส้นแบ่งทั่วไป) */
-  --color-border-strong: #000000; /* ดำ (เส้นขอบเมื่อเน้น) */
+  /* --- Main Text Colors (Black & White Theme) --- */
+  --color-primary: #000000;       /* ดำสนิท (หัวข้อ, ข้อความหลัก) */
+  --color-secondary: #222222;     /* ดำเกือบสนิท (ฉลาก) */
+  --color-muted: #555555;         /* เทาเข้ม (คำอธิบาย) */
+  --color-border: #e0e0e0;        /* เทาอ่อน (เส้นแบ่ง) */
+  
+  /* --- Button Colors (Restored Original Colors) --- */
+  --color-green: #28a745;
+  --color-green-dark: #218838;
+  --color-red: #dc3545;
+  --color-red-dark: #c82333;
 
-  /* Shadows (Sharp & Minimal) */
-  --shadow-button: 0 4px 0 rgba(0, 0, 0, 1); /* เงาแบบ Hard Shadow สีดำ */
+  /* Shadows */
+  --shadow-button: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  --shadow-button-green: 0 4px 10px rgba(40, 167, 69, 0.3);
+  --shadow-button-red: 0 4px 10px rgba(220, 53, 69, 0.3);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.05); 
   --shadow-hover: 0 6px 12px rgba(0,0,0,0.08); 
   
@@ -33,7 +40,7 @@
   background: var(--color-surface); 
   font-family: "Sarabun", sans-serif; 
   box-sizing: border-box;
-  color: var(--color-primary); /* บังคับตัวหนังสือหลักเป็นดำ */
+  color: var(--color-primary);
 }
 
 /* ==================================================================
@@ -52,7 +59,6 @@
 .pageSetup { max-width: 700px; }
 .page:hover {
   box-shadow: var(--shadow-hover);
-  border-color: #cccccc;
 }
 
 /* ==================================================================
@@ -65,7 +71,7 @@
 .pageTitle {
   font-size: 2rem; 
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-primary); /* หัวข้อสีดำ */
   margin: 0;
   display: flex;
   flex-wrap: wrap;
@@ -77,14 +83,13 @@
 .pageSubtitle {
   font-size: 1.1rem; 
   font-weight: 400; 
-  color: var(--color-muted); /* เทาเข้ม */
+  color: var(--color-muted); /* คำอธิบายสีเทาเข้ม */
   margin-top: 0.5rem; 
 }
 .orgNameHighlight {
   color: var(--color-primary); 
   font-weight: 700;
   text-decoration: underline;
-  text-decoration-thickness: 2px; /* ขีดเส้นใต้หนาขึ้นสีดำ */
 }
 
 .editNameButton {
@@ -122,11 +127,11 @@
 .label {
   font-weight: 600;
   font-size: 0.95rem; 
-  color: var(--color-primary); /* สีดำ */
+  color: var(--color-primary); /* ฉลากสีดำ */
 }
 .label.required::after {
   content: " *";
-  color: var(--color-primary); /* ดอกจันสีดำ */
+  color: var(--color-red); /* ดอกจันสีแดง (เพื่อให้เห็นชัดว่าจำเป็น) */
   margin-left: 0.25rem; 
 }
 .input, .select {
@@ -136,21 +141,21 @@
   border-radius: var(--radius-input); 
   border: 1px solid var(--color-border);
   background: var(--color-bg);
-  color: var(--color-primary); /* พิมพ์เป็นสีดำ */
+  color: var(--color-primary); /* พิมพ์ตัวหนังสือสีดำ */
   transition: var(--transition);
   box-sizing: border-box;
 }
 .input:hover, .select:hover {
-  border-color: var(--color-muted); /* Hover เป็นสีเทาเข้ม */
+  border-color: var(--color-muted);
 }
 .input:focus, .select:focus {
   outline: none;
   background: var(--color-bg);
-  border-color: var(--color-primary); /* Focus เป็นสีดำสนิท */
-  box-shadow: 0 0 0 1px var(--color-primary); /* เส้นหนาขึ้น */
+  border-color: var(--color-primary); /* Focus ขอบดำ */
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 .input::placeholder {
-  color: #999999; /* Placeholder สีเทา */
+  color: #999999; 
   font-style: italic;
 }
 .helpText, .helpTextSmall {
@@ -160,7 +165,7 @@
 }
 
 /* ==================================================================
-* Buttons (Black & White Theme)
+* Buttons (Original Colors: Green/Red)
 * ================================================================== */
 .buttonGroup {
   margin-top: 1rem; 
@@ -191,38 +196,48 @@
   flex-basis: 0; 
 }
 .button:disabled {
-  opacity: 0.5; 
+  opacity: 0.6; 
   cursor: not-allowed;
-  background-color: #e0e0e0 !important;
-  color: #888888 !important;
-  border-color: #e0e0e0 !important;
   box-shadow: none;
 }
 
-/* --- 1. Primary Buttons (Black Background) --- */
+/* --- 1. Primary/Save Buttons (GREEN) --- */
 .btnPrimary, .btnSuccess {
-  background-color: var(--color-primary); 
+  background-color: var(--color-green); 
   color: white;
-  border-color: var(--color-primary);
-  /* box-shadow: var(--shadow-button); Optional: Add shadow if needed */
+  border-color: var(--color-green);
+  box-shadow: var(--shadow-button-green);
 }
 .btnPrimary:hover:not(:disabled), .btnSuccess:hover:not(:disabled) {
-  background-color: #333333; /* Dark Gray on hover */
-  border-color: #333333;
-  transform: translateY(-1px); 
+  background-color: var(--color-green-dark);
+  border-color: var(--color-green-dark);
+  transform: translateY(-2px); 
 }
 
-/* --- 2. Secondary/Back Buttons (White Background, Black Border) --- */
-.btnPrimaryBack, .btnSecondary, .btnGeo {
+/* --- 2. Back Buttons (RED) --- */
+.btnPrimaryBack {
+  background-color: var(--color-red); 
+  color: white;
+  border-color: var(--color-red);
+  box-shadow: var(--shadow-button-red);
+}
+.btnPrimaryBack:hover:not(:disabled) {
+  background-color: var(--color-red-dark);
+  border-color: var(--color-red-dark);
+  transform: translateY(-2px);
+}
+
+/* --- 3. Secondary/Choose File Buttons (White) --- */
+.btnSecondary, .btnGeo {
   background-color: white; 
   color: var(--color-primary); 
-  border: 1px solid #dddddd; /* Border ปกติสีเทาอ่อน */
+  border: 1px solid var(--color-border); 
 }
-.btnPrimaryBack:hover:not(:disabled), .btnSecondary:hover:not(:disabled), .btnGeo:hover:not(:disabled) {
+.btnSecondary:hover:not(:disabled), .btnGeo:hover:not(:disabled) {
   background-color: #f9f9f9;
-  border-color: var(--color-primary); /* Hover แล้วขอบดำ */
+  border-color: var(--color-primary); 
   color: var(--color-primary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* ==================================================================
@@ -251,7 +266,7 @@
   transition: var(--transition);
 }
 .accordionItem:hover {
-  border-color: var(--color-primary); /* กรอบกลายเป็นสีดำเมื่อ Hover */
+  border-color: var(--color-primary); /* กรอบดำเมื่อ Hover */
 }
 
 .accordionHeader {
@@ -270,7 +285,7 @@
   background-color: #fafafa; 
 }
 
-/* --- Icons (Black Outline Style) --- */
+/* --- Icons (B/W Theme) --- */
 .accordionIcon {
   flex-shrink: 0;
   width: 2.75rem; 
@@ -282,16 +297,16 @@
   font-size: 1.5rem;
   transition: var(--transition);
   
-  /* เปลี่ยนเป็นพื้นขาว ขอบดำ */
+  /* พื้นขาว ขอบเทา (คุมโทน B/W) */
   background-color: #ffffff;
   border: 1px solid var(--color-border); 
   color: var(--color-primary);
 }
 .accordionHeader:hover .accordionIcon {
-  border-color: var(--color-primary); /* Hover Header แล้วขอบไอคอนดำด้วย */
+  border-color: var(--color-primary);
 }
 
-/* สีพื้นหลังเดิมถูกยกเลิก ใช้สไตล์ข้างบนแทนเพื่อคุมโทนขาวดำ */
+/* สีพื้นหลังเดิมถูกยกเลิกเพื่อคุมโทน */
 .iconBgCode, .iconBgLogo, .iconBgLocation, .iconBgType {
   background-color: transparent; 
   color: var(--color-primary); 
@@ -303,12 +318,12 @@
 .accordionTitle {
   font-size: 1.1rem; 
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary); /* ข้อสีดำ */
   margin: 0;
 }
 .accordionSubtitle {
   font-size: 0.9rem; 
-  color: var(--color-muted);
+  color: var(--color-muted); /* คำอธิบายเทาเข้ม */
   margin: 0;
   margin-top: 0.2rem; 
 }
@@ -371,7 +386,6 @@
   border-radius: var(--radius-card); 
   border: 2px solid var(--color-border); 
   background-color: #fafafa;
-  filter: grayscale(100%); /* คุมโทนรูป Preview ให้เป็นขาวดำ */
 }
 .hiddenFileInput {
   display: none;
@@ -438,7 +452,7 @@
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   box-shadow: none;
-  border: 1px solid transparent; /* ซ่อนขอบปกติ */
+  border: 1px solid transparent; 
   transition: var(--transition);
   white-space: nowrap; 
 }
@@ -453,7 +467,7 @@
   align-items: center;
   justify-content: space-between;
   background: white;
-  border: 1px solid var(--color-primary); /* ขอบดำชัดเจน */
+  border: 1px solid var(--color-primary); /* ขอบดำ */
   border-radius: 9999px; 
   padding: 0.5rem;
   min-height: 48px;
@@ -477,12 +491,12 @@
 
 .codeCopyButton {
   position: static; 
-  background: var(--color-primary); /* ปุ่มดำ */
-  border: 1px solid var(--color-primary);
+  background: white;
+  border: 1px solid var(--color-border);
   border-radius: 9999px; 
   cursor: pointer;
   padding: 0.35rem 0.75rem;
-  color: white; /* ตัวหนังสือขาว */
+  color: var(--color-primary);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -494,8 +508,8 @@
   white-space: nowrap; 
 }
 .codeCopyButton:hover {
-  background: #333333;
-  border-color: #333333;
+  background: #f9f9f9;
+  border-color: var(--color-primary);
 }
 .codeCopyButton svg {
   width: 16px;
@@ -503,12 +517,12 @@
   stroke-width: 2;
 }
 .codeCopyButton.copied {
-  background-color: white;
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--color-green); /* Copy แล้วเป็นสีเขียว */
+  color: white;
+  border-color: var(--color-green);
 }
 .codeCopyButton.copied svg {
-  stroke: var(--color-primary);
+  stroke: white;
 }
 
 /* === Form Grid & Submit === */
@@ -532,12 +546,10 @@
 }
 
 .errorMessage {
-  color: var(--color-primary);
-  font-weight: bold;
+  color: var(--color-red); /* Error สีแดง */
   font-size: 0.9rem; 
   margin-top: 0.5rem;
   text-align: center;
-  text-decoration: underline;
 }
 
 .geoButtonContainer {
