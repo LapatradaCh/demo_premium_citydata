@@ -427,22 +427,24 @@
 .hiddenFileInput {
   display: none;
 }
-/* --- FIX: จัดการปุ่มโลโก้ใหม่ --- */
+
+/* --- FIX: จัดการปุ่มโลโก้ และเนื้อหาด้านขวาให้อยู่ตรงกลางทั้งหมด --- */
 .logoUploadActions {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  align-items: flex-start; /* ปุ่มเลือกไฟล์อยู่ซ้ายเหมือนเดิม */
+  align-items: center; /* จัดแกนขวาง (ปุ่ม) ให้ตรงกลาง */
+  text-align: center;  /* จัดข้อความให้ตรงกลาง */
   width: 100%;
 }
 .logoUploadActions > .button {
   width: auto; 
 }
 
-/* ปุ่มบันทึกโลโก้ (สีเขียว) ให้วางตรงกลาง */
+/* ปุ่มบันทึกโลโก้ (สีเขียว) ให้วางตรงกลางเสมอ */
 .logoUploadActions .btnSave {
-  align-self: center; /* เปลี่ยนจาก flex-end เป็น center */
-  width: auto !important; /* ไม่เต็มจอ */
+  align-self: center;
+  width: auto !important;
   min-width: 120px;
   margin-top: 0.5rem;
 }
@@ -577,11 +579,11 @@
 .submitRow {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: center; /* เปลี่ยนจาก flex-end เป็น center */
+  justify-content: center; /* Center all general save buttons */
   margin-top: 1rem;
 }
 .submitRow .button {
-  width: auto !important; /* ห้ามเต็มจอ */
+  width: auto !important;
   flex-grow: 0; 
   flex-basis: auto;
   min-width: 120px;
@@ -725,7 +727,7 @@
       justify-items: center; 
   }
   .logoUploadActions {
-      align-items: flex-start; /* ปุ่มเลือกไฟล์อยู่ซ้ายเหมือนเดิม */
+      align-items: center; /* Center items on mobile too */
       width: 100%;
   }
   /* ปุ่มเลือกไฟล์ (สีขาว) ให้เต็มจอเพื่อให้กดง่าย */
@@ -735,6 +737,6 @@
   /* ปุ่มบันทึกโลโก้ (สีเขียว) ให้วางตรงกลาง และไม่เต็มจอ */
   .logoUploadActions .btnSave {
       width: auto !important;
-      align-self: center; /* เปลี่ยนจาก flex-end เป็น center */
+      align-self: center; 
   }
 }
