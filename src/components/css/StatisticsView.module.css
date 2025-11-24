@@ -1,26 +1,27 @@
-/* StatisticsView.module.css - ฉบับบังคับขยายเต็มจอ */
+/* StatisticsView.module.css - Modern Clean Style */
 
+/* พื้นหลังหลัก - ปรับเป็นสีเทาที่นุ่มขึ้นเหมือนในรูปตัวอย่าง */
 .container {
   min-height: 100vh;
-  background-color: #f9fafb;
-  font-family: 'Sarabun', 'Prompt', sans-serif;
+  background-color: #f3f4f6; /* สีเทาอ่อนแบบ Modern UI */
+  font-family: 'Prompt', 'Sarabun', sans-serif; /* แนะนำใช้ Prompt ถ้ามี */
   padding-bottom: 80px;
-  /* เพิ่ม: เพื่อให้แน่ใจว่า container หลักก็เต็มจอ */
   width: 100% !important;
   max-width: none !important;
 }
 
+/* ส่วนหัว - ปรับให้คลีน ตัดเงาแข็งๆ ออก */
 .header {
   background-color: #ffffff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  padding: 16px 24px;
+  padding: 20px 32px; /* เพิ่มพื้นที่หายใจ */
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 10;
-  width: 100% !important; /* บังคับ Header เต็มจอ */
+  z-index: 100;
+  width: 100% !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* เงาบางๆ ดูแพง */
   box-sizing: border-box;
 }
 
@@ -30,277 +31,274 @@
   gap: 16px;
 }
 
-.headerSubtitle {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 0;
+/* ชื่อหน้า - ทำให้ใหญ่และหนาขึ้น */
+.headerLeft h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.5px;
 }
 
-/* --- จุดสำคัญ: บังคับขยายเนื้อหา --- */
+.headerSubtitle {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* --- Main Content: จัดเต็มจอ และเพิ่มระยะห่าง --- */
 .main {
-  padding: 16px;
+  padding: 32px; /* เพิ่ม padding ให้ดูโปร่ง */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  
-  /* บังคับขยายเต็ม 100% ไม่สนลูกใคร */
+  gap: 24px; /* เพิ่มระยะห่างระหว่างแถว */
   width: 100% !important;
   max-width: none !important;
-  min-width: 100% !important;
-  
   box-sizing: border-box;
 }
-/* ------------------------------- */
 
-/* Status Cards */
+/* --- Status Cards (การ์ดบนสุด) --- */
+/* ปรับให้เหมือนสติกเกอร์ ลอยนูนขึ้นมา */
 .statusCard {
   background-color: #ffffff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s;
+  border-radius: 16px; /* มุมโค้งมนกว่าเดิม */
+  padding: 24px;
+  /* ลบเส้นขอบเดิมทิ้ง เน้นเงาแทน */
+  border: none !important; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   cursor: default;
-  border: 1px solid #e5e7eb;
-  border-top-width: 4px;
-  border-top-style: solid;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%; /* ยืดการ์ดให้เต็ม */
+  position: relative;
+  overflow: hidden;
+  height: 100%;
 }
 
-.hoverShadow:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/* เอฟเฟกต์ตอนเอาเมาส์ชี้ - ลอยขึ้นนิดนึง */
+.statusCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* แถบสีด้านบน (ถ้า JS ใส่ style border-color มา มันจะยังทำงานอยู่) */
+/* แต่เราจะเพิ่มแถบสีจางๆ ด้านข้างให้ดูมีมิติ */
+.statusCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: inherit; /* พยายามดึงสีจาก parent ถ้าทำได้ */
+  border-radius: 16px 0 0 16px;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .cardTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #6b7280; /* สีเทากลางๆ */
+  text-transform: uppercase; /* ตัวพิมพ์ใหญ่ดูทางการ */
+  letter-spacing: 0.5px;
 }
 
+/* ตัวเลขสถิติ - ทำให้ใหญ่เบิ้มเหมือนในรูปตัวอย่าง */
 .cardCount {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 36px; /* ใหญ่สะใจ */
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.2;
 }
 
 .cardPercent {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9ca3af;
+  background: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 20px;
+  width: fit-content;
 }
 
-/* Section Cards */
+/* --- Section Cards (กล่องกราฟใหญ่) --- */
 .sectionCard {
   background-color: #ffffff;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #f3f4f6;
+  padding: 32px; /* เพิ่มพื้นที่ภายใน */
+  border-radius: 20px; /* มุมโค้งมนมาก */
+  /* ลบเส้นขอบแข็งๆ */
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
-  min-width: 0; 
-  overflow: hidden; 
-  width: 100%; /* ยืดการ์ดให้เต็ม */
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 .sectionHeader {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px; /* เว้นระยะห่างจากกราฟ */
+  border-bottom: 1px solid #f3f4f6; /* เส้นขีดคั่นบางๆ */
+  padding-bottom: 16px;
 }
 
 .sectionTitle {
-  font-size: 16px;
-  font-weight: bold;
-  color: #1f2937;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   margin: 0;
 }
 
-.sectionSubtitle {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 4px 0 0 0;
+/* ตกแต่งไอคอนหน้าหัวข้อ (ถ้ามี) */
+.sectionTitle svg {
+  color: #4f46e5; /* สีม่วงน้ำเงินทันสมัย */
 }
 
-/* Charts */
+.sectionSubtitle {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* --- Charts Container --- */
 .chartContainer {
-  height: 300px;
+  height: 350px; /* เพิ่มความสูงอีกนิด */
   width: 100%;
   position: relative;
 }
 
 .staffChartContainer {
-  height: 500px;
+  height: 550px;
   width: 100%;
   position: relative;
 }
 
 .chartContainer *,
 .staffChartContainer * {
-  max-width: none !important; 
-  box-sizing: border-box; 
+  max-width: none !important;
+  box-sizing: border-box;
 }
 
-/* Legend & Badges */
-.legendContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 11px;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-/* Satisfaction */
+/* --- Satisfaction Score (คะแนนความพึงพอใจ) --- */
 .satisfactionHeader {
   display: flex;
   align-items: flex-end;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .scoreBig {
-  font-size: 30px;
-  font-weight: bold;
-  color: #111827;
+  font-size: 48px; /* ตัวเลขใหญ่มาก */
+  font-weight: 900;
+  color: #1f2937;
   line-height: 1;
+  letter-spacing: -2px;
 }
 
 .starRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 8px;
 }
 
 .starLabel {
-  width: 24px;
-  font-weight: bold;
+  width: 30px;
+  font-weight: 600;
   color: #4b5563;
 }
 
 .progressTrack {
   flex: 1;
-  height: 6px;
+  height: 8px; /* หลอดหนาขึ้นนิดนึง */
   background-color: #f3f4f6;
-  border-radius: 9999px;
+  border-radius: 99px;
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  border-radius: 9999px;
+  border-radius: 99px;
+  /* เพิ่ม Gradient ให้ดูสวย */
+  background-image: linear-gradient(90deg, #fcd34d 0%, #fbbf24 100%);
 }
 
 .starPercent {
-  width: 28px;
+  width: 32px;
   text-align: right;
   color: #6b7280;
-  font-size: 11px;
-}
-
-/* Top Staff Header */
-.topHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.topBadge {
-  background-color: #eff6ff;
-  color: #1d4ed8;
-  padding: 4px 10px;
-  border-radius: 6px;
+  font-weight: 500;
   font-size: 12px;
-  font-weight: bold;
+}
+
+/* --- Legend (คำอธิบายกราฟ) --- */
+.legendContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  margin-top: 16px;
+  justify-content: center; /* จัดกึ่งกลาง */
+}
+
+.legendItem {
   display: flex;
   align-items: center;
+  gap: 6px;
+  background: #f9fafb;
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: #4b5563;
 }
 
-/* Empty State */
-.emptyState {
-  padding: 20px;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 12px;
-  margin: auto;
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
-/* Responsive Grids */
+/* --- Responsive Grid System --- */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
-  width: 100%; /* ยืด Grid ให้เต็ม */
+  gap: 20px;
+  width: 100%;
 }
 
 .responsiveGrid2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
-  width: 100%; /* ยืด Grid ให้เต็ม */
+  gap: 24px;
+  width: 100%;
 }
 
-/* Tablet & Desktop Overrides */
+/* Tablet & Desktop Layout */
 @media (min-width: 768px) {
-  .main { padding: 24px; gap: 24px; }
-  .sectionCard { padding: 24px; }
-  .headerSubtitle { font-size: 14px; }
-  .cardTitle { font-size: 14px; }
-  .cardCount { font-size: 24px; }
-  
-  .sectionHeader {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .topHeader {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .responsiveGrid4 {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
   }
-  
-  .chartContainer { height: 280px; }
-  .staffChartContainer { height: 450px; }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .responsiveGrid4 {
     grid-template-columns: repeat(4, 1fr);
   }
+  
   .responsiveGrid2 {
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
   }
 }
