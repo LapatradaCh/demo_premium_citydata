@@ -1,13 +1,13 @@
-/* StatisticsView.module.css - Vibrant & Clear Style */
+/* StatisticsView.module.css - Final Bold & Colorful Version */
 
-/* 1. Import Font */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+/* 1. Import Font Prompt */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
 
-/* 2. Main Container & Background */
+/* 2. Main Container */
 .container {
   min-height: 100vh;
-  background-color: #f8fafc; /* พื้นหลังสีเทาที่สว่างและคลีนขึ้น */
-  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: #f1f5f9; /* พื้นหลังสีเทาโทนเย็น สะอาดแต่ไม่จ้า */
+  font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
@@ -24,21 +24,22 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* เงาชัดขึ้นเล็กน้อย */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* เงาชัดขึ้น */
   width: 100% !important;
   box-sizing: border-box;
 }
 
 .headerLeft h1, .headerLeft span {
   font-weight: 700 !important;
-  color: #0f172a; /* สีดำเข้มชัด */
-  letter-spacing: -0.5px;
+  color: #0f172a;
+  font-size: 24px;
 }
 
 .headerSubtitle {
   font-size: 14px;
-  color: #64748b; /* สีเทาที่ชัดเจนขึ้น */
+  color: #64748b;
   font-weight: 500;
+  margin-top: 4px;
 }
 
 /* Main Content Area */
@@ -48,6 +49,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  
+  /* ปลดล็อกพื้นหลังและขนาด */
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -56,68 +59,84 @@
   box-sizing: border-box;
 }
 
-/* --- Status Cards (ปรับให้สีชัด คลีน) --- */
+/* --- STATUS CARDS (ส่วนที่เน้นให้ชัด ไม่มินิมอล) --- */
 .statusCard {
-  /* บังคับพื้นหลังขาว เพื่อให้ตัวเลขสีสดๆ เด่นออกมา */
-  background-color: #ffffff !important; 
+  background-color: #ffffff;
   border-radius: 20px;
-  padding: 24px;
-  /* ใช้เงาที่ดูมีมิติและสะอาดตา */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  /* เพิ่มเส้นขอบสีจางๆ ให้ดูคมชัด */
-  border: 1px solid #e2e8f0; 
+  padding: 24px 28px;
   
-  transition: all 0.3s ease;
+  /* เส้นขอบหนา 4px เพื่อให้เห็นสีชัดเจน (สีจะมาจาก Inline Style ของ JS) */
+  border-width: 4px !important;
+  border-style: solid;
+  border-color: #e2e8f0; /* สีสำรองกรณี JS ไม่ส่งสีมา */
+  
+  /* เงาลึก ให้ดูเป็นการ์ดจริงๆ ไม่ใช่กระดาษบางๆ */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  min-height: 160px;
 }
 
+/* Hover Effect */
 .statusCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #cbd5e1;
+  transform: translateY(-8px); /* ลอยขึ้นสูงกว่าเดิม */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
 }
 
 .cardTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: #475569; /* สีหัวข้อที่ชัดเจน */
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 18px;
+  font-weight: 700; /* หนามาก */
+  color: #334155; /* เทาเข้ม */
+  letter-spacing: 0.3px;
 }
 
-/* ตัวเลขสถิติ - ทำให้ใหญ่และสีเข้มชัดที่สุด */
+/* ตัวเลขสถิติ - ใหญ่และหนาที่สุด */
 .cardCount {
-  font-size: 40px; 
-  font-weight: 800;
-  color: #0f172a; /* ดำเข้มเกือบสนิท */
-  line-height: 1.1;
-  margin-top: 8px;
+  font-size: 56px;
+  font-weight: 900; /* หนาสุดขีด */
+  color: #0f172a; /* ดำ */
+  line-height: 1;
+  text-align: right;
+  margin-bottom: 12px;
 }
 
+/* แถบเปอร์เซ็นต์ - เปลี่ยนจากจางๆ เป็นเข้มชัด (High Contrast) */
 .cardPercent {
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
-  background-color: #f1f5f9;
-  padding: 6px 12px;
-  border-radius: 99px;
-  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff; /* ตัวหนังสือสีขาว */
+  background-color: #1e293b; /* พื้นหลังสีน้ำเงินเข้มเกือบดำ */
+  padding: 8px 16px;
+  border-radius: 12px;
+  width: fit-content;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* เงาปุ่ม */
 }
 
-/* --- Section Cards (กล่องกราฟ) --- */
+/* --- SECTION CARDS (กล่องกราฟ) --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 32px;
   border-radius: 24px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  border: 1px solid #f1f5f9; /* ขอบบางๆ */
+  /* ขอบชัดเจน */
+  border: 1px solid #cbd5e1; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
   width: 100%;
 }
 
@@ -127,12 +146,12 @@
   align-items: center;
   margin-bottom: 32px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #f8fafc; /* เส้นคั่นที่ชัดขึ้น */
+  border-bottom: 2px solid #f1f5f9;
 }
 
 .sectionTitle {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800; /* หนา */
   color: #0f172a;
   display: flex;
   align-items: center;
@@ -140,23 +159,23 @@
   margin: 0;
 }
 
-/* แถบสีเน้นหน้าหัวข้อกราฟ (สีน้ำเงินสด) */
+/* แถบสีด้านหน้าหัวข้อกราฟ เพิ่มความโดดเด่น */
 .sectionTitle::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 24px;
-  background: linear-gradient(to bottom, #3b82f6, #2563eb); /* ไล่สีน้ำเงินสด */
+  width: 8px;
+  height: 28px;
+  background: linear-gradient(to bottom, #3b82f6, #1d4ed8); /* สีน้ำเงินสด */
   border-radius: 4px;
 }
 
 .sectionSubtitle {
   font-size: 14px;
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 500;
 }
 
-/* --- Charts Areas --- */
+/* --- CHARTS --- */
 .chartContainer {
   height: 380px;
   width: 100%;
@@ -169,6 +188,7 @@
   position: relative;
 }
 
+/* บังคับ CSS ในกราฟ */
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
@@ -176,13 +196,20 @@
   font-family: 'Prompt', sans-serif !important;
 }
 
-/* --- Satisfaction Score (คะแนน & ดาว) --- */
+/* --- SATISFACTION (ความพึงพอใจ) --- */
+.satisfactionHeader {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
 .scoreBig {
-  font-size: 64px; /* ใหญ่และชัดมาก */
+  font-size: 72px; /* ใหญ่สะใจ */
   font-weight: 900;
-  color: #0f172a; /* ดำเข้ม */
-  line-height: 1;
-  letter-spacing: -2px;
+  color: #0f172a;
+  line-height: 0.9;
+  letter-spacing: -3px;
 }
 
 .starRow {
@@ -199,11 +226,11 @@
   color: #334155;
 }
 
-/* หลอดพลัง - ปรับสีให้สดและชัดขึ้น */
+/* หลอดพลัง สีสด */
 .progressTrack {
   flex: 1;
-  height: 14px; /* หนาขึ้นอีกนิด */
-  background-color: #e2e8f0; /* พื้นหลังหลอดสีเทาชัดๆ */
+  height: 16px; /* หนา */
+  background-color: #e2e8f0;
   border-radius: 99px;
   overflow: hidden;
 }
@@ -211,20 +238,30 @@
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  /* ไล่สีส้ม-เหลืองที่สดใสและมีมิติ */
-  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3); /* เงาเรืองแสงให้หลอด */
+  /* ไล่สีส้มสดใส */
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  box-shadow: 0 2px 5px rgba(234, 88, 12, 0.4);
 }
 
 .starPercent {
-  width: 45px;
+  width: 50px;
   text-align: right;
   color: #475569;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
 }
 
-/* --- Responsive Grid --- */
+/* --- TOP STAFF BADGE --- */
+.topBadge {
+  background-color: #dbeafe; /* ฟ้าอ่อน */
+  color: #1e40af; /* น้ำเงินเข้ม */
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #93c5fd;
+}
+
+/* --- RESPONSIVE GRID --- */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: 1fr;
@@ -240,6 +277,8 @@
 }
 
 @media (min-width: 768px) {
+  .header { padding: 24px 48px; }
+  .main { padding: 32px 48px; }
   .responsiveGrid4 { grid-template-columns: repeat(2, 1fr); }
 }
 
