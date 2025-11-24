@@ -1,56 +1,55 @@
-/* StatisticsView.module.css - Final Bold & Colorful Version */
+/* StatisticsView.module.css - Balanced & Professional Typography */
 
-/* 1. Import Font Prompt */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
-/* 2. Main Container */
+/* --- 1. Global Settings & Background --- */
 .container {
   min-height: 100vh;
-  background-color: #f1f5f9; /* พื้นหลังสีเทาโทนเย็น สะอาดแต่ไม่จ้า */
+  background-color: #f1f5f9;
+  /* กำหนด Base Font Size ให้ทั้งหน้า */
   font-family: 'Prompt', sans-serif !important;
+  font-size: 14px; 
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
   overflow-x: hidden;
 }
 
-/* Header */
+/* --- 2. Header --- */
 .header {
   background-color: #ffffff;
-  padding: 20px 32px;
+  padding: 16px 32px; /* ลด padding แนวตั้งนิดนึงให้กระชับ */
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* เงาชัดขึ้น */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   width: 100% !important;
   box-sizing: border-box;
 }
 
 .headerLeft h1, .headerLeft span {
-  font-weight: 700 !important;
-  color: #0f172a;
-  font-size: 24px;
+  font-size: 20px !important; /* ปรับให้ไม่ใหญ่เกินไป */
+  font-weight: 600 !important;
+  color: #1e293b;
+  margin: 0;
 }
 
 .headerSubtitle {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
-  font-weight: 500;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
-/* Main Content Area */
+/* --- 3. Main Content --- */
 .main {
-  padding: 32px;
+  padding: 24px 32px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  
-  /* ปลดล็อกพื้นหลังและขนาด */
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -59,84 +58,74 @@
   box-sizing: border-box;
 }
 
-/* --- STATUS CARDS (ส่วนที่เน้นให้ชัด ไม่มินิมอล) --- */
+/* --- 4. Status Cards (ปรับบาลานซ์ตัวหนังสือใหม่) --- */
 .statusCard {
   background-color: #ffffff;
-  border-radius: 20px;
-  padding: 24px 28px;
+  border-radius: 16px;
+  padding: 20px 24px;
   
-  /* เส้นขอบหนา 4px เพื่อให้เห็นสีชัดเจน (สีจะมาจาก Inline Style ของ JS) */
-  border-width: 4px !important;
+  /* เส้นขอบหนาและสีชัดเหมือนเดิม */
+  border-width: 3px !important;
   border-style: solid;
-  border-color: #e2e8f0; /* สีสำรองกรณี JS ไม่ส่งสีมา */
+  border-color: #e2e8f0;
   
-  /* เงาลึก ให้ดูเป็นการ์ดจริงๆ ไม่ใช่กระดาษบางๆ */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  min-height: 160px;
+  min-height: 140px; /* ลดความสูงขั้นต่ำลงนิดนึง */
 }
 
-/* Hover Effect */
 .statusCard:hover {
-  transform: translateY(-8px); /* ลอยขึ้นสูงกว่าเดิม */
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.cardTitle {
-  font-size: 18px;
-  font-weight: 700; /* หนามาก */
-  color: #334155; /* เทาเข้ม */
-  letter-spacing: 0.3px;
-}
-
-/* ตัวเลขสถิติ - ใหญ่และหนาที่สุด */
-.cardCount {
-  font-size: 56px;
-  font-weight: 900; /* หนาสุดขีด */
-  color: #0f172a; /* ดำ */
-  line-height: 1;
-  text-align: right;
+  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
   margin-bottom: 12px;
 }
 
-/* แถบเปอร์เซ็นต์ - เปลี่ยนจากจางๆ เป็นเข้มชัด (High Contrast) */
-.cardPercent {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff; /* ตัวหนังสือสีขาว */
-  background-color: #1e293b; /* พื้นหลังสีน้ำเงินเข้มเกือบดำ */
-  padding: 8px 16px;
-  border-radius: 12px;
-  width: fit-content;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* เงาปุ่ม */
+/* หัวข้อการ์ด: เพิ่มขนาดให้อ่านง่ายขึ้น */
+.cardTitle {
+  font-size: 16px; /* เดิมเล็กไป ปรับขึ้น */
+  font-weight: 600;
+  color: #475569;
 }
 
-/* --- SECTION CARDS (กล่องกราฟ) --- */
+/* ตัวเลข: ลดขนาดลงจาก 56px ให้ดูไม่ตะโกน */
+.cardCount {
+  font-size: 42px; 
+  font-weight: 700; /* ลดความหนาลงจาก 900 */
+  color: #0f172a;
+  line-height: 1;
+  text-align: right;
+  margin-bottom: 8px;
+}
+
+/* เปอร์เซ็นต์: ปรับให้สมส่วน */
+.cardPercent {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #334155;
+  padding: 4px 10px;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+/* --- 5. Section Cards (กล่องกราฟ) --- */
 .sectionCard {
   background-color: #ffffff;
-  padding: 32px;
-  border-radius: 24px;
-  /* ขอบชัดเจน */
-  border: 1px solid #cbd5e1; 
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
+  padding: 24px; /* ลด padding ให้เนื้อหาไม่ดูโหวง */
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   width: 100%;
 }
 
@@ -144,92 +133,90 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f1f5f9;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
+/* หัวข้อกราฟ: ปรับให้เท่ากับมาตรฐาน */
 .sectionTitle {
-  font-size: 20px;
-  font-weight: 800; /* หนา */
-  color: #0f172a;
+  font-size: 18px; /* ไม่ใหญ่เกินไป */
+  font-weight: 600;
+  color: #1e293b;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin: 0;
 }
 
-/* แถบสีด้านหน้าหัวข้อกราฟ เพิ่มความโดดเด่น */
 .sectionTitle::before {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 28px;
-  background: linear-gradient(to bottom, #3b82f6, #1d4ed8); /* สีน้ำเงินสด */
+  width: 6px;
+  height: 20px;
+  background: #3b82f6;
   border-radius: 4px;
 }
 
 .sectionSubtitle {
-  font-size: 14px;
-  color: #64748b;
-  font-weight: 500;
+  font-size: 13px;
+  color: #94a3b8;
 }
 
-/* --- CHARTS --- */
+/* --- 6. Charts --- */
 .chartContainer {
-  height: 380px;
+  height: 350px;
   width: 100%;
   position: relative;
 }
 
 .staffChartContainer {
-  height: 550px;
+  height: 500px;
   width: 100%;
   position: relative;
 }
 
-/* บังคับ CSS ในกราฟ */
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
   box-sizing: border-box;
   font-family: 'Prompt', sans-serif !important;
+  font-size: 12px; /* คุม font ในกราฟไม่ให้ใหญ่/เล็กเกินไป */
 }
 
-/* --- SATISFACTION (ความพึงพอใจ) --- */
+/* --- 7. Satisfaction Score --- */
 .satisfactionHeader {
   display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 24px;
+  align-items: flex-end; /* จัดให้ฐานตัวหนังสือเท่ากัน */
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
+/* คะแนนความพึงพอใจ: ลดขนาดลงให้บาลานซ์ */
 .scoreBig {
-  font-size: 72px; /* ใหญ่สะใจ */
-  font-weight: 900;
-  color: #0f172a;
-  line-height: 0.9;
-  letter-spacing: -3px;
+  font-size: 48px; /* จากเดิม 60-70px */
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
 }
 
 .starRow {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 14px;
-  margin-bottom: 16px;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 12px;
 }
 
 .starLabel {
-  width: 30px;
-  font-weight: 700;
-  color: #334155;
+  width: 24px;
+  font-weight: 600;
+  color: #475569;
 }
 
-/* หลอดพลัง สีสด */
 .progressTrack {
   flex: 1;
-  height: 16px; /* หนา */
+  height: 10px;
   background-color: #e2e8f0;
   border-radius: 99px;
   overflow: hidden;
@@ -238,46 +225,34 @@
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  /* ไล่สีส้มสดใส */
-  background: linear-gradient(90deg, #f59e0b, #ea580c);
-  box-shadow: 0 2px 5px rgba(234, 88, 12, 0.4);
+  background: linear-gradient(90deg, #f59e0b, #d97706);
 }
 
 .starPercent {
-  width: 50px;
+  width: 36px;
   text-align: right;
-  color: #475569;
-  font-weight: 700;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-/* --- TOP STAFF BADGE --- */
-.topBadge {
-  background-color: #dbeafe; /* ฟ้าอ่อน */
-  color: #1e40af; /* น้ำเงินเข้ม */
-  padding: 6px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  border: 1px solid #93c5fd;
-}
-
-/* --- RESPONSIVE GRID --- */
+/* --- 8. Responsive Grid --- */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
 }
 
 .responsiveGrid2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
 }
 
 @media (min-width: 768px) {
-  .header { padding: 24px 48px; }
+  .header { padding: 20px 48px; }
   .main { padding: 32px 48px; }
   .responsiveGrid4 { grid-template-columns: repeat(2, 1fr); }
 }
