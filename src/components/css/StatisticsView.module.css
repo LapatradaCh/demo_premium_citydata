@@ -26,19 +26,23 @@
 }
 
 .headerSubtitle {
-  font-size: 12px; /* ปรับให้เล็กหน่อยบนมือถือ */
+  font-size: 12px;
   color: #6b7280;
   margin: 0;
 }
 
+/* --- ส่วนที่แก้ไขให้เต็มจอ --- */
 .main {
-  padding: 16px; /* ลด padding รวมเพื่อให้เนื้อหาชิดขอบมากขึ้นในมือถือ */
-  max-width: 1280px;
+  padding: 16px;
+  max-width: 100%;  /* แก้เป็น 100% เพื่อให้เต็มจอ */
+  width: 100%;      /* บังคับขยายความกว้าง */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-sizing: border-box; /* เพื่อให้ padding ไม่ดัน layout เกิน */
 }
+/* ----------------------- */
 
 /* Status Cards */
 .statusCard {
@@ -86,20 +90,19 @@
 /* Section Cards */
 .sectionCard {
   background-color: #ffffff;
-  padding: 16px; /* Mobile First: padding น้อยหน่อย */
+  padding: 16px;
   border-radius: 12px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
   display: flex;
   flex-direction: column;
-  /* สำคัญ! ป้องกัน Grid item ล้น */
   min-width: 0; 
   overflow: hidden; 
 }
 
 .sectionHeader {
   display: flex;
-  flex-direction: column; /* Mobile First: เรียงลงมา */
+  flex-direction: column;
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 20px;
@@ -123,31 +126,27 @@
 
 /* Charts */
 .chartContainer {
-  height: 300px; /* เพิ่มความสูงเล็กน้อยเพื่อให้ดูง่ายในมือถือ */
+  height: 300px;
   width: 100%;
   position: relative;
 }
 
 .staffChartContainer {
-  height: 500px; /* สูงเป็นพิเศษสำหรับแนวดิ่งหลายคน */
+  height: 500px;
   width: 100%;
   position: relative;
 }
 
-/* --- ส่วนที่เพิ่ม: แก้ปัญหา Global CSS ตีกราฟ --- */
 .chartContainer *,
 .staffChartContainer * {
-  /* บังคับปลดล็อก max-width ที่ติดมาจาก Global CSS */
   max-width: none !important; 
-  /* ป้องกันการคำนวณขนาดผิดพลาดในบาง Browser */
   box-sizing: border-box; 
 }
-/* --------------------------------------------- */
 
 /* Legend & Badges */
 .legendContainer {
   display: flex;
-  flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
+  flex-wrap: wrap;
   gap: 8px;
   font-size: 11px;
 }
@@ -215,7 +214,7 @@
 /* Top Staff Header */
 .topHeader {
   display: flex;
-  flex-direction: column; /* Mobile First */
+  flex-direction: column;
   gap: 8px;
   align-items: flex-start;
   margin-bottom: 16px;
@@ -244,13 +243,13 @@
 /* Responsive Grids */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 แถว */
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 แถว */
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
@@ -279,7 +278,6 @@
     gap: 16px;
   }
   
-  /* ปรับความสูงกราฟให้เหมาะสมกับจอใหญ่ */
   .chartContainer { height: 280px; }
   .staffChartContainer { height: 450px; }
 }
