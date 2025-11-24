@@ -1,55 +1,57 @@
-/* StatisticsView.module.css - Balanced & Professional Typography */
+/* StatisticsView.module.css - Final Complete Version */
 
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+/* 1. Import Font Prompt */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
-/* --- 1. Global Settings & Background --- */
+/* 2. Main Container */
 .container {
   min-height: 100vh;
-  background-color: #f1f5f9;
-  /* กำหนด Base Font Size ให้ทั้งหน้า */
+  background-color: #f1f5f9; /* สีเทาโทนเย็น สบายตา */
   font-family: 'Prompt', sans-serif !important;
-  font-size: 14px; 
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
   overflow-x: hidden;
 }
 
-/* --- 2. Header --- */
+/* Header */
 .header {
   background-color: #ffffff;
-  padding: 16px 32px; /* ลด padding แนวตั้งนิดนึงให้กระชับ */
+  padding: 16px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 100% !important;
   box-sizing: border-box;
 }
 
 .headerLeft h1, .headerLeft span {
-  font-size: 20px !important; /* ปรับให้ไม่ใหญ่เกินไป */
-  font-weight: 600 !important;
-  color: #1e293b;
+  font-weight: 700 !important;
+  color: #0f172a;
+  font-size: 20px;
   margin: 0;
 }
 
 .headerSubtitle {
   font-size: 13px;
   color: #64748b;
-  margin-top: 2px;
+  font-weight: 500;
+  margin-top: 4px;
 }
 
-/* --- 3. Main Content --- */
+/* Main Content Area */
 .main {
   padding: 24px 32px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  
+  /* ปลดล็อกพื้นหลังและขนาดเต็มจอ */
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -58,74 +60,81 @@
   box-sizing: border-box;
 }
 
-/* --- 4. Status Cards (ปรับบาลานซ์ตัวหนังสือใหม่) --- */
+/* --- STATUS CARDS (การ์ด 4 สี) --- */
 .statusCard {
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px 24px;
   
-  /* เส้นขอบหนาและสีชัดเหมือนเดิม */
+  /* ขอบหนา 3px ให้สีชัดเจน (สีมาจาก JS) */
   border-width: 3px !important;
   border-style: solid;
-  border-color: #e2e8f0;
+  border-color: #e2e8f0; /* สีสำรอง */
   
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  /* เงาลึก มีมิติ */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
   
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  min-height: 140px; /* ลดความสูงขั้นต่ำลงนิดนึง */
+  min-height: 140px;
 }
 
 .statusCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+  align-items: center;
   margin-bottom: 12px;
 }
 
-/* หัวข้อการ์ด: เพิ่มขนาดให้อ่านง่ายขึ้น */
 .cardTitle {
-  font-size: 16px; /* เดิมเล็กไป ปรับขึ้น */
+  font-size: 16px;
   font-weight: 600;
-  color: #475569;
+  color: #334155; /* สีเทาเข้ม */
+  white-space: nowrap; /* ห้ามตัดบรรทัด */
 }
 
-/* ตัวเลข: ลดขนาดลงจาก 56px ให้ดูไม่ตะโกน */
+/* ตัวเลขสถิติ - เน้นความสมดุล */
 .cardCount {
-  font-size: 42px; 
-  font-weight: 700; /* ลดความหนาลงจาก 900 */
-  color: #0f172a;
+  font-size: 42px;
+  font-weight: 800; /* หนาเข้ม */
+  color: #0f172a; /* ดำ */
   line-height: 1;
   text-align: right;
   margin-bottom: 8px;
 }
 
-/* เปอร์เซ็นต์: ปรับให้สมส่วน */
+/* แถบเปอร์เซ็นต์ - เข้มชัด High Contrast */
 .cardPercent {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
-  background-color: #334155;
+  background-color: #1e293b; /* พื้นหลังเข้ม */
   padding: 4px 10px;
   border-radius: 8px;
   width: fit-content;
 }
 
-/* --- 5. Section Cards (กล่องกราฟ) --- */
+/* --- SECTION CARDS (กล่องกราฟ) --- */
 .sectionCard {
   background-color: #ffffff;
-  padding: 24px; /* ลด padding ให้เนื้อหาไม่ดูโหวง */
+  padding: 24px;
   border-radius: 20px;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  border: 1px solid #cbd5e1; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
   width: 100%;
 }
 
@@ -138,32 +147,33 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-/* หัวข้อกราฟ: ปรับให้เท่ากับมาตรฐาน */
 .sectionTitle {
-  font-size: 18px; /* ไม่ใหญ่เกินไป */
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 0;
 }
 
+/* แถบสีหน้าหัวข้อ */
 .sectionTitle::before {
   content: '';
   display: inline-block;
   width: 6px;
   height: 20px;
-  background: #3b82f6;
+  background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
   border-radius: 4px;
 }
 
 .sectionSubtitle {
   font-size: 13px;
-  color: #94a3b8;
+  color: #64748b;
+  font-weight: 500;
 }
 
-/* --- 6. Charts --- */
+/* --- CHARTS --- */
 .chartContainer {
   height: 350px;
   width: 100%;
@@ -181,42 +191,40 @@
   max-width: none !important;
   box-sizing: border-box;
   font-family: 'Prompt', sans-serif !important;
-  font-size: 12px; /* คุม font ในกราฟไม่ให้ใหญ่/เล็กเกินไป */
 }
 
-/* --- 7. Satisfaction Score --- */
+/* --- SATISFACTION --- */
 .satisfactionHeader {
   display: flex;
-  align-items: flex-end; /* จัดให้ฐานตัวหนังสือเท่ากัน */
+  align-items: flex-end;
   gap: 12px;
   margin-bottom: 20px;
 }
 
-/* คะแนนความพึงพอใจ: ลดขนาดลงให้บาลานซ์ */
 .scoreBig {
-  font-size: 48px; /* จากเดิม 60-70px */
-  font-weight: 700;
-  color: #1e293b;
-  line-height: 1;
+  font-size: 56px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 0.9;
 }
 
 .starRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 13px;
+  font-size: 14px;
   margin-bottom: 12px;
 }
 
 .starLabel {
-  width: 24px;
-  font-weight: 600;
-  color: #475569;
+  width: 28px;
+  font-weight: 700;
+  color: #334155;
 }
 
 .progressTrack {
   flex: 1;
-  height: 10px;
+  height: 12px;
   background-color: #e2e8f0;
   border-radius: 99px;
   overflow: hidden;
@@ -225,39 +233,101 @@
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #f59e0b, #d97706);
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
 }
 
 .starPercent {
-  width: 36px;
+  width: 40px;
   text-align: right;
-  color: #64748b;
-  font-size: 12px;
+  color: #475569;
   font-weight: 600;
 }
 
-/* --- 8. Responsive Grid --- */
+/* --- TOP BADGE --- */
+.topBadge {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #bfdbfe;
+}
+
+/* --- GRID SYSTEM & RESPONSIVE --- */
+
+/* Default Grid (สำหรับ Desktop) */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์เป็นค่าตั้งต้น */
+  gap: 24px;
   width: 100%;
 }
 
 .responsiveGrid2 {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
   width: 100%;
 }
 
-@media (min-width: 768px) {
-  .header { padding: 20px 48px; }
-  .main { padding: 32px 48px; }
-  .responsiveGrid4 { grid-template-columns: repeat(2, 1fr); }
+/* Mobile Layout (< 768px) - ส่วนสำคัญที่แก้ให้คุณ */
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 20px;
+  }
+  
+  .main {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  /* บังคับให้แสดง 2 คอลัมน์ในมือถือ (ซ้าย-ขวา) ไม่เรียงยาวลงมา */
+  .responsiveGrid4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  
+  /* เรียงกราฟลงมาทีละอัน */
+  .responsiveGrid2 {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* ปรับขนาดการ์ดให้เล็กและกระชับ */
+  .statusCard {
+    padding: 16px !important;
+    min-height: auto !important;
+    border-width: 2px !important; /* ลดความหนาขอบนิดหน่อย */
+  }
+
+  .cardTitle {
+    font-size: 13px !important;
+  }
+
+  .cardCount {
+    font-size: 32px !important; /* ลดขนาดตัวเลขไม่ให้ล้น */
+    margin-bottom: 4px !important;
+  }
+
+  .cardPercent {
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+  }
+  
+  /* ลดขนาดกราฟในมือถือ */
+  .chartContainer {
+    height: 260px !important;
+  }
+  
+  .staffChartContainer {
+    height: 400px !important;
+  }
 }
 
-@media (min-width: 1200px) {
-  .responsiveGrid4 { grid-template-columns: repeat(4, 1fr); }
-  .responsiveGrid2 { grid-template-columns: repeat(2, 1fr); }
+/* Tablet Override (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .responsiveGrid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
