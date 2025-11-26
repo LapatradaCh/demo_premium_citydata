@@ -14,9 +14,6 @@ const IconGoogle = () => (
 const IconImagePlaceholder = () => (
   <svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
 );
-const IconBack = () => (
-    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-);
 const IconBuilding = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
 );
@@ -44,13 +41,13 @@ const IconX = () => ( // ปฏิเสธ
   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
 );
 
-const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
+const ReportDetail = ({ data, onGoToInternalMap }) => {
   
   const info = data || {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
-    status: "รอรับเรื่อง", // 🔴 ลองเปลี่ยนเป็นสถานะอื่น จะเห็น Timeline ขึ้น 2 อัน
+    status: "รอรับเรื่อง", // ลองเปลี่ยนสถานะดูเพื่อทดสอบสี
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
@@ -269,14 +266,6 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
           })}
         </div>
       </div>
-
-      {/* 4. Back Button (สีแดง) */}
-      {onBack && (
-        <button className={styles.centerBackButton} onClick={onBack}>
-          <IconBack /> ย้อนกลับ
-        </button>
-      )}
-
     </div>
   );
 };
