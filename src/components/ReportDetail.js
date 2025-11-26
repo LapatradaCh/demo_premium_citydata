@@ -20,12 +20,19 @@ const IconBack = () => (
 const IconBuilding = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
 );
+// Timeline Icons
+const IconArrowRight = () => (
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+);
+const IconClock = () => (
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+);
 
 const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   
   const info = data || {
     id: "RQ-TEST-001",
-    title: "ทดสอบการแสดงผล",
+    title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
     status: "รอรับเรื่อง",
     locationDetail: "ไม่ระบุตำแหน่ง",
@@ -34,12 +41,30 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     image: null 
   };
 
-  const handleInternalMap = () => {
-    if (onGoToInternalMap) {
-      onGoToInternalMap();
-    } else {
-      console.log("No navigation function provided");
+  // Mock Data Timeline
+  const timelineEvents = [
+    {
+      type: 'blue',
+      status: 'ส่งต่อ',
+      date: '26 พ.ย. 68',
+      time: '08:56 น.',
+      header: 'ใช้เวลา 10 นาที',
+      detail: 'เขตพระนคร ส่งต่อไปยัง สำนักงานเลขานุการผู้ว่าราชการกรุงเทพมหานคร (บัญชีทางการ)',
+      icon: <IconArrowRight />
+    },
+    {
+      type: 'red',
+      status: 'รอรับเรื่อง',
+      date: '26 พ.ย. 68',
+      time: '08:47 น.',
+      header: 'ปัญหา ผอ. เขตไม่ปฏิบัติหน้าที่',
+      detail: `เรียน ผู้ว่า กทม\nผอ.เขตป้อมปราบ ไม่ปฏิบัติหน้าที่ เรื่องร้องเรียนใน traffy fondue ไม่ได้รับการแก้ไขอย่างจริงจัง ลูกน้องเอาเรื่องให้ดูก็ไม่ดู วันๆ ผอ. ไปวัด เยี่ยมศาลเจ้า เข้ามูลนิธิ พอให้ไปดูทางเท้าที่มีคนขายของ มีจอดรถ มีการรุกล้ำก็ไม่ยอมไปเลย ลูกน้องต่างเอือมระอา\n\nขอให้ผู้ว่าถาม ผอ. คนนี้หน่อย ว่าจะปฏิบัติหน้าที่ต่อหรือไม่`,
+      icon: <IconClock />
     }
+  ];
+
+  const handleInternalMap = () => {
+    if (onGoToInternalMap) onGoToInternalMap();
   };
 
   const handleGoogleMap = () => {
@@ -52,7 +77,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   return (
     <div className={styles.container}>
       
-      {/* 1. ส่วนบน */}
+      {/* 1. Top Section (Grid 50:50) */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -84,15 +109,13 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 2. ส่วนกลาง */}
+      {/* 2. Middle Section (Grid 50:50) */}
       <div className={styles.middleSection}>
-        {/* การ์ดตำแหน่ง (มีลายน้ำรูปแผนที่) */}
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
             <p className={styles.locationText}>{info.locationDetail || "ไม่ระบุรายละเอียดตำแหน่ง"}</p>
           </div>
-          
           <div className={styles.buttonGroup}>
             <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
               <IconInternalMap /> แผนที่ภายใน
@@ -103,28 +126,68 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
           </div>
         </div>
 
-        {/* การ์ดหน่วยงาน (มีลายน้ำรูปตึก) */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
           <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
-          
-          {/* ใช้ List เพื่อความสวยงาม */}
           <ul className={styles.agencyList}>
-            <li className={styles.agencyItem}>
-              แผนกซ่อมบำรุงทั่วไป
-            </li>
-            {/* ตัวอย่างถ้ามีหลายหน่วยงาน */}
-            {/* <li className={styles.agencyItem}>ฝ่ายอาคารสถานที่</li> */}
+            <li className={styles.agencyItem}>แผนกซ่อมบำรุงทั่วไป</li>
           </ul>
         </div>
       </div>
 
-      {/* 3. ส่วนล่าง */}
+      {/* 3. Bottom Section: Timeline (ตามรูป) */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
-        <div className={styles.emptyStateText}>ยังไม่มีการอัปเดตสถานะเพิ่มเติม...</div>
+        
+        <div className={styles.timelineContainer}>
+          {timelineEvents.map((event, index) => (
+            <div key={index} className={styles.timelineRow}>
+              
+              {/* Left: Time & Status */}
+              <div className={styles.timeLeft}>
+                <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
+                  {event.status}
+                </span>
+                <span className={styles.statusTime}>{event.date}</span>
+                <span className={styles.statusTime}>{event.time}</span>
+              </div>
+
+              {/* Center: Icon & Line */}
+              <div className={styles.timeCenter}>
+                <div className={`${styles.iconCircle} ${event.type === 'blue' ? styles.bgBlue : styles.bgRed}`}>
+                  {event.icon}
+                </div>
+                <div className={styles.line}></div>
+              </div>
+
+              {/* Right: Details */}
+              <div className={styles.timeRight}>
+                
+                {/* Mobile Header */}
+                <div className={styles.mobileHeader}>
+                   <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
+                    {event.status}
+                  </span>
+                   <span className={styles.statusTime}>{event.date} {event.time}</span>
+                </div>
+
+                {event.type === 'blue' ? (
+                   <div className={styles.durationText}>{event.header}</div>
+                ) : (
+                   <div className={styles.detailTitle}>{event.header}</div>
+                )}
+                
+                <div className={styles.detailBody}>
+                  {event.detail}
+                </div>
+              </div>
+
+            </div>
+          ))}
+        </div>
+
       </div>
 
-      {/* 4. ปุ่มย้อนกลับ */}
+      {/* 4. Back Button */}
       {onBack && (
         <button className={styles.centerBackButton} onClick={onBack}>
           <IconBack /> ย้อนกลับ
