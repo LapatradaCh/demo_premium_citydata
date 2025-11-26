@@ -1,13 +1,27 @@
 /* --- css/ReportDetail.module.css --- */
 
-/* Container หลักของหน้านี้ */
+/* Container หลัก: ใช้พื้นหลังสีเทาอ่อนมากๆ เพื่อให้ Card สีขาวเด่นขึ้น */
 .container {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  font-family: 'Sarabun', sans-serif; /* หรือฟอนต์ที่คุณใช้อยู่ */
+  gap: 24px;
+  font-family: 'Sarabun', sans-serif;
   color: #333;
+  padding: 20px;
+  background-color: #F9FAFB; /* สีพื้นหลัง page */
+  box-sizing: border-box;
+}
+
+/* Common Card Style: ใช้ร่วมกันทุกกล่องเพื่อให้ Design ไปในทิศทางเดียว */
+.card {
+  background-color: #FFFFFF;
+  border-radius: 12px; /* มุมโค้งมน */
+  border: 1px solid #E5E7EB; /* เส้นขอบสีเทาจางๆ */
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* เงานุ่มๆ */
 }
 
 /* ============================== */
@@ -15,174 +29,182 @@
 /* ============================== */
 .topSection {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr; /* แบ่งสัดส่วน ซ้ายใหญ่กว่าขวานิดหน่อย */
-  gap: 20px;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
 }
 
-/* การ์ดข้อมูล (สีครีม) */
 .infoCard {
-  background-color: #F5EFE6; /* สีครีม */
-  padding: 25px;
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  position: relative;
+  gap: 12px;
+  justify-content: center;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .label {
   font-size: 14px;
-  font-weight: 600;
-  color: #000;
+  color: #6B7280; /* สีเทากลาง */
+  font-weight: 500;
   margin: 0;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  margin: 5px 0;
+  color: #111827; /* สีดำเกือบสนิท */
+  margin: 4px 0 12px 0;
 }
 
+/* ดาว: ใช้สีดำหรือเทาเข้มเพื่อให้เข้าธีม */
 .stars {
-  color: #F5A623; /* สีส้มทอง */
-  font-size: 20px;
+  color: #111827; 
+  font-size: 18px;
   letter-spacing: 2px;
 }
 
-/* ปุ่มสถานะ (กรอบสีน้ำตาล) */
-.statusBox {
-  margin-top: 10px;
-  border: 2px solid #5D4037;
+/* ปุ่มสถานะ: ปรับเป็น Pill Shape เรียบหรู */
+.statusBadge {
+  margin-top: 16px;
   display: inline-flex;
   align-items: center;
-  padding: 5px 15px;
-  gap: 10px;
-  background: #D7CCC8; /* สีพื้นหลังปุ่ม */
-  font-weight: 700;
-  color: #000;
+  padding: 6px 16px;
+  gap: 8px;
+  background-color: #F3F4F6; /* สีเทาอ่อน */
+  border: 1px solid #D1D5DB;
+  border-radius: 50px; /* ทรงแคปซูล */
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
   width: fit-content;
-  cursor: pointer;
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
 }
 
-/* การ์ดรูปภาพ (สีชมพูอ่อน กรอบแดง) */
+/* การ์ดรูปภาพ */
 .imageCard {
-  background-color: #FADBD8; /* สีชมพูอ่อน */
-  border: 2px solid #C0392B; /* กรอบแดง */
+  background-color: #F3F4F6; /* พื้นหลังรูปเป็นสีเทา */
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 180px;
+  min-height: 220px;
+  border: 1px dashed #D1D5DB; /* เส้นประแสดงพื้นที่ */
   position: relative;
 }
 
-.imageText {
-  color: #C0392B;
-  font-size: 24px;
-  font-family: 'Brush Script MT', cursive, sans-serif; /* ฟอนต์ลายมือจำลอง */
-  transform: rotate(-5deg);
+.imagePlaceholder {
+  color: #9CA3AF;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .realImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 /* ============================== */
-/* ส่วนที่ 2: ตำแหน่ง + หน่วยงาน (กลาง) */
+/* ส่วนที่ 2: ตำแหน่ง + หน่วยงาน */
 /* ============================== */
 .middleSection {
   display: grid;
-  grid-template-columns: 1fr 1.5fr; /* ซ้ายเล็ก ขวาใหญ่ */
-  gap: 20px;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 24px;
 }
 
-/* กล่องตำแหน่ง (สีครีม กรอบดำ) */
 .locationCard {
-  background-color: #F5EFE6;
-  border: 1px solid #000;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
   gap: 8px;
-  box-shadow: 3px 3px 0px rgba(0,0,0,0.15); /* เงาแข็ง */
 }
 
-.purpleText {
-  color: #8E44AD; /* สีม่วง */
-  font-size: 20px;
+.sectionHeader {
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 5px;
+  color: #111827;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.linkText {
+.breadcrumb {
   font-size: 14px;
-  color: #8B4513; /* สีน้ำตาลเข้ม */
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
+  color: #4B5563;
+  background: #F3F4F6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  font-weight: 500;
 }
 
-.linkText:hover {
-  text-decoration: underline;
-}
-
-/* กล่องหน่วยงาน */
+/* หน่วยงาน */
 .agencyWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.agencyCard {
+  height: 100%;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
 }
 
-.agencyHeader {
-  border: 1px solid #000;
-  background-color: #fff;
-  padding: 8px 15px;
-  font-weight: 700;
-  color: #8B4513;
-  text-align: center;
-  width: fit-content;
-  margin-bottom: -1px; /* ให้เส้นซ้อนกัน */
-  z-index: 1;
-}
-
-.agencyBox {
-  border: 1px solid #000;
-  background-color: #F8F9FA; /* สีขาวอมเทา */
-  height: 100%;
-  min-height: 100px;
-  padding: 15px;
-}
-
 /* ============================== */
-/* ส่วนที่ 3: รายงานสถานะ (ล่าง) */
+/* ส่วนที่ 3: รายงานสถานะ */
 /* ============================== */
 .bottomSection {
-  background-color: #F5EFE6;
-  padding: 20px;
   min-height: 200px;
-  border-radius: 4px;
 }
 
-.sectionTitle {
-  font-size: 18px;
-  font-weight: 700;
-  color: #5D4037;
-  margin-bottom: 15px;
+.emptyStateText {
+  color: #9CA3AF;
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
-/* --- Responsive Mobile --- */
+/* ปุ่มย้อนกลับ */
+.backButton {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  background-color: #fff;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  background-color: #F3F4F6;
+  border-color: #9CA3AF;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .topSection, .middleSection {
-    grid-template-columns: 1fr; /* เรียงเป็นแนวตั้งในมือถือ */
+    grid-template-columns: 1fr;
   }
   
   .imageCard {
     height: 200px;
+    min-height: auto;
   }
 }
