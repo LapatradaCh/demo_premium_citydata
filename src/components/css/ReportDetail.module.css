@@ -38,7 +38,7 @@
   border-color: #E5E7EB;
 }
 
-/* Grid Layout */
+/* Grid Layout (50:50) */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -75,11 +75,12 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Action Buttons */
+/* ✅ Action Buttons (แก้ไขให้ไม่ตัดบรรทัด) */
 .actionRow {
   display: flex;
   gap: 10px;
   margin-top: 8px;
+  flex-wrap: wrap; /* ยอมให้ปุ่มตกบรรทัดได้ถ้าจอเล็กจริงๆ */
 }
 
 .editButton {
@@ -93,8 +94,11 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center; /* จัดกลาง */
   gap: 6px;
   transition: all 0.2s;
+  white-space: nowrap; /* ⛔ ห้ามตัดบรรทัด */
+  flex: 1; /* ขยายเต็มพื้นที่เท่าๆ กัน */
 }
 
 .editButton:hover {
@@ -120,10 +124,8 @@
 .realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .imageCard:hover .realImage { transform: scale(1.05); }
 
-/* Middle Section */
-.locationCard::after, .agencyCard::after {
-  content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0;
-}
+/* Decoration */
+.locationCard::after, .agencyCard::after { content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0; }
 .locationCard::after { bottom: -20px; right: -20px; width: 120px; height: 120px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E"); }
 .agencyCard::after { top: 10px; right: 10px; width: 100px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); }
 
@@ -194,12 +196,12 @@
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* ✅ แก้ไข: ปุ่มปิดใหญ่ขึ้นและชัดเจน (ตามรูป 2) */
+/* ปุ่มปิดใหญ่แบบวงกลมแดง */
 .closeButton {
-  background-color: #EF4444; /* แดง */
+  background-color: #EF4444;
   border: none;
   border-radius: 50%;
-  width: 40px; /* ใหญ่ขึ้น */
+  width: 40px;
   height: 40px;
   display: flex; align-items: center; justify-content: center;
   color: #fff;
@@ -210,14 +212,8 @@
   right: 16px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-.closeButton:hover { 
-  background-color: #DC2626; 
-  transform: scale(1.1); 
-}
-/* ปรับขนาด icon กากบาท */
-.closeButton svg { 
-  width: 24px; height: 24px; stroke-width: 3; 
-}
+.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
+.closeButton svg { width: 24px; height: 24px; stroke-width: 3; }
 
 /* Type Selector */
 .typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
