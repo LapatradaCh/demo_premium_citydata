@@ -7,7 +7,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* ระยะห่างระหว่างแถวแนวตั้ง */
+  gap: 24px;
   font-family: 'Sarabun', sans-serif;
   color: #333;
   padding: 24px;
@@ -27,11 +27,11 @@
   position: relative;
   overflow: hidden;
   
-  /* สำคัญ: ทำให้การ์ดเต็มความสูงของ Grid Cell เสมอ */
+  /* ทำให้การ์ดเต็มความสูงของ Grid Cell เสมอ */
   height: 100%; 
   display: flex;
   flex-direction: column;
-  justify-content: center; /* จัดเนื้อหาให้อยู่กลางแนวตั้ง (ถ้าต้องการ) */
+  box-sizing: border-box;
 }
 
 .card:hover {
@@ -41,22 +41,19 @@
 }
 
 /* ============================================ */
-/* จัด Grid Layout ให้เท่ากันเป๊ะ (Solution) */
+/* GRID LAYOUT (แบบสมมาตร 50:50) */
 /* ============================================ */
-
-/* ใช้ Class เดียวกันคุมทั้งแถวบนและแถวกลาง เพื่อให้เส้นตรงกัน */
 .topSection, .middleSection {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* แบ่ง 50% - 50% เท่ากัน */
-  gap: 24px; /* ระยะห่างแนวนอนเท่ากับแนวตั้ง */
-  align-items: stretch; /* สั่งให้การ์ดยืดความสูงเท่ากัน */
+  grid-template-columns: 1fr 1fr; /* แบ่งครึ่งเท่ากันเป๊ะ */
+  gap: 24px;
+  align-items: stretch; /* ยืดความสูงให้เท่ากัน */
 }
 
 /* --- ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) --- */
 .infoCard {
+  justify-content: center;
   gap: 16px;
-  justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
-  align-items: flex-start;
 }
 
 .label {
@@ -106,8 +103,8 @@
   justify-content: center;
   border: 2px dashed #E5E7EB;
   position: relative;
-  min-height: 250px; /* กำหนดความสูงขั้นต่ำเพื่อให้ดูสมดุล */
-  padding: 0; /* เอารอบๆ ออกเพื่อให้รูปเต็ม */
+  min-height: 250px; /* กำหนดความสูงขั้นต่ำ */
+  padding: 0;
 }
 
 .imagePlaceholder {
@@ -123,6 +120,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.imageCard:hover .realImage {
+  transform: scale(1.05);
 }
 
 /* --- ส่วนที่ 2: ตำแหน่ง + หน่วยงาน --- */
@@ -154,15 +156,16 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E");
 }
 
+/* จัด Layout ภายในการ์ด */
 .locationCard {
-  justify-content: space-between; /* ดันเนื้อหากับปุ่มให้ห่างกัน */
+  justify-content: space-between;
 }
 
 .agencyCard {
-  justify-content: flex-start; /* หน่วยงานให้เรียงจากบนลงล่างปกติ */
+  justify-content: flex-start;
 }
 
-/* เนื้อหาข้างในต้องอยู่เหนือลายน้ำ */
+/* Z-Index Control */
 .sectionHeader, .locationText, .buttonGroup, .agencyList {
   position: relative;
   z-index: 2; 
@@ -184,9 +187,10 @@
   font-weight: 500;
   line-height: 1.6;
   margin: 0;
-  flex-grow: 1; /* ให้ข้อความยืดพื้นที่ได้ */
+  flex-grow: 1;
 }
 
+/* Buttons */
 .buttonGroup {
   display: flex;
   gap: 10px;
@@ -230,6 +234,7 @@
   border-color: #9CA3AF;
 }
 
+/* Agency List */
 .agencyList {
   list-style: none;
   padding: 0;
@@ -250,30 +255,120 @@
   margin-bottom: 8px;
 }
 
-/* --- ส่วนที่ 3: รายงานสถานะ --- */
+/* ========================================= */
+/* ส่วนที่ 3: Timeline (ติดตามสถานะ) - ใหม่ */
+/* ========================================= */
 .bottomSection {
   min-height: 200px;
-  justify-content: flex-start; /* เริ่มจากบนสุด */
+  justify-content: flex-start;
 }
 
-.emptyStateText {
-  color: #9CA3AF;
-  font-style: italic;
-  font-size: 14px;
-  margin-top: 12px;
+.timelineContainer {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* แถวของ Timeline: แบ่ง 3 ส่วน */
+.timelineRow {
+  display: grid;
+  grid-template-columns: 110px 40px 1fr; /* ซ้าย | กลาง | ขวา */
+  gap: 0px;
+  position: relative;
+}
+
+/* 1. ซ้าย: เวลา/สถานะ */
+.timeLeft {
+  text-align: right;
+  padding-right: 12px;
+  padding-top: 4px;
+}
+
+.statusTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.statusTime {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  display: block;
+  line-height: 1.4;
+}
+
+/* 2. กลาง: ไอคอน/เส้น */
+.timeCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.line {
+  width: 2px;
+  background-color: #e2e8f0;
+  flex-grow: 1;
+  margin-top: 4px;
+  min-height: 40px;
+}
+
+.timelineRow:last-child .line {
+  display: none;
+}
+
+.iconCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  color: #fff;
+  z-index: 2;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.emptyStateText::before {
-  content: "";
-  display: block;
-  width: 8px;
-  height: 8px;
-  background-color: #E5E7EB;
-  border-radius: 50%;
+/* 3. ขวา: รายละเอียด */
+.timeRight {
+  padding-left: 12px;
+  padding-bottom: 40px;
+  padding-top: 4px;
 }
+
+.durationText {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.detailTitle {
+  font-size: 15px;
+  color: #334155;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.detailBody {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* สีเฉพาะสถานะ (แดง/น้ำเงิน) */
+.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.textBlue { color: #1d4ed8; }
+
+.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.textRed { color: #b91c1c; }
+
+/* Mobile Header (ซ่อนบนจอใหญ่) */
+.mobileHeader { display: none; }
 
 /* ปุ่มย้อนกลับ */
 .centerBackButton {
@@ -299,17 +394,17 @@
   box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
-/* Responsive มือถือ */
+/* Responsive */
 @media (max-width: 768px) {
   .topSection, .middleSection {
     grid-template-columns: 1fr; /* กลับมาเรียงแนวตั้งเมื่อจอเล็ก */
   }
   
-  .imageCard {
-    min-height: 200px;
-  }
+  .imageCard { min-height: 200px; }
+  .buttonGroup { flex-direction: column; }
   
-  .buttonGroup {
-    flex-direction: column; /* ปุ่มเรียงซ้อนกันในมือถือ */
-  }
+  /* Timeline Mobile */
+  .timelineRow { grid-template-columns: 40px 1fr; }
+  .timeLeft { display: none; }
+  .mobileHeader { display: block; margin-bottom: 8px; }
 }
