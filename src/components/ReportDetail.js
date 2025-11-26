@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react'; // เพิ่ม useMemo เพื่อคำนวณเวลาแค่ครั้งเดียวตอนโหลด
 import styles from './css/ReportDetail.module.css';
 
 // --- Icon Components ---
@@ -40,29 +40,57 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     image: null 
   };
 
-  // ✅ แก้ไข Mock Data เป็น xxx ตามที่ขอ
-  const timelineEvents = [
-    {
-      type: 'blue',
-      status: 'ส่งต่อ',
-      date: '26 พ.ย. 68',
-      time: '08:56 น.',
-      header: 'xxxxxxxxxxxxxx', // Placeholder
-      detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Placeholder
-      icon: <IconArrowRight />
-    },
-    {
-      type: 'red',
-      status: 'รอรับเรื่อง',
-      date: '26 พ.ย. 68',
-      time: '08:47 น.',
-      header: 'xxxxxxxxxxxxxxxxxxxx', // Placeholder
-      detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, // Placeholder
-      icon: <IconClock />
-    }
-  ];
+  // --- 🕒 ฟังก์ชันคำนวณวันและเวลาไทย (Real-time) ---
+  const getDateTime = (offsetMinutes = 0) => {
+    const now = new Date();
+    // ปรับเวลาตาม offset (เช่น -10 นาที)
+    const targetDate = new Date(now.getTime() + (offsetMinutes * 60000));
+
+    // วันที่แบบไทยย่อ (เช่น 26 พ.ย. 68)
+    const day = targetDate.getDate();
+    const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const month = months[targetDate.getMonth()];
+    const year = (targetDate.getFullYear() + 543).toString().slice(-2); // เอาแค่ 2 ตัวท้าย
+
+    // เวลา (เช่น 08:56 น.)
+    let hours = targetDate.getHours();
+    let minutes = targetDate.getMinutes();
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return {
+      date: `${day} ${month} ${year}`,
+      time: `${hours}:${minutes} น.`
+    };
+  };
+
+  // ใช้ useMemo เพื่อให้ค่าเวลาคงที่ ไม่เปลี่ยนไปมาทุกครั้งที่ re-render เล็กน้อย
+  const timelineEvents = useMemo(() => {
+    const now = getDateTime(0);         // เวลาปัจจุบัน
+    const past = getDateTime(-10);      // เวลา 10 นาทีที่แล้ว
+
+    return [
+      {
+        type: 'blue',
+        status: 'ส่งต่อ',
+        date: now.date,   // 📅 วันที่ปัจจุบัน
+        time: now.time,   // 🕒 เวลาปัจจุบัน
+        header: 'xxxxxxxxxxxxxx', 
+        detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
+        icon: <IconArrowRight />
+      },
+      {
+        type: 'red',
+        status: 'รอรับเรื่อง',
+        date: past.date,  // 📅 วันที่ 10 นาทีก่อน
+        time: past.time,  // 🕒 เวลา 10 นาทีก่อน
+        header: 'xxxxxxxxxxxxxxxxxxxx', 
+        detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
+        icon: <IconClock />
+      }
+    ];
+  }, []);
 
   const handleInternalMap = () => {
     if (onGoToInternalMap) onGoToInternalMap();
@@ -160,9 +188,10 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
                 <div className={styles.line}></div>
               </div>
 
-              {/* Right: Details (Content is now 'xxx') */}
+              {/* Right: Details */}
               <div className={styles.timeRight}>
                 
+                {/* Mobile Header */}
                 <div className={styles.mobileHeader}>
                    <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
                     {event.status}
