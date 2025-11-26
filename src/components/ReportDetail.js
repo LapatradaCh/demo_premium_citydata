@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import styles from './css/ReportDetail.module.css';
 
 // --- Icons ---
@@ -16,7 +16,7 @@ const IconClose = () => (<svg width="24" height="24" fill="none" stroke="current
 // Timeline Icons
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
 const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
-const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
+const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconCheck = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>);
 const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>);
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
@@ -24,9 +24,15 @@ const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColo
 
 const ReportDetail = ({ data, onGoToInternalMap }) => {
   
+  // Modal States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   
+  // ✅ State สำหรับเก็บรูปภาพที่เลือก (Preview URL)
+  const [selectedImage, setSelectedImage] = useState(null);
+  // ✅ Ref สำหรับ input file ที่ซ่อนอยู่
+  const fileInputRef = useRef(null);
+
   const info = data || {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
@@ -39,6 +45,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     image: null 
   };
 
+  // --- Helper Functions ---
   const getStatusClass = (status) => {
     if (status.includes('รอ')) return styles.statusPending;
     if (status.includes('ประสาน')) return styles.statusCoordinating;
@@ -116,11 +123,38 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
+  // --- Image Upload Handlers ---
+  // ✅ ฟังก์ชันเมื่อมีการเลือกไฟล์
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // สร้าง URL สำหรับแสดงตัวอย่างรูปภาพ
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+  };
+
+  // ✅ ฟังก์ชันกดที่กล่องเพื่อเรียก input file
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  // ✅ ฟังก์ชันลบรูปภาพที่เลือก
+  const handleRemoveImage = (e) => {
+    e.stopPropagation(); // ป้องกันไม่ให้ event คลิกทะลุไปที่ uploadBox
+    setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // รีเซ็ตค่า input file
+    }
+  };
+
+  // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
   return (
     <div className={styles.container}>
       
+      {/* 1. Top Section */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -144,6 +178,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <span>{info.status}</span>
           </div>
 
+          {/* Edit Buttons */}
           <div className={styles.actionRow}>
              <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
                 <IconEdit /> เปลี่ยนประเภท
@@ -166,6 +201,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
+      {/* 2. Middle Section */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
@@ -190,6 +226,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
+      {/* 3. Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.timelineContainer}>
@@ -231,6 +268,9 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
+      {/* ================= MODALS ================= */}
+      
+      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -244,7 +284,9 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <div className={styles.typeGrid}>
               {problemTypes.map((type, index) => (
                 <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
-                  <div className={styles.typeCircle}><span>?</span></div>
+                  <div className={styles.typeCircle}>
+                    <span>?</span> 
+                  </div>
                   <span className={styles.typeLabel}>{type}</span>
                 </div>
               ))}
@@ -257,12 +299,19 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       )}
 
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง */}
       {showStatusModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowStatusModal(false)}>
+        <div className={styles.modalOverlay} onClick={() => {
+            setShowStatusModal(false);
+            setSelectedImage(null); // รีเซ็ตรูปเมื่อปิด modal
+          }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
-              <button className={styles.closeButton} onClick={() => setShowStatusModal(false)}>
+              <button className={styles.closeButton} onClick={() => {
+                  setShowStatusModal(false);
+                  setSelectedImage(null); // รีเซ็ตรูปเมื่อปิด modal
+                }}>
                 <IconClose />
               </button>
             </div>
@@ -287,15 +336,45 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
 
             <div className={styles.formGroup}>
                <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
-               <div className={styles.uploadBox}>
-                  <IconCamera />
-                  <span>แนบรูปภาพ</span>
+               
+               {/* ✅ Input file ที่ซ่อนอยู่ */}
+               <input 
+                 type="file" 
+                 ref={fileInputRef} 
+                 onChange={handleFileChange} 
+                 accept="image/*" 
+                 style={{ display: 'none' }} 
+               />
+
+               {/* ✅ กล่องอัปโหลดรูปภาพ (คลิกได้) */}
+               <div className={styles.uploadBox} onClick={triggerFileInput}>
+                  {selectedImage ? (
+                    // แสดงรูปตัวอย่างถ้ามีรูปที่เลือก
+                    <div className={styles.previewWrapper}>
+                      <img src={selectedImage} alt="Preview" className={styles.imagePreview} />
+                      {/* ปุ่มลบรูป (กากบาทเล็ก) */}
+                      <button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button>
+                    </div>
+                  ) : (
+                    // แสดง placeholder ถ้ายังไม่ได้เลือกรูป
+                    <>
+                      <IconCamera />
+                      <span>แนบรูปภาพ</span>
+                    </>
+                  )}
                </div>
             </div>
 
             <div className={styles.modalActions}>
-               <button className={styles.btnCancel} onClick={() => setShowStatusModal(false)}>ยกเลิก</button>
-               <button className={styles.btnConfirm} onClick={() => setShowStatusModal(false)}>ยืนยัน</button>
+               <button className={styles.btnCancel} onClick={() => {
+                   setShowStatusModal(false);
+                   setSelectedImage(null); // รีเซ็ตรูปเมื่อยกเลิก
+                 }}>ยกเลิก</button>
+               <button className={styles.btnConfirm} onClick={() => {
+                   // TODO: Handle form submission with image here
+                   setShowStatusModal(false);
+                   setSelectedImage(null); 
+                 }}>ยืนยัน</button>
             </div>
           </div>
         </div>
