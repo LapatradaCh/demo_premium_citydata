@@ -20,17 +20,28 @@ const IconBack = () => (
 const IconBuilding = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
 );
-const IconArrowRight = () => (
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-);
-const IconClock = () => (
+
+// --- Timeline Icons ---
+const IconClock = () => ( // รอรับเรื่อง
   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
 );
-const IconCheck = () => (
+const IconPhone = () => ( // กำลังประสาน
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+);
+const IconWrench = () => ( // ดำเนินการ
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+);
+const IconCheck = () => ( // เสร็จสิ้น
     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
 );
-const IconWrench = () => (
-    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+const IconArrowRight = () => ( // ส่งต่อ
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+);
+const IconUsers = () => ( // เชิญร่วม
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+);
+const IconX = () => ( // ปฏิเสธ
+  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
 );
 
 const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
@@ -39,37 +50,46 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
-    status: "รอรับเรื่อง", // ลองเปลี่ยนคำนี้ดู สีปุ่มและ Timeline จะเปลี่ยนตาม
+    status: "รอรับเรื่อง", // ลองเปลี่ยนคำในนี้เป็น: รอรับเรื่อง, กำลังประสาน, ดำเนินการ, เสร็จสิ้น, ส่งต่อ, เชิญร่วม, ปฏิเสธ
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
     image: null 
   };
 
-  // Logic 1: เลือกสีปุ่มด้านบน
+  // ✅ Logic 1: เลือกสีป้ายสถานะ (Badges)
   const getStatusClass = (status) => {
-    if (status.includes('รอ')) return styles.statusPending;
-    if (status.includes('กำลัง')) return styles.statusProgress;
-    if (status.includes('เสร็จ')) return styles.statusDone;
-    if (status.includes('ส่งต่อ')) return styles.statusForward;
+    if (status.includes('รอ')) return styles.statusPending;     // แดง
+    if (status.includes('ประสาน')) return styles.statusCoordinating; // ม่วง
+    if (status.includes('ดำเนินการ')) return styles.statusProgress; // เหลือง
+    if (status.includes('เสร็จ')) return styles.statusDone;     // เขียว
+    if (status.includes('ส่งต่อ')) return styles.statusForward;  // ฟ้า
+    if (status.includes('เชิญ')) return styles.statusInvite;    // Teal (มิ้นต์)
+    if (status.includes('ปฏิเสธ')) return styles.statusReject;  // เทาเข้ม
     return styles.statusDefault;
   };
 
-  // Logic 2: เลือกสี Timeline
+  // ✅ Logic 2: เลือกสีเส้น Timeline
   const getTimelineColorType = (status) => {
     if (status.includes('รอ')) return 'red';
-    if (status.includes('กำลัง')) return 'orange';
+    if (status.includes('ประสาน')) return 'purple';
+    if (status.includes('ดำเนินการ')) return 'yellow';
     if (status.includes('เสร็จ')) return 'green';
     if (status.includes('ส่งต่อ')) return 'blue';
+    if (status.includes('เชิญ')) return 'teal';
+    if (status.includes('ปฏิเสธ')) return 'dark';
     return 'red';
   };
 
-  // Logic 3: เลือกไอคอน Timeline
+  // ✅ Logic 3: เลือกไอคอน Timeline
   const getTimelineIcon = (status) => {
     if (status.includes('รอ')) return <IconClock />;
-    if (status.includes('กำลัง')) return <IconWrench />;
+    if (status.includes('ประสาน')) return <IconPhone />;
+    if (status.includes('ดำเนินการ')) return <IconWrench />;
     if (status.includes('เสร็จ')) return <IconCheck />;
     if (status.includes('ส่งต่อ')) return <IconArrowRight />;
+    if (status.includes('เชิญ')) return <IconUsers />;
+    if (status.includes('ปฏิเสธ')) return <IconX />;
     return <IconClock />;
   };
 
@@ -96,7 +116,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
 
     return [
       {
-        // Dynamic Item (ล่าสุด): สี+ไอคอน เปลี่ยนตามสถานะจริง
+        // รายการล่าสุด (Dynamic)
         type: getTimelineColorType(info.status), 
         status: info.status, 
         date: now.date,
@@ -106,7 +126,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         icon: getTimelineIcon(info.status)
       },
       {
-        // Static Item (ประวัติ): สีแดง
+        // รายการประวัติ (Static)
         type: 'red',
         status: 'สร้างเรื่องร้องเรียน',
         date: past.date,
@@ -198,12 +218,16 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         <div className={styles.timelineContainer}>
           {timelineEvents.map((event, index) => {
             
+            // Logic เลือก Class สีของ Timeline ตาม type
             let colorTitleClass = styles.textRed;
             let colorBgClass = styles.bgRed;
             
             if (event.type === 'blue') { colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; }
             else if (event.type === 'green') { colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; }
-            else if (event.type === 'orange') { colorTitleClass = styles.textOrange; colorBgClass = styles.bgOrange; }
+            else if (event.type === 'yellow') { colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; }
+            else if (event.type === 'purple') { colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; }
+            else if (event.type === 'teal') { colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; }
+            else if (event.type === 'dark') { colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; }
 
             return (
               <div key={index} className={styles.timelineRow}>
