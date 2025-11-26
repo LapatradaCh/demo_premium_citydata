@@ -79,7 +79,7 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทาเข้ม */
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* --- Action Buttons (ปุ่มแก้ไขหน้าแรก) --- */
+/* --- Action Buttons (ปุ่มแก้ไข Premium) --- */
 .actionRow {
   display: flex;
   gap: 12px;
@@ -121,7 +121,9 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
-.editButton svg { width: 18px; height: 18px; stroke-width: 2; }
+.editButton svg {
+  width: 18px; height: 18px; stroke-width: 2;
+}
 
 /* --- Image Card --- */
 .imageCard {
@@ -251,10 +253,66 @@
 .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 .formTextarea { min-height: 80px; resize: vertical; }
 
-.uploadBox { border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; }
+/* ✅ Upload Box & Preview (เพิ่มใหม่) */
+.uploadBox { 
+  border: 2px dashed #D1D5DB; 
+  border-radius: 8px; 
+  padding: 20px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 10px; 
+  cursor: pointer; 
+  background-color: #F9FAFB; 
+  transition: all 0.2s; 
+  color: #6B7280; 
+  font-size: 13px;
+  position: relative; /* เพื่อให้ปุ่มลบรูปอิงตำแหน่ง */
+  min-height: 120px; /* ความสูงขั้นต่ำ */
+}
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* ✅ Modal Buttons (แก้ไขล่าสุด) */
+/* รูปตัวอย่าง (Preview) */
+.previewWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.imagePreview {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 180px; /* จำกัดความสูง */
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+/* ปุ่มลบรูปตัวอย่าง (กากบาทเล็ก) */
+.removePreviewBtn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  background-color: #EF4444;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.2s;
+}
+.removePreviewBtn:hover { background-color: #DC2626; }
+
+
+/* Modal Buttons (แดง/เขียว) */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
 
 /* ปุ่มยกเลิก (แดงทึบ ไม่มีขอบ) */
