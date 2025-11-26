@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './css/ReportDetail.module.css';
 
-// ... (Icon Components เหมือนเดิม) ...
+// --- Icon Components ---
 const IconMapPin = () => (
   <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
 );
@@ -17,8 +17,10 @@ const IconImagePlaceholder = () => (
 const IconBack = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 );
+const IconBuilding = () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+);
 
-// ✅ เพิ่ม props: onGoToInternalMap
 const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   
   const info = data || {
@@ -32,7 +34,6 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     image: null 
   };
 
-  // ✅ เรียกใช้ props เมื่อกดปุ่ม
   const handleInternalMap = () => {
     if (onGoToInternalMap) {
       onGoToInternalMap();
@@ -51,7 +52,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   return (
     <div className={styles.container}>
       
-      {/* 1. ส่วนบน (เหมือนเดิม) */}
+      {/* 1. ส่วนบน */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -83,8 +84,9 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 2. ส่วนกลาง (แก้ไขปุ่มกด) */}
+      {/* 2. ส่วนกลาง */}
       <div className={styles.middleSection}>
+        {/* การ์ดตำแหน่ง (มีลายน้ำรูปแผนที่) */}
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
@@ -92,32 +94,37 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
           </div>
           
           <div className={styles.buttonGroup}>
-            {/* ✅ ปุ่มนี้จะเรียกฟังก์ชันที่ส่งมาจาก Home.js */}
             <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
               <IconInternalMap /> แผนที่ภายใน
             </button>
-            
             <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
               <IconGoogle /> Google Maps
             </button>
           </div>
         </div>
 
+        {/* การ์ดหน่วยงาน (มีลายน้ำรูปตึก) */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
-          <div className={styles.sectionHeader}>หน่วยงานที่เกี่ยวข้อง</div>
-          <div style={{ color: '#4B5563', fontSize: '15px', lineHeight: '1.6', paddingLeft: '10px' }}>
-             - แผนกซ่อมบำรุงทั่วไป
-          </div>
+          <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
+          
+          {/* ใช้ List เพื่อความสวยงาม */}
+          <ul className={styles.agencyList}>
+            <li className={styles.agencyItem}>
+              แผนกซ่อมบำรุงทั่วไป
+            </li>
+            {/* ตัวอย่างถ้ามีหลายหน่วยงาน */}
+            {/* <li className={styles.agencyItem}>ฝ่ายอาคารสถานที่</li> */}
+          </ul>
         </div>
       </div>
 
-      {/* 3. ส่วนล่าง (เหมือนเดิม) */}
+      {/* 3. ส่วนล่าง */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.emptyStateText}>ยังไม่มีการอัปเดตสถานะเพิ่มเติม...</div>
       </div>
 
-      {/* 4. ปุ่มย้อนกลับ (อยู่ด้านล่างสุด ตรงกลาง) */}
+      {/* 4. ปุ่มย้อนกลับ */}
       {onBack && (
         <button className={styles.centerBackButton} onClick={onBack}>
           <IconBack /> ย้อนกลับ
