@@ -79,36 +79,50 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทาเข้ม */
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* --- Edit/Action Buttons (ปุ่มแก้ไขหน้าแรก) --- */
+/* --- Action Buttons (ปุ่มแก้ไข Premium) --- */
 .actionRow {
   display: flex;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 12px;
   flex-wrap: wrap;
 }
 
 .editButton {
-  background-color: #FFFFFF;
-  border: 1px solid #D1D5DB;
-  color: #374151;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
+  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB); /* ไล่สีพื้นหลัง */
+  border: 1px solid #E5E7EB;
+  color: #4B5563;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  transition: all 0.2s;
+  gap: 8px;
+  /* เงานุ่มนวล */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap; /* ห้ามตัดบรรทัด */
   flex: 1;
 }
 
 .editButton:hover {
-  background-color: #F9FAFB;
+  background: linear-gradient(to bottom, #F3F4F6, #E5E7EB);
   border-color: #9CA3AF;
   color: #111827;
+  transform: translateY(-2px); /* ลอยขึ้น */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.editButton:active {
+  background: #E5E7EB;
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.editButton svg {
+  width: 18px; height: 18px; stroke-width: 2;
 }
 
 /* --- Image Card --- */
@@ -205,7 +219,7 @@
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* ปุ่มปิด (X) ใหญ่และสีแดง */
+/* ปุ่มปิด (X) ใหญ่สีแดง */
 .closeButton {
   background-color: #EF4444;
   border: none;
@@ -242,17 +256,16 @@
 .uploadBox { border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* ✅ ปุ่ม Action ใน Modal (แดง/เขียว) */
+/* ✅ Modal Buttons (แดง/เขียว) */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
 
-/* ปุ่มยกเลิก (แดง) */
 .btnCancel { 
   flex: 1; 
   padding: 10px; 
   border-radius: 8px; 
-  border: 2px solid #EF4444; /* ขอบแดง */
-  background-color: #FEF2F2; /* พื้นแดงอ่อน */
-  color: #DC2626; /* ตัวหนังสือแดงเข้ม */
+  border: 2px solid #EF4444; 
+  background-color: #FEF2F2; 
+  color: #DC2626; 
   font-weight: 700; 
   cursor: pointer; 
   transition: all 0.2s ease;
@@ -263,14 +276,13 @@
   transform: translateY(-1px);
 }
 
-/* ปุ่มยืนยัน/เปลี่ยน (เขียว) */
 .btnConfirm { 
   flex: 1; 
   padding: 10px; 
   border-radius: 8px; 
   border: none; 
-  background-color: #10B981; /* เขียว Emerald */
-  color: #FFFFFF; /* ตัวหนังสือขาว */
+  background-color: #10B981; 
+  color: #FFFFFF; 
   font-weight: 700; 
   cursor: pointer; 
   transition: all 0.2s ease;
@@ -282,7 +294,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
