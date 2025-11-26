@@ -38,9 +38,7 @@
   border-color: #E5E7EB;
 }
 
-/* ============================================ */
-/* GRID LAYOUT (แบบสมมาตร 50:50) */
-/* ============================================ */
+/* Grid Layout */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -48,36 +46,15 @@
   align-items: stretch;
 }
 
-/* --- ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) --- */
-.infoCard {
-  justify-content: center;
-  gap: 16px;
-}
+/* Top Section Styles */
+.infoCard { justify-content: center; gap: 16px; }
+.label { font-size: 13px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0; }
+.title { font-size: 28px; font-weight: 800; color: #111827; margin: 0; line-height: 1.2; }
+.stars { color: #111827; font-size: 20px; letter-spacing: 4px; }
 
-.label {
-  font-size: 13px;
-  color: #9CA3AF;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin: 0 0 4px 0;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: 800;
-  color: #111827;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.stars {
-  color: #111827;
-  font-size: 20px;
-  letter-spacing: 4px;
-}
-
-/* Status Badge Base */
+/* ========================================= */
+/* ✅ Status Badges (สีป้ายสถานะตามรูป) */
+/* ========================================= */
 .statusBadge {
   display: inline-flex;
   align-items: center;
@@ -91,265 +68,96 @@
   transition: all 0.2s ease;
 }
 
-/* Status Colors (Dynamic) */
+/* 1. รอรับเรื่อง (Red) */
 .statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-.statusProgress { background-color: #FFFBEB; color: #D97706; border-color: #FDE68A; }
+/* 2. กำลังประสาน (Purple) */
+.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
+/* 3. ดำเนินการ (Yellow) */
+.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
+/* 4. เสร็จสิ้น (Green) */
 .statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
+/* 5. ส่งต่อ (Blue) */
 .statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
+/* 6. เชิญร่วม (Teal) */
+.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
+/* 7. ปฏิเสธ (Grey/Dark) */
+.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 
+/* Image Card */
+.imageCard { background-color: #F9FAFB; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px dashed #E5E7EB; position: relative; min-height: 250px; padding: 0; }
+.imagePlaceholder { color: #9CA3AF; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.imageCard:hover .realImage { transform: scale(1.05); }
 
-/* การ์ดรูปภาพ */
-.imageCard {
-  background-color: #F9FAFB;
-  border-radius: 16px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #E5E7EB;
-  position: relative;
-  min-height: 250px;
-  padding: 0;
-}
-
-.imagePlaceholder {
-  color: #9CA3AF;
-  font-size: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.realImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.imageCard:hover .realImage {
-  transform: scale(1.05);
-}
-
-/* --- ส่วนที่ 2: ตำแหน่ง + หน่วยงาน --- */
-.locationCard::after, .agencyCard::after {
-  content: "";
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.locationCard::after {
-  bottom: -20px;
-  right: -20px;
-  width: 120px;
-  height: 120px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E");
-}
-
-.agencyCard::after {
-  top: 10px;
-  right: 10px;
-  width: 100px;
-  height: 100px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E");
-}
+/* Decoration */
+.locationCard::after, .agencyCard::after { content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0; }
+.locationCard::after { bottom: -20px; right: -20px; width: 120px; height: 120px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E"); }
+.agencyCard::after { top: 10px; right: 10px; width: 100px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); }
 
 .locationCard { justify-content: space-between; }
 .agencyCard { justify-content: flex-start; }
+.sectionHeader, .locationText, .buttonGroup, .agencyList { position: relative; z-index: 2; }
+.sectionHeader { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.locationText { font-size: 15px; color: #4B5563; font-weight: 500; line-height: 1.6; margin: 0; flex-grow: 1; }
 
-.sectionHeader, .locationText, .buttonGroup, .agencyList {
-  position: relative;
-  z-index: 2; 
-}
-
-.sectionHeader {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.locationText {
-  font-size: 15px;
-  color: #4B5563;
-  font-weight: 500;
-  line-height: 1.6;
-  margin: 0;
-  flex-grow: 1;
-}
-
-.buttonGroup {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-  width: 100%;
-}
-
-.actionButton {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-}
-
+.buttonGroup { display: flex; gap: 10px; margin-top: 16px; width: 100%; }
+.actionButton { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; }
 .internalMapBtn { background-color: #1F2937; color: #ffffff; border: 1px solid #1F2937; }
 .internalMapBtn:hover { background-color: #000000; }
 .googleMapBtn { background-color: #ffffff; color: #374151; border: 1px solid #E5E7EB; }
 .googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
 .agencyList { list-style: none; padding: 0; margin: 0; width: 100%; }
-.agencyItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #4B5563;
-  font-size: 15px;
-  background-color: rgba(255,255,255,0.8);
-  padding: 12px;
-  border-radius: 6px;
-  border-left: 4px solid #E5E7EB;
-  margin-bottom: 8px;
-}
+.agencyItem { display: flex; align-items: center; gap: 10px; color: #4B5563; font-size: 15px; background-color: rgba(255,255,255,0.8); padding: 12px; border-radius: 6px; border-left: 4px solid #E5E7EB; margin-bottom: 8px; }
 
-/* ========================================= */
-/* ส่วนที่ 3: Timeline (ติดตามสถานะ) */
-/* ========================================= */
-.bottomSection {
-  min-height: 200px;
-  justify-content: flex-start;
-}
-
-.timelineContainer {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.timelineRow {
-  display: grid;
-  grid-template-columns: 110px 40px 1fr;
-  gap: 0px;
-  position: relative;
-}
-
-.timeLeft {
-  text-align: right;
-  padding-right: 12px;
-  padding-top: 4px;
-}
-
-.statusTitle {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  display: block;
-}
-
-.statusTime {
-  font-size: 13px;
-  color: #64748b;
-  font-weight: 500;
-  display: block;
-  line-height: 1.4;
-}
-
-.timeCenter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.line {
-  width: 2px;
-  background-color: #e2e8f0;
-  flex-grow: 1;
-  margin-top: 4px;
-  min-height: 40px;
-}
-
+/* Timeline Styles */
+.bottomSection { min-height: 200px; justify-content: flex-start; }
+.timelineContainer { margin-top: 16px; display: flex; flex-direction: column; }
+.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; gap: 0px; position: relative; }
+.timeLeft { text-align: right; padding-right: 12px; padding-top: 4px; }
+.statusTitle { font-size: 16px; font-weight: 700; margin-bottom: 4px; display: block; }
+.statusTime { font-size: 13px; color: #64748b; font-weight: 500; display: block; line-height: 1.4; }
+.timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
+.line { width: 2px; background-color: #e2e8f0; flex-grow: 1; margin-top: 4px; min-height: 40px; }
 .timelineRow:last-child .line { display: none; }
+.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; z-index: 2; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.timeRight { padding-left: 12px; padding-bottom: 40px; padding-top: 4px; }
+.durationText { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px; display: block; }
+.detailTitle { font-size: 15px; color: #334155; margin-bottom: 8px; line-height: 1.6; }
+.detailBody { font-size: 14px; color: #64748b; line-height: 1.6; white-space: pre-line; }
 
-.iconCircle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  z-index: 2;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.timeRight {
-  padding-left: 12px;
-  padding-bottom: 40px;
-  padding-top: 4px;
-}
-
-.durationText {
-  font-size: 16px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.detailTitle {
-  font-size: 15px;
-  color: #334155;
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-.detailBody {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-
-/* Timeline Colors */
+/* ========================================= */
+/* ✅ Timeline Colors (สีสำหรับเส้น Timeline) */
+/* ========================================= */
 .bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 .textRed { color: #b91c1c; }
 
-.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.textBlue { color: #1d4ed8; }
+.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+.textPurple { color: #7e22ce; }
+
+.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); }
+.textYellow { color: #a16207; }
 
 .bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); }
 .textGreen { color: #15803d; }
 
-.bgOrange { background: linear-gradient(135deg, #f59e0b, #b45309); }
-.textOrange { color: #b45309; }
+.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.textBlue { color: #1d4ed8; }
+
+.bgTeal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+.textTeal { color: #0f766e; }
+
+.bgDark { background: linear-gradient(135deg, #4b5563, #1f2937); }
+.textDark { color: #1f2937; }
 
 .mobileHeader { display: none; }
 
-/* ========================================= */
 /* ปุ่มย้อนกลับ (สีแดง) */
-/* ========================================= */
 .centerBackButton {
   align-self: center;
   margin-top: 10px;
   padding: 12px 48px;
-  background-color: #dc2626; /* แดง */
+  background-color: #dc2626;
   color: #ffffff;
   border: none;
   border-radius: 50px;
@@ -369,7 +177,6 @@
   box-shadow: 0 10px 15px rgba(0,0,0,0.2);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .topSection, .middleSection { grid-template-columns: 1fr; }
   .imageCard { min-height: 200px; }
