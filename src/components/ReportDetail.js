@@ -44,7 +44,7 @@ const ReportDetail = ({ data, onBack }) => {
     // navigate('/MapView'); 
 
     // วิธี 2: ถ้าเปลี่ยน URL ตรงๆ
-    window.location.href = '/MapView'; 
+    window.location.href = './MapView'; 
   };
 
   // ไป Google Maps
