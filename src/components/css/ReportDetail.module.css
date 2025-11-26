@@ -13,7 +13,7 @@
   padding: 24px;
   background-color: #F9FAFB;
   box-sizing: border-box;
-  padding-bottom: 80px;
+  padding-bottom: 40px; /* ลด padding ลงนิดหน่อยเพราะไม่มีปุ่มแล้ว */
 }
 
 /* Common Card Style */
@@ -52,9 +52,7 @@
 .title { font-size: 28px; font-weight: 800; color: #111827; margin: 0; line-height: 1.2; }
 .stars { color: #111827; font-size: 20px; letter-spacing: 4px; }
 
-/* ========================================= */
-/* ✅ Status Badges (สีป้ายสถานะตามรูป) */
-/* ========================================= */
+/* Status Badges */
 .statusBadge {
   display: inline-flex;
   align-items: center;
@@ -68,20 +66,14 @@
   transition: all 0.2s ease;
 }
 
-/* 1. รอรับเรื่อง (Red) */
 .statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-/* 2. กำลังประสาน (Purple) */
 .statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
-/* 3. ดำเนินการ (Yellow) */
 .statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
-/* 4. เสร็จสิ้น (Green) */
 .statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
-/* 5. ส่งต่อ (Blue) */
 .statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-/* 6. เชิญร่วม (Teal) */
 .statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
-/* 7. ปฏิเสธ (Grey/Dark) */
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
+.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
 /* Image Card */
 .imageCard { background-color: #F9FAFB; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px dashed #E5E7EB; position: relative; min-height: 250px; padding: 0; }
@@ -126,57 +118,25 @@
 .detailTitle { font-size: 15px; color: #334155; margin-bottom: 8px; line-height: 1.6; }
 .detailBody { font-size: 14px; color: #64748b; line-height: 1.6; white-space: pre-line; }
 
-/* ========================================= */
-/* ✅ Timeline Colors (สีสำหรับเส้น Timeline) */
-/* ========================================= */
+/* Timeline Colors */
 .bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 .textRed { color: #b91c1c; }
-
 .bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); }
 .textPurple { color: #7e22ce; }
-
 .bgYellow { background: linear-gradient(135deg, #eab308, #a16207); }
 .textYellow { color: #a16207; }
-
 .bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); }
 .textGreen { color: #15803d; }
-
 .bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
 .textBlue { color: #1d4ed8; }
-
 .bgTeal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
 .textTeal { color: #0f766e; }
-
 .bgDark { background: linear-gradient(135deg, #4b5563, #1f2937); }
 .textDark { color: #1f2937; }
 
 .mobileHeader { display: none; }
 
-/* ปุ่มย้อนกลับ (สีแดง) */
-.centerBackButton {
-  align-self: center;
-  margin-top: 10px;
-  padding: 12px 48px;
-  background-color: #dc2626;
-  color: #ffffff;
-  border: none;
-  border-radius: 50px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-}
-
-.centerBackButton:hover {
-  background-color: #b91c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .topSection, .middleSection { grid-template-columns: 1fr; }
   .imageCard { min-height: 200px; }
