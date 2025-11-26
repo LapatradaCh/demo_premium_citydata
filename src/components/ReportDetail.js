@@ -20,7 +20,6 @@ const IconBack = () => (
 const IconBuilding = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
 );
-// Timeline Icons
 const IconArrowRight = () => (
   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
 );
@@ -41,15 +40,15 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     image: null 
   };
 
-  // Mock Data Timeline
+  // ✅ แก้ไข Mock Data เป็น xxx ตามที่ขอ
   const timelineEvents = [
     {
       type: 'blue',
       status: 'ส่งต่อ',
       date: '26 พ.ย. 68',
       time: '08:56 น.',
-      header: 'ใช้เวลา 10 นาที',
-      detail: 'เขตพระนคร ส่งต่อไปยัง สำนักงานเลขานุการผู้ว่าราชการกรุงเทพมหานคร (บัญชีทางการ)',
+      header: 'xxxxxxxxxxxxxx', // Placeholder
+      detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Placeholder
       icon: <IconArrowRight />
     },
     {
@@ -57,8 +56,10 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
       status: 'รอรับเรื่อง',
       date: '26 พ.ย. 68',
       time: '08:47 น.',
-      header: 'ปัญหา ผอ. เขตไม่ปฏิบัติหน้าที่',
-      detail: `เรียน ผู้ว่า กทม\nผอ.เขตป้อมปราบ ไม่ปฏิบัติหน้าที่ เรื่องร้องเรียนใน traffy fondue ไม่ได้รับการแก้ไขอย่างจริงจัง ลูกน้องเอาเรื่องให้ดูก็ไม่ดู วันๆ ผอ. ไปวัด เยี่ยมศาลเจ้า เข้ามูลนิธิ พอให้ไปดูทางเท้าที่มีคนขายของ มีจอดรถ มีการรุกล้ำก็ไม่ยอมไปเลย ลูกน้องต่างเอือมระอา\n\nขอให้ผู้ว่าถาม ผอ. คนนี้หน่อย ว่าจะปฏิบัติหน้าที่ต่อหรือไม่`,
+      header: 'xxxxxxxxxxxxxxxxxxxx', // Placeholder
+      detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, // Placeholder
       icon: <IconClock />
     }
   ];
@@ -77,7 +78,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   return (
     <div className={styles.container}>
       
-      {/* 1. Top Section (Grid 50:50) */}
+      {/* 1. Top Section */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -109,7 +110,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 2. Middle Section (Grid 50:50) */}
+      {/* 2. Middle Section */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
@@ -134,7 +135,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 3. Bottom Section: Timeline (ตามรูป) */}
+      {/* 3. Bottom Section: Timeline */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         
@@ -159,10 +160,9 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
                 <div className={styles.line}></div>
               </div>
 
-              {/* Right: Details */}
+              {/* Right: Details (Content is now 'xxx') */}
               <div className={styles.timeRight}>
                 
-                {/* Mobile Header */}
                 <div className={styles.mobileHeader}>
                    <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
                     {event.status}
@@ -187,7 +187,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
 
       </div>
 
-      {/* 4. Back Button */}
+      {/* 4. Back Button (สีแดง) */}
       {onBack && (
         <button className={styles.centerBackButton} onClick={onBack}>
           <IconBack /> ย้อนกลับ
