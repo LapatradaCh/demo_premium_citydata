@@ -50,7 +50,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
-    status: "รอรับเรื่อง", // ลองเปลี่ยนคำในนี้เป็น: รอรับเรื่อง, กำลังประสาน, ดำเนินการ, เสร็จสิ้น, ส่งต่อ, เชิญร่วม, ปฏิเสธ
+    status: "รอรับเรื่อง", // ลองเปลี่ยนสถานะดูเพื่อทดสอบสี
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
@@ -126,9 +126,9 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         icon: getTimelineIcon(info.status)
       },
       {
-        // รายการประวัติ (Static)
+        // รายการประวัติ (Static) -> เปลี่ยนชื่อสถานะเป็น "รอรับเรื่อง"
         type: 'red',
-        status: 'สร้างเรื่องร้องเรียน',
+        status: 'รอรับเรื่อง', // ✅ แก้ไขแล้ว
         date: past.date,
         time: past.time,
         header: 'xxxxxxxxxxxxxxxxxxxx', 
