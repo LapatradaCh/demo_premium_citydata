@@ -40,6 +40,7 @@ const Home = () => {
 
   const [selectedReport, setSelectedReport] = useState(null);
 
+  // ... (menuItems และ useEffect โหลดข้อมูล เหมือนเดิม ไม่ต้องแก้) ...
   const menuItems = [
     {
       name: "แผนที่",
@@ -70,7 +71,6 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    // ... (ส่วนโหลดข้อมูลหน่วยงาน เหมือนเดิม) ...
     const stateAgency = location.state?.agency;
     if (stateAgency) {
       setOrganizationInfo({
@@ -82,7 +82,6 @@ const Home = () => {
       return;
     }
     const tryReadOrg = (retry = 0) => {
-      // ... (code เดิม) ...
        const cachedOrg = localStorage.getItem("selectedOrg");
        const lastOrg = localStorage.getItem("lastSelectedOrg");
        let orgToSet = null;
@@ -123,49 +122,55 @@ const Home = () => {
     navigate("/");
   };
 
+  // ✅ แก้ไข 1: ถ้ามี items (เมนูย่อย) ให้เปิดแค่ Pop-up ยังไม่ต้องเปลี่ยนหน้า
   const handleTabClick = (item) => {
     if (item.action) {
       item.action();
     } else {
-      setSelectedReport(null);
       if (item.items) {
-        setActiveTab(item.name);
+        // กรณีมีเมนูย่อย: แค่เปิด/ปิด Pop-up (ไม่ set activeTab)
         setOpenSubMenu(openSubMenu === item.name ? null : item.name);
       } else {
+        // กรณีไม่มีเมนูย่อย (เช่น ตั้งค่า): เปลี่ยนหน้าได้เลย
+        setSelectedReport(null);
         setActiveTab(item.name);
         setOpenSubMenu(null);
       }
     }
   };
 
+  // ✅ แก้ไข 2: เมื่อกดเลือกเมนูย่อย ค่อยเปลี่ยนหน้าหลัก (setActiveTab)
   const handleSubMenuItemClick = (mainTabName, subItemName) => {
+    // 1. อัปเดตว่าเลือก SubTab ไหนอยู่
     setActiveSubTabs({
       ...activeSubTabs,
       [mainTabName]: subItemName,
     });
+    
+    // 2. เปลี่ยนหน้าหลักมาที่ Tab นี้
+    setActiveTab(mainTabName); 
+
+    // 3. Logic เพิ่มเติม
     if (mainTabName === "รายการแจ้ง") {
       setSelectedReport(null);
     }
+    
+    // 4. ปิด Pop-up
     setOpenSubMenu(null);
   };
 
-  // ✅ เพิ่มฟังก์ชัน: สลับไปหน้าแผนที่ภายใน
   const handleGoToInternalMap = () => {
-    // 1. เปลี่ยน Tab หลักเป็น "แผนที่"
     setActiveTab("แผนที่");
-    // 2. เปลี่ยน SubTab แผนที่เป็น "แผนที่ภายใน"
     setActiveSubTabs((prev) => ({
       ...prev,
       แผนที่: "แผนที่ภายใน",
     }));
-    // 3. ปิดหน้ารายละเอียด (เพื่อให้หน้า Home แสดง MapView แทน)
     setSelectedReport(null);
   };
 
   return (
     <div>
       <div className={styles.logoSectionTop}>
-        {/* ... (Header เหมือนเดิม) ... */}
         <img src={organizationInfo.logo || logo} alt="Logo" className={styles.logoImg} />
         <span className={styles.unitName}>{organizationInfo.name}</span>
         <div className={styles.logoutIcon}>
@@ -182,7 +187,7 @@ const Home = () => {
               <ReportDetail 
                 data={selectedReport}
                 onBack={() => setSelectedReport(null)} 
-                onGoToInternalMap={handleGoToInternalMap} // ✅ ส่ง props นี้ไป
+                onGoToInternalMap={handleGoToInternalMap} 
               />
             ) : (
               <ReportTable 
@@ -197,7 +202,6 @@ const Home = () => {
           <MapView subTab={activeSubTabs["แผนที่"]} />
         )}
 
-        {/* ... (Tab อื่นๆ เหมือนเดิม) ... */}
         {activeTab === "สถิติ" && (
           <>
             {activeSubTabs["สถิติ"] === "สถิติ" && <StatisticsView subTab={activeSubTabs["สถิติ"]} organizationId={organizationInfo.id} />}
@@ -208,7 +212,6 @@ const Home = () => {
       </div>
 
       <div className={styles.bottomNav}>
-        {/* ... (Bottom Nav เหมือนเดิม) ... */}
         {menuItems.map((item) => (
           <div key={item.name} className={styles.bottomNavButtonContainer}>
             {item.items && openSubMenu === item.name && (
@@ -227,7 +230,8 @@ const Home = () => {
               </div>
             )}
             <button
-              className={activeTab === item.name ? styles.active : ""}
+              /* เพิ่มเงื่อนไข: ถ้า Menu เปิดอยู่ ให้ปุ่มดู Active ด้วยเพื่อให้รู้ว่ากดตัวไหนอยู่ */
+              className={activeTab === item.name || openSubMenu === item.name ? styles.active : ""}
               onClick={() => handleTabClick(item)}
             >
               <item.icon />
