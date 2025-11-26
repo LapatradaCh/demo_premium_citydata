@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'; // เพิ่ม useMemo เพื่อคำนวณเวลาแค่ครั้งเดียวตอนโหลด
+import React, { useMemo } from 'react';
 import styles from './css/ReportDetail.module.css';
 
 // --- Icon Components ---
@@ -26,6 +26,12 @@ const IconArrowRight = () => (
 const IconClock = () => (
   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
 );
+const IconCheck = () => (
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+);
+const IconWrench = () => (
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+);
 
 const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
   
@@ -33,64 +39,85 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
-    status: "รอรับเรื่อง",
+    status: "รอรับเรื่อง", // ลองเปลี่ยนคำนี้ดู สีปุ่มและ Timeline จะเปลี่ยนตาม
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
     image: null 
   };
 
-  // --- 🕒 ฟังก์ชันคำนวณวันและเวลาไทย (Real-time) ---
+  // Logic 1: เลือกสีปุ่มด้านบน
+  const getStatusClass = (status) => {
+    if (status.includes('รอ')) return styles.statusPending;
+    if (status.includes('กำลัง')) return styles.statusProgress;
+    if (status.includes('เสร็จ')) return styles.statusDone;
+    if (status.includes('ส่งต่อ')) return styles.statusForward;
+    return styles.statusDefault;
+  };
+
+  // Logic 2: เลือกสี Timeline
+  const getTimelineColorType = (status) => {
+    if (status.includes('รอ')) return 'red';
+    if (status.includes('กำลัง')) return 'orange';
+    if (status.includes('เสร็จ')) return 'green';
+    if (status.includes('ส่งต่อ')) return 'blue';
+    return 'red';
+  };
+
+  // Logic 3: เลือกไอคอน Timeline
+  const getTimelineIcon = (status) => {
+    if (status.includes('รอ')) return <IconClock />;
+    if (status.includes('กำลัง')) return <IconWrench />;
+    if (status.includes('เสร็จ')) return <IconCheck />;
+    if (status.includes('ส่งต่อ')) return <IconArrowRight />;
+    return <IconClock />;
+  };
+
+  // Logic 4: เวลา Real-time
   const getDateTime = (offsetMinutes = 0) => {
     const now = new Date();
-    // ปรับเวลาตาม offset (เช่น -10 นาที)
     const targetDate = new Date(now.getTime() + (offsetMinutes * 60000));
-
-    // วันที่แบบไทยย่อ (เช่น 26 พ.ย. 68)
     const day = targetDate.getDate();
     const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     const month = months[targetDate.getMonth()];
-    const year = (targetDate.getFullYear() + 543).toString().slice(-2); // เอาแค่ 2 ตัวท้าย
-
-    // เวลา (เช่น 08:56 น.)
+    const year = (targetDate.getFullYear() + 543).toString().slice(-2);
     let hours = targetDate.getHours();
     let minutes = targetDate.getMinutes();
     minutes = minutes < 10 ? '0' + minutes : minutes;
-
     return {
       date: `${day} ${month} ${year}`,
       time: `${hours}:${minutes} น.`
     };
   };
 
-  // ใช้ useMemo เพื่อให้ค่าเวลาคงที่ ไม่เปลี่ยนไปมาทุกครั้งที่ re-render เล็กน้อย
   const timelineEvents = useMemo(() => {
-    const now = getDateTime(0);         // เวลาปัจจุบัน
-    const past = getDateTime(-10);      // เวลา 10 นาทีที่แล้ว
+    const now = getDateTime(0);
+    const past = getDateTime(-10);
 
     return [
       {
-        type: 'blue',
-        status: 'ส่งต่อ',
-        date: now.date,   // 📅 วันที่ปัจจุบัน
-        time: now.time,   // 🕒 เวลาปัจจุบัน
+        // Dynamic Item (ล่าสุด): สี+ไอคอน เปลี่ยนตามสถานะจริง
+        type: getTimelineColorType(info.status), 
+        status: info.status, 
+        date: now.date,
+        time: now.time,
         header: 'xxxxxxxxxxxxxx', 
         detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-        icon: <IconArrowRight />
+        icon: getTimelineIcon(info.status)
       },
       {
+        // Static Item (ประวัติ): สีแดง
         type: 'red',
-        status: 'รอรับเรื่อง',
-        date: past.date,  // 📅 วันที่ 10 นาทีก่อน
-        time: past.time,  // 🕒 เวลา 10 นาทีก่อน
+        status: 'สร้างเรื่องร้องเรียน',
+        date: past.date,
+        time: past.time,
         header: 'xxxxxxxxxxxxxxxxxxxx', 
         detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
         icon: <IconClock />
       }
     ];
-  }, []);
+  }, [info.status]);
 
   const handleInternalMap = () => {
     if (onGoToInternalMap) onGoToInternalMap();
@@ -120,8 +147,9 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
               <span style={{color: '#E5E7EB'}}>{'★'.repeat(5 - info.rating)}</span>
             </div>
           </div>
-          <div className={styles.statusBadge}>
-            <span style={{color: '#6B7280'}}>สถานะ :</span>
+          
+          <div className={`${styles.statusBadge} ${getStatusClass(info.status)}`}>
+            <span>สถานะ :</span>
             <span>{info.status}</span>
           </div>
         </div>
@@ -168,52 +196,46 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         
         <div className={styles.timelineContainer}>
-          {timelineEvents.map((event, index) => (
-            <div key={index} className={styles.timelineRow}>
-              
-              {/* Left: Time & Status */}
-              <div className={styles.timeLeft}>
-                <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
-                  {event.status}
-                </span>
-                <span className={styles.statusTime}>{event.date}</span>
-                <span className={styles.statusTime}>{event.time}</span>
-              </div>
+          {timelineEvents.map((event, index) => {
+            
+            let colorTitleClass = styles.textRed;
+            let colorBgClass = styles.bgRed;
+            
+            if (event.type === 'blue') { colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; }
+            else if (event.type === 'green') { colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; }
+            else if (event.type === 'orange') { colorTitleClass = styles.textOrange; colorBgClass = styles.bgOrange; }
 
-              {/* Center: Icon & Line */}
-              <div className={styles.timeCenter}>
-                <div className={`${styles.iconCircle} ${event.type === 'blue' ? styles.bgBlue : styles.bgRed}`}>
-                  {event.icon}
-                </div>
-                <div className={styles.line}></div>
-              </div>
-
-              {/* Right: Details */}
-              <div className={styles.timeRight}>
-                
-                {/* Mobile Header */}
-                <div className={styles.mobileHeader}>
-                   <span className={`${styles.statusTitle} ${event.type === 'blue' ? styles.textBlue : styles.textRed}`}>
+            return (
+              <div key={index} className={styles.timelineRow}>
+                <div className={styles.timeLeft}>
+                  <span className={`${styles.statusTitle} ${colorTitleClass}`}>
                     {event.status}
                   </span>
-                   <span className={styles.statusTime}>{event.date} {event.time}</span>
+                  <span className={styles.statusTime}>{event.date}</span>
+                  <span className={styles.statusTime}>{event.time}</span>
                 </div>
-
-                {event.type === 'blue' ? (
-                   <div className={styles.durationText}>{event.header}</div>
-                ) : (
-                   <div className={styles.detailTitle}>{event.header}</div>
-                )}
-                
-                <div className={styles.detailBody}>
-                  {event.detail}
+                <div className={styles.timeCenter}>
+                  <div className={`${styles.iconCircle} ${colorBgClass}`}>
+                    {event.icon}
+                  </div>
+                  <div className={styles.line}></div>
+                </div>
+                <div className={styles.timeRight}>
+                  <div className={styles.mobileHeader}>
+                     <span className={`${styles.statusTitle} ${colorTitleClass}`}>
+                      {event.status}
+                    </span>
+                     <span className={styles.statusTime}>{event.date} {event.time}</span>
+                  </div>
+                  <div className={styles.durationText}>{event.header}</div>
+                  <div className={styles.detailBody}>
+                    {event.detail}
+                  </div>
                 </div>
               </div>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
-
       </div>
 
       {/* 4. Back Button (สีแดง) */}
