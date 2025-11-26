@@ -10,7 +10,7 @@ const IconBuilding = () => (<svg width="20" height="20" fill="none" stroke="curr
 const IconEdit = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>);
 const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>);
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
-// Close Icon (X) - Adjusted size
+// Close Icon (X)
 const IconClose = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
 // Timeline Icons
@@ -39,7 +39,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     image: null 
   };
 
-  // Helper Functions
   const getStatusClass = (status) => {
     if (status.includes('รอ')) return styles.statusPending;
     if (status.includes('ประสาน')) return styles.statusCoordinating;
@@ -117,13 +116,11 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
-  // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
   return (
     <div className={styles.container}>
       
-      {/* 1. Top Section */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -147,7 +144,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <span>{info.status}</span>
           </div>
 
-          {/* Edit Buttons */}
           <div className={styles.actionRow}>
              <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
                 <IconEdit /> เปลี่ยนประเภท
@@ -170,7 +166,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 2. Middle Section */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
@@ -195,7 +190,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 3. Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.timelineContainer}>
@@ -237,9 +231,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* ================= MODALS ================= */}
-      
-      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -253,9 +244,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <div className={styles.typeGrid}>
               {problemTypes.map((type, index) => (
                 <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
-                  <div className={styles.typeCircle}>
-                    <span>?</span> 
-                  </div>
+                  <div className={styles.typeCircle}><span>?</span></div>
                   <span className={styles.typeLabel}>{type}</span>
                 </div>
               ))}
@@ -268,7 +257,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => setShowStatusModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
