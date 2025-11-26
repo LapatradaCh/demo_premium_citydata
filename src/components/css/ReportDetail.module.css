@@ -79,7 +79,7 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทาเข้ม */
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* --- Action Buttons (ปุ่มแก้ไข Premium) --- */
+/* --- Action Buttons (ปุ่มแก้ไขหน้าแรก) --- */
 .actionRow {
   display: flex;
   gap: 12px;
@@ -121,9 +121,7 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
-.editButton svg {
-  width: 18px; height: 18px; stroke-width: 2;
-}
+.editButton svg { width: 18px; height: 18px; stroke-width: 2; }
 
 /* --- Image Card --- */
 .imageCard {
@@ -256,33 +254,36 @@
 .uploadBox { border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* ✅ Modal Buttons (แดง/เขียว) */
+/* ✅ Modal Buttons (แก้ไขล่าสุด) */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
 
+/* ปุ่มยกเลิก (แดงทึบ ไม่มีขอบ) */
 .btnCancel { 
   flex: 1; 
   padding: 10px; 
   border-radius: 8px; 
-  border: 2px solid #EF4444; 
-  background-color: #FEF2F2; 
-  color: #DC2626; 
+  border: none; 
+  background-color: #EF4444; /* สีแดง */
+  color: #FFFFFF; /* ตัวหนังสือขาว */
   font-weight: 700; 
   cursor: pointer; 
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .btnCancel:hover { 
-  background-color: #FEE2E2; 
-  border-color: #DC2626; 
+  background-color: #DC2626; 
   transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
+/* ปุ่มยืนยัน (เขียวทึบ ไม่มีขอบ) */
 .btnConfirm { 
   flex: 1; 
   padding: 10px; 
   border-radius: 8px; 
   border: none; 
-  background-color: #10B981; 
-  color: #FFFFFF; 
+  background-color: #10B981; /* สีเขียว */
+  color: #FFFFFF; /* ตัวหนังสือขาว */
   font-weight: 700; 
   cursor: pointer; 
   transition: all 0.2s ease;
