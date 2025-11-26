@@ -1,60 +1,44 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './css/ReportDetail.module.css';
 
-// --- Icon Components ---
-const IconMapPin = () => (
-  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-);
-const IconInternalMap = () => (
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-);
-const IconGoogle = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-);
-const IconImagePlaceholder = () => (
-  <svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-);
-const IconBuilding = () => (
-    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-);
+// --- Icons ---
+const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
+const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
+const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
+const IconImagePlaceholder = () => (<svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>);
+const IconBuilding = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>);
+const IconEdit = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>);
+const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>);
+const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 
-// --- Timeline Icons ---
-const IconClock = () => ( // รอรับเรื่อง
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-);
-const IconPhone = () => ( // กำลังประสาน
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-);
-const IconWrench = () => ( // ดำเนินการ
-    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-);
-const IconCheck = () => ( // เสร็จสิ้น
-    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-);
-const IconArrowRight = () => ( // ส่งต่อ
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-);
-const IconUsers = () => ( // เชิญร่วม
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-);
-const IconX = () => ( // ปฏิเสธ
-  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-);
+// Timeline Icons
+const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
+const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
+const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
+const IconCheck = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>);
+const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>);
+const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
+const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
 const ReportDetail = ({ data, onGoToInternalMap }) => {
+  
+  // Modal States
+  const [showTypeModal, setShowTypeModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
   
   const info = data || {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
+    category: "ไฟฟ้า/ส่องสว่าง",
     rating: 0,
-    status: "รอรับเรื่อง", // ลองเปลี่ยนสถานะดูเพื่อทดสอบสี
+    status: "รอรับเรื่อง", // ลองเปลี่ยนเป็น "ดำเนินการ" เพื่อดู Timeline เปลี่ยน
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
     image: null 
   };
 
-  // Logic 1: เลือกสีป้ายสถานะ (Badges)
+  // Helper Functions
   const getStatusClass = (status) => {
     if (status.includes('รอ')) return styles.statusPending;
     if (status.includes('ประสาน')) return styles.statusCoordinating;
@@ -66,7 +50,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     return styles.statusDefault;
   };
 
-  // Logic 2: เลือกสีเส้น Timeline
   const getTimelineColorType = (status) => {
     if (status.includes('รอ')) return 'red';
     if (status.includes('ประสาน')) return 'purple';
@@ -78,7 +61,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     return 'red';
   };
 
-  // Logic 3: เลือกไอคอน Timeline
   const getTimelineIcon = (status) => {
     if (status.includes('รอ')) return <IconClock />;
     if (status.includes('ประสาน')) return <IconPhone />;
@@ -90,7 +72,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     return <IconClock />;
   };
 
-  // Logic 4: เวลา Real-time
   const getDateTime = (offsetMinutes = 0) => {
     const now = new Date();
     const targetDate = new Date(now.getTime() + (offsetMinutes * 60000));
@@ -101,59 +82,44 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     let hours = targetDate.getHours();
     let minutes = targetDate.getMinutes();
     minutes = minutes < 10 ? '0' + minutes : minutes;
-    return {
-      date: `${day} ${month} ${year}`,
-      time: `${hours}:${minutes} น.`
-    };
+    return { date: `${day} ${month} ${year}`, time: `${hours}:${minutes} น.` };
   };
 
-  // ✅ Timeline Logic: ถ้า "รอรับเรื่อง" โชว์อันเดียว, ถ้าอื่น โชว์ 2 อัน
   const timelineEvents = useMemo(() => {
     const now = getDateTime(0);
     const past = getDateTime(-10);
-
+    
     // รายการล่าสุด (แสดงเสมอ)
     const latestItem = {
       type: getTimelineColorType(info.status), 
       status: info.status, 
-      date: now.date,
-      time: now.time,
+      date: now.date, time: now.time,
       header: 'xxxxxxxxxxxxxx', 
       detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
       icon: getTimelineIcon(info.status)
     };
-
-    // รายการประวัติ (แสดงเฉพาะเมื่อสถานะ *ไม่ใช่* รอรับเรื่อง)
+    
+    // รายการประวัติ (แสดงถ้าไม่ใช่รอรับเรื่อง)
     const historyItem = {
-      type: 'red',
-      status: 'รอรับเรื่อง', 
-      date: past.date,
-      time: past.time,
+      type: 'red', status: 'รอรับเรื่อง', 
+      date: past.date, time: past.time,
       header: 'xxxxxxxxxxxxxxxxxxxx', 
-      detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
+      detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
       icon: <IconClock />
     };
 
-    // Logic ตรวจสอบเงื่อนไข
-    if (info.status === 'รอรับเรื่อง') {
-      return [latestItem]; // โชว์แค่อันเดียว
-    } else {
-      return [latestItem, historyItem]; // โชว์ล่าสุด + ประวัติ
-    }
-
+    if (info.status === 'รอรับเรื่อง') return [latestItem];
+    else return [latestItem, historyItem];
   }, [info.status]);
 
-  const handleInternalMap = () => {
-    if (onGoToInternalMap) onGoToInternalMap();
-  };
-
+  const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
   const handleGoogleMap = () => {
-    const query = info.lat && info.lng 
-      ? `${info.lat},${info.lng}` 
-      : encodeURIComponent(info.locationDetail || "แผนที่");
+    const query = info.lat && info.lng ? `${info.lat},${info.lng}` : encodeURIComponent(info.locationDetail || "แผนที่");
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
+
+  // Mock Problem Types
+  const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
   return (
     <div className={styles.container}>
@@ -164,7 +130,11 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
           <div>
             <p className={styles.label}>รหัสเรื่อง: {info.id}</p>
             <h2 className={styles.title}>{info.title}</h2>
+            <div className={styles.categoryText}>
+               <span>ประเภท: {info.category}</span>
+            </div>
           </div>
+          
           <div>
             <p className={styles.label}>ความเร่งด่วน / คะแนน</p>
             <div className={styles.stars}>
@@ -176,6 +146,16 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
           <div className={`${styles.statusBadge} ${getStatusClass(info.status)}`}>
             <span>สถานะ :</span>
             <span>{info.status}</span>
+          </div>
+
+          {/* Edit Buttons */}
+          <div className={styles.actionRow}>
+             <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
+                <IconEdit /> เปลี่ยนประเภท
+             </button>
+             <button className={styles.editButton} onClick={() => setShowStatusModal(true)}>
+                <IconRefresh /> ปรับสถานะ
+             </button>
           </div>
         </div>
 
@@ -219,53 +199,119 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
       {/* 3. Bottom Section: Timeline */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
-        
         <div className={styles.timelineContainer}>
           {timelineEvents.map((event, index) => {
-            
-            // Logic เลือก Class สีของ Timeline ตาม type
             let colorTitleClass = styles.textRed;
             let colorBgClass = styles.bgRed;
-            
-            if (event.type === 'blue') { colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; }
-            else if (event.type === 'green') { colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; }
-            else if (event.type === 'yellow') { colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; }
-            else if (event.type === 'purple') { colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; }
-            else if (event.type === 'teal') { colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; }
-            else if (event.type === 'dark') { colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; }
+            // Check color type
+            switch(event.type) {
+               case 'blue': colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; break;
+               case 'green': colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; break;
+               case 'yellow': colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; break;
+               case 'purple': colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; break;
+               case 'teal': colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; break;
+               case 'dark': colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; break;
+               default: colorTitleClass = styles.textRed; colorBgClass = styles.bgRed;
+            }
 
             return (
               <div key={index} className={styles.timelineRow}>
                 <div className={styles.timeLeft}>
-                  <span className={`${styles.statusTitle} ${colorTitleClass}`}>
-                    {event.status}
-                  </span>
+                  <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
                   <span className={styles.statusTime}>{event.date}</span>
                   <span className={styles.statusTime}>{event.time}</span>
                 </div>
                 <div className={styles.timeCenter}>
-                  <div className={`${styles.iconCircle} ${colorBgClass}`}>
-                    {event.icon}
-                  </div>
+                  <div className={`${styles.iconCircle} ${colorBgClass}`}>{event.icon}</div>
                   <div className={styles.line}></div>
                 </div>
                 <div className={styles.timeRight}>
                   <div className={styles.mobileHeader}>
-                     <span className={`${styles.statusTitle} ${colorTitleClass}`}>
-                      {event.status}
-                    </span>
+                     <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
                      <span className={styles.statusTime}>{event.date} {event.time}</span>
                   </div>
                   <div className={styles.durationText}>{event.header}</div>
-                  <div className={styles.detailBody}>
-                    {event.detail}
-                  </div>
+                  <div className={styles.detailBody}>{event.detail}</div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* ================= MODALS ================= */}
+      
+      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
+      {showTypeModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>เปลี่ยนประเภทปัญหา</h3>
+              <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}>×</button>
+            </div>
+            
+            <div className={styles.typeGrid}>
+              {problemTypes.map((type, index) => (
+                <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
+                  <div className={styles.typeCircle}>
+                    {/* Mock Icon */}
+                    <span>?</span> 
+                  </div>
+                  <span className={styles.typeLabel}>{type}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.modalActions}>
+               <button className={styles.btnConfirm} onClick={() => setShowTypeModal(false)}>เปลี่ยน</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง */}
+      {showStatusModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowStatusModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
+              <button className={styles.closeButton} onClick={() => setShowStatusModal(false)}>×</button>
+            </div>
+            
+            <div className={styles.formGroup}>
+               <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
+               <select className={styles.formSelect} defaultValue={info.status}>
+                  <option value="รอรับเรื่อง">รอรับเรื่อง</option>
+                  <option value="กำลังประสาน">กำลังประสาน</option>
+                  <option value="ดำเนินการ">ดำเนินการ</option>
+                  <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                  <option value="ส่งต่อ">ส่งต่อ</option>
+                  <option value="เชิญร่วม">เชิญร่วม</option>
+                  <option value="ปฏิเสธ">ปฏิเสธ</option>
+               </select>
+            </div>
+
+            <div className={styles.formGroup}>
+               <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
+               <textarea className={styles.formTextarea} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
+            </div>
+
+            <div className={styles.formGroup}>
+               <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
+               <div className={styles.uploadBox}>
+                  <IconCamera />
+                  <span>แนบรูปภาพ</span>
+               </div>
+            </div>
+
+            <div className={styles.modalActions}>
+               <button className={styles.btnCancel} onClick={() => setShowStatusModal(false)}>ยกเลิก</button>
+               <button className={styles.btnConfirm} onClick={() => setShowStatusModal(false)}>ยืนยัน</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
