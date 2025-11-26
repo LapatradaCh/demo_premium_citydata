@@ -1,8 +1,7 @@
 import React from 'react';
-// import { useNavigate } from 'react-router-dom'; 
 import styles from './css/ReportDetail.module.css';
 
-// --- Icon Components ---
+// ... (Icon Components เหมือนเดิม) ...
 const IconMapPin = () => (
   <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
 );
@@ -19,9 +18,9 @@ const IconBack = () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 );
 
-const ReportDetail = ({ data, onBack }) => {
-  // const navigate = useNavigate();
-
+// ✅ เพิ่ม props: onGoToInternalMap
+const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
+  
   const info = data || {
     id: "RQ-TEST-001",
     title: "ทดสอบการแสดงผล",
@@ -33,9 +32,13 @@ const ReportDetail = ({ data, onBack }) => {
     image: null 
   };
 
+  // ✅ เรียกใช้ props เมื่อกดปุ่ม
   const handleInternalMap = () => {
-    // navigate('/MapView'); // ถ้าใช้ router
-    window.location.href = '/MapView'; 
+    if (onGoToInternalMap) {
+      onGoToInternalMap();
+    } else {
+      console.log("No navigation function provided");
+    }
   };
 
   const handleGoogleMap = () => {
@@ -48,7 +51,7 @@ const ReportDetail = ({ data, onBack }) => {
   return (
     <div className={styles.container}>
       
-      {/* 1. ส่วนบน */}
+      {/* 1. ส่วนบน (เหมือนเดิม) */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -80,17 +83,20 @@ const ReportDetail = ({ data, onBack }) => {
         </div>
       </div>
 
-      {/* 2. ส่วนกลาง */}
+      {/* 2. ส่วนกลาง (แก้ไขปุ่มกด) */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
             <p className={styles.locationText}>{info.locationDetail || "ไม่ระบุรายละเอียดตำแหน่ง"}</p>
           </div>
+          
           <div className={styles.buttonGroup}>
+            {/* ✅ ปุ่มนี้จะเรียกฟังก์ชันที่ส่งมาจาก Home.js */}
             <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
               <IconInternalMap /> แผนที่ภายใน
             </button>
+            
             <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
               <IconGoogle /> Google Maps
             </button>
@@ -105,7 +111,7 @@ const ReportDetail = ({ data, onBack }) => {
         </div>
       </div>
 
-      {/* 3. ส่วนล่าง */}
+      {/* 3. ส่วนล่าง (เหมือนเดิม) */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.emptyStateText}>ยังไม่มีการอัปเดตสถานะเพิ่มเติม...</div>
