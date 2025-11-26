@@ -10,6 +10,8 @@ const IconBuilding = () => (<svg width="20" height="20" fill="none" stroke="curr
 const IconEdit = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>);
 const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>);
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
+// Close Icon (X)
+const IconClose = () => (<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
 // Timeline Icons
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
@@ -22,7 +24,6 @@ const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColo
 
 const ReportDetail = ({ data, onGoToInternalMap }) => {
   
-  // Modal States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   
@@ -31,7 +32,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     title: "ทดสอบไฟฟ้าดับ",
     category: "ไฟฟ้า/ส่องสว่าง",
     rating: 0,
-    status: "รอรับเรื่อง", // ลองเปลี่ยนเป็น "ดำเนินการ" เพื่อดู Timeline เปลี่ยน
+    status: "รอรับเรื่อง", 
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
@@ -89,7 +90,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     const now = getDateTime(0);
     const past = getDateTime(-10);
     
-    // รายการล่าสุด (แสดงเสมอ)
     const latestItem = {
       type: getTimelineColorType(info.status), 
       status: info.status, 
@@ -99,7 +99,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
       icon: getTimelineIcon(info.status)
     };
     
-    // รายการประวัติ (แสดงถ้าไม่ใช่รอรับเรื่อง)
     const historyItem = {
       type: 'red', status: 'รอรับเรื่อง', 
       date: past.date, time: past.time,
@@ -118,7 +117,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
-  // Mock Problem Types
+  // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
   return (
@@ -196,14 +195,13 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 3. Bottom Section: Timeline */}
+      {/* 3. Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.timelineContainer}>
           {timelineEvents.map((event, index) => {
             let colorTitleClass = styles.textRed;
             let colorBgClass = styles.bgRed;
-            // Check color type
             switch(event.type) {
                case 'blue': colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; break;
                case 'green': colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; break;
@@ -247,14 +245,15 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>เปลี่ยนประเภทปัญหา</h3>
-              <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}>×</button>
+              <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}>
+                <IconClose />
+              </button>
             </div>
             
             <div className={styles.typeGrid}>
               {problemTypes.map((type, index) => (
                 <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
                   <div className={styles.typeCircle}>
-                    {/* Mock Icon */}
                     <span>?</span> 
                   </div>
                   <span className={styles.typeLabel}>{type}</span>
@@ -275,7 +274,9 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
-              <button className={styles.closeButton} onClick={() => setShowStatusModal(false)}>×</button>
+              <button className={styles.closeButton} onClick={() => setShowStatusModal(false)}>
+                <IconClose />
+              </button>
             </div>
             
             <div className={styles.formGroup}>
