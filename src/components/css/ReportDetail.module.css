@@ -7,7 +7,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 24px; /* ระยะห่างระหว่างแถวแนวตั้ง */
   font-family: 'Sarabun', sans-serif;
   color: #333;
   padding: 24px;
@@ -16,37 +16,47 @@
   padding-bottom: 80px;
 }
 
-/* Common Card Style: เพิ่มลูกเล่น Hover */
+/* Common Card Style */
 .card {
   background-color: #FFFFFF;
-  border-radius: 16px; /* โค้งมนมากขึ้น */
+  border-radius: 16px;
   border: 1px solid #F3F4F6;
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animation นุ่มๆ */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden; /* เพื่อไม่ให้ลายพื้นหลังล้น */
+  overflow: hidden;
+  
+  /* สำคัญ: ทำให้การ์ดเต็มความสูงของ Grid Cell เสมอ */
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* จัดเนื้อหาให้อยู่กลางแนวตั้ง (ถ้าต้องการ) */
 }
 
-/* เมื่อเอาเมาส์ชี้ การ์ดจะลอยขึ้น */
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
   border-color: #E5E7EB;
 }
 
-/* --- ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) --- */
-.topSection {
+/* ============================================ */
+/* จัด Grid Layout ให้เท่ากันเป๊ะ (Solution) */
+/* ============================================ */
+
+/* ใช้ Class เดียวกันคุมทั้งแถวบนและแถวกลาง เพื่อให้เส้นตรงกัน */
+.topSection, .middleSection {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 24px;
+  grid-template-columns: 1fr 1fr; /* แบ่ง 50% - 50% เท่ากัน */
+  gap: 24px; /* ระยะห่างแนวนอนเท่ากับแนวตั้ง */
+  align-items: stretch; /* สั่งให้การ์ดยืดความสูงเท่ากัน */
 }
 
+/* --- ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) --- */
 .infoCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   gap: 16px;
+  justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
+  align-items: flex-start;
 }
 
 .label {
@@ -84,11 +94,6 @@
   font-weight: 700;
   color: #374151;
   width: fit-content;
-  transition: background-color 0.2s;
-}
-
-.statusBadge:hover {
-  background-color: #E5E7EB;
 }
 
 /* การ์ดรูปภาพ */
@@ -99,9 +104,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 240px;
   border: 2px dashed #E5E7EB;
   position: relative;
+  min-height: 250px; /* กำหนดความสูงขั้นต่ำเพื่อให้ดูสมดุล */
+  padding: 0; /* เอารอบๆ ออกเพื่อให้รูปเต็ม */
 }
 
 .imagePlaceholder {
@@ -117,67 +123,56 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.imageCard:hover .realImage {
-  transform: scale(1.05); /* รูปขยายเมื่อชี้ */
 }
 
 /* --- ส่วนที่ 2: ตำแหน่ง + หน่วยงาน --- */
-.middleSection {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 24px;
-}
 
-/* === Decoration: ใส่ไอคอนจางๆ พื้นหลัง === 
-   ใช้ SVG Data URI เพื่อไม่ต้องโหลดไฟล์เพิ่ม
-*/
-.locationCard::after {
+/* พื้นหลังลายน้ำ (Decoration) */
+.locationCard::after, .agencyCard::after {
   content: "";
   position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.locationCard::after {
   bottom: -20px;
   right: -20px;
   width: 120px;
   height: 120px;
-  /* รูปแผนที่จางๆ */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 .agencyCard::after {
-  content: "";
-  position: absolute;
   top: 10px;
   right: 10px;
   width: 100px;
   height: 100px;
-  /* รูปตึกจางๆ */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.6;
-  pointer-events: none;
 }
 
-.locationCard, .agencyCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
+.locationCard {
+  justify-content: space-between; /* ดันเนื้อหากับปุ่มให้ห่างกัน */
+}
+
+.agencyCard {
+  justify-content: flex-start; /* หน่วยงานให้เรียงจากบนลงล่างปกติ */
+}
+
+/* เนื้อหาข้างในต้องอยู่เหนือลายน้ำ */
+.sectionHeader, .locationText, .buttonGroup, .agencyList {
   position: relative;
-  z-index: 1; /* ให้เนื้อหาอยู่บนลายพื้นหลัง */
+  z-index: 2; 
 }
 
 .sectionHeader {
   font-size: 18px;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -189,35 +184,29 @@
   font-weight: 500;
   line-height: 1.6;
   margin: 0;
-  position: relative;
-  z-index: 2;
+  flex-grow: 1; /* ให้ข้อความยืดพื้นที่ได้ */
 }
 
-/* ปุ่ม Map Group */
 .buttonGroup {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
-  margin-top: auto;
-  position: relative;
-  z-index: 2;
+  margin-top: 16px;
+  width: 100%;
 }
 
 .actionButton {
   flex: 1;
-  min-width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 12px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .internalMapBtn {
@@ -228,8 +217,6 @@
 
 .internalMapBtn:hover {
   background-color: #000000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
 .googleMapBtn {
@@ -241,17 +228,13 @@
 .googleMapBtn:hover {
   background-color: #F9FAFB;
   border-color: #9CA3AF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* ปรับปรุง List ใน Agency */
 .agencyList {
   list-style: none;
   padding: 0;
   margin: 0;
-  position: relative;
-  z-index: 2;
+  width: 100%;
 }
 
 .agencyItem {
@@ -260,16 +243,17 @@
   gap: 10px;
   color: #4B5563;
   font-size: 15px;
-  margin-bottom: 8px;
-  background-color: rgba(255,255,255,0.8); /* พื้นหลังจางๆ เพื่อให้อ่านง่ายทับลายหลัง */
-  padding: 8px 12px;
+  background-color: rgba(255,255,255,0.8);
+  padding: 12px;
   border-radius: 6px;
-  border-left: 3px solid #E5E7EB; /* เส้นขอบซ้าย */
+  border-left: 4px solid #E5E7EB;
+  margin-bottom: 8px;
 }
 
 /* --- ส่วนที่ 3: รายงานสถานะ --- */
 .bottomSection {
   min-height: 200px;
+  justify-content: flex-start; /* เริ่มจากบนสุด */
 }
 
 .emptyStateText {
@@ -291,10 +275,10 @@
   border-radius: 50%;
 }
 
-/* --- ปุ่มย้อนกลับ (Floating Action Style) --- */
+/* ปุ่มย้อนกลับ */
 .centerBackButton {
   align-self: center;
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 12px 48px;
   background-color: #ffffff;
   border: none;
@@ -306,24 +290,26 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  /* เงาแบบลอยตัว */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   transition: all 0.3s ease;
 }
 
 .centerBackButton:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
-/* Responsive */
+/* Responsive มือถือ */
 @media (max-width: 768px) {
   .topSection, .middleSection {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* กลับมาเรียงแนวตั้งเมื่อจอเล็ก */
   }
+  
   .imageCard {
-    height: 200px;
-    min-height: auto;
+    min-height: 200px;
+  }
+  
+  .buttonGroup {
+    flex-direction: column; /* ปุ่มเรียงซ้อนกันในมือถือ */
   }
 }
