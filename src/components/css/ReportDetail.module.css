@@ -1,5 +1,6 @@
 /* --- css/ReportDetail.module.css --- */
 
+/* Container หลัก */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -12,20 +13,29 @@
   padding: 24px;
   background-color: #F9FAFB;
   box-sizing: border-box;
-  /* เพิ่ม padding ด้านล่างเผื่อสำหรับ Mobile Navbar */
-  padding-bottom: 80px; 
+  padding-bottom: 80px;
 }
 
-/* Common Card Style */
+/* Common Card Style: เพิ่มลูกเล่น Hover */
 .card {
   background-color: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB;
+  border-radius: 16px; /* โค้งมนมากขึ้น */
+  border: 1px solid #F3F4F6;
   padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animation นุ่มๆ */
+  position: relative;
+  overflow: hidden; /* เพื่อไม่ให้ลายพื้นหลังล้น */
 }
 
-/* --- ส่วนที่ 1: ข้อมูล + รูปภาพ --- */
+/* เมื่อเอาเมาส์ชี้ การ์ดจะลอยขึ้น */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  border-color: #E5E7EB;
+}
+
+/* --- ส่วนที่ 1: ข้อมูล + รูปภาพ (บน) --- */
 .topSection {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -40,50 +50,57 @@
 }
 
 .label {
-  font-size: 14px;
-  color: #6B7280;
-  font-weight: 500;
+  font-size: 13px;
+  color: #9CA3AF;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   margin: 0 0 4px 0;
 }
 
 .title {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: #111827;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .stars {
   color: #111827;
-  font-size: 18px;
-  letter-spacing: 2px;
+  font-size: 20px;
+  letter-spacing: 4px;
 }
 
 .statusBadge {
   display: inline-flex;
   align-items: center;
-  padding: 6px 16px;
-  gap: 8px;
+  padding: 6px 18px;
+  gap: 10px;
   background-color: #F3F4F6;
   border: 1px solid #E5E7EB;
   border-radius: 50px;
   font-size: 14px;
-  font-weight: 600;
-  color: #1F2937;
+  font-weight: 700;
+  color: #374151;
   width: fit-content;
+  transition: background-color 0.2s;
+}
+
+.statusBadge:hover {
+  background-color: #E5E7EB;
 }
 
 /* การ์ดรูปภาพ */
 .imageCard {
   background-color: #F9FAFB;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 240px;
-  border: 1px dashed #D1D5DB;
+  border: 2px dashed #E5E7EB;
   position: relative;
 }
 
@@ -93,13 +110,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .realImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.imageCard:hover .realImage {
+  transform: scale(1.05); /* รูปขยายเมื่อชี้ */
 }
 
 /* --- ส่วนที่ 2: ตำแหน่ง + หน่วยงาน --- */
@@ -109,11 +131,46 @@
   gap: 24px;
 }
 
-.locationCard {
+/* === Decoration: ใส่ไอคอนจางๆ พื้นหลัง === 
+   ใช้ SVG Data URI เพื่อไม่ต้องโหลดไฟล์เพิ่ม
+*/
+.locationCard::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  /* รูปแผนที่จางๆ */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.agencyCard::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 100px;
+  height: 100px;
+  /* รูปตึกจางๆ */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.locationCard, .agencyCard {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 16px;
+  position: relative;
+  z-index: 1; /* ให้เนื้อหาอยู่บนลายพื้นหลัง */
 }
 
 .sectionHeader {
@@ -123,66 +180,91 @@
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .locationText {
   font-size: 15px;
-  color: #374151;
+  color: #4B5563;
   font-weight: 500;
   line-height: 1.6;
   margin: 0;
+  position: relative;
+  z-index: 2;
 }
 
 /* ปุ่ม Map Group */
 .buttonGroup {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
   margin-top: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .actionButton {
   flex: 1;
-  min-width: 130px;
+  min-width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 10px 16px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .internalMapBtn {
-  background-color: #111827;
+  background-color: #1F2937;
   color: #ffffff;
-  border: 1px solid #111827;
+  border: 1px solid #1F2937;
 }
 
 .internalMapBtn:hover {
-  background-color: #374151;
+  background-color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
 .googleMapBtn {
   background-color: #ffffff;
   color: #374151;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #E5E7EB;
 }
 
 .googleMapBtn:hover {
   background-color: #F9FAFB;
   border-color: #9CA3AF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.agencyCard {
-  min-height: 150px;
+/* ปรับปรุง List ใน Agency */
+.agencyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.agencyItem {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #4B5563;
+  font-size: 15px;
+  margin-bottom: 8px;
+  background-color: rgba(255,255,255,0.8); /* พื้นหลังจางๆ เพื่อให้อ่านง่ายทับลายหลัง */
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid #E5E7EB; /* เส้นขอบซ้าย */
 }
 
 /* --- ส่วนที่ 3: รายงานสถานะ --- */
@@ -195,33 +277,44 @@
   font-style: italic;
   font-size: 14px;
   margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ========================================= */
-/* ปุ่มย้อนกลับ (ตรงกลางด้านล่าง) - ใหม่ */
-/* ========================================= */
+.emptyStateText::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  background-color: #E5E7EB;
+  border-radius: 50%;
+}
+
+/* --- ปุ่มย้อนกลับ (Floating Action Style) --- */
 .centerBackButton {
-  align-self: center; /* จัดให้อยู่ตรงกลางของ Flex Container */
-  margin-top: 10px;
-  padding: 12px 40px;
+  align-self: center;
+  margin-top: 20px;
+  padding: 12px 48px;
   background-color: #ffffff;
-  border: 1px solid #D1D5DB;
-  border-radius: 50px; /* ทรงแคปซูล */
+  border: none;
+  border-radius: 50px;
   color: #374151;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  gap: 12px;
+  /* เงาแบบลอยตัว */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .centerBackButton:hover {
-  background-color: #F3F4F6;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  color: #111827;
 }
 
 /* Responsive */
@@ -232,10 +325,5 @@
   .imageCard {
     height: 200px;
     min-height: auto;
-  }
-  /* ในมือถือ ปุ่มย้อนกลับอาจจะต้องกว้างหน่อย */
-  .centerBackButton {
-    width: 80%;
-    justify-content: center;
   }
 }
