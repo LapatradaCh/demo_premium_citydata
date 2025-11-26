@@ -50,26 +50,26 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     id: "RQ-TEST-001",
     title: "ทดสอบไฟฟ้าดับ",
     rating: 0,
-    status: "รอรับเรื่อง", // ลองเปลี่ยนสถานะดูเพื่อทดสอบสี
+    status: "รอรับเรื่อง", // 🔴 ลองเปลี่ยนเป็นสถานะอื่น จะเห็น Timeline ขึ้น 2 อัน
     locationDetail: "ไม่ระบุตำแหน่ง",
     lat: null, 
     lng: null,
     image: null 
   };
 
-  // ✅ Logic 1: เลือกสีป้ายสถานะ (Badges)
+  // Logic 1: เลือกสีป้ายสถานะ (Badges)
   const getStatusClass = (status) => {
-    if (status.includes('รอ')) return styles.statusPending;     // แดง
-    if (status.includes('ประสาน')) return styles.statusCoordinating; // ม่วง
-    if (status.includes('ดำเนินการ')) return styles.statusProgress; // เหลือง
-    if (status.includes('เสร็จ')) return styles.statusDone;     // เขียว
-    if (status.includes('ส่งต่อ')) return styles.statusForward;  // ฟ้า
-    if (status.includes('เชิญ')) return styles.statusInvite;    // Teal (มิ้นต์)
-    if (status.includes('ปฏิเสธ')) return styles.statusReject;  // เทาเข้ม
+    if (status.includes('รอ')) return styles.statusPending;
+    if (status.includes('ประสาน')) return styles.statusCoordinating;
+    if (status.includes('ดำเนินการ')) return styles.statusProgress;
+    if (status.includes('เสร็จ')) return styles.statusDone;
+    if (status.includes('ส่งต่อ')) return styles.statusForward;
+    if (status.includes('เชิญ')) return styles.statusInvite;
+    if (status.includes('ปฏิเสธ')) return styles.statusReject;
     return styles.statusDefault;
   };
 
-  // ✅ Logic 2: เลือกสีเส้น Timeline
+  // Logic 2: เลือกสีเส้น Timeline
   const getTimelineColorType = (status) => {
     if (status.includes('รอ')) return 'red';
     if (status.includes('ประสาน')) return 'purple';
@@ -81,7 +81,7 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     return 'red';
   };
 
-  // ✅ Logic 3: เลือกไอคอน Timeline
+  // Logic 3: เลือกไอคอน Timeline
   const getTimelineIcon = (status) => {
     if (status.includes('รอ')) return <IconClock />;
     if (status.includes('ประสาน')) return <IconPhone />;
@@ -110,33 +110,41 @@ const ReportDetail = ({ data, onBack, onGoToInternalMap }) => {
     };
   };
 
+  // ✅ Timeline Logic: ถ้า "รอรับเรื่อง" โชว์อันเดียว, ถ้าอื่น โชว์ 2 อัน
   const timelineEvents = useMemo(() => {
     const now = getDateTime(0);
     const past = getDateTime(-10);
 
-    return [
-      {
-        // รายการล่าสุด (Dynamic)
-        type: getTimelineColorType(info.status), 
-        status: info.status, 
-        date: now.date,
-        time: now.time,
-        header: 'xxxxxxxxxxxxxx', 
-        detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-        icon: getTimelineIcon(info.status)
-      },
-      {
-        // รายการประวัติ (Static) -> เปลี่ยนชื่อสถานะเป็น "รอรับเรื่อง"
-        type: 'red',
-        status: 'รอรับเรื่อง', // ✅ แก้ไขแล้ว
-        date: past.date,
-        time: past.time,
-        header: 'xxxxxxxxxxxxxxxxxxxx', 
-        detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
-        icon: <IconClock />
-      }
-    ];
+    // รายการล่าสุด (แสดงเสมอ)
+    const latestItem = {
+      type: getTimelineColorType(info.status), 
+      status: info.status, 
+      date: now.date,
+      time: now.time,
+      header: 'xxxxxxxxxxxxxx', 
+      detail: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
+      icon: getTimelineIcon(info.status)
+    };
+
+    // รายการประวัติ (แสดงเฉพาะเมื่อสถานะ *ไม่ใช่* รอรับเรื่อง)
+    const historyItem = {
+      type: 'red',
+      status: 'รอรับเรื่อง', 
+      date: past.date,
+      time: past.time,
+      header: 'xxxxxxxxxxxxxxxxxxxx', 
+      detail: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`, 
+      icon: <IconClock />
+    };
+
+    // Logic ตรวจสอบเงื่อนไข
+    if (info.status === 'รอรับเรื่อง') {
+      return [latestItem]; // โชว์แค่อันเดียว
+    } else {
+      return [latestItem, historyItem]; // โชว์ล่าสุด + ประวัติ
+    }
+
   }, [info.status]);
 
   const handleInternalMap = () => {
