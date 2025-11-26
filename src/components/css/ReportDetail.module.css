@@ -66,13 +66,13 @@
   border: 1px solid transparent;
 }
 
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; } /* แดง */
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; } /* ม่วง */
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; } /* เหลือง */
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; } /* เขียว */
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; } /* ฟ้า */
-.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; } /* เขียวมิ้นต์ */
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทาเข้ม */
+.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
+.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
+.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
+.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
+.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
+.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
 /* Action Buttons (Edit/Update) */
@@ -120,7 +120,7 @@
 .realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .imageCard:hover .realImage { transform: scale(1.05); }
 
-/* Middle Section Styles */
+/* Decoration */
 .locationCard::after, .agencyCard::after {
   content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0;
 }
@@ -171,13 +171,13 @@
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* MODAL (POP-UP) STYLES */
+/* MODAL STYLES (ป๊อปอัพ) */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* พื้นหลังดำจางๆ */
   display: flex; align-items: center; justify-content: center;
-  z-index: 1000; backdrop-filter: blur(2px);
+  z-index: 1000; backdrop-filter: blur(3px);
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -186,37 +186,57 @@
   border-radius: 16px; padding: 24px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex; flex-direction: column; gap: 20px;
+  position: relative; /* เพื่อให้ปุ่มปิดอิงตำแหน่ง */
   animation: slideUp 0.3s ease-out;
-  max-height: 90vh; overflow-y: auto; /* กันล้นจอ */
+  max-height: 90vh; overflow-y: auto;
 }
 
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
-.closeButton { background: none; border: none; font-size: 24px; color: #9CA3AF; cursor: pointer; }
-.closeButton:hover { color: #EF4444; }
 
-/* Type Selector */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; }
-.typeItem { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 8px; transition: all 0.2s; }
-.typeItem:hover { background-color: #F3F4F6; }
-.typeItem.selected { background-color: #F3F4F6; border: 1px solid #111827; }
-.typeCircle { width: 50px; height: 50px; background-color: #E5E7EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #6B7280; }
-.typeLabel { font-size: 12px; color: #374151; text-align: center; font-weight: 500; }
+/* ❌ ปุ่มปิดแบบวงกลมสีแดง (Red Circle Close Button) */
+.closeButton {
+  background-color: #EF4444;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.closeButton:hover { background-color: #DC2626; }
+.closeButton svg { width: 16px; height: 16px; stroke-width: 2.5; }
 
-/* Status Form */
+/* Type Selector Grid */
+.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+.typeItem { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; padding: 12px; border-radius: 12px; border: 1px solid transparent; transition: all 0.2s; }
+.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
+.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
+.typeCircle { width: 48px; height: 48px; background-color: #E5E7EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #6B7280; }
+.typeLabel { font-size: 13px; color: #374151; text-align: center; font-weight: 500; }
+
+/* Status Form Elements */
 .formGroup { display: flex; flex-direction: column; gap: 8px; }
 .formLabel { font-size: 14px; font-weight: 600; color: #374151; }
-.formInput, .formSelect, .formTextarea { padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; }
+.formInput, .formSelect, .formTextarea { padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
+.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 .formTextarea { min-height: 80px; resize: vertical; }
 
+/* Upload Box */
 .uploadBox { border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
+/* Modal Buttons (UX/UI Clean Style) */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
-.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #EF4444; background-color: #FEF2F2; color: #EF4444; font-weight: 600; cursor: pointer; }
-.btnCancel:hover { background-color: #FEE2E2; }
-.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #16A34A; background-color: #F0FDF4; color: #16A34A; font-weight: 600; cursor: pointer; }
-.btnConfirm:hover { background-color: #DCFCE7; }
+.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #D1D5DB; background-color: #FFFFFF; color: #374151; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btnCancel:hover { background-color: #F3F4F6; border-color: #9CA3AF; }
+.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #111827; color: #FFFFFF; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btnConfirm:hover { background-color: #000000; transform: translateY(-1px); }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
