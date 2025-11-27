@@ -34,8 +34,28 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
+  // *** 1. State สำหรับเก็บประเภทปัญหาจาก API ***
+  const [issueTypeList, setIssueTypeList] = useState([]);
+
+  // *** 2. Fetch Issue Types ***
   useEffect(() => {
-    // Default ID สำหรับทดสอบ (หากไม่มี prop ส่งมา)
+    const fetchIssueTypes = async () => {
+      try {
+        // ดึงจาก API ที่เพิ่งแก้เสร็จ
+        const res = await fetch('https://premium-citydata-api-ab.vercel.app/api/get_issue_types');
+        if (res.ok) {
+          const data = await res.json();
+          setIssueTypeList(data);
+        }
+      } catch (err) {
+        console.error("Failed to load issue types:", err);
+      }
+    };
+    fetchIssueTypes();
+  }, []);
+
+  // Fetch Case Detail (อันเดิม)
+  useEffect(() => {
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
     const fetchCaseDetail = async () => {
@@ -43,7 +63,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
-        // --- 1. ยิงไปที่ Server จริง (พร้อม API ที่แก้แล้ว) ---
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
@@ -54,8 +73,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
         const result = await response.json();
         
-        // --- 2. Data Mapping (แปลงข้อมูล) ---
-        // ใช้ parseFloat เพื่อป้องกัน error .toFixed()
         const lat = parseFloat(result.info.latitude);
         const lng = parseFloat(result.info.longitude);
 
@@ -65,18 +82,12 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             category: (result.info.tags && result.info.tags.length > 0) ? result.info.tags[0] : "ทั่วไป",
             rating: result.info.rating || 0,
             status: result.info.status || "รอรับเรื่อง",
-            
-            // ใช้ตัวแปรที่แปลง float แล้ว
             locationDetail: (lat && lng) 
               ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
               : (result.info.location_detail || "ไม่ระบุพิกัด"),
-            
             lat: lat,
             lng: lng,
-            
             image: result.info.cover_image_url || null,
-            
-            // รับค่าชื่อหน่วยงานที่ Join มาจาก Backend
             agency: result.info.agency_name || "ไม่ระบุหน่วยงาน"
         };
 
@@ -212,7 +223,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   };
 
-  const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
+  // const problemTypes = ... (ลบอันเก่าทิ้ง)
 
   if (loading) return <div className={styles.container}><div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>กำลังโหลดข้อมูล...</div></div>;
   if (error) return (
@@ -291,7 +302,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           </div>
         </div>
 
-        {/* Agency Section (แสดงชื่อหน่วยงานที่ดึงมา) */}
+        {/* Agency Section */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
           <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
           <ul className={styles.agencyList}>
@@ -347,7 +358,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         )}
       </div>
 
-      {/* Modals (คงเดิม) */}
+      {/* Modals */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -357,16 +368,30 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                 <IconClose />
               </button>
             </div>
+            
             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
-                  {problemTypes.map((type, index) => (
-                    <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
+                  
+                  {/* *** 3. แสดง Loading หรือ List จาก API *** */}
+                  {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888'}}>กำลังโหลดประเภท...</p>}
+
+                  {issueTypeList.map((typeItem) => (
+                    <div 
+                        key={typeItem.issue_type_id} 
+                        className={`${styles.typeItem} ${info.category === typeItem.name ? styles.selected : ''}`}
+                        onClick={() => {
+                            console.log("Selected ID:", typeItem.issue_type_id);
+                            // ใส่ logic เปลี่ยนประเภทที่นี่ในอนาคต
+                        }}
+                    >
                       <div className={styles.typeCircle}><span>?</span></div>
-                      <span className={styles.typeLabel}>{type}</span>
+                      <span className={styles.typeLabel}>{typeItem.name}</span>
                     </div>
                   ))}
+
                 </div>
             </div>
+
             <div className={styles.modalActions}>
                <button className={styles.btnConfirm} onClick={() => setShowTypeModal(false)}>เปลี่ยน</button>
             </div>
