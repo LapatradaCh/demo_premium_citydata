@@ -44,10 +44,8 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     image: null 
   };
 
-  // State สำหรับเก็บค่าสถานะใน Modal (เพื่อให้ Dropdown เปลี่ยนค่าได้)
   const [statusValue, setStatusValue] = useState(info.status);
   
-  // Reset ค่าเมื่อปิด/เปิด Modal ใหม่
   useEffect(() => {
     if (showStatusModal) {
       setStatusValue(info.status);
@@ -183,7 +181,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <span>{info.status}</span>
           </div>
 
-          {/* Edit Buttons */}
           <div className={styles.actionRow}>
              <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
                 <IconEdit /> เปลี่ยนประเภท
@@ -286,15 +283,18 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
               </button>
             </div>
             
-            <div className={styles.typeGrid}>
-              {problemTypes.map((type, index) => (
-                <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
-                  <div className={styles.typeCircle}>
-                    <span>?</span> 
-                  </div>
-                  <span className={styles.typeLabel}>{type}</span>
+            {/* Wrapper สำหรับ Scroll */}
+            <div className={styles.modalScrollableContent}>
+                <div className={styles.typeGrid}>
+                  {problemTypes.map((type, index) => (
+                    <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
+                      <div className={styles.typeCircle}>
+                        <span>?</span> 
+                      </div>
+                      <span className={styles.typeLabel}>{type}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
             </div>
 
             <div className={styles.modalActions}>
@@ -304,13 +304,15 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (แก้ให้ไม่หลุดขอบ) */}
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (แก้ให้ไม่หลุดขอบด้วย Fixed Header/Footer) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => {
             setShowStatusModal(false);
             setSelectedImage(null);
           }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            
+            {/* HEADER: ติดอยู่ด้านบน */}
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
               <button className={styles.closeButton} onClick={() => {
@@ -321,66 +323,61 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
               </button>
             </div>
             
-            <div className={styles.formGroup}>
-               <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
-               {/* ผูก state กับ select และใส่ onChange */}
-               <select 
-                  className={styles.formSelect} 
-                  value={statusValue} 
-                  onChange={(e) => setStatusValue(e.target.value)}
-                >
-                  <option value="รอรับเรื่อง">รอรับเรื่อง</option>
-                  <option value="กำลังประสาน">กำลังประสาน</option>
-                  <option value="ดำเนินการ">ดำเนินการ</option>
-                  <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-                  <option value="ส่งต่อ">ส่งต่อ</option>
-                  <option value="เชิญร่วม">เชิญร่วม</option>
-                  <option value="ปฏิเสธ">ปฏิเสธ</option>
-               </select>
+            {/* BODY: เลื่อนได้แค่ตรงนี้ */}
+            <div className={styles.modalScrollableContent}>
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
+                   <select 
+                      className={styles.formSelect} 
+                      value={statusValue} 
+                      onChange={(e) => setStatusValue(e.target.value)}
+                    >
+                      <option value="รอรับเรื่อง">รอรับเรื่อง</option>
+                      <option value="กำลังประสาน">กำลังประสาน</option>
+                      <option value="ดำเนินการ">ดำเนินการ</option>
+                      <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                      <option value="ส่งต่อ">ส่งต่อ</option>
+                      <option value="เชิญร่วม">เชิญร่วม</option>
+                      <option value="ปฏิเสธ">ปฏิเสธ</option>
+                   </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
+                   <textarea className={styles.formTextarea} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
+                </div>
+
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
+                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                   <div className={styles.uploadBox} onClick={triggerFileInput}>
+                      {selectedImage ? (
+                        <div className={styles.previewWrapper}>
+                          <img src={selectedImage} alt="Preview" className={styles.imagePreview} />
+                          <button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button>
+                        </div>
+                      ) : (
+                        <>
+                          <IconCamera />
+                          <span>แนบรูปภาพ</span>
+                        </>
+                      )}
+                   </div>
+                </div>
             </div>
 
-            <div className={styles.formGroup}>
-               <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
-               <textarea className={styles.formTextarea} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
-            </div>
-
-            <div className={styles.formGroup}>
-               <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
-               
-               <input 
-                 type="file" 
-                 ref={fileInputRef} 
-                 onChange={handleFileChange} 
-                 accept="image/*" 
-                 style={{ display: 'none' }} 
-               />
-
-               <div className={styles.uploadBox} onClick={triggerFileInput}>
-                  {selectedImage ? (
-                    <div className={styles.previewWrapper}>
-                      <img src={selectedImage} alt="Preview" className={styles.imagePreview} />
-                      <button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button>
-                    </div>
-                  ) : (
-                    <>
-                      <IconCamera />
-                      <span>แนบรูปภาพ</span>
-                    </>
-                  )}
-               </div>
-            </div>
-
+            {/* FOOTER: ติดอยู่ด้านล่าง */}
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => {
                    setShowStatusModal(false);
                    setSelectedImage(null); 
                  }}>ยกเลิก</button>
                <button className={styles.btnConfirm} onClick={() => {
-                   // Submit Logic here with statusValue and selectedImage
                    setShowStatusModal(false);
                    setSelectedImage(null); 
                  }}>ยืนยัน</button>
             </div>
+            
           </div>
         </div>
       )}
