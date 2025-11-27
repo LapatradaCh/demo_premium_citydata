@@ -1,26 +1,15 @@
 /* --- SettingsView.module.css --- */
 
-/* === General Reset & Variables === */
-:root {
-  --primary-green: #10b981;
-  --primary-red: #ef4444;
-  --text-dark: #1f2937;
-  --text-gray: #6b7280;
-  --bg-light: #f9fafb;
-  --border-color: #e5e7eb;
-}
-
-/* === Modal === */
+/* === (SHARED) Modal === */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1999;
-  backdrop-filter: blur(3px);
-  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(4px);
 }
 
 .filterModal {
@@ -30,473 +19,329 @@
   transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .filterModalHeader h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--text-dark);
 }
 
 .filterModalClose {
-  background: #fee2e2;
+  background: #dc3545;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--primary-red);
-  transition: all 0.2s;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  position: relative;
 }
 
 .filterModalClose:hover {
-  background-color: var(--primary-red);
   color: #fff;
 }
 
-.filterModalContent {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.filterModalClose svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
 }
 
-/* === Filter Group & Inputs === */
-.filterGroup {
+.filterModalContent {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* === (SHARED) Filter Group === */
+.filterGroup {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
 }
 
 .filterGroup label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-dark);
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 
+.filterGroup select {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+/* === (SHARED) Button === */
+.filterApplyButton {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #057a55;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: center;
+  min-width: 150px;
+  text-align: center;
+}
+.filterApplyButton:hover {
+  background-color: #046c4e;
+}
+
+/* === (SHARED) Input === */
 .searchInput {
   width: 100%;
+  flex-grow: 1;
   box-sizing: border-box;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  padding: 12px 18px;
+  border-radius: 8px; /* ปรับให้ดูเหลี่ยมขึ้นเล็กน้อยตามสไตล์ฟอร์มทางการ */
+  border: 1px solid #ccc;
   font-size: 14px;
-  background-color: #fff;
-  color: var(--text-dark);
+  background-color: #fcfcfc; /* สีพื้นหลังขาวเกือบเทาจางๆ */
+  color: #000;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-
 .searchInput:focus {
   outline: none;
-  border-color: #3b82f6; /* Focus color */
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #333;
+  background-color: #fff;
+  box-shadow: 0 0 0 1px #333;
 }
 
-/* Custom Select Styling */
-.selectWrapper {
-    position: relative;
-    width: 100%;
-}
-
-.customSelect {
-    width: 100%;
-    appearance: none;
-    -webkit-appearance: none;
-    padding: 12px 16px;
-    padding-right: 36px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background-color: #fff;
-    font-size: 14px;
-    color: var(--text-dark);
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.customSelect:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.selectArrow {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-gray);
-    pointer-events: none;
-}
-
-
-/* === Layout Containers === */
+/* --- SettingsView Specific --- */
 .settingsContainer {
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  font-family: 'Noto Sans Thai', sans-serif;
 }
-
-/* Top Dropdown Card */
-.settingsHeaderDropdown {
-  background: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-.headerLabel {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #111;
-}
-
-/* Main Content Card */
 .settingsSection {
+  width: 100%;
   background: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
-
 .settingsTitle {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #111;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+.settingsSubtitle {
+  font-size: 14px;
+  color: #555;
+  margin: -12px 0 16px 0;
+}
+.settingsItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.settingsItem:last-child {
+  border-bottom: none;
+}
+.settingsItemText {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-.titleIconWrapper {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background-color: #f3f4f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
 }
 
-.settingsSubtitle {
-  font-size: 14px;
-  color: var(--text-gray);
-  margin-top: -16px;
+/* ========================================= */
+/* === (NEW) Agency Edit Section Styles === */
+/* ========================================= */
+
+/* Image Upload Section */
+.agencyImageSection {
+  display: flex;
+  justify-content: center;
   margin-bottom: 24px;
-  padding-left: 48px; /* Align with text not icon */
 }
-
-/* === Agency Edit Specifics === */
-.agencyImageContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 32px;
-}
-
 .agencyImageWrapper {
   position: relative;
   width: 120px;
   height: 120px;
-  margin-bottom: 12px;
-  transition: transform 0.2s;
 }
-
-.agencyImageWrapper:hover {
-    transform: scale(1.02);
-}
-
 .agencyImagePlaceholder {
   width: 100%;
   height: 100%;
-  background-color: #f3f4f6;
-  border: 2px dashed #d1d5db;
-  border-radius: 12px;
+  background-color: #e9ecef; /* เทาอ่อน */
+  border: 2px solid #333; /* ขอบดำตามรูป */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-gray);
-  font-weight: 600;
-  font-size: 13px;
-  transition: border-color 0.2s;
+  color: #333;
+  font-weight: 700;
+  font-size: 14px;
+  /* border-radius: 8px; ถ้าอยากได้เหลี่ยมให้เอาออก */
 }
-
-.agencyImageWrapper:hover .agencyImagePlaceholder {
-    border-color: #9ca3af;
-    background-color: #e5e7eb;
-}
-
 .agencyImageIcon {
-  margin-bottom: 8px;
-  color: #9ca3af;
+  font-size: 32px;
+  margin-bottom: 4px;
+  color: #555;
 }
-
 .imageEditBtn {
   position: absolute;
-  bottom: -5px;
-  right: -5px;
+  bottom: -6px;
+  right: -6px;
   background-color: #fff;
-  border: 1px solid var(--border-color);
-  color: #ef4444; /* Red accent */
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  border: 2px solid #dc3545; /* ขอบแดงตามไอคอนในรูป (หรือใช้สีดำก็ได้ แต่แดงจะเด่นกว่าสำหรับจุดสนใจ) */
+  color: #dc3545;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px; /* เหลี่ยมมนนิดๆ */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.2s;
 }
 .imageEditBtn:hover {
-  background-color: #ef4444;
-  color: white;
-  border-color: #ef4444;
+  background-color: #dc3545;
+  color: #fff;
 }
 
-.imageHint {
-    font-size: 12px;
-    color: #9ca3af;
-    margin: 0;
-}
-
+/* Form Styles */
 .editFormContainer {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
-
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+.formGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a4b42; /* สีน้ำตาลเข้ม/เทาเข้ม ตามรูป */
+  display: flex;
+  align-items: center;
 }
 
 /* Map Placeholder */
 .mapPlaceholderBox {
   width: 100%;
-  height: 180px;
-  background-color: #f3f4f6;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  height: 160px;
+  background-color: #e9ecef;
+  border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-gray);
+  color: #888;
   font-size: 13px;
-  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
-/* Action Buttons */
+/* Action Buttons (Red/Green) */
 .actionButtonRow {
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border-color);
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
 }
-
 .btnCancel, .btnConfirm {
   flex: 1;
-  max-width: 160px;
-  padding: 12px 0;
+  max-width: 140px;
+  padding: 10px 0;
   font-size: 15px;
   font-weight: 600;
-  border-radius: 8px;
+  border: 1px solid;
+  border-radius: 4px; /* เหลี่ยมเล็กน้อย */
   cursor: pointer;
-  transition: all 0.2s;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: opacity 0.2s;
 }
 
-/* Cancel Button: White bg, Red Text, Red Border */
+/* ปุ่มยกเลิก (แดงโทนอ่อนๆ หรือขาวขอบแดง ตามรูปดูเหมือนพื้นหลังสีอ่อน) */
+/* แต่โจทย์ขอ "ยกเลิกสีแดง ยืนยันสีเขียว" เราจะจัดให้ชัดเจน */
 .btnCancel {
-  color: #ef4444;
-  border: 1px solid #ef4444;
-  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.05);
+  background-color: #fff; 
+  color: #dc3545;
+  border-color: #dc3545;
 }
 .btnCancel:hover {
-  background-color: #fef2f2;
-  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.1);
-  transform: translateY(-1px);
-}
-.btnCancel:active {
-    transform: translateY(0);
+  background-color: #fff5f5;
 }
 
-/* Confirm Button: White bg, Green Text, Green Border */
 .btnConfirm {
-  color: #10b981;
-  border: 1px solid #10b981;
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.05);
+  background-color: #fff;
+  color: #198754;
+  border-color: #198754;
 }
 .btnConfirm:hover {
-  background-color: #ecfdf5;
-  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
-  transform: translateY(-1px);
-}
-.btnConfirm:active {
-    transform: translateY(0);
+  background-color: #f0fdf4;
 }
 
-/* === Password List Items === */
-.settingsItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-color);
-}
+/* ========================================= */
 
-.passwordUserItem {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.passwordUserInfo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.roleIconBadge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #eff6ff;
-    color: #3b82f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.userInfoText {
-    display: flex;
-    flex-direction: column;
-}
-
-.userRole {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-dark);
-}
-
-.userName {
-    font-size: 12px;
-    color: var(--text-gray);
-}
-
-.passwordField {
-    margin-left: 44px; /* Align with text */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-}
-
-.passwordLabel {
-    color: var(--text-gray);
-}
-
-.passwordValue {
-    font-family: monospace;
-    color: var(--text-dark);
-    background: #f3f4f6;
-    padding: 2px 6px;
-    border-radius: 4px;
-    letter-spacing: 1px;
-}
-.passwordVisible {
-    background: #ecfdf5;
-    color: #047857;
-    border: 1px solid #a7f3d0;
-}
-
-.passwordButtonGroup {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-}
-
-.passwordButton {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s;
-    color: var(--text-dark);
-}
-.passwordButton:hover {
-    background-color: #f9fafb;
-    border-color: #d1d5db;
-}
-
-.viewButtonActive {
-    background-color: #fef2f2;
-    color: #ef4444;
-    border-color: #fecaca;
-}
-.viewButtonActive:hover {
-    background-color: #fee2e2;
-}
-
-.changeButton {
-    color: #3b82f6;
-    border-color: #bfdbfe;
-    background-color: #eff6ff;
-}
-.changeButton:hover {
-    background-color: #dbeafe;
-    border-color: #93c5fd;
-}
-
-/* === Toggle === */
+/* Toggle Switch */
 .mockToggle {
   position: relative;
   display: inline-block;
-  width: 48px;
-  height: 26px;
+  width: 50px;
+  height: 28px;
 }
 .mockToggle input {
   opacity: 0;
@@ -510,92 +355,162 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #e5e7eb;
-  transition: .3s;
-  border-radius: 34px;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
 }
 .mockSlider:before {
   position: absolute;
   content: "";
   height: 20px;
   width: 20px;
-  left: 3px;
-  bottom: 3px;
+  left: 4px;
+  bottom: 4px;
   background-color: white;
-  transition: .3s;
+  transition: 0.4s;
   border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .mockToggle input:checked + .mockSlider {
-  background-color: #10b981;
+  background-color: #057a55;
 }
 .mockToggle input:checked + .mockSlider:before {
   transform: translateX(22px);
 }
 
-/* === QR Code === */
+/* QR Code Section */
 .qrCodePlaceholder {
-    background-color: #fff;
-    border: 2px dashed #e5e7eb;
-    border-radius: 12px;
-    height: 240px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    color: var(--text-gray);
-    margin-bottom: 24px;
+  width: 100%;
+  min-height: 250px;
+  background: #f9f9f9;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #aaa;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 .mockQrIcon {
-    width: 64px;
-    height: 64px;
-    opacity: 0.2;
+  font-size: 80px;
+  color: #e0e0e0;
+}
+.qrForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.filterApplyButton {
-    background-color: var(--text-dark); /* Black button for primary actions */
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+/* Header Dropdown Wrapper */
+.settingsHeaderDropdown {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-.filterApplyButton:hover {
-    background-color: #000;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.settingsHeaderDropdown .filterGroup select {
+  width: 100%;
 }
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-@keyframes slideUp {
-    from { transform: translate(-50%, -45%); opacity: 0; }
-    to { transform: translate(-50%, -50%); opacity: 1; }
+.settingsContentArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-/* Mobile Responsive */
+/* Password Section */
+.passwordUserItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.passwordUserInfo {
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.passwordUserIcon {
+  margin-right: 0;
+  color: #007bff;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.passwordUserPass {
+  font-size: 13px;
+  color: #555;
+  margin-left: 24px;
+}
+.passwordButtonGroup {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.passwordButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+  line-height: 1;
+  white-space: nowrap;
+}
+.viewButton {
+  background-color: #6c757d;
+  border: 1px solid #5a6268;
+}
+.changeButton {
+  background-color: #007bff;
+  border: 1px solid #0069d9;
+}
+.viewButtonActive {
+  background-color: #c82333;
+  border-color: #b21f2d;
+}
+
+/* Media Queries */
 @media screen and (max-width: 480px) {
   .settingsSection {
-    padding: 20px;
+    padding: 16px;
   }
+  .settingsItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .passwordButtonGroup {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .passwordButton {
+    padding: 10px 14px;
+    white-space: normal;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  /* Form Mobile Adjustments */
   .actionButtonRow {
     flex-direction: column;
   }
   .btnCancel, .btnConfirm {
     max-width: 100%;
-  }
-  .passwordItem {
-      flex-direction: column;
-      align-items: stretch;
-  }
-  .passwordButtonGroup {
-      justify-content: flex-end;
-      margin-top: 12px;
   }
 }
