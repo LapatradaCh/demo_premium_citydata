@@ -5,7 +5,7 @@ import styles from './css/ReportDetail.module.css';
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
 const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
-const IconImagePlaceholder = () => (<svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>);
+const IconImagePlaceholder = () => (<svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>);
 const IconBuilding = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>);
 const IconEdit = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>);
 const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>);
@@ -21,22 +21,27 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// Component Start
 const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   
+  // Data States
   const [caseInfo, setCaseInfo] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // Trigger reload
 
+  // Modal & Input States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  const [issueTypeList, setIssueTypeList] = useState([]);
+  // Update Logic States
+  const [issueTypeList, setIssueTypeList] = useState([]); // List ประเภทปัญหา
+  const [selectedIssueType, setSelectedIssueType] = useState(null); // ประเภทที่เลือกใหม่
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  // Fetch Issue Types
+  // 1. Fetch Issue Types List (ดึงครั้งเดียวตอนโหลด)
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -52,7 +57,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchIssueTypes();
   }, []);
 
-  // Fetch Case Detail
+  // 2. Fetch Case Detail (ทำงานเมื่อเปิดหน้า หรือ refreshKey เปลี่ยน)
   useEffect(() => {
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
@@ -61,6 +66,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
+        // GET Request
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
@@ -70,15 +76,16 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         }
 
         const result = await response.json();
-        
         const lat = parseFloat(result.info.latitude);
         const lng = parseFloat(result.info.longitude);
 
+        // Mapping Data
         const mappedInfo = {
             id: result.info.case_code || result.info.issue_cases_id,
+            real_id: result.info.issue_cases_id, // ID จริงสำหรับ Update
             title: result.info.title || "ไม่มีหัวข้อ",
             
-            // *** แก้ไข: ใช้ชื่อที่ดึงจากตาราง issue_types ***
+            // ดึงชื่อประเภทจาก Join Table
             category: result.info.issue_category_name || "ทั่วไป",
             
             rating: result.info.rating || 0,
@@ -89,6 +96,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             lat: lat,
             lng: lng,
             image: result.info.cover_image_url || null,
+            
+            // ดึงชื่อหน่วยงานจาก Join Table
             agency: result.info.agency_name || "ไม่ระบุหน่วยงาน"
         };
 
@@ -104,7 +113,40 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     };
 
     fetchCaseDetail();
-  }, [reportId]);
+  }, [reportId, refreshKey]);
+
+  // 3. Handle Update Category (ยิง POST ไปที่ get_case_detail)
+  const handleUpdateCategory = async () => {
+    if (!selectedIssueType || !caseInfo) return;
+
+    try {
+        setIsUpdating(true);
+        
+        const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/get_case_detail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'update_category', // บอก Backend ว่าจะทำอะไร
+                case_id: caseInfo.real_id,
+                new_type_id: selectedIssueType.issue_id,
+                new_type_name: selectedIssueType.name,
+                old_type_name: caseInfo.category,
+                user_id: 1 // TODO: ใส่ User ID จริงเมื่อมีระบบ Login
+            })
+        });
+
+        if (!response.ok) throw new Error('Update failed');
+
+        setShowTypeModal(false);
+        setRefreshKey(prev => prev + 1); // รีโหลดข้อมูลใหม่
+        alert('เปลี่ยนประเภทปัญหาเรียบร้อยแล้ว');
+
+    } catch (err) {
+        alert('เกิดข้อผิดพลาด: ' + err.message);
+    } finally {
+        setIsUpdating(false);
+    }
+  };
 
   // Fallback Data
   const info = caseInfo || {
@@ -128,7 +170,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   }, [showStatusModal, info.status]);
 
-  // --- Helpers ---
+  // --- Helper Functions ---
   const getStatusClass = (status = "") => {
     if (!status) return styles.statusDefault;
     if (status.includes('รอ')) return styles.statusPending;
@@ -244,7 +286,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           <div>
             <p className={styles.label}>รหัสเรื่อง: {info.id}</p>
             <h2 className={styles.title}>{info.title}</h2>
-            {/* ตรงนี้จะแสดงชื่อประเภทจาก DB แล้วครับ */}
             <div className={styles.categoryText}>
                <span>ประเภท: {info.category}</span>
             </div>
@@ -313,7 +354,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
       {/* Bottom Section (Timeline) */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
-        
         {timelineEvents.length === 0 ? (
             <div style={{padding:'20px', textAlign:'center', color:'#9CA3AF'}}>ยังไม่มีประวัติการดำเนินงาน</div>
         ) : (
@@ -357,7 +397,9 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         )}
       </div>
 
-      {/* Modals */}
+      {/* ================= MODALS ================= */}
+      
+      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -373,29 +415,39 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                   
                   {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888'}}>กำลังโหลดประเภท...</p>}
 
-                  {issueTypeList.map((typeItem) => (
-                    <div 
-                        key={typeItem.issue_type_id} 
-                        className={`${styles.typeItem} ${info.category === typeItem.name ? styles.selected : ''}`}
-                        onClick={() => {
-                            console.log("Selected ID:", typeItem.issue_type_id);
-                        }}
-                    >
-                      <div className={styles.typeCircle}><span>?</span></div>
-                      <span className={styles.typeLabel}>{typeItem.name}</span>
-                    </div>
-                  ))}
+                  {issueTypeList.map((typeItem) => {
+                    const isSelected = selectedIssueType 
+                         ? selectedIssueType.issue_id === typeItem.issue_id 
+                         : info.category === typeItem.name;
 
+                    return (
+                        <div 
+                            key={typeItem.issue_id} 
+                            className={`${styles.typeItem} ${isSelected ? styles.selected : ''}`}
+                            onClick={() => setSelectedIssueType(typeItem)}
+                        >
+                        <div className={styles.typeCircle}><span>?</span></div>
+                        <span className={styles.typeLabel}>{typeItem.name}</span>
+                        </div>
+                    );
+                  })}
                 </div>
             </div>
 
             <div className={styles.modalActions}>
-               <button className={styles.btnConfirm} onClick={() => setShowTypeModal(false)}>เปลี่ยน</button>
+               <button 
+                  className={styles.btnConfirm} 
+                  onClick={handleUpdateCategory}
+                  disabled={isUpdating}
+               >
+                  {isUpdating ? 'กำลังบันทึก...' : 'เปลี่ยน'}
+               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
