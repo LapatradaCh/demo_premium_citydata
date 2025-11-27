@@ -21,7 +21,6 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// Component Start
 const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   
   // Data States
@@ -29,7 +28,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0); // เอาไว้สั่ง reload หน้า
+  const [refreshKey, setRefreshKey] = useState(0); 
 
   // Modal & Input States
   const [showTypeModal, setShowTypeModal] = useState(false);
@@ -38,11 +37,11 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const fileInputRef = useRef(null);
 
   // Update Logic States
-  const [issueTypeList, setIssueTypeList] = useState([]); // List ประเภทปัญหา
-  const [selectedIssueType, setSelectedIssueType] = useState(null); // ประเภทที่เลือกใหม่
+  const [issueTypeList, setIssueTypeList] = useState([]);
+  const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // 1. Fetch Issue Types List (ดึงครั้งเดียวตอนโหลด)
+  // 1. Fetch Issue Types
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -58,7 +57,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchIssueTypes();
   }, []);
 
-  // 2. Fetch Case Detail (ทำงานเมื่อเปิดหน้า หรือ refreshKey เปลี่ยน)
+  // 2. Fetch Case Detail
   useEffect(() => {
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
@@ -67,7 +66,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
-        // *** ใช้ API crud_case_detail ***
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/crud_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
@@ -80,15 +78,11 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         const lat = parseFloat(result.info.latitude);
         const lng = parseFloat(result.info.longitude);
 
-        // Mapping Data
         const mappedInfo = {
             id: result.info.case_code || result.info.issue_cases_id,
-            real_id: result.info.issue_cases_id, // ID จริงสำหรับ Update
+            real_id: result.info.issue_cases_id,
             title: result.info.title || "ไม่มีหัวข้อ",
-            
-            // ดึงชื่อประเภทจาก Join Table
             category: result.info.issue_category_name || "ทั่วไป",
-            
             rating: result.info.rating || 0,
             status: result.info.status || "รอรับเรื่อง",
             locationDetail: (lat && lng) 
@@ -97,11 +91,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             lat: lat,
             lng: lng,
             image: result.info.cover_image_url || null,
-            
-            // ดึงชื่อหน่วยงานจาก Join Table
             agency: result.info.agency_name || "ไม่ระบุหน่วยงาน"
         };
-        console.log(mappedInfo);
 
         setCaseInfo(mappedInfo);
         setTimelineData(result.timeline || []);
@@ -117,35 +108,54 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // 3. Handle Update Category (ยิง POST ไปที่ crud_case_detail)
+  // 3. Handle Update Category
   const handleUpdateCategory = async () => {
-    if (!selectedIssueType || !caseInfo) return;
+    if (!selectedIssueType || !caseInfo) {
+        alert("กรุณาเลือกประเภทปัญหา");
+        return;
+    }
+
+    // --- ส่วนที่แก้ไข: ดึง user_id จาก LocalStorage ---
+    const storedUserId = localStorage.getItem("user_id"); // ดึงตรงๆ ตามที่คุณบอก
+    const currentUserId = storedUserId ? storedUserId : 1; // ถ้าไม่มี fallback เป็น 1
+    // ------------------------------------------------
+
+    // Debug
+    console.log("Sending Update:", {
+        action: 'update_category',
+        case_id: caseInfo.real_id,
+        new_type_id: selectedIssueType.issue_id,
+        user_id: currentUserId
+    });
 
     try {
         setIsUpdating(true);
         
-        // *** ยิง POST ไปที่ crud_case_detail ***
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                action: 'update_category', // บอก Backend ว่าจะทำอะไร
+                action: 'update_category', 
                 case_id: caseInfo.real_id,
-                new_type_id: selectedIssueType.issue_id,
+                new_type_id: selectedIssueType.issue_id, // issue_id จาก API
                 new_type_name: selectedIssueType.name,
                 old_type_name: caseInfo.category,
-                user_id: 1 // TODO: ใส่ User ID จริงเมื่อมีระบบ Login
+                user_id: currentUserId 
             })
         });
 
-        if (!response.ok) throw new Error('Update failed');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || errorData.message || 'Update failed');
+        }
 
         setShowTypeModal(false);
-        setRefreshKey(prev => prev + 1); // รีโหลดข้อมูลใหม่
+        setRefreshKey(prev => prev + 1); 
         alert('เปลี่ยนประเภทปัญหาเรียบร้อยแล้ว');
 
     } catch (err) {
         alert('เกิดข้อผิดพลาด: ' + err.message);
+        console.error("Update Error Details:", err);
     } finally {
         setIsUpdating(false);
     }
@@ -450,7 +460,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI - ยังไม่ต่อ API) */}
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
