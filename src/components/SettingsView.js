@@ -4,10 +4,10 @@ import {
   FaCog, FaTimes, FaUnlockAlt, FaEdit, FaImage, FaPhoneAlt,
   FaMapMarkerAlt, FaRegCopy, FaChevronDown, FaCheckCircle,
   FaBuilding, FaMapMarkedAlt, FaUserCog, FaUserTie,
-  FaEye, FaEyeSlash, FaSyncAlt, FaQrcode, FaLink, FaGlobe
+  FaEye, FaEyeSlash, FaSyncAlt, FaQrcode, FaLink
 } from "react-icons/fa";
 
-// --- Mock Toggle (สำหรับหน้าอื่น) ---
+// --- Components ย่อย ---
 const MockToggle = () => (
     <label className={styles.mockToggle}>
       <input type="checkbox" />
@@ -16,10 +16,12 @@ const MockToggle = () => (
 );
 
 // ------------------------------------------------------------------
-// --- 1. Agency Settings (Re-designed) ---
+// --- ส่วนที่ 1: ข้อมูลหน่วยงาน (Agency) - View & Popup Edit ---
 // ------------------------------------------------------------------
 const AgencySettings = () => {
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ควบคุม Popup
+  
+  // Data จำลอง
   const [formData, setFormData] = useState({
     name: "เทศบาลตำบลตัวอย่าง",
     adminCode: "AL1F8H2",
@@ -37,220 +39,203 @@ const AgencySettings = () => {
     setFormData({ ...formData, [field]: value });
   };
 
-  // --- VIEW MODE: ออกแบบให้เหมือน Dashboard Profile ---
-  const renderViewMode = () => (
-    <div className={styles.viewContainer}>
-        {/* ส่วนหัว: โลโก้และชื่อ */}
-        <div className={styles.profileHeader}>
-            <div className={styles.profileLogo}>
-                <FaImage />
-            </div>
-            <div className={styles.profileInfo}>
-                <h2 className={styles.orgName}>{formData.name}</h2>
-                <div className={styles.badges}>
-                    <span className={styles.badgeType}>{formData.agencyType}</span>
-                    <span className={styles.badgeStatus}><FaCheckCircle/> ใช้งานเต็มรูปแบบ</span>
-                </div>
-            </div>
-            <button className={styles.btnEditMain} onClick={() => setIsEditing(true)}>
-                <FaEdit /> แก้ไขข้อมูล
-            </button>
-        </div>
-
-        {/* ส่วนเนื้อหา: แบ่งเป็นกล่องข้อมูล */}
-        <div className={styles.infoGrid}>
-            {/* กล่อง 1: รหัส */}
-            <div className={styles.infoBox}>
-                <div className={styles.boxHeader}>
-                    <div className={styles.iconBox} style={{background: '#e3f2fd', color: '#0d47a1'}}><FaUnlockAlt/></div>
-                    <h4>รหัสเข้าร่วมองค์กร</h4>
-                </div>
-                <div className={styles.boxContent}>
-                    <div className={styles.dataRow}>
-                        <span className={styles.label}>Admin Code</span>
-                        <span className={styles.valueCode}>{formData.adminCode}</span>
-                    </div>
-                    <div className={styles.dataRow}>
-                        <span className={styles.label}>User Code</span>
-                        <span className={styles.valueCode}>{formData.userCode}</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* กล่อง 2: ที่อยู่และการติดต่อ */}
-            <div className={styles.infoBox}>
-                <div className={styles.boxHeader}>
-                    <div className={styles.iconBox} style={{background: '#e8f5e9', color: '#1b5e20'}}><FaMapMarkedAlt/></div>
-                    <h4>พื้นที่รับผิดชอบ & ติดต่อ</h4>
-                </div>
-                <div className={styles.boxContent}>
-                    <div className={styles.dataRow}>
-                        <span className={styles.label}>ที่อยู่</span>
-                        <span className={styles.value}>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span>
-                    </div>
-                    <div className={styles.dataRow}>
-                        <span className={styles.label}>โทรศัพท์</span>
-                        <span className={styles.valueHighlight}>{formData.phone}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  );
-
-  // --- EDIT MODE: แบ่ง Section ชัดเจน ---
-  const renderEditMode = () => (
-    <div className={styles.editContainer}>
-        <div className={styles.editHeader}>
+  // --- POPUP EDIT MODAL (ฟอร์มแก้ไข) ---
+  const AgencyEditModal = () => (
+    <>
+      <div className={styles.modalBackdrop} onClick={() => setIsEditModalOpen(false)} />
+      <div className={styles.modalContainer}>
+        <div className={styles.modalHeader}>
             <h3>แก้ไขข้อมูลหน่วยงาน</h3>
-            <button onClick={() => setIsEditing(false)} className={styles.btnClose}><FaTimes/></button>
+            <button className={styles.btnClose} onClick={() => setIsEditModalOpen(false)}><FaTimes/></button>
         </div>
-
-        <div className={styles.editBody}>
-            {/* ส่วนที่ 1: รูปภาพ + ชื่อ */}
-            <div className={styles.editSection}>
-                <div className={styles.uploadWrapper}>
-                    <div className={styles.imgPreview}>
-                        <FaImage />
-                        <div className={styles.editOverlay}><FaEdit/></div>
-                    </div>
-                    <div className={styles.uploadText}>
-                        <label>รูปภาพโลโก้</label>
-                        <span>รองรับไฟล์ JPG, PNG (Max 5MB)</span>
-                    </div>
+        
+        <div className={styles.modalBody}>
+             {/* 1. รูปภาพ */}
+             <div className={styles.imageUploadSection}>
+                <div className={styles.imageCircle}>
+                    <FaImage size={32} color="#ccc"/>
+                    <div className={styles.editIconOverlay}><FaEdit/></div>
                 </div>
+                <span className={styles.hintText}>รองรับไฟล์ JPG, PNG (Max 5MB)</span>
+             </div>
+
+             {/* 2. ข้อมูลทั่วไป */}
+             <div className={styles.formSection}>
+                <h4 className={styles.sectionTitle}><FaBuilding/> ข้อมูลทั่วไป</h4>
                 <div className={styles.formGrid}>
-                     <div className={styles.formGroupFull}>
+                    <div className={styles.formGroupFull}>
                         <label>ชื่อหน่วยงาน</label>
-                        <input type="text" className={styles.input} value={formData.name} onChange={(e)=>handleChange('name',e.target.value)} />
+                        <input type="text" className={styles.input} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
                     </div>
                     <div className={styles.formGroup}>
                         <label>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
-                        <select className={styles.input} value={formData.agencyType} onChange={(e)=>handleChange('agencyType',e.target.value)}>
+                        <select className={styles.input} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
                             <option value="เทศบาล">เทศบาล</option>
                             <option value="อบต">อบต.</option>
                         </select>
                     </div>
                     <div className={styles.formGroup}>
                         <label>สถานะการใช้งาน <span className={styles.req}>*</span></label>
-                        <select className={styles.input} value={formData.usageType} onChange={(e)=>handleChange('usageType',e.target.value)}>
+                        <select className={styles.input} value={formData.usageType} onChange={(e)=>handleChange('usageType', e.target.value)}>
                             <option value="full">เต็มรูปแบบ</option>
                         </select>
                     </div>
                 </div>
-            </div>
+             </div>
 
-            <hr className={styles.divider}/>
+             {/* 3. รหัส & ที่อยู่ */}
+             <div className={styles.formGrid}>
+                 {/* รหัส */}
+                 <div className={styles.formSection}>
+                    <h4 className={styles.sectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม</h4>
+                    <div className={styles.codeBox}>
+                        <div className={styles.codeTabs}>
+                            <button className={activeCodeTab==='admin'?styles.tabActive:styles.tab} onClick={()=>setActiveCodeTab('admin')}>Admin</button>
+                            <button className={activeCodeTab==='user'?styles.tabActive:styles.tab} onClick={()=>setActiveCodeTab('user')}>User</button>
+                        </div>
+                        <div className={styles.codeDisplay}>
+                            <span className={styles.codeText}>{activeCodeTab==='admin'?formData.adminCode:formData.userCode}</span>
+                            <button className={styles.btnCopy}><FaRegCopy/> คัดลอก</button>
+                        </div>
+                    </div>
+                 </div>
 
-            {/* ส่วนที่ 2: รหัส (Codes) */}
-            <div className={styles.editSection}>
-                <h4 className={styles.subTitle}><FaUnlockAlt/> จัดการรหัสเข้าร่วม</h4>
-                <div className={styles.codeManager}>
-                    <div className={styles.codeTabs}>
-                         <button className={activeCodeTab==='admin' ? styles.tabActive : styles.tab} onClick={()=>setActiveCodeTab('admin')}>Admin</button>
-                         <button className={activeCodeTab==='user' ? styles.tabActive : styles.tab} onClick={()=>setActiveCodeTab('user')}>User</button>
+                 {/* ที่อยู่ */}
+                 <div className={styles.formSection}>
+                    <div className={styles.flexHeader}>
+                        <h4 className={styles.sectionTitleNoMargin}><FaMapMarkedAlt/> ที่อยู่ & ติดต่อ</h4>
+                        <button className={styles.btnSmallOutline}><FaMapMarkerAlt/> ดึงตำแหน่ง</button>
                     </div>
-                    <div className={styles.codeDisplay}>
-                        <span className={styles.largeCode}>{activeCodeTab==='admin'?formData.adminCode:formData.userCode}</span>
-                        <button className={styles.btnCopy}><FaRegCopy/> คัดลอก</button>
+                    <div className={styles.addressGrid}>
+                        <input className={styles.input} placeholder="จังหวัด" value={formData.province} onChange={(e)=>handleChange('province', e.target.value)} />
+                        <input className={styles.input} placeholder="อำเภอ" value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
+                        <input className={styles.input} placeholder="ตำบล" value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
+                        <input className={styles.input} placeholder="เบอร์โทร" value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
                     </div>
-                </div>
-            </div>
-
-            <hr className={styles.divider}/>
-
-            {/* ส่วนที่ 3: ที่อยู่ */}
-            <div className={styles.editSection}>
-                <div className={styles.flexTitle}>
-                    <h4 className={styles.subTitle}><FaMapMarkedAlt/> ข้อมูลที่ตั้ง & ติดต่อ</h4>
-                    <button className={styles.btnOutlineSmall}><FaMapMarkerAlt/> ดึงตำแหน่งปัจจุบัน</button>
-                </div>
-                <div className={styles.formGrid}>
-                    <div className={styles.formGroup}>
-                        <label>จังหวัด</label>
-                        <input className={styles.input} value={formData.province} onChange={(e)=>handleChange('province',e.target.value)} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>อำเภอ/เขต</label>
-                        <input className={styles.input} value={formData.district} onChange={(e)=>handleChange('district',e.target.value)} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>ตำบล/แขวง</label>
-                        <input className={styles.input} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict',e.target.value)} />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>เบอร์โทรศัพท์ <span className={styles.req}>*</span></label>
-                        <input className={styles.input} value={formData.phone} onChange={(e)=>handleChange('phone',e.target.value)} />
-                    </div>
-                </div>
-            </div>
-
-            <div className={styles.actionFooter}>
-                <button className={styles.btnCancel} onClick={()=>setIsEditing(false)}>ยกเลิก</button>
-                <button className={styles.btnSave} onClick={()=>setIsEditing(false)}>บันทึกการเปลี่ยนแปลง</button>
-            </div>
+                 </div>
+             </div>
         </div>
-    </div>
+
+        <div className={styles.modalFooter}>
+            <button className={styles.btnCancel} onClick={() => setIsEditModalOpen(false)}>ยกเลิก</button>
+            <button className={styles.btnSave} onClick={() => setIsEditModalOpen(false)}>บันทึกการเปลี่ยนแปลง</button>
+        </div>
+      </div>
+    </>
   );
 
+  // --- VIEW MODE (หน้าแสดงผลปกติ) ---
   return (
-    <div className={styles.cardContainer}>
-        {isEditing ? renderEditMode() : renderViewMode()}
-    </div>
+    <>
+        <div className={styles.viewContainer}>
+            {/* Header Card */}
+            <div className={styles.profileCard}>
+                <div className={styles.profileLeft}>
+                    <div className={styles.logoCircle}><FaImage/></div>
+                    <div>
+                        <h2 className={styles.orgName}>{formData.name}</h2>
+                        <div className={styles.badges}>
+                            <span className={styles.badgeType}>{formData.agencyType}</span>
+                            <span className={styles.badgeStatus}><FaCheckCircle/> ใช้งานเต็มรูปแบบ</span>
+                        </div>
+                    </div>
+                </div>
+                <button className={styles.btnEditMain} onClick={() => setIsEditModalOpen(true)}>
+                    <FaEdit /> แก้ไขข้อมูล
+                </button>
+            </div>
+
+            {/* Info Cards */}
+            <div className={styles.infoGrid}>
+                <div className={styles.infoBox}>
+                    <div className={styles.boxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
+                    <div className={styles.dataRow}><span>Admin:</span> <strong className={styles.codeFont}>{formData.adminCode}</strong></div>
+                    <div className={styles.dataRow}><span>User:</span> <strong className={styles.codeFont}>{formData.userCode}</strong></div>
+                </div>
+                <div className={styles.infoBox}>
+                    <div className={styles.boxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
+                    <div className={styles.dataRow}><span>ที่อยู่:</span> <span>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span></div>
+                    <div className={styles.dataRow}><span>โทรศัพท์:</span> <span style={{color:'var(--primary)', fontWeight:'bold'}}>{formData.phone}</span></div>
+                </div>
+            </div>
+        </div>
+        
+        {/* Render Modal if Open */}
+        {isEditModalOpen && <AgencyEditModal />}
+    </>
   );
 };
 
 // ------------------------------------------------------------------
-// --- (ส่วนหน้าอื่นๆ ยังคงเดิม) ---
+// --- ส่วนที่ 2: เมนูอื่นๆ (กู้คืนกลับมาเหมือนเดิม) ---
 // ------------------------------------------------------------------
+
+// Map
 const MapSettingsContent = () => (
-    <div className={styles.cardContainer}>
-      <h3 className={styles.pageTitle}><FaMapMarkedAlt/> ตั้งค่าแผนที่</h3>
-      <div className={styles.settingItem}>
-        <span>เปิด/ปิด แผนที่สาธารณะ</span>
-        <MockToggle />
+    <div className={styles.viewContainer}>
+      <div className={styles.simpleCard}>
+        <h3 className={styles.pageTitle}><FaMapMarkedAlt/> ตั้งค่าแผนที่</h3>
+        <div className={styles.settingRow}>
+            <span>แผนที่สาธารณะ (เปิด/ปิด)</span>
+            <MockToggle />
+        </div>
       </div>
     </div>
 );
 
+// Password
 const PasswordSettingsContent = () => {
-    // Mock user list logic (simplified for display)
+    const [visible, setVisible] = useState({});
+    const toggle = (user) => setVisible({...visible, [user]: !visible[user]});
     return (
-        <div className={styles.cardContainer}>
-            <h3 className={styles.pageTitle}><FaUnlockAlt/> รหัสเข้าใช้งาน</h3>
-            <div className={styles.userList}>
-                <div className={styles.userRow}>
-                    <div className={styles.userInfo}><FaUserCog style={{color:'#007bff'}}/> ผู้ดูแล (Admin)</div>
-                    <button className={styles.btnOutlineSmall}><FaSyncAlt/> เปลี่ยนรหัส</button>
-                </div>
-                <div className={styles.userRow}>
-                    <div className={styles.userInfo}><FaUserTie style={{color:'#28a745'}}/> เจ้าหน้าที่</div>
-                    <button className={styles.btnOutlineSmall}><FaSyncAlt/> เปลี่ยนรหัส</button>
-                </div>
+        <div className={styles.viewContainer}>
+            <div className={styles.simpleCard}>
+                <h3 className={styles.pageTitle}><FaUnlockAlt/> รหัสเข้าใช้งาน</h3>
+                {[
+                    {role:"ผู้ดูแล (Admin)", user:"admin_xx", pass:"1234"},
+                    {role:"เจ้าหน้าที่", user:"staff_01", pass:"5678"}
+                ].map((u,i)=>(
+                    <div key={i} className={styles.userRow}>
+                        <div className={styles.userInfo}>
+                            <FaUserCog style={{color:'#0d6efd'}}/> 
+                            <div>{u.role}<div style={{fontSize:12, color:'#999'}}>{u.user}</div></div>
+                        </div>
+                        <div className={styles.passAction}>
+                            <span style={{marginRight:10, fontSize:13}}>{visible[u.user] ? u.pass : "••••••"}</span>
+                            <button className={styles.btnIcon} onClick={()=>toggle(u.user)}>{visible[u.user]?<FaEyeSlash/>:<FaEye/>}</button>
+                            <button className={styles.btnSmall}><FaSyncAlt/> เปลี่ยน</button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     )
 };
 
+// QR Codes
 const QRUnitSettingsContent = () => (
-    <div className={styles.cardContainer}>
-        <h3 className={styles.pageTitle}><FaQrcode/> QR Code หน่วยงาน</h3>
-        <div className={styles.qrArea}>
-            <FaQrcode size={80} color="#ddd"/>
-            <p>QR Code Preview</p>
+    <div className={styles.viewContainer}>
+        <div className={styles.simpleCard}>
+            <h3 className={styles.pageTitle}><FaQrcode/> QR Code หน่วยงาน</h3>
+            <div className={styles.qrArea}>
+                <FaQrcode size={60} color="#ccc"/>
+                <span>ตัวอย่าง QR Code</span>
+            </div>
+            <button className={styles.btnSave}>ดาวน์โหลด QR Code</button>
         </div>
-        <button className={styles.btnSaveFull}>ดาวน์โหลด QR Code</button>
     </div>
 );
 
 const QRCreateSettingsContent = () => (
-    <div className={styles.cardContainer}>
-        <h3 className={styles.pageTitle}><FaLink/> สร้าง QR Code เอง</h3>
-        <div className={styles.formGroupFull} style={{marginBottom:'15px'}}>
-             <label>ลิงก์ปลายทาง / ชื่อปัญหา</label>
-             <input type="text" className={styles.input} placeholder="ระบุชื่อ..." />
+    <div className={styles.viewContainer}>
+        <div className={styles.simpleCard}>
+            <h3 className={styles.pageTitle}><FaLink/> สร้าง QR Code เอง</h3>
+            <div className={styles.formGroup} style={{marginBottom:15}}>
+                <label>ชื่อลิงก์ / ปัญหา</label>
+                <input className={styles.input} placeholder="เช่น แจ้งไฟดับ..." />
+            </div>
+            <button className={styles.btnSave}>สร้าง QR Code</button>
         </div>
-        <button className={styles.btnSaveFull}>สร้าง QR Code</button>
     </div>
 );
 
@@ -258,6 +243,7 @@ const QRCreateSettingsContent = () => (
 // --- Main View Controller ---
 // ------------------------------------------------------------------
 const SettingsView = () => {
+  // เมนูตั้งค่า (ตัด "ทั่วไป" ออกแล้ว เอา "ข้อมูลหน่วยงาน" ขึ้นก่อน)
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
     { id: "แผนที่", label: "ตั้งค่าแผนที่" },
