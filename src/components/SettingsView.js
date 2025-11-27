@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./css/SettingsView.module.css";
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, FaUserCog, FaUserTie,
@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
-// --- Helper Components (เหมือนเดิม ไม่แตะ) ---
+// --- Helper Components (ส่วนนี้เหมือนเดิม ไม่ได้แก้ไข) ---
 // ------------------------------------------------------------------
 const MockToggle = () => (
   <label className={styles.mockToggle}>
@@ -49,16 +49,20 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
 };
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (Dashboard + Fixed Popup Layout) --> แก้ไขจุดนี้
+// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Upload Image + UX Improvements)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  // State สำหรับเก็บรูปภาพ
+  const [logoPreview, setLogoPreview] = useState(null); 
+  const fileInputRef = useRef(null); // Ref สำหรับ input file
+
   const [formData, setFormData] = useState({
     name: "เทศบาลตำบลตัวอย่าง",
     adminCode: "AL1F8H2",
     userCode: "US9K2M4",
     agencyType: "เทศบาล",
-    // usageType: "full",  <-- ลบออกตาม request
     province: "เชียงใหม่",
     district: "เมือง",
     subDistrict: "สุเทพ",
@@ -67,33 +71,59 @@ const AgencySettings = () => {
 
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
 
-  // --- POPUP EDIT MODAL (จัด Layout ใหม่ สวยงาม เป็นระเบียบ) ---
+  // ฟังก์ชันคลิกที่วงกลมรูปภาพ
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  // ฟังก์ชันเมื่อเลือกไฟล์
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setLogoPreview(imageUrl);
+    }
+  };
+
+  // --- POPUP EDIT MODAL ---
   const AgencyEditModal = () => (
     <>
       <div className={styles.agencyModalBackdrop} onClick={() => setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
-        {/* Header: ปุ่มปิดสีแดง ใหญ่ขึ้น */}
+        {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
+            {/* ปุ่มปิดสีแดง วงกลม */}
             <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)}>
                 <FaTimes />
             </button>
         </div>
         
         <div className={styles.agencyModalBody}>
-             {/* 1. รูปภาพ */}
+             {/* ส่วนอัปโหลดรูปภาพ */}
              <div className={styles.agencyImageSection}>
-                <div className={styles.agencyImageCircle}>
-                    <FaImage size={32} color="#ccc"/>
+                <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    style={{ display: "none" }} 
+                    accept="image/*"
+                    onChange={handleFileChange}
+                />
+                <div className={styles.agencyImageCircle} onClick={handleImageClick}>
+                    {logoPreview ? (
+                        <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} />
+                    ) : (
+                        <FaImage size={32} color="#ccc"/>
+                    )}
                     <div className={styles.agencyEditOverlay}><FaEdit/></div>
                 </div>
                 <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
              </div>
 
-             {/* 2. ฟอร์มจัดกลุ่ม */}
+             {/* ฟอร์มข้อมูล */}
              <div className={styles.agencyFormContainer}>
                 
-                {/* Group: ข้อมูลหลัก */}
+                {/* Group 1: ข้อมูลทั่วไป */}
                 <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
@@ -108,7 +138,7 @@ const AgencySettings = () => {
                     </select>
                 </div>
 
-                {/* Group: รหัส (แยกออกมาให้ชัด) */}
+                {/* Group 2: รหัส */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม</div>
                 <div className={styles.agencyRow2}>
@@ -122,11 +152,10 @@ const AgencySettings = () => {
                       </div>
                 </div>
 
-                {/* Group: ที่อยู่ & ติดต่อ */}
+                {/* Group 3: ที่อยู่ (Grid 3 ช่อง) */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
                 
-                {/* แถวที่อยู่: จังหวัด / อำเภอ / ตำบล (ปรับเป็น 3 คอลัมน์ หรือ Grid ที่สวยขึ้น) */}
                 <div className={styles.agencyAddressGrid}>
                     <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>จังหวัด</label>
@@ -146,12 +175,7 @@ const AgencySettings = () => {
                     <label className={styles.agencyLabel}>เบอร์โทรศัพท์ติดต่อ <span className={styles.req}>*</span></label>
                     <div style={{position:'relative'}}>
                         <FaPhoneAlt style={{position:'absolute', left:12, top:13, color:'#999', fontSize:12}}/>
-                        <input 
-                            className={styles.agencyInput} 
-                            style={{paddingLeft: 35}}
-                            value={formData.phone} 
-                            onChange={(e)=>handleChange('phone', e.target.value)} 
-                        />
+                        <input className={styles.agencyInput} style={{paddingLeft: 35}} value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
                     </div>
                 </div>
 
@@ -172,16 +196,18 @@ const AgencySettings = () => {
         <div className={styles.agencyViewContainer}>
             <div className={styles.agencyProfileCard}>
                 <div className={styles.agencyProfileLeft}>
-                    <div className={styles.agencyLogoCircle}><FaImage/></div>
+                    {/* แสดงรูปโลโก้ */}
+                    <div className={styles.agencyLogoCircle}>
+                        {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage/>}
+                    </div>
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name}</h2>
                         <div className={styles.agencyBadges}>
                             <span className={styles.agencyBadgeType}><FaCity style={{fontSize:10}}/> {formData.agencyType}</span>
-                            {/* ลบ badge ใช้งานเต็มรูปแบบออกแล้ว */}
                         </div>
                     </div>
                 </div>
-                {/* ปุ่มแก้ไขเปลี่ยนสีเป็น Amber/Orange ให้สื่อถึงการแก้ไข */}
+                {/* ปุ่มแก้ไข: สีส้ม ชิดขวา ขนาดพอดี */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
@@ -206,7 +232,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-5. หน้าอื่นๆ (แผนที่, รหัส, QR) -> ใช้ Code เดิมเป๊ะๆ ไม่เปลี่ยน
+// 2-5. หน้าอื่นๆ (เหมือนเดิม ไม่ได้แก้ไขตามคำสั่ง)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
