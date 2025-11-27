@@ -2,7 +2,7 @@
 * { box-sizing: border-box; }
 
 /* ========================================= */
-/* === ORIGINAL STYLES (สำหรับหน้าอื่น) === */
+/* === ORIGINAL STYLES (สำหรับหน้าอื่นๆ ห้ามแก้) === */
 /* ========================================= */
 .settingsContainer { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 24px; margin: 0 auto; }
 .settingsSection { width: 100%; background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
@@ -18,7 +18,7 @@
 .filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; }
 .filterApplyButton:hover { background-color: #046c4e; }
 
-/* Password Specific */
+/* Password & Modal & Other */
 .passwordUserItem { display: flex; flex-direction: column; gap: 4px; }
 .passwordUserInfo { font-weight: 700; font-size: 15px; color: #000; display: flex; align-items: center; gap: 8px; }
 .passwordUserIcon { color: #007bff; }
@@ -28,20 +28,14 @@
 .viewButton { background-color: #6c757d; }
 .viewButtonActive { background-color: #dc3545; }
 .changeButton { background-color: #007bff; }
-
-/* QR Code Specific */
 .qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
 .mockQrIcon { font-size: 80px; color: #e0e0e0; }
 .qrForm { display: flex; flex-direction: column; gap: 16px; }
-
-/* Modal (Original) */
 .filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
 .filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
 .filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
 .filterModalClose { background: #dc3545; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
 .filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-
-/* Toggle */
 .mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
 .mockToggle input { opacity: 0; width: 0; height: 0; }
 .mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
@@ -51,7 +45,7 @@
 
 
 /* ========================================================= */
-/* === NEW AGENCY STYLES (แยกออกมาเพื่อไม่ให้กระทบอันเดิม) === */
+/* === NEW AGENCY STYLES (แยกออกมา 100%) === */
 /* ========================================================= */
 :root { --agency-primary: #057a55; --agency-border: #e0e0e0; }
 
@@ -72,32 +66,41 @@
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 .agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 0.5px; color: #333; }
 
-/* Agency Modal */
+/* MODAL & FORM (FIXED LAYOUT) */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; backdrop-filter: blur(2px); }
-.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 800px; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3001; display: flex; flex-direction: column; }
-.agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
-.agencyModalHeader h3 { margin: 0; font-size: 18px; }
-.agencyBtnClose { background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
-.agencyBtnClose:hover { color: #dc3545; }
-.agencyModalBody { padding: 24px; overflow-y: auto; }
-.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; border-radius: 0 0 12px 12px; }
+.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 600px; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3001; display: flex; flex-direction: column; }
+.agencyModalHeader { padding: 12px 20px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 12px 12px 0 0; }
+.agencyModalTitle { margin: 0; font-size: 16px; color: #333; font-weight: 700; }
 
-.agencyEditGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 20px; }
-.agencyCol { display: flex; flex-direction: column; gap: 16px; }
-.agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+/* ปุ่มปิดเรียบๆ (Simple X) */
+.agencyBtnCloseSimple { background: none; border: none; font-size: 18px; color: #999; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; transition: all 0.2s; }
+.agencyBtnCloseSimple:hover { background: #f0f0f0; color: #333; }
+
+.agencyModalBody { padding: 24px; overflow-y: auto; }
+.agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 20px; }
 .agencyImageCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; }
 .agencyEditOverlay { position: absolute; bottom: -5px; right: -5px; background: var(--agency-primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; cursor: pointer; }
 .agencyHint { font-size: 12px; color: #999; }
-.agencySectionTitle { font-size: 15px; font-weight: 700; margin: 0 0 5px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; display: flex; gap: 8px; align-items: center; color: #333; }
+
+.agencyFormContainer { display: flex; flex-direction: column; gap: 16px; }
+.agencySubHeader { font-size: 14px; font-weight: 700; color: #555; margin: 10px 0 5px 0; display: flex; gap: 6px; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
+.agencyLabel { font-size: 13px; font-weight: 600; color: #333; }
 .agencyInput { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
 .agencyInput:focus { outline: none; border-color: var(--agency-primary); }
-.agencyInputCode { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: monospace; background: #f9f9f9; }
+.agencyInputCode { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: monospace; background: #fdfdfd; }
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.agencyBtnCancel { padding: 10px 24px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; }
-.agencyBtnSave { padding: 10px 24px; border-radius: 6px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; }
+.agencyDivider { height: 1px; background: #f0f0f0; margin: 5px 0; }
+.req { color: #dc3545; }
+
+.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; border-radius: 0 0 12px 12px; }
+.agencyBtnCancel { padding: 8px 20px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
+.agencyBtnCancel:hover { background: #eee; }
+.agencyBtnSave { padding: 8px 20px; border-radius: 6px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
+.agencyBtnSave:hover { background: #046c4e; }
 
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 @media screen and (max-width: 600px) {
-    .agencyViewContainer, .agencyInfoGrid, .agencyEditGrid, .agencyRow2 { grid-template-columns: 1fr; }
+    .agencyViewContainer, .agencyInfoGrid, .agencyRow2 { grid-template-columns: 1fr; }
+    .agencyModalContainer { width: 95%; max-height: 95vh; }
 }
