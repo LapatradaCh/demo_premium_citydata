@@ -67,7 +67,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setError(null);
         
         // GET Request
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/crud_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
 
