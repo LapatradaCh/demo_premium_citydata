@@ -252,8 +252,8 @@
   background-color: #dc3545; /* สีแดงทึบ */
   border: none;              /* เอาขอบออก */
   color: #fff;               /* ไอคอนสีขาว */
-  width: 32px;
-  height: 32px;
+  width: 64px;
+  height: 64px;
   border-radius: 4px;        /* มุมมนเล็กน้อย */
   display: flex;
   align-items: center;
