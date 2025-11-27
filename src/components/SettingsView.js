@@ -17,6 +17,7 @@ import {
   FaBuilding,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaRegCopy // เพิ่มไอคอน Copy
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
@@ -92,16 +93,23 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
 };
 
 // ------------------------------------------------------------------
-// --- (*** NEW: 1. เนื้อหา "ข้อมูลหน่วยงาน" - สร้างใหม่ตามรูป ***) ---
+// --- (UPDATED) 1. เนื้อหา "ข้อมูลหน่วยงาน" - ตามรูปภาพอ้างอิง ---
 // ------------------------------------------------------------------
 const AgencyEditContent = () => {
   // Mock Data
   const [formData, setFormData] = useState({
     name: "เทศบาลตำบลตัวอย่าง",
-    type: "เทศบาลขนาดกลาง",
-    location: "123 หมู่ 1 ถ.สุขุมวิท ต.ปากน้ำ อ.เมือง จ.สมุทรปราการ",
-    phone: "02-123-4567",
+    adminCode: "AL1F8H2", 
+    userCode: "US9K2M4", 
+    agencyType: "",       
+    usageType: "",        
+    province: "",         
+    district: "",         
+    subDistrict: "",      
+    phone: "",  
   });
+
+  const [activeCodeTab, setActiveCodeTab] = useState("admin"); // 'admin' or 'user'
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -109,91 +117,157 @@ const AgencyEditContent = () => {
 
   return (
     <div className={styles.settingsSection}>
-      {/* ส่วนหัวข้อ (Optional) */}
       <h3 className={styles.settingsTitle}>
-        <FaBuilding style={{ marginRight: "10px", color: "#6c757d" }} />
+        <FaBuilding style={{ marginRight: "10px", color: "#555" }} />
         แก้ไขข้อมูลหน่วยงาน
       </h3>
 
-      {/* --- ส่วนรูปภาพ --- */}
+      {/* --- ส่วนรูปภาพ/โลโก้ --- */}
       <div className={styles.agencyImageSection}>
         <div className={styles.agencyImageWrapper}>
+          {/* กรอบรูป */}
           <div className={styles.agencyImagePlaceholder}>
             <FaImage className={styles.agencyImageIcon} />
-            <span>รูปภาพ</span>
+            <span>อัปโหลดโลโก้</span>
           </div>
-          <button className={styles.imageEditBtn} title="แก้ไขรูปภาพ">
+          {/* ปุ่มแก้ไข (ขนาดใหญ่ สีแดงทึบ) */}
+          <button className={styles.imageEditBtn} title="เลือกไฟล์โลโก้">
             <FaEdit />
           </button>
         </div>
+        <div style={{ textAlign: 'center', marginTop: '12px', color: '#777', fontSize: '13px' }}>
+             ขนาดไฟล์ไม่เกิน 5MB (JPG, PNG)
+        </div>
       </div>
 
-      {/* --- ฟอร์มกรอกข้อมูล --- */}
       <div className={styles.editFormContainer}>
-        {/* ชื่อหน่วยงาน */}
-        <div className={styles.formGroup}>
-          <label>ชื่อหน่วยงาน</label>
-          <input
-            type="text"
-            className={styles.searchInput}
-            value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
+        
+        {/* --- ส่วนรหัสเข้าร่วมองค์กร --- */}
+        <div className={styles.formSectionBox}>
+             <h4 className={styles.sectionHeader}>
+                <FaUnlockAlt /> รหัสเข้าร่วมองค์กร
+             </h4>
+             <div className={styles.codeSwitchContainer}>
+                <button 
+                    className={`${styles.codeTab} ${activeCodeTab === 'admin' ? styles.active : ''}`}
+                    onClick={() => setActiveCodeTab('admin')}
+                >
+                    Admin Code
+                </button>
+                <button 
+                    className={`${styles.codeTab} ${activeCodeTab === 'user' ? styles.active : ''}`}
+                    onClick={() => setActiveCodeTab('user')}
+                >
+                    User Code
+                </button>
+             </div>
+             <div className={styles.codeDisplayBox}>
+                <span className={styles.codeText}>
+                    {activeCodeTab === 'admin' ? formData.adminCode : formData.userCode}
+                </span>
+                <button className={styles.copyBtn} title="คัดลอก">
+                    <FaRegCopy /> คัดลอก
+                </button>
+             </div>
         </div>
 
-        {/* ประเภทหน่วยงาน */}
-        <div className={styles.formGroup}>
-          <label>ประเภทหน่วยงาน</label>
-          <input
-            type="text"
-            className={styles.searchInput}
-            value={formData.type}
-            onChange={(e) => handleChange("type", e.target.value)}
-          />
+        {/* --- ส่วนตั้งค่าประเภทหน่วยงาน --- */}
+        <div className={styles.rowTwoCols}>
+            <div className={styles.formGroup}>
+              <label>ประเภทหน่วยงาน <span style={{color:'red'}}>*</span></label>
+              <select 
+                className={styles.searchInput}
+                value={formData.agencyType}
+                onChange={(e) => handleChange("agencyType", e.target.value)}
+              >
+                 <option value="">เลือกประเภท</option>
+                 <option value="เทศบาล">เทศบาล</option>
+                 <option value="อบต">อบต.</option>
+              </select>
+            </div>
+            <div className={styles.formGroup}>
+              <label>ประเภทการใช้งาน <span style={{color:'red'}}>*</span></label>
+              <select 
+                className={styles.searchInput}
+                value={formData.usageType}
+                onChange={(e) => handleChange("usageType", e.target.value)}
+              >
+                 <option value="">เลือกประเภทการใช้งาน</option>
+                 <option value="full">เต็มรูปแบบ</option>
+                 <option value="demo">ทดลองใช้</option>
+              </select>
+            </div>
         </div>
 
-        {/* ตำแหน่งหน่วยงาน & แผนที่ */}
-        <div className={styles.formGroup}>
-          <label>
-             ตำแหน่งหน่วยงาน
-          </label>
-          {/* Input text */}
-          <input
-            type="text"
-            className={styles.searchInput}
-            style={{ marginBottom: "10px" }}
-            value={formData.location}
-            onChange={(e) => handleChange("location", e.target.value)}
-          />
-          {/* Map Placeholder Box */}
-          <div className={styles.mapPlaceholderBox}>
-             <FaMapMarkerAlt style={{fontSize: '24px', marginBottom: '8px'}} />
-             <span>(พื้นที่แสดงแผนที่ Google Map)</span>
-          </div>
+        {/* --- ส่วนกำหนดขอบเขตและข้อมูลติดต่อ --- */}
+        <div className={styles.formSectionBox} style={{marginTop: '10px'}}>
+            <h4 className={styles.sectionHeader}>
+                <FaMapMarkedAlt /> ข้อมูลที่ตั้งและติดต่อ
+            </h4>
+            
+            {/* ปุ่มดึงตำแหน่ง */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                <button className={styles.getLocationBtn}>
+                    <FaMapMarkerAlt /> ดึงตำแหน่งปัจจุบัน
+                </button>
+            </div>
+
+            <div className={styles.rowTwoCols}>
+                <div className={styles.formGroup}>
+                  <label>จังหวัดที่รับผิดชอบ</label>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="ระบุจังหวัด"
+                    value={formData.province}
+                    onChange={(e) => handleChange("province", e.target.value)}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>อำเภอ/เขต</label>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="ระบุอำเภอ"
+                    value={formData.district}
+                    onChange={(e) => handleChange("district", e.target.value)}
+                  />
+                </div>
+            </div>
+            
+            <div className={styles.rowTwoCols}>
+                <div className={styles.formGroup}>
+                  <label>ตำบล/แขวง</label>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="ระบุตำบล"
+                    value={formData.subDistrict}
+                    onChange={(e) => handleChange("subDistrict", e.target.value)}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>เบอร์โทรศัพท์ติดต่อ <span style={{color:'red'}}>*</span></label>
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="08XXXXXXXX"
+                    value={formData.phone}
+                    onChange={(e) => handleChange("phone", e.target.value)}
+                  />
+                </div>
+            </div>
         </div>
 
-        {/* เบอร์โทรศัพท์ */}
-        <div className={styles.formGroup}>
-          <label>
-            <FaPhoneAlt style={{ marginRight: "6px", fontSize: "12px" }} />
-            เบอร์โทรศัพท์
-          </label>
-          <input
-            type="text"
-            className={styles.searchInput}
-            value={formData.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-          />
-        </div>
       </div>
 
-      {/* --- ปุ่ม Action (แดง/เขียว) --- */}
+      {/* --- ปุ่ม Action (แดง/เขียว ทึบ) --- */}
       <div className={styles.actionButtonRow}>
         <button className={styles.btnCancel}>
             ยกเลิกแก้ไข
         </button>
         <button className={styles.btnConfirm}>
-            ยืนยันแก้ไข
+            บันทึกข้อมูล
         </button>
       </div>
     </div>
@@ -361,7 +435,6 @@ const QRCreateSettingsContent = () => (
 
 // --- Main SettingsView ---
 const SettingsView = () => {
-  // (*** MODIFIED ***) เปลี่ยน "ทั่วไป" เป็น "ข้อมูลหน่วยงาน"
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" }, 
     { id: "แผนที่", label: "ตั้งค่าแผนที่" },
@@ -375,7 +448,7 @@ const SettingsView = () => {
   const renderSettingContent = () => {
     switch (activeSetting) {
       case "ข้อมูลหน่วยงาน":
-        return <AgencyEditContent />; // เรียกใช้ Component ใหม่
+        return <AgencyEditContent />;
       case "แผนที่":
         return <MapSettingsContent />;
       case "รหัสผ่าน":
