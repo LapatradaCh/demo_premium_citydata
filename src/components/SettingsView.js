@@ -12,13 +12,17 @@ import {
   FaEyeSlash,
   FaQrcode,
   FaLink,
+  FaEdit,
+  FaImage,
+  FaBuilding,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
-// --- (*** 3. SettingsView - "ปรับปรุงใหม่ตามคำขอ" ***) ---
+// --- Components ย่อย (Toggle, Modal) ---
 // ------------------------------------------------------------------
 
-// (Component ย่อยสำหรับ Toggle Switch - เหมือนเดิม)
 const MockToggle = () => (
   <label className={styles.mockToggle}>
     <input type="checkbox" />
@@ -26,10 +30,7 @@ const MockToggle = () => (
   </label>
 );
 
-// (*** NEW COMPONENT: Modal สำหรับ "บังคับรีเซ็ต" ***)
-// (*** นี่คือเวอร์ชันที่ปลอดภัยกว่า PasswordChangeModal เดิม ***)
 const AdminChangePasswordModal = ({ onClose, user }) => {
-  // (*** MODIFIED ***) เราไม่สนรหัสเก่า เราจะตั้งใหม่เลย
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -42,7 +43,6 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
       alert("รหัสผ่านใหม่และการยืนยันไม่ตรงกัน");
       return;
     }
-    // (ณ จุดนี้ คุณจะส่ง API request เพื่อตั้งรหัสใหม่ให้ user.username)
     alert(`(จำลอง) ตั้งรหัสผ่านใหม่สำหรับ ${user.username} สำเร็จ!`);
     onClose();
   };
@@ -58,8 +58,6 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
           </button>
         </div>
         <div className={styles.filterModalContent} style={{ gap: "15px" }}>
-          {/* (*** DELETED ***) ลบช่อง "รหัสผ่านเดิม" */}
-
           <div className={styles.filterGroup}>
             <label>รหัสผ่านใหม่</label>
             <input
@@ -93,58 +91,116 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
   );
 };
 
-// --- (*** MODIFIED: 1. เนื้อหา "ตั้งค่าทั่วไป" (เพิ่มโปรไฟล์ผู้ใช้ และลบเนื้อหาในรูป) ***) ---
-const GeneralSettingsContent = () => {
-  // ข้อมูลจำลองของเจ้าหน้าที่ที่ล็อกอินอยู่
-  const currentUser = {
-    name: "เจ้าหน้าที่ สมชาย ใจดี",
-    email: "somchai.j@agency.go.th",
-    unit: "ฝ่ายรับเรื่องร้องเรียน",
-    role: "เจ้าหน้าที่",
+// ------------------------------------------------------------------
+// --- (*** NEW: 1. เนื้อหา "ข้อมูลหน่วยงาน" - สร้างใหม่ตามรูป ***) ---
+// ------------------------------------------------------------------
+const AgencyEditContent = () => {
+  // Mock Data
+  const [formData, setFormData] = useState({
+    name: "เทศบาลตำบลตัวอย่าง",
+    type: "เทศบาลขนาดกลาง",
+    location: "123 หมู่ 1 ถ.สุขุมวิท ต.ปากน้ำ อ.เมือง จ.สมุทรปราการ",
+    phone: "02-123-4567",
+  });
+
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   return (
-    <>
-      {/* (*** ADDED ***) The Profile Box */}
-      <div className={styles.settingsSection}>
-        <h3 className={styles.settingsTitle}>👤 โปรไฟล์ของฉัน</h3>
-        <div className={styles.settingsItem}>
-          <span className={styles.settingsItemText}>ชื่อ-สกุล</span>
-          <span
-            className={styles.settingsItemValue}
-            style={{ cursor: "default", color: "#333", fontWeight: "600" }}
-          >
-            {currentUser.name}
-          </span>
-        </div>
-        <div className={styles.settingsItem}>
-          <span className={styles.settingsItemText}>หน่วยงาน</span>
-          <span
-            className={styles.settingsItemValue}
-            style={{ cursor: "default", color: "#555" }}
-          >
-            {currentUser.unit}
-          </span>
-        </div>
-        <div className={styles.settingsItem} style={{ borderBottom: "none" }}>
-          <span className={styles.settingsItemText}>Email</span>
-          <span
-            className={styles.settingsItemValue}
-            style={{ cursor: "default", color: "#555" }}
-          >
-            {currentUser.email}
-          </span>
+    <div className={styles.settingsSection}>
+      {/* ส่วนหัวข้อ (Optional) */}
+      <h3 className={styles.settingsTitle}>
+        <FaBuilding style={{ marginRight: "10px", color: "#6c757d" }} />
+        แก้ไขข้อมูลหน่วยงาน
+      </h3>
+
+      {/* --- ส่วนรูปภาพ --- */}
+      <div className={styles.agencyImageSection}>
+        <div className={styles.agencyImageWrapper}>
+          <div className={styles.agencyImagePlaceholder}>
+            <FaImage className={styles.agencyImageIcon} />
+            <span>รูปภาพ</span>
+          </div>
+          <button className={styles.imageEditBtn} title="แก้ไขรูปภาพ">
+            <FaEdit />
+          </button>
         </div>
       </div>
 
-      {/* (*** DELETED PER REQUEST ***)
-            กล่อง "การแจ้งเตือน" และ "ทั่วไป (ภาษา)" ถูกลบออกจากหน้านี้
-          */}
-    </>
+      {/* --- ฟอร์มกรอกข้อมูล --- */}
+      <div className={styles.editFormContainer}>
+        {/* ชื่อหน่วยงาน */}
+        <div className={styles.formGroup}>
+          <label>ชื่อหน่วยงาน</label>
+          <input
+            type="text"
+            className={styles.searchInput}
+            value={formData.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+        </div>
+
+        {/* ประเภทหน่วยงาน */}
+        <div className={styles.formGroup}>
+          <label>ประเภทหน่วยงาน</label>
+          <input
+            type="text"
+            className={styles.searchInput}
+            value={formData.type}
+            onChange={(e) => handleChange("type", e.target.value)}
+          />
+        </div>
+
+        {/* ตำแหน่งหน่วยงาน & แผนที่ */}
+        <div className={styles.formGroup}>
+          <label>
+             ตำแหน่งหน่วยงาน
+          </label>
+          {/* Input text */}
+          <input
+            type="text"
+            className={styles.searchInput}
+            style={{ marginBottom: "10px" }}
+            value={formData.location}
+            onChange={(e) => handleChange("location", e.target.value)}
+          />
+          {/* Map Placeholder Box */}
+          <div className={styles.mapPlaceholderBox}>
+             <FaMapMarkerAlt style={{fontSize: '24px', marginBottom: '8px'}} />
+             <span>(พื้นที่แสดงแผนที่ Google Map)</span>
+          </div>
+        </div>
+
+        {/* เบอร์โทรศัพท์ */}
+        <div className={styles.formGroup}>
+          <label>
+            <FaPhoneAlt style={{ marginRight: "6px", fontSize: "12px" }} />
+            เบอร์โทรศัพท์
+          </label>
+          <input
+            type="text"
+            className={styles.searchInput}
+            value={formData.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* --- ปุ่ม Action (แดง/เขียว) --- */}
+      <div className={styles.actionButtonRow}>
+        <button className={styles.btnCancel}>
+            ยกเลิกแก้ไข
+        </button>
+        <button className={styles.btnConfirm}>
+            ยืนยันแก้ไข
+        </button>
+      </div>
+    </div>
   );
 };
 
-// --- (*** MODIFIED: 2. เนื้อหา "ตั้งค่าแผนที่" (ปรับปรุงใหม่ตามคำขอ) ***) ---
+// --- (2. เนื้อหา "ตั้งค่าแผนที่") ---
 const MapSettingsContent = () => {
   return (
     <div className={styles.settingsSection}>
@@ -155,58 +211,42 @@ const MapSettingsContent = () => {
       <p className={styles.settingsSubtitle}>
         ตั้งค่าการแสดงผลของแผนที่สาธารณะสำหรับประชาชน
       </p>
-
-      {/* (*** MODIFIED ***) เหลือแค่ Toggle เดียวตามคำขอ */}
       <div className={styles.settingsItem} style={{ borderBottom: "none" }}>
         <div className={styles.settingsItemText}>
           <span>แผนที่สาธารณะ (เปิด/ปิด)</span>
         </div>
         <MockToggle />
       </div>
-
-      {/* (*** DELETED ***)
-            ลบ Toggle "แสดงหมุดสถานะที่เสร็จสิ้น" และ "แสดงหมายเหตุ" ออก
-          */}
     </div>
   );
 };
 
-// --- (*** MODIFIED: 3. เนื้อหา "รหัสผ่าน" (สลับการมองเห็นได้) ***) ---
+// --- (3. เนื้อหา "รหัสผ่าน") ---
 const PasswordSettingsContent = () => {
-  const [modalUser, setModalUser] = useState(null); // State สำหรับ Modal (เหมือนเดิม)
-
-  // (*** NEW STATE ***) State เพื่อจำว่ารหัสของ username ใดที่กำลังแสดงอยู่
+  const [modalUser, setModalUser] = useState(null);
   const [visiblePasswordUsername, setVisiblePasswordUsername] = useState(null);
 
-  // (*** MODIFIED ***)
-  // เปลี่ยนจาก password: "..." เป็น realPassword: "..." เพื่อเก็บรหัสจริง
   const users = [
     {
       role: "ผู้ดูแลหน่วยงาน",
       username: "admin_unit_xx",
-      realPassword: "AdminPassword123", // <-- รหัสจริง (จำลอง)
+      realPassword: "AdminPassword123",
       icon: FaUserCog,
     },
     {
       role: "เจ้าหน้าที่",
       username: "staff_zone_01",
-      realPassword: "Staff_pass_456", // <-- รหัสจริง (จำลอง)
+      realPassword: "Staff_pass_456",
       icon: FaUserTie,
     },
   ];
 
-  // ฟังก์ชันเปิด Modal (เหมือนเดิม)
   const handleOpenResetModal = (user) => {
-    // ส่งข้อมูล user ทั้งหมดไป (เผื่อ Modal ต้องใช้)
     setModalUser(user);
   };
 
-  // (*** MODIFIED ***)
-  // เปลี่ยนจาก handleViewPassword เป็นฟังก์ชันสลับการมองเห็น
   const handleTogglePasswordView = (username) => {
     setVisiblePasswordUsername((prevUsername) =>
-      // ถ้า username ที่กดมา คืออันเดียวกับที่แสดงอยู่ ให้ซ่อน (null)
-      // ถ้าไม่ใช่ ให้แสดงอันใหม่
       prevUsername === username ? null : username
     );
   };
@@ -222,43 +262,29 @@ const PasswordSettingsContent = () => {
           จัดการและรีเซ็ตรหัสผ่านสำหรับเจ้าหน้าที่และผู้ดูแลหน่วยงาน
         </p>
 
-        {/* (*** MODIFIED: อัปเดตการ map ข้อมูล ***) */}
         {users.map((user, index) => {
-          // ตรวจสอบว่ารหัสของ user นี้กำลังถูกแสดงอยู่หรือไม่
           const isVisible = visiblePasswordUsername === user.username;
-
           return (
             <div key={index} className={styles.settingsItem}>
-              {/* (ส่วนข้อมูลผู้ใช้ - เหมือนเดิม) */}
               <div className={styles.passwordUserItem}>
                 <span className={styles.passwordUserInfo}>
                   <user.icon className={styles.passwordUserIcon} />
                   {user.role} ({user.username})
                 </span>
-
-                {/* (*** MODIFIED ***)
-                        สลับการแสดงผลรหัสจริง กับ "***********"
-                    */}
                 <span className={styles.passwordUserPass}>
                   รหัสผ่าน: {isVisible ? user.realPassword : "***********"}
                 </span>
               </div>
-
-              {/* (ส่วนปุ่ม - อัปเดต onClick และ ข้อความ) */}
               <div className={styles.passwordButtonGroup}>
                 <button
-                  // (*** MODIFIED ***) เพิ่ม class 'viewButtonActive' เมื่อกำลังแสดง
                   className={`${styles.passwordButton} ${styles.viewButton} ${
                     isVisible ? styles.viewButtonActive : ""
                   }`}
-                  // (*** MODIFIED ***) เรียกใช้ฟังก์ชันสลับการมองเห็น
                   onClick={() => handleTogglePasswordView(user.username)}
                 >
-                  {/* (*** MODIFIED ***) สลับไอคอนและข้อความ */}
                   {isVisible ? <FaEyeSlash /> : <FaEye />}
                   {isVisible ? "ซ่อนรหัส" : "ดูรหัส"}
                 </button>
-
                 <button
                   className={`${styles.passwordButton} ${styles.changeButton}`}
                   onClick={() => handleOpenResetModal(user)}
@@ -270,25 +296,22 @@ const PasswordSettingsContent = () => {
           );
         })}
       </div>
-
-      {/* (Modal - เหมือนเดิม) */}
       {modalUser && (
         <AdminChangePasswordModal
           onClose={() => setModalUser(null)}
-          user={modalUser} // ส่ง user object ทั้งหมดไป
+          user={modalUser}
         />
       )}
     </>
   );
 };
 
-// --- (*** REVERTED: 4. เนื้อหา "QRCode หน่วยงาน" (แบบเดิม) ***) ---
+// --- (4. เนื้อหา "QRCode หน่วยงาน") ---
 const QRUnitSettingsContent = () => (
   <div className={styles.settingsSection}>
     <h3 className={styles.settingsTitle}>QRCode ประจำหน่วยงาน</h3>
     <p className={styles.settingsSubtitle}>
       ใช้ QR Code นี้สำหรับแชร์ให้ประชาชนทั่วไป
-      เพื่อแจ้งเรื่องเข้ามายังหน่วยงานของคุณ
     </p>
     <div className={styles.qrCodePlaceholder}>
       <FaQrcode className={styles.mockQrIcon} />
@@ -300,12 +323,12 @@ const QRUnitSettingsContent = () => (
   </div>
 );
 
-// --- (*** REVERTED: 5. เนื้อหา "QRCode สร้างเอง" (แบบเดิม) ***) ---
+// --- (5. เนื้อหา "QRCode สร้างเอง") ---
 const QRCreateSettingsContent = () => (
   <div className={styles.settingsSection}>
     <h3 className={styles.settingsTitle}>สร้าง QR Code เอง</h3>
     <p className={styles.settingsSubtitle}>
-      สร้าง QR Code เพื่อลิงก์ไปยังประเภทปัญหาที่กำหนดเอง (เช่น "แจ้งเหตุไฟดับ")
+      สร้าง QR Code เพื่อลิงก์ไปยังประเภทปัญหาที่กำหนดเอง
     </p>
     <form className={styles.qrForm}>
       <div className={styles.filterGroup}>
@@ -313,7 +336,6 @@ const QRCreateSettingsContent = () => (
         <select>
           <option>xxxx (ทั้งหมด)</option>
           <option>xxxx ไฟฟ้า/ประปา</option>
-          <option>xxxx ถนน/ทางเท้า</option>
         </select>
       </div>
       <div className={styles.filterGroup}>
@@ -337,29 +359,27 @@ const QRCreateSettingsContent = () => (
   </div>
 );
 
-// --- (*** REFACTORED: Component หลักสำหรับหน้าตั้งค่า ***) ---
+// --- Main SettingsView ---
 const SettingsView = () => {
-  // 1. (*** MODIFIED ***) อัปเดตเมนูตามคำขอ
+  // (*** MODIFIED ***) เปลี่ยน "ทั่วไป" เป็น "ข้อมูลหน่วยงาน"
   const settingsOptions = [
-    { id: "ทั่วไป", label: "ตั้งค่า (ทั่วไป)" }, // <-- (*** MODIFIED ***) หน้านี้จะมีโปรไฟล์ผู้ใช้อยู่ด้านบน
+    { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" }, 
     { id: "แผนที่", label: "ตั้งค่าแผนที่" },
-    { id: "รหัสผ่าน", label: "รหัสผ่าน (ผู้ดูแล)" }, // <-- (*** ADDED BACK ***)
+    { id: "รหัสผ่าน", label: "รหัสผ่าน (ผู้ดูแล)" },
     { id: "qrหน่วยงาน", label: "QRCode หน่วยงาน" },
     { id: "qrสร้างเอง", label: "QRCode สร้างเอง" },
   ];
 
-  // 2. ตั้งค่าเริ่มต้นเป็น "ทั่วไป" (เพื่อให้เหมือนในรูป)
   const [activeSetting, setActiveSetting] = useState(settingsOptions[0].id);
 
-  // 3. (*** MODIFIED ***) อัปเดตฟังก์ชัน Render ให้ตรงกับเมนู
   const renderSettingContent = () => {
     switch (activeSetting) {
-      case "ทั่วไป":
-        return <GeneralSettingsContent />; // <-- (*** MODIFIED ***) หน้านี้มีแค่โปรไฟล์
+      case "ข้อมูลหน่วยงาน":
+        return <AgencyEditContent />; // เรียกใช้ Component ใหม่
       case "แผนที่":
-        return <MapSettingsContent />; // <-- (*** MODIFIED ***) หน้านี้ถูกปรับปรุงแล้ว
+        return <MapSettingsContent />;
       case "รหัสผ่าน":
-        return <PasswordSettingsContent />; // <-- (*** MODIFIED ***) ใช้ระบบ 2 ปุ่ม
+        return <PasswordSettingsContent />;
       case "qrหน่วยงาน":
         return <QRUnitSettingsContent />;
       case "qrสร้างเอง":
@@ -369,7 +389,6 @@ const SettingsView = () => {
     }
   };
 
-  // 4. Render UI หลัก (Dropdown + Content) - (เหมือนเดิม)
   return (
     <div className={styles.settingsContainer}>
       <div className={styles.settingsHeaderDropdown}>
@@ -408,6 +427,5 @@ const SettingsView = () => {
     </div>
   );
 };
-// --- (*** จบส่วนที่ปรับปรุง SettingsView ***) ---
 
 export default SettingsView;
