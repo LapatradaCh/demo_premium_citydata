@@ -1,61 +1,24 @@
 /* --- SettingsView.module.css --- */
 * { box-sizing: border-box; }
 
-/* ========================================= */
-/* === ORIGINAL SHARED STYLES (แผนที่/รหัส/QR) === */
-/* ========================================= */
-.settingsContainer { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 24px; margin: 0 auto; }
-.settingsSection { width: 100%; background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
-.settingsTitle { font-size: 18px; font-weight: 700; color: #111; margin: 0 0 10px 0; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; }
-.settingsSubtitle { font-size: 14px; color: #555; margin: -5px 0 20px 0; }
-.settingsItem { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
-.settingsItemText { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; color: #333; }
+:root {
+    --primary-green: #057a55;
+    --border-color: #e0e0e0;
+}
 
-.settingsHeaderDropdown { width: 100%; background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 20px 24px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
-.filterGroup { flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; }
-.filterGroup select { width: 100%; font-size: 14px; border-radius: 12px; border: 1px solid #d0d0d0; padding: 10px 14px; background: #fff; cursor: pointer; }
+/* ================= SHARED LAYOUT ================= */
+.settingsContainer { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 24px; margin: 0 auto; font-family: 'Sarabun', sans-serif; }
+.settingsHeaderDropdown { width: 100%; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; padding: 20px 24px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+.filterGroup select { width: 100%; font-size: 14px; border-radius: 8px; border: 1px solid #ccc; padding: 10px 14px; cursor: pointer; }
 
-/* Modal & Form */
-.filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(2px); }
-.filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
-.filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
-.filterModalClose { background: #dc3545; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
-.filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.searchInput { width: 100%; padding: 12px 18px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background-color: #fcfcfc; }
-.filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; }
-.filterApplyButton:hover { background-color: #046c4e; }
+/* Content Cards */
+.settingsCard { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.cardTitle { font-size: 18px; margin: 0 0 10px 0; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.settingsSubtitle { font-size: 14px; color: #666; margin-bottom: 20px; }
 
-/* Password Section Specific */
-.passwordUserItem { display: flex; flex-direction: column; gap: 4px; }
-.passwordUserInfo { font-weight: 700; font-size: 15px; color: #000; display: flex; align-items: center; gap: 8px; }
-.passwordUserPass { font-size: 13px; color: #555; margin-left: 24px; }
-.passwordButtonGroup { display: flex; gap: 8px; }
-.passwordButton { display: flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 13px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; color: #fff; }
-.viewButton { background-color: #6c757d; }
-.viewButtonActive { background-color: #dc3545; }
-.changeButton { background-color: #007bff; }
-
-/* QR Code */
-.qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
-.mockQrIcon { font-size: 80px; color: #e0e0e0; }
-
-/* Toggle */
-.mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
-.mockToggle input { opacity: 0; width: 0; height: 0; }
-.mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
-.mockSlider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
-.mockToggle input:checked + .mockSlider { background-color: #057a55; }
-.mockToggle input:checked + .mockSlider:before { transform: translateX(22px); }
-
-
-/* ========================================= */
-/* === NEW AGENCY DASHBOARD & POPUP STYLES === */
-/* ========================================= */
-:root { --primary-green: #057a55; --bg-dash: #f8f9fa; }
-
-/* View Mode (Dashboard) */
+/* ================= VIEW MODE ================= */
 .viewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeIn 0.3s; }
-.profileCard { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.profileCard { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; justify-content: space-between; align-items: center; }
 .profileLeft { display: flex; gap: 20px; align-items: center; }
 .logoCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .orgName { margin: 0 0 8px 0; font-size: 22px; color: #333; }
@@ -66,51 +29,65 @@
 .btnEditMain:hover { background: #f8f9fa; border-color: #ccc; }
 
 .infoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.infoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; }
+.infoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; }
 .boxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
 .dataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 .codeFont { font-family: monospace; font-size: 15px; letter-spacing: 0.5px; color: #333; }
 
-/* Popup Edit Modal */
+/* ================= MODAL (EDIT POPUP) - FIXED ================= */
 .modalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; backdrop-filter: blur(2px); }
-.modalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 600px; max-height: 90vh; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3001; display: flex; flex-direction: column; }
-.modalHeader { padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+.modalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3001; display: flex; flex-direction: column; overflow: hidden; }
+.modalHeader { padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #fff; }
 .modalHeader h3 { margin: 0; font-size: 18px; }
 .btnClose { background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
 .btnClose:hover { color: #dc3545; }
-.modalBody { padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
-.modalFooter { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; border-radius: 0 0 16px 16px; }
 
-/* Form Styles */
-.imageUploadSection { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.imageCircle { width: 90px; height: 90px; background: #f0f0f0; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; }
-.editIconOverlay { position: absolute; bottom: 0; right: 0; background: var(--primary-green); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; cursor: pointer; }
+.modalBody { padding: 24px; overflow-y: auto; max-height: 80vh; }
+
+/* Edit Grid Layout */
+.editGridMain { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 20px; }
+.editColumn { display: flex; flex-direction: column; gap: 16px; }
+
+.imageUploadSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+.imageCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; }
+.editIconOverlay { position: absolute; bottom: -5px; right: -5px; background: var(--primary-green); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; cursor: pointer; }
 .hintText { font-size: 12px; color: #999; }
-.sectionTitleNew { font-size: 15px; font-weight: 700; margin: 0 0 12px 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 5px; display: flex; gap: 8px; align-items: center; }
-.sectionTitleNoMargin { font-size: 15px; font-weight: 700; margin: 0; display: flex; gap: 8px; align-items: center; }
-.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.sectionTitle { font-size: 15px; font-weight: 700; margin: 0 0 5px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; display: flex; gap: 8px; align-items: center; color: #333; }
 .formGroup { display: flex; flex-direction: column; gap: 6px; }
-.formGroupFull { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; }
-.inputNew { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #fff; }
-.inputNew:focus { outline: none; border-color: var(--primary-green); }
+.input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+.input:focus { outline: none; border-color: var(--primary-green); }
+.inputCode { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: monospace; background: #fdfdfd; }
+.rowTwo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .req { color: #dc3545; }
-.codeBox { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; }
-.codeTabs { display: flex; gap: 10px; margin-bottom: 8px; border-bottom: 1px solid #ddd; }
-.tab, .tabActive { background: none; border: none; padding-bottom: 5px; cursor: pointer; font-size: 13px; font-weight: 600; }
-.tab { color: #999; }
-.tabActive { color: var(--primary-green); border-bottom: 2px solid var(--primary-green); }
-.codeDisplay { display: flex; justify-content: space-between; align-items: center; }
-.codeText { font-family: monospace; font-size: 16px; font-weight: 700; }
-.btnCopy { background: none; border: none; color: var(--primary-green); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; gap: 5px; align-items: center; }
-.flexHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.btnSmallOutline { padding: 4px 10px; font-size: 12px; border: 1px solid var(--primary-green); background: #fff; color: var(--primary-green); border-radius: 4px; cursor: pointer; display: flex; gap: 4px; align-items: center; }
-.addressGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.btnCancelNew { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 14px; background: #e0e0e0; color: #333; }
-.btnSaveNew { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 14px; background: var(--primary-green); color: #fff; }
+
+.modalFooter { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; }
+.btnCancel { padding: 10px 24px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; }
+.btnCancel:hover { background: #eee; }
+.btnSave { padding: 10px 24px; border-radius: 6px; border: none; background: var(--primary-green); color: #fff; cursor: pointer; font-weight: 600; }
+.btnSave:hover { background: #046c4e; }
+
+/* ================= EXTRAS (Map, Pass, QR) ================= */
+.settingRow { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+.userRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
+.userInfo { display: flex; gap: 10px; align-items: center; font-weight: 600; }
+.passAction { display: flex; gap: 10px; align-items: center; }
+.btnIcon { background: none; border: none; cursor: pointer; color: #666; }
+.btnSmall { padding: 4px 10px; font-size: 12px; background: #f0f0f0; border: none; border-radius: 4px; cursor: pointer; display: flex; gap: 5px; align-items: center; }
+
+.qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
+.mockQrIcon { font-size: 80px; color: #e0e0e0; }
+.filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; }
+
+.mockToggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+.mockToggle input { opacity: 0; width: 0; height: 0; }
+.mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.mockSlider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+.mockToggle input:checked + .mockSlider { background-color: var(--primary-green); }
+.mockToggle input:checked + .mockSlider:before { transform: translateX(20px); }
 
 @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 @media screen and (max-width: 600px) {
-    .viewContainer, .infoGrid, .modalBody, .formGrid, .addressGrid { grid-template-columns: 1fr; }
-    .profileCard { flex-direction: column; text-align: center; }
-    .profileLeft { flex-direction: column; }
+    .viewContainer, .infoGrid, .editGridMain, .rowTwo { grid-template-columns: 1fr; }
+    .modalContainer { width: 95%; max-height: 95vh; }
 }
