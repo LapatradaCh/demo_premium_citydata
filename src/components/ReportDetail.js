@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './css/ReportDetail.module.css';
 
-// --- Icons (คงเดิม) ---
+// --- Icons ---
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
 const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
@@ -40,37 +40,55 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   // --- Fetch Data from Backend ---
   useEffect(() => {
-    // ถ้าไม่มี reportId ให้ใช้ค่า mock หรือ return
-    const idToFetch = reportId || "1"; // Default เป็น 1 เพื่อทดสอบถ้าไม่ได้ส่ง prop มา
+    // ใช้ ID จาก Postman เป็น Default ในกรณีที่ไม่มี prop ส่งมา (เพื่อทดสอบ)
+    const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
     const fetchCaseDetail = async () => {
       try {
         setLoading(true);
-        // เรียก API ตามโครงสร้างไฟล์ backend ที่ให้มา
-        const response = await fetch(`https://demo-premium-citydata-pi.vercel.app/api/get_case_detail?id=${idToFetch}`);
+        setError(null);
         
+        // --- 1. เปลี่ยน URL ให้ตรงกับ Server จริง (premium-citydata-api-ab.vercel.app) ---
+        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
+        
+        const response = await fetch(apiUrl);
+
         if (!response.ok) {
-          throw new Error('Failed to fetch case detail');
+           // กรณี 404 หรือ 500
+           throw new Error(`Server responded with status: ${response.status}`);
         }
 
         const result = await response.json();
         
-        // --- Mapping Info Data (Database -> Frontend) ---
-        // Backend return: { info: {...}, timeline: [...] }
+        // --- 2. Mapping Info Data (ให้ตรงกับ JSON Response ใน Postman) ---
+        // result = { info: {...}, timeline: [...] }
         const mappedInfo = {
-            id: result.info.issue_cases_id,
-            title: result.info.issue_title || result.info.title || "ไม่มีหัวข้อ", // รองรับชื่อ column ที่อาจต่างกัน
-            category: result.info.category_name || result.info.category || "ทั่วไป",
-            rating: result.info.urgency_level || result.info.rating || 0,
-            status: result.info.case_status || result.info.status || "รอรับเรื่อง",
-            locationDetail: result.info.location_detail || result.info.location || "ไม่ระบุตำแหน่ง",
+            // ใช้ case_code (เช่น 2025-842YCY) แทน ID ยาวๆ เพื่อความสวยงาม
+            id: result.info.case_code || result.info.issue_cases_id,
+            
+            title: result.info.title || "ไม่มีหัวข้อ",
+            
+            // ดึง Tags ตัวแรกมาเป็น Category ถ้าไม่มีให้ใช้ "ทั่วไป"
+            category: (result.info.tags && result.info.tags.length > 0) ? result.info.tags[0] : "ทั่วไป",
+            
+            rating: result.info.rating || 0, // ถ้า API ยังไม่ส่งคะแนนมา ให้ default 0
+            
+            status: result.info.status || "รอรับเรื่อง",
+            
+            // สร้าง location string จาก lat/long
+            locationDetail: result.info.latitude 
+              ? `${result.info.latitude.toFixed(5)}, ${result.info.longitude.toFixed(5)}` 
+              : (result.info.location_detail || "ไม่ระบุพิกัด"),
+            
             lat: result.info.latitude,
             lng: result.info.longitude,
-            image: result.info.image_url || result.info.image || null
+            
+            // *** แก้ไข: ใช้ cover_image_url ตาม Postman ***
+            image: result.info.cover_image_url || null
         };
 
         setCaseInfo(mappedInfo);
-        setTimelineData(result.timeline || []);
+        setTimelineData(result.timeline || []); // กัน Error ถ้า timeline เป็น null
         setLoading(false);
 
       } catch (err) {
@@ -83,7 +101,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId]);
 
-  // Fallback info ถ้าโหลดอยู่หรือ error
+  // Fallback info ระหว่างโหลด หรือ เกิด Error
   const info = caseInfo || {
     id: "LOADING...",
     title: "กำลังโหลด...",
@@ -106,6 +124,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   // --- Helper Functions ---
   const getStatusClass = (status = "") => {
+    if (!status) return styles.statusDefault;
     if (status.includes('รอ')) return styles.statusPending;
     if (status.includes('ประสาน')) return styles.statusCoordinating;
     if (status.includes('ดำเนินการ')) return styles.statusProgress;
@@ -117,6 +136,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   };
 
   const getTimelineColorType = (status = "") => {
+    if (!status) return 'red';
     if (status.includes('รอ')) return 'red';
     if (status.includes('ประสาน')) return 'purple';
     if (status.includes('ดำเนินการ')) return 'yellow';
@@ -128,6 +148,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   };
 
   const getTimelineIcon = (status = "") => {
+    if (!status) return <IconClock />;
     if (status.includes('รอ')) return <IconClock />;
     if (status.includes('ประสาน')) return <IconPhone />;
     if (status.includes('ดำเนินการ')) return <IconWrench />;
@@ -159,7 +180,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   // --- Timeline Mapping from API Data ---
   const timelineEvents = useMemo(() => {
     if (!timelineData || timelineData.length === 0) {
-        // กรณีไม่มีข้อมูล Timeline เลย
         return []; 
     }
 
@@ -170,7 +190,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             status: log.status,
             date: date,
             time: time,
-            header: `โดย: ${log.changed_by || 'ระบบ'}`, // แสดงชื่อคนเปลี่ยน
+            header: `โดย: ${log.changed_by || 'ระบบ'}`, 
             detail: log.detail,
             icon: getTimelineIcon(log.status)
         };
@@ -207,8 +227,24 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
-  if (loading) return <div className={styles.container}><div style={{padding:'20px', textAlign:'center'}}>กำลังโหลดข้อมูล...</div></div>;
-  if (error) return <div className={styles.container}><div style={{padding:'20px', textAlign:'center', color:'red'}}>เกิดข้อผิดพลาด: {error}</div></div>;
+  // --- Render Functions ---
+  if (loading) return (
+    <div className={styles.container}>
+        <div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>
+            กำลังโหลดข้อมูล...
+        </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className={styles.container}>
+        <div style={{padding:'40px', textAlign:'center', color:'red'}}>
+            เกิดข้อผิดพลาด: {error}
+            <br/>
+            <button onClick={() => window.location.reload()} style={{marginTop:'10px', padding:'5px 10px'}}>ลองใหม่</button>
+        </div>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
@@ -264,7 +300,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
-            <p className={styles.locationText}>{info.locationDetail || "ไม่ระบุรายละเอียดตำแหน่ง"}</p>
+            <p className={styles.locationText}>{info.locationDetail}</p>
           </div>
           <div className={styles.buttonGroup}>
             <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
@@ -287,43 +323,48 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
       {/* 3. Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
-        <div className={styles.timelineContainer}>
-          {timelineEvents.map((event, index) => {
-            let colorTitleClass = styles.textRed;
-            let colorBgClass = styles.bgRed;
-            switch(event.type) {
-               case 'blue': colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; break;
-               case 'green': colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; break;
-               case 'yellow': colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; break;
-               case 'purple': colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; break;
-               case 'teal': colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; break;
-               case 'dark': colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; break;
-               default: colorTitleClass = styles.textRed; colorBgClass = styles.bgRed;
-            }
+        
+        {timelineEvents.length === 0 ? (
+            <div style={{padding:'20px', textAlign:'center', color:'#9CA3AF'}}>ยังไม่มีประวัติการดำเนินงาน</div>
+        ) : (
+            <div className={styles.timelineContainer}>
+            {timelineEvents.map((event, index) => {
+                let colorTitleClass = styles.textRed;
+                let colorBgClass = styles.bgRed;
+                switch(event.type) {
+                case 'blue': colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; break;
+                case 'green': colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; break;
+                case 'yellow': colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; break;
+                case 'purple': colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; break;
+                case 'teal': colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; break;
+                case 'dark': colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; break;
+                default: colorTitleClass = styles.textRed; colorBgClass = styles.bgRed;
+                }
 
-            return (
-              <div key={index} className={styles.timelineRow}>
-                <div className={styles.timeLeft}>
-                  <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
-                  <span className={styles.statusTime}>{event.date}</span>
-                  <span className={styles.statusTime}>{event.time}</span>
+                return (
+                <div key={index} className={styles.timelineRow}>
+                    <div className={styles.timeLeft}>
+                    <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
+                    <span className={styles.statusTime}>{event.date}</span>
+                    <span className={styles.statusTime}>{event.time}</span>
+                    </div>
+                    <div className={styles.timeCenter}>
+                    <div className={`${styles.iconCircle} ${colorBgClass}`}>{event.icon}</div>
+                    <div className={styles.line}></div>
+                    </div>
+                    <div className={styles.timeRight}>
+                    <div className={styles.mobileHeader}>
+                        <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
+                        <span className={styles.statusTime}>{event.date} {event.time}</span>
+                    </div>
+                    <div className={styles.durationText}>{event.header}</div>
+                    <div className={styles.detailBody}>{event.detail}</div>
+                    </div>
                 </div>
-                <div className={styles.timeCenter}>
-                  <div className={`${styles.iconCircle} ${colorBgClass}`}>{event.icon}</div>
-                  <div className={styles.line}></div>
-                </div>
-                <div className={styles.timeRight}>
-                  <div className={styles.mobileHeader}>
-                      <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
-                      <span className={styles.statusTime}>{event.date} {event.time}</span>
-                  </div>
-                  <div className={styles.durationText}>{event.header}</div>
-                  <div className={styles.detailBody}>{event.detail}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+            })}
+            </div>
+        )}
       </div>
 
       {/* ================= MODALS ================= */}
@@ -339,7 +380,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
               </button>
             </div>
             
-            {/* Wrapper สำหรับ Scroll */}
             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
                   {problemTypes.map((type, index) => (
@@ -368,7 +408,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             
-            {/* HEADER */}
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
               <button className={styles.closeButton} onClick={() => {
@@ -379,7 +418,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
               </button>
             </div>
             
-            {/* BODY */}
             <div className={styles.modalScrollableContent}>
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
@@ -389,7 +427,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                       onChange={(e) => setStatusValue(e.target.value)}
                     >
                       <option value="รอรับเรื่อง">รอรับเรื่อง</option>
-                      <option value="กำลังประสาน">กำลังประสาน</option>
+                      <option value="กำลังประสานงาน">กำลังประสานงาน</option>
                       <option value="ดำเนินการ">ดำเนินการ</option>
                       <option value="เสร็จสิ้น">เสร็จสิ้น</option>
                       <option value="ส่งต่อ">ส่งต่อ</option>
@@ -422,7 +460,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                 </div>
             </div>
 
-            {/* FOOTER */}
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => {
                    setShowStatusModal(false);
