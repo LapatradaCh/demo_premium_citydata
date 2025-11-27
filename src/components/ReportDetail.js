@@ -12,7 +12,7 @@ const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="curre
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconClose = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// Timeline Icons (คงเดิม)
+// Timeline Icons
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
 const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
 const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
@@ -21,7 +21,15 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-const ReportDetail = ({ data, onGoToInternalMap }) => {
+// รับ prop reportId เข้ามาเพื่อใช้ในการ fetch
+const ReportDetail = ({ reportId, onGoToInternalMap }) => {
+  
+  // State สำหรับเก็บข้อมูลที่ fetch มา
+  const [caseInfo, setCaseInfo] = useState(null);
+  const [timelineData, setTimelineData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   // Modal States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -30,24 +38,62 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  // --- Parse Data from Backend ---
-  // Backend returns: { info: {...}, timeline: [...] }
-  const rawInfo = data?.info || {};
-  const rawTimeline = data?.timeline || [];
+  // --- Fetch Data from Backend ---
+  useEffect(() => {
+    // ถ้าไม่มี reportId ให้ใช้ค่า mock หรือ return
+    const idToFetch = reportId || "1"; // Default เป็น 1 เพื่อทดสอบถ้าไม่ได้ส่ง prop มา
 
-  // Map Backend Fields to UI Fields
-  const info = {
-    // ใช้ issue_cases_id จาก Backend
-    id: rawInfo.issue_cases_id || "N/A",
-    // เดาชื่อ field จาก DB ทั่วไป (ปรับตามจริงถ้าชื่อ field ใน DB ไม่ใช่ issue_topic)
-    title: rawInfo.issue_topic || rawInfo.title || "ไม่ระบุหัวข้อ", 
-    category: rawInfo.issue_type || rawInfo.category || "ทั่วไป",
-    rating: rawInfo.urgency_level || 0, // สมมติชื่อ field
-    status: rawInfo.status || "รอรับเรื่อง", 
-    locationDetail: rawInfo.location_name || rawInfo.locationDetail || "ไม่ระบุตำแหน่ง",
-    lat: rawInfo.lat || null, 
-    lng: rawInfo.lng || null,
-    image: rawInfo.photo_url || rawInfo.image || null 
+    const fetchCaseDetail = async () => {
+      try {
+        setLoading(true);
+        // เรียก API ตามโครงสร้างไฟล์ backend ที่ให้มา
+        const response = await fetch(`https://demo-premium-citydata-pi.vercel.app/api/get_case_detail?id=${idToFetch}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch case detail');
+        }
+
+        const result = await response.json();
+        
+        // --- Mapping Info Data (Database -> Frontend) ---
+        // Backend return: { info: {...}, timeline: [...] }
+        const mappedInfo = {
+            id: result.info.issue_cases_id,
+            title: result.info.issue_title || result.info.title || "ไม่มีหัวข้อ", // รองรับชื่อ column ที่อาจต่างกัน
+            category: result.info.category_name || result.info.category || "ทั่วไป",
+            rating: result.info.urgency_level || result.info.rating || 0,
+            status: result.info.case_status || result.info.status || "รอรับเรื่อง",
+            locationDetail: result.info.location_detail || result.info.location || "ไม่ระบุตำแหน่ง",
+            lat: result.info.latitude,
+            lng: result.info.longitude,
+            image: result.info.image_url || result.info.image || null
+        };
+
+        setCaseInfo(mappedInfo);
+        setTimelineData(result.timeline || []);
+        setLoading(false);
+
+      } catch (err) {
+        console.error("Error fetching details:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchCaseDetail();
+  }, [reportId]);
+
+  // Fallback info ถ้าโหลดอยู่หรือ error
+  const info = caseInfo || {
+    id: "LOADING...",
+    title: "กำลังโหลด...",
+    category: "-",
+    rating: 0,
+    status: "รอรับเรื่อง", 
+    locationDetail: "-",
+    lat: null, 
+    lng: null,
+    image: null 
   };
 
   const [statusValue, setStatusValue] = useState(info.status);
@@ -59,48 +105,45 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
   }, [showStatusModal, info.status]);
 
   // --- Helper Functions ---
-  const getStatusClass = (status) => {
-    const s = status || "";
-    if (s.includes('รอ')) return styles.statusPending;
-    if (s.includes('ประสาน')) return styles.statusCoordinating;
-    if (s.includes('ดำเนินการ')) return styles.statusProgress;
-    if (s.includes('เสร็จ')) return styles.statusDone;
-    if (s.includes('ส่งต่อ')) return styles.statusForward;
-    if (s.includes('เชิญ')) return styles.statusInvite;
-    if (s.includes('ปฏิเสธ')) return styles.statusReject;
+  const getStatusClass = (status = "") => {
+    if (status.includes('รอ')) return styles.statusPending;
+    if (status.includes('ประสาน')) return styles.statusCoordinating;
+    if (status.includes('ดำเนินการ')) return styles.statusProgress;
+    if (status.includes('เสร็จ')) return styles.statusDone;
+    if (status.includes('ส่งต่อ')) return styles.statusForward;
+    if (status.includes('เชิญ')) return styles.statusInvite;
+    if (status.includes('ปฏิเสธ')) return styles.statusReject;
     return styles.statusDefault;
   };
 
-  const getTimelineColorType = (status) => {
-    const s = status || "";
-    if (s.includes('รอ')) return 'red';
-    if (s.includes('ประสาน')) return 'purple';
-    if (s.includes('ดำเนินการ')) return 'yellow';
-    if (s.includes('เสร็จ')) return 'green';
-    if (s.includes('ส่งต่อ')) return 'blue';
-    if (s.includes('เชิญ')) return 'teal';
-    if (s.includes('ปฏิเสธ')) return 'dark';
+  const getTimelineColorType = (status = "") => {
+    if (status.includes('รอ')) return 'red';
+    if (status.includes('ประสาน')) return 'purple';
+    if (status.includes('ดำเนินการ')) return 'yellow';
+    if (status.includes('เสร็จ')) return 'green';
+    if (status.includes('ส่งต่อ')) return 'blue';
+    if (status.includes('เชิญ')) return 'teal';
+    if (status.includes('ปฏิเสธ')) return 'dark';
     return 'red';
   };
 
-  const getTimelineIcon = (status) => {
-    const s = status || "";
-    if (s.includes('รอ')) return <IconClock />;
-    if (s.includes('ประสาน')) return <IconPhone />;
-    if (s.includes('ดำเนินการ')) return <IconWrench />;
-    if (s.includes('เสร็จ')) return <IconCheck />;
-    if (s.includes('ส่งต่อ')) return <IconArrowRight />;
-    if (s.includes('เชิญ')) return <IconUsers />;
-    if (s.includes('ปฏิเสธ')) return <IconX />;
+  const getTimelineIcon = (status = "") => {
+    if (status.includes('รอ')) return <IconClock />;
+    if (status.includes('ประสาน')) return <IconPhone />;
+    if (status.includes('ดำเนินการ')) return <IconWrench />;
+    if (status.includes('เสร็จ')) return <IconCheck />;
+    if (status.includes('ส่งต่อ')) return <IconArrowRight />;
+    if (status.includes('เชิญ')) return <IconUsers />;
+    if (status.includes('ปฏิเสธ')) return <IconX />;
     return <IconClock />;
   };
 
-  // Function แปลงวันที่จาก Backend String (ISO/Timestamp)
-  const formatDateTime = (dateString) => {
-    if (!dateString) return { date: '-', time: '-' };
-    const dateObj = new Date(dateString);
-    
-    // แปลงเป็น พ.ศ. และภาษาไทย
+  // Helper แปลงวันที่จาก ISO String (DB) เป็น Format ไทย
+  const formatThaiDateTime = (isoString) => {
+    if (!isoString) return { date: '-', time: '-' };
+    const dateObj = new Date(isoString);
+    if (isNaN(dateObj.getTime())) return { date: '-', time: '-' };
+
     const day = dateObj.getDate();
     const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     const month = months[dateObj.getMonth()];
@@ -110,41 +153,29 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     let minutes = dateObj.getMinutes();
     minutes = minutes < 10 ? '0' + minutes : minutes;
     
-    return { 
-        date: `${day} ${month} ${year}`, 
-        time: `${hours}:${minutes} น.` 
-    };
+    return { date: `${day} ${month} ${year}`, time: `${hours}:${minutes} น.` };
   };
 
-  // --- Real Timeline Logic ---
-  // ใช้ rawTimeline จาก Backend แทน Mock Data
+  // --- Timeline Mapping from API Data ---
   const timelineEvents = useMemo(() => {
-    if (!rawTimeline || rawTimeline.length === 0) {
-      // Fallback ถ้าไม่มีข้อมูล Timeline
-      return [{
-          type: getTimelineColorType(info.status), 
-          status: info.status, 
-          date: '-', time: '-',
-          header: 'สถานะปัจจุบัน', 
-          detail: 'ยังไม่มีประวัติการดำเนินการ', 
-          icon: getTimelineIcon(info.status)
-      }];
+    if (!timelineData || timelineData.length === 0) {
+        // กรณีไม่มีข้อมูล Timeline เลย
+        return []; 
     }
 
-    // Map ข้อมูลจาก Backend -> Frontend Timeline
-    return rawTimeline.map((log) => {
-        const { date, time } = formatDateTime(log.created_at);
+    return timelineData.map(log => {
+        const { date, time } = formatThaiDateTime(log.created_at);
         return {
             type: getTimelineColorType(log.status),
             status: log.status,
             date: date,
             time: time,
-            header: log.changed_by ? `ดำเนินการโดย: ${log.changed_by}` : 'อัปเดตระบบ', // แสดงชื่อผู้ทำถ้ามี
-            detail: log.detail, // ข้อความที่ Backend เตรียมมาให้แล้ว (เช่น "เปลี่ยนสถานะจาก...")
+            header: `โดย: ${log.changed_by || 'ระบบ'}`, // แสดงชื่อคนเปลี่ยน
+            detail: log.detail,
             icon: getTimelineIcon(log.status)
         };
     });
-  }, [rawTimeline, info.status]);
+  }, [timelineData]);
 
   const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
   const handleGoogleMap = () => {
@@ -173,8 +204,11 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     }
   };
 
-  // Mock Data สำหรับ Dropdown
+  // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
+
+  if (loading) return <div className={styles.container}><div style={{padding:'20px', textAlign:'center'}}>กำลังโหลดข้อมูล...</div></div>;
+  if (error) return <div className={styles.container}><div style={{padding:'20px', textAlign:'center', color:'red'}}>เกิดข้อผิดพลาด: {error}</div></div>;
 
   return (
     <div className={styles.container}>
@@ -230,7 +264,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
-            <p className={styles.locationText}>{info.locationDetail}</p>
+            <p className={styles.locationText}>{info.locationDetail || "ไม่ระบุรายละเอียดตำแหน่ง"}</p>
           </div>
           <div className={styles.buttonGroup}>
             <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
@@ -250,7 +284,7 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 3. Bottom Section - TIMELINE REAL DATA */}
+      {/* 3. Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         <div className={styles.timelineContainer}>
