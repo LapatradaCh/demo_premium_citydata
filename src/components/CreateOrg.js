@@ -7,7 +7,7 @@ const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
 
 /**
  * =================================================================
- * Component 1: QuickCreatePage (สร้างใหม่ -> POST)
+ * Component 1: QuickCreatePage (หน้าแรก - สร้างหน่วยงาน)
  * =================================================================
  */
 const QuickCreatePage = ({
@@ -70,7 +70,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm (อัปเดตโลโก้ -> PUT)
+ * Component 2: LogoSetupForm (อัปเดตโลโก้)
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -94,9 +94,8 @@ const LogoSetupForm = ({ onSave, orgId }) => {
     
     setIsSaving(true);
     
-    // Note: ในการใช้งานจริง คุณต้อง Upload รูปไปที่ Server/Storage ก่อน
-    // แล้วค่อยเอา URL ที่ได้มาส่งให้ API
-    // ตรงนี้ผมจำลองส่งเป็น URL String ไปก่อนเพื่อให้ API ทำงานได้
+    // Note: ควรทำระบบ Upload ไฟล์จริง แล้วส่ง URL กลับมา
+    // ตรงนี้จำลองส่ง URL ไปก่อน
     const mockLogoUrl = "https://placehold.co/400x400/png?text=Logo"; 
 
     try {
@@ -104,8 +103,8 @@ const LogoSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ส่ง PK
-          url_logo: mockLogoUrl   // ส่ง URL รูปภาพ
+          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          url_logo: mockLogoUrl
         }),
       });
 
@@ -160,7 +159,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm (อัปเดตที่อยู่ -> PUT)
+ * Component 3: LocationSetupForm (อัปเดตที่อยู่และพิกัด)
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -229,13 +228,12 @@ const LocationSetupForm = ({ onSave, orgId }) => {
     setIsSaving(true);
 
     try {
-      // ส่งข้อมูลไป Update
       const response = await fetch(`${API_BASE_URL}/organizations`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ส่ง PK
-          ...locationData         // ส่งข้อมูลที่อยู่และพิกัด
+          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          ...locationData
         }),
       });
 
@@ -294,7 +292,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm (อัปเดตประเภท -> PUT)
+ * Component 4: TypeSetupForm (อัปเดตประเภท)
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
@@ -347,7 +345,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ส่ง PK
+          organization_id: orgId, // ใช้ ID ในการอัปเดต
           org_type_id: typeData.org_type_id,
           usage_type_id: typeData.usage_type_id
         }),
@@ -421,7 +419,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (แสดงรหัส - ไม่มีการยิง API)
+ * Component 5: CodeSetupBox (แสดงผลรหัส)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -473,14 +471,14 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
 /**
  * =================================================================
- * Component 6: SetupGuidePage (ส่ง orgId ให้ Component ลูก)
+ * Component 6: SetupGuidePage (หน้าขั้นตอนการตั้งค่า)
  * =================================================================
  */
 const SetupGuidePage = ({
   createdOrgName,
   adminCode, 
   userCode,   
-  orgId, // รับ orgId (PK) มาใช้งาน
+  orgId, 
   handleGoBackToEdit,
 }) => {
   const [activeAccordion, setActiveAccordion] = useState(null); 
@@ -609,7 +607,7 @@ const SetupGuidePage = ({
 
 /**
  * =================================================================
- * Main Component: CreateOrg (จัดการ state หลัก orgId)
+ * Main Component: CreateOrg (จัดการ Logic หลัก และการสุ่มรหัส)
  * =================================================================
  */
 function CreateOrg() {
@@ -624,7 +622,7 @@ function CreateOrg() {
   const [adminCode, setAdminCode] = useState('');
   const [userCode, setUserCode] = useState('');
   
-  // *** State สำคัญ: เก็บ ID ที่ Database ส่งกลับมาเพื่อใช้ Update ต่อ ***
+  // *** State เก็บ organization_id จาก Backend ***
   const [orgId, setOrgId] = useState(null); 
 
 
@@ -638,13 +636,40 @@ function CreateOrg() {
     setIsLoading(true);
     setError(null);
 
-    // 1. สร้างรหัสต่างๆ ฝั่ง Client
-    const randomPartAdmin = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const newAdminCode = `ADMIN-${randomPartAdmin}`;
-    const randomPartOrg = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const newOrgCode = `ORG-${randomPartOrg}`;
+    // =========================================================
+    // NEW LOGIC: ฟังก์ชันสุ่มรหัส (Prefix + 3ตัวอักษร + 3ตัวเลข)
+    // =========================================================
+    const generateCustomCode = (prefix) => {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const numbers = "0123456789";
+      let chars = [];
+
+      // 1. สุ่มตัวอักษร 3 ตัว
+      for (let i = 0; i < 3; i++) {
+        chars.push(letters.charAt(Math.floor(Math.random() * letters.length)));
+      }
+
+      // 2. สุ่มตัวเลข 3 ตัว
+      for (let i = 0; i < 3; i++) {
+        chars.push(numbers.charAt(Math.floor(Math.random() * numbers.length)));
+      }
+
+      // 3. สลับตำแหน่ง (Shuffle)
+      for (let i = chars.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [chars[i], chars[j]] = [chars[j], chars[i]];
+      }
+
+      // 4. รวมกับ Prefix
+      return prefix + chars.join('');
+    };
+    // =========================================================
+
+    // 1. สร้างรหัส
+    const newOrgCode = generateCustomCode('U');   // เช่น U8B9K2L
+    const newAdminCode = generateCustomCode('A'); // เช่น A3X5M9P
     
-    // User Code (โชว์หน้าเว็บ แต่ API ปัจจุบันอาจยังไม่เก็บลง DB)
+    // User Code (ใช้ Logic เดิม หรือจะเปลี่ยนเป็น Custom ก็ได้)
     const randomPartUser = Math.random().toString(36).substring(2, 7).toUpperCase();
     const newUserCode = `USER-${randomPartUser}`;
 
@@ -672,13 +697,13 @@ function CreateOrg() {
         }
 
         // 4. สำเร็จ! เก็บข้อมูลลง State
-        console.log("Created Org Data:", data);
+        console.log("Created Org Success:", data);
         
         setCreatedOrgName(orgName);
         setAdminCode(newAdminCode);
         setUserCode(newUserCode);
         
-        // *** สำคัญ: เก็บ ID จาก Backend ไว้ใช้ต่อ ***
+        // เก็บ ID เพื่อใช้ในขั้นตอนถัดไป (Setup)
         setOrgId(data.organization_id); 
 
         // เปลี่ยนหน้า
@@ -688,6 +713,7 @@ function CreateOrg() {
         console.error("API Error:", err);
         setError(err.message);
         if(err.message.includes('already')) {
+            // โอกาสเกิดน้อยมาก แต่ถ้าเกิดให้แจ้งเตือน
             alert('รหัสหน่วยงานซ้ำ กรุณาลองใหม่อีกครั้ง');
         }
     } finally {
@@ -698,7 +724,6 @@ function CreateOrg() {
   const handleGoBackToEdit = () => {
     setOrgName(createdOrgName);
     setPage('create');
-    // Note: ถ้ากดกลับไปสร้างใหม่ orgId เดิมจะถูกแทนที่เมื่อกด Submit อีกครั้ง
   };
 
   const handleBackToHome = () => {
@@ -722,7 +747,7 @@ function CreateOrg() {
           createdOrgName={createdOrgName}
           adminCode={adminCode}
           userCode={userCode}
-          orgId={orgId} // ส่ง orgId ไปให้ลูกๆ ใช้งาน
+          orgId={orgId} 
           handleGoBackToEdit={handleGoBackToEdit}
         />
       )}
