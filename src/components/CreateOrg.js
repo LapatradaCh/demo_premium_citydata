@@ -637,7 +637,7 @@ function CreateOrg() {
     setError(null);
 
     // =========================================================
-    // NEW LOGIC: ฟังก์ชันสุ่มรหัส (Prefix + 3ตัวอักษร + 3ตัวเลข)
+    // ฟังก์ชันสุ่มรหัส (Prefix + 3ตัวอักษร + 3ตัวเลข)
     // =========================================================
     const generateCustomCode = (prefix) => {
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -666,14 +666,11 @@ function CreateOrg() {
     // =========================================================
 
     // 1. สร้างรหัส
-    const newOrgCode = generateCustomCode('U');   // เช่น U8B9K2L
-    const newAdminCode = generateCustomCode('A'); // เช่น A3X5M9P
+    const newOrgCode = generateCustomCode('U');   // นี่คือ Organization Code (Uxxxxxx)
+    const newAdminCode = generateCustomCode('A'); // นี่คือ Admin Code (Axxxxxx)
     
-    // User Code (ใช้ Logic เดิม หรือจะเปลี่ยนเป็น Custom ก็ได้)
-    const randomPartUser = Math.random().toString(36).substring(2, 7).toUpperCase();
-    const newUserCode = `USER-${randomPartUser}`;
-
     // 2. Payload สำหรับ POST
+    // (ส่ง Organization Code ไปเป็น Primary Identify ของ User องค์กรนี้ด้วย)
     const payload = {
         organization_code: newOrgCode,
         organization_name: orgName,
@@ -701,7 +698,9 @@ function CreateOrg() {
         
         setCreatedOrgName(orgName);
         setAdminCode(newAdminCode);
-        setUserCode(newUserCode);
+        
+        // --- จุดที่แก้ไข: ให้ User Code เป็นค่าเดียวกับ Organization Code ---
+        setUserCode(newOrgCode); 
         
         // เก็บ ID เพื่อใช้ในขั้นตอนถัดไป (Setup)
         setOrgId(data.organization_id); 
@@ -713,7 +712,6 @@ function CreateOrg() {
         console.error("API Error:", err);
         setError(err.message);
         if(err.message.includes('already')) {
-            // โอกาสเกิดน้อยมาก แต่ถ้าเกิดให้แจ้งเตือน
             alert('รหัสหน่วยงานซ้ำ กรุณาลองใหม่อีกครั้ง');
         }
     } finally {
