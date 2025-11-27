@@ -45,20 +45,21 @@
 
 
 /* ========================================================= */
-/* === NEW AGENCY STYLES (แยกออกมา 100%) === */
+/* === NEW AGENCY STYLES (ปรับปรุงใหม่ตาม UI/UX) === */
 /* ========================================================= */
-:root { --agency-primary: #057a55; --agency-border: #e0e0e0; }
+:root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
 .agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 .agencyProfileCard { background: #fff; border: 1px solid var(--agency-border); border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .agencyProfileLeft { display: flex; gap: 20px; align-items: center; }
 .agencyLogoCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .agencyOrgName { margin: 0 0 8px 0; font-size: 22px; color: #333; }
-.agencyBadges { display: flex; gap: 8px; }
-.agencyBadgeType { background: #eee; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.agencyBadgeStatus { background: #e8f5e9; color: #1b5e20; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: flex; gap: 5px; align-items: center; }
-.agencyBtnEdit { padding: 10px 20px; border-radius: 20px; border: 1px solid #e0e0e0; background: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; font-weight: 600; transition: all 0.2s; }
-.agencyBtnEdit:hover { background: #f8f9fa; border-color: #ccc; }
+.agencyBadges { display: flex; gap: 8px; align-items: center;}
+.agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
+
+/* ปุ่มแก้ไข: สีเหลือง/ส้ม (UX: Modification/Action) */
+.agencyBtnEditWarning { padding: 10px 24px; border-radius: 10px; border: none; background: var(--agency-warning); color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); font-size: 14px; }
+.agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
 
 .agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; }
@@ -66,41 +67,46 @@
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 .agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 0.5px; color: #333; }
 
-/* MODAL & FORM (FIXED LAYOUT) */
-.agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; backdrop-filter: blur(2px); }
-.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 600px; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3001; display: flex; flex-direction: column; }
-.agencyModalHeader { padding: 12px 20px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 12px 12px 0 0; }
-.agencyModalTitle { margin: 0; font-size: 16px; color: #333; font-weight: 700; }
+/* --- MODAL (POPUP) --- */
+.agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
+.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 600px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
 
-/* ปุ่มปิดเรียบๆ (Simple X) */
-.agencyBtnCloseSimple { background: none; border: none; font-size: 18px; color: #999; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; transition: all 0.2s; }
-.agencyBtnCloseSimple:hover { background: #f0f0f0; color: #333; }
+.agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 16px 16px 0 0; }
+.agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-.agencyModalBody { padding: 24px; overflow-y: auto; }
-.agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 20px; }
-.agencyImageCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; }
-.agencyEditOverlay { position: absolute; bottom: -5px; right: -5px; background: var(--agency-primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; cursor: pointer; }
+/* ปุ่มปิด: สีแดง (UX: Danger/Close) และใหญ่ขึ้น */
+.agencyBtnCloseRed { background: #dc3545; border: none; font-size: 20px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); }
+.agencyBtnCloseRed:hover { background: #bb2d3b; transform: scale(1.05); }
+
+.agencyModalBody { padding: 24px; overflow-y: auto; flex: 1; }
+.agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; }
+.agencyImageCircle { width: 90px; height: 90px; background: #f8f9fa; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; transition: all 0.2s; cursor: pointer; }
+.agencyImageCircle:hover { border-color: var(--agency-primary); background: #e8f5e9; }
+.agencyEditOverlay { position: absolute; bottom: 0; right: 0; background: var(--agency-warning); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .agencyHint { font-size: 12px; color: #999; }
 
-.agencyFormContainer { display: flex; flex-direction: column; gap: 16px; }
-.agencySubHeader { font-size: 14px; font-weight: 700; color: #555; margin: 10px 0 5px 0; display: flex; gap: 6px; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
+.agencyFormContainer { display: flex; flex-direction: column; gap: 14px; }
+.agencySectionTitle { font-size: 14px; font-weight: 700; color: #057a55; margin: 5px 0 0 0; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
-.agencyLabel { font-size: 13px; font-weight: 600; color: #333; }
-.agencyInput { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-.agencyInput:focus { outline: none; border-color: var(--agency-primary); }
-.agencyInputCode { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: monospace; background: #fdfdfd; }
-.agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.agencyDivider { height: 1px; background: #f0f0f0; margin: 5px 0; }
+.agencyLabel { font-size: 13px; font-weight: 600; color: #444; }
+.agencyInput { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #fff; transition: border 0.2s; }
+.agencyInput:focus { outline: none; border-color: var(--agency-primary); box-shadow: 0 0 0 3px rgba(5, 122, 85, 0.1); }
+.agencyInputCode { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; font-family: monospace; background: #f8f9fa; color: #333; font-weight: 600; letter-spacing: 1px; text-align: center; }
+
+.agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; } /* Grid 3 ช่องสำหรับที่อยู่ */
+.agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
 .req { color: #dc3545; }
 
-.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; border-radius: 0 0 12px 12px; }
-.agencyBtnCancel { padding: 8px 20px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
-.agencyBtnCancel:hover { background: #eee; }
-.agencyBtnSave { padding: 8px 20px; border-radius: 6px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
-.agencyBtnSave:hover { background: #046c4e; }
+.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 16px 16px; }
+.agencyBtnCancel { padding: 10px 24px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; color: #333; transition: all 0.2s; }
+.agencyBtnCancel:hover { background: #f8f9fa; }
+.agencyBtnSave { padding: 10px 24px; border-radius: 8px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2); }
+.agencyBtnSave:hover { background: #046c4e; transform: translateY(-1px); }
 
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 @media screen and (max-width: 600px) {
-    .agencyViewContainer, .agencyInfoGrid, .agencyRow2 { grid-template-columns: 1fr; }
+    .agencyViewContainer, .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { grid-template-columns: 1fr; }
     .agencyModalContainer { width: 95%; max-height: 95vh; }
 }
