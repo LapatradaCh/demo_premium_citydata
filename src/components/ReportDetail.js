@@ -24,23 +24,18 @@ const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColo
 // รับ prop reportId เข้ามาเพื่อใช้ในการ fetch
 const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   
-  // State สำหรับเก็บข้อมูลที่ fetch มา
   const [caseInfo, setCaseInfo] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Modal States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
-  
-  // States for Image Upload
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  // --- Fetch Data from Backend ---
   useEffect(() => {
-    // ใช้ ID จาก Postman เป็น Default ในกรณีที่ไม่มี prop ส่งมา (เพื่อทดสอบ)
+    // ใช้ ID จาก Postman เป็น Default ในกรณีที่ไม่มี prop ส่งมา
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
     const fetchCaseDetail = async () => {
@@ -48,47 +43,41 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
-        // --- 1. เปลี่ยน URL ให้ตรงกับ Server จริง (premium-citydata-api-ab.vercel.app) ---
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-           // กรณี 404 หรือ 500
            throw new Error(`Server responded with status: ${response.status}`);
         }
 
         const result = await response.json();
         
-        // --- 2. Mapping Info Data (ให้ตรงกับ JSON Response ใน Postman) ---
-        // result = { info: {...}, timeline: [...] }
+        // --- Mapping Data ---
+        // ป้องกัน Error ด้วยการแปลง String -> Float ก่อนเรียก .toFixed
+        const lat = parseFloat(result.info.latitude);
+        const lng = parseFloat(result.info.longitude);
+
         const mappedInfo = {
-            // ใช้ case_code (เช่น 2025-842YCY) แทน ID ยาวๆ เพื่อความสวยงาม
             id: result.info.case_code || result.info.issue_cases_id,
-            
             title: result.info.title || "ไม่มีหัวข้อ",
-            
-            // ดึง Tags ตัวแรกมาเป็น Category ถ้าไม่มีให้ใช้ "ทั่วไป"
             category: (result.info.tags && result.info.tags.length > 0) ? result.info.tags[0] : "ทั่วไป",
-            
-            rating: result.info.rating || 0, // ถ้า API ยังไม่ส่งคะแนนมา ให้ default 0
-            
+            rating: result.info.rating || 0,
             status: result.info.status || "รอรับเรื่อง",
             
-            // สร้าง location string จาก lat/long
-            locationDetail: result.info.latitude 
-              ? `${result.info.latitude.toFixed(5)}, ${result.info.longitude.toFixed(5)}` 
+            // แก้ไขจุดที่ Error: ใช้ตัวแปรที่แปลงเป็น Float แล้ว
+            locationDetail: (lat && lng) 
+              ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
               : (result.info.location_detail || "ไม่ระบุพิกัด"),
             
-            lat: result.info.latitude,
-            lng: result.info.longitude,
+            lat: lat,
+            lng: lng,
             
-            // *** แก้ไข: ใช้ cover_image_url ตาม Postman ***
             image: result.info.cover_image_url || null
         };
 
         setCaseInfo(mappedInfo);
-        setTimelineData(result.timeline || []); // กัน Error ถ้า timeline เป็น null
+        setTimelineData(result.timeline || []);
         setLoading(false);
 
       } catch (err) {
@@ -101,7 +90,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId]);
 
-  // Fallback info ระหว่างโหลด หรือ เกิด Error
   const info = caseInfo || {
     id: "LOADING...",
     title: "กำลังโหลด...",
@@ -159,7 +147,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     return <IconClock />;
   };
 
-  // Helper แปลงวันที่จาก ISO String (DB) เป็น Format ไทย
   const formatThaiDateTime = (isoString) => {
     if (!isoString) return { date: '-', time: '-' };
     const dateObj = new Date(isoString);
@@ -177,12 +164,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     return { date: `${day} ${month} ${year}`, time: `${hours}:${minutes} น.` };
   };
 
-  // --- Timeline Mapping from API Data ---
   const timelineEvents = useMemo(() => {
     if (!timelineData || timelineData.length === 0) {
         return []; 
     }
-
     return timelineData.map(log => {
         const { date, time } = formatThaiDateTime(log.created_at);
         return {
@@ -199,11 +184,11 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
   const handleGoogleMap = () => {
+    // ต้องแปลงกลับเป็น string เพื่อใส่ใน URL
     const query = info.lat && info.lng ? `${info.lat},${info.lng}` : encodeURIComponent(info.locationDetail || "แผนที่");
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
-  // --- Image Upload Handlers ---
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -224,10 +209,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   };
 
-  // Mock Data
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
-  // --- Render Functions ---
   if (loading) return (
     <div className={styles.container}>
         <div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>
@@ -249,7 +232,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   return (
     <div className={styles.container}>
       
-      {/* 1. Top Section */}
+      {/* Top Section */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
           <div>
@@ -295,7 +278,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 2. Middle Section */}
+      {/* Middle Section */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
           <div>
@@ -320,7 +303,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* 3. Bottom Section */}
+      {/* Bottom Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         
@@ -367,9 +350,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         )}
       </div>
 
-      {/* ================= MODALS ================= */}
-      
-      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
+      {/* Modals */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -400,14 +381,12 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => {
             setShowStatusModal(false);
             setSelectedImage(null);
           }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
               <button className={styles.closeButton} onClick={() => {
