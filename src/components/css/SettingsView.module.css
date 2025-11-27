@@ -2,7 +2,7 @@
 * { box-sizing: border-box; }
 
 /* ========================================= */
-/* === ORIGINAL STYLES (สำหรับหน้าอื่นๆ ห้ามแก้) === */
+/* === ORIGINAL STYLES (สำหรับหน้าอื่นๆ) === */
 /* ========================================= */
 .settingsContainer { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 24px; margin: 0 auto; }
 .settingsSection { width: 100%; background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
@@ -45,20 +45,37 @@
 
 
 /* ========================================================= */
-/* === NEW AGENCY STYLES (ปรับปรุงใหม่ตาม UI/UX) === */
+/* === AGENCY STYLES (UPDATED for UX/UI) === */
 /* ========================================================= */
 :root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
 .agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 .agencyProfileCard { background: #fff; border: 1px solid var(--agency-border); border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .agencyProfileLeft { display: flex; gap: 20px; align-items: center; }
-.agencyLogoCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.agencyLogoCircle { width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
 .agencyOrgName { margin: 0 0 8px 0; font-size: 22px; color: #333; }
 .agencyBadges { display: flex; gap: 8px; align-items: center;}
 .agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
 
-/* ปุ่มแก้ไข: สีเหลือง/ส้ม (UX: Modification/Action) */
-.agencyBtnEditWarning { padding: 10px 24px; border-radius: 10px; border: none; background: var(--agency-warning); color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); font-size: 14px; }
+/* ปุ่มแก้ไข: สีส้ม, fit-content, สวยงาม */
+.agencyBtnEditWarning { 
+    padding: 8px 24px; 
+    border-radius: 10px; 
+    border: none; 
+    background: var(--agency-warning); 
+    color: #fff; 
+    cursor: pointer; 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+    font-weight: 700; 
+    transition: all 0.2s; 
+    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); 
+    font-size: 14px; 
+    
+    width: fit-content; /* ขนาดพอดีคำ */
+    white-space: nowrap; 
+}
 .agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
 
 .agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -69,19 +86,47 @@
 
 /* --- MODAL (POPUP) --- */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
-.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 600px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
+.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
 
 .agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 16px 16px 0 0; }
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-/* ปุ่มปิด: สีแดง (UX: Danger/Close) และใหญ่ขึ้น */
-.agencyBtnCloseRed { background: #dc3545; border: none; font-size: 20px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); }
-.agencyBtnCloseRed:hover { background: #bb2d3b; transform: scale(1.05); }
+/* ปุ่มปิด: วงกลมสีแดง */
+.agencyBtnCloseRed { 
+    background: #dc3545; 
+    border: none; 
+    font-size: 16px; 
+    color: white; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; /* วงกลม */
+    transition: all 0.2s; 
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); 
+}
+.agencyBtnCloseRed:hover { background: #bb2d3b; transform: rotate(90deg); }
 
 .agencyModalBody { padding: 24px; overflow-y: auto; flex: 1; }
 .agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; }
-.agencyImageCircle { width: 90px; height: 90px; background: #f8f9fa; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; transition: all 0.2s; cursor: pointer; }
+.agencyImageCircle { 
+    width: 90px; 
+    height: 90px; 
+    background: #f8f9fa; 
+    border-radius: 50%; 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: 2px dashed #ccc; 
+    transition: all 0.2s; 
+    cursor: pointer; 
+    overflow: hidden; /* ตัดรูปส่วนเกิน */
+}
 .agencyImageCircle:hover { border-color: var(--agency-primary); background: #e8f5e9; }
+.uploadedLogo { width: 100%; height: 100%; object-fit: cover; }
 .agencyEditOverlay { position: absolute; bottom: 0; right: 0; background: var(--agency-warning); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .agencyHint { font-size: 12px; color: #999; }
 
@@ -95,7 +140,7 @@
 .agencyInputCode { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; font-family: monospace; background: #f8f9fa; color: #333; font-weight: 600; letter-spacing: 1px; text-align: center; }
 
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; } /* Grid 3 ช่องสำหรับที่อยู่ */
+.agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; } /* 3 Columns */
 .agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
 .req { color: #dc3545; }
 
