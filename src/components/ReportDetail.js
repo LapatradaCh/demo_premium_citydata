@@ -101,6 +101,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             // ดึงชื่อหน่วยงานจาก Join Table
             agency: result.info.agency_name || "ไม่ระบุหน่วยงาน"
         };
+        console.log(mappedInfo);
 
         setCaseInfo(mappedInfo);
         setTimelineData(result.timeline || []);
