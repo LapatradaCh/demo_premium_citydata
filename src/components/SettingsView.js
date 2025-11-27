@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
-// --- Helper Components ---
+// --- Helper Components (เหมือนเดิม ไม่แตะ) ---
 // ------------------------------------------------------------------
 const MockToggle = () => (
   <label className={styles.mockToggle}>
@@ -49,8 +49,7 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
 };
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (Dashboard View + Popup Edit)
-//    ** ใช้ CSS แยกพิเศษ (Prefix: agency_) เพื่อไม่ให้กระทบหน้าอื่น **
+// 1. ส่วน "ข้อมูลหน่วยงาน" (Dashboard + Fixed Popup Layout)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -67,94 +66,99 @@ const AgencySettings = () => {
   });
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
 
-  // --- POPUP EDIT MODAL ---
+  // --- POPUP EDIT MODAL (จัด Layout ใหม่ให้ไม่รก) ---
   const AgencyEditModal = () => (
     <>
       <div className={styles.agencyModalBackdrop} onClick={() => setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
+        {/* Header: ปุ่มปิดแบบเรียบ (รูปที่ 1) */}
         <div className={styles.agencyModalHeader}>
-            <h3>แก้ไขข้อมูลหน่วยงาน</h3>
-            <button className={styles.agencyBtnClose} onClick={() => setIsEditModalOpen(false)}><FaTimes/></button>
+            <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
+            <button className={styles.agencyBtnCloseSimple} onClick={() => setIsEditModalOpen(false)}>
+                <FaTimes/>
+            </button>
         </div>
         
         <div className={styles.agencyModalBody}>
-             {/* 1. รูปภาพ */}
+             {/* 1. รูปภาพ (อยู่บนสุดตรงกลาง) */}
              <div className={styles.agencyImageSection}>
                 <div className={styles.agencyImageCircle}>
                     <FaImage size={32} color="#ccc"/>
                     <div className={styles.agencyEditOverlay}><FaEdit/></div>
                 </div>
-                <span className={styles.agencyHint}>รูปภาพโลโก้ (Max 5MB)</span>
              </div>
 
-             {/* 2. Grid Layout */}
-             <div className={styles.agencyEditGrid}>
-                {/* Column Left */}
-                <div className={styles.agencyCol}>
-                    <h4 className={styles.agencySectionTitle}><FaBuilding/> ข้อมูลทั่วไป</h4>
-                    
+             {/* 2. ฟอร์มจัดกลุ่ม (ใช้ Grid) */}
+             <div className={styles.agencyFormContainer}>
+                
+                {/* Group 1: ข้อมูลทั่วไป */}
+                <div className={styles.agencyFormGroup}>
+                    <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
+                    <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
+                </div>
+
+                <div className={styles.agencyRow2}>
                     <div className={styles.agencyFormGroup}>
-                        <label>ชื่อหน่วยงาน</label>
-                        <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
+                        <label className={styles.agencyLabel}>ประเภท <span className={styles.req}>*</span></label>
+                        <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
+                            <option value="เทศบาล">เทศบาล</option>
+                            <option value="อบต">อบต.</option>
+                        </select>
                     </div>
-
-                    <div className={styles.agencyRow2}>
-                        <div className={styles.agencyFormGroup}>
-                            <label>ประเภท <span className={styles.req}>*</span></label>
-                            <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
-                                <option value="เทศบาล">เทศบาล</option>
-                                <option value="อบต">อบต.</option>
-                            </select>
-                        </div>
-                        <div className={styles.agencyFormGroup}>
-                            <label>สถานะ <span className={styles.req}>*</span></label>
-                            <select className={styles.agencyInput} value={formData.usageType} onChange={(e)=>handleChange('usageType', e.target.value)}>
-                                <option value="full">เต็มรูปแบบ</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <h4 className={styles.agencySectionTitle} style={{marginTop:20}}><FaUnlockAlt/> แก้ไขรหัส (กรอกเอง)</h4>
-                    <div className={styles.agencyRow2}>
-                         <div className={styles.agencyFormGroup}>
-                            <label>Admin Code</label>
-                            <input className={styles.agencyInputCode} value={formData.adminCode} onChange={(e)=>handleChange('adminCode', e.target.value)} />
-                         </div>
-                         <div className={styles.agencyFormGroup}>
-                            <label>User Code</label>
-                            <input className={styles.agencyInputCode} value={formData.userCode} onChange={(e)=>handleChange('userCode', e.target.value)} />
-                         </div>
+                    <div className={styles.agencyFormGroup}>
+                        <label className={styles.agencyLabel}>สถานะ <span className={styles.req}>*</span></label>
+                        <select className={styles.agencyInput} value={formData.usageType} onChange={(e)=>handleChange('usageType', e.target.value)}>
+                            <option value="full">เต็มรูปแบบ</option>
+                        </select>
                     </div>
                 </div>
 
-                {/* Column Right */}
-                <div className={styles.agencyCol}>
-                    <h4 className={styles.agencySectionTitle}><FaMapMarkedAlt/> แก้ไขที่อยู่ & ติดต่อ</h4>
+                <div className={styles.agencyDivider}></div>
+
+                {/* Group 2: รหัส (วางคู่กัน) */}
+                <h4 className={styles.agencySubHeader}><FaUnlockAlt/> รหัสเข้าร่วม</h4>
+                <div className={styles.agencyRow2}>
+                     <div className={styles.agencyFormGroup}>
+                        <label className={styles.agencyLabel}>Admin Code</label>
+                        <input className={styles.agencyInputCode} value={formData.adminCode} onChange={(e)=>handleChange('adminCode', e.target.value)} />
+                     </div>
+                     <div className={styles.agencyFormGroup}>
+                        <label className={styles.agencyLabel}>User Code</label>
+                        <input className={styles.agencyInputCode} value={formData.userCode} onChange={(e)=>handleChange('userCode', e.target.value)} />
+                     </div>
+                </div>
+
+                <div className={styles.agencyDivider}></div>
+
+                {/* Group 3: ที่อยู่ (วางเป็นระเบียบ) */}
+                <h4 className={styles.agencySubHeader}><FaMapMarkedAlt/> ที่อยู่ & ติดต่อ</h4>
+                <div className={styles.agencyRow2}>
                     <div className={styles.agencyFormGroup}>
-                        <label>จังหวัด</label>
+                        <label className={styles.agencyLabel}>จังหวัด</label>
                         <input className={styles.agencyInput} value={formData.province} onChange={(e)=>handleChange('province', e.target.value)} />
                     </div>
-                    <div className={styles.agencyRow2}>
-                        <div className={styles.agencyFormGroup}>
-                            <label>อำเภอ/เขต</label>
-                            <input className={styles.agencyInput} value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
-                        </div>
-                        <div className={styles.agencyFormGroup}>
-                            <label>ตำบล/แขวง</label>
-                            <input className={styles.agencyInput} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
-                        </div>
+                    <div className={styles.agencyFormGroup}>
+                        <label className={styles.agencyLabel}>อำเภอ/เขต</label>
+                        <input className={styles.agencyInput} value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
+                    </div>
+                </div>
+                <div className={styles.agencyRow2}>
+                    <div className={styles.agencyFormGroup}>
+                        <label className={styles.agencyLabel}>ตำบล/แขวง</label>
+                        <input className={styles.agencyInput} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
                     </div>
                     <div className={styles.agencyFormGroup}>
-                        <label>เบอร์โทรศัพท์ <span className={styles.req}>*</span></label>
+                        <label className={styles.agencyLabel}>เบอร์โทรศัพท์ <span className={styles.req}>*</span></label>
                         <input className={styles.agencyInput} value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
                     </div>
                 </div>
+
              </div>
         </div>
 
         <div className={styles.agencyModalFooter}>
             <button className={styles.agencyBtnCancel} onClick={() => setIsEditModalOpen(false)}>ยกเลิก</button>
-            <button className={styles.agencyBtnSave} onClick={() => setIsEditModalOpen(false)}>บันทึกการเปลี่ยนแปลง</button>
+            <button className={styles.agencyBtnSave} onClick={() => setIsEditModalOpen(false)}>บันทึก</button>
         </div>
       </div>
     </>
@@ -199,7 +203,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2. แผนที่ (Original) - ใช้ CSS เดิม
+// 2-5. หน้าอื่นๆ (แผนที่, รหัส, QR) -> ใช้ Code เดิมเป๊ะๆ ไม่เปลี่ยน
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -214,19 +218,14 @@ const MapSettingsContent = () => (
   </div>
 );
 
-// ==================================================================================
-// 3. รหัสผ่าน (Original) - ใช้ CSS เดิม
-// ==================================================================================
 const PasswordSettingsContent = () => {
   const [modalUser, setModalUser] = useState(null);
   const [visible, setVisible] = useState({});
   const toggle = (user) => setVisible({...visible, [user]: !visible[user]});
-
   const users = [
     { role: "ผู้ดูแลหน่วยงาน", username: "admin_unit_xx", realPassword: "AdminPassword123", icon: FaUserCog },
     { role: "เจ้าหน้าที่", username: "staff_zone_01", realPassword: "Staff_pass_456", icon: FaUserTie },
   ];
-
   return (
     <>
       <div className={styles.settingsSection}>
@@ -234,7 +233,6 @@ const PasswordSettingsContent = () => {
           <FaUnlockAlt style={{ marginRight: "10px", color: "#6c757d" }} /> รหัสเข้าใช้งาน
         </h3>
         <p className={styles.settingsSubtitle}>จัดการและรีเซ็ตรหัสผ่านสำหรับเจ้าหน้าที่และผู้ดูแลหน่วยงาน</p>
-
         {users.map((user, index) => {
           const isVisible = visible[user.username];
           return (
@@ -248,10 +246,7 @@ const PasswordSettingsContent = () => {
                 </span>
               </div>
               <div className={styles.passwordButtonGroup}>
-                <button
-                  className={`${styles.passwordButton} ${styles.viewButton} ${isVisible ? styles.viewButtonActive : ""}`}
-                  onClick={() => toggle(user.username)}
-                >
+                <button className={`${styles.passwordButton} ${styles.viewButton} ${isVisible ? styles.viewButtonActive : ""}`} onClick={() => toggle(user.username)}>
                   {isVisible ? <FaEyeSlash /> : <FaEye />} {isVisible ? "ซ่อน" : "ดู"}
                 </button>
                 <button className={`${styles.passwordButton} ${styles.changeButton}`} onClick={() => setModalUser(user)}>
@@ -267,9 +262,6 @@ const PasswordSettingsContent = () => {
   );
 };
 
-// ==================================================================================
-// 4. QR Code หน่วยงาน (Original) - ใช้ CSS เดิม
-// ==================================================================================
 const QRUnitSettingsContent = () => (
   <div className={styles.settingsSection}>
     <h3 className={styles.settingsTitle}>QRCode ประจำหน่วยงาน</h3>
@@ -282,9 +274,6 @@ const QRUnitSettingsContent = () => (
   </div>
 );
 
-// ==================================================================================
-// 5. QR Code สร้างเอง (Original) - ใช้ CSS เดิม
-// ==================================================================================
 const QRCreateSettingsContent = () => (
   <div className={styles.settingsSection}>
     <h3 className={styles.settingsTitle}>สร้าง QR Code เอง</h3>
@@ -309,9 +298,7 @@ const QRCreateSettingsContent = () => (
   </div>
 );
 
-// ==================================================================================
 // Main View
-// ==================================================================================
 const SettingsView = () => {
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
@@ -321,7 +308,6 @@ const SettingsView = () => {
     { id: "qrสร้างเอง", label: "QRCode สร้างเอง" },
   ];
   const [activeSetting, setActiveSetting] = useState(settingsOptions[0].id);
-
   const renderSettingContent = () => {
     switch (activeSetting) {
       case "ข้อมูลหน่วยงาน": return <AgencySettings />;
@@ -332,7 +318,6 @@ const SettingsView = () => {
       default: return null;
     }
   };
-
   return (
     <div className={styles.settingsContainer}>
       <div className={styles.settingsHeaderDropdown}>
