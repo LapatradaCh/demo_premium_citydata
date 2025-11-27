@@ -88,7 +88,7 @@
 }
 
 .editButton {
-  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB); /* ไล่สีพื้นหลัง */
+  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB);
   border: 1px solid #E5E7EB;
   color: #4B5563;
   padding: 10px 16px;
@@ -100,10 +100,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  /* เงานุ่มนวล */
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  white-space: nowrap;
   flex: 1;
 }
 
@@ -111,7 +110,7 @@
   background: linear-gradient(to bottom, #F3F4F6, #E5E7EB);
   border-color: #9CA3AF;
   color: #111827;
-  transform: translateY(-2px); /* ลอยขึ้น */
+  transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -145,7 +144,6 @@
 /* ========================================= */
 /* 3. MIDDLE SECTION (LOCATION & AGENCY) */
 /* ========================================= */
-/* Watermark Decoration */
 .locationCard::after, .agencyCard::after { content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0; }
 .locationCard::after { bottom: -20px; right: -20px; width: 120px; height: 120px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E"); }
 .agencyCard::after { top: 10px; right: 10px; width: 100px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); }
@@ -196,44 +194,54 @@
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. MODAL STYLES (POP-UP) */
+/* 5. MODAL STYLES (POP-UP) - ปรับปรุงใหม่ */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  display: flex; align-items: center; justify-content: center;
   z-index: 1000; backdrop-filter: blur(3px);
   animation: fadeIn 0.2s ease-out;
+  
+  /* ✅ แก้ไข: ใช้ Flexbox จัดกึ่งกลาง และเพิ่ม Padding กันหลุดขอบ */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  padding: 20px; /* เพิ่ม Padding รอบนอก */
+  box-sizing: border-box;
 }
 
 .modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 420px;
+  background-color: #FFFFFF;
+  
+  /* ✅ แก้ไข: ความกว้างและความสูงให้ยืดหยุ่น */
+  width: 100%; max-width: 420px; 
+  
   border-radius: 16px; padding: 24px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex; flex-direction: column; gap: 20px;
   position: relative; 
   animation: slideUp 0.3s ease-out;
-  max-height: 90vh; overflow-y: auto;
+  
+  /* ✅ แก้ไข: ความสูงสูงสุดต้องไม่เกินหน้าจอ (ลบด้วย Padding บนล่าง) */
+  max-height: calc(100vh - 40px);
+  overflow-y: auto; /* ให้ Scroll ได้เฉพาะเนื้อหาภายใน */
 }
 
-.modalHeader { display: flex; justify-content: space-between; align-items: center; }
+/* Scrollbar สวยๆ */
+.modalContent::-webkit-scrollbar { width: 6px; }
+.modalContent::-webkit-scrollbar-thumb { background-color: #D1D5DB; border-radius: 3px; }
+
+.modalHeader { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* ปุ่มปิด (X) ใหญ่สีแดง */
 .closeButton {
-  background-color: #EF4444;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  background-color: #EF4444; border: none; border-radius: 50%;
+  width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: absolute;
-  top: 16px;
-  right: 16px;
+  color: #fff; cursor: pointer; transition: all 0.2s ease;
+  position: absolute; top: 16px; right: 16px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 10;
 }
 .closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
 .closeButton svg { width: 24px; height: 24px; stroke-width: 3; }
@@ -247,111 +255,62 @@
 .typeLabel { font-size: 13px; color: #374151; text-align: center; font-weight: 500; }
 
 /* Forms */
-.formGroup { display: flex; flex-direction: column; gap: 8px; }
+.formGroup { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 .formLabel { font-size: 14px; font-weight: 600; color: #374151; }
-.formInput, .formSelect, .formTextarea { padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
+
+/* ✅ แก้ไข: ใส่ box-sizing และ width 100% กันทะลุ */
+.formInput, .formSelect, .formTextarea { 
+  padding: 10px 12px; 
+  border: 1px solid #D1D5DB; 
+  border-radius: 8px; 
+  font-family: 'Sarabun', sans-serif; 
+  font-size: 14px; 
+  width: 100%; 
+  box-sizing: border-box; /* สำคัญมาก */
+  outline: none; 
+  transition: border-color 0.2s; 
+  background-color: #fff;
+}
 .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 .formTextarea { min-height: 80px; resize: vertical; }
 
-/* ✅ Upload Box & Preview (เพิ่มใหม่) */
+/* Upload Box */
 .uploadBox { 
   border: 2px dashed #D1D5DB; 
   border-radius: 8px; 
   padding: 20px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 10px; 
-  cursor: pointer; 
-  background-color: #F9FAFB; 
-  transition: all 0.2s; 
-  color: #6B7280; 
-  font-size: 13px;
-  position: relative; /* เพื่อให้ปุ่มลบรูปอิงตำแหน่ง */
-  min-height: 120px; /* ความสูงขั้นต่ำ */
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; 
+  cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px;
+  position: relative; min-height: 120px; 
 }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* รูปตัวอย่าง (Preview) */
-.previewWrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.imagePreview {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 180px; /* จำกัดความสูง */
-  object-fit: contain;
-  border-radius: 6px;
-  border: 1px solid #E5E7EB;
-}
-/* ปุ่มลบรูปตัวอย่าง (กากบาทเล็ก) */
+.previewWrapper { position: relative; width: 100%; display: flex; justify-content: center; }
+.imagePreview { width: auto; height: auto; max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 6px; border: 1px solid #E5E7EB; }
 .removePreviewBtn {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 24px;
-  height: 24px;
-  background-color: #EF4444;
-  color: white;
-  border: 2px solid white;
-  border-radius: 50%;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  transition: background-color 0.2s;
+  position: absolute; top: -10px; right: -10px;
+  width: 24px; height: 24px; background-color: #EF4444; color: white;
+  border: 2px solid white; border-radius: 50%; font-size: 14px; font-weight: bold;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background-color 0.2s;
 }
 .removePreviewBtn:hover { background-color: #DC2626; }
 
-
-/* Modal Buttons (แดง/เขียว) */
-.modalActions { display: flex; gap: 12px; margin-top: 10px; }
-
-/* ปุ่มยกเลิก (แดงทึบ ไม่มีขอบ) */
+/* Modal Buttons */
+.modalActions { display: flex; gap: 12px; margin-top: 10px; flex-shrink: 0; }
 .btnCancel { 
-  flex: 1; 
-  padding: 10px; 
-  border-radius: 8px; 
-  border: none; 
-  background-color: #EF4444; /* สีแดง */
-  color: #FFFFFF; /* ตัวหนังสือขาว */
-  font-weight: 700; 
-  cursor: pointer; 
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1; padding: 10px; border-radius: 8px; border: none; 
+  background-color: #EF4444; color: #FFFFFF; font-weight: 700; 
+  cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.btnCancel:hover { 
-  background-color: #DC2626; 
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
+.btnCancel:hover { background-color: #DC2626; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
 
-/* ปุ่มยืนยัน (เขียวทึบ ไม่มีขอบ) */
 .btnConfirm { 
-  flex: 1; 
-  padding: 10px; 
-  border-radius: 8px; 
-  border: none; 
-  background-color: #10B981; /* สีเขียว */
-  color: #FFFFFF; /* ตัวหนังสือขาว */
-  font-weight: 700; 
-  cursor: pointer; 
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1; padding: 10px; border-radius: 8px; border: none; 
+  background-color: #10B981; color: #FFFFFF; font-weight: 700; 
+  cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.btnConfirm:hover { 
-  background-color: #059669; 
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
+.btnConfirm:hover { background-color: #059669; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
