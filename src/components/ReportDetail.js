@@ -21,6 +21,7 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
+// Component Start
 const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   
   // Data States
@@ -28,7 +29,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0); // Trigger reload
+  const [refreshKey, setRefreshKey] = useState(0); // เอาไว้สั่ง reload หน้า
 
   // Modal & Input States
   const [showTypeModal, setShowTypeModal] = useState(false);
@@ -66,7 +67,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
-        // GET Request
+        // *** ใช้ API crud_case_detail ***
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/crud_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
@@ -122,6 +123,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     try {
         setIsUpdating(true);
         
+        // *** ยิง POST ไปที่ crud_case_detail ***
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -447,7 +449,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI) */}
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI - ยังไม่ต่อ API) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
