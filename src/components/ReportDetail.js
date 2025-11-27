@@ -115,14 +115,14 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // 3. Handle Update Category (ยิง POST ไปที่ get_case_detail)
+  // 3. Handle Update Category (ยิง POST ไปที่ crud_case_detail)
   const handleUpdateCategory = async () => {
     if (!selectedIssueType || !caseInfo) return;
 
     try {
         setIsUpdating(true);
         
-        const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/get_case_detail', {
+        const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
