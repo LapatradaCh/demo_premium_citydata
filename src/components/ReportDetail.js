@@ -21,7 +21,7 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// รับ prop reportId เข้ามาเพื่อใช้ในการ fetch
+// Component Start
 const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   
   const [caseInfo, setCaseInfo] = useState(null);
@@ -35,7 +35,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    // ใช้ ID จาก Postman เป็น Default ในกรณีที่ไม่มี prop ส่งมา
+    // Default ID สำหรับทดสอบ (หากไม่มี prop ส่งมา)
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
     const fetchCaseDetail = async () => {
@@ -43,6 +43,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
+        // --- 1. ยิงไปที่ Server จริง (พร้อม API ที่แก้แล้ว) ---
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/get_case_detail?id=${idToFetch}`;
         
         const response = await fetch(apiUrl);
@@ -53,8 +54,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
         const result = await response.json();
         
-        // --- Mapping Data ---
-        // ป้องกัน Error ด้วยการแปลง String -> Float ก่อนเรียก .toFixed
+        // --- 2. Data Mapping (แปลงข้อมูล) ---
+        // ใช้ parseFloat เพื่อป้องกัน error .toFixed()
         const lat = parseFloat(result.info.latitude);
         const lng = parseFloat(result.info.longitude);
 
@@ -65,7 +66,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             rating: result.info.rating || 0,
             status: result.info.status || "รอรับเรื่อง",
             
-            // แก้ไขจุดที่ Error: ใช้ตัวแปรที่แปลงเป็น Float แล้ว
+            // ใช้ตัวแปรที่แปลง float แล้ว
             locationDetail: (lat && lng) 
               ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
               : (result.info.location_detail || "ไม่ระบุพิกัด"),
@@ -73,7 +74,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             lat: lat,
             lng: lng,
             
-            image: result.info.cover_image_url || null
+            image: result.info.cover_image_url || null,
+            
+            // รับค่าชื่อหน่วยงานที่ Join มาจาก Backend
+            agency: result.info.agency_name || "ไม่ระบุหน่วยงาน"
         };
 
         setCaseInfo(mappedInfo);
@@ -90,6 +94,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId]);
 
+  // Fallback Data
   const info = caseInfo || {
     id: "LOADING...",
     title: "กำลังโหลด...",
@@ -99,7 +104,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     locationDetail: "-",
     lat: null, 
     lng: null,
-    image: null 
+    image: null,
+    agency: "-" 
   };
 
   const [statusValue, setStatusValue] = useState(info.status);
@@ -110,7 +116,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   }, [showStatusModal, info.status]);
 
-  // --- Helper Functions ---
+  // --- Helpers ---
   const getStatusClass = (status = "") => {
     if (!status) return styles.statusDefault;
     if (status.includes('รอ')) return styles.statusPending;
@@ -165,9 +171,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   };
 
   const timelineEvents = useMemo(() => {
-    if (!timelineData || timelineData.length === 0) {
-        return []; 
-    }
+    if (!timelineData || timelineData.length === 0) return []; 
     return timelineData.map(log => {
         const { date, time } = formatThaiDateTime(log.created_at);
         return {
@@ -184,7 +188,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
   const handleGoogleMap = () => {
-    // ต้องแปลงกลับเป็น string เพื่อใส่ใน URL
     const query = info.lat && info.lng ? `${info.lat},${info.lng}` : encodeURIComponent(info.locationDetail || "แผนที่");
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
@@ -211,14 +214,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   const problemTypes = ["ไฟฟ้า", "ประปา", "ถนน", "ความสะอาด", "จราจร", "เสียงรบกวน", "น้ำท่วม", "ต้นไม้", "อื่นๆ"];
 
-  if (loading) return (
-    <div className={styles.container}>
-        <div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>
-            กำลังโหลดข้อมูล...
-        </div>
-    </div>
-  );
-  
+  if (loading) return <div className={styles.container}><div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>กำลังโหลดข้อมูล...</div></div>;
   if (error) return (
     <div className={styles.container}>
         <div style={{padding:'40px', textAlign:'center', color:'red'}}>
@@ -295,15 +291,16 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           </div>
         </div>
 
+        {/* Agency Section (แสดงชื่อหน่วยงานที่ดึงมา) */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
           <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
           <ul className={styles.agencyList}>
-            <li className={styles.agencyItem}>แผนกซ่อมบำรุงทั่วไป</li>
+            <li className={styles.agencyItem}>{info.agency}</li>
           </ul>
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom Section (Timeline) */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         
@@ -350,7 +347,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         )}
       </div>
 
-      {/* Modals */}
+      {/* Modals (คงเดิม) */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -360,20 +357,16 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                 <IconClose />
               </button>
             </div>
-            
             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
                   {problemTypes.map((type, index) => (
                     <div key={index} className={`${styles.typeItem} ${index === 0 ? styles.selected : ''}`}>
-                      <div className={styles.typeCircle}>
-                        <span>?</span> 
-                      </div>
+                      <div className={styles.typeCircle}><span>?</span></div>
                       <span className={styles.typeLabel}>{type}</span>
                     </div>
                   ))}
                 </div>
             </div>
-
             <div className={styles.modalActions}>
                <button className={styles.btnConfirm} onClick={() => setShowTypeModal(false)}>เปลี่ยน</button>
             </div>
@@ -382,29 +375,18 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
       )}
 
       {showStatusModal && (
-        <div className={styles.modalOverlay} onClick={() => {
-            setShowStatusModal(false);
-            setSelectedImage(null);
-          }}>
+        <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
-              <button className={styles.closeButton} onClick={() => {
-                  setShowStatusModal(false);
-                  setSelectedImage(null);
-                }}>
+              <button className={styles.closeButton} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
                 <IconClose />
               </button>
             </div>
-            
             <div className={styles.modalScrollableContent}>
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
-                   <select 
-                      className={styles.formSelect} 
-                      value={statusValue} 
-                      onChange={(e) => setStatusValue(e.target.value)}
-                    >
+                   <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
                       <option value="รอรับเรื่อง">รอรับเรื่อง</option>
                       <option value="กำลังประสานงาน">กำลังประสานงาน</option>
                       <option value="ดำเนินการ">ดำเนินการ</option>
@@ -414,12 +396,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                       <option value="ปฏิเสธ">ปฏิเสธ</option>
                     </select>
                 </div>
-
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
                    <textarea className={styles.formTextarea} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
                 </div>
-
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
                    <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
@@ -438,18 +418,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                    </div>
                 </div>
             </div>
-
             <div className={styles.modalActions}>
-               <button className={styles.btnCancel} onClick={() => {
-                   setShowStatusModal(false);
-                   setSelectedImage(null); 
-                 }}>ยกเลิก</button>
-               <button className={styles.btnConfirm} onClick={() => {
-                   setShowStatusModal(false);
-                   setSelectedImage(null); 
-                 }}>ยืนยัน</button>
+               <button className={styles.btnCancel} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยกเลิก</button>
+               <button className={styles.btnConfirm} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยืนยัน</button>
             </div>
-            
           </div>
         </div>
       )}
