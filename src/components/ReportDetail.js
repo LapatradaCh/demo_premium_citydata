@@ -5,7 +5,7 @@ import styles from './css/ReportDetail.module.css';
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
 const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
-const IconImagePlaceholder = () => (<svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>);
+const IconImagePlaceholder = () => (<svg width="48" height="48" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>);
 const IconBuilding = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>);
 const IconEdit = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>);
 const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>);
@@ -34,14 +34,12 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  // *** 1. State สำหรับเก็บประเภทปัญหาจาก API ***
   const [issueTypeList, setIssueTypeList] = useState([]);
 
-  // *** 2. Fetch Issue Types ***
+  // Fetch Issue Types
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
-        // ดึงจาก API ที่เพิ่งแก้เสร็จ
         const res = await fetch('https://premium-citydata-api-ab.vercel.app/api/get_issue_types');
         if (res.ok) {
           const data = await res.json();
@@ -54,7 +52,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchIssueTypes();
   }, []);
 
-  // Fetch Case Detail (อันเดิม)
+  // Fetch Case Detail
   useEffect(() => {
     const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
 
@@ -79,7 +77,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         const mappedInfo = {
             id: result.info.case_code || result.info.issue_cases_id,
             title: result.info.title || "ไม่มีหัวข้อ",
-            category: (result.info.tags && result.info.tags.length > 0) ? result.info.tags[0] : "ทั่วไป",
+            
+            // *** แก้ไข: ใช้ชื่อที่ดึงจากตาราง issue_types ***
+            category: result.info.issue_category_name || "ทั่วไป",
+            
             rating: result.info.rating || 0,
             status: result.info.status || "รอรับเรื่อง",
             locationDetail: (lat && lng) 
@@ -223,8 +224,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   };
 
-  // const problemTypes = ... (ลบอันเก่าทิ้ง)
-
   if (loading) return <div className={styles.container}><div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>กำลังโหลดข้อมูล...</div></div>;
   if (error) return (
     <div className={styles.container}>
@@ -245,6 +244,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           <div>
             <p className={styles.label}>รหัสเรื่อง: {info.id}</p>
             <h2 className={styles.title}>{info.title}</h2>
+            {/* ตรงนี้จะแสดงชื่อประเภทจาก DB แล้วครับ */}
             <div className={styles.categoryText}>
                <span>ประเภท: {info.category}</span>
             </div>
@@ -302,7 +302,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           </div>
         </div>
 
-        {/* Agency Section */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
           <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
           <ul className={styles.agencyList}>
@@ -372,7 +371,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
                   
-                  {/* *** 3. แสดง Loading หรือ List จาก API *** */}
                   {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888'}}>กำลังโหลดประเภท...</p>}
 
                   {issueTypeList.map((typeItem) => (
@@ -381,7 +379,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                         className={`${styles.typeItem} ${info.category === typeItem.name ? styles.selected : ''}`}
                         onClick={() => {
                             console.log("Selected ID:", typeItem.issue_type_id);
-                            // ใส่ logic เปลี่ยนประเภทที่นี่ในอนาคต
                         }}
                     >
                       <div className={styles.typeCircle}><span>?</span></div>
