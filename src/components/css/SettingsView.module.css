@@ -1,286 +1,309 @@
 /* --- SettingsView.module.css --- */
 
+/* Basic Reset & Font */
+* { box-sizing: border-box; }
+
 /* ========================================= */
-/* === (SHARED) Modal & General === */
+/* === (NEW) Header Dropdown Design === */
 /* ========================================= */
-.filterModalBackdrop {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1999;
-  backdrop-filter: blur(4px);
+.settingsHeaderBar {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* เงานุ่มๆ */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+    gap: 12px;
 }
-.filterModal {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  background: #ffffff;
-  border-radius: 16px;
-  width: 90%; max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex; flex-direction: column;
+
+.headerLabel {
+    font-size: 18px;
+    font-weight: 800;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.filterModalHeader {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 18px; border-bottom: 1px solid #f0f0f0;
+
+.customSelectWrapper {
+    position: relative;
+    width: 280px; /* กำหนดความกว้างไม่ให้ยาวเกินไป */
 }
-.filterModalHeader h3 { margin: 0; font-size: 16px; font-weight: 700; }
-.filterModalClose {
-  background: #dc3545; border: none; border-radius: 50%;
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #fff; position: relative;
+
+.customSelect {
+    width: 100%;
+    appearance: none;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s;
 }
-.filterModalClose:hover { background-color: #bb2d3b; }
-.filterModalContent {
-  padding: 20px; display: flex; flex-direction: column;
-  gap: 16px; max-height: 70vh; overflow-y: auto;
+.customSelect:hover {
+    background-color: #f1f3f5;
+    border-color: #ced4da;
+}
+.customSelect:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+.selectIcon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+    font-size: 12px;
 }
 
 /* ========================================= */
-/* === (SHARED) Inputs & Buttons === */
-/* ========================================= */
-.searchInput {
-  width: 100%; flex-grow: 1; box-sizing: border-box;
-  padding: 12px 18px; border-radius: 8px;
-  border: 1px solid #ccc; font-size: 14px;
-  background-color: #fcfcfc; color: #000;
-  transition: all 0.2s ease;
-}
-.searchInput:focus {
-  outline: none; border-color: #333; background-color: #fff;
-  box-shadow: 0 0 0 1px #333;
-}
-.filterApplyButton {
-  padding: 12px 20px; font-size: 15px; font-weight: 700;
-  color: #fff; background-color: #057a55;
-  border: none; border-radius: 12px; cursor: pointer;
-  transition: all 0.2s ease; align-self: center;
-  min-width: 150px; text-align: center;
-}
-.filterApplyButton:hover { background-color: #046c4e; }
-
-/* ========================================= */
-/* === Settings Container === */
+/* === Content Area === */
 /* ========================================= */
 .settingsContainer {
-  width: 100%; max-width: 700px;
-  display: flex; flex-direction: column; gap: 24px;
+    width: 100%;
+    max-width: 800px; /* ขยายให้กว้างขึ้นนิดหน่อยเพื่อให้ดูไม่อึดอัด */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0 auto;
 }
+
 .settingsSection {
-  width: 100%; background: #fff;
-  border: 1px solid #e0e0e0; border-radius: 16px;
-  padding: 24px 28px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-.settingsTitle {
-  font-size: 18px; font-weight: 700; color: #111;
-  margin: 0 0 20px 0; padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex; align-items: center;
-}
-.settingsSubtitle { font-size: 14px; color: #555; margin: -12px 0 16px 0; }
-.settingsItem {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 0; border-bottom: 1px solid #f5f5f5;
-}
-.settingsItemText {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 15px; font-weight: 600; color: #333;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 30px; /* เพิ่ม Padding ให้ดูโล่ง */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
 }
 
 /* ========================================= */
-/* === (UPDATED) Agency Edit Specifics === */
+/* === View Mode (Clean Card) === */
 /* ========================================= */
+.viewModeContainer {
+    animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- Image/Logo Section (สวยงาม Rounded) --- */
-.agencyImageSection {
-  display: flex; flex-direction: column;
-  align-items: center; margin-bottom: 30px;
-}
-.agencyImageWrapper {
-  position: relative;
-  width: 140px; height: 140px;
-}
-.agencyImagePlaceholder {
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border: 4px solid #fff;
-  border-radius: 24px; /* มุมมน */
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  color: #555; font-weight: 700; font-size: 13px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.agencyImageIcon {
-  font-size: 36px; margin-bottom: 6px; color: #666;
+.viewHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-/* ปุ่มแก้ไข: ใหญ่ขึ้น 40px+ สีแดงทึบ ไม่มีขอบ */
-.imageEditBtn {
-  position: absolute;
-  bottom: -5px; right: -5px;
-  background-color: #dc3545; /* แดงทึบ */
-  border: 3px solid #fff;    /* ขอบขาวตัดกับตัวรูปเพื่อให้ดูเด้งออกมา */
-  color: #fff;
-  width: 44px; height: 44px; /* รวมขอบ = 46px, เนื้อใน ~40px */
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
-}
-.imageEditBtn svg { font-size: 18px; }
-.imageEditBtn:hover {
-  background-color: #bb2d3b; transform: scale(1.1);
+.logoCircleLarge {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 4px solid #fff;
 }
 
-/* --- Form Layout --- */
-.editFormContainer {
-  display: flex; flex-direction: column; gap: 20px;
+.viewHeaderText {
+    flex-grow: 1;
 }
-.rowTwoCols {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-}
-.formGroup {
-  display: flex; flex-direction: column; gap: 6px;
-}
-.formGroup label {
-  font-size: 14px; font-weight: 600; color: #444;
+.viewHeaderText h2 {
+    margin: 0 0 8px 0;
+    font-size: 22px;
+    color: #222;
 }
 
-/* Section Box (กรอบย่อยสำหรับ Group ข้อมูล) */
-.formSectionBox {
-    background-color: #fcfcfc;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 10px;
+.tagGroup {
+    display: flex;
+    gap: 8px;
 }
-.sectionHeader {
-    margin: 0 0 12px 0;
-    font-size: 14px; font-weight: 700; color: #333;
-    display: flex; align-items: center; gap: 8px;
+.tagType {
+    background: #e9ecef; color: #495057;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
 }
-
-/* Code Display Section */
-.codeSwitchContainer {
-    display: flex; gap: 10px; margin-bottom: 10px;
-}
-.codeTab {
-    background: none; border: none; font-size: 13px; font-weight: 600;
-    color: #888; cursor: pointer; padding-bottom: 4px;
-    border-bottom: 2px solid transparent; transition: all 0.2s;
-}
-.codeTab.active {
-    color: #000; border-bottom-color: #000;
-}
-.codeDisplayBox {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #fff; border: 1px solid #ddd;
-    border-radius: 8px; padding: 10px 14px;
-}
-.codeText { font-family: monospace; font-size: 16px; font-weight: 700; color: #333; }
-.copyBtn {
-    background: none; border: none; color: #007bff;
-    font-size: 13px; font-weight: 600; cursor: pointer;
+.tagUsage {
+    background: #d1e7dd; color: #0f5132;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
     display: flex; align-items: center; gap: 4px;
 }
-.copyBtn:hover { text-decoration: underline; }
 
-/* Location Button */
+.editModeBtn {
+    padding: 10px 20px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.editModeBtn:hover {
+    background: #f8f9fa;
+    border-color: #bbb;
+    transform: translateY(-1px);
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid #f0f0f0;
+    margin: 24px 0;
+}
+
+.viewGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.infoCard {
+    background: #fcfcfc;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+.infoTitle {
+    font-size: 13px; font-weight: 700; color: #888;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+.codeRow {
+    display: flex; justify-content: space-between;
+    margin-bottom: 8px; font-size: 14px;
+    border-bottom: 1px dashed #eee; padding-bottom: 4px;
+}
+.codeRow:last-child { border-bottom: none; }
+.codeHighlight {
+    font-family: 'Courier New', monospace;
+    color: #333; letter-spacing: 1px;
+}
+
+.addressText, .phoneText {
+    font-size: 15px; color: #333; line-height: 1.6;
+}
+.phoneText {
+    margin-top: 8px; font-weight: 600; color: #057a55;
+    display: flex; align-items: center; gap: 6px;
+}
+
+/* ========================================= */
+/* === Edit Mode (Form) === */
+/* ========================================= */
+.editModeContainer {
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+.editHeaderTitle {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 10px;
+}
+.editHeaderTitle h3 { margin: 0; font-size: 18px; color: #333; }
+.closeEditBtn {
+    cursor: pointer; color: #aaa; font-size: 18px;
+    transition: color 0.2s;
+}
+.closeEditBtn:hover { color: #dc3545; }
+
+/* Image Edit Section */
+.agencyImageSection {
+    display: flex; flex-direction: column; align-items: center;
+}
+.agencyImageWrapper {
+    position: relative; width: 120px; height: 120px;
+}
+.agencyImagePlaceholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(to top, #f3f3f3, #fff);
+    border: 2px dashed #ddd;
+    border-radius: 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #aaa; font-size: 12px; font-weight: 600;
+}
+.agencyImageIcon { font-size: 32px; margin-bottom: 4px; color: #ccc; }
+.imageEditBtn {
+    position: absolute; bottom: -8px; right: -8px;
+    width: 36px; height: 36px;
+    background: #dc3545; color: #fff;
+    border: 3px solid #fff; border-radius: 50%;
+    cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+}
+.fileHint { font-size: 12px; color: #999; margin-top: 8px; }
+
+/* Form Layout */
+.editFormContainer { display: flex; flex-direction: column; gap: 16px; }
+.formGroup { display: flex; flex-direction: column; gap: 6px; }
+.formGroup label { font-size: 14px; font-weight: 600; color: #444; }
+
+.searchInput {
+    padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px;
+    font-size: 14px; background: #fff; transition: all 0.2s; width: 100%;
+}
+.searchInput:focus { border-color: #333; outline: none; }
+
+.rowTwoCols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.formSectionBox {
+    background: #f8f9fa; border-radius: 12px; padding: 16px;
+    border: 1px solid #eee;
+}
+.sectionHeader {
+    margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #555;
+    display: flex; align-items: center; gap: 6px;
+}
+
+/* Buttons */
 .getLocationBtn {
-    background-color: #fff; color: #007bff;
-    border: 1px solid #007bff; border-radius: 20px;
-    padding: 8px 24px; font-weight: 600; font-size: 14px;
-    cursor: pointer; display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s;
-}
-.getLocationBtn:hover {
-    background-color: #eef6ff; box-shadow: 0 4px 6px rgba(0,123,255,0.15);
+    width: 100%; padding: 8px; margin-bottom: 12px;
+    background: #fff; border: 1px solid #007bff; color: #007bff;
+    border-radius: 8px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 
-/* --- Action Buttons (Updated: Solid Colors, No Border) --- */
 .actionButtonRow {
-  display: flex; justify-content: center; gap: 16px;
-  margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;
+    display: flex; gap: 12px; margin-top: 10px;
 }
 .btnCancel, .btnConfirm {
-  flex: 1; max-width: 140px; padding: 12px 0;
-  font-size: 15px; font-weight: 600;
-  border: none; /* ไม่มีขอบ */
-  border-radius: 8px;
-  cursor: pointer; transition: all 0.2s; color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex: 1; padding: 12px; border-radius: 8px; border: none;
+    font-weight: 600; color: #fff; cursor: pointer;
 }
-/* ปุ่มยกเลิก - แดงทึบ */
-.btnCancel { background-color: #dc3545; }
-.btnCancel:hover { background-color: #bb2d3b; box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3); }
+.btnCancel { background: #dc3545; }
+.btnConfirm { background: #198754; }
 
-/* ปุ่มยืนยัน - เขียวทึบ */
-.btnConfirm { background-color: #198754; }
-.btnConfirm:hover { background-color: #157347; box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3); }
+/* Code Tabs */
+.codeSwitchContainer { display: flex; gap: 8px; margin-bottom: 8px; }
+.codeTab {
+    background: none; border: none; font-size: 13px; font-weight: 600; color: #999;
+    padding-bottom: 4px; cursor: pointer;
+}
+.codeTab.active { color: #333; border-bottom: 2px solid #333; }
+.codeDisplayBox {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
+}
+.codeText { font-family: monospace; font-weight: 700; font-size: 16px; }
+.copyBtn { border: none; background: none; color: #007bff; cursor: pointer; font-size: 13px; display: flex; gap: 4px; align-items: center; }
 
-/* ========================================= */
-/* === Toggle & Layout Helpers === */
-/* ========================================= */
-.mockToggle {
-  position: relative; display: inline-block; width: 50px; height: 28px;
-}
-.mockToggle input { opacity: 0; width: 0; height: 0; }
-.mockSlider {
-  position: absolute; cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc; transition: 0.4s; border-radius: 28px;
-}
-.mockSlider:before {
-  position: absolute; content: ""; height: 20px; width: 20px;
-  left: 4px; bottom: 4px; background-color: white;
-  transition: 0.4s; border-radius: 50%;
-}
-.mockToggle input:checked + .mockSlider { background-color: #057a55; }
-.mockToggle input:checked + .mockSlider:before { transform: translateX(22px); }
-
-.filterGroup {
-    display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;
-}
-.passwordUserItem { display: flex; flex-direction: column; gap: 4px; }
-.passwordUserInfo { font-weight: 700; display: flex; gap: 8px; align-items: center; }
-.passwordButtonGroup { display: flex; gap: 8px; margin-top: 6px; }
-.passwordButton {
-    padding: 6px 12px; font-size: 13px; border: none; border-radius: 6px; color: #fff; cursor: pointer;
-}
-.viewButton { background: #6c757d; }
-.changeButton { background: #007bff; }
-.viewButtonActive { background-color: #c82333; border-color: #b21f2d; }
-
-/* Header Dropdown Wrapper */
-.settingsHeaderDropdown {
-  width: 100%;
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-.settingsHeaderDropdown .filterGroup select {
-  width: 100%;
-}
-.settingsContentArea {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
+/* Mobile */
 @media screen and (max-width: 480px) {
-  .rowTwoCols { grid-template-columns: 1fr; }
-  .actionButtonRow { flex-direction: column; }
-  .btnCancel, .btnConfirm { max-width: 100%; }
-  .settingsSection { padding: 16px; }
-  .settingsItem {
-    flex-direction: column; align-items: flex-start; gap: 12px;
-  }
-  .passwordButtonGroup {
-    width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;
-  }
+    .settingsHeaderBar { flex-direction: column; align-items: flex-start; }
+    .customSelectWrapper { width: 100%; }
+    .viewGrid { grid-template-columns: 1fr; }
+    .viewHeader { flex-direction: column; text-align: center; }
+    .tagGroup { justify-content: center; }
+    .rowTwoCols { grid-template-columns: 1fr; }
 }
