@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './css/ReportDetail.module.css';
 
 // --- Icons ---
@@ -28,9 +28,8 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   
-  // ✅ State สำหรับเก็บรูปภาพที่เลือก (Preview URL)
+  // States for Image Upload
   const [selectedImage, setSelectedImage] = useState(null);
-  // ✅ Ref สำหรับ input file ที่ซ่อนอยู่
   const fileInputRef = useRef(null);
 
   const info = data || {
@@ -44,6 +43,16 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
     lng: null,
     image: null 
   };
+
+  // State สำหรับเก็บค่าสถานะใน Modal (เพื่อให้ Dropdown เปลี่ยนค่าได้)
+  const [statusValue, setStatusValue] = useState(info.status);
+  
+  // Reset ค่าเมื่อปิด/เปิด Modal ใหม่
+  useEffect(() => {
+    if (showStatusModal) {
+      setStatusValue(info.status);
+    }
+  }, [showStatusModal, info.status]);
 
   // --- Helper Functions ---
   const getStatusClass = (status) => {
@@ -124,27 +133,23 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
   };
 
   // --- Image Upload Handlers ---
-  // ✅ ฟังก์ชันเมื่อมีการเลือกไฟล์
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // สร้าง URL สำหรับแสดงตัวอย่างรูปภาพ
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
     }
   };
 
-  // ✅ ฟังก์ชันกดที่กล่องเพื่อเรียก input file
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
 
-  // ✅ ฟังก์ชันลบรูปภาพที่เลือก
   const handleRemoveImage = (e) => {
-    e.stopPropagation(); // ป้องกันไม่ให้ event คลิกทะลุไปที่ uploadBox
+    e.stopPropagation(); 
     setSelectedImage(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // รีเซ็ตค่า input file
+      fileInputRef.current.value = ''; 
     }
   };
 
@@ -256,8 +261,8 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
                 </div>
                 <div className={styles.timeRight}>
                   <div className={styles.mobileHeader}>
-                     <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
-                     <span className={styles.statusTime}>{event.date} {event.time}</span>
+                      <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
+                      <span className={styles.statusTime}>{event.date} {event.time}</span>
                   </div>
                   <div className={styles.durationText}>{event.header}</div>
                   <div className={styles.detailBody}>{event.detail}</div>
@@ -299,18 +304,18 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง */}
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (แก้ให้ไม่หลุดขอบ) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => {
             setShowStatusModal(false);
-            setSelectedImage(null); // รีเซ็ตรูปเมื่อปิด modal
+            setSelectedImage(null);
           }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
               <button className={styles.closeButton} onClick={() => {
                   setShowStatusModal(false);
-                  setSelectedImage(null); // รีเซ็ตรูปเมื่อปิด modal
+                  setSelectedImage(null);
                 }}>
                 <IconClose />
               </button>
@@ -318,7 +323,12 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             
             <div className={styles.formGroup}>
                <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
-               <select className={styles.formSelect} defaultValue={info.status}>
+               {/* ผูก state กับ select และใส่ onChange */}
+               <select 
+                  className={styles.formSelect} 
+                  value={statusValue} 
+                  onChange={(e) => setStatusValue(e.target.value)}
+                >
                   <option value="รอรับเรื่อง">รอรับเรื่อง</option>
                   <option value="กำลังประสาน">กำลังประสาน</option>
                   <option value="ดำเนินการ">ดำเนินการ</option>
@@ -337,7 +347,6 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <div className={styles.formGroup}>
                <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
                
-               {/* ✅ Input file ที่ซ่อนอยู่ */}
                <input 
                  type="file" 
                  ref={fileInputRef} 
@@ -346,17 +355,13 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
                  style={{ display: 'none' }} 
                />
 
-               {/* ✅ กล่องอัปโหลดรูปภาพ (คลิกได้) */}
                <div className={styles.uploadBox} onClick={triggerFileInput}>
                   {selectedImage ? (
-                    // แสดงรูปตัวอย่างถ้ามีรูปที่เลือก
                     <div className={styles.previewWrapper}>
                       <img src={selectedImage} alt="Preview" className={styles.imagePreview} />
-                      {/* ปุ่มลบรูป (กากบาทเล็ก) */}
                       <button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button>
                     </div>
                   ) : (
-                    // แสดง placeholder ถ้ายังไม่ได้เลือกรูป
                     <>
                       <IconCamera />
                       <span>แนบรูปภาพ</span>
@@ -368,10 +373,10 @@ const ReportDetail = ({ data, onGoToInternalMap }) => {
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => {
                    setShowStatusModal(false);
-                   setSelectedImage(null); // รีเซ็ตรูปเมื่อยกเลิก
+                   setSelectedImage(null); 
                  }}>ยกเลิก</button>
                <button className={styles.btnConfirm} onClick={() => {
-                   // TODO: Handle form submission with image here
+                   // Submit Logic here with statusValue and selectedImage
                    setShowStatusModal(false);
                    setSelectedImage(null); 
                  }}>ยืนยัน</button>
