@@ -3,7 +3,7 @@ import styles from "./css/SettingsView.module.css";
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, FaUserCog, FaUserTie,
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
-  FaCheckCircle, FaBuilding, FaRegCopy
+  FaCheckCircle, FaPhoneAlt, FaCity
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
@@ -49,7 +49,7 @@ const AdminChangePasswordModal = ({ onClose, user }) => {
 };
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (Dashboard + Fixed Popup Layout)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (Dashboard + Fixed Popup Layout) --> แก้ไขจุดนี้
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -58,81 +58,76 @@ const AgencySettings = () => {
     adminCode: "AL1F8H2",
     userCode: "US9K2M4",
     agencyType: "เทศบาล",
-    usageType: "full",
+    // usageType: "full",  <-- ลบออกตาม request
     province: "เชียงใหม่",
     district: "เมือง",
     subDistrict: "สุเทพ",
     phone: "089-999-9999",
   });
+
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
 
-  // --- POPUP EDIT MODAL (จัด Layout ใหม่ให้ไม่รก) ---
+  // --- POPUP EDIT MODAL (จัด Layout ใหม่ สวยงาม เป็นระเบียบ) ---
   const AgencyEditModal = () => (
     <>
       <div className={styles.agencyModalBackdrop} onClick={() => setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
-        {/* Header: ปุ่มปิดแบบเรียบ (รูปที่ 1) */}
+        {/* Header: ปุ่มปิดสีแดง ใหญ่ขึ้น */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
-            <button className={styles.agencyBtnCloseSimple} onClick={() => setIsEditModalOpen(false)}>
-                <FaTimes/>
+            <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)}>
+                <FaTimes />
             </button>
         </div>
         
         <div className={styles.agencyModalBody}>
-             {/* 1. รูปภาพ (อยู่บนสุดตรงกลาง) */}
+             {/* 1. รูปภาพ */}
              <div className={styles.agencyImageSection}>
                 <div className={styles.agencyImageCircle}>
                     <FaImage size={32} color="#ccc"/>
                     <div className={styles.agencyEditOverlay}><FaEdit/></div>
                 </div>
+                <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
              </div>
 
-             {/* 2. ฟอร์มจัดกลุ่ม (ใช้ Grid) */}
+             {/* 2. ฟอร์มจัดกลุ่ม */}
              <div className={styles.agencyFormContainer}>
                 
-                {/* Group 1: ข้อมูลทั่วไป */}
+                {/* Group: ข้อมูลหลัก */}
+                <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
                     <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
                 </div>
-
-                <div className={styles.agencyRow2}>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>ประเภท <span className={styles.req}>*</span></label>
-                        <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
-                            <option value="เทศบาล">เทศบาล</option>
-                            <option value="อบต">อบต.</option>
-                        </select>
-                    </div>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>สถานะ <span className={styles.req}>*</span></label>
-                        <select className={styles.agencyInput} value={formData.usageType} onChange={(e)=>handleChange('usageType', e.target.value)}>
-                            <option value="full">เต็มรูปแบบ</option>
-                        </select>
-                    </div>
+                
+                <div className={styles.agencyFormGroup}>
+                    <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
+                    <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
+                        <option value="เทศบาล">เทศบาล</option>
+                        <option value="อบต">อบต.</option>
+                    </select>
                 </div>
 
+                {/* Group: รหัส (แยกออกมาให้ชัด) */}
                 <div className={styles.agencyDivider}></div>
-
-                {/* Group 2: รหัส (วางคู่กัน) */}
-                <h4 className={styles.agencySubHeader}><FaUnlockAlt/> รหัสเข้าร่วม</h4>
+                <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม</div>
                 <div className={styles.agencyRow2}>
-                     <div className={styles.agencyFormGroup}>
+                      <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>Admin Code</label>
                         <input className={styles.agencyInputCode} value={formData.adminCode} onChange={(e)=>handleChange('adminCode', e.target.value)} />
-                     </div>
-                     <div className={styles.agencyFormGroup}>
+                      </div>
+                      <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>User Code</label>
                         <input className={styles.agencyInputCode} value={formData.userCode} onChange={(e)=>handleChange('userCode', e.target.value)} />
-                     </div>
+                      </div>
                 </div>
 
+                {/* Group: ที่อยู่ & ติดต่อ */}
                 <div className={styles.agencyDivider}></div>
-
-                {/* Group 3: ที่อยู่ (วางเป็นระเบียบ) */}
-                <h4 className={styles.agencySubHeader}><FaMapMarkedAlt/> ที่อยู่ & ติดต่อ</h4>
-                <div className={styles.agencyRow2}>
+                <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
+                
+                {/* แถวที่อยู่: จังหวัด / อำเภอ / ตำบล (ปรับเป็น 3 คอลัมน์ หรือ Grid ที่สวยขึ้น) */}
+                <div className={styles.agencyAddressGrid}>
                     <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>จังหวัด</label>
                         <input className={styles.agencyInput} value={formData.province} onChange={(e)=>handleChange('province', e.target.value)} />
@@ -141,15 +136,22 @@ const AgencySettings = () => {
                         <label className={styles.agencyLabel}>อำเภอ/เขต</label>
                         <input className={styles.agencyInput} value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
                     </div>
-                </div>
-                <div className={styles.agencyRow2}>
                     <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>ตำบล/แขวง</label>
                         <input className={styles.agencyInput} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
                     </div>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>เบอร์โทรศัพท์ <span className={styles.req}>*</span></label>
-                        <input className={styles.agencyInput} value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
+                </div>
+
+                <div className={styles.agencyFormGroup} style={{marginTop: 10}}>
+                    <label className={styles.agencyLabel}>เบอร์โทรศัพท์ติดต่อ <span className={styles.req}>*</span></label>
+                    <div style={{position:'relative'}}>
+                        <FaPhoneAlt style={{position:'absolute', left:12, top:13, color:'#999', fontSize:12}}/>
+                        <input 
+                            className={styles.agencyInput} 
+                            style={{paddingLeft: 35}}
+                            value={formData.phone} 
+                            onChange={(e)=>handleChange('phone', e.target.value)} 
+                        />
                     </div>
                 </div>
 
@@ -158,7 +160,7 @@ const AgencySettings = () => {
 
         <div className={styles.agencyModalFooter}>
             <button className={styles.agencyBtnCancel} onClick={() => setIsEditModalOpen(false)}>ยกเลิก</button>
-            <button className={styles.agencyBtnSave} onClick={() => setIsEditModalOpen(false)}>บันทึก</button>
+            <button className={styles.agencyBtnSave} onClick={() => setIsEditModalOpen(false)}>บันทึกข้อมูล</button>
         </div>
       </div>
     </>
@@ -174,12 +176,13 @@ const AgencySettings = () => {
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name}</h2>
                         <div className={styles.agencyBadges}>
-                            <span className={styles.agencyBadgeType}>{formData.agencyType}</span>
-                            <span className={styles.agencyBadgeStatus}><FaCheckCircle/> ใช้งานเต็มรูปแบบ</span>
+                            <span className={styles.agencyBadgeType}><FaCity style={{fontSize:10}}/> {formData.agencyType}</span>
+                            {/* ลบ badge ใช้งานเต็มรูปแบบออกแล้ว */}
                         </div>
                     </div>
                 </div>
-                <button className={styles.agencyBtnEdit} onClick={() => setIsEditModalOpen(true)}>
+                {/* ปุ่มแก้ไขเปลี่ยนสีเป็น Amber/Orange ให้สื่อถึงการแก้ไข */}
+                <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
             </div>
