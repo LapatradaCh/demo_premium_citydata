@@ -16,14 +16,15 @@ const MockToggle = () => (
   </label>
 );
 
-// (AdminChangePasswordModal ถูกลบออกแล้ว)
-
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (คงเดิม: อัปโหลดรูป + UI ล่าสุด)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (Full Features)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
+  // State สำหรับซ่อน/แสดงรหัส
+  const [showCodes, setShowCodes] = useState({ admin: false, user: false });
+
   // State สำหรับเก็บรูปภาพ
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
@@ -41,6 +42,12 @@ const AgencySettings = () => {
 
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
 
+  // ฟังก์ชันสลับสถานะตา (เปิด/ปิดรหัส)
+  const toggleCode = (key) => {
+    setShowCodes(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // จัดการรูปภาพ
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
@@ -174,18 +181,45 @@ const AgencySettings = () => {
                         </div>
                     </div>
                 </div>
-                {/* ปุ่มแก้ไข */}
+                {/* ปุ่มแก้ไข: สีส้ม */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
             </div>
 
             <div className={styles.agencyInfoGrid}>
+                {/* Info Box 1: Codes (Show/Hide Feature) */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
-                    <div className={styles.agencyDataRow}><span>Admin:</span> <strong className={styles.agencyCodeFont}>{formData.adminCode}</strong></div>
-                    <div className={styles.agencyDataRow}><span>User:</span> <strong className={styles.agencyCodeFont}>{formData.userCode}</strong></div>
+                    
+                    {/* Admin Code Row */}
+                    <div className={styles.agencyDataRow}>
+                        <span>Admin:</span> 
+                        <div className={styles.codeRevealGroup}>
+                            <strong className={styles.agencyCodeFont}>
+                                {showCodes.admin ? formData.adminCode : "******"}
+                            </strong>
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')}>
+                                {showCodes.admin ? <FaEyeSlash /> : <FaEye />}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* User Code Row */}
+                    <div className={styles.agencyDataRow}>
+                        <span>User:</span> 
+                        <div className={styles.codeRevealGroup}>
+                            <strong className={styles.agencyCodeFont}>
+                                {showCodes.user ? formData.userCode : "******"}
+                            </strong>
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('user')}>
+                                {showCodes.user ? <FaEyeSlash /> : <FaEye />}
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
+                {/* Info Box 2: Address */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
                     <div className={styles.agencyDataRow}><span>ที่อยู่:</span> <span>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span></div>
@@ -199,7 +233,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR) -> (Password ถูกลบออกแล้ว)
+// 2-4. หน้าอื่นๆ (Map, QR) -> (Password Removed)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -213,8 +247,6 @@ const MapSettingsContent = () => (
     </div>
   </div>
 );
-
-// (PasswordSettingsContent ถูกลบออกแล้ว)
 
 const QRUnitSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -254,11 +286,9 @@ const QRCreateSettingsContent = () => (
 
 // Main View
 const SettingsView = () => {
-  // ลบตัวเลือก "รหัสผ่าน" ออกจาก Array
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
     { id: "แผนที่", label: "ตั้งค่าแผนที่" },
-    // { id: "รหัสผ่าน", label: "รหัสผ่าน (ผู้ดูแล)" },  <-- REMOVED
     { id: "qrหน่วยงาน", label: "QRCode หน่วยงาน" },
     { id: "qrสร้างเอง", label: "QRCode สร้างเอง" },
   ];
@@ -269,7 +299,6 @@ const SettingsView = () => {
     switch (activeSetting) {
       case "ข้อมูลหน่วยงาน": return <AgencySettings />;
       case "แผนที่": return <MapSettingsContent />;
-      // case "รหัสผ่าน": return <PasswordSettingsContent />; <-- REMOVED
       case "qrหน่วยงาน": return <QRUnitSettingsContent />;
       case "qrสร้างเอง": return <QRCreateSettingsContent />;
       default: return null;
