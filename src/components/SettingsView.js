@@ -3,7 +3,7 @@ import styles from "./css/SettingsView.module.css";
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
-  FaCheckCircle, FaPhoneAlt, FaCity
+  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
@@ -17,7 +17,7 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Fix Eye Icon Logic)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Add Copy Button)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -45,6 +45,12 @@ const AgencySettings = () => {
   // ฟังก์ชันสลับสถานะตา (เปิด/ปิดรหัส)
   const toggleCode = (key) => {
     setShowCodes(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // ฟังก์ชันคัดลอกรหัส
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
   };
 
   // จัดการรูปภาพ
@@ -186,7 +192,7 @@ const AgencySettings = () => {
             </div>
 
             <div className={styles.agencyInfoGrid}>
-                {/* Info Box 1: Codes (Show/Hide Feature) */}
+                {/* Info Box 1: Codes */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
                     
@@ -197,9 +203,13 @@ const AgencySettings = () => {
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.admin ? formData.adminCode : "******"}
                             </strong>
-                            <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')}>
-                                {/* แก้ไขตรงนี้: ถ้าแสดงรหัส (True) ให้ใช้ FaEye (ตาเปิด), ถ้าซ่อน (False) ให้ใช้ FaEyeSlash (ตาปิด) */}
+                            {/* ปุ่มตา */}
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')} title="แสดง/ซ่อน">
                                 {showCodes.admin ? <FaEye /> : <FaEyeSlash />}
+                            </button>
+                            {/* ปุ่มคัดลอก (Copy) */}
+                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.adminCode)} title="คัดลอกรหัส">
+                                <FaRegCopy />
                             </button>
                         </div>
                     </div>
@@ -211,9 +221,13 @@ const AgencySettings = () => {
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.user ? formData.userCode : "******"}
                             </strong>
-                            <button className={styles.iconBtnEye} onClick={() => toggleCode('user')}>
-                                {/* แก้ไขตรงนี้เช่นกัน */}
+                            {/* ปุ่มตา */}
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('user')} title="แสดง/ซ่อน">
                                 {showCodes.user ? <FaEye /> : <FaEyeSlash />}
+                            </button>
+                            {/* ปุ่มคัดลอก (Copy) */}
+                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.userCode)} title="คัดลอกรหัส">
+                                <FaRegCopy />
                             </button>
                         </div>
                     </div>
@@ -233,7 +247,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR) -> (Password Removed)
+// 2-4. หน้าอื่นๆ (Map, QR)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
