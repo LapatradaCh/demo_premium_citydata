@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import styles from "./css/SettingsView.module.css";
 import {
-  FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, FaUserCog, FaUserTie,
+  FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
   FaCheckCircle, FaPhoneAlt, FaCity
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
-// --- Helper Components (ส่วนนี้เหมือนเดิม ไม่ได้แก้ไข) ---
+// --- Helper Components ---
 // ------------------------------------------------------------------
 const MockToggle = () => (
   <label className={styles.mockToggle}>
@@ -16,47 +16,17 @@ const MockToggle = () => (
   </label>
 );
 
-const AdminChangePasswordModal = ({ onClose, user }) => {
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const handleSubmit = () => {
-    if (!newPassword) { alert("กรุณาใส่รหัสผ่านใหม่"); return; }
-    if (newPassword !== confirmPassword) { alert("รหัสผ่านใหม่และการยืนยันไม่ตรงกัน"); return; }
-    alert(`ตั้งรหัสผ่านใหม่สำเร็จ!`); onClose();
-  };
-  return (
-    <>
-      <div className={styles.filterModalBackdrop} onClick={onClose} />
-      <div className={styles.filterModal}>
-        <div className={styles.filterModalHeader}>
-          <h3>ตั้งรหัสผ่านใหม่ให้: {user.username}</h3>
-          <button className={styles.filterModalClose} onClick={onClose}><FaTimes /></button>
-        </div>
-        <div className={styles.filterModalContent}>
-          <div className={styles.filterGroup}>
-            <label>รหัสผ่านใหม่</label>
-            <input type="password" className={styles.searchInput} value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} />
-          </div>
-          <div className={styles.filterGroup}>
-            <label>ยืนยันรหัสผ่านใหม่</label>
-            <input type="password" className={styles.searchInput} value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} />
-          </div>
-          <button className={styles.filterApplyButton} style={{marginTop:10}} onClick={handleSubmit}>ยืนยัน</button>
-        </div>
-      </div>
-    </>
-  );
-};
+// (AdminChangePasswordModal ถูกลบออกแล้ว)
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Upload Image + UX Improvements)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (คงเดิม: อัปโหลดรูป + UI ล่าสุด)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
   // State สำหรับเก็บรูปภาพ
   const [logoPreview, setLogoPreview] = useState(null); 
-  const fileInputRef = useRef(null); // Ref สำหรับ input file
+  const fileInputRef = useRef(null); 
 
   const [formData, setFormData] = useState({
     name: "เทศบาลตำบลตัวอย่าง",
@@ -71,12 +41,10 @@ const AgencySettings = () => {
 
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
 
-  // ฟังก์ชันคลิกที่วงกลมรูปภาพ
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
 
-  // ฟังก์ชันเมื่อเลือกไฟล์
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -93,7 +61,7 @@ const AgencySettings = () => {
         {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
-            {/* ปุ่มปิดสีแดง วงกลม */}
+            {/* ปุ่มปิดสีแดง วงกลมใหญ่ */}
             <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)}>
                 <FaTimes />
             </button>
@@ -152,7 +120,7 @@ const AgencySettings = () => {
                       </div>
                 </div>
 
-                {/* Group 3: ที่อยู่ (Grid 3 ช่อง) */}
+                {/* Group 3: ที่อยู่ */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
                 
@@ -196,7 +164,6 @@ const AgencySettings = () => {
         <div className={styles.agencyViewContainer}>
             <div className={styles.agencyProfileCard}>
                 <div className={styles.agencyProfileLeft}>
-                    {/* แสดงรูปโลโก้ */}
                     <div className={styles.agencyLogoCircle}>
                         {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage/>}
                     </div>
@@ -207,7 +174,7 @@ const AgencySettings = () => {
                         </div>
                     </div>
                 </div>
-                {/* ปุ่มแก้ไข: สีส้ม ชิดขวา ขนาดพอดี */}
+                {/* ปุ่มแก้ไข */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
@@ -232,7 +199,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-5. หน้าอื่นๆ (เหมือนเดิม ไม่ได้แก้ไขตามคำสั่ง)
+// 2-4. หน้าอื่นๆ (Map, QR) -> (Password ถูกลบออกแล้ว)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -247,49 +214,7 @@ const MapSettingsContent = () => (
   </div>
 );
 
-const PasswordSettingsContent = () => {
-  const [modalUser, setModalUser] = useState(null);
-  const [visible, setVisible] = useState({});
-  const toggle = (user) => setVisible({...visible, [user]: !visible[user]});
-  const users = [
-    { role: "ผู้ดูแลหน่วยงาน", username: "admin_unit_xx", realPassword: "AdminPassword123", icon: FaUserCog },
-    { role: "เจ้าหน้าที่", username: "staff_zone_01", realPassword: "Staff_pass_456", icon: FaUserTie },
-  ];
-  return (
-    <>
-      <div className={styles.settingsSection}>
-        <h3 className={styles.settingsTitle}>
-          <FaUnlockAlt style={{ marginRight: "10px", color: "#6c757d" }} /> รหัสเข้าใช้งาน
-        </h3>
-        <p className={styles.settingsSubtitle}>จัดการและรีเซ็ตรหัสผ่านสำหรับเจ้าหน้าที่และผู้ดูแลหน่วยงาน</p>
-        {users.map((user, index) => {
-          const isVisible = visible[user.username];
-          return (
-            <div key={index} className={styles.settingsItem}>
-              <div className={styles.passwordUserItem}>
-                <span className={styles.passwordUserInfo}>
-                  <user.icon className={styles.passwordUserIcon} /> {user.role} ({user.username})
-                </span>
-                <span className={styles.passwordUserPass}>
-                  รหัสผ่าน: {isVisible ? user.realPassword : "***********"}
-                </span>
-              </div>
-              <div className={styles.passwordButtonGroup}>
-                <button className={`${styles.passwordButton} ${styles.viewButton} ${isVisible ? styles.viewButtonActive : ""}`} onClick={() => toggle(user.username)}>
-                  {isVisible ? <FaEyeSlash /> : <FaEye />} {isVisible ? "ซ่อน" : "ดู"}
-                </button>
-                <button className={`${styles.passwordButton} ${styles.changeButton}`} onClick={() => setModalUser(user)}>
-                  <FaSyncAlt /> เปลี่ยน
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {modalUser && <AdminChangePasswordModal onClose={() => setModalUser(null)} user={modalUser} />}
-    </>
-  );
-};
+// (PasswordSettingsContent ถูกลบออกแล้ว)
 
 const QRUnitSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -329,24 +254,28 @@ const QRCreateSettingsContent = () => (
 
 // Main View
 const SettingsView = () => {
+  // ลบตัวเลือก "รหัสผ่าน" ออกจาก Array
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
     { id: "แผนที่", label: "ตั้งค่าแผนที่" },
-    { id: "รหัสผ่าน", label: "รหัสผ่าน (ผู้ดูแล)" },
+    // { id: "รหัสผ่าน", label: "รหัสผ่าน (ผู้ดูแล)" },  <-- REMOVED
     { id: "qrหน่วยงาน", label: "QRCode หน่วยงาน" },
     { id: "qrสร้างเอง", label: "QRCode สร้างเอง" },
   ];
+
   const [activeSetting, setActiveSetting] = useState(settingsOptions[0].id);
+
   const renderSettingContent = () => {
     switch (activeSetting) {
       case "ข้อมูลหน่วยงาน": return <AgencySettings />;
       case "แผนที่": return <MapSettingsContent />;
-      case "รหัสผ่าน": return <PasswordSettingsContent />;
+      // case "รหัสผ่าน": return <PasswordSettingsContent />; <-- REMOVED
       case "qrหน่วยงาน": return <QRUnitSettingsContent />;
       case "qrสร้างเอง": return <QRCreateSettingsContent />;
       default: return null;
     }
   };
+
   return (
     <div className={styles.settingsContainer}>
       <div className={styles.settingsHeaderDropdown}>
