@@ -36,7 +36,7 @@
 
 
 /* ========================================================= */
-/* === AGENCY STYLES (UPDATED FIX) === */
+/* === AGENCY STYLES (UPDATED FULL) === */
 /* ========================================================= */
 :root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
@@ -72,7 +72,14 @@
 .agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; }
 .agencyBoxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
-.agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 0.5px; color: #333; }
+
+/* Code Reveal & Toggle */
+.codeRevealGroup { display: flex; align-items: center; gap: 10px; }
+.iconBtnEye { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; padding: 4px; border-radius: 50%; transition: all 0.2s; }
+.iconBtnEye:hover { color: #0d6efd; background-color: #f0f8ff; }
+
+/* ปรับฟอนต์รหัส */
+.agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #333; min-width: 80px; text-align: right; }
 
 /* --- MODAL (POPUP) --- */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
@@ -173,9 +180,7 @@
     font-size: 14px; 
     transition: all 0.2s; 
 }
-.agencyBtnCancel:hover { 
-    background: #bb2d3b; /* แดงเข้ม */
-}
+.agencyBtnCancel:hover { background: #bb2d3b; }
 
 .agencyBtnSave { padding: 10px 24px; border-radius: 8px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2); }
 .agencyBtnSave:hover { background: #046c4e; transform: translateY(-1px); }
