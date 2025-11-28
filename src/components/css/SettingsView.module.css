@@ -36,7 +36,7 @@
 
 
 /* ========================================================= */
-/* === AGENCY STYLES (UPDATED FULL) === */
+/* === AGENCY STYLES (FULL UPDATE) === */
 /* ========================================================= */
 :root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
@@ -73,10 +73,29 @@
 .agencyBoxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 
-/* Code Reveal & Toggle */
+/* Code Reveal Group */
 .codeRevealGroup { display: flex; align-items: center; gap: 10px; }
+
+/* ปุ่มตา (Eye) */
 .iconBtnEye { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; padding: 4px; border-radius: 50%; transition: all 0.2s; }
 .iconBtnEye:hover { color: #0d6efd; background-color: #f0f8ff; }
+
+/* ปุ่มคัดลอก (Copy) */
+.iconBtnCopy { 
+    background: none; 
+    border: none; 
+    color: #6c757d; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 15px; 
+    padding: 4px; 
+    border-radius: 50%; 
+    transition: all 0.2s; 
+    margin-left: 2px;
+}
+.iconBtnCopy:hover { color: #198754; background-color: #e8f5e9; }
 
 /* ปรับฟอนต์รหัส */
 .agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #333; min-width: 80px; text-align: right; }
