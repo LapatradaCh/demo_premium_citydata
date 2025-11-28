@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./CreateOrg.module.css";
-// เพิ่ม icon ที่ดูคลีนขึ้น
 import { FaBuilding, FaMapMarkerAlt, FaKey, FaLayerGroup, FaCamera, FaCopy, FaCheckCircle, FaArrowLeft, FaArrowRight, FaChevronRight } from "react-icons/fa";
 
 // URL ของ API
