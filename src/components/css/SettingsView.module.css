@@ -2,7 +2,7 @@
 * { box-sizing: border-box; }
 
 /* ========================================= */
-/* === ORIGINAL STYLES (สำหรับหน้าอื่นๆ ห้ามแก้) === */
+/* === ORIGINAL STYLES === */
 /* ========================================= */
 .settingsContainer { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 24px; margin: 0 auto; }
 .settingsSection { width: 100%; background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
@@ -18,16 +18,7 @@
 .filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; }
 .filterApplyButton:hover { background-color: #046c4e; }
 
-/* Password & Modal & Other */
-.passwordUserItem { display: flex; flex-direction: column; gap: 4px; }
-.passwordUserInfo { font-weight: 700; font-size: 15px; color: #000; display: flex; align-items: center; gap: 8px; }
-.passwordUserIcon { color: #007bff; }
-.passwordUserPass { font-size: 13px; color: #555; margin-left: 24px; }
-.passwordButtonGroup { display: flex; gap: 8px; }
-.passwordButton { display: flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 13px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; color: #fff; }
-.viewButton { background-color: #6c757d; }
-.viewButtonActive { background-color: #dc3545; }
-.changeButton { background-color: #007bff; }
+/* QR, Mockup, Misc */
 .qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
 .mockQrIcon { font-size: 80px; color: #e0e0e0; }
 .qrForm { display: flex; flex-direction: column; gap: 16px; }
@@ -90,11 +81,11 @@
 .agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 16px 16px 0 0; }
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-/* ปุ่มปิด: วงกลมสีแดง */
+/* ปุ่มปิด: วงกลมสีแดง + ไอคอนใหญ่ */
 .agencyBtnCloseRed { 
     background: #dc3545; 
     border: none; 
-    font-size: 16px; 
+    font-size: 22px; 
     color: white; 
     cursor: pointer; 
     display: flex; 
@@ -111,8 +102,7 @@
 .agencyModalBody { padding: 24px; overflow-y: auto; flex: 1; }
 .agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; }
 
-/* FIX: เอา overflow: hidden ออก เพื่อให้ปุ่มสีส้มลอยออกมาได้ 
-*/
+/* FIX: เอา overflow: hidden ออก */
 .agencyImageCircle { 
     width: 90px; 
     height: 90px; 
@@ -125,7 +115,6 @@
     border: 2px dashed #ccc; 
     transition: all 0.2s; 
     cursor: pointer; 
-    /* overflow: hidden; <-- ต้องไม่มีบรรทัดนี้ ไม่งั้นปุ่มแหว่ง */
 }
 .agencyImageCircle:hover { border-color: var(--agency-primary); background: #e8f5e9; }
 
@@ -134,14 +123,14 @@
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
-    border-radius: 50%; /* เพิ่มตรงนี้แทน */
+    border-radius: 50%; 
 }
 
 /* ปุ่มสีส้มลอย (Overlay) */
 .agencyEditOverlay { 
     position: absolute; 
-    bottom: -5px; /* ขยับลงให้เกาะขอบ */
-    right: -5px;  /* ขยับขวาให้เกาะขอบ */
+    bottom: -5px;
+    right: -5px;
     background: var(--agency-warning); 
     color: #fff; 
     width: 28px; 
