@@ -94,8 +94,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
     
     setIsSaving(true);
     
-    // Note: ควรทำระบบ Upload ไฟล์จริง แล้วส่ง URL กลับมา
-    // ตรงนี้จำลองส่ง URL ไปก่อน
+    // Note: ควรทำระบบ Upload ไฟล์จริง แล้วส่ง URL กลับมา (ตรงนี้จำลอง URL)
     const mockLogoUrl = "https://placehold.co/400x400/png?text=Logo"; 
 
     try {
@@ -103,7 +102,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           url_logo: mockLogoUrl
         }),
       });
@@ -232,7 +231,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           ...locationData
         }),
       });
@@ -345,7 +344,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           org_type_id: typeData.org_type_id,
           usage_type_id: typeData.usage_type_id
         }),
