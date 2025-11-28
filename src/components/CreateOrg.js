@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./css/CreateOrg.module.css";
-import { FaBuilding, FaMapMarkerAlt, FaKey, FaTag, FaCamera, FaCopy, FaCheck, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import styles from "./CreateOrg.module.css";
+// เพิ่ม icon ที่ดูคลีนขึ้น
+import { FaBuilding, FaMapMarkerAlt, FaKey, FaLayerGroup, FaCamera, FaCopy, FaCheckCircle, FaArrowLeft, FaArrowRight, FaChevronRight } from "react-icons/fa";
 
 // URL ของ API
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
@@ -27,7 +28,7 @@ const QuickCreatePage = ({ orgName, setOrgName, createdOrgName, isLoading, handl
     <div className={styles.cardHeader}>
       <div className={styles.brandIcon}><FaBuilding /></div>
       <h1 className={styles.cardTitle}>{createdOrgName ? 'แก้ไขชื่อหน่วยงาน' : 'เริ่มต้นสร้างหน่วยงาน'}</h1>
-      <p className={styles.cardSubtitle}>กรอกชื่อหน่วยงานของคุณเพื่อเข้าสู่ระบบจัดการเมือง</p>
+      <p className={styles.cardSubtitle}>กรอกชื่อหน่วยงานของคุณเพื่อเข้าสู่ระบบจัดการเมือง<br/>อย่างเต็มรูปแบบ</p>
     </div>
 
     <form onSubmit={handleQuickCreate} className={styles.mainForm}>
@@ -92,7 +93,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
           {orgImagePreview ? (
             <img src={orgImagePreview} alt="Preview" className={styles.previewImg} />
           ) : (
-            <div className={styles.placeholderImg}><FaCamera /></div>
+            <FaCamera />
           )}
         </div>
         <div className={styles.uploadControls}>
@@ -100,7 +101,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
             เลือกรูปภาพ
             <input type="file" hidden accept="image/*" onChange={handleImageChange} />
           </label>
-          <p className={styles.hintText}>รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 5MB</p>
+          <p className={styles.hintText}>รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 5MB<br/>แนะนำขนาด 500x500 px</p>
         </div>
       </div>
       <div className={styles.formFooter}>
@@ -129,7 +130,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
       async (pos) => {
         // จำลอง Fetch API
         const { latitude, longitude } = pos.coords;
-        // Mock data response for UI demonstration
+        // Mock data response
         setTimeout(() => {
             setLocationData(prev => ({...prev, province: 'เชียงใหม่', district: 'เมือง', sub_district: 'สุเทพ'}));
             setGeoStatus('success');
@@ -148,10 +149,18 @@ const LocationSetupForm = ({ onSave, orgId }) => {
   return (
     <form onSubmit={handleSubmit} className={styles.innerForm}>
       <div className={styles.geoSection}>
-        <button type="button" onClick={handleFetchGeolocation} className={styles.btnGeo} disabled={geoStatus === 'loading'}>
-          {geoStatus === 'loading' ? 'กำลังค้นหา...' : <><FaMapMarkerAlt /> ดึงตำแหน่งปัจจุบัน</>}
-        </button>
-        {geoStatus === 'success' && <span className={styles.statusSuccess}><FaCheck /> พบตำแหน่งแล้ว</span>}
+        <div>
+            <label className={styles.inputLabel} style={{marginBottom: 0}}>พิกัดตำแหน่ง</label>
+            <p className={styles.hintText} style={{marginTop: '0.25rem'}}>ระบุตำแหน่งเพื่อการแสดงผลบนแผนที่</p>
+        </div>
+        
+        {geoStatus === 'success' ? (
+             <span className={styles.statusSuccess}><FaCheckCircle /> ระบุตำแหน่งแล้ว</span>
+        ) : (
+            <button type="button" onClick={handleFetchGeolocation} className={styles.btnGeo} disabled={geoStatus === 'loading'}>
+              {geoStatus === 'loading' ? 'กำลังค้นหา...' : <><FaMapMarkerAlt /> ดึงตำแหน่งปัจจุบัน</>}
+            </button>
+        )}
       </div>
 
       <div className={styles.gridThree}>
@@ -208,22 +217,23 @@ const TypeSetupForm = ({ onSave, orgId }) => {
             <select className={styles.selectField}>
                 <option>เลือกประเภท...</option>
                 <option>เทศบาล</option>
-                <option>อบต.</option>
+                <option>องค์การบริหารส่วนตำบล (อบต.)</option>
                 <option>โรงพยาบาล</option>
+                <option>หน่วยงานเอกชน</option>
             </select>
         </div>
         <div className={styles.inputGroup}>
             <label>รูปแบบการใช้งาน <span className={styles.req}>*</span></label>
             <select className={styles.selectField}>
                 <option>เลือกรูปแบบ...</option>
-                <option>เต็มรูปแบบ (Full)</option>
-                <option>แจ้งเหตุ (Report only)</option>
+                <option>เต็มรูปแบบ (City Management)</option>
+                <option>รับแจ้งเหตุ (Report & Dispatch)</option>
             </select>
         </div>
       </div>
       <div className={styles.formFooter}>
         <button type="submit" className={styles.btnSave} disabled={isSaving}>
-            {isSaving ? 'กำลังบันทึก...' : 'บันทึกประเภท'}
+            {isSaving ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า'}
         </button>
       </div>
     </form>
@@ -265,7 +275,9 @@ const CodeDisplay = ({ adminCode, userCode }) => {
                 </button>
             </div>
             <p className={styles.codeHint}>
-                {mode === 'admin' ? 'ใช้สำหรับผู้ดูแลระบบเข้าสู่ระบบ' : 'ใช้สำหรับเจ้าหน้าที่ทั่วไปเข้าสู่ระบบ'}
+                {mode === 'admin' 
+                    ? 'รหัสสำหรับผู้ดูแลระบบ ใช้ในการเข้าถึง Dashboard และการตั้งค่าขั้นสูง' 
+                    : 'รหัสสำหรับเจ้าหน้าที่ภาคสนาม ใช้ในการรับงานและแจ้งเหตุผ่านมือถือ'}
             </p>
         </div>
     );
@@ -286,7 +298,7 @@ const SetupGuidePage = ({ createdOrgName, adminCode, userCode, orgId, handleGoBa
             <div className={styles.accordionHeader} onClick={() => toggleSection(id)}>
                 <SectionHeader icon={icon} title={title} subtitle={subtitle} />
                 <div className={styles.accordionArrow}>
-                    <FaArrowRight style={{ transform: activeSection === id ? 'rotate(90deg)' : 'rotate(0deg)', transition: '0.3s' }} />
+                    <FaChevronRight style={{ transform: activeSection === id ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
                 </div>
             </div>
             <div className={styles.accordionBody}>
@@ -301,24 +313,24 @@ const SetupGuidePage = ({ createdOrgName, adminCode, userCode, orgId, handleGoBa
         <div className={styles.setupLayout}>
             <div className={styles.setupHeader}>
                 <h2>ตั้งค่าหน่วยงาน</h2>
-                <p>จัดการข้อมูลพื้นฐานของ <strong>{createdOrgName}</strong> ให้ครบถ้วน</p>
+                <p>จัดการข้อมูลของ <strong>{createdOrgName}</strong> ให้ครบถ้วน</p>
             </div>
 
             <div className={styles.accordionList}>
                 <AccordionItem 
-                    id="code" icon={FaKey} title="รหัสเข้าร่วมองค์กร" subtitle="ดูและคัดลอกรหัสสำหรับเข้าใช้งาน"
+                    id="code" icon={FaKey} title="รหัสเข้าใช้งาน" subtitle="ดูและคัดลอกรหัสสำหรับ Admin และเจ้าหน้าที่"
                     component={<CodeDisplay adminCode={adminCode} userCode={userCode} />} 
                 />
                 <AccordionItem 
-                    id="logo" icon={FaCamera} title="โลโก้หน่วยงาน" subtitle="อัปโหลดตราสัญลักษณ์"
+                    id="logo" icon={FaCamera} title="ตราสัญลักษณ์" subtitle="อัปโหลดโลโก้หน่วยงานเพื่อความน่าเชื่อถือ"
                     component={<LogoSetupForm onSave={() => setActiveSection(null)} orgId={orgId} />} 
                 />
                 <AccordionItem 
-                    id="location" icon={FaMapMarkerAlt} title="ขอบเขตและที่อยู่" subtitle="ระบุพิกัดและข้อมูลติดต่อ"
+                    id="location" icon={FaMapMarkerAlt} title="ที่อยู่และพิกัด" subtitle="กำหนดขอบเขตความรับผิดชอบและจุดติดต่อ"
                     component={<LocationSetupForm onSave={() => setActiveSection(null)} orgId={orgId} />} 
                 />
                 <AccordionItem 
-                    id="type" icon={FaTag} title="ประเภทหน่วยงาน" subtitle="ตั้งค่าหมวดหมู่และการใช้งาน"
+                    id="type" icon={FaLayerGroup} title="ข้อมูลจำเพาะ" subtitle="ตั้งค่าประเภทหน่วยงานและรูปแบบระบบ"
                     component={<TypeSetupForm onSave={() => setActiveSection(null)} orgId={orgId} />} 
                 />
             </div>
@@ -346,12 +358,12 @@ function CreateOrg() {
   // จำลองการสร้าง (Mock Logic)
   const handleQuickCreate = (e) => {
     e.preventDefault();
-    if (!orgName) return alert('กรุณากรอกชื่อ');
+    if (!orgName) return alert('กรุณากรอกชื่อหน่วยงาน');
     setIsLoading(true);
     setTimeout(() => {
         setCreatedOrgName(orgName);
-        setAdminCode('A' + Math.floor(100000 + Math.random() * 900000));
-        setUserCode('U' + Math.floor(100000 + Math.random() * 900000));
+        setAdminCode('A-' + Math.floor(1000 + Math.random() * 9000));
+        setUserCode('U-' + Math.floor(1000 + Math.random() * 9000));
         setOrgId(123);
         setPage('setup');
         setIsLoading(false);
