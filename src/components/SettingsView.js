@@ -17,7 +17,7 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (Full Features)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Fix Eye Icon Logic)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -68,7 +68,6 @@ const AgencySettings = () => {
         {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
-            {/* ปุ่มปิดสีแดง วงกลมใหญ่ */}
             <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)}>
                 <FaTimes />
             </button>
@@ -181,7 +180,6 @@ const AgencySettings = () => {
                         </div>
                     </div>
                 </div>
-                {/* ปุ่มแก้ไข: สีส้ม */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
@@ -200,7 +198,8 @@ const AgencySettings = () => {
                                 {showCodes.admin ? formData.adminCode : "******"}
                             </strong>
                             <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')}>
-                                {showCodes.admin ? <FaEyeSlash /> : <FaEye />}
+                                {/* แก้ไขตรงนี้: ถ้าแสดงรหัส (True) ให้ใช้ FaEye (ตาเปิด), ถ้าซ่อน (False) ให้ใช้ FaEyeSlash (ตาปิด) */}
+                                {showCodes.admin ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
                     </div>
@@ -213,7 +212,8 @@ const AgencySettings = () => {
                                 {showCodes.user ? formData.userCode : "******"}
                             </strong>
                             <button className={styles.iconBtnEye} onClick={() => toggleCode('user')}>
-                                {showCodes.user ? <FaEyeSlash /> : <FaEye />}
+                                {/* แก้ไขตรงนี้เช่นกัน */}
+                                {showCodes.user ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
                     </div>
