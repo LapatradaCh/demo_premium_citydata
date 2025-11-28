@@ -1,18 +1,29 @@
 /* --- Variables --- */
 :root {
-  --primary: #059669;       /* Emerald 600 */
-  --primary-hover: #047857; /* Emerald 700 */
-  --bg-page: #f3f4f6;       /* Gray 100 */
+  --primary: #10b981;       /* Emerald 500 - สว่างขึ้นเล็กน้อยบนพื้นขาว */
+  --primary-hover: #059669; /* Emerald 600 */
+  --primary-light: #ecfdf5; /* Emerald 50 */
+  
+  --bg-page: #f9fafb;       /* Gray 50 - พื้นหลังหน้าเกือบขาว */
   --bg-card: #ffffff;
-  --text-main: #111827;     /* Gray 900 */
-  --text-sub: #6b7280;      /* Gray 500 */
+  
+  --text-main: #111827;     /* Gray 900 - ดำเกือบสนิท */
+  --text-sub: #6b7280;      /* Gray 500 - เทากลาง */
+  --text-light: #9ca3af;    /* Gray 400 */
+  
   --border: #e5e7eb;        /* Gray 200 */
-  --input-bg: #f9fafb;      /* Gray 50 */
-  --radius: 12px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --input-bg: #ffffff;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Layout --- */
+/* --- Global Layout --- */
 .pageContainer {
   min-height: 100vh;
   background-color: var(--bg-page);
@@ -20,70 +31,89 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  font-family: 'Sarabun', sans-serif;
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-main);
 }
 
-/* --- Quick Create Card --- */
+/* --- Card Styles (Base) --- */
 .centeredCard {
   background: var(--bg-card);
   width: 100%;
-  max-width: 480px;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  padding: 3rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   text-align: center;
+  border: 1px solid var(--border);
+}
+
+.cardHeader {
+  margin-bottom: 2.5rem;
 }
 
 .brandIcon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: var(--primary);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--primary-light);
+  width: 80px;
+  height: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .cardTitle {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.875rem;
+  font-weight: 800;
   color: var(--text-main);
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.025em;
 }
 
 .cardSubtitle {
   color: var(--text-sub);
-  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
+/* --- Form Elements --- */
 .mainForm {
   text-align: left;
 }
 
-/* --- Inputs --- */
 .inputWrapper {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .inputLabel {
   display: block;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   font-size: 0.95rem;
+  color: var(--text-main);
 }
 
 .inputFieldLarge {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
   border: 2px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--input-bg);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  color: var(--text-main);
 }
 
 .inputFieldLarge:focus {
   border-color: var(--primary);
   outline: none;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.inputFieldLarge::placeholder {
+  color: var(--text-light);
 }
 
 /* --- Buttons --- */
@@ -91,27 +121,34 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .btnPrimary {
-  background: var(--primary);
+  background: var(--text-main); /* ปรับเป็นสีดำตามสไตล์ Modern B&W */
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius);
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
+  gap: 0.75rem;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .btnPrimary:hover:not(:disabled) {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .btnGhost {
@@ -123,148 +160,204 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
 }
 
 .btnGhost:hover {
   color: var(--text-main);
+  background: #f3f4f6;
 }
 
-/* --- Setup Layout --- */
+.errorAlert {
+  background: #fef2f2;
+  color: #ef4444;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #fee2e2;
+  text-align: center;
+}
+
+/* --- Setup Page Layout --- */
 .setupLayout {
   width: 100%;
-  max-width: 650px;
+  max-width: 700px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .setupHeader {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .setupHeader h2 {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 800;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
-  color: #111;
+  letter-spacing: -0.025em;
 }
 
 .setupHeader p {
   color: var(--text-sub);
+  font-size: 1.1rem;
 }
 
-/* --- Accordion Style (Clean Cards) --- */
+.setupHeader strong {
+  color: var(--primary);
+}
+
+/* --- Accordion List --- */
 .accordionList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .accordionCard {
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
+.accordionCard:hover {
+  border-color: #d1d5db;
+}
+
 .accordionCard.active {
   border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.08);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
 }
 
 .accordionHeader {
-  padding: 1.25rem;
+  padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   background: #fff;
+  transition: background 0.2s;
 }
 
 .accordionHeader:hover {
-  background: #f9fafb;
+  background: #fafafa;
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .headerIconBox {
-  width: 48px;
-  height: 48px;
-  background: #ecfdf5; /* Light Green */
+  width: 52px;
+  height: 52px;
+  background: var(--primary-light);
   color: var(--primary);
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.headerTextBox {
+  display: flex;
+  flex-direction: column;
 }
 
 .headerTitle {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
+  color: var(--text-main);
 }
 
 .headerSubtitle {
-  margin: 2px 0 0 0;
+  margin: 4px 0 0 0;
   font-size: 0.9rem;
   color: var(--text-sub);
+}
+
+.accordionArrow {
+  color: var(--text-light);
+  font-size: 1.25rem;
+}
+
+.accordionCard.active .accordionArrow {
+  color: var(--primary);
 }
 
 /* --- Accordion Body --- */
 .accordionBody {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-  background: #fafafa;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+  background: #fff;
 }
 
 .accordionCard.active .accordionBody {
-  max-height: 800px; /* สูงพอให้เนื้อหาขยาย */
+  max-height: 1000px;
   border-top: 1px solid var(--border);
+  transition: max-height 0.4s ease-in-out;
 }
 
 .accordionContent {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 /* --- Internal Forms --- */
 .innerForm {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .inputGroup label {
-  display: block;
   font-weight: 600;
-  margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #374151;
+  color: var(--text-main);
 }
 
 .inputField, .selectField {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  padding: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   background: #fff;
   font-size: 1rem;
+  transition: all 0.2s;
+  color: var(--text-main);
 }
 
 .inputField:focus, .selectField:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .gridTwo {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .gridThree {
@@ -273,151 +366,207 @@
     gap: 1rem;
 }
 
-/* --- Logo Upload Specific --- */
+/* --- Logo Upload --- */
 .logoUploadContainer {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    padding: 1rem;
-    background: #fff;
-    border-radius: 8px;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: var(--radius-md);
     border: 1px dashed #d1d5db;
 }
+
 .previewBox {
-    width: 80px;
-    height: 80px;
-    background: #f3f4f6;
-    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    color: #9ca3af;
-    font-size: 1.5rem;
+    color: var(--text-light);
+    font-size: 2rem;
+    box-shadow: var(--shadow-sm);
 }
-.previewImg { width: 100%; height: 100%; object-fit: cover; }
+
+.previewImg { width: 100%; height: 100%; object-fit: contain; }
+
 .uploadControls { flex: 1; }
+
 .btnUpload {
     display: inline-block;
-    padding: 0.5rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     background: #fff;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     font-size: 0.9rem;
+    color: var(--text-main);
+    transition: all 0.2s;
 }
-.hintText { font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem; }
+.btnUpload:hover { border-color: var(--text-sub); background: #f9fafb; }
 
-/* --- Geo Location Specific --- */
+.hintText { font-size: 0.85rem; color: var(--text-sub); margin-top: 0.75rem; }
+
+/* --- Geo Location --- */
 .geoSection {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
 }
+
 .btnGeo {
     background: #fff;
     border: 1px solid var(--primary);
     color: var(--primary);
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-weight: 600;
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
-.btnGeo:hover { background: #ecfdf5; }
-.statusSuccess { color: var(--primary); font-size: 0.9rem; display: flex; align-items: center; gap: 0.25rem; }
+.btnGeo:hover { background: var(--primary-light); }
+.btnGeo:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* --- Code Display Specific --- */
+.statusSuccess { 
+    color: var(--primary); 
+    font-size: 0.9rem; 
+    font-weight: 500;
+    display: flex; align-items: center; gap: 0.5rem; 
+    background: var(--primary-light);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+}
+
+/* --- Code Display --- */
 .codeContainer {
     text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
 }
 .codeTabs {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background: #f3f4f6;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
 }
 .codeTab {
     background: transparent;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
     cursor: pointer;
     font-weight: 500;
     color: var(--text-sub);
-    border-bottom: 2px solid transparent;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 .codeTab.activeTab {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
+    background: #fff;
+    color: var(--text-main);
+    box-shadow: var(--shadow-sm);
+    font-weight: 700;
 }
 .codeDisplayBox {
-    background: #f3f4f6;
-    padding: 1rem;
-    border-radius: 8px;
+    background: var(--text-main); /* พื้นดำ */
+    color: #fff; /* ตัวหนังสือขาว */
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--text-main);
+    box-shadow: var(--shadow-md);
 }
 .theCode {
-    font-family: monospace;
-    font-size: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.75rem;
     font-weight: 700;
-    letter-spacing: 2px;
-    color: #111;
+    letter-spacing: 3px;
+    color: #fff;
 }
 .btnCopy {
-    background: #fff;
-    border: 1px solid #d1d5db;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    transition: 0.2s;
 }
-.btnCopy:hover { border-color: #9ca3af; }
-.codeHint { font-size: 0.85rem; color: var(--text-sub); margin-top: 0.75rem; }
+.btnCopy:hover { background: rgba(255,255,255,0.3); }
+
+.codeHint { 
+    font-size: 0.9rem; 
+    color: var(--text-sub); 
+    margin-top: 1rem; 
+    line-height: 1.5;
+}
 
 /* --- Footer Buttons --- */
 .formFooter {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
     text-align: right;
 }
 .btnSave {
-    background: var(--primary);
+    background: var(--primary); /* สีเขียวสำหรับปุ่มบันทึกย่อย */
     color: white;
     border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    border-radius: var(--radius-sm);
     font-weight: 600;
     cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
 }
-.btnSave:hover { background: var(--primary-hover); }
+.btnSave:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
 .btnTextBack {
     background: none;
     border: none;
-    color: var(--text-sub);
+    color: var(--text-light);
     cursor: pointer;
-    margin-top: 2rem;
+    margin-top: 3rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     width: 100%;
     justify-content: center;
+    font-size: 0.9rem;
+    transition: color 0.2s;
 }
-.btnTextBack:hover { color: var(--text-main); text-decoration: underline; }
+.btnTextBack:hover { color: var(--text-main); }
 
-.req { color: #dc2626; }
+.req { color: #ef4444; }
 
 /* Mobile */
-@media (max-width: 600px) {
-    .gridTwo, .gridThree { grid-template-columns: 1fr; }
+@media (max-width: 640px) {
+    .pageContainer { padding: 1rem; }
+    .centeredCard { padding: 1.5rem; }
+    .cardTitle { font-size: 1.5rem; }
+    .gridTwo, .gridThree { grid-template-columns: 1fr; gap: 1rem; }
+    .logoUploadContainer { flex-direction: column; text-align: center; }
     .btnGeo { width: 100%; justify-content: center; }
+    .codeDisplayBox { flex-direction: column; gap: 1rem; }
 }
