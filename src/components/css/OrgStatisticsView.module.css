@@ -129,7 +129,7 @@
 }
 
 /* =========================================
-   2. ORG STATISTICS VIEW (หน้ากราฟรวม)
+   2. ORG STATISTICS VIEW (Desktop Default)
    ========================================= */
 
 .orgStatsContainer {
@@ -535,7 +535,7 @@
 }
 
 /* =========================================
-   4. MEDIA QUERIES (Responsive)
+   4. MEDIA QUERIES (Mobile Optimized)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -576,22 +576,22 @@
     gap: 16px;
   }
 
-  /* 1. แปลง Sidebar เป็นแถบเมนูเลื่อนแนวนอน */
+  /* 1. Sidebar Container (รางเลื่อน) */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
-    overflow-x: auto; /* เปิดให้เลื่อนแนวนอน */
-    padding: 12px 16px; /* ระยะห่างขอบซ้ายขวา */
+    
+    /* ตั้งค่าการเลื่อน */
+    overflow-x: auto; 
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* เพื่อความลื่นไหลบน iOS */
+    
     background: transparent;
     border: none;
     box-shadow: none;
-    border-radius: 0;
+    padding: 0; /* เอาระยะห่างออก เพื่อให้ไปจัดการที่ Nav แทน */
     
-    /* Scroll Snap: เวลาปัดจะหยุดตรงปุ่มพอดี */
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch; 
-
-    /* ซ่อน Scrollbar (Clean Look) */
+    /* ซ่อน Scrollbar */
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -603,54 +603,56 @@
     display: none;
   }
 
+  /* 2. Menu Navigation (ตัวจัดเรียงปุ่ม) */
   .orgStatsMenuNav {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
-    gap: 12px; /* ระยะห่างระหว่างปุ่ม */
+    flex-wrap: nowrap; /* สำคัญ: ห้ามขึ้นบรรทัดใหม่ */
+    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    
+    /* Padding ซ้ายขวา เพื่อให้ปุ่มแรก/สุดท้าย ไม่ติดขอบจอ */
+    padding: 4px 16px; 
+    
     border-bottom: none;
-    padding: 0;
+    width: 100%; /* ให้เต็มจอ */
   }
 
-  /* 2. ปรับปุ่มเป็นทรงแคปซูล (Chips) */
+  /* 3. Button Styles (ตัวปุ่ม) */
   .orgStatsMenuButton {
-    flex: 0 0 auto; /* สำคัญ! ห้ามยืด/หด ตามความกว้างจอ */
-    width: auto;    /* ให้ความกว้างเท่ากับข้อความด้านใน */
-    padding: 8px 16px;
+    /* *** สำคัญที่สุด *** */
+    flex: 0 0 auto; /* ห้ามยืด ห้ามหด ให้คงขนาดตามเนื้อหา */
+    width: auto;    /* ขนาดกว้างตามตัวอักษร */
+    display: inline-flex; /* แสดงผลแบบ Inline Flex */
+    
+    /* รูปร่างหน้าตาปุ่ม */
+    padding: 10px 20px; /* เพิ่มพื้นที่สัมผัสให้กดง่ายขึ้น */
     font-size: 14px;
     background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 50px; /* มุมมนทรงแคปซูล */
-    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 50px; /* ทรงแคปซูล */
+    color: #666;
     white-space: nowrap;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* เงาเบาๆ */
     
-    scroll-snap-align: start; /* จุดหยุดเวลาเลื่อน */
+    /* การจัดตำแหน่งข้อความ */
+    align-items: center;
+    justify-content: center;
   }
 
-  .orgStatsMenuButton:hover {
-    background-color: #f9f9f9;
-  }
-
-  /* 3. ปุ่มที่ถูกเลือก (Active) */
+  /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #222; /* สีเข้มชัดเจน */
+    background-color: #333; /* สีเข้มเด่นชัด */
     color: #fff;
-    border-color: #222;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    border-color: #333;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     font-weight: 600;
-    transform: translateY(-1px);
-  }
-  
-  .orgStatsMenuButton svg {
-    font-size: 16px;
   }
 
   .orgStatsContent {
-    padding: 0 16px; /* กันเนื้อหากราฟชนขอบจอ */
+    padding: 0 16px;
   }
 
-  /* --- Styles อื่นๆ สำหรับมือถือ --- */
+  /* --- Styles ส่วนอื่นๆ คงเดิม --- */
   .reportCardFilterBar {
     flex-wrap: wrap;
   }
