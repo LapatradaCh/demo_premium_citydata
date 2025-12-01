@@ -554,34 +554,77 @@
   }
 }
 
+/* === ปรับปรุงส่วนแสดงผลบนมือถือ (Mobile) === */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
+    gap: 16px; /* เพิ่มระยะห่างระหว่างเมนูกับกราฟ */
   }
+
+  /* ปรับ Sidebar ให้เป็นแถบเมนูด้านบน */
   .orgStatsSidebar {
     width: 100%;
-    max-height: 120px;
-    overflow-x: auto;
-    padding: 12px;
+    max-height: none; /* ปล่อยความสูงตามเนื้อหา */
+    overflow-x: auto; /* เลื่อนแนวนอนได้ */
+    padding: 12px 0; /* ลด padding ด้านข้างเพื่อให้ปุ่มชิดขอบจอ */
+    background: transparent; /* เอาพื้นหลังกล่องออกเพื่อให้กลืนไปกับหน้า */
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    
+    /* ซ่อน Scrollbar ไม่ให้รกตาแต่ยังเลื่อนได้ */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
+  .orgStatsSidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
   .orgStatsMenuTitle {
     display: none;
   }
+
   .orgStatsMenuNav {
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 10px;
     border-bottom: none;
+    padding: 0 16px; /* ดันเนื้อหาเข้ามาหน่อยไม่ให้ติดขอบจอเกินไป */
   }
+
+  /* ปรับปุ่มให้เป็นลักษณะ Chips/Pills */
   .orgStatsMenuButton {
     flex-shrink: 0;
-    padding: 8px 10px;
-    font-size: 13px;
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #fff; /* พื้นหลังสีขาว */
+    border: 1px solid #e0e0e0; /* ขอบจางๆ */
+    border-radius: 20px; /* ทำมุมมนเป็นวงรี */
+    color: #555;
+    white-space: nowrap; /* ห้ามตัดคำ */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03); /* เงาบางๆ ให้ดูลอย */
   }
+
+  /* สถานะเมื่อกดปุ่ม (Active) บนมือถือ */
+  .orgStatsMenuButton.active {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transform: translateY(-1px); /* ขยับขึ้นเล็กน้อย */
+  }
+  
+  .orgStatsMenuButton svg {
+    font-size: 16px;
+  }
+
   .orgStatsContent {
     padding: 0;
   }
+
+  /* --- Report Card Mobile Styles --- */
   .reportCardFilterBar {
     flex-wrap: wrap;
   }
@@ -598,6 +641,12 @@
   }
   .reportCardScoreGroup {
     align-items: flex-start;
+    flex-direction: row; /* ให้คะแนนกับดาวอยู่บรรทัดเดียวกันบนมือถือ */
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #eee;
   }
   .reportCardRank {
     font-size: 20px;
@@ -605,6 +654,8 @@
   .reportCardName {
     font-size: 16px;
   }
+  
+  /* Satisfaction Card Mobile */
   .satisfactionCardBreakdown {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -615,12 +666,15 @@
     padding-right: 0;
     padding-bottom: 16px;
     align-items: center;
+    flex-direction: row; /* จัดคะแนนให้อยู่แนวนอน */
+    justify-content: center;
+    gap: 16px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .mockHBarItem {
-    grid-template-columns: 100px 1fr 50px;
+    grid-template-columns: 90px 1fr 45px;
     gap: 8px;
   }
   .mockHBarLabel {
