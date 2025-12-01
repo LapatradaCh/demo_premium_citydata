@@ -581,15 +581,15 @@
     width: 100%;
     max-height: none;
     
-    /* ตั้งค่าการเลื่อน */
+    /* การเลื่อน */
     overflow-x: auto; 
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch; /* เพื่อความลื่นไหลบน iOS */
+    -webkit-overflow-scrolling: touch;
     
     background: transparent;
     border: none;
     box-shadow: none;
-    padding: 0; /* เอาระยะห่างออก เพื่อให้ไปจัดการที่ Nav แทน */
+    padding: 0; 
     
     /* ซ่อน Scrollbar */
     -ms-overflow-style: none;
@@ -607,44 +607,46 @@
   .orgStatsMenuNav {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap; /* สำคัญ: ห้ามขึ้นบรรทัดใหม่ */
-    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    flex-wrap: nowrap;
+    gap: 12px; /* เพิ่มช่องว่างระหว่างปุ่ม */
     
-    /* Padding ซ้ายขวา เพื่อให้ปุ่มแรก/สุดท้าย ไม่ติดขอบจอ */
+    /* เพิ่ม Padding ซ้ายขวา ให้ปุ่มไม่ติดขอบจอเกินไป */
     padding: 4px 16px; 
     
     border-bottom: none;
-    width: 100%; /* ให้เต็มจอ */
+    width: max-content; /* ดันความกว้างให้สุดเนื้อหา */
   }
 
-  /* 3. Button Styles (ตัวปุ่ม) */
+  /* 3. Button Styles (ตัวปุ่ม - Modern Chips) */
   .orgStatsMenuButton {
-    /* *** สำคัญที่สุด *** */
-    flex: 0 0 auto; /* ห้ามยืด ห้ามหด ให้คงขนาดตามเนื้อหา */
-    width: auto;    /* ขนาดกว้างตามตัวอักษร */
-    display: inline-flex; /* แสดงผลแบบ Inline Flex */
+    flex: 0 0 auto;
+    width: auto;
+    display: inline-flex;
     
-    /* รูปร่างหน้าตาปุ่ม */
-    padding: 10px 20px; /* เพิ่มพื้นที่สัมผัสให้กดง่ายขึ้น */
+    /* ดีไซน์ปุ่มแบบตัน (Solid Style) */
+    padding: 10px 20px;
     font-size: 14px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50px; /* ทรงแคปซูล */
-    color: #666;
-    white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* เงาเบาๆ */
     
-    /* การจัดตำแหน่งข้อความ */
+    /* *** จุดเปลี่ยนสำคัญ: พื้นหลังเทา + ไม่มีขอบ *** */
+    background-color: #f3f4f6; /* สีเทาอ่อน (Inactive) */
+    border: none; /* เอาขอบออก */
+    border-radius: 50px; 
+    
+    color: #555;
+    white-space: nowrap;
+    box-shadow: none; /* ปุ่มปกติไม่ต้องมีเงา จะได้ดูเรียบ */
+    
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
   }
 
   /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #333; /* สีเข้มเด่นชัด */
+    background-color: #222; /* สีเข้ม */
     color: #fff;
-    border-color: #333;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    /* เพิ่มเงาเฉพาะปุ่ม Active ให้ดูลอยขึ้นมา */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
     font-weight: 600;
   }
 
@@ -652,7 +654,7 @@
     padding: 0 16px;
   }
 
-  /* --- Styles ส่วนอื่นๆ คงเดิม --- */
+  /* --- Styles ส่วนอื่นๆ --- */
   .reportCardFilterBar {
     flex-wrap: wrap;
   }
