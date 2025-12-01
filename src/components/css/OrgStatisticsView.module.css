@@ -568,93 +568,108 @@
   }
 }
 
-/* --- MOBILE SPECIFIC FIXES --- */
+/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Grid Layout) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 16px;
+    gap: 20px; /* เพิ่มระยะห่างระหว่างชุดปุ่ม กับ กราฟ */
   }
 
-  /* 1. Sidebar Container (รางเลื่อน) */
+  /* 1. Sidebar Container: ปลดล็อกให้แสดงผลเต็มพื้นที่ ไม่เลื่อน */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
-    
-    /* การเลื่อน */
-    overflow-x: auto; 
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    
+    overflow: visible; /* ให้เมนูกางออกมาได้เลย */
+    padding: 0; 
     background: transparent;
     border: none;
     box-shadow: none;
-    padding: 0; 
-    
-    /* ซ่อน Scrollbar */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
   .orgStatsSidebar::-webkit-scrollbar {
     display: none;
   }
 
+  /* แสดงหัวข้อเล็กน้อยเพื่อให้รู้ว่านี่คือเมนูเลือกอะไร */
   .orgStatsMenuTitle {
-    display: none;
+    display: block; 
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+    padding-left: 4px;
+    border: none;
+    font-weight: 600;
   }
 
-  /* 2. Menu Navigation (ตัวจัดเรียงปุ่ม) */
+  /* 2. Menu Navigation: จัดเป็นตาราง (Grid) */
   .orgStatsMenuNav {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 12px; /* เพิ่มช่องว่างระหว่างปุ่ม */
-    
-    /* เพิ่ม Padding ซ้ายขวา ให้ปุ่มไม่ติดขอบจอเกินไป */
-    padding: 4px 16px; 
-    
+    flex-wrap: wrap; /* อนุญาตให้ปุ่มขึ้นบรรทัดใหม่ */
+    gap: 10px;       /* ระยะห่างระหว่างปุ่ม */
+    width: 100%;
+    padding: 0;
     border-bottom: none;
-    width: max-content; /* ดันความกว้างให้สุดเนื้อหา */
   }
 
-  /* 3. Button Styles (ตัวปุ่ม - Modern Chips) */
+  /* 3. Button Styles: ปุ่มขนาดใหญ่ แบบตาราง 2 คอลัมน์ */
   .orgStatsMenuButton {
-    flex: 0 0 auto;
-    width: auto;
-    display: inline-flex;
+    /* สูตรคำนวณ: (100% - ช่องว่าง 10px) / 2 = 2 ปุ่มต่อแถวเป๊ะ */
+    width: calc(50% - 5px); 
+    flex: unset; /* ยกเลิก flex เดิม */
     
-    /* ดีไซน์ปุ่มแบบตัน (Solid Style) */
-    padding: 10px 20px;
-    font-size: 14px;
-    
-    /* *** จุดเปลี่ยนสำคัญ: พื้นหลังเทา + ไม่มีขอบ *** */
-    background-color: #f3f4f6; /* สีเทาอ่อน (Inactive) */
-    border: none; /* เอาขอบออก */
-    border-radius: 50px; 
-    
-    color: #555;
-    white-space: nowrap;
-    box-shadow: none; /* ปุ่มปกติไม่ต้องมีเงา จะได้ดูเรียบ */
-    
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* จัดตัวหนังสือให้อยู่ตรงกลาง */
+    text-align: center;
+    
+    padding: 12px 10px;
+    min-height: 50px; /* ความสูงขั้นต่ำ ให้กดง่ายๆ */
+    
+    /* Design: สไตล์ปุ่มแบบการ์ด (Block) */
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* มุมมนกลางๆ */
+    
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+    
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* เงาบางๆ ให้ดูมีมิติ */
     transition: all 0.2s ease;
+  }
+
+  /* จัดการ icon ในปุ่ม (ถ้ามี) */
+  .orgStatsMenuButton svg {
+    margin-right: 6px;
+    font-size: 18px;
+    color: #888;
   }
 
   /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #222; /* สีเข้ม */
+    background-color: #222; /* สีพื้นเข้ม */
     color: #fff;
-    /* เพิ่มเงาเฉพาะปุ่ม Active ให้ดูลอยขึ้นมา */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    border-color: #222;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* เงาลอยเด่น */
+    transform: translateY(-2px); /* ขยับขึ้นนิดนึงให้รู้ว่าถูกเลือก */
     font-weight: 600;
+  }
+  
+  .orgStatsMenuButton.active svg {
+    color: #fff;
+  }
+  
+  /* เอฟเฟกต์ตอนกดจึ้กๆ */
+  .orgStatsMenuButton:active {
+    transform: scale(0.98); 
   }
 
   .orgStatsContent {
-    padding: 0 16px;
+    padding: 0;
   }
 
-  /* --- Styles ส่วนอื่นๆ --- */
+  /* --- Styles ส่วนอื่นๆ คงเดิม --- */
   .reportCardFilterBar {
     flex-wrap: wrap;
   }
@@ -702,6 +717,7 @@
 }
 
 @media screen and (max-width: 480px) {
+  /* ถ้าจอเล็กมากๆ (เช่น iPhone SE) */
   .mockHBarItem {
     grid-template-columns: 90px 1fr 45px;
     gap: 8px;
