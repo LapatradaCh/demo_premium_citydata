@@ -10,7 +10,7 @@
 .settingsItem { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f5f5f5; }
 .settingsItemText { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; color: #333; }
 
-/* --- FIX: เพิ่ม Flexbox เพื่อจัดระเบียบ Filter --- */
+/* --- DESKTOP LAYOUT --- */
 .settingsHeaderDropdown { 
     width: 100%; 
     background: #fff; 
@@ -18,16 +18,17 @@
     border-radius: 16px; 
     padding: 20px 24px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    display: flex;             /* เพิ่ม */
-    flex-wrap: wrap;           /* เพิ่ม: ยอมให้ปัดบรรทัดถ้าที่เต็ม */
-    gap: 12px;                 /* เพิ่มระยะห่าง */
-    align-items: center;       /* จัดกึ่งกลางแนวตั้ง */
+    display: flex;             
+    flex-wrap: wrap;           
+    gap: 12px;                 
+    align-items: center;       
 }
 
-.filterGroup { flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; min-width: 150px; /* กันบีบจนเล็กเกิน */ }
-.filterGroup select { width: 100%; font-size: 14px; border-radius: 12px; border: 1px solid #d0d0d0; padding: 10px 14px; background: #fff; cursor: pointer; }
+.filterGroup { flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; min-width: 150px; }
+/* เพิ่ม text-overflow เพื่อช่วยเรื่องข้อความยาวในบาง browser */
+.filterGroup select { width: 100%; font-size: 14px; border-radius: 12px; border: 1px solid #d0d0d0; padding: 10px 14px; background: #fff; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
 .searchInput { width: 100%; padding: 12px 18px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background-color: #fcfcfc; }
-.filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; }
+.filterApplyButton { padding: 12px 20px; font-size: 15px; font-weight: 700; color: #fff; background-color: #057a55; border: none; border-radius: 12px; cursor: pointer; text-align: center; white-space: nowrap; }
 .filterApplyButton:hover { background-color: #046c4e; }
 
 /* QR, Mockup, Misc */
@@ -48,13 +49,12 @@
 
 
 /* ========================================================= */
-/* === AGENCY STYLES (UPDATED FOR LONG NAMES) === */
+/* === AGENCY STYLES === */
 /* ========================================================= */
 :root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
 .agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 
-/* --- UPDATED CARD LAYOUT --- */
 .agencyProfileCard { 
     background: #fff; 
     border: 1px solid var(--agency-border); 
@@ -64,9 +64,11 @@
     flex-direction: column; 
     gap: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+    /* ป้องกัน Card ล้น */
+    max-width: 100%;
+    overflow: hidden; 
 }
 
-/* New Wrapper for Logo + Text */
 .agencyProfileHeader {
     display: flex;
     gap: 20px;
@@ -129,11 +131,10 @@
 }
 
 .agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; }
+.agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; overflow: hidden; } /* เพิ่ม overflow hidden กันเหนียว */
 .agencyBoxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 
-/* Code Reveal Group */
 .codeRevealGroup { display: flex; align-items: center; gap: 10px; }
 
 .iconBtnEye { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; padding: 8px; border-radius: 50%; transition: all 0.2s; }
@@ -157,7 +158,7 @@
 
 .agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #333; min-width: 80px; text-align: right; }
 
-/* --- MODAL (POPUP) --- */
+/* --- MODAL --- */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
 .agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
 
@@ -199,12 +200,7 @@
 }
 .agencyImageCircle:hover { border-color: var(--agency-primary); background: #e8f5e9; }
 
-.uploadedLogo { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    border-radius: 50%; 
-}
+.uploadedLogo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
 .agencyEditOverlay { 
     position: absolute; 
@@ -240,17 +236,7 @@
 
 .agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 16px 16px; }
 
-.agencyBtnCancel { 
-    padding: 10px 24px; 
-    border-radius: 8px; 
-    border: none; 
-    background: #dc3545; 
-    color: #fff; 
-    cursor: pointer; 
-    font-weight: 600; 
-    font-size: 14px; 
-    transition: all 0.2s; 
-}
+.agencyBtnCancel { padding: 10px 24px; border-radius: 8px; border: none; background: #dc3545; color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
 .agencyBtnSave { padding: 10px 24px; border-radius: 8px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2); }
@@ -259,10 +245,10 @@
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
 /* ========================================= */
-/* === MOBILE RESPONSIVE FIXES === */
+/* === MOBILE RESPONSIVE FIXES (FINAL) === */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* ปรับ Grid ของ Agency */
+    /* จัดการ Grid Agency เหมือนเดิม */
     .agencyViewContainer, 
     .agencyInfoGrid, 
     .agencyRow2, 
@@ -270,38 +256,29 @@
         grid-template-columns: 1fr; 
     }
 
-    /* FIX: ปรับการแสดงผล Dropdown ให้เรียงเป็นแนวตั้ง */
+    /* --- FIX 2.0: ใช้ Block แทน Flexbox เพื่อความชัวร์เรื่องความกว้าง --- */
     .settingsHeaderDropdown {
-        display: flex;
-        flex-direction: column; /* บังคับเรียงลงมา */
-        align-items: stretch;   /* ยืดให้เต็มความกว้าง */
-        gap: 12px;
-        padding: 16px;          /* ลด padding ให้มีที่เหลือ */
-        height: auto;
+        display: block !important;    /* เลิกใช้ Flex ในมือถือ */
+        width: 100% !important;
+        padding: 16px !important;     /* ลด Padding เพื่อเหลือพื้นที่ให้ Input */
+        height: auto !important;
+        overflow-x: hidden !important; /* ตัดส่วนเกินทิ้งทันที */
     }
 
-    /* FIX: จำกัดความกว้างไม่ให้ล้น */
+    /* บังคับให้แต่ละก้อน (Select/Input) เรียงลงมาและห่างกัน */
     .filterGroup {
-        width: 100%;
-        min-width: 0;           /* แก้บั๊ก Flexbox ล้น */
+        width: 100% !important;
+        min-width: 0 !important;      /* ยกเลิก min-width จาก Desktop */
+        margin-bottom: 12px;          /* เว้นระยะห่างแนวตั้ง */
+        display: block !important;
     }
 
-    /* FIX: บังคับ Input/Select ไม่ให้กว้างเกิน Container */
+    /* บังคับทุก Input/Select ไม่ให้กว้างเกินกล่องแม่ */
     .filterGroup select,
-    .searchInput {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* ปรับปุ่มค้นหาให้เต็มกว้างด้วยถ้าต้องการ */
+    .searchInput,
     .filterApplyButton {
-        width: 100%;
-    }
-
-    /* ปรับ Modal */
-    .agencyModalContainer { 
-        width: 95%; 
-        max-height: 95vh; 
+        width: 100% !important;
+        max-width: 100% !important;   /* ห้ามเกิน 100% เด็ดขาด */
+        box-sizing: border-box !important;
     }
 }
