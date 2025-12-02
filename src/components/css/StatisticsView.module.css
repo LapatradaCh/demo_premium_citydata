@@ -1,12 +1,11 @@
-/* StatisticsView.module.css - No Custom Font (Global Font Version) */
+/* StatisticsView.module.css - Fixed Chart Labels overflow */
 
-/* 1. เอา @import ฟอนต์ Prompt ออก */
+/* 1. ไม่มีการ Import Font Prompt (ใช้ฟอนต์เดิมของเว็บ) */
 
 /* 2. Main Container */
 .container {
   min-height: 100vh;
   background-color: #ffffff;
-  /* เอา font-family: 'Prompt' ออก เพื่อให้ใช้ฟอนต์เดิมของเว็บ */
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
@@ -49,8 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-   
-  /* ปลดล็อกพื้นหลังและขนาดเต็มจอ */
+  
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -59,20 +57,15 @@
   box-sizing: border-box;
 }
 
-/* --- STATUS CARDS (การ์ด 4 สี) --- */
+/* --- STATUS CARDS --- */
 .statusCard {
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px 24px;
-   
-  /* ขอบหนา 3px ให้สีชัดเจน (สีมาจาก JS) */
   border-width: 3px !important;
   border-style: solid;
-  border-color: #e2e8f0; /* สีสำรอง */
-   
-  /* เงาลึก มีมิติ */
+  border-color: #e2e8f0;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-   
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
@@ -97,39 +90,37 @@
 .cardTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #334155; /* สีเทาเข้ม */
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  color: #334155;
+  white-space: nowrap;
 }
 
-/* ตัวเลขสถิติ - เน้นความสมดุล */
 .cardCount {
   font-size: 42px;
-  font-weight: 800; /* หนาเข้ม */
-  color: #0f172a; /* ดำ */
+  font-weight: 800;
+  color: #0f172a;
   line-height: 1;
   text-align: right;
   margin-bottom: 8px;
 }
 
-/* แถบเปอร์เซ็นต์ - เข้มชัด High Contrast */
 .cardPercent {
   font-size: 12px;
   font-weight: 700;
   color: #ffffff;
-  background-color: #1e293b; /* พื้นหลังเข้ม */
+  background-color: #1e293b;
   padding: 4px 10px;
   border-radius: 8px;
   width: fit-content;
 }
 
-/* --- SECTION CARDS (กล่องกราฟ) --- */
+/* --- SECTION CARDS --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
   border-radius: 20px;
   border: 1px solid #cbd5e1; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-   
+  
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -156,7 +147,6 @@
   margin: 0;
 }
 
-/* แถบสีหน้าหัวข้อ */
 .sectionTitle::before {
   content: '';
   display: inline-block;
@@ -172,7 +162,7 @@
   font-weight: 500;
 }
 
-/* --- CHARTS --- */
+/* --- CHARTS (แก้ไขส่วนนี้เพื่อแก้ปัญหาตัวหนังสือล้น) --- */
 .chartContainer {
   height: 350px;
   width: 100%;
@@ -185,11 +175,16 @@
   position: relative;
 }
 
-/* เอา font-family ออกจากส่วนนี้ด้วย */
+/* เพิ่ม font-size และ letter-spacing 
+   เพื่อบังคับให้ตัวหนังสือในกราฟ (เช่น Ticket-001) เล็กลงและกระชับขึ้น
+   จะได้ไม่ล้นกรอบด้านซ้ายครับ 
+*/
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
   box-sizing: border-box;
+  font-size: 12px !important; /* ลดขนาดตัวอักษรในกราฟ */
+  letter-spacing: -0.5px !important; /* บีบระยะห่างตัวอักษรนิดหน่อย */
 }
 
 /* --- SATISFACTION --- */
@@ -229,11 +224,10 @@
   overflow: hidden;
 }
 
-/* คงสีเหลืองไว้ตามที่ขอ */
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #fde047, #eab308);
+  background: linear-gradient(90deg, #fde047, #eab308); /* สีเหลือง */
 }
 
 .starPercent {
@@ -256,7 +250,6 @@
 
 /* --- GRID SYSTEM & RESPONSIVE --- */
 
-/* Default Grid (สำหรับ Desktop) */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -276,7 +269,7 @@
   .header {
     padding: 16px 20px;
   }
-   
+  
   .main {
     padding: 16px;
     gap: 16px;
@@ -286,7 +279,7 @@
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
   }
-   
+  
   .responsiveGrid2 {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
@@ -311,11 +304,11 @@
     font-size: 10px !important;
     padding: 2px 8px !important;
   }
-   
+  
   .chartContainer {
     height: 260px !important;
   }
-   
+  
   .staffChartContainer {
     height: 400px !important;
   }
