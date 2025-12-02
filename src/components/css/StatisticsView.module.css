@@ -6,7 +6,7 @@
 /* 2. Main Container */
 .container {
   min-height: 100vh;
-  background-color: #f1f5f9; /* สีเทาโทนเย็น สบายตา */
+  background-color: #ffffff; /* <--- แก้ตรงนี้ครับ (จากเดิม #f1f5f9) */
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
