@@ -187,6 +187,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
