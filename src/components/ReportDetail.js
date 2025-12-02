@@ -40,6 +40,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [issueTypeList, setIssueTypeList] = useState([]);
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [statusComment, setStatusComment] = useState(""); // <--- เพิ่ม State เก็บข้อความคอมเมนต์
 
   // 1. Fetch Issue Types
   useEffect(() => {
@@ -108,25 +109,15 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // 3. Handle Update Category
+  // 3. Handle Update Category (เปลี่ยนประเภท)
   const handleUpdateCategory = async () => {
     if (!selectedIssueType || !caseInfo) {
         alert("กรุณาเลือกประเภทปัญหา");
         return;
     }
 
-    // --- ส่วนที่แก้ไข: ดึง user_id จาก LocalStorage ---
-    const storedUserId = localStorage.getItem("user_id"); // ดึงตรงๆ ตามที่คุณบอก
-    const currentUserId = storedUserId ? storedUserId : 1; // ถ้าไม่มี fallback เป็น 1
-    // ------------------------------------------------
-
-    // Debug
-    console.log("Sending Update:", {
-        action: 'update_category',
-        case_id: caseInfo.real_id,
-        new_type_id: selectedIssueType.issue_id,
-        user_id: currentUserId
-    });
+    const storedUserId = localStorage.getItem("user_id");
+    const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
 
     try {
         setIsUpdating(true);
@@ -137,7 +128,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             body: JSON.stringify({
                 action: 'update_category', 
                 case_id: caseInfo.real_id,
-                new_type_id: selectedIssueType.issue_id, // issue_id จาก API
+                new_type_id: selectedIssueType.issue_id,
                 new_type_name: selectedIssueType.name,
                 old_type_name: caseInfo.category,
                 user_id: currentUserId 
@@ -155,11 +146,65 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
     } catch (err) {
         alert('เกิดข้อผิดพลาด: ' + err.message);
-        console.error("Update Error Details:", err);
+        console.error("Update Category Error:", err);
     } finally {
         setIsUpdating(false);
     }
   };
+
+  // 4. Handle Update Status (เปลี่ยนสถานะ - เพิ่มใหม่)
+  const handleUpdateStatus = async () => {
+    if (!caseInfo) return;
+
+    // --- Image Upload Placeholder ---
+    // หากต้องการรองรับการอัปโหลดรูป ต้อง uploadToCloud ให้เสร็จก่อนแล้วเอา URL มาใส่
+    let finalImageUrl = null;
+    const file = fileInputRef.current?.files[0];
+    if (file) {
+        // finalImageUrl = await uploadImage(file);
+        console.log("Mock Image Upload: จะต้องมีการอัปโหลดไฟล์จริงเพื่อรับ URL");
+    }
+
+    const storedUserId = localStorage.getItem("user_id");
+    const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
+
+    try {
+        setIsUpdating(true);
+
+        const payload = {
+            action: 'update_status',           
+            case_id: caseInfo.real_id,         
+            user_id: currentUserId,            
+            new_status: statusValue,           
+            comment: statusComment,            // ส่งคอมเมนต์ไปด้วย
+            image_url: finalImageUrl           
+        };
+
+        const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Update failed');
+        }
+
+        alert("ปรับสถานะเรียบร้อยแล้ว");
+        setShowStatusModal(false);
+        setStatusComment("");      
+        setSelectedImage(null);    
+        setRefreshKey(prev => prev + 1); 
+
+    } catch (err) {
+        console.error("Update Status Error:", err);
+        alert("เกิดข้อผิดพลาด: " + err.message);
+    } finally {
+        setIsUpdating(false);
+    }
+  };
+
 
   // Fallback Data
   const info = caseInfo || {
@@ -460,7 +505,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Mock UI) */}
+      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Update Status) */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -483,10 +528,18 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                       <option value="ปฏิเสธ">ปฏิเสธ</option>
                     </select>
                 </div>
+                
+                {/* --- ส่วนที่แก้ไข: Textarea เชื่อมกับ statusComment --- */}
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
-                   <textarea className={styles.formTextarea} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
+                   <textarea 
+                        className={styles.formTextarea} 
+                        placeholder="รายละเอียดการดำเนินงาน..."
+                        value={statusComment}
+                        onChange={(e) => setStatusComment(e.target.value)}
+                    ></textarea>
                 </div>
+
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
                    <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
@@ -507,7 +560,15 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             </div>
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยกเลิก</button>
-               <button className={styles.btnConfirm} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยืนยัน</button>
+               
+               {/* --- ส่วนที่แก้ไข: เรียกใช้ handleUpdateStatus --- */}
+               <button 
+                  className={styles.btnConfirm} 
+                  onClick={handleUpdateStatus}
+                  disabled={isUpdating}
+               >
+                  {isUpdating ? 'กำลังบันทึก...' : 'ยืนยัน'}
+               </button>
             </div>
           </div>
         </div>
