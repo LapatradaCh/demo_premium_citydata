@@ -354,16 +354,16 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           <div>
             <p className={styles.label}>คะแนนความพึงพอใจเฉลี่ย</p>
             
-            {/* ✅ ปรับปรุงส่วนแสดงดาว: ใช้ Overlay Technique */}
+            {/* ✅ ปรับปรุงส่วนแสดงดาว: ใช้ Overlay Technique และสีเหลือง */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               
-              {/* Container สำหรับดาว: ใช้ inline-block และ relative เพื่อเป็นกรอบหลัก */}
+              {/* Container สำหรับดาว */}
               <div style={{ 
                   position: 'relative', 
                   display: 'inline-block', 
-                  fontSize: '1.25rem', // ปรับขนาดดาวตรงนี้
+                  fontSize: '1.25rem', 
                   lineHeight: 1,
-                  letterSpacing: '2px' // ระยะห่างระหว่างดาว
+                  letterSpacing: '2px' 
               }}>
                 
                 {/* Layer 1 (ล่างสุด): ดาวสีเทาเต็ม 5 ดวง (Background) */}
@@ -376,10 +376,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    whiteSpace: 'nowrap', // ห้ามขึ้นบรรทัดใหม่
-                    overflow: 'hidden',   // ซ่อนส่วนที่เกิน
-                    color: '#FFD700',     // สีเหลืองทอง
-                    width: `${(info.rating / 5) * 100}%` // ✨ คำนวณความกว้าง: (4.2/5)*100 = 84%
+                    whiteSpace: 'nowrap', 
+                    overflow: 'hidden',   
+                    color: '#FFC107',     // ✨ สีเหลือง (Amber 500)
+                    width: `${(info.rating / 5) * 100}%` 
                 }}>
                   ★★★★★
                 </div>
