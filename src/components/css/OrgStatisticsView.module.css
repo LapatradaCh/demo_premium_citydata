@@ -1,5 +1,5 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Smart Grid Layout - แก้ปัญหาข้อความยาว & ประหยัดพื้นที่) */
+/* (Mobile Grouped Menu - ดีไซน์แบบลิสต์กลุ่ม สะอาดตา เหมือน Dropdown/Settings) */
 
 /* =========================================
    1. SHARED COMPONENTS (ใช้ร่วมกัน)
@@ -568,7 +568,7 @@
   }
 }
 
-/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Smart Grid 2 คอลัมน์) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Grouped Menu List) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
@@ -576,7 +576,7 @@
     gap: 16px;
   }
 
-  /* 1. Sidebar Container */
+  /* 1. Sidebar Container: ปลดล็อกพื้นที่ ไม่ต้องมี scroll bar ที่ container */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -590,81 +590,98 @@
     display: none;
   }
 
+  /* ชื่อหัวข้อเมนู */
   .orgStatsMenuTitle {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     color: #888;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     padding-left: 4px;
     font-weight: 500;
   }
 
-  /* 2. Menu Navigation: ใช้ Grid System แบ่ง 2 คอลัมน์เป๊ะๆ */
+  /* 2. Menu Navigation: สร้างกรอบรวม (Container) ให้เหมือนกล่อง Dropdown */
   .orgStatsMenuNav {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* แบ่งครึ่งซ้ายขวาเท่ากัน */
-    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding: 0;
-    border-bottom: none;
+    
+    /* สร้างกรอบล้อมรอบปุ่มทั้งหมด */
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* มุมมนเฉพาะกรอบนอก */
+    overflow: hidden; /* ตัดมุมปุ่มข้างในให้มนตาม */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
 
-  /* 3. Button Styles: ดีไซน์ใหม่ให้รองรับภาษาไทย */
+  /* 3. Button Styles: ดีไซน์แบบรายการ (List Item) */
   .orgStatsMenuButton {
-    width: 100%; 
+    width: 100%;
     flex: unset;
     
     display: flex;
-    flex-direction: column; /* ไอคอนอยู่บน ข้อความอยู่ล่าง */
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start; /* จัดชิดซ้าย */
+    text-align: left;
     
-    padding: 12px 6px; /* ลด Padding ข้างๆ ให้มีที่เหลือสำหรับข้อความ */
-    min-height: 60px; /* ความสูงมาตรฐาน */
-    height: 100%; /* ให้ปุ่มสูงเท่ากันทั้งแถว */
+    padding: 14px 16px; /* พื้นที่กดกำลังดี */
+    min-height: unset; 
     
+    /* ลบดีไซน์ปุ่มเดิมออก */
     background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
+    border: none;
+    border-radius: 0; /* ไม่เอามุมมนที่ตัวปุ่ม */
+    border-left: 4px solid transparent; /* เตรียมพื้นที่ไว้สำหรับ Active border เพื่อไม่ให้ตัวหนังสือกระโดด */
     
-    font-size: 13px; /* ขนาดตัวอักษรพอเหมาะ */
-    color: #555;
+    /* เส้นคั่นระหว่างเมนู (Divider) */
+    border-bottom: 1px solid #f0f0f0;
+    
+    font-size: 14px;
+    color: #444;
     font-weight: 500;
-    line-height: 1.35;
     
-    /* *** สำคัญมาก: อนุญาตให้ตัดคำลงบรรทัดใหม่ได้ *** */
-    white-space: normal; 
-    
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+    transition: background-color 0.2s, border-left-color 0.2s;
+  }
+
+  /* ลบเส้นคั่นของปุ่มสุดท้ายออก */
+  .orgStatsMenuButton:last-child {
+    border-bottom: none;
   }
 
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-bottom: 6px;
-    margin-right: 0;
-    font-size: 20px;
-    color: #888;
+    margin-right: 12px;
+    font-size: 18px;
+    color: #999;
+    min-width: 24px;
+    text-align: center;
   }
   
-  /* ลบลูกศรด้านหลังออก */
+  /* เพิ่มลูกศร (Chevron) ให้ดูเหมือนเลือกได้ */
   .orgStatsMenuButton::after {
-    display: none;
+    content: "›"; 
+    margin-left: auto; 
+    font-size: 20px;
+    color: #ccc;
+    font-weight: 300;
+    line-height: 1;
   }
 
   /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #333; 
-    color: #fff;
-    border-color: #333;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    transform: translateY(-2px);
+    background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนๆ */
+    color: #000; /* สีตัวหนังสือเข้ม */
     font-weight: 600;
+    
+    /* แสดงแถบสีด้านซ้าย */
+    border-left-color: #333; 
+    box-shadow: none; /* ลบเงาเดิมออกเพื่อให้ดูแบนราบไปกับลิสต์ */
+    transform: none; /* ไม่ขยับ */
   }
   
   .orgStatsMenuButton.active svg {
-    color: #fff;
+    color: #333;
   }
 
   .orgStatsContent {
