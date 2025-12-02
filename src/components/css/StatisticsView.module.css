@@ -1,13 +1,12 @@
-/* StatisticsView.module.css - Final Complete Version */
+/* StatisticsView.module.css - No Custom Font (Global Font Version) */
 
-/* 1. Import Font Prompt */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
+/* 1. เอา @import ฟอนต์ Prompt ออก */
 
 /* 2. Main Container */
 .container {
   min-height: 100vh;
-  background-color: #ffffff; /* <--- แก้ตรงนี้ครับ (จากเดิม #f1f5f9) */
-  font-family: 'Prompt', sans-serif !important;
+  background-color: #ffffff;
+  /* เอา font-family: 'Prompt' ออก เพื่อให้ใช้ฟอนต์เดิมของเว็บ */
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
@@ -50,7 +49,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  
+   
   /* ปลดล็อกพื้นหลังและขนาดเต็มจอ */
   background-color: transparent !important;
   box-shadow: none !important;
@@ -65,15 +64,15 @@
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px 24px;
-  
+   
   /* ขอบหนา 3px ให้สีชัดเจน (สีมาจาก JS) */
   border-width: 3px !important;
   border-style: solid;
   border-color: #e2e8f0; /* สีสำรอง */
-  
+   
   /* เงาลึก มีมิติ */
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  
+   
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
@@ -130,7 +129,7 @@
   border-radius: 20px;
   border: 1px solid #cbd5e1; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-  
+   
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -186,11 +185,11 @@
   position: relative;
 }
 
+/* เอา font-family ออกจากส่วนนี้ด้วย */
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
   box-sizing: border-box;
-  font-family: 'Prompt', sans-serif !important;
 }
 
 /* --- SATISFACTION --- */
@@ -230,10 +229,11 @@
   overflow: hidden;
 }
 
+/* คงสีเหลืองไว้ตามที่ขอ */
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  background: linear-gradient(90deg, #fde047, #eab308);
 }
 
 .starPercent {
@@ -259,7 +259,7 @@
 /* Default Grid (สำหรับ Desktop) */
 .responsiveGrid4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์เป็นค่าตั้งต้น */
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   width: 100%;
 }
@@ -271,34 +271,31 @@
   width: 100%;
 }
 
-/* Mobile Layout (< 768px) - ส่วนสำคัญที่แก้ให้คุณ */
+/* Mobile Layout (< 768px) */
 @media (max-width: 768px) {
   .header {
     padding: 16px 20px;
   }
-  
+   
   .main {
     padding: 16px;
     gap: 16px;
   }
 
-  /* บังคับให้แสดง 2 คอลัมน์ในมือถือ (ซ้าย-ขวา) ไม่เรียงยาวลงมา */
   .responsiveGrid4 {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
   }
-  
-  /* เรียงกราฟลงมาทีละอัน */
+   
   .responsiveGrid2 {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
 
-  /* ปรับขนาดการ์ดให้เล็กและกระชับ */
   .statusCard {
     padding: 16px !important;
     min-height: auto !important;
-    border-width: 2px !important; /* ลดความหนาขอบนิดหน่อย */
+    border-width: 2px !important;
   }
 
   .cardTitle {
@@ -306,7 +303,7 @@
   }
 
   .cardCount {
-    font-size: 32px !important; /* ลดขนาดตัวเลขไม่ให้ล้น */
+    font-size: 32px !important;
     margin-bottom: 4px !important;
   }
 
@@ -314,12 +311,11 @@
     font-size: 10px !important;
     padding: 2px 8px !important;
   }
-  
-  /* ลดขนาดกราฟในมือถือ */
+   
   .chartContainer {
     height: 260px !important;
   }
-  
+   
   .staffChartContainer {
     height: 400px !important;
   }
