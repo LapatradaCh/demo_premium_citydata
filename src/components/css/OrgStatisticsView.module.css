@@ -1,11 +1,10 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Modern Segmented Control - ดีไซน์แถบเมนูลอย สวย คลีน ทันสมัย) */
+/* (Mobile Clean Cards - แนวนอน 3 ปุ่ม ไม่มีพื้นหลังสีเทา ดูสะอาดตา) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน - ไม่ต้องแก้)
+   1. SHARED COMPONENTS (ใช้ร่วมกัน - ส่วนนี้คงเดิม)
    ========================================= */
 
-/* Chart Box Wrapper */
 .chartBox {
   background: #fff;
   border-radius: 16px;
@@ -547,7 +546,7 @@
   .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Modern Segmented Control) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Clean Cards without Gray Background) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
@@ -555,7 +554,7 @@
     gap: 20px;
   }
 
-  /* 1. Sidebar Container: ปล่อยโล่ง ไม่ต้องมีกรอบ */
+  /* 1. Sidebar Container: พื้นที่ว่างๆ */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -571,72 +570,76 @@
   /* ซ่อนหัวข้อ */
   .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Track: สร้างรางพื้นหลังสีเทาอ่อน */
+  /* 2. Menu Nav: ***พื้นหลังโปร่ง*** (เอาสีเทาออกแล้ว) */
   .orgStatsMenuNav {
     display: flex;
-    flex-direction: row; /* เรียงแนวนอน */
+    flex-direction: row;
     width: 100%;
     
-    background-color: #f1f3f5; /* สีเทาอ่อนเป็นพื้นหลังราง */
-    padding: 4px; /* ระยะห่างขอบราง */
-    border-radius: 12px; /* มุมมนของราง */
-    gap: 4px; /* ช่องว่างระหว่างปุ่ม */
+    background-color: transparent; /* เอาพื้นหลังสีเทาออกตามคำขอ */
+    padding: 0;
+    gap: 12px; /* เพิ่มระยะห่างระหว่างปุ่ม เพราะไม่มีรางแล้ว */
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ปุ่มแท็บ */
+  /* 3. Button Styles: ดีไซน์การ์ดขาวมีขอบ */
   .orgStatsMenuButton {
-    flex: 1 1 0px; /* ให้ทุกปุ่มแบ่งพื้นที่เท่าๆ กัน */
-    width: 0; /* เทคนิคให้ flex ทำงานถูกต้องเมื่อมีข้อความยาว */
+    /* ให้ทุกปุ่มแบ่งพื้นที่เท่าๆ กัน */
+    flex: 1 1 0px; 
+    width: 0;
     
     display: flex;
-    flex-direction: column; /* ไอคอนอยู่บน ข้อความอยู่ล่าง */
+    flex-direction: column; /* ไอคอนบน ข้อความล่าง */
     align-items: center;
     justify-content: center;
     text-align: center;
     
-    padding: 8px 4px;
-    min-height: 44px; /* ความสูงมาตรฐานปุ่มสัมผัส */
+    padding: 10px 4px; /* ลด Padding ข้างๆ กันล้น */
+    min-height: 60px; /* ความสูงกำลังดี */
     
-    background-color: transparent; /* พื้นใส */
-    border: none;
-    border-radius: 10px; /* มุมมนของตัวปุ่ม */
+    background-color: #fff;
+    /* เพิ่มขอบบางๆ เพื่อให้ปุ่มดูเป็นทรงเมื่ออยู่บนพื้นขาว */
+    border: 1px solid #e0e0e0; 
+    border-radius: 12px; /* มุมมน */
     
     font-size: 12px;
-    color: #666; /* สีตัวหนังสือเทาเข้ม */
+    color: #555;
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1.25;
     
-    /* อนุญาตให้ตัดคำได้ */
-    white-space: normal; 
+    white-space: normal; /* ตัดคำได้ */
     
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* เงาบางมากๆ */
     transition: all 0.2s ease;
   }
   
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-bottom: 4px; /* ระยะห่างไอคอนกับข้อความ */
+    margin-bottom: 6px;
     margin-right: 0;
-    font-size: 18px;
-    color: #888;
+    font-size: 20px;
+    color: #999; /* ไอคอนสีเทาจาง */
   }
   
-  /* ซ่อนลูกศร */
   .orgStatsMenuButton::after { display: none; }
 
-  /* 4. Active State: ปุ่มสีขาวลอยขึ้นมา (Floating) */
+  /* 4. Active State: ขอบหนาสีเข้ม + ไอคอนสีเข้ม */
   .orgStatsMenuButton.active {
-    background-color: #ffffff; /* พื้นสีขาว */
-    color: #000; /* ตัวหนังสือสีดำ */
+    background-color: #fff;
+    color: #000;
     
-    /* เงาเพื่อให้ดูเหมือนปุ่มลอยขึ้นมา */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+    /* เน้นขอบหนาสีดำ (หรือสี Theme) */
+    border: 2px solid #333; 
     
-    font-weight: 600;
+    /* เงาชัดขึ้นนิดนึง */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    
+    font-weight: 700;
+    transform: translateY(-2px); /* ลอยขึ้นนิดนึง */
   }
   
   .orgStatsMenuButton.active svg {
-    color: #000; /* ไอคอนสีดำ */
+    color: #333; /* ไอคอนสีเข้ม */
   }
 
   .orgStatsContent { padding: 0; }
@@ -661,4 +664,8 @@
   .reportCardName { font-size: 15px; }
   .reportCardFilterBar .filterGroup { width: 100%; }
   .satisfactionCardScore { font-size: 32px; }
+  
+  /* ปรับขนาดฟอนต์ให้เล็กลงอีกนิดถ้าระบบเป็นมือถือจอเล็กมาก */
+  .orgStatsMenuButton { font-size: 11px; padding: 8px 2px; }
+  .orgStatsMenuButton svg { font-size: 18px; }
 }
