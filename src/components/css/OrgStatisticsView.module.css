@@ -1,8 +1,8 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile High Contrast Menu - เมนูแนวตั้งแบบเน้นสีที่เลือกชัดเจน อ่านง่ายสุด) */
+/* (Mobile High Contrast Vertical Menu - เน้นอ่านง่าย รองรับชื่อยาว Active เด่นชัด) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน)
+   1. SHARED COMPONENTS (คงเดิม)
    ========================================= */
 
 /* Chart Box Wrapper */
@@ -576,7 +576,7 @@
     gap: 16px;
   }
 
-  /* 1. Container: ปลดล็อกพื้นที่ ไม่ต้องมี scroll bar ที่ container */
+  /* 1. Container: ปลดล็อกพื้นที่ */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -596,14 +596,15 @@
     display: none;
   }
 
-  /* 2. Menu Track: รวมเมนูเป็นการ์ดก้อนเดียว */
+  /* 2. Menu Track: รวมเมนูเป็นการ์ดก้อนเดียวแบบมีขอบมน */
   .orgStatsMenuNav {
     display: flex;
     flex-direction: column; /* เรียงแนวตั้งเพื่อรองรับข้อความยาว */
     
     background-color: #ffffff;
-    border-radius: 16px; /* มุมมนสวยงาม */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06); /* เงาฟุ้งๆ ดูสะอาด */
+    border-radius: 12px; /* มุมมนเฉพาะกรอบนอก */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* เงาบางๆ ให้ดูลอย */
+    border: 1px solid #f0f0f0;
     overflow: hidden; /* ตัดมุมปุ่มข้างใน */
     
     width: 100%;
@@ -611,29 +612,30 @@
     gap: 0; /* ติดกันเป็นเนื้อเดียว */
   }
 
-  /* 3. Button Styles: ดีไซน์แบบปุ่มกดเต็มความกว้าง */
+  /* 3. Button Styles: ปุ่มแนวนอนเต็มจอ (Row) */
   .orgStatsMenuButton {
     width: 100%;
     flex: unset;
     
     display: flex;
+    flex-direction: row; /* ไอคอนซ้าย ข้อความขวา */
     align-items: center;
     justify-content: flex-start;
     text-align: left;
     
-    padding: 16px 20px; /* เพิ่มพื้นที่สัมผัส */
-    min-height: 50px;
+    padding: 16px 20px; /* พื้นที่กดกำลังดี */
+    min-height: 54px; /* ความสูงขั้นต่ำ */
     
     background-color: #fff;
     border: none;
-    border-bottom: 1px solid #f0f0f0; /* เส้นคั่นบางๆ */
+    border-bottom: 1px solid #f2f2f2; /* เส้นคั่นบางๆ */
     border-radius: 0;
     
-    font-size: 15px; /* ตัวหนังสือใหญ่อ่านง่าย */
-    color: #555;
+    font-size: 14px;
+    color: #444;
     font-weight: 500;
     
-    /* อนุญาตให้ตัดคำได้ถ้าจำเป็นจริงๆ */
+    /* อนุญาตให้ตัดคำลงบรรทัดใหม่ได้ */
     white-space: normal; 
     line-height: 1.4;
     
@@ -647,9 +649,9 @@
 
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-right: 12px;
+    margin-right: 14px;
     font-size: 18px;
-    color: #888;
+    color: #999;
     flex-shrink: 0; /* ห้ามไอคอนหดตัว */
   }
   
@@ -657,17 +659,17 @@
     display: none;
   }
 
-  /* 4. Active State: เปลี่ยนเป็นสีดำ (Dark Mode) เด่นชัดสุดๆ */
+  /* 4. Active State: สีเข้มเด่นชัด (High Contrast) */
   .orgStatsMenuButton.active {
-    background-color: #2b2b2b; /* สีดำ Charcoal */
-    color: #ffffff; /* ตัวหนังสือขาว */
+    background-color: #222; /* สีดำ (หรือสีเข้มตามธีม) */
+    color: #fff; /* ตัวหนังสือขาว */
     
-    border-bottom-color: #2b2b2b; /* กลืนเส้นขอบไปเลย */
+    border-bottom-color: #222; /* กลืนเส้นขอบไปเลย */
     font-weight: 600;
   }
   
   .orgStatsMenuButton.active svg {
-    color: #ffffff;
+    color: #fff; /* ไอคอนสีขาว */
   }
 
   .orgStatsContent {
@@ -704,6 +706,7 @@
   .reportCardName {
     font-size: 16px;
   }
+  
   .satisfactionCardBreakdown {
     grid-template-columns: 1fr;
     gap: 16px;
