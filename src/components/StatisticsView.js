@@ -24,10 +24,14 @@ import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
 // 1. ปรับค่าสี Hex Code ให้ตรงกับในไฟล์ CSS เป๊ะๆ เพื่อให้กราฟสีเดียวกับ Text
+// เพิ่ม Alias ชื่อสั้น/ยาว และสีของ 'ทั้งหมด' เข้าไปเพื่อให้เรียกใช้ง่ายขึ้น
 const STATUS_COLORS = {
+  'ทั้งหมด': '#0f172a',         // total (น้ำเงินเข้ม)
   'รอรับเรื่อง': '#ff4d4f',      // waiting (แดง)
   'กำลังประสานงาน': '#9c27b0',   // coordinating (ม่วง)
+  'กำลังประสาน': '#9c27b0',      // Alias
   'กำลังดำเนินการ': '#ffc107',   // action (เหลือง)
+  'ดำเนินการ': '#ffc107',        // Alias
   'เสร็จสิ้น': '#4caf50',        // finished (เขียว)
   'ส่งต่อ': '#2196f3',         // forward (ฟ้า)
   'เชิญร่วม': '#00bcd4',         // invite (Cyan)
@@ -221,8 +225,10 @@ const StatisticsView = ({ organizationId }) => {
               const cssKey = STATUS_KEY_MAP[card.title] || 'total';
               
               const textClass = styles[`text-${cssKey}`];      // e.g. styles['text-waiting']
-              const badgeClass = styles[`badge-${cssKey}`];    // e.g. styles['badge-waiting']
               const badgeBaseClass = styles['badge-status'];   // Base class for styling
+              
+              // ดึงสี Solid จาก STATUS_COLORS โดยใช้ชื่อ title เป็น key
+              const solidColor = STATUS_COLORS[card.title] || '#000';
 
               return (
                 <div key={idx} className={styles.statusCard}>
@@ -233,8 +239,14 @@ const StatisticsView = ({ organizationId }) => {
                       {card.count}
                     </span>
                   </div>
-                  {/* ใช้ Class Badge จาก CSS */}
-                  <div className={`${badgeBaseClass} ${badgeClass}`}>
+                  {/* Override สไตล์ Badge ให้เป็นพื้นหลังสีทึบ + ตัวหนังสือขาว */}
+                  <div 
+                    className={badgeBaseClass}
+                    style={{ 
+                      backgroundColor: solidColor, 
+                      color: '#ffffff' 
+                    }}
+                  >
                     {percent.toFixed(2)}%
                   </div>
                 </div>
@@ -265,7 +277,7 @@ const StatisticsView = ({ organizationId }) => {
                 <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
                 <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
                 {/* ใช้สีจาก STATUS_COLORS ที่แก้ให้ตรงกับ CSS แล้ว */}
-                <Line type="monotone" dataKey="total" stroke="#0f172a" strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
+                <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
                 <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับ" />
                 <Line type="monotone" dataKey="coordinating" stroke={STATUS_COLORS['กำลังประสานงาน']} strokeWidth={2} dot={{r: 2}} name="ประสาน" />
               </LineChart>
@@ -408,7 +420,7 @@ const StatisticsView = ({ organizationId }) => {
                             cursor={{fill: 'transparent'}}
                             contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
                           />
-                          {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL').map((status) => (
+                          {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL' && k !== 'ทั้งหมด' && k !== 'กำลังประสาน' && k !== 'ดำเนินการ').map((status) => (
                             <Bar 
                               key={status} 
                               dataKey={status} 
