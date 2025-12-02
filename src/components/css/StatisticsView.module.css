@@ -1,11 +1,10 @@
-/* StatisticsView.module.css - Final Fix Overflow v3 */
-
-/* 1. ไม่มีการ Import Font Prompt (ใช้ฟอนต์เดิมของเว็บ) */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* 2. Main Container */
 .container {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #ffffff; /* พื้นหลังสีขาว */
+  font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
@@ -48,7 +47,6 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -120,14 +118,11 @@
   border-radius: 20px;
   border: 1px solid #cbd5e1; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-  
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
   width: 100%;
-
-  /* สำคัญ: ให้แสดงผลล้นกล่องได้ ถ้าตัวหนังสือยาวมากๆ */
-  overflow: visible !important;
 }
 
 .sectionHeader {
@@ -164,46 +159,27 @@
   font-weight: 500;
 }
 
-/* --- CHARTS (ส่วนแก้ไขหลัก) --- */
+/* --- CHARTS --- */
 .chartContainer {
   height: 350px;
   width: 100%;
   position: relative;
-  
-  /* เพิ่มพื้นที่ว่างด้านซ้าย 30px เพื่อดันกราฟและตัวหนังสือให้ขยับเข้าไปข้างใน */
-  padding-left: 30px !important;
-  
-  /* เผื่อไว้: ถ้ายังชิดไป ให้ขยับ Margin เพิ่มอีก */
-  /* margin-left: 10px !important; */
-  
-  /* ให้แน่ใจว่า padding ไม่ทำให้กราฟล้นขวา */
-  box-sizing: border-box !important;
-  
-  /* แสดงผลส่วนที่ล้นได้ */
-  overflow: visible !important;
 }
 
 .staffChartContainer {
   height: 500px;
   width: 100%;
   position: relative;
-  
-  /* ใช้ค่าเดียวกันกับกราฟด้านบน */
-  padding-left: 30px !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
 }
 
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
   box-sizing: border-box;
-  
-  /* ปรับขนาดฟอนต์ในกราฟให้เล็กลงอีกนิดเพื่อความปลอดภัย */
-  font-size: 11px !important;
+  font-family: 'Prompt', sans-serif !important;
 }
 
-/* --- SATISFACTION --- */
+/* --- SATISFACTION (สีเหลืองเข้ม) --- */
 .satisfactionHeader {
   display: flex;
   align-items: flex-end;
@@ -214,7 +190,7 @@
 .scoreBig {
   font-size: 56px;
   font-weight: 800;
-  color: #0f172a;
+  color: #ca8a04; /* สีเหลืองเข้ม */
   line-height: 0.9;
 }
 
@@ -243,7 +219,7 @@
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #fde047, #eab308); /* สีเหลือง */
+  background-color: #eab308; /* สีเหลือง */
 }
 
 .starPercent {
@@ -264,8 +240,20 @@
   border: 1px solid #bfdbfe;
 }
 
-/* --- GRID SYSTEM & RESPONSIVE --- */
+.topHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
 
+.emptyState {
+  text-align: center;
+  color: #9ca3af;
+  padding: 20px;
+}
+
+/* --- GRID SYSTEM & RESPONSIVE --- */
 .responsiveGrid4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -280,59 +268,19 @@
   width: 100%;
 }
 
-/* Mobile Layout (< 768px) */
 @media (max-width: 768px) {
-  .header {
-    padding: 16px 20px;
-  }
-  
-  .main {
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .responsiveGrid4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-  
-  .responsiveGrid2 {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-
-  .statusCard {
-    padding: 16px !important;
-    min-height: auto !important;
-    border-width: 2px !important;
-  }
-
-  .cardTitle {
-    font-size: 13px !important;
-  }
-
-  .cardCount {
-    font-size: 32px !important;
-    margin-bottom: 4px !important;
-  }
-
-  .cardPercent {
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-  }
-  
-  .chartContainer {
-    height: 260px !important;
-  }
-  
-  .staffChartContainer {
-    height: 400px !important;
-  }
+  .header { padding: 16px 20px; }
+  .main { padding: 16px; gap: 16px; }
+  .responsiveGrid4 { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .statusCard { padding: 16px !important; min-height: auto !important; border-width: 2px !important; }
+  .cardTitle { font-size: 13px !important; }
+  .cardCount { font-size: 32px !important; margin-bottom: 4px !important; }
+  .cardPercent { font-size: 10px !important; padding: 2px 8px !important; }
+  .chartContainer { height: 260px !important; }
+  .staffChartContainer { height: 400px !important; }
 }
 
-/* Tablet Override (768px - 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .responsiveGrid4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .responsiveGrid4 { grid-template-columns: repeat(2, 1fr); }
 }
