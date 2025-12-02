@@ -354,7 +354,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           </div>
           
           <div>
-            <p className={styles.label}>ความเร่งด่วน / คะแนน</p>
+            <p className={styles.label}>คะแนนความพึงพอใจเฉลี่ย</p>
             <div className={styles.stars}>
               {'★'.repeat(info.rating)}
               <span style={{color: '#E5E7EB'}}>{'★'.repeat(5 - info.rating)}</span>
