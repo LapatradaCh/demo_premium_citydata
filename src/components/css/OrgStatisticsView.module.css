@@ -1,5 +1,5 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Clean Cards - แนวนอน 3 ปุ่ม ไม่มีพื้นหลังสีเทา ดูสะอาดตา) */
+/* (Mobile Clean Cards - แนวนอน 3 ปุ่ม Active เป็นปุ่มทึบสีดำ) */
 
 /* =========================================
    1. SHARED COMPONENTS (ใช้ร่วมกัน - ส่วนนี้คงเดิม)
@@ -546,7 +546,7 @@
   .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Clean Cards without Gray Background) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Clean Cards with Solid Active State) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
@@ -570,21 +570,20 @@
   /* ซ่อนหัวข้อ */
   .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Nav: ***พื้นหลังโปร่ง*** (เอาสีเทาออกแล้ว) */
+  /* 2. Menu Nav: พื้นหลังโปร่ง */
   .orgStatsMenuNav {
     display: flex;
     flex-direction: row;
     width: 100%;
     
-    background-color: transparent; /* เอาพื้นหลังสีเทาออกตามคำขอ */
+    background-color: transparent; 
     padding: 0;
-    gap: 12px; /* เพิ่มระยะห่างระหว่างปุ่ม เพราะไม่มีรางแล้ว */
+    gap: 12px; 
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ดีไซน์การ์ดขาวมีขอบ */
+  /* 3. Button Styles: ดีไซน์การ์ดขาวมีขอบ (สถานะปกติ) */
   .orgStatsMenuButton {
-    /* ให้ทุกปุ่มแบ่งพื้นที่เท่าๆ กัน */
     flex: 1 1 0px; 
     width: 0;
     
@@ -594,52 +593,50 @@
     justify-content: center;
     text-align: center;
     
-    padding: 10px 4px; /* ลด Padding ข้างๆ กันล้น */
-    min-height: 60px; /* ความสูงกำลังดี */
+    padding: 10px 4px;
+    min-height: 60px;
     
-    background-color: #fff;
-    /* เพิ่มขอบบางๆ เพื่อให้ปุ่มดูเป็นทรงเมื่ออยู่บนพื้นขาว */
-    border: 1px solid #e0e0e0; 
-    border-radius: 12px; /* มุมมน */
+    background-color: #fff; /* พื้นขาว */
+    border: 1px solid #e0e0e0; /* ขอบสีเทาบางๆ */
+    border-radius: 12px;
     
     font-size: 12px;
-    color: #555;
+    color: #555; /* ตัวหนังสือสีเทา */
     font-weight: 500;
     line-height: 1.25;
     
-    white-space: normal; /* ตัดคำได้ */
+    white-space: normal;
     
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* เงาบางมากๆ */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     transition: all 0.2s ease;
   }
   
-  /* จัดการ icon */
+  /* จัดการ icon (สถานะปกติ) */
   .orgStatsMenuButton svg {
     margin-bottom: 6px;
     margin-right: 0;
     font-size: 20px;
-    color: #999; /* ไอคอนสีเทาจาง */
+    color: #999; /* ไอคอนสีเทา */
   }
   
   .orgStatsMenuButton::after { display: none; }
 
-  /* 4. Active State: ขอบหนาสีเข้ม + ไอคอนสีเข้ม */
+  /* 4. Active State: ***ปุ่มทึบสีดำ ตัวหนังสือ/ไอคอนสีขาว*** */
   .orgStatsMenuButton.active {
-    background-color: #fff;
-    color: #000;
+    background-color: #333; /* พื้นหลังสีดำเข้ม */
+    color: #fff; /* ตัวหนังสือสีขาว */
     
-    /* เน้นขอบหนาสีดำ (หรือสี Theme) */
-    border: 2px solid #333; 
+    border-color: #333; /* ขอบสีเดียวกับพื้นหลัง (ให้ดูกลมกลืน) */
     
-    /* เงาชัดขึ้นนิดนึง */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    /* เงาเข้มขึ้นเล็กน้อยให้ดูลอย */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     
     font-weight: 700;
-    transform: translateY(-2px); /* ลอยขึ้นนิดนึง */
+    transform: translateY(-2px);
   }
   
   .orgStatsMenuButton.active svg {
-    color: #333; /* ไอคอนสีเข้ม */
+    color: #fff; /* ไอคอนสีขาว */
   }
 
   .orgStatsContent { padding: 0; }
@@ -665,7 +662,6 @@
   .reportCardFilterBar .filterGroup { width: 100%; }
   .satisfactionCardScore { font-size: 32px; }
   
-  /* ปรับขนาดฟอนต์ให้เล็กลงอีกนิดถ้าระบบเป็นมือถือจอเล็กมาก */
   .orgStatsMenuButton { font-size: 11px; padding: 8px 2px; }
   .orgStatsMenuButton svg { font-size: 18px; }
 }
