@@ -1,8 +1,8 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile High Contrast Vertical Menu - เน้นอ่านง่าย รองรับชื่อยาว Active เด่นชัด) */
+/* (Mobile Modern Dashboard Grid - ดีไซน์แบบปุ่มกระเบื้อง โปร่ง สบายตา ประหยัดที่) */
 
 /* =========================================
-   1. SHARED COMPONENTS (คงเดิม)
+   1. SHARED COMPONENTS (ใช้ร่วมกัน - ไม่ต้องแก้)
    ========================================= */
 
 /* Chart Box Wrapper */
@@ -539,44 +539,23 @@
    ========================================= */
 
 @media screen and (max-width: 1024px) {
-  .orgStatsContainer {
-    align-self: unset;
-  }
-  .reportCardViewContainer {
-    flex-direction: column;
-    align-self: unset;
-  }
-  .reportCardSidebar {
-    width: 100%;
-    max-height: 40vh;
-  }
-  .reportCardMenuNav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-  }
-  .reportCardMenuButton {
-    flex-shrink: 0;
-    width: auto;
-    white-space: nowrap;
-    padding: 8px 12px;
-  }
-  .reportCardMenuButton span {
-    display: inline;
-  }
+  .orgStatsContainer { align-self: unset; }
+  .reportCardViewContainer { flex-direction: column; align-self: unset; }
+  .reportCardSidebar { width: 100%; max-height: 40vh; }
+  .reportCardMenuNav { flex-direction: row; flex-wrap: wrap; overflow-x: auto; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+  .reportCardMenuButton { flex-shrink: 0; width: auto; white-space: nowrap; padding: 8px 12px; }
+  .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Vertical Card with High Contrast) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Modern Dashboard Grid - 2 Col, Light, Clean) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 16px;
+    gap: 24px; /* เพิ่มระยะห่างให้ดูโปร่ง */
   }
 
-  /* 1. Container: ปลดล็อกพื้นที่ */
+  /* 1. Sidebar Container: ปล่อยโล่ง ไม่ต้องมีกรอบ */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -585,165 +564,116 @@
     background: transparent;
     border: none;
     box-shadow: none;
-    margin-bottom: 0;
   }
-  .orgStatsSidebar::-webkit-scrollbar {
-    display: none;
-  }
+  .orgStatsSidebar::-webkit-scrollbar { display: none; }
 
   /* ซ่อนหัวข้อ */
-  .orgStatsMenuTitle {
-    display: none;
-  }
+  .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Track: รวมเมนูเป็นการ์ดก้อนเดียวแบบมีขอบมน */
+  /* 2. Menu Nav: จัดเป็น Grid 2 คอลัมน์ */
   .orgStatsMenuNav {
-    display: flex;
-    flex-direction: column; /* เรียงแนวตั้งเพื่อรองรับข้อความยาว */
-    
-    background-color: #ffffff;
-    border-radius: 12px; /* มุมมนเฉพาะกรอบนอก */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* เงาบางๆ ให้ดูลอย */
-    border: 1px solid #f0f0f0;
-    overflow: hidden; /* ตัดมุมปุ่มข้างใน */
-    
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* แบ่งครึ่งเป๊ะๆ */
+    gap: 12px; /* ช่องว่างระหว่างปุ่ม */
     width: 100%;
     padding: 0;
-    gap: 0; /* ติดกันเป็นเนื้อเดียว */
+    border-bottom: none;
   }
 
-  /* 3. Button Styles: ปุ่มแนวนอนเต็มจอ (Row) */
+  /* 3. Button Styles: ดีไซน์แบบการ์ดสี่เหลี่ยม (Tile) */
   .orgStatsMenuButton {
     width: 100%;
     flex: unset;
     
     display: flex;
-    flex-direction: row; /* ไอคอนซ้าย ข้อความขวา */
+    flex-direction: column; /* ไอคอนบน ข้อความล่าง */
     align-items: center;
-    justify-content: flex-start;
-    text-align: left;
+    justify-content: center;
+    text-align: center;
     
-    padding: 16px 20px; /* พื้นที่กดกำลังดี */
-    min-height: 54px; /* ความสูงขั้นต่ำ */
+    padding: 16px 10px;
+    min-height: 90px; /* ความสูงคงที่ ให้ปุ่มเท่ากันหมด */
     
     background-color: #fff;
-    border: none;
-    border-bottom: 1px solid #f2f2f2; /* เส้นคั่นบางๆ */
-    border-radius: 0;
+    border: 1px solid #eee; 
+    border-radius: 16px; /* มุมมนมากหน่อยให้ดู Soft */
     
-    font-size: 14px;
-    color: #444;
+    font-size: 13px;
+    color: #666;
     font-weight: 500;
-    
-    /* อนุญาตให้ตัดคำลงบรรทัดใหม่ได้ */
-    white-space: normal; 
     line-height: 1.4;
     
-    transition: all 0.2s ease;
+    /* ให้ข้อความยาวๆ ไหลลงบรรทัดล่างได้สวยๆ ไม่เบี้ยว */
+    white-space: normal; 
+    
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03); /* เงาบางมากๆ */
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
   }
   
-  /* ลบเส้นคั่นอันสุดท้าย */
-  .orgStatsMenuButton:last-child {
-    border-bottom: none;
-  }
-
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-right: 14px;
-    font-size: 18px;
-    color: #999;
-    flex-shrink: 0; /* ห้ามไอคอนหดตัว */
+    margin-bottom: 8px; /* ระยะห่างจากข้อความ */
+    margin-right: 0;
+    font-size: 24px; /* ไอคอนใหญ่ขึ้น */
+    color: #bbb; /* สีไอคอนปกติจางๆ */
+    transition: color 0.2s ease;
   }
   
-  .orgStatsMenuButton::after {
-    display: none;
-  }
+  /* ซ่อนลูกศร */
+  .orgStatsMenuButton::after { display: none; }
 
-  /* 4. Active State: สีเข้มเด่นชัด (High Contrast) */
+  /* 4. Active State: เน้นขอบหนา + ไอคอนสี (ไม่ถมดำทึบ) */
   .orgStatsMenuButton.active {
-    background-color: #222; /* สีดำ (หรือสีเข้มตามธีม) */
-    color: #fff; /* ตัวหนังสือขาว */
+    background-color: #fff;
+    color: #000;
     
-    border-bottom-color: #222; /* กลืนเส้นขอบไปเลย */
-    font-weight: 600;
+    /* ไฮไลท์ด้วยขอบหนาสีดำแทนการถมดำ ดูแพงกว่า */
+    border: 2px solid #000; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+    font-weight: 700;
+    
+    transform: translateY(-2px); /* ลอยขึ้นนิดนึง */
   }
   
   .orgStatsMenuButton.active svg {
-    color: #fff; /* ไอคอนสีขาว */
+    color: #000; /* ไอคอนเปลี่ยนเป็นสีเข้มชัดเจน */
   }
 
-  .orgStatsContent {
-    padding: 0;
+  /* (Optional) เพิ่มขีดสีเล็กๆ ด้านบนปุ่ม Active */
+  .orgStatsMenuButton.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background-color: #000;
+    border-radius: 0 0 4px 4px;
   }
+
+  .orgStatsContent { padding: 0; }
 
   /* --- Styles ส่วนอื่นๆ คงเดิม --- */
-  .reportCardFilterBar {
-    flex-wrap: wrap;
-  }
-  .reportCardFilterBar .filterGroup {
-    width: calc(50% - 8px);
-    min-width: unset;
-  }
-  .searchButton {
-    width: 100%;
-  }
-  .reportCardHeader {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .reportCardScoreGroup {
-    align-items: flex-start;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px dashed #eee;
-  }
-  .reportCardRank {
-    font-size: 20px;
-  }
-  .reportCardName {
-    font-size: 16px;
-  }
-  
-  .satisfactionCardBreakdown {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .satisfactionCardHeader {
-    border-right: none;
-    border-bottom: 1px solid #ffeeba;
-    padding-right: 0;
-    padding-bottom: 16px;
-    align-items: center;
-    flex-direction: row;
-    justify-content: center;
-    gap: 16px;
-  }
+  .reportCardFilterBar { flex-wrap: wrap; }
+  .reportCardFilterBar .filterGroup { width: calc(50% - 8px); min-width: unset; }
+  .searchButton { width: 100%; }
+  .reportCardHeader { flex-direction: column; align-items: stretch; }
+  .reportCardScoreGroup { align-items: flex-start; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #eee; }
+  .reportCardRank { font-size: 20px; }
+  .reportCardName { font-size: 16px; }
+  .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 16px; }
+  .satisfactionCardHeader { border-right: none; border-bottom: 1px solid #ffeeba; padding-right: 0; padding-bottom: 16px; align-items: center; flex-direction: row; justify-content: center; gap: 16px; }
 }
 
 @media screen and (max-width: 480px) {
-  .mockHBarItem {
-    grid-template-columns: 90px 1fr 45px;
-    gap: 8px;
-  }
-  .mockHBarLabel {
-    font-size: 12px;
-  }
-  .chartBox {
-    padding: 16px;
-  }
-  .reportCardRank {
-    font-size: 18px;
-  }
-  .reportCardName {
-    font-size: 15px;
-  }
-  .reportCardFilterBar .filterGroup {
-    width: 100%;
-  }
-  .satisfactionCardScore {
-    font-size: 32px;
-  }
+  .mockHBarItem { grid-template-columns: 90px 1fr 45px; gap: 8px; }
+  .mockHBarLabel { font-size: 12px; }
+  .chartBox { padding: 16px; }
+  .reportCardRank { font-size: 18px; }
+  .reportCardName { font-size: 15px; }
+  .reportCardFilterBar .filterGroup { width: 100%; }
+  .satisfactionCardScore { font-size: 32px; }
 }
