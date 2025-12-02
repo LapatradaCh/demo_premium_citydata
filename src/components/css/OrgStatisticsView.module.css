@@ -1,10 +1,11 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Floating Tabs - ดีไซน์แบบแท็บลอย สวย สะอาด รองรับชื่อยาวอัตโนมัติ) */
+/* (Mobile Modern Segmented Control - ดีไซน์แถบเมนูลอย สวย คลีน ทันสมัย) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน - ส่วนนี้เหมือนเดิม)
+   1. SHARED COMPONENTS (ใช้ร่วมกัน - ไม่ต้องแก้)
    ========================================= */
 
+/* Chart Box Wrapper */
 .chartBox {
   background: #fff;
   border-radius: 16px;
@@ -546,15 +547,15 @@
   .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Floating Tabs / Segmented Control) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Modern Segmented Control) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 16px;
+    gap: 20px;
   }
 
-  /* 1. Sidebar Container: พื้นที่ว่างๆ ไม่ต้องมีกรอบ */
+  /* 1. Sidebar Container: ปล่อยโล่ง ไม่ต้องมีกรอบ */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -570,75 +571,72 @@
   /* ซ่อนหัวข้อ */
   .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Nav: รางพื้นหลังสีเทาอ่อน */
+  /* 2. Menu Track: สร้างรางพื้นหลังสีเทาอ่อน */
   .orgStatsMenuNav {
     display: flex;
-    flex-wrap: wrap; /* หัวใจสำคัญ: อนุญาตให้ปุ่มยาวๆ ปัดตกบรรทัด */
-    
-    background-color: #f3f4f6; /* พื้นหลังรางสีเทา */
-    padding: 4px; /* ช่องว่างขอบราง */
-    border-radius: 14px; /* มุมมนโค้งสวย */
-    gap: 6px; /* ช่องไฟระหว่างปุ่ม */
-    
+    flex-direction: row; /* เรียงแนวนอน */
     width: 100%;
+    
+    background-color: #f1f3f5; /* สีเทาอ่อนเป็นพื้นหลังราง */
+    padding: 4px; /* ระยะห่างขอบราง */
+    border-radius: 12px; /* มุมมนของราง */
+    gap: 4px; /* ช่องว่างระหว่างปุ่ม */
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ดีไซน์แท็บลอย (Floating Tab) */
+  /* 3. Button Styles: ปุ่มแท็บ */
   .orgStatsMenuButton {
-    /* เทคนิค Flex:
-       flex-grow: 1 -> ขยายให้เต็มพื้นที่
-       flex-basis: 40% -> เริ่มต้นที่เกือบครึ่งจอ (2 ปุ่มต่อแถว)
-       แต่ถ้าข้อความยาวเกิน มันจะขยายตัวเองจนเต็ม 100% อัตโนมัติ (ขึ้นบรรทัดใหม่)
-    */
-    flex: 1 1 40%; 
-    width: auto;
+    flex: 1 1 0px; /* ให้ทุกปุ่มแบ่งพื้นที่เท่าๆ กัน */
+    width: 0; /* เทคนิคให้ flex ทำงานถูกต้องเมื่อมีข้อความยาว */
     
     display: flex;
+    flex-direction: column; /* ไอคอนอยู่บน ข้อความอยู่ล่าง */
     align-items: center;
     justify-content: center;
     text-align: center;
     
-    padding: 10px 12px;
-    min-height: 46px;
+    padding: 8px 4px;
+    min-height: 44px; /* ความสูงมาตรฐานปุ่มสัมผัส */
     
-    background-color: transparent; /* ปุ่มปกติพื้นใส */
+    background-color: transparent; /* พื้นใส */
     border: none;
-    border-radius: 10px;
+    border-radius: 10px; /* มุมมนของตัวปุ่ม */
     
-    font-size: 13px;
-    color: #666; /* สีเทากลางๆ */
+    font-size: 12px;
+    color: #666; /* สีตัวหนังสือเทาเข้ม */
     font-weight: 500;
+    line-height: 1.2;
     
-    white-space: normal; /* ยอมให้ตัดคำถ้าจำเป็นจริงๆ */
-    line-height: 1.25;
+    /* อนุญาตให้ตัดคำได้ */
+    white-space: normal; 
     
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
   }
   
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-right: 8px;
-    font-size: 16px;
+    margin-bottom: 4px; /* ระยะห่างไอคอนกับข้อความ */
+    margin-right: 0;
+    font-size: 18px;
     color: #888;
   }
   
+  /* ซ่อนลูกศร */
   .orgStatsMenuButton::after { display: none; }
 
-  /* 4. Active State: ปุ่มสีขาวลอยขึ้นมา (White Card) */
+  /* 4. Active State: ปุ่มสีขาวลอยขึ้นมา (Floating) */
   .orgStatsMenuButton.active {
-    background-color: #ffffff; /* พื้นขาว */
-    color: #000; /* ตัวหนังสือดำเข้ม */
+    background-color: #ffffff; /* พื้นสีขาว */
+    color: #000; /* ตัวหนังสือสีดำ */
     
-    /* เงา Drop Shadow นุ่มๆ */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    /* เงาเพื่อให้ดูเหมือนปุ่มลอยขึ้นมา */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
     
-    font-weight: 700;
-    transform: none;
+    font-weight: 600;
   }
   
   .orgStatsMenuButton.active svg {
-    color: #000; /* ไอคอนดำเข้ม */
+    color: #000; /* ไอคอนสีดำ */
   }
 
   .orgStatsContent { padding: 0; }
@@ -663,7 +661,4 @@
   .reportCardName { font-size: 15px; }
   .reportCardFilterBar .filterGroup { width: 100%; }
   .satisfactionCardScore { font-size: 32px; }
-  
-  /* ปรับขนาดฟอนต์เมนูสำหรับจอมือถือเล็ก */
-  .orgStatsMenuButton { font-size: 12px; padding: 8px 6px; }
 }
