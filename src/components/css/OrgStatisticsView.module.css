@@ -1,5 +1,5 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (สำหรับ OrganizationStatisticsView.js) */
+/* (Mobile Vertical List Layout - รูปแบบรายการแนวตั้ง ใช้งานง่ายเหมือนเมนู Settings) */
 
 /* =========================================
    1. SHARED COMPONENTS (ใช้ร่วมกัน)
@@ -568,19 +568,19 @@
   }
 }
 
-/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Grid Layout) --- */
+/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Vertical List) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 20px; /* เพิ่มระยะห่างระหว่างชุดปุ่ม กับ กราฟ */
+    gap: 16px; /* ระยะห่างระหว่างเมนูกับกราฟ */
   }
 
-  /* 1. Sidebar Container: ปลดล็อกให้แสดงผลเต็มพื้นที่ ไม่เลื่อน */
+  /* 1. Sidebar Container: ปลดล็อกพื้นที่ */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
-    overflow: visible; /* ให้เมนูกางออกมาได้เลย */
+    overflow: visible; 
     padding: 0; 
     background: transparent;
     border: none;
@@ -594,65 +594,73 @@
   .orgStatsMenuTitle {
     display: block; 
     font-size: 14px;
-    color: #777;
-    margin-bottom: 10px;
+    color: #666;
+    margin-bottom: 8px;
     padding-left: 4px;
     border: none;
     font-weight: 600;
   }
 
-  /* 2. Menu Navigation: จัดเป็นตาราง (Grid) */
+  /* 2. Menu Navigation: เรียงแนวตั้ง (Vertical Column) */
   .orgStatsMenuNav {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /* อนุญาตให้ปุ่มขึ้นบรรทัดใหม่ */
-    gap: 10px;       /* ระยะห่างระหว่างปุ่ม */
+    flex-direction: column; /* เรียงลงมาทีละอัน */
+    gap: 8px; /* ระยะห่างระหว่างปุ่ม */
     width: 100%;
     padding: 0;
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ปุ่มขนาดใหญ่ แบบตาราง 2 คอลัมน์ */
+  /* 3. Button Styles: เต็มความกว้าง (Full Width List) */
   .orgStatsMenuButton {
-    /* สูตรคำนวณ: (100% - ช่องว่าง 10px) / 2 = 2 ปุ่มต่อแถวเป๊ะ */
-    width: calc(50% - 5px); 
-    flex: unset; /* ยกเลิก flex เดิม */
+    width: 100%; /* เต็มจอ */
+    flex: unset;
     
     display: flex;
     align-items: center;
-    justify-content: center; /* จัดตัวหนังสือให้อยู่ตรงกลาง */
-    text-align: center;
+    justify-content: flex-start; /* จัดชิดซ้าย */
+    text-align: left;
     
-    padding: 12px 10px;
-    min-height: 50px; /* ความสูงขั้นต่ำ ให้กดง่ายๆ */
+    padding: 12px 16px; /* เพิ่มพื้นที่กด */
     
-    /* Design: สไตล์ปุ่มแบบการ์ด (Block) */
     background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px; /* มุมมนกลางๆ */
+    border: 1px solid #eee;
+    border-radius: 8px; /* มุมมนเล็กน้อย */
     
     font-size: 14px;
-    color: #555;
+    color: #333;
     font-weight: 500;
     
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* เงาบางๆ ให้ดูมีมิติ */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     transition: all 0.2s ease;
   }
 
-  /* จัดการ icon ในปุ่ม (ถ้ามี) */
+  /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-right: 6px;
+    margin-right: 12px; /* เว้นระยะห่างไอคอนกับตัวหนังสือ */
     font-size: 18px;
     color: #888;
+    min-width: 20px; /* จองพื้นที่ไอคอนให้เท่ากัน */
+    text-align: center;
+  }
+
+  /* เพิ่มลูกศรด้านขวา (›) เพื่อสื่อว่าเป็นเมนูที่กดเลือกได้ */
+  .orgStatsMenuButton::after {
+    content: "›"; /* สัญลักษณ์ลูกศร */
+    margin-left: auto; /* ดันไปขวาสุดของปุ่ม */
+    font-size: 18px;
+    color: #ccc;
+    font-weight: 300;
+    line-height: 1;
   }
 
   /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #222; /* สีพื้นเข้ม */
+    background-color: #333; /* สีพื้นเข้ม */
     color: #fff;
-    border-color: #222;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* เงาลอยเด่น */
-    transform: translateY(-2px); /* ขยับขึ้นนิดนึงให้รู้ว่าถูกเลือก */
+    border-color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transform: none;
     font-weight: 600;
   }
   
@@ -660,16 +668,16 @@
     color: #fff;
   }
   
-  /* เอฟเฟกต์ตอนกดจึ้กๆ */
-  .orgStatsMenuButton:active {
-    transform: scale(0.98); 
+  /* เมื่อ Active ให้ลูกศรเปลี่ยนสีหรือซ่อน */
+  .orgStatsMenuButton.active::after {
+    color: #fff; 
   }
 
   .orgStatsContent {
     padding: 0;
   }
 
-  /* --- Styles ส่วนอื่นๆ คงเดิม --- */
+  /* --- Styles อื่นๆ คงเดิม --- */
   .reportCardFilterBar {
     flex-wrap: wrap;
   }
