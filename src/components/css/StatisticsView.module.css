@@ -16,7 +16,6 @@
 .text-reject       { color: #64748b !important; } /* ปฏิเสธ */
 
 /* --- Badge Base Style --- */
-/* รูปทรงพื้นฐานของป้าย % (สีพื้นหลังถูกกำหนดใน JS) */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
