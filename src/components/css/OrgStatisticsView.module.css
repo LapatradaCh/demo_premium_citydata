@@ -1,5 +1,5 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Vertical List Layout - รูปแบบรายการแนวตั้ง ใช้งานง่ายเหมือนเมนู Settings) */
+/* (Mobile Smart Grid Layout - แก้ปัญหาข้อความยาว & ประหยัดพื้นที่) */
 
 /* =========================================
    1. SHARED COMPONENTS (ใช้ร่วมกัน)
@@ -568,20 +568,20 @@
   }
 }
 
-/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Vertical List) --- */
+/* --- MOBILE SPECIFIC FIXES (ใช้รูปแบบ Smart Grid 2 คอลัมน์) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 16px; /* ระยะห่างระหว่างเมนูกับกราฟ */
+    gap: 16px;
   }
 
-  /* 1. Sidebar Container: ปลดล็อกพื้นที่ */
+  /* 1. Sidebar Container */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
-    overflow: visible; 
-    padding: 0; 
+    overflow: visible;
+    padding: 0;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -590,87 +590,81 @@
     display: none;
   }
 
-  /* แสดงหัวข้อเล็กน้อยเพื่อให้รู้ว่านี่คือเมนูเลือกอะไร */
   .orgStatsMenuTitle {
-    display: block; 
+    display: block;
     font-size: 14px;
-    color: #666;
+    color: #888;
     margin-bottom: 8px;
     padding-left: 4px;
-    border: none;
-    font-weight: 600;
+    font-weight: 500;
   }
 
-  /* 2. Menu Navigation: เรียงแนวตั้ง (Vertical Column) */
+  /* 2. Menu Navigation: ใช้ Grid System แบ่ง 2 คอลัมน์เป๊ะๆ */
   .orgStatsMenuNav {
-    display: flex;
-    flex-direction: column; /* เรียงลงมาทีละอัน */
-    gap: 8px; /* ระยะห่างระหว่างปุ่ม */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* แบ่งครึ่งซ้ายขวาเท่ากัน */
+    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
     width: 100%;
     padding: 0;
     border-bottom: none;
   }
 
-  /* 3. Button Styles: เต็มความกว้าง (Full Width List) */
+  /* 3. Button Styles: ดีไซน์ใหม่ให้รองรับภาษาไทย */
   .orgStatsMenuButton {
-    width: 100%; /* เต็มจอ */
+    width: 100%; 
     flex: unset;
     
     display: flex;
+    flex-direction: column; /* ไอคอนอยู่บน ข้อความอยู่ล่าง */
     align-items: center;
-    justify-content: flex-start; /* จัดชิดซ้าย */
-    text-align: left;
+    justify-content: center;
+    text-align: center;
     
-    padding: 12px 16px; /* เพิ่มพื้นที่กด */
+    padding: 12px 6px; /* ลด Padding ข้างๆ ให้มีที่เหลือสำหรับข้อความ */
+    min-height: 60px; /* ความสูงมาตรฐาน */
+    height: 100%; /* ให้ปุ่มสูงเท่ากันทั้งแถว */
     
     background-color: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px; /* มุมมนเล็กน้อย */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
     
-    font-size: 14px;
-    color: #333;
+    font-size: 13px; /* ขนาดตัวอักษรพอเหมาะ */
+    color: #555;
     font-weight: 500;
+    line-height: 1.35;
     
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    /* *** สำคัญมาก: อนุญาตให้ตัดคำลงบรรทัดใหม่ได้ *** */
+    white-space: normal; 
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     transition: all 0.2s ease;
   }
 
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-right: 12px; /* เว้นระยะห่างไอคอนกับตัวหนังสือ */
-    font-size: 18px;
+    margin-bottom: 6px;
+    margin-right: 0;
+    font-size: 20px;
     color: #888;
-    min-width: 20px; /* จองพื้นที่ไอคอนให้เท่ากัน */
-    text-align: center;
   }
-
-  /* เพิ่มลูกศรด้านขวา (›) เพื่อสื่อว่าเป็นเมนูที่กดเลือกได้ */
+  
+  /* ลบลูกศรด้านหลังออก */
   .orgStatsMenuButton::after {
-    content: "›"; /* สัญลักษณ์ลูกศร */
-    margin-left: auto; /* ดันไปขวาสุดของปุ่ม */
-    font-size: 18px;
-    color: #ccc;
-    font-weight: 300;
-    line-height: 1;
+    display: none;
   }
 
   /* สถานะกด (Active) */
   .orgStatsMenuButton.active {
-    background-color: #333; /* สีพื้นเข้ม */
+    background-color: #333; 
     color: #fff;
     border-color: #333;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transform: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
     font-weight: 600;
   }
   
   .orgStatsMenuButton.active svg {
     color: #fff;
-  }
-  
-  /* เมื่อ Active ให้ลูกศรเปลี่ยนสีหรือซ่อน */
-  .orgStatsMenuButton.active::after {
-    color: #fff; 
   }
 
   .orgStatsContent {
@@ -725,7 +719,6 @@
 }
 
 @media screen and (max-width: 480px) {
-  /* ถ้าจอเล็กมากๆ (เช่น iPhone SE) */
   .mockHBarItem {
     grid-template-columns: 90px 1fr 45px;
     gap: 8px;
