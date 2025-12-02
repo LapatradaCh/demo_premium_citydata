@@ -49,22 +49,22 @@
 .agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
 
 /* ปุ่มแก้ไข: สีส้ม, fit-content, ชิดขวา */
-.agencyBtnEditWarning { 
-    padding: 8px 24px; 
-    border-radius: 10px; 
-    border: none; 
-    background: var(--agency-warning); 
-    color: #fff; 
-    cursor: pointer; 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-    font-weight: 700; 
-    transition: all 0.2s; 
-    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); 
-    font-size: 14px; 
-    width: fit-content; 
-    white-space: nowrap; 
+.agencyBtnEditWarning {
+    padding: 8px 24px;
+    border-radius: 10px;
+    border: none;
+    background: var(--agency-warning);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3);
+    font-size: 14px;
+    width: fit-content;
+    white-space: nowrap;
 }
 .agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
 
@@ -81,18 +81,18 @@
 .iconBtnEye:hover { color: #0d6efd; background-color: #f0f8ff; }
 
 /* ปุ่มคัดลอก (Copy) */
-.iconBtnCopy { 
-    background: none; 
-    border: none; 
-    color: #6c757d; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 15px; 
-    padding: 4px; 
-    border-radius: 50%; 
-    transition: all 0.2s; 
+.iconBtnCopy {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
     margin-left: 2px;
 }
 .iconBtnCopy:hover { color: #198754; background-color: #e8f5e9; }
@@ -108,20 +108,20 @@
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
 /* ปุ่มปิด: วงกลมสีแดง + ไอคอนใหญ่ */
-.agencyBtnCloseRed { 
-    background: #dc3545; 
-    border: none; 
-    font-size: 22px; 
-    color: white; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    transition: all 0.2s; 
-    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); 
+.agencyBtnCloseRed {
+    background: #dc3545;
+    border: none;
+    font-size: 22px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4);
 }
 .agencyBtnCloseRed:hover { background: #bb2d3b; transform: rotate(90deg); }
 
@@ -129,44 +129,44 @@
 .agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; }
 
 /* FIX: เอา overflow: hidden ออก */
-.agencyImageCircle { 
-    width: 90px; 
-    height: 90px; 
-    background: #f8f9fa; 
-    border-radius: 50%; 
-    position: relative; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border: 2px dashed #ccc; 
-    transition: all 0.2s; 
-    cursor: pointer; 
+.agencyImageCircle {
+    width: 90px;
+    height: 90px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    transition: all 0.2s;
+    cursor: pointer;
 }
 .agencyImageCircle:hover { border-color: var(--agency-primary); background: #e8f5e9; }
 
 /* รูปที่อัปโหลดต้องกลมที่ตัวมันเอง */
-.uploadedLogo { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    border-radius: 50%; 
+.uploadedLogo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 /* ปุ่มสีส้มลอย (Overlay) */
-.agencyEditOverlay { 
-    position: absolute; 
+.agencyEditOverlay {
+    position: absolute;
     bottom: -5px;
     right: -5px;
-    background: var(--agency-warning); 
-    color: #fff; 
-    width: 28px; 
-    height: 28px; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border: 2px solid #fff; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15); 
+    background: var(--agency-warning);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     z-index: 10;
 }
 .agencyHint { font-size: 12px; color: #999; }
@@ -188,16 +188,16 @@
 .agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 16px 16px; }
 
 /* ปุ่มยกเลิก: สีแดง ตัวหนังสือขาว */
-.agencyBtnCancel { 
-    padding: 10px 24px; 
-    border-radius: 8px; 
-    border: none; 
+.agencyBtnCancel {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
     background: #dc3545; /* แดง */
     color: #fff; /* ขาว */
-    cursor: pointer; 
-    font-weight: 600; 
-    font-size: 14px; 
-    transition: all 0.2s; 
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
@@ -205,7 +205,50 @@
 .agencyBtnSave:hover { background: #046c4e; transform: translateY(-1px); }
 
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
+
+/* ========================================= */
+/* === RESPONSIVE FIXES (UPDATED) === */
+/* ========================================= */
 @media screen and (max-width: 600px) {
-    .agencyViewContainer, .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { grid-template-columns: 1fr; }
-    .agencyModalContainer { width: 95%; max-height: 95vh; }
+    /* --- Agency Responsive --- */
+    .agencyViewContainer, 
+    .agencyInfoGrid, 
+    .agencyRow2, 
+    .agencyAddressGrid { 
+        grid-template-columns: 1fr; 
+    }
+    
+    .agencyModalContainer { 
+        width: 95%; 
+        max-height: 95vh; 
+    }
+
+    /* --- Settings & Dropdown Responsive Fixes --- */
+    /* ลด Padding ของ Container หลักลงเล็กน้อย */
+    .settingsContainer {
+        padding: 0 16px;
+    }
+
+    /* ปรับแต่งกล่อง Dropdown เพื่อป้องกันการล้น */
+    .settingsHeaderDropdown {
+        padding: 16px; /* ลด Padding ลงเพื่อให้มีพื้นที่ภายในมากขึ้น */
+        width: 100%;
+        overflow: hidden; /* ป้องกันการทะลุขอบ */
+        box-sizing: border-box;
+    }
+
+    /* ปรับ Flex item ให้ย่อตัวได้ */
+    .filterGroup {
+        width: 100%;
+        min-width: 0; /* สำคัญ: ช่วยให้ Flex item ย่อตัวได้ไม่ดัน Layout แตก */
+    }
+
+    /* บังคับขนาด Select ไม่ให้เกินกรอบ */
+    .filterGroup select {
+        width: 100%;
+        max-width: 100%;
+        font-size: 13px; /* ลดขนาดฟอนต์ลงเล็กน้อยให้อ่านง่าย */
+        padding: 10px;
+        text-overflow: ellipsis; /* ถ้าข้อความยาวเกินให้แสดงจุดไข่ปลา */
+    }
 }
