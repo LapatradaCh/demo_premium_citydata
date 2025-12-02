@@ -40,7 +40,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [issueTypeList, setIssueTypeList] = useState([]);
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [statusComment, setStatusComment] = useState(""); // <--- เพิ่ม State เก็บข้อความคอมเมนต์
+  const [statusComment, setStatusComment] = useState(""); 
 
   // 1. Fetch Issue Types
   useEffect(() => {
@@ -72,7 +72,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-           throw new Error(`Server responded with status: ${response.status}`);
+            throw new Error(`Server responded with status: ${response.status}`);
         }
 
         const result = await response.json();
@@ -84,7 +84,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             real_id: result.info.issue_cases_id,
             title: result.info.title || "ไม่มีหัวข้อ",
             category: result.info.issue_category_name || "ทั่วไป",
-            rating: result.info.rating || 0,
+            
+            // ✅ ใช้ parseFloat เพื่อรองรับคะแนนทศนิยม เช่น 4.5
+            rating: result.info.rating ? parseFloat(result.info.rating) : 0.0,
+            
             status: result.info.status || "รอรับเรื่อง",
             locationDetail: (lat && lng) 
               ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
@@ -109,7 +112,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // 3. Handle Update Category (เปลี่ยนประเภท)
+  // 3. Handle Update Category
   const handleUpdateCategory = async () => {
     if (!selectedIssueType || !caseInfo) {
         alert("กรุณาเลือกประเภทปัญหา");
@@ -152,12 +155,11 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     }
   };
 
-  // 4. Handle Update Status (เปลี่ยนสถานะ - เพิ่มใหม่)
+  // 4. Handle Update Status
   const handleUpdateStatus = async () => {
     if (!caseInfo) return;
 
     // --- Image Upload Placeholder ---
-    // หากต้องการรองรับการอัปโหลดรูป ต้อง uploadToCloud ให้เสร็จก่อนแล้วเอา URL มาใส่
     let finalImageUrl = null;
     const file = fileInputRef.current?.files[0];
     if (file) {
@@ -172,17 +174,13 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         setIsUpdating(true);
 
         const payload = {
-            action: 'update_status',           
-            case_id: caseInfo.real_id,         
-            user_id: currentUserId,            
-            new_status: statusValue,           
-            comment: statusComment,            // ส่งคอมเมนต์ไปด้วย
-            image_url: finalImageUrl           
+            action: 'update_status',            
+            case_id: caseInfo.real_id,          
+            user_id: currentUserId,             
+            new_status: statusValue,            
+            comment: statusComment,            
+            image_url: finalImageUrl            
         };
-
-        // !!! เพิ่มบรรทัดนี้ เพื่อเช็คข้อมูลก่อนส่ง !!!
-        console.log("DEBUG PAYLOAD:", payload); 
-        console.log("JSON STRING:", JSON.stringify(payload));
 
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
@@ -197,8 +195,8 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
         alert("ปรับสถานะเรียบร้อยแล้ว");
         setShowStatusModal(false);
-        setStatusComment("");      
-        setSelectedImage(null);    
+        setStatusComment("");       
+        setSelectedImage(null);     
         setRefreshKey(prev => prev + 1); 
 
     } catch (err) {
@@ -215,7 +213,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     id: "LOADING...",
     title: "กำลังโหลด...",
     category: "-",
-    rating: 0,
+    rating: 0.0,
     status: "รอรับเรื่อง", 
     locationDetail: "-",
     lat: null, 
@@ -355,9 +353,43 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
           
           <div>
             <p className={styles.label}>คะแนนความพึงพอใจเฉลี่ย</p>
-            <div className={styles.stars}>
-              {'★'.repeat(info.rating)}
-              <span style={{color: '#E5E7EB'}}>{'★'.repeat(5 - info.rating)}</span>
+            
+            {/* ✅ ปรับปรุงส่วนแสดงดาว: ใช้ Overlay Technique */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              
+              {/* Container สำหรับดาว: ใช้ inline-block และ relative เพื่อเป็นกรอบหลัก */}
+              <div style={{ 
+                  position: 'relative', 
+                  display: 'inline-block', 
+                  fontSize: '1.25rem', // ปรับขนาดดาวตรงนี้
+                  lineHeight: 1,
+                  letterSpacing: '2px' // ระยะห่างระหว่างดาว
+              }}>
+                
+                {/* Layer 1 (ล่างสุด): ดาวสีเทาเต็ม 5 ดวง (Background) */}
+                <div style={{ color: '#E5E7EB' }}>
+                  ★★★★★
+                </div>
+                
+                {/* Layer 2 (บนสุด): ดาวสีเหลือง (Foreground) ตัดขอบตาม % คะแนน */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    whiteSpace: 'nowrap', // ห้ามขึ้นบรรทัดใหม่
+                    overflow: 'hidden',   // ซ่อนส่วนที่เกิน
+                    color: '#FFD700',     // สีเหลืองทอง
+                    width: `${(info.rating / 5) * 100}%` // ✨ คำนวณความกว้าง: (4.2/5)*100 = 84%
+                }}>
+                  ★★★★★
+                </div>
+              </div>
+
+              {/* แสดงตัวเลขคะแนนจริงด้านหลัง */}
+              <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: '500' }}>
+                  {info.rating > 0 ? info.rating.toFixed(1) : '0.0'} / 5
+              </span>
+
             </div>
           </div>
           
@@ -533,7 +565,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                     </select>
                 </div>
                 
-                {/* --- ส่วนที่แก้ไข: Textarea เชื่อมกับ statusComment --- */}
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
                    <textarea 
@@ -565,7 +596,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยกเลิก</button>
                
-               {/* --- ส่วนที่แก้ไข: เรียกใช้ handleUpdateStatus --- */}
                <button 
                   className={styles.btnConfirm} 
                   onClick={handleUpdateStatus}
