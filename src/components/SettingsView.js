@@ -17,7 +17,7 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED: Add Copy Button)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED LAYOUT)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -30,7 +30,7 @@ const AgencySettings = () => {
   const fileInputRef = useRef(null); 
 
   const [formData, setFormData] = useState({
-    name: "เทศบาลตำบลตัวอย่าง",
+    name: "เทศบาลตำบลตัวอย่างที่ชื่อยาวมากกกกกกกกกกกกกกก",
     adminCode: "AL1F8H2",
     userCode: "US9K2M4",
     agencyType: "เทศบาล",
@@ -174,8 +174,9 @@ const AgencySettings = () => {
   return (
     <>
         <div className={styles.agencyViewContainer}>
+            {/* --- UPDATED LAYOUT STRUCTURE --- */}
             <div className={styles.agencyProfileCard}>
-                <div className={styles.agencyProfileLeft}>
+                <div className={styles.agencyProfileHeader}>
                     <div className={styles.agencyLogoCircle}>
                         {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage/>}
                     </div>
@@ -186,6 +187,8 @@ const AgencySettings = () => {
                         </div>
                     </div>
                 </div>
+                
+                {/* ย้ายปุ่มมาด้านล่าง (นอก Header) */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
