@@ -1,8 +1,8 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Modern Dashboard Grid - ดีไซน์แบบปุ่มกระเบื้อง โปร่ง สบายตา ประหยัดที่) */
+/* (Mobile Clean Vertical Menu - ดีไซน์แบบลิสต์แนวตั้ง สะอาดตา รองรับชื่อยาว) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน - ไม่ต้องแก้)
+   1. SHARED COMPONENTS (ใช้ร่วมกัน)
    ========================================= */
 
 /* Chart Box Wrapper */
@@ -547,111 +547,116 @@
   .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Modern Dashboard Grid - 2 Col, Light, Clean) --- */
+/* --- MOBILE SPECIFIC FIXES (Design: Dropdown-Style Vertical List) --- */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
-    gap: 24px; /* เพิ่มระยะห่างให้ดูโปร่ง */
+    gap: 16px;
   }
 
-  /* 1. Sidebar Container: ปล่อยโล่ง ไม่ต้องมีกรอบ */
+  /* 1. Sidebar Container: กล่องรวมเมนู (เหมือน Dropdown กางออก) */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
     overflow: visible;
     padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
+    
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* มุมมนเฉพาะขอบนอก */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06); /* เงาให้ดูลอยๆ */
+    
+    margin-bottom: 8px;
   }
   .orgStatsSidebar::-webkit-scrollbar { display: none; }
 
   /* ซ่อนหัวข้อ */
   .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Nav: จัดเป็น Grid 2 คอลัมน์ */
+  /* 2. Menu Nav: เรียงแนวตั้งเต็มจอ */
   .orgStatsMenuNav {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* แบ่งครึ่งเป๊ะๆ */
-    gap: 12px; /* ช่องว่างระหว่างปุ่ม */
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding: 0;
+    gap: 0; /* ติดกันเป็นเนื้อเดียว */
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ดีไซน์แบบการ์ดสี่เหลี่ยม (Tile) */
+  /* 3. Button Styles: ดีไซน์ลิสต์ (Row) */
   .orgStatsMenuButton {
     width: 100%;
     flex: unset;
     
     display: flex;
-    flex-direction: column; /* ไอคอนบน ข้อความล่าง */
+    flex-direction: row; /* ไอคอนซ้าย ข้อความขวา */
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
     
-    padding: 16px 10px;
-    min-height: 90px; /* ความสูงคงที่ ให้ปุ่มเท่ากันหมด */
+    padding: 14px 16px; /* ความสูงกำลังดี */
+    min-height: unset;
     
     background-color: #fff;
-    border: 1px solid #eee; 
-    border-radius: 16px; /* มุมมนมากหน่อยให้ดู Soft */
+    border: none;
+    border-bottom: 1px solid #f2f2f2; /* เส้นคั่นบางๆ */
+    border-left: 4px solid transparent; /* เตรียมที่ไว้สำหรับแถบ Active */
     
-    font-size: 13px;
-    color: #666;
+    /* ลบมุมมนที่ตัวปุ่มออก (ให้มุมมนอยู่ที่ Container แทน) */
+    border-radius: 0; 
+    
+    font-size: 14px;
+    color: #444;
     font-weight: 500;
+    
+    /* ให้ข้อความยาวๆ อยู่บรรทัดเดียวได้ (หรือตัดลงใหม่ก็ยังสวย) */
+    white-space: normal;
     line-height: 1.4;
     
-    /* ให้ข้อความยาวๆ ไหลลงบรรทัดล่างได้สวยๆ ไม่เบี้ยว */
-    white-space: normal; 
-    
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03); /* เงาบางมากๆ */
-    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
   }
   
+  /* ลบเส้นคั่นของปุ่มสุดท้าย */
+  .orgStatsMenuButton:last-child {
+    border-bottom: none;
+  }
+
   /* จัดการ icon */
   .orgStatsMenuButton svg {
-    margin-bottom: 8px; /* ระยะห่างจากข้อความ */
-    margin-right: 0;
-    font-size: 24px; /* ไอคอนใหญ่ขึ้น */
-    color: #bbb; /* สีไอคอนปกติจางๆ */
-    transition: color 0.2s ease;
+    margin-right: 12px;
+    font-size: 18px;
+    color: #999;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
   }
   
-  /* ซ่อนลูกศร */
-  .orgStatsMenuButton::after { display: none; }
+  /* เพิ่มลูกศร (Chevron) ให้ดูเหมือนเลือกได้ */
+  .orgStatsMenuButton::after {
+    content: "›"; 
+    margin-left: auto; 
+    font-size: 20px;
+    color: #ccc;
+    font-weight: 300;
+    line-height: 1;
+  }
 
-  /* 4. Active State: เน้นขอบหนา + ไอคอนสี (ไม่ถมดำทึบ) */
+  /* 4. Active State: แถบสีด้านซ้าย + พื้นหลังจางๆ (ไม่ถมดำทึบ) */
   .orgStatsMenuButton.active {
-    background-color: #fff;
-    color: #000;
+    background-color: #f9fafb; /* พื้นหลังเทาจางๆ */
+    color: #000; /* ตัวหนังสือดำเข้ม */
+    font-weight: 600;
     
-    /* ไฮไลท์ด้วยขอบหนาสีดำแทนการถมดำ ดูแพงกว่า */
-    border: 2px solid #000; 
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
-    font-weight: 700;
+    /* ไฮไลท์ด้วยแถบสีด้านซ้าย */
+    border-left-color: #222; 
     
-    transform: translateY(-2px); /* ลอยขึ้นนิดนึง */
+    box-shadow: none;
+    transform: none;
   }
   
   .orgStatsMenuButton.active svg {
-    color: #000; /* ไอคอนเปลี่ยนเป็นสีเข้มชัดเจน */
-  }
-
-  /* (Optional) เพิ่มขีดสีเล็กๆ ด้านบนปุ่ม Active */
-  .orgStatsMenuButton.active::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 3px;
-    background-color: #000;
-    border-radius: 0 0 4px 4px;
+    color: #222; /* ไอคอนสีดำ */
   }
 
   .orgStatsContent { padding: 0; }
