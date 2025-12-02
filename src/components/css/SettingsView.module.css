@@ -15,12 +15,14 @@
     margin: 0 auto; 
 }
 
+/* ปรับ max-width ให้ settingsSection เพื่อป้องกันล้นตั้งแต่ต้นทาง */
 .settingsSection { 
     width: 100%; 
+    max-width: 100%;
     background: #fff; 
     border: 1px solid #e0e0e0; 
     border-radius: 16px; 
-    padding: 24px 28px; /* ค่าเริ่มต้นสำหรับ Desktop */
+    padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
 }
 
@@ -56,11 +58,12 @@
     padding: 20px 24px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: flex;
-    flex-wrap: wrap; /* ยอมให้ปัดบรรทัดใน Desktop จอเล็ก */
+    flex-wrap: wrap; 
     gap: 12px;
     align-items: center;
 }
 
+/* จุดสำคัญ: min-width นี้อาจจะทำให้อ้วนเกินในมือถือ (จะไปแก้ใน media query ด้านล่าง) */
 .filterGroup { 
     flex: 1 1 auto; 
     display: flex; 
@@ -69,7 +72,7 @@
     min-width: 150px; 
 }
 
-/* Base style for selects */
+/* Base Select Style */
 .filterGroup select,
 .settingsSection select { 
     width: 100%; 
@@ -210,50 +213,51 @@
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
 /* ========================================= */
-/* === 4. MOBILE RESPONSIVE FIXES (FINAL) === */
+/* === 4. MOBILE RESPONSIVE FIXES (RESET ALL) === */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* --- FIX 1: ปรับพื้นที่กล่องหลัก (Settings Section) --- */
-    /* ลด padding ซ้ายขวาจาก 28px -> 16px ให้มีพื้นที่มากขึ้น */
+    /* 1. รีเซ็ตกล่อง Settings ทั้งหมด */
+    .settingsContainer,
     .settingsSection {
-        padding: 20px 16px !important; 
         width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px 16px !important; /* ลด padding เพื่อคืนพื้นที่ */
         box-sizing: border-box !important;
+        overflow-x: hidden !important; /* ตัดส่วนเกินแนวนอนทิ้ง */
     }
 
-    /* --- FIX 2: ปรับ Header Dropdown ให้เรียงแนวตั้ง --- */
+    /* 2. จัดการ Header Dropdown (กล่องบน) */
     .settingsHeaderDropdown {
-        display: block !important;
+        display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
         padding: 16px !important;
         height: auto !important;
-        overflow-x: hidden !important;
     }
 
-    /* --- FIX 3: บังคับ Input/Select ทุกตัว ห้ามล้นจอ --- */
-    .filterGroup, 
+    /* 3. จัดการ Filter Group และ Input */
+    .filterGroup,
     .agencyFormGroup {
         width: 100% !important;
-        min-width: 0 !important;
+        min-width: 0 !important; /* สำคัญ: ยกเลิก min-width 150px ของ Desktop */
         margin-bottom: 12px;
         display: block !important;
     }
 
-    /* Target ทั้ง Select ใน Filter และ Select ที่อยู่ใน Settings โดยตรง */
+    /* 4. บังคับ Select/Input ทุกตัวให้หด */
+    .settingsSection select,
     .filterGroup select,
     .searchInput,
     .filterApplyButton,
-    .settingsSection select { 
+    .agencyInput {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         box-sizing: border-box !important;
-        /* ป้องกันข้อความยาวเกินไปแล้วดันกล่องขยาย */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis; 
     }
 
-    /* Agency Grid ปรับเป็นแถวเดียว */
+    /* Grid Layouts Reset */
     .agencyViewContainer, 
     .agencyInfoGrid, 
     .agencyRow2, 
@@ -261,7 +265,7 @@
         grid-template-columns: 1fr !important; 
     }
 
-    /* Modal ให้เต็มจอ */
+    /* Modal */
     .agencyModalContainer { 
         width: 95% !important; 
         max-height: 95vh !important; 
