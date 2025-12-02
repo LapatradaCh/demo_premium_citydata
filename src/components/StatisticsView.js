@@ -19,18 +19,33 @@ import {
   ComposedChart
 } from 'recharts';
 
+// Import CSS Module
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
+// 1. ปรับค่าสี Hex Code ให้ตรงกับในไฟล์ CSS เป๊ะๆ เพื่อให้กราฟสีเดียวกับ Text
 const STATUS_COLORS = {
-  'รอรับเรื่อง': '#ef4444',      
-  'กำลังประสานงาน': '#a855f7',    
-  'กำลังดำเนินการ': '#f59e0b',    
-  'เสร็จสิ้น': '#22c55e',        
-  'ส่งต่อ': '#3b82f6',            
-  'เชิญร่วม': '#06b6d4',          
-  'ปฏิเสธ': '#6b7280',            
-  'NULL': '#d1d5db'              
+  'รอรับเรื่อง': '#ff4d4f',      // waiting (แดง)
+  'กำลังประสานงาน': '#9c27b0',   // coordinating (ม่วง)
+  'กำลังดำเนินการ': '#ffc107',   // action (เหลือง)
+  'เสร็จสิ้น': '#4caf50',        // finished (เขียว)
+  'ส่งต่อ': '#2196f3',         // forward (ฟ้า)
+  'เชิญร่วม': '#00bcd4',         // invite (Cyan)
+  'ปฏิเสธ': '#64748b',         // reject (เทา)
+  'NULL': '#d1d5db'
+};
+
+// 2. สร้าง Mapping เพื่อเชื่อมชื่อไทย -> ชื่อ Class ใน CSS
+// (เช่น 'รอรับเรื่อง' -> styles['text-waiting'])
+const STATUS_KEY_MAP = {
+  'ทั้งหมด': 'total',
+  'รอรับเรื่อง': 'waiting',
+  'กำลังประสาน': 'coordinating',
+  'ดำเนินการ': 'action',
+  'เสร็จสิ้น': 'finished',
+  'ส่งต่อ': 'forward',
+  'เชิญร่วม': 'invite',
+  'ปฏิเสธ': 'reject'
 };
 
 // --- Mock Data ---
@@ -63,6 +78,7 @@ const StatisticsView = ({ organizationId }) => {
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
+      // หากต้องการ test โดยไม่มี token/orgId ให้ comment บรรทัดนี้ชั่วคราว
       if (!accessToken || !organizationId) {
         setLoading(false);
         return;
@@ -168,15 +184,16 @@ const StatisticsView = ({ organizationId }) => {
     return total > 0 ? (val / total) * 100 : 0;
   };
 
+  // กำหนดข้อมูลพื้นฐานของการ์ด (ตัด bg/color hardcode ออก แล้วใช้ key แทน)
   const statusCardConfig = [
-    { title: 'ทั้งหมด', count: getTotalCases(), color: '#6c757d', bg: '#ffffff', border: '#e5e7eb' },
-    { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), color: '#dc3545', bg: '#fef2f2', border: '#fee2e2' },
-    { title: 'กำลังประสาน', count: getStatusCount('กำลังประสานงาน'), color: '#9b59b6', bg: '#faf5ff', border: '#f3e8ff' },
-    { title: 'ดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), color: '#ffc107', bg: '#fefce8', border: '#fef9c3' },
-    { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), color: '#057A55', bg: '#f0fdf4', border: '#dcfce7' },
-    { title: 'ส่งต่อ', count: getStatusCount('ส่งต่อ'), color: '#007bff', bg: '#eff6ff', border: '#dbeafe' },
-    { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), color: '#20c997', bg: '#ecfeff', border: '#cffafe' },
-    { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), color: '#6b7280', bg: '#f9fafb', border: '#f3f4f6' },
+    { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' },
+    { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
+    { title: 'กำลังประสาน', count: getStatusCount('กำลังประสานงาน'), key: 'coordinating' },
+    { title: 'ดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), key: 'action' },
+    { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), key: 'finished' },
+    { title: 'ส่งต่อ', count: getStatusCount('ส่งต่อ'), key: 'forward' },
+    { title: 'เชิญร่วม', count: getStatusCount('เชิญร่วม'), key: 'invite' },
+    { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), key: 'reject' },
   ];
 
   return (
@@ -199,23 +216,27 @@ const StatisticsView = ({ organizationId }) => {
           <section className={styles.responsiveGrid4}>
             {statusCardConfig.map((card, idx) => {
               const percent = getPercent(card.count, getTotalCases());
+              
+              // Map ชื่อ key (เช่น 'waiting') ไปเป็นชื่อ class ใน CSS (เช่น styles['text-waiting'])
+              const cssKey = STATUS_KEY_MAP[card.title] || 'total';
+              
+              const textClass = styles[`text-${cssKey}`];      // e.g. styles['text-waiting']
+              const badgeClass = styles[`badge-${cssKey}`];    // e.g. styles['badge-waiting']
+              const badgeBaseClass = styles['badge-status'];   // Base class for styling
+
               return (
-                <div 
-                  key={idx} 
-                  className={styles.statusCard}
-                  style={{
-                    backgroundColor: card.bg,
-                    borderColor: card.border,
-                    borderTopColor: card.color
-                  }}
-                >
+                <div key={idx} className={styles.statusCard}>
                   <div className={styles.cardHeader}>
                     <span className={styles.cardTitle}>{card.title}</span>
-                    <span className={styles.cardCount} style={{color: card.color}}>
+                    {/* ใช้ Class จาก CSS แทนการใส่ style color ตรงๆ */}
+                    <span className={`${styles.cardCount} ${textClass}`}>
                       {card.count}
                     </span>
                   </div>
-                  <div className={styles.cardPercent}>({percent.toFixed(2)}%)</div>
+                  {/* ใช้ Class Badge จาก CSS */}
+                  <div className={`${badgeBaseClass} ${badgeClass}`}>
+                    {percent.toFixed(2)}%
+                  </div>
                 </div>
               );
             })}
@@ -242,11 +263,11 @@ const StatisticsView = ({ organizationId }) => {
                 <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
-                {/* ย้าย Legend ลงล่างเพื่อประหยัดที่แนวนอน */}
                 <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
-                <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
-                <Line type="monotone" dataKey="pending" stroke="#f87171" strokeWidth={2} dot={{r: 2}} name="รอรับ" />
-                <Line type="monotone" dataKey="coordinating" stroke="#c084fc" strokeWidth={2} dot={{r: 2}} name="ประสาน" />
+                {/* ใช้สีจาก STATUS_COLORS ที่แก้ให้ตรงกับ CSS แล้ว */}
+                <Line type="monotone" dataKey="total" stroke="#0f172a" strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
+                <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับ" />
+                <Line type="monotone" dataKey="coordinating" stroke={STATUS_COLORS['กำลังประสานงาน']} strokeWidth={2} dot={{r: 2}} name="ประสาน" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -283,9 +304,10 @@ const StatisticsView = ({ organizationId }) => {
                   />
                   <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
                   <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับ" barSize={16} />
-                  <Bar dataKey="stage2" stackId="a" fill="#d8b4fe" name="ประสาน" barSize={16} />
-                  <Bar dataKey="stage3" stackId="a" fill="#fde047" name="ทำ" barSize={16} />
+                  {/* ใช้สีจาก STATUS_COLORS */}
+                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับ" barSize={16} />
+                  <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังประสานงาน']} name="ประสาน" barSize={16} />
+                  <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ดำเนินการ" barSize={16} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -314,8 +336,8 @@ const StatisticsView = ({ organizationId }) => {
                     <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
                     <Tooltip contentStyle={{ fontSize: '12px' }} />
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                    <Bar dataKey="count" name="จำนวน" barSize={16} fill="#3b82f6" />
-                    <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill="#f97316" />
+                    <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
+                    <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -334,7 +356,7 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        <span style={{color: '#eab308'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        <span style={{color: '#ffc107'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -344,7 +366,7 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    <div className={styles.progressBar} style={{backgroundColor: '#eab308', width: `${percent}%`}}></div>
+                                    <div className={styles.progressBar} style={{backgroundColor: '#ffc107', width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
@@ -386,7 +408,7 @@ const StatisticsView = ({ organizationId }) => {
                             cursor={{fill: 'transparent'}}
                             contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
                           />
-                          {Object.keys(STATUS_COLORS).map((status) => (
+                          {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL').map((status) => (
                             <Bar 
                               key={status} 
                               dataKey={status} 
@@ -400,7 +422,7 @@ const StatisticsView = ({ organizationId }) => {
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
-                       <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
+                        <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
                     )}
                 </div>
             </section>
