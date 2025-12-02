@@ -4,7 +4,7 @@
 * { box-sizing: border-box; }
 
 /* ========================================= */
-/* === 2. ORIGINAL SETTINGS STYLES === */
+/* === 2. MAIN SETTINGS CONTAINER === */
 /* ========================================= */
 .settingsContainer { 
     width: 100%; 
@@ -15,15 +15,15 @@
     margin: 0 auto; 
 }
 
-/* ปรับ max-width ให้ settingsSection เพื่อป้องกันล้นตั้งแต่ต้นทาง */
 .settingsSection { 
     width: 100%; 
-    max-width: 100%;
     background: #fff; 
     border: 1px solid #e0e0e0; 
     border-radius: 16px; 
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
+    /* ป้องกันล้น */
+    max-width: 100%;
 }
 
 .settingsTitle { 
@@ -35,6 +35,7 @@
     border-bottom: 1px solid #f0f0f0; 
     display: flex; 
     align-items: center; 
+    flex-wrap: wrap; /* ยอมให้ปัดบรรทัดได้ถ้าจอเล็ก */
 }
 
 .settingsSubtitle { font-size: 14px; color: #555; margin: -12px 0 16px 0; }
@@ -46,10 +47,63 @@
     padding: 14px 0; 
     border-bottom: 1px solid #f5f5f5; 
 }
-
 .settingsItemText { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; color: #333; }
 
-/* Filter / Search Header */
+/* ========================================= */
+/* === 3. BEAUTIFUL DROPDOWN STYLES (NEW) === */
+/* ========================================= */
+/* ตกแต่ง Select ทุกตัวในหน้านี้ให้สวยงามเหมือนกัน */
+.settingsSection select,
+.filterGroup select {
+    /* ล้างค่าเดิมของ Browser */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Layout */
+    display: block;
+    width: 100%;
+    height: 48px; /* ความสูงมาตรฐานให้จิ้มง่าย */
+    padding: 10px 40px 10px 16px; /* เว้นขวา 40px เผื่อลูกศร */
+    margin-top: 8px; /* เว้นระยะห่างจาก Label ด้านบน */
+    margin-bottom: 12px;
+    
+    /* Design */
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    /* สร้างลูกศร (Chevron) ด้วย SVG */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+}
+
+/* ตอนเอาเมาส์ชี้ */
+.settingsSection select:hover,
+.filterGroup select:hover {
+    background-color: #fff;
+    border-color: #057a55; /* สีเขียวธีม */
+}
+
+/* ตอนกดเลือก */
+.settingsSection select:focus,
+.filterGroup select:focus {
+    outline: none;
+    background-color: #fff;
+    border-color: #057a55;
+    box-shadow: 0 0 0 3px rgba(5, 122, 85, 0.1);
+}
+
+/* ========================================= */
+/* === 4. FILTER / HEADER STYLES === */
+/* ========================================= */
 .settingsHeaderDropdown { 
     width: 100%; 
     background: #fff; 
@@ -63,25 +117,12 @@
     align-items: center;
 }
 
-/* จุดสำคัญ: min-width นี้อาจจะทำให้อ้วนเกินในมือถือ (จะไปแก้ใน media query ด้านล่าง) */
 .filterGroup { 
     flex: 1 1 auto; 
     display: flex; 
     flex-direction: column; 
     gap: 6px; 
     min-width: 150px; 
-}
-
-/* Base Select Style */
-.filterGroup select,
-.settingsSection select { 
-    width: 100%; 
-    font-size: 14px; 
-    border-radius: 12px; 
-    border: 1px solid #d0d0d0; 
-    padding: 10px 14px; 
-    background: #fff; 
-    cursor: pointer; 
 }
 
 .searchInput { width: 100%; padding: 12px 18px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background-color: #fcfcfc; }
@@ -100,72 +141,34 @@
 }
 .filterApplyButton:hover { background-color: #046c4e; }
 
-/* QR, Mockup, Misc */
+/* QR, Misc */
 .qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
 .mockQrIcon { font-size: 80px; color: #e0e0e0; }
 .qrForm { display: flex; flex-direction: column; gap: 16px; }
 
-/* Modal Styles */
-.filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
-.filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
-.filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
-.filterModalClose { background: #dc3545; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
-.filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-
-/* Toggle Switch */
-.mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
-.mockToggle input { opacity: 0; width: 0; height: 0; }
-.mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
-.mockSlider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
-.mockToggle input:checked + .mockSlider { background-color: #057a55; }
-.mockToggle input:checked + .mockSlider:before { transform: translateX(22px); }
-
-
-/* ========================================================= */
-/* === 3. AGENCY STYLES === */
-/* ========================================================= */
+/* ========================================= */
+/* === 5. AGENCY & CARD STYLES === */
+/* ========================================= */
 :root { --agency-primary: #057a55; --agency-warning: #f59e0b; --agency-border: #e0e0e0; }
 
 .agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 
 .agencyProfileCard { 
-    background: #fff; 
-    border: 1px solid var(--agency-border); 
-    border-radius: 16px; 
-    padding: 24px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
-    max-width: 100%;
-    overflow: hidden; 
+    background: #fff; border: 1px solid var(--agency-border); border-radius: 16px; padding: 24px; 
+    display: flex; flex-direction: column; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+    max-width: 100%; overflow: hidden; 
 }
 
 .agencyProfileHeader { display: flex; gap: 20px; align-items: flex-start; width: 100%; }
-
-.agencyLogoCircle { 
-    width: 80px; height: 80px; flex-shrink: 0; background: #f0f0f0; 
-    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-    font-size: 30px; color: #bbb; border: 3px solid #fff; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; 
-}
-
+.agencyLogoCircle { width: 80px; height: 80px; flex-shrink: 0; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
 .agencyOrgName { margin: 0 0 8px 0; font-size: 22px; color: #333; line-height: 1.4; word-break: break-word; }
-
 .agencyBadges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
 
-.agencyBtnEditWarning { 
-    padding: 10px 24px; border-radius: 10px; border: none; background: var(--agency-warning); 
-    color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; justify-content: center; 
-    font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); 
-    font-size: 14px; width: 100%; white-space: nowrap; 
-}
+.agencyBtnEditWarning { padding: 10px 24px; border-radius: 10px; border: none; background: var(--agency-warning); color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; justify-content: center; font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); font-size: 14px; width: 100%; white-space: nowrap; }
 .agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
 
-@media (min-width: 600px) {
-    .agencyBtnEditWarning { width: fit-content; align-self: flex-end; }
-}
+@media (min-width: 600px) { .agencyBtnEditWarning { width: fit-content; align-self: flex-end; } }
 
 .agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; overflow: hidden; }
@@ -179,7 +182,7 @@
 .iconBtnCopy:hover { color: #198754; background-color: #e8f5e9; }
 .agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #333; min-width: 80px; text-align: right; }
 
-/* Modal Agency */
+/* Modal */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
 .agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
 .agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 16px 16px 0 0; }
@@ -209,25 +212,35 @@
 .agencyBtnCancel:hover { background: #bb2d3b; }
 .agencyBtnSave { padding: 10px 24px; border-radius: 8px; border: none; background: var(--agency-primary); color: #fff; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2); }
 .agencyBtnSave:hover { background: #046c4e; transform: translateY(-1px); }
-
+.filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
+.filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+.filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
+.filterModalClose { background: #dc3545; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
+.filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
+.mockToggle input { opacity: 0; width: 0; height: 0; }
+.mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
+.mockSlider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
+.mockToggle input:checked + .mockSlider { background-color: #057a55; }
+.mockToggle input:checked + .mockSlider:before { transform: translateX(22px); }
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
 /* ========================================= */
-/* === 4. MOBILE RESPONSIVE FIXES (RESET ALL) === */
+/* === 6. MOBILE RESPONSIVE FIXES (FINAL) === */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* 1. รีเซ็ตกล่อง Settings ทั้งหมด */
+    /* 1. รีเซ็ต Container & Section */
     .settingsContainer,
     .settingsSection {
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 20px 16px !important; /* ลด padding เพื่อคืนพื้นที่ */
+        padding: 20px 16px !important; 
         box-sizing: border-box !important;
-        overflow-x: hidden !important; /* ตัดส่วนเกินแนวนอนทิ้ง */
+        overflow-x: hidden !important; 
     }
 
-    /* 2. จัดการ Header Dropdown (กล่องบน) */
+    /* 2. จัดการ Header Dropdown */
     .settingsHeaderDropdown {
         display: flex !important;
         flex-direction: column !important;
@@ -236,16 +249,16 @@
         height: auto !important;
     }
 
-    /* 3. จัดการ Filter Group และ Input */
+    /* 3. จัดการ Filter Group */
     .filterGroup,
     .agencyFormGroup {
         width: 100% !important;
-        min-width: 0 !important; /* สำคัญ: ยกเลิก min-width 150px ของ Desktop */
+        min-width: 0 !important; 
         margin-bottom: 12px;
         display: block !important;
     }
 
-    /* 4. บังคับ Select/Input ทุกตัวให้หด */
+    /* 4. บังคับ Input/Select ทุกตัวให้เต็ม 100% แต่ไม่ล้น */
     .settingsSection select,
     .filterGroup select,
     .searchInput,
@@ -257,17 +270,23 @@
         box-sizing: border-box !important;
     }
 
-    /* Grid Layouts Reset */
+    /* 5. แก้ไขตำแหน่ง Select ในมือถือ */
+    .settingsSection select {
+        /* ย้ำ Styling อีกรอบกันมือถือบางรุ่น Override */
+        display: block !important;
+        height: 48px !important;
+        margin-top: 12px !important; /* เว้นระยะจากหัวข้อไม่ให้ทับ */
+        margin-bottom: 12px !important;
+        background-position: right 12px center !important;
+        font-size: 16px !important; /* ป้องกัน iOS Zoom */
+    }
+
+    /* Grid Reset */
     .agencyViewContainer, 
     .agencyInfoGrid, 
     .agencyRow2, 
-    .agencyAddressGrid { 
-        grid-template-columns: 1fr !important; 
-    }
+    .agencyAddressGrid { grid-template-columns: 1fr !important; }
 
-    /* Modal */
-    .agencyModalContainer { 
-        width: 95% !important; 
-        max-height: 95vh !important; 
-    }
+    /* Modal Fullscreen */
+    .agencyModalContainer { width: 95% !important; max-height: 95vh !important; }
 }
