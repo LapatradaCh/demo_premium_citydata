@@ -19,7 +19,7 @@ import {
   ComposedChart
 } from 'recharts';
 
-import styles from './css/StatisticsView.module.css';
+import styles from './StatisticsView.module.css';
 
 // --- Configuration ---
 const STATUS_COLORS = {
@@ -202,7 +202,7 @@ const StatisticsView = ({ organizationId }) => {
               return (
                 <div 
                   key={idx} 
-                  className={`${styles.statusCard} ${styles.hoverShadow}`}
+                  className={styles.statusCard}
                   style={{
                     backgroundColor: card.bg,
                     borderColor: card.border,
@@ -269,11 +269,18 @@ const StatisticsView = ({ organizationId }) => {
                 <BarChart 
                   data={efficiencyData} 
                   layout="vertical"
-                  margin={{ top: 0, right: 10, left: -20, bottom: 0 }}
+                  margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                   <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={70} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
+                  <YAxis 
+                    dataKey="id" 
+                    type="category" 
+                    width={100} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fontSize: 10}} 
+                  />
                   <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
                   <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                   <Bar dataKey="stage1" stackId="a" fill="#fca5a5" name="รอรับ" barSize={16} />
@@ -291,7 +298,7 @@ const StatisticsView = ({ organizationId }) => {
                   <Activity color="#6366f1" size={20} />
                   ประเภท vs เวลา
                 </h2>
-                <p className={styles.sectionSubtitle}>ความสัมพันธ์ (จำนวน/เวลา)</p>
+                <p className="sectionSubtitle">ความสัมพันธ์ (จำนวน/เวลา)</p>
               </div>
             </div>
             {problemTypeData.length > 0 ? (
@@ -322,12 +329,12 @@ const StatisticsView = ({ organizationId }) => {
         <div className={styles.responsiveGrid2}>
             
             <section className={styles.sectionCard}>
-                <h3 style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', fontSize: '16px'}}>ความพึงพอใจ</h3>
+                <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', fontSize: '16px'}}>ความพึงพอใจ</h3>
                 {satisfactionData ? (
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        <span style={{color: '#facc15'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        <span style={{color: '#eab308'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -337,7 +344,7 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    <div className={styles.progressBar} style={{backgroundColor: '#facc15', width: `${percent}%`}}></div>
+                                    <div className={styles.progressBar} style={{backgroundColor: '#eab308', width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
@@ -350,7 +357,7 @@ const StatisticsView = ({ organizationId }) => {
 
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
-                    <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
+                    <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
                     <div className={styles.topBadge}>
                         <Users size={14} style={{marginRight: '4px'}}/>
                         ทั้งหมด: {totalStaffCount} คน
@@ -363,7 +370,6 @@ const StatisticsView = ({ organizationId }) => {
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          /* แก้ไขจุดที่ 1: เปลี่ยน margin.left จาก -10 เป็น 0 หรือ 10 เพื่อไม่ให้ตกขอบ */
                           margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
@@ -371,7 +377,6 @@ const StatisticsView = ({ organizationId }) => {
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            /* แก้ไขจุดที่ 2: เพิ่มความกว้างแกน Y จาก 90 เป็น 140 เพื่อรองรับชื่อยาวๆ */
                             width={140} 
                             axisLine={false} 
                             tickLine={false} 
