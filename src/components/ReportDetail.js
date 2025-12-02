@@ -183,7 +183,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -521,7 +520,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                    <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
                       <option value="รอรับเรื่อง">รอรับเรื่อง</option>
                       <option value="กำลังประสานงาน">กำลังประสานงาน</option>
-                      <option value="ดำเนินการ">ดำเนินการ</option>
+                      <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
                       <option value="เสร็จสิ้น">เสร็จสิ้น</option>
                       <option value="ส่งต่อ">ส่งต่อ</option>
                       <option value="เชิญร่วม">เชิญร่วม</option>
