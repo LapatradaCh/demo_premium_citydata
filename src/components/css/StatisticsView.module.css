@@ -1,4 +1,4 @@
-/* StatisticsView.module.css - Fixed Chart Labels overflow */
+/* StatisticsView.module.css - Final Fixed Version */
 
 /* 1. ไม่มีการ Import Font Prompt (ใช้ฟอนต์เดิมของเว็บ) */
 
@@ -6,6 +6,7 @@
 .container {
   min-height: 100vh;
   background-color: #ffffff;
+  /* เอา font-family ออกเพื่อให้ใช้ฟอนต์มาตรฐาน */
   padding-bottom: 80px;
   width: 100% !important;
   max-width: none !important;
@@ -113,7 +114,7 @@
   width: fit-content;
 }
 
-/* --- SECTION CARDS --- */
+/* --- SECTION CARDS (กล่องครอบกราฟ) --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -124,8 +125,10 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  overflow: hidden;
   width: 100%;
+
+  /* แก้ไข: เปลี่ยนเป็น visible เพื่อไม่ให้ตัดตัวหนังสือที่ยาวเกินกราฟ */
+  overflow: visible !important;
 }
 
 .sectionHeader {
@@ -162,29 +165,32 @@
   font-weight: 500;
 }
 
-/* --- CHARTS (แก้ไขส่วนนี้เพื่อแก้ปัญหาตัวหนังสือล้น) --- */
+/* --- CHARTS (ปรับปรุงการแสดงผล) --- */
 .chartContainer {
   height: 350px;
   width: 100%;
   position: relative;
+  /* เพิ่ม padding ซ้ายเพื่อให้กราฟขยับหนีตัวหนังสือแกน Y */
+  padding-left: 5px;
+  /* เปิด visible เพื่อไม่ให้ label ถูกตัด */
+  overflow: visible !important;
 }
 
 .staffChartContainer {
   height: 500px;
   width: 100%;
   position: relative;
+  /* ใช้การตั้งค่าแบบเดียวกัน */
+  padding-left: 5px;
+  overflow: visible !important;
 }
 
-/* เพิ่ม font-size และ letter-spacing 
-   เพื่อบังคับให้ตัวหนังสือในกราฟ (เช่น Ticket-001) เล็กลงและกระชับขึ้น
-   จะได้ไม่ล้นกรอบด้านซ้ายครับ 
-*/
 .chartContainer *,
 .staffChartContainer * {
   max-width: none !important;
   box-sizing: border-box;
-  font-size: 12px !important; /* ลดขนาดตัวอักษรในกราฟ */
-  letter-spacing: -0.5px !important; /* บีบระยะห่างตัวอักษรนิดหน่อย */
+  /* ปรับขนาดตัวอักษรในกราฟให้พอดี ไม่ใหญ่จนล้น */
+  font-size: 12px !important;
 }
 
 /* --- SATISFACTION --- */
@@ -224,10 +230,11 @@
   overflow: hidden;
 }
 
+/* หลอดสีเหลือง (Yellow Gradient) */
 .progressBar {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #fde047, #eab308); /* สีเหลือง */
+  background: linear-gradient(90deg, #fde047, #eab308); 
 }
 
 .starPercent {
