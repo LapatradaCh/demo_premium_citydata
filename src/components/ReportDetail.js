@@ -180,6 +180,10 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
             image_url: finalImageUrl           
         };
 
+        // !!! เพิ่มบรรทัดนี้ เพื่อเช็คข้อมูลก่อนส่ง !!!
+        console.log("DEBUG PAYLOAD:", payload); 
+        console.log("JSON STRING:", JSON.stringify(payload));
+
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
