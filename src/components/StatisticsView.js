@@ -24,12 +24,12 @@ import styles from './css/StatisticsView.module.css';
 // --- Configuration ---
 const STATUS_COLORS = {
   'รอรับเรื่อง': '#ef4444',      
-  'กำลังประสานงาน': '#a855f7',   
-  'กำลังดำเนินการ': '#f59e0b',   
+  'กำลังประสานงาน': '#a855f7',    
+  'กำลังดำเนินการ': '#f59e0b',    
   'เสร็จสิ้น': '#22c55e',        
-  'ส่งต่อ': '#3b82f6',           
-  'เชิญร่วม': '#06b6d4',         
-  'ปฏิเสธ': '#6b7280',           
+  'ส่งต่อ': '#3b82f6',            
+  'เชิญร่วม': '#06b6d4',          
+  'ปฏิเสธ': '#6b7280',            
   'NULL': '#d1d5db'              
 };
 
@@ -352,8 +352,8 @@ const StatisticsView = ({ organizationId }) => {
                 <div className={styles.topHeader}>
                     <h3 style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
                     <div className={styles.topBadge}>
-                       <Users size={14} style={{marginRight: '4px'}}/>
-                       ทั้งหมด: {totalStaffCount} คน
+                        <Users size={14} style={{marginRight: '4px'}}/>
+                        ทั้งหมด: {totalStaffCount} คน
                     </div>
                 </div>
                 
@@ -363,14 +363,16 @@ const StatisticsView = ({ organizationId }) => {
                         <BarChart 
                           layout="vertical" 
                           data={staffData} 
-                          margin={{ top: 5, right: 10, left: -10, bottom: 0 }}
+                          /* แก้ไขจุดที่ 1: เปลี่ยน margin.left จาก -10 เป็น 0 หรือ 10 เพื่อไม่ให้ตกขอบ */
+                          margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
                         >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={90} 
+                            /* แก้ไขจุดที่ 2: เพิ่มความกว้างแกน Y จาก 90 เป็น 140 เพื่อรองรับชื่อยาวๆ */
+                            width={140} 
                             axisLine={false} 
                             tickLine={false} 
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
