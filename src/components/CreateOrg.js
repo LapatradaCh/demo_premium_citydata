@@ -69,7 +69,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm
+ * Component 2: LogoSetupForm (ปรับปรุงใหม่: ไอคอนกล้อง)
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -120,12 +120,28 @@ const LogoSetupForm = ({ onSave, orgId }) => {
   return (
     <form onSubmit={handleLogoSubmit}>
       <div className={styles.logoUploadBox}>
-        <img
-          id="logo-preview"
-          src={orgImagePreview || "https://placehold.co/150x150/f0f0f0/cccccc?text=LOGO"}
-          alt="Logo Preview"
-          className={styles.logoPreview}
-        />
+        
+        {/* Wrapper สำหรับรูปภาพและปุ่มแก้ไข */}
+        <div className={styles.logoWrapper}>
+          <img
+            id="logo-preview"
+            src={orgImagePreview || "https://placehold.co/150x150/f0f0f0/cccccc?text=LOGO"}
+            alt="Logo Preview"
+            className={styles.logoPreview}
+          />
+          
+          {/* ปุ่มไอคอนกล้องสีเหลือง (คลิกแล้วเปิด input file) */}
+          <div 
+            className={styles.editIcon} 
+            onClick={() => document.getElementById('logo-upload-input').click()}
+            title="เปลี่ยนรูปภาพ"
+          >
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+             </svg>
+          </div>
+        </div>
         
         <div className={styles.logoUploadActions}>
           <input
@@ -136,15 +152,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
             onChange={handleImageChange}
           />
           
-          <label
-            htmlFor="logo-upload-input"
-            className={`${styles.button} ${styles.btnSecondary}`}
-            style={{ width: 'auto', minWidth: '150px' }}
-          >
-            เลือกไฟล์โลโก้
-          </label>
-          
-          <p style={{fontSize: '0.85rem', color: '#999', margin: 0}}>
+          <p style={{fontSize: '0.85rem', color: '#999', margin: '1rem 0'}}>
             ขนาดไฟล์ไม่เกิน 5MB, รูปแบบ JPG, PNG
           </p>
           
@@ -419,11 +427,9 @@ const TypeSetupForm = ({ onSave, orgId }) => {
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
-  // ใช้ state เก็บค่า 'admin' หรือ 'user' จาก Dropdown
   const [codeType, setCodeType] = useState('admin');
   const [copyStatus, setCopyStatus] = useState('idle');
 
-  // เลือกแสดงรหัสตามค่าใน Dropdown
   const currentCode = codeType === 'admin' ? adminCode : userCode;
 
   const handleCopy = () => {
@@ -436,10 +442,9 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
   return (
     <div className={styles.codeBoxContainer}>
       
-      {/* ส่วน Dropdown เลือกประเภท */}
       <div className={styles.formGroup}>
         <select
-          className={styles.select} /* ใช้ Class select เดิมของฟอร์มได้เลย */
+          className={styles.select}
           value={codeType}
           onChange={(e) => setCodeType(e.target.value)}
           style={{ fontWeight: 'bold', color: '#444', cursor: 'pointer' }}
@@ -449,7 +454,6 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
         </select>
       </div>
 
-      {/* ส่วนแสดงรหัส (ดีไซน์เดิม) */}
       <div className={styles.codeDisplayBox}>
         <span className={styles.codeText}>
           {currentCode}
