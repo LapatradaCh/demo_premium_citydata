@@ -60,7 +60,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
 
   // 2. Fetch Case Detail
   useEffect(() => {
-    const idToFetch = reportId || "41f97b13-7b67-461f-9db1-37629029da84";
+    const idToFetch = reportId ;
 
     const fetchCaseDetail = async () => {
       try {
