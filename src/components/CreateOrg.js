@@ -7,7 +7,7 @@ const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
 
 /**
  * =================================================================
- * Component 1: QuickCreatePage (หน้าแรก - สร้างหน่วยงาน)
+ * Component 1: QuickCreatePage
  * =================================================================
  */
 const QuickCreatePage = ({
@@ -42,7 +42,6 @@ const QuickCreatePage = ({
         />
       </div>
       
-      {/* แสดง Error Message */}
       {error && <div className={styles.errorMessage}>{error}</div>}
       
       <div className={styles.buttonGroup}>
@@ -70,7 +69,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm (อัปเดตโลโก้)
+ * Component 2: LogoSetupForm
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -165,7 +164,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm (GPS & Address)
+ * Component 3: LocationSetupForm
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -299,7 +298,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm (Types)
+ * Component 4: TypeSetupForm
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
@@ -416,14 +415,16 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (แก้ UI ให้เหมือนรูปตัวอย่าง)
+ * Component 5: CodeSetupBox (Dropdown + Icon Copy)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
-  const [showAdminCode, setShowAdminCode] = useState(true);
+  // ใช้ state เก็บค่า 'admin' หรือ 'user' จาก Dropdown
+  const [codeType, setCodeType] = useState('admin');
   const [copyStatus, setCopyStatus] = useState('idle');
 
-  const currentCode = showAdminCode ? adminCode : userCode;
+  // เลือกแสดงรหัสตามค่าใน Dropdown
+  const currentCode = codeType === 'admin' ? adminCode : userCode;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(currentCode).then(() => {
@@ -434,23 +435,21 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
   return (
     <div className={styles.codeBoxContainer}>
-      <div className={styles.codeSwitchWrapper}>
-         <button 
-           type="button" 
-           className={`${styles.codeSwitchBtn} ${showAdminCode ? styles.active : ''}`}
-           onClick={() => setShowAdminCode(true)}
-         >
-           Admin Code
-         </button>
-         <button 
-           type="button" 
-           className={`${styles.codeSwitchBtn} ${!showAdminCode ? styles.active : ''}`}
-           onClick={() => setShowAdminCode(false)}
-         >
-           User Code
-         </button>
+      
+      {/* ส่วน Dropdown เลือกประเภท */}
+      <div className={styles.formGroup}>
+        <select
+          className={styles.select} /* ใช้ Class select เดิมของฟอร์มได้เลย */
+          value={codeType}
+          onChange={(e) => setCodeType(e.target.value)}
+          style={{ fontWeight: 'bold', color: '#444', cursor: 'pointer' }}
+        >
+          <option value="admin">🔑 Admin Code (รหัสสำหรับผู้ดูแล)</option>
+          <option value="user">👤 User Code (รหัสสำหรับสมาชิก)</option>
+        </select>
       </div>
 
+      {/* ส่วนแสดงรหัส (ดีไซน์เดิม) */}
       <div className={styles.codeDisplayBox}>
         <span className={styles.codeText}>
           {currentCode}
@@ -462,11 +461,9 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
           title={copyStatus === 'copied' ? 'คัดลอกสำเร็จ' : 'คัดลอกรหัส'}
         >
           {copyStatus === 'copied' ? (
-             // ไอคอนเครื่องหมายถูก (เมื่อ Copy แล้ว)
-             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           ) : (
-             // ไอคอน Copy สีเขียว (ปกติ - สี่เหลี่ยมซ้อนกัน)
-             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           )}
         </button>
       </div>
