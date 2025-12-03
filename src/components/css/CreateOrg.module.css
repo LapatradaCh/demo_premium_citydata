@@ -345,11 +345,11 @@
   width: 100%;
 }
 
-/* --- [UPDATED] Code Box: เปลี่ยนเป็น Dropdown และคงดีไซน์มินิมอล --- */
+/* --- [UPDATED] Code Box: Dropdown + Clean Icon --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem; /* ระยะห่างระหว่าง Dropdown กับกล่องรหัส */
+  gap: 0.8rem;
 }
 
 /* กล่องแสดงรหัส: กรอบดำ เส้นบาง พื้นขาว */
@@ -359,7 +359,7 @@
   align-items: center;
   background: white;
   
-  border: 1px solid #333; /* กรอบดำเส้นบาง */
+  border: 1px solid #333; 
   border-radius: 16px; 
   
   padding: 1rem 1.5rem;
@@ -374,20 +374,17 @@
   letter-spacing: 2px;
 }
 
-/* ปุ่ม Copy: วงกลมเล็กๆ */
+/* ปุ่ม Copy: บังคับเป็นไอคอนเล็ก ไม่ยืดเป็นปุ่มยาว */
 .btnCopy {
-  /* ล็อกขนาดเป็นสี่เหลี่ยมจัตุรัส */
   width: 32px !important;  
   height: 32px !important;
-  min-width: 32px !important;
+  min-width: 32px !important; /* กันหด */
   
-  /* จัดไอคอนกึ่งกลาง */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 !important;
   
-  /* ล้างพื้นหลังเดิม */
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
