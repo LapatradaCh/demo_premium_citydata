@@ -43,7 +43,7 @@ const QuickCreatePage = ({
       </div>
       
       {/* แสดง Error Message */}
-      {error && <div className={styles.errorMessage} style={{color: 'red', marginBottom: '1rem'}}>{error}</div>}
+      {error && <div className={styles.errorMessage}>{error}</div>}
       
       <div className={styles.buttonGroup}>
         <button
@@ -70,7 +70,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm (อัปเดตโลโก้)
+ * Component 2: LogoSetupForm (อัปเดตโลโก้) - ปรับปุ่มให้สวย
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -94,8 +94,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
     
     setIsSaving(true);
     
-    // Note: ควรทำระบบ Upload ไฟล์จริง แล้วส่ง URL กลับมา
-    // ตรงนี้จำลองส่ง URL ไปก่อน
+    // Note: จำลองการส่ง URL
     const mockLogoUrl = "https://placehold.co/400x400/png?text=Logo"; 
 
     try {
@@ -103,7 +102,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           url_logo: mockLogoUrl
         }),
       });
@@ -121,15 +120,18 @@ const LogoSetupForm = ({ onSave, orgId }) => {
   };
 
   return (
-    <form onSubmit={handleLogoSubmit} className={styles.contentForm}>
+    <form onSubmit={handleLogoSubmit}>
       <div className={styles.logoUploadBox}>
+        {/* รูป Preview */}
         <img
           id="logo-preview"
-          src={orgImagePreview || "https://placehold.co/150x150/E2E8F0/A0AEC0?text=โลโก้"}
+          src={orgImagePreview || "https://placehold.co/150x150/E2E8F0/A0AEC0?text=LOGO"}
           alt="Logo Preview"
           className={styles.logoPreview}
         />
+        
         <div className={styles.logoUploadActions}>
+          {/* ซ่อน Input ตัวจริง */}
           <input
             type="file"
             id="logo-upload-input"
@@ -137,13 +139,17 @@ const LogoSetupForm = ({ onSave, orgId }) => {
             className={styles.hiddenFileInput}
             onChange={handleImageChange}
           />
+          {/* ใช้ Label ทำเป็นปุ่มแทน */}
           <label
             htmlFor="logo-upload-input"
             className={`${styles.button} ${styles.btnSecondary}`}
+            style={{ width: 'auto', minWidth: '150px' }}
           >
             เลือกไฟล์โลโก้
           </label>
+          
           <p className={styles.helpTextSmall}>ขนาดไฟล์ไม่เกิน 5MB, รูปแบบ JPG, PNG</p>
+          
           <button 
             type="submit" 
             className={`${styles.button} ${styles.btnSuccess} ${styles.btnSave}`}
@@ -159,7 +165,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm (อัปเดตที่อยู่และพิกัด)
+ * Component 3: LocationSetupForm - ปรับ Grid Layout
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -224,21 +230,17 @@ const LocationSetupForm = ({ onSave, orgId }) => {
   const handleLocationSubmit = async (e) => {
     e.preventDefault();
     if (!orgId) return alert("ไม่พบรหัสหน่วยงาน (Organization ID)");
-    
     setIsSaving(true);
-
     try {
       const response = await fetch(`${API_BASE_URL}/organizations`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           ...locationData
         }),
       });
-
       if (!response.ok) throw new Error('Update location failed');
-
       alert("บันทึกข้อมูลขอบเขตสำเร็จ!");
       onSave();
     } catch (err) {
@@ -250,8 +252,8 @@ const LocationSetupForm = ({ onSave, orgId }) => {
   };
 
   return (
-    <form onSubmit={handleLocationSubmit} className={`${styles.contentForm} ${styles.formGrid}`}>
-      <div className={`${styles.formGroup} ${styles.geoButtonContainer}`}>
+    <form onSubmit={handleLocationSubmit}>
+      <div className={styles.geoButtonContainer}>
         <button
           type="button"
           onClick={handleFetchGeolocation}
@@ -263,28 +265,31 @@ const LocationSetupForm = ({ onSave, orgId }) => {
         {geoStatus === 'error' && <p className={styles.errorMessage}>{geoError}</p>}
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="province" className={styles.label}>จังหวัดที่รับผิดชอบ</label>
-        <input type="text" id="province" name="province" value={locationData.province} className={styles.input} readOnly disabled />
-      </div>
-      <div className={styles.formGroup}> 
-        <label htmlFor="district" className={styles.label}>อำเภอ/เขต</label>
-        <input type="text" id="district" name="district" value={locationData.district} className={styles.input} readOnly disabled />
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="sub_district" className={styles.label}>ตำบล/แขวง</label>
-        <input type="text" id="sub_district" name="sub_district" value={locationData.sub_district} className={styles.input} readOnly disabled />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="contact_phone" className={`${styles.label} ${styles.required}`}>เบอร์โทรศัพท์ติดต่อ</label>
-        <input type="tel" id="contact_phone" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} className={styles.input} placeholder="08XXXXXXXX" />
-      </div>
-
-      <div className={styles.submitRow}>
-        <button type="submit" className={`${styles.button} ${styles.btnSuccess}`} disabled={isSaving}>
-           {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
-        </button>
+      {/* ใช้ Grid Layout */}
+      <div className={styles.formGrid}>
+        <div className={styles.formGroup}>
+          <label htmlFor="province" className={styles.label}>จังหวัดที่รับผิดชอบ</label>
+          <input type="text" id="province" name="province" value={locationData.province} className={styles.input} readOnly disabled />
+        </div>
+        <div className={styles.formGroup}> 
+          <label htmlFor="district" className={styles.label}>อำเภอ/เขต</label>
+          <input type="text" id="district" name="district" value={locationData.district} className={styles.input} readOnly disabled />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="sub_district" className={styles.label}>ตำบล/แขวง</label>
+          <input type="text" id="sub_district" name="sub_district" value={locationData.sub_district} className={styles.input} readOnly disabled />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="contact_phone" className={`${styles.label} ${styles.required}`}>เบอร์โทรศัพท์ติดต่อ</label>
+          <input type="tel" id="contact_phone" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} className={styles.input} placeholder="08XXXXXXXX" />
+        </div>
+        
+        {/* ปุ่ม Submit เต็มแถว */}
+        <div className={styles.submitRow}>
+          <button type="submit" className={`${styles.button} ${styles.btnSuccess}`} disabled={isSaving}>
+             {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+          </button>
+        </div>
       </div>
     </form>
   );
@@ -292,7 +297,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm (อัปเดตประเภท)
+ * Component 4: TypeSetupForm - ปรับ Grid Layout
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
@@ -312,15 +317,12 @@ const TypeSetupForm = ({ onSave, orgId }) => {
           fetch(`${API_BASE_URL}/organization-types`),
           fetch(`${API_BASE_URL}/usage-types`)
         ]);
-        if (!orgTypeRes.ok || !usageTypeRes.ok) {
-          throw new Error('ไม่สามารถดึงข้อมูลประเภทหน่วยงานได้');
-        }
+        if (!orgTypeRes.ok || !usageTypeRes.ok) throw new Error('ไม่สามารถดึงข้อมูลประเภทได้');
         const orgTypeData = await orgTypeRes.json();
         const usageTypeData = await usageTypeRes.json();
         setOrgTypeOptions(orgTypeData);
         setUsageTypeOptions(usageTypeData);
       } catch (error) {
-        console.error("Error fetching types:", error);
         setTypesError(error.message);
       } finally {
         setTypesLoading(false);
@@ -336,27 +338,22 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
   const handleTypeSubmit = async (e) => {
     e.preventDefault();
-    if (!orgId) return alert("ไม่พบรหัสหน่วยงาน (Organization ID)");
-    
+    if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
     setIsSaving(true);
-    
     try {
       const response = await fetch(`${API_BASE_URL}/organizations`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          organization_id: orgId, // ใช้ ID ในการอัปเดต
+          organization_id: orgId,
           org_type_id: typeData.org_type_id,
           usage_type_id: typeData.usage_type_id
         }),
       });
-
       if (!response.ok) throw new Error('Update types failed');
-
       alert("บันทึกข้อมูลประเภทสำเร็จ!");
       onSave();
     } catch (err) {
-      console.error(err);
       alert("เกิดข้อผิดพลาดในการบันทึกประเภท");
     } finally {
       setIsSaving(false);
@@ -367,7 +364,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
   if (typesError) return <p className={styles.errorMessage}>{typesError}</p>;
 
   return (
-    <form onSubmit={handleTypeSubmit} className={`${styles.contentForm} ${styles.formGrid}`}>
+    <form onSubmit={handleTypeSubmit} className={styles.formGrid}>
       <div className={styles.formGroup}>
         <label htmlFor="org_type_id" className={`${styles.label} ${styles.required}`}>ประเภทหน่วยงาน</label>
         <select
@@ -376,13 +373,10 @@ const TypeSetupForm = ({ onSave, orgId }) => {
           value={typeData.org_type_id}
           onChange={handleTypeChange}
           className={styles.select}
-          disabled={orgTypeOptions.length === 0}
         >
           <option value="">เลือกประเภท</option>
           {orgTypeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
+            <option key={option.value} value={option.value}>{option.label}</option>
           ))}
         </select>
       </div>
@@ -394,13 +388,10 @@ const TypeSetupForm = ({ onSave, orgId }) => {
           value={typeData.usage_type_id}
           onChange={handleTypeChange}
           className={styles.select}
-          disabled={usageTypeOptions.length === 0}
         >
           <option value="">เลือกประเภทการใช้งาน</option>
           {usageTypeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
+            <option key={option.value} value={option.value}>{option.label}</option>
           ))}
         </select>
       </div>
@@ -419,7 +410,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (แสดงผลรหัส)
+ * Component 5: CodeSetupBox
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -428,35 +419,25 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
   const currentCode = showAdminCode ? adminCode : userCode;
   const currentCodeType = showAdminCode ? 'Admin Code' : 'User Code';
-  
   const toggleCodeType = () => setShowAdminCode(!showAdminCode);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(currentCode).then(() => {
       setCopyStatus('copied');
       setTimeout(() => setCopyStatus('idle'), 2000);
-    }).catch(err => {
-      console.error('Failed to copy: ', err);
-      alert('คัดลอกไม่สำเร็จ');
-    });
+    }).catch(err => alert('คัดลอกไม่สำเร็จ'));
   };
 
   return (
     <div className={styles.codeBoxContent}>
       <div className={styles.codeBoxHeader}>
         <span className={styles.codeBoxType}>{currentCodeType}</span>
-        <button
-          type="button"
-          className={styles.codeBoxSwitch}
-          onClick={toggleCodeType}
-        >
+        <button type="button" className={styles.codeBoxSwitch} onClick={toggleCodeType}>
           {showAdminCode ? 'สลับเป็น User Code' : 'สลับเป็น Admin Code'}
         </button>
       </div>
       <div className={styles.codeBoxDisplayWrapper}>
-        <div id="display-org-code" className={styles.codeBoxDisplay}>
-          {currentCode}
-        </div>
+        <div className={styles.codeBoxDisplay}>{currentCode}</div>
         <button 
           type="button"
           onClick={handleCopy}
@@ -471,18 +452,11 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
 /**
  * =================================================================
- * Component 6: SetupGuidePage (หน้าขั้นตอนการตั้งค่า)
+ * Component 6: SetupGuidePage
  * =================================================================
  */
-const SetupGuidePage = ({
-  createdOrgName,
-  adminCode, 
-  userCode,   
-  orgId, 
-  handleGoBackToEdit,
-}) => {
+const SetupGuidePage = ({ createdOrgName, adminCode, userCode, orgId, handleGoBackToEdit }) => {
   const [activeAccordion, setActiveAccordion] = useState(null); 
-
   const handleAccordionClick = (section) => {
     setActiveAccordion(activeAccordion === section ? null : section);
   };
@@ -491,241 +465,130 @@ const SetupGuidePage = ({
     <div id="page-setup-guide" className={`${styles.page} ${styles.pageSetup}`}>
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>
-          <span>ยินดีต้อนรับสู่ <span className={styles.orgNameHighlight}>{createdOrgName}</span>!</span>
+          ยินดีต้อนรับสู่ <span className={styles.orgNameHighlight}>{createdOrgName}</span>
         </h1>
         <p className={styles.pageSubtitle}>องค์กรของคุณถูกสร้างเรียบร้อยแล้ว</p>
       </div>
 
-      <div className={styles.setupContainer}>
-        <h2 className={styles.setupTitle}>ขั้นตอนต่อไป (แนะนำ)</h2>
-        <div className={styles.accordion} id="setup-accordion">
+      <div className={styles.accordion}>
+        <h2 className={styles.contentTitle} style={{textAlign:'center', border:'none'}}>ขั้นตอนต่อไป (แนะนำ)</h2>
+        
+        {/* Accordion Items */}
+        {['code', 'logo', 'location', 'types'].map((item) => {
+          let title, subtitle, icon, content;
+          if (item === 'code') {
+             title = "รหัสเข้าร่วมองค์กร"; subtitle = "สำหรับแชร์ให้สมาชิก Admin และ User"; icon = "🔑";
+             content = <CodeSetupBox adminCode={adminCode} userCode={userCode} />;
+          } else if (item === 'logo') {
+             title = "อัปโหลดโลโก้"; subtitle = "เพิ่มตราสัญลักษณ์ให้สมาชิกจำได้ง่าย"; icon = "🖼️";
+             content = <LogoSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />;
+          } else if (item === 'location') {
+             title = "กำหนดขอบเขตที่รับผิดชอบ"; subtitle = "ระบุตำแหน่งและเบอร์ติดต่อ"; icon = "📍";
+             content = <LocationSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />;
+          } else {
+             title = "ตั้งค่าประเภทหน่วยงาน"; subtitle = "ระบุประเภทและการใช้งาน"; icon = "🏷️";
+             content = <TypeSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />;
+          }
 
-          {/* 1. รหัสเข้าร่วม */}
-          <div className={styles.accordionItem}>
-            <button
-              type="button"
-              className={styles.accordionHeader}
-              onClick={() => handleAccordionClick('code')}
-            >
-              <div className={`${styles.accordionIcon} ${styles.iconBgCode}`}>🔑</div>
-              <div className={styles.accordionTitleBox}>
-                <p className={styles.accordionTitle}>รหัสเข้าร่วมองค์กร</p>
-                <p className={styles.accordionSubtitle}>สำหรับแชร์ให้สมาชิก Admin และ User</p>
-              </div>
-              <svg className={`${styles.accordionArrow} ${activeAccordion === 'code' ? styles.rotate180 : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'code' ? styles.open : ''}`}>
-              <div className={styles.accordionContent}>
-                <CodeSetupBox adminCode={adminCode} userCode={userCode} />
+          return (
+            <div key={item} className={styles.accordionItem}>
+              <button type="button" className={styles.accordionHeader} onClick={() => handleAccordionClick(item)}>
+                <div className={styles.accordionIcon}>{icon}</div>
+                <div style={{flex: 1}}>
+                  <p className={styles.accordionTitle}>{title}</p>
+                  <p className={styles.accordionSubtitle}>{subtitle}</p>
+                </div>
+                <svg className={`${styles.accordionArrow} ${activeAccordion === item ? styles.rotate180 : ''}`} xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              <div className={`${styles.accordionContentWrapper} ${activeAccordion === item ? styles.open : ''}`}>
+                <div className={styles.accordionContent}>
+                   <h3 className={styles.contentTitle}>{title}</h3>
+                   {content}
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* 2. อัปโหลดโลโก้ */}
-          <div className={styles.accordionItem}>
-            <button
-              type="button"
-              className={styles.accordionHeader}
-              onClick={() => handleAccordionClick('logo')}
-            >
-              <div className={`${styles.accordionIcon} ${styles.iconBgLogo}`}>🖼️</div>
-              <div className={styles.accordionTitleBox}>
-                <p className={styles.accordionTitle}>อัปโหลดโลโก้</p>
-                <p className={styles.accordionSubtitle}>เพิ่มตราสัญลักษณ์ให้สมาชิกจำได้ง่าย</p>
-              </div>
-              <svg className={`${styles.accordionArrow} ${activeAccordion === 'logo' ? styles.rotate180 : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'logo' ? styles.open : ''}`}>
-              <div className={styles.accordionContent}>
-                <h3 className={styles.contentTitle}>อัปโหลดโลโก้หน่วยงาน</h3>
-                <LogoSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />
-              </div>
-            </div>
-          </div>
-
-          {/* 3. กำหนดขอบเขต */}
-          <div className={styles.accordionItem}>
-            <button
-              type="button"
-              className={styles.accordionHeader}
-              onClick={() => handleAccordionClick('location')}
-            >
-              <div className={`${styles.accordionIcon} ${styles.iconBgLocation}`}>📍</div>
-              <div className={styles.accordionTitleBox}>
-                <p className={styles.accordionTitle}>กำหนดขอบเขตที่รับผิดชอบ</p>
-                <p className={styles.accordionSubtitle}>ระบุตำแหน่งและเบอร์ติดต่อ</p>
-              </div>
-              <svg className={`${styles.accordionArrow} ${activeAccordion === 'location' ? styles.rotate180 : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'location' ? styles.open : ''}`}>
-              <div className={styles.accordionContent}>
-                <h3 className={styles.contentTitle}>กำหนดขอบเขตและข้อมูลติดต่อ</h3>
-                <LocationSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />
-              </div>
-            </div>
-          </div>
-
-          {/* 4. ตั้งค่าประเภท */}
-          <div className={styles.accordionItem}>
-            <button
-              type="button"
-              className={styles.accordionHeader}
-              onClick={() => handleAccordionClick('types')}
-            >
-              <div className={`${styles.accordionIcon} ${styles.iconBgType}`}>🏷️</div>
-              <div className={styles.accordionTitleBox}>
-                <p className={styles.accordionTitle}>ตั้งค่าประเภทหน่วยงาน</p>
-                <p className={styles.accordionSubtitle}>ระบุประเภทและการใช้งาน</p>
-              </div>
-              <svg className={`${styles.accordionArrow} ${activeAccordion === 'types' ? styles.rotate180 : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'types' ? styles.open : ''}`}>
-              <div className={styles.accordionContent}>
-                <h3 className={styles.contentTitle}>ตั้งค่าประเภทหน่วยงานและการใช้งาน</h3>
-                <TypeSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />
-              </div>
-            </div>
-          </div>
-
-        </div>
+          );
+        })}
       </div>
       
       <div className={styles.buttonGroup} style={{ marginTop: '3rem' }}>
         <button
           type="button"
-          id="btn-back-to-edit"
           className={`${styles.button} ${styles.btnPrimaryBack}`}
           onClick={handleGoBackToEdit} 
         >
-          {'ย้อนกลับไปแก้ไขชื่อหน่วยงาน'}
+          ย้อนกลับไปแก้ไขชื่อหน่วยงาน
         </button>
       </div>
     </div>
   );
 };
 
-
 /**
  * =================================================================
- * Main Component: CreateOrg (จัดการ Logic หลัก และการสุ่มรหัส)
+ * Main Component
  * =================================================================
  */
 function CreateOrg() {
   const [page, setPage] = useState('create');
   const navigate = useNavigate();
-
   const [orgName, setOrgName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [createdOrgName, setCreatedOrgName] = useState('');
   const [adminCode, setAdminCode] = useState('');
   const [userCode, setUserCode] = useState('');
-  
-  // *** State เก็บ organization_id จาก Backend ***
   const [orgId, setOrgId] = useState(null); 
-
 
   const handleQuickCreate = async (e) => {
     e.preventDefault();
-    if (!orgName) {
-      alert('กรุณากรอกชื่อหน่วยงาน');
-      return;
-    }
-    
+    if (!orgName) return alert('กรุณากรอกชื่อหน่วยงาน');
     setIsLoading(true);
     setError(null);
 
-    // =========================================================
-    // ฟังก์ชันสุ่มรหัส (Prefix + 3ตัวอักษร + 3ตัวเลข)
-    // =========================================================
     const generateCustomCode = (prefix) => {
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       const numbers = "0123456789";
       let chars = [];
-
-      // 1. สุ่มตัวอักษร 3 ตัว
-      for (let i = 0; i < 3; i++) {
-        chars.push(letters.charAt(Math.floor(Math.random() * letters.length)));
-      }
-
-      // 2. สุ่มตัวเลข 3 ตัว
-      for (let i = 0; i < 3; i++) {
-        chars.push(numbers.charAt(Math.floor(Math.random() * numbers.length)));
-      }
-
-      // 3. สลับตำแหน่ง (Shuffle)
+      for (let i = 0; i < 3; i++) chars.push(letters.charAt(Math.floor(Math.random() * letters.length)));
+      for (let i = 0; i < 3; i++) chars.push(numbers.charAt(Math.floor(Math.random() * numbers.length)));
       for (let i = chars.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [chars[i], chars[j]] = [chars[j], chars[i]];
       }
-
-      // 4. รวมกับ Prefix
       return prefix + chars.join('');
     };
-    // =========================================================
 
-    // 1. สร้างรหัส
-    const newOrgCode = generateCustomCode('U');   // นี่คือ Organization Code (Uxxxxxx)
-    const newAdminCode = generateCustomCode('A'); // นี่คือ Admin Code (Axxxxxx)
+    const newOrgCode = generateCustomCode('U');   
+    const newAdminCode = generateCustomCode('A'); 
     
-    // 2. Payload สำหรับ POST
-    // (ส่ง Organization Code ไปเป็น Primary Identify ของ User องค์กรนี้ด้วย)
-    const payload = {
-        organization_code: newOrgCode,
-        organization_name: orgName,
-        admin_code: newAdminCode,
-    };
-
     try {
-        // 3. ยิง Request ไปยัง API
         const response = await fetch(`${API_BASE_URL}/organizations`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                organization_code: newOrgCode,
+                organization_name: orgName,
+                admin_code: newAdminCode,
+            }),
         });
 
         const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'เกิดข้อผิดพลาดในการสร้างหน่วยงาน');
 
-        if (!response.ok) {
-            throw new Error(data.message || 'เกิดข้อผิดพลาดในการสร้างหน่วยงาน');
-        }
-
-        // 4. สำเร็จ! เก็บข้อมูลลง State
-        console.log("Created Org Success:", data);
-        
         setCreatedOrgName(orgName);
         setAdminCode(newAdminCode);
-        
-        // --- จุดที่แก้ไข: ให้ User Code เป็นค่าเดียวกับ Organization Code ---
         setUserCode(newOrgCode); 
-        
-        // เก็บ ID เพื่อใช้ในขั้นตอนถัดไป (Setup)
         setOrgId(data.organization_id); 
-
-        // เปลี่ยนหน้า
         setPage('setup');
 
     } catch (err) {
         console.error("API Error:", err);
         setError(err.message);
-        if(err.message.includes('already')) {
-            alert('รหัสหน่วยงานซ้ำ กรุณาลองใหม่อีกครั้ง');
-        }
+        if(err.message.includes('already')) alert('รหัสหน่วยงานซ้ำ กรุณาลองใหม่อีกครั้ง');
     } finally {
         setIsLoading(false);
     }
-  };
-
-  const handleGoBackToEdit = () => {
-    setOrgName(createdOrgName);
-    setPage('create');
-  };
-
-  const handleBackToHome = () => {
-    navigate('/home1');
   };
 
   return (
@@ -737,7 +600,7 @@ function CreateOrg() {
           createdOrgName={createdOrgName}
           isLoading={isLoading}
           handleQuickCreate={handleQuickCreate}
-          handleBackToHome={handleBackToHome}
+          handleBackToHome={() => navigate('/home1')}
           error={error}
         />
       ) : (
@@ -746,7 +609,7 @@ function CreateOrg() {
           adminCode={adminCode}
           userCode={userCode}
           orgId={orgId} 
-          handleGoBackToEdit={handleGoBackToEdit}
+          handleGoBackToEdit={() => { setOrgName(createdOrgName); setPage('create'); }}
         />
       )}
     </div>
