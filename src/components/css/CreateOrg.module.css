@@ -1,33 +1,32 @@
 /* ==================================================================
- * 1. Variables: ขาว-ดำ มินิมอล + ปุ่มสีเดิม (เขียว/แดง)
+ * 🎨 1. Variables & Theme (คงสีเดิม เขียว/แดง)
  * ================================================================== */
 :root {
-  /* --- สีปุ่ม (ห้ามเปลี่ยน!) --- */
   --color-green: #28a745;
-  --color-green-hover: #218838;
+  --color-green-dark: #218838;
   --color-red: #dc3545;
-  --color-red-hover: #c82333;
+  --color-red-dark: #c82333;
 
-  /* --- ธีมขาว-ดำ มินิมอล (Minimal Monochrome) --- */
-  --color-bg-page: #ffffff;       /* พื้นหลังหน้าเว็บขาวล้วน */
-  --color-surface: #ffffff;       /* พื้นหลังการ์ดขาว */
-  --color-text-main: #000000;     /* ตัวอักษรดำสนิท */
-  --color-text-sub: #666666;      /* ตัวอักษรเทาเข้ม */
-  --color-border: #e0e0e0;        /* เส้นขอบสีเทาเรียบๆ */
-  --color-input-bg: #f9f9f9;      /* พื้นหลัง Input เทาจางๆ */
-
-  /* --- Design Tokens --- */
-  --radius-card: 12px;            /* โค้งมนพอประมาณ ไม่กลมป๊อก */
-  --radius-input: 6px;            /* โค้งมนเล็กน้อย ดูคม */
-  --radius-btn: 6px;              /* ปุ่มเหลี่ยมมนนิดๆ ดูทางการ */
+  --color-bg: #ffffff;
+  --color-surface: #f4f6f8;
+  --color-border: #e0e0e0;
   
-  /* --- Shadow (น้อยมากๆ หรือไม่มีเลยตามสไตล์มินิมอล) --- */
-  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.05); /* เงานิดเดียวพอให้เห็นขอบ */
+  --color-text-main: #2d3436; 
+  --color-text-sub: #636e72;
+
+  --radius-card: 16px;       
+  --radius-input: 8px;
+  --radius-btn: 50px;
+  
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-input: inset 0 2px 4px rgba(0,0,0,0.02);
+  
   --transition: all 0.2s ease-in-out;
 }
 
 /* ==================================================================
- * 2. Layout & Container
+ * 📐 2. Layout & Container
  * ================================================================== */
 .container {
   display: flex;
@@ -35,32 +34,32 @@
   align-items: center;
   min-height: 100vh;
   padding: 2rem 1rem;
-  background-color: #f5f5f5; /* พื้นหลังข้างหลังสุดเป็นเทาอ่อนมากๆ เพื่อให้การ์ดขาวเด่น */
-  font-family: 'Sarabun', sans-serif;
+  background: var(--color-surface);
+  font-family: "Sarabun", sans-serif;
   color: var(--color-text-main);
   box-sizing: border-box;
 }
 
 .page {
   width: 100%;
-  background: var(--color-surface);
+  background: var(--color-bg);
   border-radius: var(--radius-card);
-  padding: 3rem;
+  padding: 2.5rem;
   box-shadow: var(--shadow-card);
-  border: 1px solid var(--color-border); /* เพิ่มเส้นขอบบางๆ */
+  transition: var(--transition);
 }
 .pageCreate { max-width: 500px; }
-.pageSetup { max-width: 800px; }
+.pageSetup { max-width: 700px; }
 
-/* Header เรียบๆ */
+/* Header */
 .pageHeader {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 .pageTitle {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #000;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-text-main);
   margin-bottom: 0.5rem;
 }
 .pageSubtitle {
@@ -68,13 +67,15 @@
   color: var(--color-text-sub);
 }
 .orgNameHighlight {
-  text-decoration: underline; /* ขีดเส้นใต้แบบคลาสสิก */
-  text-decoration-color: var(--color-green);
-  font-weight: 700;
+  color: #000;
+  background: rgba(0,0,0,0.04);
+  padding: 0.1rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 /* ==================================================================
- * 3. Form & Inputs (จัด Grid ให้ตรงเป๊ะ)
+ * 📝 3. Forms & Inputs (แก้เรื่องจัดวางไม่ตรง)
  * ================================================================== */
 .form {
   display: flex;
@@ -82,20 +83,22 @@
   gap: 1.5rem;
 }
 
-/* Grid System: บังคับให้ Input เท่ากัน */
+/* Grid System: จัดระเบียบ Input ให้ตรงกัน */
 .formGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr; /* มือถือ: เรียงเดี่ยว */
+  gap: 1.5rem; /* ระยะห่างระหว่างช่อง */
   width: 100%;
 }
+
 @media (min-width: 768px) {
   .formGrid {
-    grid-template-columns: 1fr 1fr; /* 2 คอลัมน์บนจอคอม */
-    align-items: end; /* ให้ Input วางระนาบเดียวกัน */
+    grid-template-columns: 1fr 1fr; /* จอคอม: 2 คอลัมน์เท่ากัน */
+    align-items: start;
   }
-  .submitRow, .geoButtonContainer {
-    grid-column: 1 / -1; /* กินพื้นที่เต็มแถว */
+  /* ให้ปุ่ม Save หรือปุ่มยาวๆ กินเต็มความกว้าง */
+  .fullWidth {
+    grid-column: 1 / -1; 
   }
 }
 
@@ -103,13 +106,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 100%;
+  width: 100%; /* บังคับให้เต็มช่อง Grid */
 }
 
 .label {
+  font-weight: 700;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #000;
+  color: var(--color-text-main);
 }
 .label.required::after {
   content: " *";
@@ -117,24 +120,40 @@
 }
 
 .input, .select {
-  width: 100%;
-  padding: 0.8rem 1rem;
+  width: 100%; /* บังคับเต็มความกว้าง */
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   border-radius: var(--radius-input);
-  border: 1px solid #ccc; /* ขอบเทาชัดๆ */
-  background-color: #fff;
-  color: #000;
+  border: 1px solid var(--color-border);
+  background: #fdfdfd;
+  color: var(--color-text-main);
   transition: var(--transition);
-  box-sizing: border-box;
+  box-sizing: border-box; /* สำคัญมาก! กันไม่ให้ Padding ดันจนล้น */
 }
 .input:focus, .select:focus {
   outline: none;
-  border-color: #000; /* Focus แล้วขอบดำ (Minimal) */
-  box-shadow: 0 0 0 1px #000;
+  background: #fff;
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+/* ปุ่ม Save ด้านล่างฟอร์ม */
+.submitRow {
+  grid-column: 1 / -1; /* เต็มบรรทัดเสมอ */
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start; /* ชิดซ้าย หรือ center ตามชอบ */
+}
+
+.errorMessage {
+  color: var(--color-red);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.5rem;
 }
 
 /* ==================================================================
- * 4. Buttons (สีเดิม! เขียว/แดง)
+ * 🔘 4. Buttons
  * ================================================================== */
 .buttonGroup {
   margin-top: 2rem;
@@ -145,73 +164,76 @@
 
 .button {
   width: 100%;
-  padding: 0.8rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   border-radius: var(--radius-btn);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: var(--transition);
-  border: 1px solid transparent;
+  border: none;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
-/* ปุ่มหลัก สีเขียวเดิม */
+/* ปุ่มหลัก (เขียว) */
 .btnPrimary, .btnSuccess {
-  background-color: var(--color-green);
+  background: var(--color-green);
   color: white;
+  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
 }
 .btnPrimary:hover, .btnSuccess:hover {
-  background-color: var(--color-green-hover);
+  background: var(--color-green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
 }
 
-/* ปุ่มย้อนกลับ สีแดงเดิม */
+/* ปุ่มย้อนกลับ (แดง) */
 .btnPrimaryBack {
-  background-color: var(--color-red);
+  background: var(--color-red);
   color: white;
+  box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
 }
 .btnPrimaryBack:hover {
-  background-color: var(--color-red-hover);
+  background: var(--color-red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
 }
 
-/* ปุ่มรอง (เลือกไฟล์) - ขาวขอบดำ (Minimal) */
+/* ปุ่มรอง (Secondary) - สำหรับเลือกไฟล์ */
 .btnSecondary {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #000;
+  background: white;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
 }
 .btnSecondary:hover {
-  border-color: #000;
-  background-color: #f0f0f0;
+  background: #f8f9fa;
+  border-color: #bbb;
 }
 
-/* ปุ่ม GPS - ขาวขอบเขียว */
+/* ปุ่ม GPS */
 .btnGeo {
-  background-color: #fff;
-  border: 1px dashed var(--color-green);
+  background: #f0fff4;
   color: var(--color-green);
-  margin-bottom: 1rem;
+  border: 1px dashed var(--color-green);
+  width: 100%;
+  border-radius: var(--radius-btn);
+  margin-bottom: 1.5rem; /* ดันเนื้อหาด้านล่างลงไป */
 }
 .btnGeo:hover {
-  background-color: var(--color-green);
-  color: #fff;
+  background: var(--color-green);
+  color: white;
   border-style: solid;
 }
-
-/* จัดปุ่ม Save ให้อยู่ซ้ายหรือกลางตามต้องการ */
-.submitRow {
-  margin-top: 1rem;
-  display: flex;
-}
-.submitRow .button {
-  width: auto;
-  min-width: 150px;
+.geoButtonContainer {
+  grid-column: 1 / -1; /* เต็มบรรทัด */
+  width: 100%;
 }
 
 /* ==================================================================
- * 5. Accordion (Clean Lines)
+ * 📂 5. Accordion (Cards) - แก้เรื่องความแน่น
  * ================================================================== */
 .accordion {
   display: flex;
@@ -222,59 +244,60 @@
 .accordionItem {
   background: #fff;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  border-radius: 12px;
   overflow: hidden;
   transition: var(--transition);
 }
 .accordionItem:hover {
-  border-color: #000; /* ชี้แล้วขอบดำ */
+  border-color: #ccc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .accordionHeader {
-  width: 100%;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem;
+  width: 100%;
+  padding: 1.25rem;
   background: #fff;
   border: none;
   cursor: pointer;
   text-align: left;
 }
 
-/* Icon ขาวดำ */
 .accordionIcon {
-  width: 3rem;
-  height: 3rem;
-  background: #f0f0f0;
-  border-radius: 8px;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  color: #000;
+  font-size: 1.4rem;
+  background-color: #f8f9fa;
+  color: var(--color-text-main);
+  flex-shrink: 0;
 }
 
 .accordionTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #000;
+  color: var(--color-text-main);
   margin: 0;
 }
 .accordionSubtitle {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--color-text-sub);
   margin-top: 0.2rem;
 }
 .accordionArrow {
   width: 1.2rem;
   margin-left: auto;
-  color: #000;
+  color: #bbb;
   transition: transform 0.3s;
 }
 .rotate180 { transform: rotate(180deg); }
 
-/* Content ภายใน (แก้เรื่องแน่น) */
+/* --- เนื้อหาข้างใน Accordion (แก้ปัญหาอึดอัด) --- */
 .accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
@@ -283,114 +306,131 @@
 .accordionContentWrapper.open {
   grid-template-rows: 1fr;
 }
-.accordionContent { overflow: hidden; }
-
-/* ตัวดันระยะห่างภายใน */
+.accordionContent {
+  overflow: hidden;
+}
+/* ไส้ในจริงๆ ที่มี Padding */
 .accordionInner {
-  padding: 0 1.5rem 2rem 1.5rem;
-  border-top: 1px solid #eee;
+  padding: 0 1.5rem 1.5rem 1.5rem; /* เว้นขอบ ซ้าย-ขวา-ล่าง */
+  border-top: 1px solid #f0f0f0; /* เส้นแบ่งจางๆ ระหว่างหัวข้อกับเนื้อหา */
+  margin-top: 0.5rem;
   padding-top: 1.5rem;
 }
 
 /* ==================================================================
- * 6. Custom Components (Logo & Code)
+ * 🖼️ 6. Special Components (Logo, Code)
  * ================================================================== */
 
-/* Logo Upload - เรียบง่าย */
+/* Logo Upload - จัด layout ใหม่ */
 .logoUploadBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #fff;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 12px;
   border: 1px dashed #ccc;
-  border-radius: var(--radius-card);
 }
 .logoPreview {
   width: 120px;
   height: 120px;
   object-fit: contain;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 5px;
   border: 1px solid #eee;
-  padding: 10px;
-  background: #fff;
 }
-.hiddenFileInput { display: none !important; }
+.hiddenFileInput {
+  display: none !important; /* ซ่อน Input เดิมทิ้งไปเลย */
+}
 .logoUploadActions {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
+  width: 100%;
 }
 
-/* Code Box - ขาวดำ */
+/* Code Box - ปรับสวิตช์ให้ดูเป็นปุ่ม */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 .codeSwitchWrapper {
   display: flex;
-  background: #f0f0f0;
+  background: #f1f3f5;
   padding: 4px;
-  border-radius: 6px;
-  width: fit-content; /* ให้กว้างเท่าเนื้อหา */
-  margin: 0 auto; /* จัดกลาง */
+  border-radius: 50px;
+  position: relative;
+  justify-content: space-between;
 }
 .codeSwitchBtn {
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  flex: 1;
   border: none;
   background: transparent;
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #888;
   cursor: pointer;
+  transition: all 0.2s;
 }
 .codeSwitchBtn.active {
-  background: #fff;
-  color: #000;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background: white;
+  color: var(--color-green);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .codeDisplayBox {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: #fff;
-  border: 1px solid #000; /* ขอบดำเน้นๆ */
-  border-radius: var(--radius-input);
+  align-items: center;
+  background: white;
+  border: 1px solid var(--color-text-main); /* กรอบดำตามดีไซน์เดิม */
+  border-radius: 12px;
   padding: 1rem 1.5rem;
 }
 .codeText {
-  font-family: monospace;
-  font-size: 1.5rem;
+  font-family: "Courier New", monospace;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #000;
+  letter-spacing: 1px;
 }
 .btnCopy {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   padding: 0.4rem 1rem;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
+  color: var(--color-text-main);
+  transition: all 0.2s;
 }
 .btnCopy:hover {
-  background: #000;
-  color: #fff;
-  border-color: #000;
+  background: #e9ecef;
 }
 
 /* Responsive */
 @media (min-width: 768px) {
   .logoUploadBox {
-    flex-direction: row;
+    flex-direction: row; /* แนวนอนบนคอม */
     justify-content: center;
+    padding: 2rem;
   }
-  .logoUploadActions { align-items: flex-start; }
+  .logoUploadActions {
+    align-items: flex-start;
+    width: auto;
+  }
   .buttonGroup {
     flex-direction: row;
     justify-content: center;
   }
-  .button { width: auto; min-width: 160px; }
+  .button {
+    width: auto;
+    min-width: 160px;
+  }
 }
