@@ -117,21 +117,20 @@ const Home = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     localStorage.removeItem("lastSelectedOrg");
+    // ลบ case_id ที่อาจค้างอยู่ออกด้วยตอน logout
+    localStorage.removeItem("selectedCaseId");
     localStorage.clear();
     if (liff.isLoggedIn()) liff.logout();
     navigate("/");
   };
 
-  // ✅ แก้ไข 1: ถ้ามี items (เมนูย่อย) ให้เปิดแค่ Pop-up ยังไม่ต้องเปลี่ยนหน้า
   const handleTabClick = (item) => {
     if (item.action) {
       item.action();
     } else {
       if (item.items) {
-        // กรณีมีเมนูย่อย: แค่เปิด/ปิด Pop-up (ไม่ set activeTab)
         setOpenSubMenu(openSubMenu === item.name ? null : item.name);
       } else {
-        // กรณีไม่มีเมนูย่อย (เช่น ตั้งค่า): เปลี่ยนหน้าได้เลย
         setSelectedReport(null);
         setActiveTab(item.name);
         setOpenSubMenu(null);
@@ -139,23 +138,18 @@ const Home = () => {
     }
   };
 
-  // ✅ แก้ไข 2: เมื่อกดเลือกเมนูย่อย ค่อยเปลี่ยนหน้าหลัก (setActiveTab)
   const handleSubMenuItemClick = (mainTabName, subItemName) => {
-    // 1. อัปเดตว่าเลือก SubTab ไหนอยู่
     setActiveSubTabs({
       ...activeSubTabs,
       [mainTabName]: subItemName,
     });
     
-    // 2. เปลี่ยนหน้าหลักมาที่ Tab นี้
     setActiveTab(mainTabName); 
 
-    // 3. Logic เพิ่มเติม
     if (mainTabName === "รายการแจ้ง") {
       setSelectedReport(null);
     }
     
-    // 4. ปิด Pop-up
     setOpenSubMenu(null);
   };
 
@@ -166,6 +160,20 @@ const Home = () => {
       แผนที่: "แผนที่ภายใน",
     }));
     setSelectedReport(null);
+  };
+
+  // ✅ ฟังก์ชันสำหรับจัดการเมื่อกดเลือกเคส (แยกออกมาเพื่อให้ดูง่าย)
+  const handleReportSelect = (item) => {
+    if (item) {
+        // บันทึก ID ลง LocalStorage (ใช้ชื่อ key ว่า 'selectedCaseId')
+        // หมายเหตุ: ตรวจสอบว่าใน object item ใช้ชื่อ field ว่า 'id' หรือ 'case_id' 
+        // ถ้าเป็น 'case_id' ให้แก้เป็น item.case_id ครับ
+        const caseIdToSave = item.id || item.case_id; 
+        if (caseIdToSave) {
+            localStorage.setItem("selectedCaseId", caseIdToSave);
+        }
+    }
+    setSelectedReport(item);
   };
 
   return (
@@ -186,13 +194,18 @@ const Home = () => {
             {selectedReport ? (
               <ReportDetail 
                 data={selectedReport}
-                onBack={() => setSelectedReport(null)} 
+                onBack={() => {
+                    // (Optional) เมื่อกดกลับ อาจจะลบ ID ออกจาก storage หรือเก็บไว้ก็ได้ตามต้องการ
+                    // localStorage.removeItem("selectedCaseId"); 
+                    setSelectedReport(null);
+                }} 
                 onGoToInternalMap={handleGoToInternalMap} 
               />
             ) : (
               <ReportTable 
                 subTab={activeSubTabs["รายการแจ้ง"]} 
-                onRowClick={(item) => setSelectedReport(item)} 
+                // ✅ เรียกใช้ฟังก์ชัน handleReportSelect แทนการ set state โดยตรง
+                onRowClick={handleReportSelect} 
               />
             )}
           </>
@@ -230,7 +243,6 @@ const Home = () => {
               </div>
             )}
             <button
-              /* เพิ่มเงื่อนไข: ถ้า Menu เปิดอยู่ ให้ปุ่มดู Active ด้วยเพื่อให้รู้ว่ากดตัวไหนอยู่ */
               className={activeTab === item.name || openSubMenu === item.name ? styles.active : ""}
               onClick={() => handleTabClick(item)}
             >
