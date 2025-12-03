@@ -345,7 +345,7 @@
   width: 100%;
 }
 
-/* --- [UPDATED] Code Box (ปรับตามรูปภาพที่ขอมา) --- */
+/* --- [UPDATED] Code Box (ปรับใหม่เพื่อแก้ปัญหาปุ่มยาว) --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
@@ -379,56 +379,64 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* กรอบแสดงรหัสแบบเส้นบาง + ไอคอนขวา */
+/* กล่องแสดงรหัส: ใช้ border-radius เยอะๆ เพื่อให้มนเหมือนแคปซูล */
 .codeDisplayBox {
   display: flex;
-  justify-content: space-between; /* ดันข้อความไปซ้าย ไอคอนไปขวา */
+  justify-content: space-between;
   align-items: center;
   background: white;
   
-  /* กรอบสีเข้ม เส้นบาง ตามรูป */
+  /* กรอบสีเข้ม เส้นบาง */
   border: 1px solid #333; 
   border-radius: 16px; 
   
-  padding: 1.2rem 1.5rem;
+  padding: 1rem 1.5rem; /* ปรับความสูงกล่องให้พอดี */
   transition: all 0.2s;
 }
 
 .codeText {
   font-family: "Courier New", Courier, monospace;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #2d3436;
   letter-spacing: 2px;
 }
 
-/* ...โค้ดส่วนอื่นคงเดิม... */
-
-/* ปุ่ม Copy เป็นไอคอน ไม่มีพื้นหลัง */
+/* ปุ่ม Copy: บังคับขนาดเป็นวงกลมเล็ก */
 .btnCopy {
-  background: transparent;
-  border: none;
-  padding: 5px; /* ลด Padding ลง (เดิม 8px) */
-  cursor: pointer;
-  color: var(--color-green);
-  transition: all 0.2s;
+  /* กำหนดขนาดตายตัว */
+  width: 32px !important;  
+  height: 32px !important;
+  min-width: 32px !important; /* กันหด */
+  
+  /* จัดไอคอนตรงกลาง */
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px; /* เพิ่มความมนนิดหน่อยเวลากด */
-}
-
-/* เพิ่มส่วนนี้เพื่อคุมขนาดไอคอนให้เป๊ะ */
-.btnCopy svg {
-  width: 18px;  /* กำหนดขนาดไอคอนให้เล็กลง */
-  height: 18px;
+  padding: 0 !important;
+  
+  /* ล้างค่าพื้นหลังและขอบ เพื่อไม่ให้เห็นเป็นแท่ง */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  color: var(--color-green);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 
 .btnCopy:hover {
+  background-color: rgba(40, 167, 69, 0.1) !important; /* พื้นหลังวงกลมจางๆ ตอนชี้ */
   transform: scale(1.1);
-  color: var(--color-green-dark);
-  background-color: rgba(40, 167, 69, 0.1); /* เพิ่มพื้นหลังจางๆ ตอนชี้ จะได้รู้ขอบเขตปุ่ม */
 }
+
+/* ขนาดไอคอน */
+.btnCopy svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* Responsive */
 @media (min-width: 768px) {
   .logoUploadBox {
