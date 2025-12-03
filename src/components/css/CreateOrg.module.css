@@ -26,21 +26,22 @@
 }
 
 /* ==================================================================
- * 📐 2. Layout & Container (ปรับปรุง Mobile)
+ * 📐 2. Layout & Container (Responsive Fixes)
  * ================================================================== */
 .container {
   display: flex;
   justify-content: center;
-  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+  align-items: center;
   min-height: 100vh;
-  padding: 1rem; /* ลด Padding ของ Container */
+  /* มือถือ: ลด padding รอบนอก */
+  padding: 1rem; 
   background: var(--color-surface);
   font-family: "Sarabun", sans-serif;
   color: var(--color-text-main);
   box-sizing: border-box;
 }
 
-/* สำหรับมือถือ ให้จัดชิดบนหน่อยจะได้ไม่ต้องเลื่อนหา */
+/* ถ้าจอเล็กมาก ให้จัดชิดบนแทนกึ่งกลาง จะได้ไม่ตกขอบ */
 @media (max-width: 480px) {
   .container {
     align-items: flex-start;
@@ -52,7 +53,10 @@
   width: 100%;
   background: var(--color-bg);
   border-radius: var(--radius-card);
-  padding: 1.5rem; /* ลด Padding ภายในการ์ดให้เนื้อหาไม่แคบเกินไป */
+  
+  /* มือถือ: ลด Padding ภายในลง เพื่อให้เนื้อหาไม่แคบ */
+  padding: 1.5rem;
+  
   box-shadow: var(--shadow-card);
   transition: var(--transition);
   box-sizing: border-box;
@@ -66,7 +70,7 @@
   margin-bottom: 1.5rem;
 }
 .pageTitle {
-  font-size: 1.5rem; /* ลดขนาดหัวข้อบนมือถือ */
+  font-size: 1.5rem; /* มือถือ: ลดขนาดหัวข้อลงนิดหน่อย */
   font-weight: 800;
   color: var(--color-text-main);
   margin-bottom: 0.5rem;
@@ -77,7 +81,7 @@
   color: var(--color-text-sub);
 }
 .orgNameHighlight {
-  display: inline-block; /* ป้องกันคำตกบรรทัดแบบขาดๆ */
+  display: inline-block;
   color: #000;
   background: rgba(0,0,0,0.04);
   padding: 0.1rem 0.6rem;
@@ -95,10 +99,11 @@
   gap: 1.25rem;
 }
 
-/* Grid System */
+/* Grid System (หัวใจของการแก้ปัญหา) */
 .formGrid {
   display: grid;
-  grid-template-columns: 1fr; /* Default 1 คอลัมน์ (มือถือ) */
+  /* มือถือ: บังคับเป็น 1 คอลัมน์ (เรียงลงมา) */
+  grid-template-columns: 1fr; 
   gap: 1.25rem;
   width: 100%;
 }
@@ -108,6 +113,7 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  min-width: 0; /* ป้องกัน Flex item ล้น */
 }
 
 .label {
@@ -123,13 +129,18 @@
 .input, .select {
   width: 100%;
   padding: 0.75rem 1rem;
-  font-size: 1rem; /* ขนาด Font 16px เพื่อไม่ให้ iOS ซูมอัตโนมัติ */
+  font-size: 1rem; /* 16px ป้องกัน iOS Zoom */
   border-radius: var(--radius-input);
   border: 1px solid var(--color-border);
   background: #fdfdfd;
   color: var(--color-text-main);
   transition: var(--transition);
   box-sizing: border-box;
+  
+  /* จัดการข้อความยาวเกิน */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .input:focus, .select:focus {
   outline: none;
@@ -177,11 +188,7 @@
   gap: 0.5rem;
   white-space: nowrap;
 }
-
-/* เพิ่มให้ปุ่มกดง่ายขึ้นบนมือถือ */
-.button:active {
-  transform: scale(0.98); 
-}
+.button:active { transform: scale(0.98); }
 
 .btnPrimary, .btnSuccess {
   background: var(--color-green);
@@ -226,7 +233,7 @@
   align-items: center;
   gap: 0.8rem;
   width: 100%;
-  padding: 1rem; /* ลด padding ลงนิดหน่อย */
+  padding: 1rem;
   background: #fff;
   border: none;
   cursor: pointer;
@@ -234,7 +241,7 @@
 }
 
 .accordionIcon {
-  width: 2.5rem; /* ลดขนาดไอคอนเล็กน้อย */
+  width: 2.5rem;
   height: 2.5rem;
   border-radius: 8px;
   display: flex;
@@ -277,14 +284,14 @@
   overflow: hidden;
 }
 .accordionInner {
-  padding: 0 1rem 1.5rem 1rem; /* Padding เนื้อหาด้านใน */
+  padding: 0 1rem 1.5rem 1rem;
   border-top: 1px solid #f0f0f0;
   margin-top: 0.5rem;
   padding-top: 1.5rem;
 }
 
 /* ==================================================================
- * 🖼️ 6. Special Components
+ * 🖼️ 6. Special Components (Logo, Code, Geo)
  * ================================================================== */
 
 /* --- Logo Upload --- */
@@ -301,7 +308,7 @@
 }
 .logoWrapper {
   position: relative;
-  width: 120px; /* ลดขนาดรูปบนมือถือลงนิดหน่อย */
+  width: 120px;
   height: 120px;
   margin: 0 auto;
 }
@@ -317,7 +324,7 @@
 .editIcon {
   position: absolute;
   bottom: -5px; right: -5px;
-  width: 36px; height: 36px; /* ลดขนาดปุ่มแก้นิดหน่อย */
+  width: 36px; height: 36px;
   background-color: #FACC15;
   color: #333;
   border-radius: 50%;
@@ -334,7 +341,7 @@
 
 /* --- Code Box --- */
 .codeBoxContainer {
-  display: flex; flex-direction: column; gap: 0.8rem;
+  display: flex; flex-direction: column; gap: 0.8rem; width: 100%;
 }
 .codeDisplayBox {
   display: flex; justify-content: space-between; align-items: center;
@@ -342,28 +349,28 @@
   border: 1px solid #333; 
   border-radius: 12px; 
   padding: 0.8rem 1rem;
-  overflow-x: auto; /* ป้องกันโค้ดล้นจอ */
+  overflow-x: auto; /* ให้เลื่อนแนวนอนได้ถ้ายาวเกิน */
 }
 .codeText {
   font-family: "Courier New", Courier, monospace;
-  font-size: 1.2rem; /* ลดขนาด Font รหัส */
+  font-size: 1.2rem;
   font-weight: 800;
   color: #2d3436;
   letter-spacing: 1px;
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  white-space: nowrap;
 }
 .btnCopy {
   width: 32px !important; height: 32px !important; min-width: 32px !important;
   display: flex; align-items: center; justify-content: center;
   padding: 0 !important; background: transparent !important; border: none !important;
   color: var(--color-green); cursor: pointer; border-radius: 50%;
-  margin-left: 10px;
+  margin-left: 10px; flex-shrink: 0;
 }
 
 /* --- Location Hero Box --- */
 .geoActionBox {
   display: flex;
-  flex-direction: column; /* มือถือ: เรียงแนวตั้ง (Icon บน Text ล่าง) */
+  flex-direction: column; /* มือถือ: ตั้ง Icon ไว้บน Text */
   align-items: center;
   text-align: center;
   gap: 1rem;
@@ -407,14 +414,16 @@
 }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Overrides (min-width: 768px)
+ * 💻 Desktop / Tablet Overrides (จอคอม: min-width: 768px)
  * ================================================================== */
 @media (min-width: 768px) {
-  .page { padding: 2.5rem; } /* กลับมาใช้ Padding ใหญ่บนคอม */
+  /* ขยาย Padding กลับมาให้ดูโปร่ง */
+  .page { padding: 2.5rem; }
   .pageTitle { font-size: 1.75rem; }
   
+  /* แบ่งคอลัมน์ซ้าย-ขวา เฉพาะในคอม */
   .formGrid {
-    grid-template-columns: 1fr 1fr; /* 2 คอลัมน์บนคอม */
+    grid-template-columns: 1fr 1fr; 
     align-items: start;
   }
   
