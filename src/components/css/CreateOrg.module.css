@@ -1,427 +1,412 @@
+/* ==================================================================
+* 1. Variables & Global Settings
+* ================================================================== */
 :root {
-  /* --- Colors: Palette --- */
+  /* --- คงสีเดิม (Original Colors) --- */
+  --color-green: #28a745;
+  --color-green-dark: #218838;
+  --color-red: #dc3545;
+  --color-red-dark: #c82333;
+
+  /* --- สีพื้นหลังและตัวอักษร (Modern Palette) --- */
   --color-bg: #ffffff;
-  --color-surface: #f3f4f6; /* พื้นหลังรวมให้เป็นเทาอ่อนจางๆ เพื่อดันให้ Card เด่น */
+  --color-surface: #f3f5f7; /* สีพื้นหลังเทาอ่อนช่วยดันให้การ์ดสีขาวเด่นขึ้น */
+  --color-border: #e9ecef;  /* เส้นขอบสีจางลง เพื่อไม่ให้รกตา */
   
-  /* Text Colors (Softer Black) */
-  --color-text-main: #1F2937; /* เทาเข้มเกือบดำ (Cool Gray 800) */
-  --color-text-sub: #6B7280;  /* เทากลาง (Cool Gray 500) */
+  --color-text-main: #2d3436; /* สีดำแบบ Charcoal อ่านง่ายกว่าดำสนิท */
+  --color-text-sub: #636e72;
 
-  /* Theme Colors */
-  --color-primary: #10B981;      /* เขียวมรกต ทันสมัยกว่าเขียวเดิม */
-  --color-primary-dark: #059669;
-  --color-danger: #EF4444;       /* แดง (ใช้เฉพาะจำเป็น) */
-
-  /* --- Base --- */
-  --color-border: #E5E7EB;       /* ขอบสีเทาจางๆ */
-  --radius-card: 16px;           /* โค้งมนมากขึ้น */
-  --radius-input: 8px;           /* โค้งมนกำลังดี */
-  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+  /* --- รูปร่างและเงา (Shape & Depth) --- */
+  --radius-card: 20px;       /* มุมโค้งมนดูทันสมัย */
+  --radius-input: 10px;
+  --radius-btn: 50px;        /* ปุ่มทรงรี (Pill Shape) ยอดนิยมใน App ยุคใหม่ */
   
-  /* Shadows (Modern Soft Shadows) */
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  --shadow-button: 0 4px 6px -1px rgba(16, 185, 129, 0.3); /* เงาปุ่มเขียว */
+  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ ทำให้หน้าจอดูลอย */
+  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.12);
+  --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.15); /* เงาปุ่ม */
+  
+  --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-surface);
 }
 
 /* ==================================================================
-* Global Container
+* 2. Layout & Containers
 * ================================================================== */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2rem 1rem; 
-  background: var(--color-surface); 
-  font-family: "Sarabun", sans-serif; 
-  box-sizing: border-box;
+  padding: 2rem 1rem;
+  background: var(--color-surface);
+  font-family: "Sarabun", sans-serif;
   color: var(--color-text-main);
+  box-sizing: border-box;
 }
 
-/* ==================================================================
-* Page Layout
-* ================================================================== */
 .page {
   width: 100%;
   background: var(--color-bg);
   border-radius: var(--radius-card);
-  padding: 3rem; 
+  padding: 3rem;
+  /* ใช้เงาแทนเส้นขอบ ทำให้ดูพรีเมียมขึ้น */
   box-shadow: var(--shadow-card);
-  border: 1px solid rgba(255,255,255,0.5); 
+  border: 1px solid #ffffff; 
   transition: var(--transition);
 }
 .pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; }
+.pageSetup { max-width: 700px; } /* ขยายความกว้างนิดหน่อยให้อ่านง่าย */
 
 /* ==================================================================
-* Page Header
+* 3. Header Styling
 * ================================================================== */
 .pageHeader {
   text-align: center;
-  margin-bottom: 2.5rem; 
+  margin-bottom: 2.5rem;
 }
+
 .pageTitle {
-  font-size: 2rem; 
-  font-weight: 800; /* หนาพิเศษ */
+  font-size: 2rem;
+  font-weight: 800; /* ตัวหนาพิเศษ */
   color: var(--color-text-main) !important;
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem 1rem; 
-  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
+
 .pageSubtitle {
-  font-size: 1.1rem; 
-  font-weight: 400; 
+  font-size: 1.1rem;
+  font-weight: 400;
   color: var(--color-text-sub) !important;
-  margin-top: 0.5rem; 
+  margin-top: 0.5rem;
 }
+
 .orgNameHighlight {
-  color: var(--color-primary) !important; /* เน้นชื่อองค์กรด้วยสีเขียว Theme */
+  color: #000;
   font-weight: 800;
-  text-decoration: none; /* เอาขีดเส้นใต้ออกให้ดูสะอาด */
+  background: rgba(0,0,0,0.05); /* ไฮไลท์พื้นหลังชื่อองค์กรจางๆ */
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  text-decoration: none;
 }
 
 .editNameButton {
-  background: transparent;
-  border: 1px solid var(--color-border); 
+  background: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   color: var(--color-text-sub);
-  font-size: 0.85rem; 
-  font-weight: 600;
-  font-family: "Sarabun", sans-serif;
-  padding: 0.3rem 0.8rem; 
-  border-radius: 20px; /* ปุ่มรี */
+  font-size: 0.9rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
   transition: var(--transition);
-  white-space: nowrap; 
-  display: inline-flex;
-  align-items: center;
+  margin-left: 0.5rem;
 }
 .editNameButton:hover {
-  background-color: var(--color-text-main); 
-  color: #ffffff; 
+  background-color: var(--color-text-main);
+  color: #fff;
   border-color: var(--color-text-main);
-  transform: translateY(-1px);
 }
 
 /* ==================================================================
-* Forms
+* 4. Form & Inputs
 * ================================================================== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
-}
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem; 
+  gap: 1.5rem;
 }
 .label {
-  font-weight: 600;
-  font-size: 0.95rem; 
+  font-weight: 700;
+  font-size: 0.95rem;
   color: var(--color-text-main) !important;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 .label.required::after {
   content: " *";
-  color: var(--color-danger);
-  margin-left: 0.25rem; 
+  color: var(--color-red);
 }
+
 .input, .select {
   width: 100%;
-  padding: 0.75rem 1rem; 
+  padding: 0.85rem 1.2rem; /* เพิ่มพื้นที่ภายใน */
   font-size: 1rem;
-  border-radius: var(--radius-input); 
-  border: 1px solid var(--color-border);
-  background: #F9FAFB; /* พื้น Input สีเทาจางๆ */
+  border-radius: var(--radius-input);
+  border: 2px solid #f1f3f5; /* ขอบจางๆ */
+  background: #f8f9fa; /* พื้นหลังเทาจางๆ */
   color: var(--color-text-main);
   transition: var(--transition);
   box-sizing: border-box;
 }
-.input:hover, .select:hover {
-  background: #fff;
-  border-color: #9CA3AF;
-}
+/* Effect ตอนกดเลือกช่อง */
 .input:focus, .select:focus {
   outline: none;
-  background: #ffffff;
-  border-color: var(--color-primary); /* Focus สีเขียว */
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); /* Ring สีเขียวจางๆ */
-}
-.input::placeholder {
-  color: #9CA3AF; 
-}
-.helpText, .helpTextSmall {
-  font-size: 0.85rem; 
-  color: var(--color-text-sub);
-  margin-top: 0.4rem; 
+  background: #fff;
+  border-color: var(--color-green); /* Focus เป็นสีเขียวธีมหลัก */
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15);
 }
 
 /* ==================================================================
-* Buttons
+* 5. Buttons (Red & Green Re-styled)
 * ================================================================== */
 .buttonGroup {
-  margin-top: 2rem; 
+  margin-top: 2rem;
   display: flex;
-  flex-direction: column; 
-  justify-content: center;
-  gap: 1rem; 
+  flex-direction: column;
+  gap: 1rem;
 }
+
 .button {
   width: 100%;
-  padding: 0.85rem 1.5rem; 
-  border-radius: var(--radius-input); 
-  font-weight: 600; 
-  font-size: 1rem; 
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius-btn); /* ปุ่มทรงแคปซูล */
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: var(--transition);
-  border: 1px solid transparent; 
-  text-align: center;
-  display: inline-flex; 
+  border: none;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem; 
-  white-space: nowrap; 
+  gap: 0.5rem;
+  letter-spacing: 0.5px;
+  /* เพิ่มเงาให้ปุ่มดูลอย */
+  box-shadow: var(--shadow-btn);
 }
 
-/* --- Primary/Save Buttons (GREEN) --- */
+/* ปุ่มหลัก (เขียว) */
 .btnPrimary, .btnSuccess {
-  background-color: var(--color-primary); 
+  background: var(--color-green);
   color: white;
-  border: none;
-  box-shadow: var(--shadow-button);
 }
-.btnPrimary:hover:not(:disabled), .btnSuccess:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
-  transform: translateY(-2px); 
-  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+.btnPrimary:hover, .btnSuccess:hover {
+  background: var(--color-green-dark);
+  transform: translateY(-3px); /* ลอยขึ้นเมื่อ Hover */
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); /* เงาสีเขียวฟุ้งๆ */
 }
 
-/* --- Back Buttons (DESIGN CHANGED: No more big red button) --- */
+/* ปุ่มย้อนกลับ (แดง) - คงสีเดิมไว้ตามขอ */
 .btnPrimaryBack {
-  background-color: transparent; /* พื้นใส */
-  color: var(--color-text-sub); /* ตัวหนังสือเทา */
-  border: 1px solid var(--color-border); 
+  background: var(--color-red);
+  color: white;
+}
+.btnPrimaryBack:hover {
+  background: var(--color-red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3); /* เงาสีแดงฟุ้งๆ */
+}
+
+/* ปุ่มรอง (ขาว) */
+.btnSecondary, .btnGeo {
+  background-color: white;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
   box-shadow: none;
 }
-.btnPrimaryBack:hover:not(:disabled) {
-  background-color: #F3F4F6;
-  color: var(--color-text-main);
-  border-color: #D1D5DB;
-  transform: translateY(-2px);
-}
-
-/* --- Secondary Buttons --- */
-.btnSecondary, .btnGeo {
-  background-color: white; 
-  color: var(--color-text-main); 
-  border: 1px solid var(--color-border); 
-}
-.btnSecondary:hover:not(:disabled), .btnGeo:hover:not(:disabled) {
-  background-color: #F9FAFB;
-  border-color: #9CA3AF; 
+.btnSecondary:hover, .btnGeo:hover {
+  background-color: #f8f9fa;
+  border-color: #ccc;
   transform: translateY(-2px);
 }
 
 /* ==================================================================
-* Setup Page: Accordion (The Cards)
+* 6. Accordion (Menu Items) - The "Clean" Look
 * ================================================================== */
-.setupContainer {
-  margin-top: 2rem; 
-}
-.setupTitle {
-  font-size: 1.25rem; 
-  font-weight: 700;
-  color: var(--color-text-main) !important;
-  margin-bottom: 1.5rem; 
-  text-align: center; 
-}
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; /* เพิ่มระยะห่างระหว่างการ์ด */
+  gap: 1rem;
 }
 
-/* Modern Card Style for Accordion */
 .accordionItem {
-  border: none; /* เอาเส้นขอบออก */
-  border-radius: var(--radius-card); 
-  background: var(--color-bg);
-  box-shadow: var(--shadow-card); /* ใช้เงาแทน */
-  transition: var(--transition);
+  background: #fff;
+  /* ลบเส้นขอบแข็งๆ เปลี่ยนเป็นเงาเบาๆ */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid transparent;
+  border-radius: 16px;
   overflow: hidden;
+  transition: var(--transition);
 }
+
 .accordionItem:hover {
-  transform: translateY(-3px); /* ลอยขึ้น */
-  box-shadow: var(--shadow-hover);
+  border-color: rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08); /* เงาเข้มขึ้นตอนชี้ */
 }
 
 .accordionHeader {
   display: flex;
   align-items: center;
-  gap: 1.25rem; 
+  gap: 1.25rem;
   width: 100%;
-  padding: 1.5rem; /* เพิ่ม Padding ให้น่ากด */
-  background: var(--color-bg);
+  padding: 1.25rem 1.5rem;
+  background: #fff;
   border: none;
   cursor: pointer;
   text-align: left;
 }
 
-/* --- Icons (Soft Style) --- */
+/* กล่องไอคอนสวยๆ */
 .accordionIcon {
-  flex-shrink: 0;
-  width: 3.5rem; /* ใหญ่ขึ้นนิดนึง */
-  height: 3.5rem; 
-  border-radius: 12px; /* โค้งมน */
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  
-  /* Modern Style */
-  background-color: #F3F4F6; /* พื้นหลังไอคอนสีเทาจาง */
-  border: none; 
+  background-color: #f1f3f5; /* พื้นหลังไอคอนสีเทาอ่อน สบายตา */
   color: var(--color-text-main);
-}
-.accordionHeader:hover .accordionIcon {
-  background-color: #E5E7EB; /* เข้มขึ้นเมื่อ hover */
+  flex-shrink: 0;
 }
 
 .accordionTitle {
-  font-size: 1.15rem; 
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text-main) !important;
   margin: 0;
 }
 .accordionSubtitle {
-  font-size: 0.95rem; 
+  font-size: 0.95rem;
   color: var(--color-text-sub) !important;
   margin: 0;
-  margin-top: 0.25rem; 
+  margin-top: 0.2rem;
 }
 .accordionArrow {
-  width: 1.25rem; 
-  height: 1.25rem;
-  color: #9CA3AF; 
-  transition: transform 0.3s ease-in-out;
+  width: 1.2rem;
+  color: #b2bec3;
+  transition: transform 0.3s;
 }
-.rotate180 {
-  transform: rotate(180deg);
-}
+.rotate180 { transform: rotate(180deg); }
 
-/* === Accordion Content === */
+/* --- Content ภายใน Accordion --- */
 .accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: grid-template-rows 0.4s ease-in-out;
 }
 .accordionContentWrapper.open {
   grid-template-rows: 1fr;
 }
 .accordionContent {
   overflow: hidden;
-  padding: 0 1.5rem; 
+  padding: 0 1.5rem;
 }
 .accordionInnerContent {
   padding-top: 1rem;
   padding-bottom: 2rem;
-  border-top: 1px dashed var(--color-border); /* เส้นประจางๆ แบ่งเนื้อหา */
-}
-.contentTitle {
-  font-size: 1.25rem; 
-  font-weight: 700;
-  color: var(--color-text-main) !important;
-  margin-bottom: 1.5rem; 
+  border-top: 1px dashed var(--color-border); /* เส้นประแบ่งเนื้อหา */
 }
 
-/* === Logo Upload === */
+/* ==================================================================
+* 7. Special Components (Upload & Code Box)
+* ================================================================== */
+/* Logo Upload */
 .logoUploadBox {
   display: grid;
-  grid-template-columns: 150px 1fr; 
-  align-items: center;
-  gap: 2rem; 
-  padding: 0;
-  border: none; 
-  background: none; 
+  grid-template-columns: 140px 1fr;
+  align-items: start;
+  gap: 2rem;
 }
 .logoPreview {
-  width: 150px; 
-  height: 150px; 
-  object-fit: contain; 
-  border-radius: var(--radius-card); 
-  border: 2px dashed var(--color-border); /* เส้นประสำหรับพื้นที่ Upload */
-  background-color: #F9FAFB;
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e0;
+  background-color: #f8f9fa;
+  transition: var(--transition);
 }
+.logoPreview:hover { border-color: var(--color-text-main); }
 
-/* === Code Box === */
+/* Code Box */
 .codeBoxHeader {
-  border-radius: 9999px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 99px;
   padding: 0.5rem;
-  min-height: 48px;
   border: 1px solid var(--color-border);
-  background: #F9FAFB;
+  margin-bottom: 0.8rem;
 }
 .codeBoxType {
-  color: var(--color-text-main);
   font-weight: 700;
+  padding-left: 1rem;
+  color: var(--color-text-main);
 }
-.codeBoxDisplayWrapper {
-  border: 1px solid var(--color-text-main); /* ขอบเข้มเน้น Code */
-  border-radius: 9999px; 
-  padding: 0.5rem;
+.codeBoxSwitch {
+  border: none;
   background: white;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.codeBoxDisplayWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 2px solid var(--color-text-main); /* ขอบดำเน้นความสำคัญ */
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
 }
 .codeBoxDisplay {
-  font-family: "Menlo", "Consolas", monospace;
-  font-size: 1.2rem; 
+  font-family: "Menlo", monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--color-text-main);
+  border: none;
+  background: none;
+  width: 100%;
 }
 .codeCopyButton {
-  background: var(--color-surface);
-  border: 1px solid transparent;
+  background: #f1f3f5;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
   color: var(--color-text-main);
+  transition: var(--transition);
 }
-.codeCopyButton:hover {
-  background: #E5E7EB;
-}
+.codeCopyButton:hover { background: #e9ecef; }
 .codeCopyButton.copied {
-  background-color: var(--color-primary); 
+  background: var(--color-green);
   color: white;
 }
 
 /* ==================================================================
-* Media Queries
+* 8. Responsive
 * ================================================================== */
 @media (min-width: 768px) {
-  .page { padding: 3rem; }
+  .buttonGroup {
+      flex-direction: row;
+      justify-content: center;
+      gap: 1.5rem;
+  }
+  .button {
+      width: auto;
+      min-width: 180px; /* ปุ่มมีความกว้างขั้นต่ำสวยๆ */
+  }
   .formGrid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
   }
   .submitRow, .geoButtonContainer { grid-column: 1 / -1; }
-  .buttonGroup {
-      flex-direction: row; 
-      gap: 1rem;
-  }
-  .buttonGroup > .button {
-      width: auto; 
-      min-width: 160px; 
-      flex-grow: 0; 
-  }
 }
 
 @media (max-width: 500px) {
   .page { padding: 1.5rem; }
-  .container { padding: 1rem 0.5rem; }
-  .accordionHeader { padding: 1rem; }
-  .logoUploadBox {
-      grid-template-columns: 1fr; 
-      justify-items: center; 
-      gap: 1rem;
-  }
+  .logoUploadBox { grid-template-columns: 1fr; justify-items: center; }
+  .logoUploadActions { width: 100%; text-align: center; }
 }
