@@ -345,49 +345,81 @@
   width: 100%;
 }
 
-/* --- [UPDATED] Code Box: Dropdown + Clean Icon --- */
+/* --- [NEW DESIGN] ส่วนแสดงรหัส (Clean Capsule Style) --- */
+
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem; /* เพิ่มระยะห่างให้ดูไม่อึดอัด */
 }
 
-/* กล่องแสดงรหัส: กรอบดำ เส้นบาง พื้นขาว */
+/* 1. สวิตช์เลือก Admin/User แบบแคปซูล */
+.codeSwitchWrapper {
+  display: flex;
+  background: #f1f3f5; /* พื้นหลังสีเทาอ่อนๆ */
+  padding: 4px;
+  border-radius: 50px; /* ทรงแคปซูล */
+  position: relative;
+}
+
+.codeSwitchBtn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 40px;
+  
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6c757d; /* สีเทากลาง */
+  
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* สถานะ Active (เลือกแล้ว) */
+.codeSwitchBtn.active {
+  background: white; /* พื้นหลังขาว */
+  color: var(--color-green); /* ตัวหนังสือเขียว */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* เงาบางๆ ให้ดูลอย */
+}
+
+/* 2. กล่องแสดงรหัส */
 .codeDisplayBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: white;
   
-  border: 1px solid #333; 
-  border-radius: 16px; 
+  border: 1px solid #dce0e4; /* กรอบเทาอ่อนๆ บางๆ */
+  border-radius: 12px;
   
   padding: 1rem 1.5rem;
   transition: all 0.2s;
 }
 
+/* ตัวรหัส */
 .codeText {
   font-family: "Courier New", Courier, monospace;
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #2d3436;
   letter-spacing: 2px;
 }
 
-/* ปุ่ม Copy: บังคับเป็นไอคอนเล็ก ไม่ยืดเป็นปุ่มยาว */
+/* 3. ปุ่ม Copy เป็นไอคอน */
 .btnCopy {
-  width: 32px !important;  
-  height: 32px !important;
-  min-width: 32px !important; /* กันหด */
+  /* ล้างค่าเดิม */
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 8px !important;
   
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 !important;
-  
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
   
   color: var(--color-green);
   cursor: pointer;
@@ -396,13 +428,13 @@
 }
 
 .btnCopy:hover {
-  background-color: rgba(40, 167, 69, 0.1) !important;
+  background-color: #e9f7ef !important; /* พื้นหลังเขียวอ่อนๆ ตอนชี้ */
   transform: scale(1.1);
 }
 
 .btnCopy svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 
 /* Responsive */
