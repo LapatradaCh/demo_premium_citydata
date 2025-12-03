@@ -208,8 +208,6 @@
   border-color: #bbb;
 }
 
-/* .btnGeo อันเก่าไม่ได้ใช้แล้ว */
-
 .geoButtonContainer {
   grid-column: 1 / -1;
   width: 100%;
@@ -436,17 +434,17 @@
 }
 
 /* ==================================================================
- * 📍 Location Redesign
+ * 📍 Location & Inputs Design Update
  * ================================================================== */
 
-/* 1. กล่อง Action Area (แทนปุ่มเดิม) */
+/* 1. กล่อง Hero Action (สำหรับดึงตำแหน่ง) */
 .geoActionBox {
   display: flex;
   align-items: center;
   gap: 1rem;
   
-  background: #f0fdf4; /* พื้นเขียวจางๆ */
-  border: 1px dashed #28a745; /* เส้นประเขียว */
+  background: #f0fdf4; 
+  border: 1px dashed #28a745;
   border-radius: 12px;
   
   padding: 1.5rem;
@@ -454,22 +452,17 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .geoActionBox:hover {
   background: #e6fffa;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
-  border-style: solid; /* เปลี่ยนเป็นเส้นทึบตอน Hover */
+  border-style: solid;
 }
-
-/* สถานะสำเร็จ */
 .geoSuccess {
   background: #d1e7dd;
   border-style: solid;
   border-color: #198754;
 }
-
-/* ไอคอนวงกลมซ้ายมือ */
 .geoIconCircle {
   width: 48px;
   height: 48px;
@@ -482,39 +475,21 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   flex-shrink: 0;
 }
+.geoTextContent { flex: 1; }
+.geoTitle { margin: 0; font-size: 1rem; font-weight: 700; color: #2d3436; }
+.geoSubtitle { margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #636e72; }
 
-.geoTextContent {
-  flex: 1;
-}
-
-.geoTitle {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #2d3436;
-}
-
-.geoSubtitle {
-  margin: 0.2rem 0 0 0;
-  font-size: 0.85rem;
-  color: #636e72;
-}
-
-/* Spinner หมุนๆ เวลาโหลด */
+/* Spinner */
 .spinner {
-  width: 20px;
-  height: 20px;
+  width: 20px; height: 20px;
   border: 3px solid rgba(40, 167, 69, 0.3);
   border-radius: 50%;
   border-top-color: #28a745;
   animation: spin 1s ease-in-out infinite;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* 2. Input with Icons (ช่องกรอกข้อมูลที่มีไอคอน) */
+/* 2. Input with Icons (ช่องกรอกข้อมูลที่มีไอคอนด้านใน) */
 .inputIconWrapper {
   position: relative;
   width: 100%;
@@ -528,15 +503,24 @@
   color: #999;
   display: flex;
   align-items: center;
-  pointer-events: none; /* เพื่อให้คลิกทะลุไปที่ input ได้ */
+  pointer-events: none; /* เพื่อให้คลิกทะลุไปโดน input ได้ */
   z-index: 2;
 }
 
-/* ปรับ Input ให้มี Padding ด้านซ้ายเผื่อที่ให้ไอคอน */
+/* ขยับ text ใน input หนีไอคอน */
 .inputWithIcon {
   padding-left: 2.8rem !important; 
 }
 
+/* ทำให้ Select ดูเหมือน Input */
+.select {
+  appearance: none; /* ลบลูกศรเดิมของ browser */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  cursor: pointer;
+}
 
 /* Responsive */
 @media (min-width: 768px) {
