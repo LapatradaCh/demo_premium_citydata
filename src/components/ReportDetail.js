@@ -29,7 +29,6 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); 
-  const hasViewedRef = useRef(false);
 
   // Modal & Input States
   const [showTypeModal, setShowTypeModal] = useState(false);
@@ -113,63 +112,62 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-useEffect(() => {
-    // ฟังก์ชันสำหรับยิง API PATCH /view
-    const markCaseAsViewed = async () => {
-      // 1. ตรวจสอบว่ามีข้อมูลเคสแล้ว และยังไม่เคยยิง API นี้ใน session นี้
-      if (!caseInfo || !caseInfo.real_id || hasViewedRef.current) return;
+  // ==========================================
+  // ★ ส่วนที่เพิ่มใหม่: เชื่อมต่อกับ API view.js
+  // ==========================================
+  useEffect(() => {
+    const triggerViewCase = async () => {
+        // ต้องรอให้โหลดข้อมูลเคสเสร็จก่อนถึงจะยิง API View
+        if (!caseInfo || !caseInfo.real_id) return;
 
-      const storedUserId = localStorage.getItem("user_id");
-      const storedOrgId = localStorage.getItem("org_id"); // ★ ต้องมั่นใจว่ามีการเก็บค่านี้ตอน Login
+        // ดึง user_id และ organization_id จาก LocalStorage
+        const storedUserId = localStorage.getItem("user_id");
+        const storedOrgId = localStorage.getItem("organization_id"); // ★ สำคัญ: ต้องมั่นใจว่ามีค่านี้ใน Storage
 
-      // ถ้าไม่มีข้อมูล User หรือ Org ให้ข้ามไป
-      if (!storedUserId || !storedOrgId) {
-        console.warn("Missing user_id or org_id in localStorage");
-        return;
-      }
-
-      try {
-        // ล็อกว่าทำแล้ว กันยิงซ้ำรัวๆ
-        hasViewedRef.current = true;
-
-        const caseId = caseInfo.real_id;
-        const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseId}/view`;
-
-        const response = await fetch(apiUrl, {
-          method: 'PATCH',
-          headers: { 
-            'Content-Type': 'application/json' 
-            // 'Authorization': 'Bearer ...' // ใส่ token ถ้ามี
-          },
-          body: JSON.stringify({
-            user_id: parseInt(storedUserId),
-            organization_id: parseInt(storedOrgId)
-          })
-        });
-
-        if (response.ok) {
-          console.log("Marked as viewed successfully");
-          const result = await response.json();
-          
-          // ★ เช็คว่า Backend มีการเปลี่ยนสถานะหรือไม่?
-          // ถ้าสถานะเดิมคือ 'รอรับเรื่อง' Backend จะเปลี่ยนเป็น 'กำลังประสานงาน'
-          // เราจึงควร Refresh ข้อมูลหน้าเว็บใหม่อีกครั้งเพื่อแสดงสถานะล่าสุด
-          if (caseInfo.status === 'รอรับเรื่อง') {
-             setRefreshKey(prev => prev + 1);
-          }
-        } else {
-          console.error("Failed to mark as viewed");
+        if (!storedUserId || !storedOrgId) {
+            console.warn("View Tracking: Missing user_id or organization_id in localStorage");
+            return;
         }
 
-      } catch (err) {
-        console.error("Error calling view API:", err);
-      }
+        try {
+            // URL ของ API view.js (เดาโครงสร้างจากไฟล์ที่ให้มาคือ /api/cases/[id]/view)
+            const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
+
+            const response = await fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    organization_id: parseInt(storedOrgId),
+                    user_id: parseInt(storedUserId)
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Case View Tracked Successfully:", data);
+                
+                // หาก API แจ้งว่ามีการเปลี่ยนสถานะ หรือมีการอัปเดตข้อมูล
+                // ให้ทำการ Refresh ข้อมูลในหน้าจอใหม่ (เพื่อให้ Timeline ขึ้นว่าดูแล้ว หรือสถานะเปลี่ยนเป็นกำลังประสานงาน)
+                // เราจะเช็คคร่าวๆ ว่าถ้าสำเร็จ ก็ให้ Refresh ไปเลยเพื่อความชัวร์
+                setRefreshKey(prev => prev + 1);
+            } else {
+                const errText = await response.text();
+                console.error("Failed to track view:", errText);
+            }
+
+        } catch (err) {
+            console.error("Error calling view API:", err);
+        }
     };
 
-    markCaseAsViewed();
+    // เรียกฟังก์ชันนี้เฉพาะตอนที่ caseInfo.real_id เปลี่ยน (คือโหลดเสร็จครั้งแรก)
+    triggerViewCase();
 
-  }, [caseInfo]); // ทำงานเมื่อ caseInfo มีการเปลี่ยนแปลง (โหลดข้อมูลเสร็จ)
-  
+  }, [caseInfo?.real_id]); 
+  // ==========================================
+
 
   // 3. Handle Update Category
   const handleUpdateCategory = async () => {
@@ -235,9 +233,9 @@ useEffect(() => {
         const payload = {
             action: 'update_status',            
             case_id: caseInfo.real_id,          
-            user_id: currentUserId,             
+            user_id: currentUserId,              
             new_status: statusValue,            
-            comment: statusComment,            
+            comment: statusComment,             
             image_url: finalImageUrl            
         };
 
@@ -570,8 +568,8 @@ useEffect(() => {
 
                   {issueTypeList.map((typeItem) => {
                     const isSelected = selectedIssueType 
-                         ? selectedIssueType.issue_id === typeItem.issue_id 
-                         : info.category === typeItem.name;
+                          ? selectedIssueType.issue_id === typeItem.issue_id 
+                          : info.category === typeItem.name;
 
                     return (
                         <div 
