@@ -5,6 +5,14 @@ import styles from "./css/CreateOrg.module.css";
 // URL ของ API
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
 
+// --- Helper Component: Wrapper สำหรับใส่ไอคอนหน้า Input/Select ---
+const InputWrapper = ({ icon, children }) => (
+  <div className={styles.inputIconWrapper}>
+    <div className={styles.inputIcon}>{icon}</div>
+    {children}
+  </div>
+);
+
 /**
  * =================================================================
  * Component 1: QuickCreatePage
@@ -172,17 +180,12 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm (Redesign: Modern & Icons)
+ * Component 3: LocationSetupForm (ดีไซน์ใหม่: Smart Card + Icons)
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
   const [locationData, setLocationData] = useState({
-    province: '',
-    district: '',
-    sub_district: '',
-    contact_phone: '',
-    latitude: '',
-    longitude: ''
+    province: '', district: '', sub_district: '', contact_phone: '', latitude: '', longitude: ''
   });
   const [geoStatus, setGeoStatus] = useState('idle');
   const [geoError, setGeoError] = useState(null);
@@ -195,85 +198,46 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
   const handleFetchGeolocation = () => {
     if (!navigator.geolocation) {
-      setGeoStatus('error');
-      setGeoError('เบราว์เซอร์ของคุณไม่รองรับ Geolocation');
-      return;
+      setGeoStatus('error'); setGeoError('อุปกรณ์ไม่รองรับ GPS'); return;
     }
-    setGeoStatus('loading');
-    setGeoError(null);
-
+    setGeoStatus('loading'); setGeoError(null);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         try {
-          const apiUrl = `${API_BASE_URL}/GPS?lat=${latitude}&lon=${longitude}`;
-          const response = await fetch(apiUrl);
-          if (!response.ok) throw new Error(`API ล้มเหลว (Status: ${response.status})`);
-          
-          const data = await response.json();
+          const res = await fetch(`${API_BASE_URL}/GPS?lat=${latitude}&lon=${longitude}`);
+          if (!res.ok) throw new Error('API Error');
+          const data = await res.json();
           setLocationData(prev => ({
-            ...prev,
-            province: data.province || '',
-            district: data.district || '',
+            ...prev, province: data.province || '', district: data.district || '',
             sub_district: data.sub_district || data.subdistrict || '',
-            latitude: latitude,
-            longitude: longitude
+            latitude, longitude
           }));
           setGeoStatus('success');
-        } catch (err) {
-          console.error(err);
-          setGeoStatus('error');
-          setGeoError('ไม่สามารถดึงข้อมูลที่อยู่ได้ (API Error)');
-        }
+        } catch (err) { setGeoStatus('error'); setGeoError('ดึงข้อมูลไม่สำเร็จ'); }
       },
-      (error) => {
-        setGeoStatus('error');
-        setGeoError(error.message);
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      (err) => { setGeoStatus('error'); setGeoError(err.message); },
+      { enableHighAccuracy: true }
     );
   };
 
   const handleLocationSubmit = async (e) => {
     e.preventDefault();
-    if (!orgId) return alert("ไม่พบรหัสหน่วยงาน (Organization ID)");
-    
+    if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
     setIsSaving(true);
-
     try {
-      const response = await fetch(`${API_BASE_URL}/organizations`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          organization_id: orgId,
-          ...locationData
-        }),
+      await fetch(`${API_BASE_URL}/organizations`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ organization_id: orgId, ...locationData }),
       });
-
-      if (!response.ok) throw new Error('Update location failed');
-
-      alert("บันทึกข้อมูลขอบเขตสำเร็จ!");
-      onSave();
-    } catch (err) {
-      console.error(err);
-      alert("เกิดข้อผิดพลาดในการบันทึกที่อยู่");
-    } finally {
-      setIsSaving(false);
-    }
+      alert("บันทึกข้อมูลสำเร็จ!"); onSave();
+    } catch (err) { alert("เกิดข้อผิดพลาด"); } 
+    finally { setIsSaving(false); }
   };
-
-  // Helper สำหรับสร้าง Input พร้อม Icon
-  const InputWithIcon = ({ icon, ...props }) => (
-    <div className={styles.inputIconWrapper}>
-      <div className={styles.inputIcon}>{icon}</div>
-      <input {...props} className={`${styles.input} ${styles.inputWithIcon}`} />
-    </div>
-  );
 
   return (
     <form onSubmit={handleLocationSubmit}>
-      
-      {/* Hero Section: ปุ่มดึงตำแหน่งแบบใหม่ */}
+      {/* 1. Hero Action: ปุ่มดึงตำแหน่งแบบการ์ดสวยๆ */}
       <div 
         className={`${styles.geoActionBox} ${geoStatus === 'success' ? styles.geoSuccess : ''}`}
         onClick={handleFetchGeolocation}
@@ -286,7 +250,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
             {geoStatus === 'loading' ? 'กำลังค้นหาตำแหน่ง...' : (geoStatus === 'success' ? 'ดึงข้อมูลเรียบร้อยแล้ว' : 'ดึงตำแหน่งปัจจุบันอัตโนมัติ')}
           </h4>
           <p className={styles.geoSubtitle}>
-             {geoStatus === 'success' ? 'ตรวจสอบข้อมูลด้านล่างอีกครั้ง' : 'คลิกเพื่อระบุพิกัดและเติมข้อมูลที่อยู่อัตโนมัติ'}
+             {geoStatus === 'success' ? 'ข้อมูลถูกกรอกลงในแบบฟอร์มอัตโนมัติ' : 'คลิกเพื่อระบุพิกัด GPS และที่อยู่ของคุณ'}
           </p>
         </div>
         {geoStatus === 'loading' && <div className={styles.spinner}></div>}
@@ -294,43 +258,34 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
       {geoStatus === 'error' && <div className={styles.errorMessage} style={{marginBottom: '1rem'}}>{geoError}</div>}
 
+      {/* 2. Form Grid พร้อมไอคอน */}
       <div className={styles.formGrid}>
-        
-        {/* จังหวัด */}
         <div className={styles.formGroup}>
-          <label className={styles.label}>จังหวัด</label>
-          <InputWithIcon 
-            type="text" name="province" value={locationData.province} readOnly disabled placeholder="-" 
-            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><map name=""></map><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>}
-          />
+          <label className={styles.label}>จังหวัดที่รับผิดชอบ</label>
+          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><map name=""></map><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>}>
+            <input type="text" name="province" value={locationData.province} className={`${styles.input} ${styles.inputWithIcon}`} readOnly disabled placeholder="-" />
+          </InputWrapper>
         </div>
-
-        {/* อำเภอ */}
+        
         <div className={styles.formGroup}> 
           <label className={styles.label}>อำเภอ/เขต</label>
-          <InputWithIcon 
-            type="text" name="district" value={locationData.district} readOnly disabled placeholder="-"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>}
-          />
+          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>}>
+            <input type="text" name="district" value={locationData.district} className={`${styles.input} ${styles.inputWithIcon}`} readOnly disabled placeholder="-" />
+          </InputWrapper>
         </div>
 
-        {/* ตำบล */}
         <div className={styles.formGroup}>
           <label className={styles.label}>ตำบล/แขวง</label>
-          <InputWithIcon 
-            type="text" name="sub_district" value={locationData.sub_district} readOnly disabled placeholder="-"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>}
-          />
+          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>}>
+            <input type="text" name="sub_district" value={locationData.sub_district} className={`${styles.input} ${styles.inputWithIcon}`} readOnly disabled placeholder="-" />
+          </InputWrapper>
         </div>
 
-        {/* เบอร์โทร */}
         <div className={styles.formGroup}>
           <label className={`${styles.label} ${styles.required}`}>เบอร์โทรศัพท์ติดต่อ</label>
-          <InputWithIcon 
-            type="tel" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} placeholder="08XXXXXXXX"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={locationData.contact_phone ? "#28a745" : "#888"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>}
-            style={{ borderColor: locationData.contact_phone ? '#28a745' : '', backgroundColor: '#fff' }}
-          />
+          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={locationData.contact_phone ? "#28a745" : "#888"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>}>
+             <input type="tel" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} className={`${styles.input} ${styles.inputWithIcon}`} placeholder="08XXXXXXXX" style={{borderColor: locationData.contact_phone ? '#28a745' : ''}} />
+          </InputWrapper>
         </div>
 
         <div className={styles.submitRow}>
@@ -345,104 +300,88 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm
+ * Component 4: TypeSetupForm (ดีไซน์ใหม่: Dropdown with Icons)
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
   const [typeData, setTypeData] = useState({ org_type_id: '', usage_type_id: '' });
   const [orgTypeOptions, setOrgTypeOptions] = useState([]);
   const [usageTypeOptions, setUsageTypeOptions] = useState([]);
-  const [typesLoading, setTypesLoading] = useState(false);
-  const [typesError, setTypesError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchTypes = async () => {
-      setTypesLoading(true);
-      setTypesError(null);
+      setLoading(true);
       try {
-        const [orgTypeRes, usageTypeRes] = await Promise.all([
+        const [res1, res2] = await Promise.all([
           fetch(`${API_BASE_URL}/organization-types`),
           fetch(`${API_BASE_URL}/usage-types`)
         ]);
-        if (!orgTypeRes.ok || !usageTypeRes.ok) throw new Error('ไม่สามารถดึงข้อมูลประเภทได้');
-        const orgTypeData = await orgTypeRes.json();
-        const usageTypeData = await usageTypeRes.json();
-        setOrgTypeOptions(orgTypeData);
-        setUsageTypeOptions(usageTypeData);
-      } catch (error) {
-        setTypesError(error.message);
-      } finally {
-        setTypesLoading(false);
-      }
+        setOrgTypeOptions(await res1.json());
+        setUsageTypeOptions(await res2.json());
+      } catch (err) { console.error(err); } 
+      finally { setLoading(false); }
     };
     fetchTypes();
   }, []);
 
-  const handleTypeChange = (e) => {
-    const { name, value } = e.target;
-    setTypeData(prev => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e) => setTypeData({ ...typeData, [e.target.name]: e.target.value });
 
-  const handleTypeSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
     setIsSaving(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/organizations`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          organization_id: orgId,
-          org_type_id: typeData.org_type_id,
-          usage_type_id: typeData.usage_type_id
-        }),
+      await fetch(`${API_BASE_URL}/organizations`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ organization_id: orgId, ...typeData }),
       });
-      if (!response.ok) throw new Error('Update types failed');
-      alert("บันทึกข้อมูลประเภทสำเร็จ!");
-      onSave();
-    } catch (err) {
-      alert("เกิดข้อผิดพลาดในการบันทึกประเภท");
-    } finally {
-      setIsSaving(false);
-    }
+      alert("บันทึกข้อมูลสำเร็จ!"); onSave();
+    } catch (err) { alert("เกิดข้อผิดพลาด"); } 
+    finally { setIsSaving(false); }
   };
 
-  if (typesLoading) return <p>กำลังโหลดข้อมูลประเภท...</p>;
-  if (typesError) return <p className={styles.errorMessage}>{typesError}</p>;
+  if (loading) return <div style={{textAlign:'center', padding:'2rem'}}>กำลังโหลดข้อมูล...</div>;
 
   return (
-    <form onSubmit={handleTypeSubmit}>
+    <form onSubmit={handleSubmit}>
       <div className={styles.formGrid}>
+        
+        {/* Dropdown 1: ประเภทหน่วยงาน */}
         <div className={styles.formGroup}>
-          <label htmlFor="org_type_id" className={`${styles.label} ${styles.required}`}>ประเภทหน่วยงาน</label>
-          <select
-            id="org_type_id"
-            name="org_type_id"
-            value={typeData.org_type_id}
-            onChange={handleTypeChange}
-            className={styles.select}
-          >
-            <option value="">เลือกประเภท</option>
-            {orgTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+          <label className={`${styles.label} ${styles.required}`}>ประเภทหน่วยงาน</label>
+          <InputWrapper icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="22.01"></line><line x1="15" y1="22" x2="15" y2="22.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="12" y1="6" x2="12" y2="6.01"></line><line x1="16" y1="18" x2="16" y2="18.01"></line><line x1="16" y1="14" x2="16" y2="14.01"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="16" y1="6" x2="16" y2="6.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="8" y1="6" x2="8" y2="6.01"></line></svg>
+          }>
+            <select
+              name="org_type_id"
+              value={typeData.org_type_id}
+              onChange={handleChange}
+              className={`${styles.select} ${styles.inputWithIcon}`}
+            >
+              <option value="">เลือกประเภทหน่วยงาน</option>
+              {orgTypeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          </InputWrapper>
         </div>
+
+        {/* Dropdown 2: ประเภทการใช้งาน */}
         <div className={styles.formGroup}>
-          <label htmlFor="usage_type_id" className={`${styles.label} ${styles.required}`}>ประเภทการใช้งาน</label>
-          <select
-            id="usage_type_id"
-            name="usage_type_id"
-            value={typeData.usage_type_id}
-            onChange={handleTypeChange}
-            className={styles.select}
-          >
-            <option value="">เลือกประเภทการใช้งาน</option>
-            {usageTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+          <label className={`${styles.label} ${styles.required}`}>ประเภทการใช้งาน</label>
+          <InputWrapper icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          }>
+            <select
+              name="usage_type_id"
+              value={typeData.usage_type_id}
+              onChange={handleChange}
+              className={`${styles.select} ${styles.inputWithIcon}`}
+            >
+              <option value="">เลือกประเภทการใช้งาน</option>
+              {usageTypeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          </InputWrapper>
         </div>
         
         <div className={styles.submitRow}>
@@ -450,7 +389,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
             type="submit"
             className={`${styles.button} ${styles.btnSuccess}`}
             disabled={!typeData.org_type_id || !typeData.usage_type_id || isSaving}
-            style={{ width: 'auto', minWidth: '150px' }}
+            style={{ width: '100%' }}
             >
             {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
             </button>
