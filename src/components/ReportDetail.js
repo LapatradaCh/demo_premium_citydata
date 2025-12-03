@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './css/ReportDetail.module.css';
 
-// --- Icons ---
+// --- Icons (คงเดิม) ---
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
 const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
@@ -12,7 +12,7 @@ const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="curre
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconClose = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// Timeline Icons
+// Timeline Icons (คงเดิม)
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
 const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
 const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
@@ -42,6 +42,9 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [statusComment, setStatusComment] = useState(""); 
+  
+  // State เพื่อป้องกันการเรียก View API ซ้ำ
+  const [hasViewed, setHasViewed] = useState(false);
 
   // 1. Fetch Issue Types
   useEffect(() => {
@@ -85,10 +88,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
             real_id: result.info.issue_cases_id,
             title: result.info.title || "ไม่มีหัวข้อ",
             category: result.info.issue_category_name || "ทั่วไป",
-            
-            // ✅ ใช้ parseFloat เพื่อรองรับคะแนนทศนิยม เช่น 4.5
             rating: result.info.rating ? parseFloat(result.info.rating) : 0.0,
-            
             status: result.info.status || "รอรับเรื่อง",
             locationDetail: (lat && lng) 
               ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
@@ -112,6 +112,57 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
     fetchCaseDetail();
   }, [reportId, refreshKey]);
+
+  // --- ★ NEW CODE: 2.5 Trigger View API (Automatic Status Change) ---
+  useEffect(() => {
+    const markAsViewed = async () => {
+      // ตรวจสอบว่ามีข้อมูล Case และยังไม่เคยยิง View ใน Session นี้
+      if (!caseInfo || !caseInfo.real_id || hasViewed) return;
+
+      const storedUserId = localStorage.getItem("user_id");
+      const storedOrgId = localStorage.getItem("organization_id"); // ตรวจสอบว่ามี organization_id ใน localStorage หรือไม่
+
+      // ถ้าไม่มี User หรือ Org ให้ข้ามไป
+      if (!storedUserId || !storedOrgId) {
+          console.warn("User ID or Organization ID missing in localStorage. Skipping view tracking.");
+          return;
+      }
+
+      try {
+        // Construct API URL: /api/cases/[id]/view
+        const viewApiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
+        
+        const res = await fetch(viewApiUrl, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: parseInt(storedUserId),
+                organization_id: parseInt(storedOrgId)
+            })
+        });
+
+        if (res.ok) {
+            setHasViewed(true); // Mark as viewed to prevent loop
+            // ถ้าสถานะเดิมคือ 'รอรับเรื่อง' ระบบ backend จะเปลี่ยนเป็น 'กำลังประสานงาน'
+            // เราจึงควร Refresh ข้อมูลใหม่เพื่อให้หน้า UI อัปเดตสถานะทันที
+            if (caseInfo.status === 'รอรับเรื่อง') {
+                setRefreshKey(prev => prev + 1);
+            }
+        } else {
+            console.error("Failed to mark case as viewed:", await res.text());
+        }
+
+      } catch (err) {
+        console.error("Error calling view API:", err);
+      }
+    };
+
+    markAsViewed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseInfo, hasViewed]); // ทำงานเมื่อ caseInfo เปลี่ยน (โหลดเสร็จ)
+
 
   // 3. Handle Update Category
   const handleUpdateCategory = async () => {
@@ -179,7 +230,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
             case_id: caseInfo.real_id,          
             user_id: currentUserId,             
             new_status: statusValue,            
-            comment: statusComment,            
+            comment: statusComment,             
             image_url: finalImageUrl            
         };
 
@@ -355,10 +406,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
           <div>
             <p className={styles.label}>คะแนนความพึงพอใจเฉลี่ย</p>
             
-            {/* ✅ ปรับปรุงส่วนแสดงดาว: ใช้ Overlay Technique และสีเหลือง */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              
-              {/* Container สำหรับดาว */}
               <div style={{ 
                   position: 'relative', 
                   display: 'inline-block', 
@@ -366,13 +414,9 @@ const ReportDetail = ({onGoToInternalMap }) => {
                   lineHeight: 1,
                   letterSpacing: '2px' 
               }}>
-                
-                {/* Layer 1 (ล่างสุด): ดาวสีเทาเต็ม 5 ดวง (Background) */}
                 <div style={{ color: '#E5E7EB' }}>
                   ★★★★★
                 </div>
-                
-                {/* Layer 2 (บนสุด): ดาวสีเหลือง (Foreground) ตัดขอบตาม % คะแนน */}
                 <div style={{
                     position: 'absolute',
                     top: 0,
@@ -386,7 +430,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 </div>
               </div>
 
-              {/* แสดงตัวเลขคะแนนจริงด้านหลัง */}
               <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: '500' }}>
                   {info.rating > 0 ? info.rating.toFixed(1) : '0.0'} / 5
               </span>
@@ -512,8 +555,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
                   {issueTypeList.map((typeItem) => {
                     const isSelected = selectedIssueType 
-                         ? selectedIssueType.issue_id === typeItem.issue_id 
-                         : info.category === typeItem.name;
+                          ? selectedIssueType.issue_id === typeItem.issue_id 
+                          : info.category === typeItem.name;
 
                     return (
                         <div 
