@@ -70,7 +70,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm (อัปเดตโลโก้ - ปรับ UI ใหม่)
+ * Component 2: LogoSetupForm (อัปเดตโลโก้)
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -94,7 +94,6 @@ const LogoSetupForm = ({ onSave, orgId }) => {
     
     setIsSaving(true);
     
-    // Note: จำลองส่ง URL ไปก่อน
     const mockLogoUrl = "https://placehold.co/400x400/png?text=Logo"; 
 
     try {
@@ -122,7 +121,6 @@ const LogoSetupForm = ({ onSave, orgId }) => {
   return (
     <form onSubmit={handleLogoSubmit}>
       <div className={styles.logoUploadBox}>
-        {/* ส่วนแสดงรูปภาพ */}
         <img
           id="logo-preview"
           src={orgImagePreview || "https://placehold.co/150x150/f0f0f0/cccccc?text=LOGO"}
@@ -131,7 +129,6 @@ const LogoSetupForm = ({ onSave, orgId }) => {
         />
         
         <div className={styles.logoUploadActions}>
-          {/* Input แบบซ่อน */}
           <input
             type="file"
             id="logo-upload-input"
@@ -140,7 +137,6 @@ const LogoSetupForm = ({ onSave, orgId }) => {
             onChange={handleImageChange}
           />
           
-          {/* Label ทำหน้าที่เป็นปุ่มเลือกไฟล์ */}
           <label
             htmlFor="logo-upload-input"
             className={`${styles.button} ${styles.btnSecondary}`}
@@ -169,7 +165,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm (ใช้ Grid Layout)
+ * Component 3: LocationSetupForm (GPS & Address)
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -261,7 +257,6 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
   return (
     <form onSubmit={handleLocationSubmit}>
-      {/* ปุ่ม GPS เต็มความกว้าง */}
       <div className={styles.geoButtonContainer}>
         <button
           type="button"
@@ -274,7 +269,6 @@ const LocationSetupForm = ({ onSave, orgId }) => {
         {geoStatus === 'error' && <p className={styles.errorMessage}>{geoError}</p>}
       </div>
 
-      {/* Grid Layout สำหรับ Input */}
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
           <label htmlFor="province" className={styles.label}>จังหวัดที่รับผิดชอบ</label>
@@ -293,7 +287,6 @@ const LocationSetupForm = ({ onSave, orgId }) => {
           <input type="tel" id="contact_phone" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} className={styles.input} placeholder="08XXXXXXXX" />
         </div>
 
-        {/* ปุ่ม Submit */}
         <div className={styles.submitRow}>
           <button type="submit" className={`${styles.button} ${styles.btnSuccess}`} disabled={isSaving} style={{ width: 'auto', minWidth: '150px' }}>
              {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
@@ -306,7 +299,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm (ใช้ Grid Layout)
+ * Component 4: TypeSetupForm (Types)
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
@@ -423,7 +416,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (ปรับ Switch ใหม่ และใช้ ICON แทน Text)
+ * Component 5: CodeSetupBox (แก้ UI ให้เหมือนรูปตัวอย่าง)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -441,7 +434,6 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
   return (
     <div className={styles.codeBoxContainer}>
-      {/* Switcher แบบใหม่ */}
       <div className={styles.codeSwitchWrapper}>
          <button 
            type="button" 
@@ -471,10 +463,10 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
         >
           {copyStatus === 'copied' ? (
              // ไอคอนเครื่องหมายถูก (เมื่อ Copy แล้ว)
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           ) : (
-             // ไอคอน Copy สีเขียว (ปกติ)
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+             // ไอคอน Copy สีเขียว (ปกติ - สี่เหลี่ยมซ้อนกัน)
+             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           )}
         </button>
       </div>
@@ -484,7 +476,7 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
 /**
  * =================================================================
- * Component 6: SetupGuidePage (เพิ่ม inner padding wrapper)
+ * Component 6: SetupGuidePage
  * =================================================================
  */
 const SetupGuidePage = ({
@@ -531,7 +523,6 @@ const SetupGuidePage = ({
             </button>
             <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'code' ? styles.open : ''}`}>
               <div className={styles.accordionContent}>
-                {/* เพิ่ม Wrapper inner ให้ไม่ชิดขอบ */}
                 <div className={styles.accordionInner}>
                    <CodeSetupBox adminCode={adminCode} userCode={userCode} />
                 </div>
@@ -628,7 +619,7 @@ const SetupGuidePage = ({
 
 /**
  * =================================================================
- * Main Component: CreateOrg (จัดการ Logic หลัก และการสุ่มรหัส)
+ * Main Component: CreateOrg
  * =================================================================
  */
 function CreateOrg() {
