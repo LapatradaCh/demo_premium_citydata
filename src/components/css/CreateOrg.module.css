@@ -18,10 +18,10 @@
   --transition: all 0.2s ease-in-out;
 }
 
-/* Reset: ป้องกัน Padding ดันจนล้น */
+/* Hard Reset: ป้องกัน Padding ดันจนล้น */
 * {
   box-sizing: border-box;
-  min-width: 0; 
+  min-width: 0; /* สำคัญมาก: ช่วยให้ Flex/Grid ไม่ดันจนล้น */
 }
 
 /* ==================================================================
@@ -30,11 +30,14 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* จัดกึ่งกลางทั้งแนวตั้งและแนวนอน */
   min-height: 100vh;
   width: 100%;
+  
+  /* ป้องกัน Container ล้นจอแนวนอน */
   max-width: 100vw; 
   overflow-x: hidden; 
+  
   padding: 1rem;
   background: var(--color-surface);
   font-family: "Sarabun", sans-serif;
@@ -50,11 +53,13 @@
 
 .page {
   width: 100%;
+  /* จำกัดความกว้างไม่ให้เกินจอ */
   max-width: 100%; 
   background: var(--color-bg);
   border-radius: var(--radius-card);
   padding: 1.25rem; 
   box-shadow: var(--shadow-card);
+  /* เพิ่ม margin auto เล็กน้อยเผื่อเนื้อหายาวเกินจอแนวตั้ง */
   margin: auto 0;
 }
 .pageCreate { max-width: 500px; }
@@ -97,9 +102,10 @@
   width: 100%;
 }
 
+/* Grid System */
 .formGrid {
   display: flex; 
-  flex-direction: column; 
+  flex-direction: column; /* บังคับเรียงลงมาเป็นแนวตั้ง */
   gap: 1rem;
   width: 100%;
 }
@@ -122,7 +128,6 @@
   color: var(--color-red);
 }
 
-/* Input และ Select */
 .input, .select {
   width: 100%; 
   max-width: 100%; 
@@ -136,9 +141,9 @@
   transition: var(--transition);
 }
 
-/* --- แก้ไขเฉพาะ Dropdown (Select) ตรงนี้ --- */
+/* --- [UPDATED] Dropdown styling to prevent overflow --- */
 .select {
-  appearance: none; /* ลบลูกศรเดิม */
+  appearance: none;
   cursor: pointer;
   
   /* จัดการข้อความยาว */
@@ -146,19 +151,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   
-  /* เพิ่มพื้นที่ขวาเยอะๆ ให้ข้อความไม่ทับลูกศร */
-  padding-right: 3rem; 
+  padding-right: 2.5rem !important; /* เว้นที่ให้ลูกศร */
   
-  /* สร้างลูกศรใหม่ */
+  /* Custom Arrow */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 1rem center; /* ตำแหน่งลูกศร */
+  background-position: right 0.8rem center;
   background-size: 1.2em;
 }
 
 .input:focus, .select:focus {
   outline: none;
-  background-color: #fff;
+  background: #fff;
   border-color: var(--color-green);
   box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
@@ -357,37 +361,6 @@
   display: flex; flex-direction: column; align-items: center; width: 100%;
 }
 
-/* Code Box */
-.codeBoxContainer {
-  display: flex; flex-direction: column; gap: 0.8rem; width: 100%;
-}
-.codeDisplayBox {
-  display: flex; justify-content: space-between; align-items: center;
-  background: white;
-  border: 1px solid #333; 
-  border-radius: 12px; 
-  padding: 0.8rem 1rem;
-  width: 100%;
-  overflow: hidden;
-}
-.codeText {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 1.1rem; /* ลดขนาด Font ลงนิดนึงให้พอดี */
-  font-weight: 800;
-  color: #2d3436;
-  letter-spacing: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.btnCopy {
-  width: 32px !important; height: 32px !important; min-width: 32px !important;
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 !important; background: transparent !important; border: none !important;
-  color: var(--color-green); cursor: pointer; border-radius: 50%;
-  margin-left: 10px; flex-shrink: 0;
-}
-
 /* Geo Action Box */
 .geoActionBox {
   display: flex;
@@ -413,22 +386,81 @@
 .geoTitle { margin: 0; font-size: 1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #636e72; }
 
+/* --- [NEW] Code Box Styles (Tab Switcher) --- */
+.codeBoxContainer { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
+
+/* Tab Container */
+.tabContainer {
+  display: flex;
+  background: #eee;
+  border-radius: 10px;
+  padding: 4px;
+  width: 100%;
+  gap: 4px;
+}
+
+/* Tab Button */
+.tabBtn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 4px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #666;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabActive {
+  background: white;
+  color: #28a745;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.tabDescription {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  margin: 0;
+}
+
+/* Code Display */
+.codeDisplayBox {
+  display: flex; justify-content: space-between; align-items: center;
+  background: white; border: 1px solid #333; border-radius: 12px; 
+  padding: 0.8rem 1rem; width: 100%; overflow: hidden;
+}
+.codeText {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2d3436;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btnCopy {
+  width: 32px !important; height: 32px !important; min-width: 32px !important;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 !important; background: transparent !important; border: none !important;
+  color: var(--color-green); cursor: pointer; border-radius: 50%;
+  margin-left: 10px; flex-shrink: 0;
+}
+
 /* Input with Icons */
 .inputIconWrapper { position: relative; width: 100%; }
 .inputIcon {
   position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
   color: #999; display: flex; align-items: center; pointer-events: none; z-index: 2;
 }
-.inputWithIcon { 
-  padding-left: 2.5rem !important; 
-  /* ถ้าเป็น Select ให้ padding-right เยอะกว่าปกติ (3rem) */
-}
-.select.inputWithIcon {
-  padding-right: 3rem !important; 
-}
+.inputWithIcon { padding-left: 2.5rem !important; }
+.select.inputWithIcon { padding-right: 3rem !important; }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Override (min-width: 768px)
+ * 💻 Desktop / Tablet Override
  * ================================================================== */
 @media (min-width: 768px) {
   .page { padding: 2.5rem; }
