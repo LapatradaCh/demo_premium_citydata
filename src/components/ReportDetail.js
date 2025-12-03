@@ -120,17 +120,30 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
         // ต้องรอให้โหลดข้อมูลเคสเสร็จก่อนถึงจะยิง API View
         if (!caseInfo || !caseInfo.real_id) return;
 
-        // ดึง user_id และ organization_id จาก LocalStorage
+        // 1. ดึง user_id (จาก LocalStorage ตรงๆ)
         const storedUserId = localStorage.getItem("user_id");
-        const storedOrgId = localStorage.getItem("organization_id"); // ★ สำคัญ: ต้องมั่นใจว่ามีค่านี้ใน Storage
 
+        // 2. ดึง organization_id จาก 'lastSelectedOrg' (ที่เป็น JSON String)
+        let storedOrgId = null;
+        const lastSelectedOrgStr = localStorage.getItem("lastSelectedOrg");
+        
+        if (lastSelectedOrgStr) {
+            try {
+                const orgData = JSON.parse(lastSelectedOrgStr);
+                storedOrgId = orgData.id; 
+            } catch (e) {
+                console.error("Error parsing lastSelectedOrg from LocalStorage:", e);
+            }
+        }
+
+        // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
         if (!storedUserId || !storedOrgId) {
-            console.warn("View Tracking: Missing user_id or organization_id in localStorage");
+            console.warn("View Tracking: Missing user_id or organization_id (in lastSelectedOrg)");
             return;
         }
 
         try {
-            // URL ของ API view.js (เดาโครงสร้างจากไฟล์ที่ให้มาคือ /api/cases/[id]/view)
+            // URL ของ API view.js
             const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
 
             const response = await fetch(apiUrl, {
@@ -148,9 +161,7 @@ const ReportDetail = ({ reportId, onGoToInternalMap }) => {
                 const data = await response.json();
                 console.log("Case View Tracked Successfully:", data);
                 
-                // หาก API แจ้งว่ามีการเปลี่ยนสถานะ หรือมีการอัปเดตข้อมูล
-                // ให้ทำการ Refresh ข้อมูลในหน้าจอใหม่ (เพื่อให้ Timeline ขึ้นว่าดูแล้ว หรือสถานะเปลี่ยนเป็นกำลังประสานงาน)
-                // เราจะเช็คคร่าวๆ ว่าถ้าสำเร็จ ก็ให้ Refresh ไปเลยเพื่อความชัวร์
+                // Refresh เพื่อให้หน้าจออัปเดตสถานะทันที
                 setRefreshKey(prev => prev + 1);
             } else {
                 const errText = await response.text();
