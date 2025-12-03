@@ -168,7 +168,7 @@ const Home = () => {
         // บันทึก ID ลง LocalStorage (ใช้ชื่อ key ว่า 'selectedCaseId')
         // หมายเหตุ: ตรวจสอบว่าใน object item ใช้ชื่อ field ว่า 'id' หรือ 'case_id' 
         // ถ้าเป็น 'case_id' ให้แก้เป็น item.case_id ครับ
-        const caseIdToSave = item.id || item.case_id; 
+        const caseIdToSave = item.case_id; 
         if (caseIdToSave) {
             localStorage.setItem("selectedCaseId", caseIdToSave);
         }
