@@ -6,78 +6,81 @@
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
-
   --color-bg: #ffffff;
   --color-surface: #f4f6f8;
   --color-border: #e0e0e0;
-  
   --color-text-main: #2d3436; 
   --color-text-sub: #636e72;
-
   --radius-card: 16px;        
   --radius-input: 8px;
   --radius-btn: 50px;
-  
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-input: inset 0 2px 4px rgba(0,0,0,0.02);
-  
   --transition: all 0.2s ease-in-out;
 }
 
+/* Hard Reset: ป้องกัน Padding ดันจนล้น */
+* {
+  box-sizing: border-box;
+  min-width: 0; /* สำคัญมาก: ช่วยให้ Flex/Grid ไม่ดันจนล้น */
+}
+
 /* ==================================================================
- * 📐 2. Layout & Container (Responsive Fixes)
+ * 📐 2. Layout & Container (แก้ล้นแบบเบ็ดเสร็จ)
  * ================================================================== */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  /* มือถือ: ลด padding รอบนอก */
-  padding: 1rem; 
+  width: 100%;
+  
+  /* ป้องกัน Container ล้นจอแนวนอน */
+  max-width: 100vw; 
+  overflow-x: hidden; 
+  
+  padding: 1rem;
   background: var(--color-surface);
   font-family: "Sarabun", sans-serif;
   color: var(--color-text-main);
-  box-sizing: border-box;
 }
 
-/* ถ้าจอเล็กมาก ให้จัดชิดบนแทนกึ่งกลาง จะได้ไม่ตกขอบ */
 @media (max-width: 480px) {
   .container {
     align-items: flex-start;
     padding-top: 2rem;
+    padding-left: 0.5rem; 
+    padding-right: 0.5rem;
   }
 }
 
 .page {
   width: 100%;
+  /* จำกัดความกว้างไม่ให้เกินจอ */
+  max-width: 100%; 
   background: var(--color-bg);
   border-radius: var(--radius-card);
-  
-  /* มือถือ: ลด Padding ภายในลง เพื่อให้เนื้อหาไม่แคบ */
-  padding: 1.5rem;
-  
+  padding: 1.25rem; 
   box-shadow: var(--shadow-card);
-  transition: var(--transition);
-  box-sizing: border-box;
 }
 .pageCreate { max-width: 500px; }
 .pageSetup { max-width: 700px; }
 
-/* Header */
 .pageHeader {
   text-align: center;
   margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
 }
 .pageTitle {
-  font-size: 1.5rem; /* มือถือ: ลดขนาดหัวข้อลงนิดหน่อย */
+  font-size: 1.4rem;
   font-weight: 800;
   color: var(--color-text-main);
   margin-bottom: 0.5rem;
   line-height: 1.3;
+  /* ถ้าชื่อยาวเกิน ให้ตัดคำลงบรรทัดใหม่ */
+  word-wrap: break-word; 
 }
 .pageSubtitle {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--color-text-sub);
 }
 .orgNameHighlight {
@@ -91,20 +94,20 @@
 }
 
 /* ==================================================================
- * 📝 3. Forms & Inputs
+ * 📝 3. Forms & Inputs (แก้ปัญหาเรียง 2 แถวในมือถือ)
  * ================================================================== */
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
 }
 
-/* Grid System (หัวใจของการแก้ปัญหา) */
+/* Grid System: ใช้ Flexbox แทน Grid บนมือถือเพื่อความชัวร์ */
 .formGrid {
-  display: grid;
-  /* มือถือ: บังคับเป็น 1 คอลัมน์ (เรียงลงมา) */
-  grid-template-columns: 1fr; 
-  gap: 1.25rem;
+  display: flex; 
+  flex-direction: column; /* บังคับเรียงลงมาเป็นแนวตั้ง */
+  gap: 1rem;
   width: 100%;
 }
 
@@ -113,7 +116,8 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
-  min-width: 0; /* ป้องกัน Flex item ล้น */
+  /* ป้องกัน Flex item ดันออกข้าง */
+  min-width: 0; 
 }
 
 .label {
@@ -127,21 +131,23 @@
 }
 
 .input, .select {
-  width: 100%;
+  width: 100%; /* กินพื้นที่เต็ม 100% ของพ่อมัน */
+  max-width: 100%; /* ห้ามเกิน 100% เด็ดขาด */
+  
   padding: 0.75rem 1rem;
-  font-size: 1rem; /* 16px ป้องกัน iOS Zoom */
+  font-size: 1rem; 
   border-radius: var(--radius-input);
   border: 1px solid var(--color-border);
   background: #fdfdfd;
   color: var(--color-text-main);
   transition: var(--transition);
-  box-sizing: border-box;
   
-  /* จัดการข้อความยาวเกิน */
+  /* แก้ปัญหา Dropdown ข้อความยาวล้น */
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
+
 .input:focus, .select:focus {
   outline: none;
   background: #fff;
@@ -150,10 +156,10 @@
 }
 
 .submitRow {
-  grid-column: 1 / -1;
   margin-top: 0.5rem;
   display: flex;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .errorMessage {
@@ -171,6 +177,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  width: 100%;
 }
 
 .button {
@@ -207,17 +214,17 @@
 }
 
 .geoButtonContainer {
-  grid-column: 1 / -1;
   width: 100%;
 }
 
 /* ==================================================================
- * 📂 5. Accordion (Cards)
+ * 📂 5. Accordion
  * ================================================================== */
 .accordion {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
 
 .accordionItem {
@@ -225,7 +232,7 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
   overflow: hidden;
-  transition: var(--transition);
+  width: 100%;
 }
 
 .accordionHeader {
@@ -258,17 +265,24 @@
   font-weight: 700;
   color: var(--color-text-main);
   margin: 0;
+  /* ตัดคำถ้ายาวเกิน */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; /* จำกัดความกว้างชื่อหัวข้อ */
 }
 .accordionSubtitle {
   font-size: 0.8rem;
   color: var(--color-text-sub);
   margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .accordionArrow {
   width: 1rem;
   margin-left: auto;
   color: #bbb;
-  transition: transform 0.3s;
 }
 .rotate180 { transform: rotate(180deg); }
 
@@ -294,7 +308,7 @@
  * 🖼️ 6. Special Components (Logo, Code, Geo)
  * ================================================================== */
 
-/* --- Logo Upload --- */
+/* Logo Upload */
 .logoUploadBox {
   display: flex;
   flex-direction: column;
@@ -305,6 +319,7 @@
   border-radius: 12px;
   border: 1px dashed #ccc;
   text-align: center;
+  width: 100%;
 }
 .logoWrapper {
   position: relative;
@@ -317,8 +332,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   border: 2px solid white;
 }
 .editIcon {
@@ -330,16 +343,11 @@
   border-radius: 50%;
   border: 3px solid white;
   display: flex; justify-content: center; align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
   z-index: 10;
 }
 .hiddenFileInput { display: none !important; }
-.logoUploadActions {
-  display: flex; flex-direction: column; align-items: center; width: 100%;
-}
 
-/* --- Code Box --- */
+/* Code Box */
 .codeBoxContainer {
   display: flex; flex-direction: column; gap: 0.8rem; width: 100%;
 }
@@ -349,7 +357,8 @@
   border: 1px solid #333; 
   border-radius: 12px; 
   padding: 0.8rem 1rem;
-  overflow-x: auto; /* ให้เลื่อนแนวนอนได้ถ้ายาวเกิน */
+  width: 100%;
+  overflow: hidden; /* ห้ามล้น */
 }
 .codeText {
   font-family: "Courier New", Courier, monospace;
@@ -358,6 +367,8 @@
   color: #2d3436;
   letter-spacing: 1px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ถ้าโค้ดยาวไปให้ตัด ... */
 }
 .btnCopy {
   width: 32px !important; height: 32px !important; min-width: 32px !important;
@@ -367,40 +378,32 @@
   margin-left: 10px; flex-shrink: 0;
 }
 
-/* --- Location Hero Box --- */
+/* Geo Action Box */
 .geoActionBox {
   display: flex;
-  flex-direction: column; /* มือถือ: ตั้ง Icon ไว้บน Text */
+  flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 1rem;
-  
   background: #f0fdf4; 
   border: 1px dashed #28a745;
   border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  width: 100%;
 }
 .geoSuccess { background: #d1e7dd; border-style: solid; border-color: #198754; }
 .geoIconCircle {
   width: 42px; height: 42px;
   background: white; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #28a745; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0;
+  color: #28a745; flex-shrink: 0;
 }
 .geoTextContent { flex: 1; width: 100%; }
 .geoTitle { margin: 0; font-size: 1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #636e72; }
-.spinner {
-  width: 20px; height: 20px;
-  border: 3px solid rgba(40, 167, 69, 0.3); border-radius: 50%; border-top-color: #28a745;
-  animation: spin 1s ease-in-out infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- Input with Icons --- */
+/* Input with Icons */
 .inputIconWrapper { position: relative; width: 100%; }
 .inputIcon {
   position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
@@ -414,15 +417,15 @@
 }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Overrides (จอคอม: min-width: 768px)
+ * 💻 Desktop / Tablet Override (min-width: 768px)
  * ================================================================== */
 @media (min-width: 768px) {
-  /* ขยาย Padding กลับมาให้ดูโปร่ง */
   .page { padding: 2.5rem; }
   .pageTitle { font-size: 1.75rem; }
   
-  /* แบ่งคอลัมน์ซ้าย-ขวา เฉพาะในคอม */
+  /* เปลี่ยนกลับเป็น Grid 2 คอลัมน์เฉพาะในคอม */
   .formGrid {
+    display: grid;
     grid-template-columns: 1fr 1fr; 
     align-items: start;
   }
@@ -434,7 +437,7 @@
   .logoUploadActions { align-items: flex-start; width: auto; }
   
   .geoActionBox {
-    flex-direction: row; /* คอม: เรียงแนวนอน */
+    flex-direction: row; 
     text-align: left;
     padding: 1.5rem;
   }
@@ -448,9 +451,5 @@
   .codeText { font-size: 1.4rem; }
   .codeDisplayBox { padding: 1rem 1.5rem; }
   
-  .accordionHeader { gap: 1rem; padding: 1.25rem; }
-  .accordionIcon { width: 2.8rem; height: 2.8rem; font-size: 1.4rem; }
-  .accordionTitle { font-size: 1.1rem; }
-  .accordionSubtitle { font-size: 0.9rem; }
-  .accordionInner { padding: 0 1.5rem 1.5rem 1.5rem; }
+  .accordionTitle { max-width: none; } /* เลิกจำกัดความกว้างชื่อหัวข้อในคอม */
 }
