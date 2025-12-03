@@ -183,8 +183,9 @@
   width: 100%;
 }
 
+/* สไตล์ปุ่มพื้นฐาน (บนมือถือเต็มจอ) */
 .button {
-  width: 100%; /* มือถือ: เต็มความกว้าง */
+  width: 100%; 
   padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
   font-weight: 700;
@@ -506,9 +507,9 @@
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
-  /* [แก้] กำหนดความกว้างปุ่มให้เท่ากันเป๊ะ (220px) ไม่ใช้ auto */
+  /* [แก้] จุดเดียวที่เพิ่ม: บังคับให้ปุ่มทุกอันกว้างเท่ากันบนจอคอม */
   .button { 
-    width: 220px; /* ล็อกความกว้างเลย */
+    width: 280px; 
   }
   
   .codeText { font-size: 1.8rem; }
