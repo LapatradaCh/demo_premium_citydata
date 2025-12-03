@@ -401,7 +401,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox
+ * Component 5: CodeSetupBox (Updated: Tab Switcher)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -420,17 +420,27 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
   return (
     <div className={styles.codeBoxContainer}>
       
-      <div className={styles.formGroup}>
-        <select
-          className={styles.select}
-          value={codeType}
-          onChange={(e) => setCodeType(e.target.value)}
-          style={{ fontWeight: 'bold', color: '#444', cursor: 'pointer' }}
+      {/* Tab Switcher แทน Dropdown */}
+      <div className={styles.tabContainer}>
+        <button 
+          type="button"
+          onClick={() => setCodeType('admin')}
+          className={`${styles.tabBtn} ${codeType === 'admin' ? styles.tabActive : ''}`}
         >
-          <option value="admin">🔑 Admin Code (รหัสสำหรับผู้ดูแล)</option>
-          <option value="user">👤 User Code (รหัสสำหรับสมาชิก)</option>
-        </select>
+          🔑 Admin Code
+        </button>
+        <button 
+          type="button"
+          onClick={() => setCodeType('user')}
+          className={`${styles.tabBtn} ${codeType === 'user' ? styles.tabActive : ''}`}
+        >
+          👤 User Code
+        </button>
       </div>
+      
+      <p className={styles.tabDescription}>
+        {codeType === 'admin' ? 'รหัสสำหรับผู้ดูแล (แก้ไขข้อมูลได้)' : 'รหัสสำหรับสมาชิก (ดูข้อมูลได้อย่างเดียว)'}
+      </p>
 
       <div className={styles.codeDisplayBox}>
         <span className={styles.codeText}>
@@ -443,9 +453,9 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
           title={copyStatus === 'copied' ? 'คัดลอกสำเร็จ' : 'คัดลอกรหัส'}
         >
           {copyStatus === 'copied' ? (
-             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           ) : (
-             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           )}
         </button>
       </div>
