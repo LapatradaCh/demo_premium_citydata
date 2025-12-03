@@ -402,23 +402,33 @@
   letter-spacing: 2px;
 }
 
+/* ...โค้ดส่วนอื่นคงเดิม... */
+
 /* ปุ่ม Copy เป็นไอคอน ไม่มีพื้นหลัง */
 .btnCopy {
   background: transparent;
   border: none;
-  padding: 8px;
+  padding: 5px; /* ลด Padding ลง (เดิม 8px) */
   cursor: pointer;
-  color: var(--color-green); /* สีเขียว */
+  color: var(--color-green);
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 4px; /* เพิ่มความมนนิดหน่อยเวลากด */
 }
+
+/* เพิ่มส่วนนี้เพื่อคุมขนาดไอคอนให้เป๊ะ */
+.btnCopy svg {
+  width: 18px;  /* กำหนดขนาดไอคอนให้เล็กลง */
+  height: 18px;
+}
+
 .btnCopy:hover {
   transform: scale(1.1);
   color: var(--color-green-dark);
+  background-color: rgba(40, 167, 69, 0.1); /* เพิ่มพื้นหลังจางๆ ตอนชี้ จะได้รู้ขอบเขตปุ่ม */
 }
-
 /* Responsive */
 @media (min-width: 768px) {
   .logoUploadBox {
