@@ -14,7 +14,7 @@
   --color-text-main: #2d3436; 
   --color-text-sub: #636e72;
 
-  --radius-card: 16px;       
+  --radius-card: 16px;        
   --radius-input: 8px;
   --radius-btn: 50px;
   
@@ -400,18 +400,24 @@
   font-weight: 700;
   letter-spacing: 1px;
 }
+
+/* --- [UPDATED] แก้ไขปุ่ม Copy เป็น Icon --- */
 .btnCopy {
-  background: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.4rem 1rem;
+  background: transparent; /* เอาพื้นหลังเดิมออก */
+  border: none;
+  padding: 8px;
   cursor: pointer;
-  font-weight: 600;
-  color: var(--color-text-main);
+  color: var(--color-green); /* สีไอคอนเขียว */
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* เวลาชี้แล้วขึ้นวงกลม */
 }
 .btnCopy:hover {
-  background: #e9ecef;
+  background: #e6fffa; /* สีพื้นหลังจางๆ ตอน Hover */
+  color: var(--color-green-dark);
+  transform: scale(1.1); /* ขยายเล็กน้อย */
 }
 
 /* Responsive */
