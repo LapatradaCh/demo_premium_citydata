@@ -18,10 +18,6 @@
   --radius-input: 8px;
   --radius-btn: 50px;
   
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-input: inset 0 2px 4px rgba(0,0,0,0.02);
-  
   --transition: all 0.2s ease-in-out;
 }
 
@@ -45,7 +41,7 @@
   background: var(--color-bg);
   border-radius: var(--radius-card);
   padding: 2.5rem;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition: var(--transition);
 }
 .pageCreate { max-width: 500px; }
@@ -83,7 +79,6 @@
   gap: 1.5rem;
 }
 
-/* Grid System */
 .formGrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -95,9 +90,6 @@
   .formGrid {
     grid-template-columns: 1fr 1fr;
     align-items: start;
-  }
-  .fullWidth {
-    grid-column: 1 / -1; 
   }
 }
 
@@ -227,7 +219,7 @@
 }
 
 /* ==================================================================
- * 📂 5. Accordion (Cards)
+ * 📂 5. Accordion
  * ================================================================== */
 .accordion {
   display: flex;
@@ -345,60 +337,58 @@
   width: 100%;
 }
 
-/* --- [NEW DESIGN] ส่วนแสดงรหัส (Clean Capsule Style) --- */
-
+/* --- [FINAL] ส่วนแสดงรหัส (แก้ไขตามรูปล่าสุด) --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* เพิ่มระยะห่างให้ดูไม่อึดอัด */
+  gap: 1rem;
 }
 
-/* 1. สวิตช์เลือก Admin/User แบบแคปซูล */
+/* 1. Tabs เลือก Admin/User (พื้นเทา, ปุ่ม Active ขาว+เขียว) */
 .codeSwitchWrapper {
   display: flex;
-  background: #f1f3f5; /* พื้นหลังสีเทาอ่อนๆ */
+  background: #e9ecef; /* พื้นหลังราง */
   padding: 4px;
-  border-radius: 50px; /* ทรงแคปซูล */
-  position: relative;
+  border-radius: 8px; /* มุมมนเล็กน้อย */
+  gap: 4px;
 }
 
 .codeSwitchBtn {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 8px 16px;
-  border-radius: 40px;
+  padding: 8px 0;
+  border-radius: 6px;
   
   font-size: 0.95rem;
   font-weight: 600;
-  color: #6c757d; /* สีเทากลาง */
+  color: #636e72; /* สีเทาเข้ม */
   
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-/* สถานะ Active (เลือกแล้ว) */
+/* สถานะ Active */
 .codeSwitchBtn.active {
-  background: white; /* พื้นหลังขาว */
-  color: var(--color-green); /* ตัวหนังสือเขียว */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* เงาบางๆ ให้ดูลอย */
+  background: white;
+  color: var(--color-green); /* สีเขียว */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* 2. กล่องแสดงรหัส */
+/* 2. กล่องแสดงรหัส (กรอบดำบาง) */
 .codeDisplayBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: white;
   
-  border: 1px solid #dce0e4; /* กรอบเทาอ่อนๆ บางๆ */
+  border: 1px solid #333; /* กรอบดำเส้นบาง */
   border-radius: 12px;
   
   padding: 1rem 1.5rem;
   transition: all 0.2s;
 }
 
-/* ตัวรหัส */
 .codeText {
   font-family: "Courier New", Courier, monospace;
   font-size: 1.5rem;
@@ -407,15 +397,19 @@
   letter-spacing: 2px;
 }
 
-/* 3. ปุ่ม Copy เป็นไอคอน */
+/* 3. ปุ่ม Copy ไอคอน (ล้างพื้นหลัง 100%) */
 .btnCopy {
-  /* ล้างค่าเดิม */
-  width: auto !important;
-  height: auto !important;
+  /* ล้างค่าเดิมให้หมด */
   background: transparent !important;
+  background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  
+  width: auto !important;
+  height: auto !important;
+  min-width: unset !important;
   padding: 8px !important;
+  margin: 0 !important;
   
   display: flex;
   align-items: center;
@@ -424,17 +418,17 @@
   color: var(--color-green);
   cursor: pointer;
   border-radius: 50%;
-  transition: all 0.2s;
+  transition: transform 0.2s;
 }
 
 .btnCopy:hover {
-  background-color: #e9f7ef !important; /* พื้นหลังเขียวอ่อนๆ ตอนชี้ */
+  background-color: rgba(40, 167, 69, 0.08) !important; /* พื้นหลังวงกลมจางๆ ตอนชี้ */
   transform: scale(1.1);
 }
 
 .btnCopy svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Responsive */
