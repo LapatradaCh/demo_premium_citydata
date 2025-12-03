@@ -18,10 +18,10 @@
   --transition: all 0.2s ease-in-out;
 }
 
-/* Hard Reset */
+/* Hard Reset: ป้องกัน Padding ดันจนล้น */
 * {
   box-sizing: border-box;
-  min-width: 0; 
+  min-width: 0; /* สำคัญมาก: ช่วยให้ Flex/Grid ไม่ดันจนล้น */
 }
 
 /* ==================================================================
@@ -30,11 +30,14 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* จัดกึ่งกลางทั้งแนวตั้งและแนวนอน */
   min-height: 100vh;
   width: 100%;
+  
+  /* ป้องกัน Container ล้นจอแนวนอน */
   max-width: 100vw; 
   overflow-x: hidden; 
+  
   padding: 1rem;
   background: var(--color-surface);
   font-family: "Sarabun", sans-serif;
@@ -50,11 +53,13 @@
 
 .page {
   width: 100%;
+  /* จำกัดความกว้างไม่ให้เกินจอ */
   max-width: 100%; 
   background: var(--color-bg);
   border-radius: var(--radius-card);
   padding: 1.25rem; 
   box-shadow: var(--shadow-card);
+  /* เพิ่ม margin auto เล็กน้อยเผื่อเนื้อหายาวเกินจอแนวตั้ง */
   margin: auto 0;
 }
 .pageCreate { max-width: 500px; }
@@ -97,9 +102,10 @@
   width: 100%;
 }
 
+/* Grid System */
 .formGrid {
   display: flex; 
-  flex-direction: column; 
+  flex-direction: column; /* บังคับเรียงลงมาเป็นแนวตั้งบนมือถือ */
   gap: 1rem;
   width: 100%;
 }
@@ -139,10 +145,15 @@
 .select {
   appearance: none;
   cursor: pointer;
+  
+  /* จัดการข้อความยาว */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 2.5rem !important; 
+  
+  padding-right: 2.5rem !important; /* เว้นที่ให้ลูกศร */
+  
+  /* Custom Arrow */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.8rem center;
@@ -305,7 +316,7 @@
 }
 
 /* ==================================================================
- * 🖼️ 6. Special Components
+ * 🖼️ 6. Special Components (Logo, Code, Geo)
  * ================================================================== */
 
 /* --- Logo Upload --- */
@@ -315,11 +326,7 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem 1rem;
-  /* ลบ background สีเทาและ border ออก */
-  background: transparent; 
-  border: none;
-  /* background: #fafafa; */
-  /* border: 1px dashed #ccc; */
+  background: transparent;
   text-align: center;
   width: 100%;
 }
@@ -334,8 +341,8 @@
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
-  /* ลบ border สีขาวออก */
-  /* border: 2px solid white; */
+  border: 2px solid white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 .editIcon {
   position: absolute;
@@ -347,13 +354,15 @@
   border: 3px solid white;
   display: flex; justify-content: center; align-items: center;
   z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 .hiddenFileInput { display: none !important; }
 .logoUploadActions {
   display: flex; flex-direction: column; align-items: center; width: 100%;
 }
 
-/* Geo Action Box */
+/* --- Geo Action Box --- */
 .geoActionBox {
   display: flex;
   flex-direction: column;
@@ -378,47 +387,44 @@
 .geoTitle { margin: 0; font-size: 1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #636e72; }
 
-/* --- Code Box & Tabs (แก้พื้นหลังสีเทาออก) --- */
+/* --- [UPDATED] Code Box Tabs (Black Theme) --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
 
 /* Tab Container */
 .tabContainer {
   display: flex;
-  /* ลบ background สีเทาและ padding ออก */
-  background: transparent;
-  padding: 0;
-  /* background: #eee; */
-  /* border-radius: 10px; */
-  /* padding: 4px; */
+  background: #f1f3f5;
+  padding: 4px;
+  border-radius: 50px;
   width: 100%;
-  gap: 4px;
+  gap: 0;
 }
 
 /* Tab Button */
 .tabBtn {
   flex: 1;
-  border: 1px solid transparent; /* เพิ่ม border ใสๆ ไว้ก่อน */
+  border: none;
   background: transparent;
-  padding: 8px 4px;
-  border-radius: 8px;
+  padding: 10px 4px;
+  border-radius: 50px;
   font-weight: 700;
-  color: #666;
+  color: #adb5bd; /* สีเทาตอนยังไม่เลือก */
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
+/* Active State (Black Theme) */
 .tabActive {
-  background: white;
-  color: #28a745;
-  /* เพิ่ม border สีเขียวและเงาแทน */
-  border-color: #28a745;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  background-color: #2d3436 !important; /* สีดำ */
+  color: #ffffff !important; /* สีขาว */
+  box-shadow: 0 4px 12px rgba(45, 52, 54, 0.3);
+  transform: scale(1.02);
 }
 
 .tabDescription {
   font-size: 0.8rem;
-  color: #888;
+  color: #999;
   text-align: center;
   margin: 0;
 }
@@ -457,7 +463,7 @@
 .select.inputWithIcon { padding-right: 3rem !important; }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Override
+ * 💻 Desktop / Tablet Override (min-width: 768px)
  * ================================================================== */
 @media (min-width: 768px) {
   .page { padding: 2.5rem; }
@@ -470,13 +476,12 @@
   }
   
   .logoUploadBox {
-    /* ปรับ Layout ในคอมให้ชิดซ้าย */
     flex-direction: row; 
-    justify-content: flex-start; /* เปลี่ยนจาก center เป็น flex-start */
-    padding: 1rem 0; /* ลด padding */
+    justify-content: flex-start; 
+    padding: 1rem 0; 
     gap: 2rem;
   }
-  .logoWrapper { width: 140px; height: 140px; margin: 0; /* ลบ margin auto */ }
+  .logoWrapper { width: 140px; height: 140px; margin: 0; }
   .logoUploadActions { align-items: flex-start; width: auto; }
   
   .geoActionBox {
