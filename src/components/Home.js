@@ -164,7 +164,9 @@ const Home = () => {
 
   // ✅ ฟังก์ชันสำหรับจัดการเมื่อกดเลือกเคส (แยกออกมาเพื่อให้ดูง่าย)
   const handleReportSelect = (item) => {
+    console.log("failure");
     if (item) {
+      console.log("success:" item);
         // บันทึก ID ลง LocalStorage (ใช้ชื่อ key ว่า 'selectedCaseId')
         // หมายเหตุ: ตรวจสอบว่าใน object item ใช้ชื่อ field ว่า 'id' หรือ 'case_id' 
         // ถ้าเป็น 'case_id' ให้แก้เป็น item.case_id ครับ
