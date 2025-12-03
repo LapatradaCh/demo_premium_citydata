@@ -313,39 +313,80 @@
  * 🖼️ 6. Special Components (Logo, Code)
  * ================================================================== */
 
-/* Logo Upload */
+/* Logo Upload Container */
 .logoUploadBox {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  padding: 1rem;
+  padding: 2rem 1rem;
   background: #fafafa;
   border-radius: 12px;
   border: 1px dashed #ccc;
+  text-align: center;
 }
+
+/* New Wrapper: ตัวแม่สำหรับจัดตำแหน่งรูปและไอคอน */
+.logoWrapper {
+  position: relative;
+  width: 140px;      /* ขนาดรูปภาพ */
+  height: 140px;
+  margin: 0 auto;
+}
+
+/* รูปภาพ: ให้ขยายเต็ม Wrapper */
 .logoPreview {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  padding: 5px;
-  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border: 2px solid white;
 }
+
+/* ไอคอนแก้ไข (กล้องสีเหลือง) */
+.editIcon {
+  position: absolute;
+  bottom: -5px;  /* เกยขอบล่าง */
+  right: -5px;   /* เกยขอบขวา */
+  
+  width: 40px;
+  height: 40px;
+  
+  background-color: #FACC15; /* สีเหลือง */
+  color: #333;
+  
+  border-radius: 50%;
+  border: 3px solid white;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.editIcon:hover {
+  transform: scale(1.1);
+  background-color: #fbbf24;
+}
+
 .hiddenFileInput {
   display: none !important;
 }
+
 .logoUploadActions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   align-items: center;
   width: 100%;
 }
 
-/* --- [UPDATED] Code Box: Dropdown + Clean Icon --- */
+/* --- Code Box: Dropdown + Clean Icon --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
@@ -378,7 +419,7 @@
 .btnCopy {
   width: 32px !important;  
   height: 32px !important;
-  min-width: 32px !important; /* กันหด */
+  min-width: 32px !important;
   
   display: flex;
   align-items: center;
