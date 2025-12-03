@@ -6,9 +6,7 @@
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
-  --color-yellow: #ffc107; 
-  --color-yellow-dark: #e0a800;
-  
+  --color-yellow: #ffc107; /* สีเหลืองสำหรับปุ่ม Active */
   --color-bg: #ffffff;
   --color-surface: #f4f6f8;
   --color-border: #e0e0e0;
@@ -34,7 +32,7 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* จัดกึ่งกลางทั้งแนวตั้งและแนวนอน */
   min-height: 100vh;
   width: 100%;
   max-width: 100vw; 
@@ -112,7 +110,7 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem; 
+  gap: 0.6rem;
   width: 100%;
   min-width: 0; 
 }
@@ -139,6 +137,7 @@
   transition: var(--transition);
 }
 
+/* Dropdown styling */
 .select {
   appearance: none;
   cursor: pointer;
@@ -156,14 +155,14 @@
   outline: none;
   background: #fff;
   border-color: var(--color-green);
-  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); 
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
 }
 
-/* [แก้] ปุ่ม Submit ให้มาอยู่ตรงกลาง */
+/* [แก้] ปุ่ม Submit ให้จัดกึ่งกลาง (Center) */
 .submitRow {
   margin-top: 2.5rem; 
   display: flex;
-  justify-content: center; /* เปลี่ยนจาก flex-start เป็น center */
+  justify-content: center; /* จัดให้อยู่ตรงกลาง */
   width: 100%;
 }
 
@@ -187,7 +186,7 @@
 
 .button {
   width: 100%;
-  padding: 0.9rem 1.5rem; 
+  padding: 0.9rem 1.5rem;
   border-radius: var(--radius-btn);
   font-weight: 700;
   font-size: 1rem;
@@ -313,7 +312,7 @@
   overflow: hidden;
 }
 .accordionInner {
-  padding: 0 1.5rem 2rem 1.5rem; 
+  padding: 0 1.5rem 2rem 1.5rem;
   border-top: 1px solid #f0f0f0;
 }
 
@@ -321,23 +320,22 @@
  * 🖼️ 6. Special Components
  * ================================================================== */
 
-/* --- [แก้] Logo Upload (บังคับให้อยู่ตรงกลางตลอดเวลา) --- */
+/* --- [แก้] Logo Upload (บังคับให้อยู่ตรงกลาง และเรียงบนล่าง) --- */
 .logoUploadBox {
   display: flex;
-  flex-direction: column; /* เรียงบนล่าง */
-  align-items: center;    /* จัดกึ่งกลางแกนขวาง */
-  justify-content: center; /* จัดกึ่งกลางแกนตั้ง */
+  flex-direction: column; /* เรียงแนวตั้ง: รูปอยู่บน ปุ่มอยู่ล่าง */
+  align-items: center;    /* จัดกึ่งกลางแนวนอน */
+  justify-content: center; 
   gap: 2rem;
   padding: 1rem 0;
   background: transparent;
-  text-align: center;
   width: 100%;
 }
 .logoWrapper {
   position: relative;
   width: 140px;
   height: 140px;
-  margin: 0 auto; /* ดันให้อยู่กลาง */
+  margin: 0 auto;
 }
 .logoPreview {
   width: 100%;
@@ -364,7 +362,11 @@
 .editIcon:hover { transform: scale(1.1); }
 .hiddenFileInput { display: none !important; }
 .logoUploadActions {
-  display: flex; flex-direction: column; align-items: center; width: 100%; gap: 1rem;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; /* จัดปุ่มให้อยู่ตรงกลาง */
+  width: 100%; 
+  gap: 1rem;
 }
 
 /* --- Geo Action Box --- */
@@ -374,7 +376,7 @@
   align-items: center;
   text-align: center;
   gap: 1rem;
-  background: #f9fcf9;
+  background: #f9fcf9; 
   border: 2px dashed #c3e6cb;
   border-radius: 16px;
   padding: 1.5rem;
@@ -399,24 +401,24 @@
 .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- Code Box Tabs --- */
+/* --- [แก้] Code Box Tabs (แก้พื้นหลังใส & สีปุ่ม) --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 
-/* Tab Container */
+/* Tab Container: พื้นหลังใส */
 .tabContainer {
   display: flex;
-  background: transparent;
+  background: transparent; /* เอาพื้นหลังสีเทาออก */
   padding: 0;
   border-radius: 50px;
   width: 100%;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
-/* Tab Button */
+/* Tab Button: ปกติ */
 .tabBtn {
   flex: 1;
-  border: none;
-  background: #f1f3f5;
+  border: 1px solid #e9ecef; /* เพิ่มขอบจางๆ ตอนยังไม่กด */
+  background: white;
   padding: 12px 4px;
   border-radius: 50px;
   font-weight: 700;
@@ -426,10 +428,11 @@
   transition: all 0.3s ease;
 }
 
-/* Active State: สีเหลือง */
+/* [แก้] Tab Active: สีเหลืองทั้งคู่ */
 .tabActive {
-  background-color: var(--color-yellow) !important;
-  color: #2d3436 !important;
+  background-color: var(--color-yellow) !important; /* สีเหลือง */
+  color: #2d3436 !important; /* ตัวหนังสือสีเข้ม */
+  border-color: var(--color-yellow) !important;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
   transform: translateY(-2px);
 }
@@ -491,8 +494,13 @@
     gap: 2rem;
   }
   
-  /* [แก้] Logo ในคอมก็ยังคงเรียงแนวตั้งเหมือนเดิม (ตามรูปที่อยากได้) */
-  /* ไม่ต้องใส่ flex-direction: row; */
+  /* Logo Box: ในคอมก็ยังคงเรียงแนวตั้งและอยู่กลาง */
+  .logoUploadBox {
+    flex-direction: column; 
+    align-items: center;
+    gap: 2rem;
+  }
+  .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
   
   .geoActionBox {
     flex-direction: row; 
