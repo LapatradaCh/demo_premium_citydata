@@ -423,7 +423,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (ปรับ Switch ใหม่)
+ * Component 5: CodeSetupBox (ปรับ Switch ใหม่ และใช้ ICON แทน Text)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -467,8 +467,15 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
           type="button" 
           onClick={handleCopy}
           className={styles.btnCopy}
+          title={copyStatus === 'copied' ? 'คัดลอกสำเร็จ' : 'คัดลอกรหัส'}
         >
-          {copyStatus === 'copied' ? 'คัดลอกแล้ว!' : 'คัดลอก'}
+          {copyStatus === 'copied' ? (
+             // ไอคอนเครื่องหมายถูก (เมื่อ Copy แล้ว)
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          ) : (
+             // ไอคอน Copy สีเขียว (ปกติ)
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          )}
         </button>
       </div>
     </div>
