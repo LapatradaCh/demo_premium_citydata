@@ -69,7 +69,7 @@ const QuickCreatePage = ({
 
 /**
  * =================================================================
- * Component 2: LogoSetupForm (ปรับปรุงใหม่: ไอคอนกล้อง)
+ * Component 2: LogoSetupForm (มีปุ่มกล้องมุมขวา)
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
@@ -130,7 +130,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
             className={styles.logoPreview}
           />
           
-          {/* ปุ่มไอคอนกล้องสีเหลือง (คลิกแล้วเปิด input file) */}
+          {/* ปุ่มไอคอนกล้องสีเหลือง */}
           <div 
             className={styles.editIcon} 
             onClick={() => document.getElementById('logo-upload-input').click()}
@@ -172,7 +172,7 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm
+ * Component 3: LocationSetupForm (Redesign: Modern & Icons)
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -262,40 +262,79 @@ const LocationSetupForm = ({ onSave, orgId }) => {
     }
   };
 
+  // Helper สำหรับสร้าง Input พร้อม Icon
+  const InputWithIcon = ({ icon, ...props }) => (
+    <div className={styles.inputIconWrapper}>
+      <div className={styles.inputIcon}>{icon}</div>
+      <input {...props} className={`${styles.input} ${styles.inputWithIcon}`} />
+    </div>
+  );
+
   return (
     <form onSubmit={handleLocationSubmit}>
-      <div className={styles.geoButtonContainer}>
-        <button
-          type="button"
-          onClick={handleFetchGeolocation}
-          className={`${styles.button} ${styles.btnGeo}`}
-          disabled={geoStatus === 'loading'}
-        >
-          {geoStatus === 'loading' ? 'กำลังค้นหา...' : '📍 ดึงตำแหน่งปัจจุบัน'}
-        </button>
-        {geoStatus === 'error' && <p className={styles.errorMessage}>{geoError}</p>}
+      
+      {/* Hero Section: ปุ่มดึงตำแหน่งแบบใหม่ */}
+      <div 
+        className={`${styles.geoActionBox} ${geoStatus === 'success' ? styles.geoSuccess : ''}`}
+        onClick={handleFetchGeolocation}
+      >
+        <div className={styles.geoIconCircle}>
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </div>
+        <div className={styles.geoTextContent}>
+          <h4 className={styles.geoTitle}>
+            {geoStatus === 'loading' ? 'กำลังค้นหาตำแหน่ง...' : (geoStatus === 'success' ? 'ดึงข้อมูลเรียบร้อยแล้ว' : 'ดึงตำแหน่งปัจจุบันอัตโนมัติ')}
+          </h4>
+          <p className={styles.geoSubtitle}>
+             {geoStatus === 'success' ? 'ตรวจสอบข้อมูลด้านล่างอีกครั้ง' : 'คลิกเพื่อระบุพิกัดและเติมข้อมูลที่อยู่อัตโนมัติ'}
+          </p>
+        </div>
+        {geoStatus === 'loading' && <div className={styles.spinner}></div>}
       </div>
 
+      {geoStatus === 'error' && <div className={styles.errorMessage} style={{marginBottom: '1rem'}}>{geoError}</div>}
+
       <div className={styles.formGrid}>
+        
+        {/* จังหวัด */}
         <div className={styles.formGroup}>
-          <label htmlFor="province" className={styles.label}>จังหวัดที่รับผิดชอบ</label>
-          <input type="text" id="province" name="province" value={locationData.province} className={styles.input} readOnly disabled placeholder="-" />
+          <label className={styles.label}>จังหวัด</label>
+          <InputWithIcon 
+            type="text" name="province" value={locationData.province} readOnly disabled placeholder="-" 
+            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><map name=""></map><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>}
+          />
         </div>
+
+        {/* อำเภอ */}
         <div className={styles.formGroup}> 
-          <label htmlFor="district" className={styles.label}>อำเภอ/เขต</label>
-          <input type="text" id="district" name="district" value={locationData.district} className={styles.input} readOnly disabled placeholder="-" />
+          <label className={styles.label}>อำเภอ/เขต</label>
+          <InputWithIcon 
+            type="text" name="district" value={locationData.district} readOnly disabled placeholder="-"
+            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>}
+          />
         </div>
+
+        {/* ตำบล */}
         <div className={styles.formGroup}>
-          <label htmlFor="sub_district" className={styles.label}>ตำบล/แขวง</label>
-          <input type="text" id="sub_district" name="sub_district" value={locationData.sub_district} className={styles.input} readOnly disabled placeholder="-" />
+          <label className={styles.label}>ตำบล/แขวง</label>
+          <InputWithIcon 
+            type="text" name="sub_district" value={locationData.sub_district} readOnly disabled placeholder="-"
+            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>}
+          />
         </div>
+
+        {/* เบอร์โทร */}
         <div className={styles.formGroup}>
-          <label htmlFor="contact_phone" className={`${styles.label} ${styles.required}`}>เบอร์โทรศัพท์ติดต่อ</label>
-          <input type="tel" id="contact_phone" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} className={styles.input} placeholder="08XXXXXXXX" />
+          <label className={`${styles.label} ${styles.required}`}>เบอร์โทรศัพท์ติดต่อ</label>
+          <InputWithIcon 
+            type="tel" name="contact_phone" value={locationData.contact_phone} onChange={handleLocationChange} placeholder="08XXXXXXXX"
+            icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={locationData.contact_phone ? "#28a745" : "#888"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>}
+            style={{ borderColor: locationData.contact_phone ? '#28a745' : '', backgroundColor: '#fff' }}
+          />
         </div>
 
         <div className={styles.submitRow}>
-          <button type="submit" className={`${styles.button} ${styles.btnSuccess}`} disabled={isSaving} style={{ width: 'auto', minWidth: '150px' }}>
+          <button type="submit" className={`${styles.button} ${styles.btnSuccess}`} disabled={isSaving} style={{ width: '100%' }}>
              {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
           </button>
         </div>
@@ -423,7 +462,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (Dropdown + Icon Copy)
+ * Component 5: CodeSetupBox
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
