@@ -345,52 +345,65 @@
   width: 100%;
 }
 
-/* --- [UPDATED] Code Box (ปรับใหม่เพื่อแก้ปัญหาปุ่มยาว) --- */
+/* --- [UPDATED] Code Box: ปรับดีไซน์ตามคำขอใหม่ --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+/* 1. Switcher: พื้นหลังขาว สะอาดตา High Contrast */
 .codeSwitchWrapper {
   display: flex;
-  background: #f1f3f5;
-  padding: 4px;
+  background: #ffffff; /* ขาว */
+  padding: 6px;
+  border: 1px solid #e0e0e0; /* ขอบเทาจางๆ */
   border-radius: 50px;
   position: relative;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
 }
+
 .codeSwitchBtn {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 8px 16px;
+  padding: 10px 16px; /* ปุ่มใหญ่ขึ้นนิดนึงให้กดง่าย */
   border-radius: 40px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #888;
+  
+  font-size: 1rem;
+  font-weight: 700;
+  color: #636e72; /* สีเทาเข้ม อ่านง่าย */
+  
   cursor: pointer;
-  transition: all 0.2s;
-}
-.codeSwitchBtn.active {
-  background: white;
-  color: var(--color-green);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
 }
 
-/* กล่องแสดงรหัส: ใช้ border-radius เยอะๆ เพื่อให้มนเหมือนแคปซูล */
+/* สถานะ Active: เขียว ตัวหนังสือขาว */
+.codeSwitchBtn.active {
+  background: var(--color-green); 
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.25);
+  transform: translateY(-1px);
+}
+
+.codeSwitchBtn:hover:not(.active) {
+  background-color: #f8f9fa;
+  color: #2d3436;
+}
+
+/* 2. Code Display: กรอบดำ เส้นบาง พื้นขาว */
 .codeDisplayBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: white;
   
-  /* กรอบสีเข้ม เส้นบาง */
-  border: 1px solid #333; 
+  border: 1px solid #333; /* กรอบดำ */
   border-radius: 16px; 
   
-  padding: 1rem 1.5rem; /* ปรับความสูงกล่องให้พอดี */
+  padding: 1rem 1.5rem;
   transition: all 0.2s;
 }
 
@@ -402,20 +415,20 @@
   letter-spacing: 2px;
 }
 
-/* ปุ่ม Copy: บังคับขนาดเป็นวงกลมเล็ก */
+/* 3. ปุ่ม Copy: วงกลมเล็ก ไม่ยืด */
 .btnCopy {
-  /* กำหนดขนาดตายตัว */
+  /* ล็อกขนาดเป็นสี่เหลี่ยมจัตุรัส */
   width: 32px !important;  
   height: 32px !important;
-  min-width: 32px !important; /* กันหด */
+  min-width: 32px !important;
   
-  /* จัดไอคอนตรงกลาง */
+  /* จัดไอคอนกึ่งกลาง */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 !important;
   
-  /* ล้างค่าพื้นหลังและขอบ เพื่อไม่ให้เห็นเป็นแท่ง */
+  /* ล้างพื้นหลังเดิม */
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -427,11 +440,10 @@
 }
 
 .btnCopy:hover {
-  background-color: rgba(40, 167, 69, 0.1) !important; /* พื้นหลังวงกลมจางๆ ตอนชี้ */
+  background-color: rgba(40, 167, 69, 0.1) !important;
   transform: scale(1.1);
 }
 
-/* ขนาดไอคอน */
 .btnCopy svg {
   width: 18px;
   height: 18px;
