@@ -415,7 +415,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox (ดีไซน์ใหม่ Toggle & Icon)
+ * Component 5: CodeSetupBox (Switcher + Icon)
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -433,7 +433,8 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
   return (
     <div className={styles.codeBoxContainer}>
-      {/* ส่วนสวิตช์เลือก Admin/User แบบแคปซูล */}
+      
+      {/* ส่วน Switcher Tabs */}
       <div className={styles.codeSwitchWrapper}>
          <button 
            type="button" 
@@ -451,7 +452,7 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
          </button>
       </div>
 
-      {/* กล่องแสดงรหัส + ไอคอน Copy */}
+      {/* ส่วนแสดงรหัสและไอคอน Copy */}
       <div className={styles.codeDisplayBox}>
         <span className={styles.codeText}>
           {currentCode}
@@ -464,10 +465,8 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
           title={copyStatus === 'copied' ? 'คัดลอกสำเร็จ' : 'คัดลอกรหัส'}
         >
           {copyStatus === 'copied' ? (
-             // ไอคอนเครื่องหมายถูก (เมื่อ Copy แล้ว)
              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           ) : (
-             // ไอคอน Copy ปกติ (สี่เหลี่ยมซ้อนกัน)
              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           )}
         </button>
