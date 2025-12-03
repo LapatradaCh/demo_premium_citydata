@@ -6,7 +6,7 @@
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
-  --color-yellow: #ffc107; /* เพิ่มสีเหลือง */
+  --color-yellow: #ffc107; 
   --color-yellow-dark: #e0a800;
   
   --color-bg: #ffffff;
@@ -16,7 +16,7 @@
   --color-text-sub: #636e72;
   
   --radius-card: 16px;        
-  --radius-input: 10px; /* เพิ่มความโค้ง Input นิดหน่อย */
+  --radius-input: 10px;
   --radius-btn: 50px;
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
   --transition: all 0.2s ease-in-out;
@@ -57,7 +57,7 @@
   max-width: 100%; 
   background: var(--color-bg);
   border-radius: var(--radius-card);
-  padding: 1.5rem; /* เพิ่ม Padding ภายในให้โล่งขึ้น */
+  padding: 1.5rem; 
   box-shadow: var(--shadow-card);
   margin: auto 0;
 }
@@ -66,7 +66,7 @@
 
 .pageHeader {
   text-align: center;
-  margin-bottom: 2rem; /* เพิ่มระยะห่างหัวข้อ */
+  margin-bottom: 2rem;
   padding: 0 0.5rem;
 }
 .pageTitle {
@@ -92,28 +92,27 @@
 }
 
 /* ==================================================================
- * 📝 3. Forms & Inputs (แก้ระยะห่างที่ดูแปลก)
+ * 📝 3. Forms & Inputs
  * ================================================================== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* เพิ่มระยะห่างระหว่างก้อน */
+  gap: 1.5rem;
   width: 100%;
 }
 
-/* Grid System */
 .formGrid {
   display: flex; 
   flex-direction: column; 
-  gap: 1.5rem; /* [แก้] เพิ่มระยะห่างระหว่าง Input แนวตั้งให้โล่งขึ้น */
+  gap: 1.5rem; 
   width: 100%;
-  margin-top: 1rem; /* ขยับลงมาจากหัวข้อ Accordion */
+  margin-top: 1rem;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem; /* ระยะห่าง Label กับ Input */
+  gap: 0.6rem; 
   width: 100%;
   min-width: 0; 
 }
@@ -131,8 +130,6 @@
 .input, .select {
   width: 100%; 
   max-width: 100%; 
-  
-  /* [แก้] เพิ่ม Padding ให้ Input ดูสูงขึ้น ทันสมัยขึ้น */
   padding: 0.9rem 1.2rem; 
   font-size: 1rem; 
   border-radius: var(--radius-input);
@@ -142,7 +139,6 @@
   transition: var(--transition);
 }
 
-/* Dropdown Styling */
 .select {
   appearance: none;
   cursor: pointer;
@@ -160,14 +156,14 @@
   outline: none;
   background: #fff;
   border-color: var(--color-green);
-  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); /* เงาชัดขึ้น */
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); 
 }
 
-/* [แก้] ปุ่ม Submit: เพิ่มระยะห่างด้านบนเยอะๆ */
+/* [แก้] ปุ่ม Submit ให้มาอยู่ตรงกลาง */
 .submitRow {
   margin-top: 2.5rem; 
   display: flex;
-  justify-content: flex-start;
+  justify-content: center; /* เปลี่ยนจาก flex-start เป็น center */
   width: 100%;
 }
 
@@ -191,7 +187,7 @@
 
 .button {
   width: 100%;
-  padding: 0.9rem 1.5rem; /* ปุ่มสูงขึ้นนิดนึง */
+  padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
   font-weight: 700;
   font-size: 1rem;
@@ -317,7 +313,7 @@
   overflow: hidden;
 }
 .accordionInner {
-  padding: 0 1.5rem 2rem 1.5rem; /* เพิ่ม padding ด้านล่าง */
+  padding: 0 1.5rem 2rem 1.5rem; 
   border-top: 1px solid #f0f0f0;
 }
 
@@ -325,11 +321,12 @@
  * 🖼️ 6. Special Components
  * ================================================================== */
 
-/* --- Logo Upload --- */
+/* --- [แก้] Logo Upload (บังคับให้อยู่ตรงกลางตลอดเวลา) --- */
 .logoUploadBox {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* เรียงบนล่าง */
+  align-items: center;    /* จัดกึ่งกลางแกนขวาง */
+  justify-content: center; /* จัดกึ่งกลางแกนตั้ง */
   gap: 2rem;
   padding: 1rem 0;
   background: transparent;
@@ -340,7 +337,7 @@
   position: relative;
   width: 140px;
   height: 140px;
-  margin: 0 auto;
+  margin: 0 auto; /* ดันให้อยู่กลาง */
 }
 .logoPreview {
   width: 100%;
@@ -377,7 +374,7 @@
   align-items: center;
   text-align: center;
   gap: 1rem;
-  background: #f9fcf9; /* พื้นหลังเขียวอ่อนมากๆ */
+  background: #f9fcf9;
   border: 2px dashed #c3e6cb;
   border-radius: 16px;
   padding: 1.5rem;
@@ -402,24 +399,24 @@
 .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- [แก้] Code Box Tabs (ธีมสีเหลือง/ไม่มีพื้นหลัง) --- */
+/* --- Code Box Tabs --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 
-/* Tab Container: เอาพื้นหลังสีเทาออก */
+/* Tab Container */
 .tabContainer {
   display: flex;
-  background: transparent; /* [แก้] โปร่งใส */
+  background: transparent;
   padding: 0;
   border-radius: 50px;
   width: 100%;
-  gap: 0.5rem; /* เพิ่มระยะห่างระหว่างปุ่มนิดนึง */
+  gap: 0.5rem;
 }
 
-/* Tab Button: ปุ่มปกติ */
+/* Tab Button */
 .tabBtn {
   flex: 1;
   border: none;
-  background: #f1f3f5; /* สีเทาอ่อนๆ ตอนยังไม่เลือก */
+  background: #f1f3f5;
   padding: 12px 4px;
   border-radius: 50px;
   font-weight: 700;
@@ -429,10 +426,10 @@
   transition: all 0.3s ease;
 }
 
-/* [แก้] Active State: สีเหลืองทั้งคู่ */
+/* Active State: สีเหลือง */
 .tabActive {
-  background-color: var(--color-yellow) !important; /* สีเหลือง */
-  color: #2d3436 !important; /* ตัวหนังสือสีเข้ม */
+  background-color: var(--color-yellow) !important;
+  color: #2d3436 !important;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
   transform: translateY(-2px);
 }
@@ -491,17 +488,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr; 
     align-items: start;
-    gap: 2rem; /* เพิ่มระยะห่างในคอม */
+    gap: 2rem;
   }
   
-  .logoUploadBox {
-    flex-direction: row; 
-    justify-content: flex-start; 
-    padding: 1rem 0; 
-    gap: 3rem;
-  }
-  .logoWrapper { width: 160px; height: 160px; margin: 0; }
-  .logoUploadActions { align-items: flex-start; width: auto; gap: 1.5rem; }
+  /* [แก้] Logo ในคอมก็ยังคงเรียงแนวตั้งเหมือนเดิม (ตามรูปที่อยากได้) */
+  /* ไม่ต้องใส่ flex-direction: row; */
   
   .geoActionBox {
     flex-direction: row; 
