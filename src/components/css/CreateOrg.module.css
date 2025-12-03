@@ -6,22 +6,26 @@
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
+  --color-yellow: #ffc107; /* เพิ่มสีเหลือง */
+  --color-yellow-dark: #e0a800;
+  
   --color-bg: #ffffff;
   --color-surface: #f4f6f8;
   --color-border: #e0e0e0;
   --color-text-main: #2d3436; 
   --color-text-sub: #636e72;
+  
   --radius-card: 16px;        
-  --radius-input: 8px;
+  --radius-input: 10px; /* เพิ่มความโค้ง Input นิดหน่อย */
   --radius-btn: 50px;
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
   --transition: all 0.2s ease-in-out;
 }
 
-/* Hard Reset: ป้องกัน Padding ดันจนล้น */
+/* Hard Reset */
 * {
   box-sizing: border-box;
-  min-width: 0; /* สำคัญมาก: ช่วยให้ Flex/Grid ไม่ดันจนล้น */
+  min-width: 0;
 }
 
 /* ==================================================================
@@ -30,14 +34,11 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center; /* จัดกึ่งกลางทั้งแนวตั้งและแนวนอน */
+  align-items: center;
   min-height: 100vh;
   width: 100%;
-  
-  /* ป้องกัน Container ล้นจอแนวนอน */
   max-width: 100vw; 
   overflow-x: hidden; 
-  
   padding: 1rem;
   background: var(--color-surface);
   font-family: "Sarabun", sans-serif;
@@ -53,13 +54,11 @@
 
 .page {
   width: 100%;
-  /* จำกัดความกว้างไม่ให้เกินจอ */
   max-width: 100%; 
   background: var(--color-bg);
   border-radius: var(--radius-card);
-  padding: 1.25rem; 
+  padding: 1.5rem; /* เพิ่ม Padding ภายในให้โล่งขึ้น */
   box-shadow: var(--shadow-card);
-  /* เพิ่ม margin auto เล็กน้อยเผื่อเนื้อหายาวเกินจอแนวตั้ง */
   margin: auto 0;
 }
 .pageCreate { max-width: 500px; }
@@ -67,11 +66,11 @@
 
 .pageHeader {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem; /* เพิ่มระยะห่างหัวข้อ */
   padding: 0 0.5rem;
 }
 .pageTitle {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-text-main);
   margin-bottom: 0.5rem;
@@ -79,7 +78,7 @@
   word-wrap: break-word; 
 }
 .pageSubtitle {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--color-text-sub);
 }
 .orgNameHighlight {
@@ -93,34 +92,35 @@
 }
 
 /* ==================================================================
- * 📝 3. Forms & Inputs
+ * 📝 3. Forms & Inputs (แก้ระยะห่างที่ดูแปลก)
  * ================================================================== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem; /* เพิ่มระยะห่างระหว่างก้อน */
   width: 100%;
 }
 
 /* Grid System */
 .formGrid {
   display: flex; 
-  flex-direction: column; /* บังคับเรียงลงมาเป็นแนวตั้งบนมือถือ */
-  gap: 1rem;
+  flex-direction: column; 
+  gap: 1.5rem; /* [แก้] เพิ่มระยะห่างระหว่าง Input แนวตั้งให้โล่งขึ้น */
   width: 100%;
+  margin-top: 1rem; /* ขยับลงมาจากหัวข้อ Accordion */
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem; /* ระยะห่าง Label กับ Input */
   width: 100%;
   min-width: 0; 
 }
 
 .label {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--color-text-main);
 }
 .label.required::after {
@@ -132,7 +132,8 @@
   width: 100%; 
   max-width: 100%; 
   
-  padding: 0.75rem 1rem;
+  /* [แก้] เพิ่ม Padding ให้ Input ดูสูงขึ้น ทันสมัยขึ้น */
+  padding: 0.9rem 1.2rem; 
   font-size: 1rem; 
   border-radius: var(--radius-input);
   border: 1px solid var(--color-border);
@@ -145,18 +146,13 @@
 .select {
   appearance: none;
   cursor: pointer;
-  
-  /* จัดการข้อความยาว */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  
-  padding-right: 2.5rem !important; /* เว้นที่ให้ลูกศร */
-  
-  /* Custom Arrow */
+  padding-right: 3rem !important; 
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.8rem center;
+  background-position: right 1rem center;
   background-size: 1.2em;
 }
 
@@ -164,11 +160,12 @@
   outline: none;
   background: #fff;
   border-color: var(--color-green);
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); /* เงาชัดขึ้น */
 }
 
+/* [แก้] ปุ่ม Submit: เพิ่มระยะห่างด้านบนเยอะๆ */
 .submitRow {
-  margin-top: 0.5rem;
+  margin-top: 2.5rem; 
   display: flex;
   justify-content: flex-start;
   width: 100%;
@@ -185,16 +182,16 @@
  * 🔘 4. Buttons
  * ================================================================== */
 .buttonGroup {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
   width: 100%;
 }
 
 .button {
   width: 100%;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.5rem; /* ปุ่มสูงขึ้นนิดนึง */
   border-radius: var(--radius-btn);
   font-weight: 700;
   font-size: 1rem;
@@ -212,13 +209,23 @@
 .btnPrimary, .btnSuccess {
   background: var(--color-green);
   color: white;
-  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
 }
+.btnPrimary:hover, .btnSuccess:hover {
+  background: var(--color-green-dark);
+  transform: translateY(-2px);
+}
+
 .btnPrimaryBack {
   background: var(--color-red);
   color: white;
-  box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
 }
+.btnPrimaryBack:hover {
+  background: var(--color-red-dark);
+  transform: translateY(-2px);
+}
+
 .btnSecondary {
   background: white;
   color: var(--color-text-main);
@@ -235,24 +242,25 @@
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
   width: 100%;
 }
 
 .accordionItem {
   background: #fff;
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .accordionHeader {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
   width: 100%;
-  padding: 1rem;
+  padding: 1.2rem;
   background: #fff;
   border: none;
   cursor: pointer;
@@ -260,38 +268,38 @@
 }
 
 .accordionIcon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 8px;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   background-color: #f8f9fa;
   color: var(--color-text-main);
   flex-shrink: 0;
 }
 
 .accordionTitle {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text-main);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px; 
+  max-width: 200px; 
 }
 .accordionSubtitle {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--color-text-sub);
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .accordionArrow {
-  width: 1rem;
+  width: 1.2rem;
   margin-left: auto;
   color: #bbb;
 }
@@ -309,14 +317,12 @@
   overflow: hidden;
 }
 .accordionInner {
-  padding: 0 1rem 1.5rem 1rem;
+  padding: 0 1.5rem 2rem 1.5rem; /* เพิ่ม padding ด้านล่าง */
   border-top: 1px solid #f0f0f0;
-  margin-top: 0.5rem;
-  padding-top: 1.5rem;
 }
 
 /* ==================================================================
- * 🖼️ 6. Special Components (Logo, Code, Geo)
+ * 🖼️ 6. Special Components
  * ================================================================== */
 
 /* --- Logo Upload --- */
@@ -324,42 +330,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 1rem;
+  gap: 2rem;
+  padding: 1rem 0;
   background: transparent;
   text-align: center;
   width: 100%;
 }
 .logoWrapper {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto;
 }
 .logoPreview {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
-  border: 2px solid white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-radius: 24px;
+  border: 3px solid white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 .editIcon {
   position: absolute;
-  bottom: -5px; right: -5px;
-  width: 36px; height: 36px;
-  background-color: #FACC15;
+  bottom: -8px; right: -8px;
+  width: 42px; height: 42px;
+  background-color: var(--color-yellow);
   color: #333;
   border-radius: 50%;
   border: 3px solid white;
   display: flex; justify-content: center; align-items: center;
   z-index: 10;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
 }
+.editIcon:hover { transform: scale(1.1); }
 .hiddenFileInput { display: none !important; }
 .logoUploadActions {
-  display: flex; flex-direction: column; align-items: center; width: 100%;
+  display: flex; flex-direction: column; align-items: center; width: 100%; gap: 1rem;
 }
 
 /* --- Geo Action Box --- */
@@ -369,62 +377,69 @@
   align-items: center;
   text-align: center;
   gap: 1rem;
-  background: #f0fdf4; 
-  border: 1px dashed #28a745;
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
+  background: #f9fcf9; /* พื้นหลังเขียวอ่อนมากๆ */
+  border: 2px dashed #c3e6cb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
   width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.geoSuccess { background: #d1e7dd; border-style: solid; border-color: #198754; }
+.geoActionBox:hover {
+  background: #f0fdf4;
+  border-color: var(--color-green);
+}
+.geoSuccess { background: #d1e7dd; border-style: solid; border-color: var(--color-green); }
 .geoIconCircle {
-  width: 42px; height: 42px;
+  width: 50px; height: 50px;
   background: white; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #28a745; flex-shrink: 0;
+  color: var(--color-green); flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 .geoTextContent { flex: 1; width: 100%; }
-.geoTitle { margin: 0; font-size: 1rem; font-weight: 700; color: #2d3436; }
-.geoSubtitle { margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #636e72; }
+.geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
+.geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- [UPDATED] Code Box Tabs (Black Theme) --- */
-.codeBoxContainer { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
+/* --- [แก้] Code Box Tabs (ธีมสีเหลือง/ไม่มีพื้นหลัง) --- */
+.codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 
-/* Tab Container */
+/* Tab Container: เอาพื้นหลังสีเทาออก */
 .tabContainer {
   display: flex;
-  background: #f1f3f5;
-  padding: 4px;
+  background: transparent; /* [แก้] โปร่งใส */
+  padding: 0;
   border-radius: 50px;
   width: 100%;
-  gap: 0;
+  gap: 0.5rem; /* เพิ่มระยะห่างระหว่างปุ่มนิดนึง */
 }
 
-/* Tab Button */
+/* Tab Button: ปุ่มปกติ */
 .tabBtn {
   flex: 1;
   border: none;
-  background: transparent;
-  padding: 10px 4px;
+  background: #f1f3f5; /* สีเทาอ่อนๆ ตอนยังไม่เลือก */
+  padding: 12px 4px;
   border-radius: 50px;
   font-weight: 700;
-  color: #adb5bd; /* สีเทาตอนยังไม่เลือก */
-  font-size: 0.95rem;
+  color: #adb5bd;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Active State (Black Theme) */
+/* [แก้] Active State: สีเหลืองทั้งคู่ */
 .tabActive {
-  background-color: #2d3436 !important; /* สีดำ */
-  color: #ffffff !important; /* สีขาว */
-  box-shadow: 0 4px 12px rgba(45, 52, 54, 0.3);
-  transform: scale(1.02);
+  background-color: var(--color-yellow) !important; /* สีเหลือง */
+  color: #2d3436 !important; /* ตัวหนังสือสีเข้ม */
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+  transform: translateY(-2px);
 }
 
 .tabDescription {
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 0.9rem;
+  color: #888;
   text-align: center;
   margin: 0;
 }
@@ -432,72 +447,76 @@
 /* Code Display */
 .codeDisplayBox {
   display: flex; justify-content: space-between; align-items: center;
-  background: white; border: 1px solid #333; border-radius: 12px; 
-  padding: 0.8rem 1rem; width: 100%; overflow: hidden;
+  background: white; border: 2px solid #eee; border-radius: 16px; 
+  padding: 1rem 1.2rem; width: 100%; overflow: hidden;
 }
 .codeText {
   font-family: "Courier New", Courier, monospace;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #2d3436;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .btnCopy {
-  width: 32px !important; height: 32px !important; min-width: 32px !important;
+  width: 40px !important; height: 40px !important; min-width: 40px !important;
   display: flex; align-items: center; justify-content: center;
-  padding: 0 !important; background: transparent !important; border: none !important;
+  padding: 0 !important; background: #f0fdf4 !important; border: none !important;
   color: var(--color-green); cursor: pointer; border-radius: 50%;
-  margin-left: 10px; flex-shrink: 0;
+  margin-left: 15px; flex-shrink: 0; transition: all 0.2s;
+}
+.btnCopy:hover {
+  background: var(--color-green) !important; color: white;
 }
 
 /* Input with Icons */
 .inputIconWrapper { position: relative; width: 100%; }
 .inputIcon {
-  position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
-  color: #999; display: flex; align-items: center; pointer-events: none; z-index: 2;
+  position: absolute; top: 50%; left: 15px; transform: translateY(-50%);
+  color: #aaa; display: flex; align-items: center; pointer-events: none; z-index: 2;
 }
-.inputWithIcon { padding-left: 2.5rem !important; }
+.inputWithIcon { padding-left: 3rem !important; }
 .select.inputWithIcon { padding-right: 3rem !important; }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Override (min-width: 768px)
+ * 💻 Desktop / Tablet Override
  * ================================================================== */
 @media (min-width: 768px) {
-  .page { padding: 2.5rem; }
-  .pageTitle { font-size: 1.75rem; }
+  .page { padding: 3rem; }
+  .pageTitle { font-size: 2rem; }
   
   .formGrid {
     display: grid;
     grid-template-columns: 1fr 1fr; 
     align-items: start;
+    gap: 2rem; /* เพิ่มระยะห่างในคอม */
   }
   
   .logoUploadBox {
     flex-direction: row; 
     justify-content: flex-start; 
     padding: 1rem 0; 
-    gap: 2rem;
+    gap: 3rem;
   }
-  .logoWrapper { width: 140px; height: 140px; margin: 0; }
-  .logoUploadActions { align-items: flex-start; width: auto; }
+  .logoWrapper { width: 160px; height: 160px; margin: 0; }
+  .logoUploadActions { align-items: flex-start; width: auto; gap: 1.5rem; }
   
   .geoActionBox {
     flex-direction: row; 
     text-align: left;
-    padding: 1.5rem;
+    padding: 2rem;
   }
-  .geoIconCircle { width: 48px; height: 48px; }
+  .geoIconCircle { width: 60px; height: 60px; }
   
   .buttonGroup {
-    flex-direction: row; justify-content: center;
+    flex-direction: row; justify-content: center; gap: 1.5rem;
   }
-  .button { width: auto; min-width: 160px; }
+  .button { width: auto; min-width: 180px; }
   
-  .codeText { font-size: 1.4rem; }
-  .codeDisplayBox { padding: 1rem 1.5rem; }
+  .codeText { font-size: 1.8rem; }
+  .codeDisplayBox { padding: 1.5rem 2rem; }
   
   .accordionTitle { max-width: none; }
 }
