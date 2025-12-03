@@ -1,42 +1,36 @@
 /* ==================================================================
-* 1. Variables & Global Settings
-* ================================================================== */
+ * 🎨 1. Variables & Theme (คงสีเดิม เขียว/แดง)
+ * ================================================================== */
 :root {
-  /* --- คงสีเดิม (Original Colors) --- */
+  /* --- สีหลัก (ตามที่คุณต้องการ) --- */
   --color-green: #28a745;
   --color-green-dark: #218838;
   --color-red: #dc3545;
   --color-red-dark: #c82333;
 
-  /* --- สีพื้นหลังและตัวอักษร (Modern Palette) --- */
+  /* --- สีพื้นฐานและตัวอักษร --- */
   --color-bg: #ffffff;
-  --color-surface: #f3f5f7; /* สีพื้นหลังเทาอ่อนช่วยดันให้การ์ดสีขาวเด่นขึ้น */
-  --color-border: #e9ecef;  /* เส้นขอบสีจางลง เพื่อไม่ให้รกตา */
+  --color-surface: #f4f6f8; /* พื้นหลังจอสีเทาอ่อน */
+  --color-border: #e0e0e0;
   
-  --color-text-main: #2d3436; /* สีดำแบบ Charcoal อ่านง่ายกว่าดำสนิท */
+  --color-text-main: #2d3436; /* ดำเทา (อ่านสบายตากว่าดำสนิท) */
   --color-text-sub: #636e72;
 
-  /* --- รูปร่างและเงา (Shape & Depth) --- */
-  --radius-card: 20px;       /* มุมโค้งมนดูทันสมัย */
-  --radius-input: 10px;
-  --radius-btn: 50px;        /* ปุ่มทรงรี (Pill Shape) ยอดนิยมใน App ยุคใหม่ */
+  /* --- รูปร่างและเงา (Modern UI) --- */
+  --radius-card: 20px;       
+  --radius-input: 12px;
+  --radius-btn: 50px;        /* ปุ่มทรงแคปซูล */
   
-  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ ทำให้หน้าจอดูลอย */
-  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.12);
-  --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.15); /* เงาปุ่ม */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ */
+  --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.12);
+  --shadow-btn: 0 4px 10px rgba(0, 0, 0, 0.1); 
   
   --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--color-surface);
-}
-
 /* ==================================================================
-* 2. Layout & Containers
-* ================================================================== */
+ * 📐 2. Layout & Container
+ * ================================================================== */
 .container {
   display: flex;
   justify-content: center;
@@ -54,78 +48,70 @@ body {
   background: var(--color-bg);
   border-radius: var(--radius-card);
   padding: 3rem;
-  /* ใช้เงาแทนเส้นขอบ ทำให้ดูพรีเมียมขึ้น */
   box-shadow: var(--shadow-card);
-  border: 1px solid #ffffff; 
+  border: 1px solid #fff; 
   transition: var(--transition);
 }
 .pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; } /* ขยายความกว้างนิดหน่อยให้อ่านง่าย */
+.pageSetup { max-width: 750px; } /* ขยายกว้างขึ้นนิดนึงให้ฟอร์มไม่อึดอัด */
 
-/* ==================================================================
-* 3. Header Styling
-* ================================================================== */
+/* Header */
 .pageHeader {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-
 .pageTitle {
-  font-size: 2rem;
-  font-weight: 800; /* ตัวหนาพิเศษ */
-  color: var(--color-text-main) !important;
-  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
   margin-bottom: 0.5rem;
-  line-height: 1.2;
 }
-
 .pageSubtitle {
-  font-size: 1.1rem;
-  font-weight: 400;
-  color: var(--color-text-sub) !important;
-  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--color-text-sub);
 }
-
 .orgNameHighlight {
   color: #000;
-  font-weight: 800;
-  background: rgba(0,0,0,0.05); /* ไฮไลท์พื้นหลังชื่อองค์กรจางๆ */
+  background: rgba(0,0,0,0.05);
   padding: 0 0.5rem;
   border-radius: 6px;
-  text-decoration: none;
-}
-
-.editNameButton {
-  background: none;
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  color: var(--color-text-sub);
-  font-size: 0.9rem;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  transition: var(--transition);
-  margin-left: 0.5rem;
-}
-.editNameButton:hover {
-  background-color: var(--color-text-main);
-  color: #fff;
-  border-color: var(--color-text-main);
 }
 
 /* ==================================================================
-* 4. Form & Inputs
-* ================================================================== */
+ * 📝 3. Forms & Inputs
+ * ================================================================== */
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
+
+/* --- Grid System สำหรับจัดเรียงฟอร์ม (แก้ปัญหา Input ไม่ตรง) --- */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* มือถือ: เรียงเดี่ยว */
+  gap: 1.5rem 2rem; /* บนล่าง 1.5rem, ซ้ายขวา 2rem */
+  align-items: end;
+}
+
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr 1fr; /* คอม: 2 คอลัมน์ */
+  }
+  .submitRow, .geoButtonContainer {
+    grid-column: 1 / -1; /* ปุ่มยาวเต็มบรรทัด */
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 .label {
   font-weight: 700;
   font-size: 0.95rem;
-  color: var(--color-text-main) !important;
-  margin-bottom: 0.5rem;
-  display: block;
+  color: var(--color-text-main);
 }
 .label.required::after {
   content: " *";
@@ -134,26 +120,30 @@ body {
 
 .input, .select {
   width: 100%;
-  padding: 0.85rem 1.2rem; /* เพิ่มพื้นที่ภายใน */
+  padding: 0.8rem 1rem;
   font-size: 1rem;
   border-radius: var(--radius-input);
-  border: 2px solid #f1f3f5; /* ขอบจางๆ */
-  background: #f8f9fa; /* พื้นหลังเทาจางๆ */
+  border: 1px solid var(--color-border);
+  background: #fdfdfd;
   color: var(--color-text-main);
   transition: var(--transition);
   box-sizing: border-box;
 }
-/* Effect ตอนกดเลือกช่อง */
 .input:focus, .select:focus {
   outline: none;
   background: #fff;
-  border-color: var(--color-green); /* Focus เป็นสีเขียวธีมหลัก */
-  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15);
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+}
+.errorMessage {
+  color: var(--color-red);
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 /* ==================================================================
-* 5. Buttons (Red & Green Re-styled)
-* ================================================================== */
+ * 🔘 4. Buttons (Red & Green)
+ * ================================================================== */
 .buttonGroup {
   margin-top: 2rem;
   display: flex;
@@ -163,8 +153,8 @@ body {
 
 .button {
   width: 100%;
-  padding: 0.9rem 2rem;
-  border-radius: var(--radius-btn); /* ปุ่มทรงแคปซูล */
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-btn);
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
@@ -174,8 +164,6 @@ body {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  letter-spacing: 0.5px;
-  /* เพิ่มเงาให้ปุ่มดูลอย */
   box-shadow: var(--shadow-btn);
 }
 
@@ -186,57 +174,73 @@ body {
 }
 .btnPrimary:hover, .btnSuccess:hover {
   background: var(--color-green-dark);
-  transform: translateY(-3px); /* ลอยขึ้นเมื่อ Hover */
-  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3); /* เงาสีเขียวฟุ้งๆ */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(40, 167, 69, 0.3);
 }
 
-/* ปุ่มย้อนกลับ (แดง) - คงสีเดิมไว้ตามขอ */
+/* ปุ่มย้อนกลับ (แดง) */
 .btnPrimaryBack {
   background: var(--color-red);
   color: white;
 }
 .btnPrimaryBack:hover {
   background: var(--color-red-dark);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3); /* เงาสีแดงฟุ้งๆ */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(220, 53, 69, 0.3);
 }
 
-/* ปุ่มรอง (ขาว) */
-.btnSecondary, .btnGeo {
-  background-color: white;
+/* ปุ่มรอง (Secondary) */
+.btnSecondary {
+  background: white;
   color: var(--color-text-main);
   border: 1px solid var(--color-border);
   box-shadow: none;
 }
-.btnSecondary:hover, .btnGeo:hover {
-  background-color: #f8f9fa;
+.btnSecondary:hover {
+  background: #f8f9fa;
   border-color: #ccc;
-  transform: translateY(-2px);
+}
+
+/* ปุ่มพิกัด GPS */
+.geoButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.btnGeo {
+  background: #f0fff4; /* พื้นเขียวอ่อนจางๆ */
+  color: var(--color-green);
+  border: 1px dashed var(--color-green);
+  width: auto;
+  min-width: 200px;
+}
+.btnGeo:hover {
+  background: var(--color-green);
+  color: white;
+  border-style: solid;
 }
 
 /* ==================================================================
-* 6. Accordion (Menu Items) - The "Clean" Look
-* ================================================================== */
+ * 📂 5. Accordion (Cards) - แก้เรื่องความแน่น
+ * ================================================================== */
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .accordionItem {
   background: #fff;
-  /* ลบเส้นขอบแข็งๆ เปลี่ยนเป็นเงาเบาๆ */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  border: 1px solid transparent;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* ใช้เงาแทนขอบแข็ง */
   border-radius: 16px;
   overflow: hidden;
   transition: var(--transition);
+  border: 1px solid transparent;
 }
-
 .accordionItem:hover {
-  border-color: rgba(0,0,0,0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08); /* เงาเข้มขึ้นตอนชี้ */
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 .accordionHeader {
@@ -251,7 +255,7 @@ body {
   text-align: left;
 }
 
-/* กล่องไอคอนสวยๆ */
+/* ไอคอนหน้าหัวข้อ */
 .accordionIcon {
   width: 3.2rem;
   height: 3.2rem;
@@ -260,7 +264,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  background-color: #f1f3f5; /* พื้นหลังไอคอนสีเทาอ่อน สบายตา */
+  background-color: #f3f5f7;
   color: var(--color-text-main);
   flex-shrink: 0;
 }
@@ -268,23 +272,23 @@ body {
 .accordionTitle {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--color-text-main) !important;
+  color: var(--color-text-main);
   margin: 0;
 }
 .accordionSubtitle {
   font-size: 0.95rem;
-  color: var(--color-text-sub) !important;
-  margin: 0;
+  color: var(--color-text-sub);
   margin-top: 0.2rem;
 }
 .accordionArrow {
   width: 1.2rem;
+  margin-left: auto;
   color: #b2bec3;
   transition: transform 0.3s;
 }
 .rotate180 { transform: rotate(180deg); }
 
-/* --- Content ภายใน Accordion --- */
+/* --- เนื้อหาข้างใน Accordion (แก้ปัญหาอึดอัด) --- */
 .accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
@@ -295,59 +299,92 @@ body {
 }
 .accordionContent {
   overflow: hidden;
-  padding: 0 1.5rem;
+  /* เพิ่ม Padding ให้เนื้อหาไม่ชิดขอบ */
+  padding: 0 2rem 2rem 2rem; 
 }
-.accordionInnerContent {
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-  border-top: 1px dashed var(--color-border); /* เส้นประแบ่งเนื้อหา */
+.contentTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-top: 1px solid #f0f0f0; /* เส้นแบ่งจางๆ */
+  padding-top: 1.5rem;
 }
 
 /* ==================================================================
-* 7. Special Components (Upload & Code Box)
-* ================================================================== */
-/* Logo Upload */
+ * 🖼️ 6. Special Components (Logo, Code)
+ * ================================================================== */
+
+/* Logo Upload - ปรับให้ดู Pro */
 .logoUploadBox {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 2rem;
+  padding: 1.5rem;
+  background: #fafafa;
+  border: 2px dashed #e0e0e0;
+  border-radius: 16px;
 }
 .logoPreview {
   width: 140px;
   height: 140px;
   object-fit: contain;
   border-radius: 12px;
-  border: 2px dashed #cbd5e0;
-  background-color: #f8f9fa;
-  transition: var(--transition);
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 0.5rem;
 }
-.logoPreview:hover { border-color: var(--color-text-main); }
+.hiddenFileInput {
+  display: none; /* ซ่อน Input เดิม */
+}
+.logoUploadActions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+.btnSave {
+  min-width: 150px;
+}
 
-/* Code Box */
+/* Code Box - ปรับสวิตช์ให้สวย */
+.codeBoxContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
 .codeBoxHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f8f9fa;
-  border-radius: 99px;
+  background: #f8f9fa;
   padding: 0.5rem;
-  border: 1px solid var(--color-border);
-  margin-bottom: 0.8rem;
+  border-radius: 50px;
+  border: 1px solid #eee;
 }
 .codeBoxType {
-  font-weight: 700;
   padding-left: 1rem;
+  font-weight: 700;
   color: var(--color-text-main);
 }
 .codeBoxSwitch {
-  border: none;
-  background: white;
-  padding: 0.4rem 1rem;
-  border-radius: 99px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
   cursor: pointer;
   font-weight: 600;
+  color: var(--color-text-main);
+  transition: all 0.2s;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.codeBoxSwitch:hover {
+  background: var(--color-text-main);
+  color: white;
+  border-color: var(--color-text-main);
 }
 
 .codeBoxDisplayWrapper {
@@ -355,18 +392,15 @@ body {
   align-items: center;
   justify-content: space-between;
   background: white;
-  border: 2px solid var(--color-text-main); /* ขอบดำเน้นความสำคัญ */
+  border: 2px solid var(--color-text-main);
   border-radius: 12px;
-  padding: 0.8rem 1rem;
+  padding: 1rem 1.5rem;
 }
 .codeBoxDisplay {
-  font-family: "Menlo", monospace;
-  font-size: 1.2rem;
+  font-family: "Courier New", monospace;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: var(--color-text-main);
-  border: none;
-  background: none;
-  width: 100%;
+  letter-spacing: 2px;
 }
 .codeCopyButton {
   background: #f1f3f5;
@@ -375,38 +409,24 @@ body {
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-weight: 600;
-  color: var(--color-text-main);
-  transition: var(--transition);
 }
-.codeCopyButton:hover { background: #e9ecef; }
 .codeCopyButton.copied {
   background: var(--color-green);
   color: white;
 }
 
-/* ==================================================================
-* 8. Responsive
-* ================================================================== */
+/* Responsive */
 @media (min-width: 768px) {
+  .logoUploadBox {
+    flex-direction: row; /* คอม: โลโก้ซ้าย ปุ่มขวา */
+    justify-content: center;
+  }
   .buttonGroup {
-      flex-direction: row;
-      justify-content: center;
-      gap: 1.5rem;
+    flex-direction: row;
+    justify-content: center;
   }
   .button {
-      width: auto;
-      min-width: 180px; /* ปุ่มมีความกว้างขั้นต่ำสวยๆ */
+    width: auto;
+    min-width: 160px;
   }
-  .formGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-  }
-  .submitRow, .geoButtonContainer { grid-column: 1 / -1; }
-}
-
-@media (max-width: 500px) {
-  .page { padding: 1.5rem; }
-  .logoUploadBox { grid-template-columns: 1fr; justify-items: center; }
-  .logoUploadActions { width: 100%; text-align: center; }
 }
