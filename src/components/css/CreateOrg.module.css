@@ -1,5 +1,5 @@
 /* ==================================================================
- * 🎨 1. Variables & Theme (คงสีเดิม เขียว/แดง)
+ * 🎨 1. Variables & Theme
  * ================================================================== */
 :root {
   --color-green: #28a745;
@@ -75,7 +75,7 @@
 }
 
 /* ==================================================================
- * 📝 3. Forms & Inputs (แก้เรื่องจัดวางไม่ตรง)
+ * 📝 3. Forms & Inputs
  * ================================================================== */
 .form {
   display: flex;
@@ -83,20 +83,19 @@
   gap: 1.5rem;
 }
 
-/* Grid System: จัดระเบียบ Input ให้ตรงกัน */
+/* Grid System */
 .formGrid {
   display: grid;
-  grid-template-columns: 1fr; /* มือถือ: เรียงเดี่ยว */
-  gap: 1.5rem; /* ระยะห่างระหว่างช่อง */
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
   width: 100%;
 }
 
 @media (min-width: 768px) {
   .formGrid {
-    grid-template-columns: 1fr 1fr; /* จอคอม: 2 คอลัมน์เท่ากัน */
+    grid-template-columns: 1fr 1fr;
     align-items: start;
   }
-  /* ให้ปุ่ม Save หรือปุ่มยาวๆ กินเต็มความกว้าง */
   .fullWidth {
     grid-column: 1 / -1; 
   }
@@ -106,7 +105,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 100%; /* บังคับให้เต็มช่อง Grid */
+  width: 100%;
 }
 
 .label {
@@ -120,7 +119,7 @@
 }
 
 .input, .select {
-  width: 100%; /* บังคับเต็มความกว้าง */
+  width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   border-radius: var(--radius-input);
@@ -128,7 +127,7 @@
   background: #fdfdfd;
   color: var(--color-text-main);
   transition: var(--transition);
-  box-sizing: border-box; /* สำคัญมาก! กันไม่ให้ Padding ดันจนล้น */
+  box-sizing: border-box;
 }
 .input:focus, .select:focus {
   outline: none;
@@ -137,12 +136,11 @@
   box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
 
-/* ปุ่ม Save ด้านล่างฟอร์ม */
 .submitRow {
-  grid-column: 1 / -1; /* เต็มบรรทัดเสมอ */
+  grid-column: 1 / -1;
   margin-top: 1rem;
   display: flex;
-  justify-content: flex-start; /* ชิดซ้าย หรือ center ตามชอบ */
+  justify-content: flex-start;
 }
 
 .errorMessage {
@@ -178,7 +176,6 @@
   white-space: nowrap;
 }
 
-/* ปุ่มหลัก (เขียว) */
 .btnPrimary, .btnSuccess {
   background: var(--color-green);
   color: white;
@@ -190,7 +187,6 @@
   box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
 }
 
-/* ปุ่มย้อนกลับ (แดง) */
 .btnPrimaryBack {
   background: var(--color-red);
   color: white;
@@ -202,7 +198,6 @@
   box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
 }
 
-/* ปุ่มรอง (Secondary) - สำหรับเลือกไฟล์ */
 .btnSecondary {
   background: white;
   color: var(--color-text-main);
@@ -213,14 +208,13 @@
   border-color: #bbb;
 }
 
-/* ปุ่ม GPS */
 .btnGeo {
   background: #f0fff4;
   color: var(--color-green);
   border: 1px dashed var(--color-green);
   width: 100%;
   border-radius: var(--radius-btn);
-  margin-bottom: 1.5rem; /* ดันเนื้อหาด้านล่างลงไป */
+  margin-bottom: 1.5rem;
 }
 .btnGeo:hover {
   background: var(--color-green);
@@ -228,12 +222,12 @@
   border-style: solid;
 }
 .geoButtonContainer {
-  grid-column: 1 / -1; /* เต็มบรรทัด */
+  grid-column: 1 / -1;
   width: 100%;
 }
 
 /* ==================================================================
- * 📂 5. Accordion (Cards) - แก้เรื่องความแน่น
+ * 📂 5. Accordion (Cards)
  * ================================================================== */
 .accordion {
   display: flex;
@@ -297,7 +291,6 @@
 }
 .rotate180 { transform: rotate(180deg); }
 
-/* --- เนื้อหาข้างใน Accordion (แก้ปัญหาอึดอัด) --- */
 .accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
@@ -309,10 +302,9 @@
 .accordionContent {
   overflow: hidden;
 }
-/* ไส้ในจริงๆ ที่มี Padding */
 .accordionInner {
-  padding: 0 1.5rem 1.5rem 1.5rem; /* เว้นขอบ ซ้าย-ขวา-ล่าง */
-  border-top: 1px solid #f0f0f0; /* เส้นแบ่งจางๆ ระหว่างหัวข้อกับเนื้อหา */
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid #f0f0f0;
   margin-top: 0.5rem;
   padding-top: 1.5rem;
 }
@@ -321,7 +313,7 @@
  * 🖼️ 6. Special Components (Logo, Code)
  * ================================================================== */
 
-/* Logo Upload - จัด layout ใหม่ */
+/* Logo Upload */
 .logoUploadBox {
   display: flex;
   flex-direction: column;
@@ -343,7 +335,7 @@
   border: 1px solid #eee;
 }
 .hiddenFileInput {
-  display: none !important; /* ซ่อน Input เดิมทิ้งไปเลย */
+  display: none !important;
 }
 .logoUploadActions {
   display: flex;
@@ -353,12 +345,13 @@
   width: 100%;
 }
 
-/* Code Box - ปรับสวิตช์ให้ดูเป็นปุ่ม */
+/* --- [UPDATED] Code Box (ปรับตามรูปภาพที่ขอมา) --- */
 .codeBoxContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .codeSwitchWrapper {
   display: flex;
   background: #f1f3f5;
@@ -366,6 +359,7 @@
   border-radius: 50px;
   position: relative;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 .codeSwitchBtn {
   flex: 1;
@@ -385,45 +379,50 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* กรอบแสดงรหัสแบบเส้นบาง + ไอคอนขวา */
 .codeDisplayBox {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* ดันข้อความไปซ้าย ไอคอนไปขวา */
   align-items: center;
   background: white;
-  border: 1px solid var(--color-text-main); /* กรอบดำตามดีไซน์เดิม */
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-}
-.codeText {
-  font-family: "Courier New", monospace;
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+  
+  /* กรอบสีเข้ม เส้นบาง ตามรูป */
+  border: 1px solid #333; 
+  border-radius: 16px; 
+  
+  padding: 1.2rem 1.5rem;
+  transition: all 0.2s;
 }
 
-/* --- [UPDATED] แก้ไขปุ่ม Copy เป็น Icon --- */
+.codeText {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2d3436;
+  letter-spacing: 2px;
+}
+
+/* ปุ่ม Copy เป็นไอคอน ไม่มีพื้นหลัง */
 .btnCopy {
-  background: transparent; /* เอาพื้นหลังเดิมออก */
+  background: transparent;
   border: none;
   padding: 8px;
   cursor: pointer;
-  color: var(--color-green); /* สีไอคอนเขียว */
+  color: var(--color-green); /* สีเขียว */
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%; /* เวลาชี้แล้วขึ้นวงกลม */
 }
 .btnCopy:hover {
-  background: #e6fffa; /* สีพื้นหลังจางๆ ตอน Hover */
+  transform: scale(1.1);
   color: var(--color-green-dark);
-  transform: scale(1.1); /* ขยายเล็กน้อย */
 }
 
 /* Responsive */
 @media (min-width: 768px) {
   .logoUploadBox {
-    flex-direction: row; /* แนวนอนบนคอม */
+    flex-direction: row;
     justify-content: center;
     padding: 2rem;
   }
