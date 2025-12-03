@@ -208,19 +208,8 @@
   border-color: #bbb;
 }
 
-.btnGeo {
-  background: #f0fff4;
-  color: var(--color-green);
-  border: 1px dashed var(--color-green);
-  width: 100%;
-  border-radius: var(--radius-btn);
-  margin-bottom: 1.5rem;
-}
-.btnGeo:hover {
-  background: var(--color-green);
-  color: white;
-  border-style: solid;
-}
+/* .btnGeo อันเก่าไม่ได้ใช้แล้ว */
+
 .geoButtonContainer {
   grid-column: 1 / -1;
   width: 100%;
@@ -445,6 +434,109 @@
   width: 18px;
   height: 18px;
 }
+
+/* ==================================================================
+ * 📍 Location Redesign
+ * ================================================================== */
+
+/* 1. กล่อง Action Area (แทนปุ่มเดิม) */
+.geoActionBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  background: #f0fdf4; /* พื้นเขียวจางๆ */
+  border: 1px dashed #28a745; /* เส้นประเขียว */
+  border-radius: 12px;
+  
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.geoActionBox:hover {
+  background: #e6fffa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  border-style: solid; /* เปลี่ยนเป็นเส้นทึบตอน Hover */
+}
+
+/* สถานะสำเร็จ */
+.geoSuccess {
+  background: #d1e7dd;
+  border-style: solid;
+  border-color: #198754;
+}
+
+/* ไอคอนวงกลมซ้ายมือ */
+.geoIconCircle {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #28a745;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.geoTextContent {
+  flex: 1;
+}
+
+.geoTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+.geoSubtitle {
+  margin: 0.2rem 0 0 0;
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+/* Spinner หมุนๆ เวลาโหลด */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(40, 167, 69, 0.3);
+  border-radius: 50%;
+  border-top-color: #28a745;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 2. Input with Icons (ช่องกรอกข้อมูลที่มีไอคอน) */
+.inputIconWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #999;
+  display: flex;
+  align-items: center;
+  pointer-events: none; /* เพื่อให้คลิกทะลุไปที่ input ได้ */
+  z-index: 2;
+}
+
+/* ปรับ Input ให้มี Padding ด้านซ้ายเผื่อที่ให้ไอคอน */
+.inputWithIcon {
+  padding-left: 2.8rem !important; 
+}
+
 
 /* Responsive */
 @media (min-width: 768px) {
