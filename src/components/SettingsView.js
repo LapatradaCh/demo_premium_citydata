@@ -10,6 +10,8 @@ import {
 // --- Config & Constants ---
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
+// URL สำหรับดึงประเภทองค์กร (Master Data)
+const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
 
 // --- ปรับปรุง: ดึง ID จาก LocalStorage ---
 let ORGANIZATION_ID = 1; // ค่า Default กรณีไม่พบข้อมูล
@@ -17,7 +19,6 @@ try {
   const storedOrgString = localStorage.getItem("lastSelectedOrg");
   if (storedOrgString) {
     const storedOrg = JSON.parse(storedOrgString);
-    // ตรวจสอบว่ามี id หรือไม่
     if (storedOrg && storedOrg.id) {
       ORGANIZATION_ID = storedOrg.id;
       console.log("Loaded Organization ID:", ORGANIZATION_ID);
@@ -52,12 +53,15 @@ const AgencySettings = () => {
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
+  // ✅ State สำหรับเก็บตัวเลือก Dropdown (Master Data)
+  const [orgTypeOptions, setOrgTypeOptions] = useState([]);
+
   // Initial State
   const [formData, setFormData] = useState({
     name: "",
     adminCode: "",
     userCode: "",
-    agencyType: "เทศบาล",
+    agencyType: "", // เก็บเป็น ID (Integer)
     province: "",
     district: "",
     subDistrict: "",
@@ -66,15 +70,31 @@ const AgencySettings = () => {
 
   // --- 1. FETCH DATA (GET) ---
   useEffect(() => {
-    const fetchData = async () => {
+    
+    // 1.1 ฟังก์ชันดึง Master Data (ประเภทองค์กร)
+    const fetchOrgTypes = async () => {
+        try {
+            const res = await fetch(API_ORG_TYPES_URL);
+            if(res.ok) {
+                const data = await res.json();
+                // data format: [{ value: 1, label: 'เทศบาล' }, ...]
+                setOrgTypeOptions(data);
+            }
+        } catch (error) {
+            console.error("Error fetching org types:", error);
+        }
+    };
+
+    // 1.2 ฟังก์ชันดึงข้อมูลหน่วยงาน
+    const fetchOrgData = async () => {
       try {
         setIsLoading(true);
         const url = `${API_BASE_URL}?id=${ORGANIZATION_ID}`;
-        console.log("Fetching:", url);
+        
+        // เรียกดึง Types ก่อน หรือทำคู่กันก็ได้ แต่แยกฟังก์ชันไว้แล้วเรียกตรงนี้
+        await fetchOrgTypes(); 
 
         const res = await fetch(url);
-         
-        // อ่านเป็น Text ก่อนเพื่อกัน Error กรณี Server ส่ง HTML (404/500)
         const textResponse = await res.text();
 
         if (!res.ok) {
@@ -89,18 +109,17 @@ const AgencySettings = () => {
         }
 
         // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
-        // จุดที่ปรับปรุง: ดึงข้อมูล sub_district, district, province จาก API
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
             userCode: data.organization_code || "",
-            agencyType: data.org_type_id || "เทศบาล",
             
-            // --- Map ข้อมูลที่อยู่จากคอลัมน์ API ---
+            // ✅ Map ID มาใส่ state (ถ้าไม่มีค่า ให้เป็นว่าง)
+            agencyType: data.org_type_id || "", 
+            
             province: data.province || "",
             district: data.district || "",
             subDistrict: data.sub_district || "",
-            
             phone: data.contact_phone || "",
         });
 
@@ -116,7 +135,7 @@ const AgencySettings = () => {
       }
     };
 
-    fetchData();
+    fetchOrgData();
   }, []);
 
   // --- 2. UPDATE DATA (PUT) ---
@@ -126,17 +145,16 @@ const AgencySettings = () => {
 
         // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
-            organization_id: ORGANIZATION_ID, // ต้องส่ง ID ไปด้วย
+            organization_id: ORGANIZATION_ID,
             organization_name: formData.name,
-            org_type_id: formData.agencyType,
             
-            // ส่งข้อมูลที่อยู่กลับไปอัปเดต
+            // ✅ ส่ง ID กลับไป (เช่น 1, 2)
+            org_type_id: parseInt(formData.agencyType), 
+            
             district: formData.district,
             sub_district: formData.subDistrict,
             province: formData.province,
-            
             contact_phone: formData.phone,
-            // หมายเหตุ: url_logo ต้องทำระบบ upload file แยกต่างหาก
         };
 
         const res = await fetch(API_BASE_URL, {
@@ -153,13 +171,12 @@ const AgencySettings = () => {
 
         const updatedData = JSON.parse(textResponse);
         alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
-         
-        // อัปเดต UI ให้ตรงกับ Server ล่าสุด
+          
         setFormData(prev => ({
             ...prev,
             name: updatedData.organization_name
         }));
-         
+          
         setIsEditModalOpen(false);
 
     } catch (error) {
@@ -181,18 +198,19 @@ const AgencySettings = () => {
     alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
   };
 
-  // จัดการรูปภาพ (Preview Only)
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
+  const handleImageClick = () => { fileInputRef.current.click(); };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setLogoPreview(imageUrl);
-      // TODO: เพิ่ม Logic Upload รูปขึ้น Server ตรงนี้
     }
+  };
+
+  // --- Helper: หาชื่อ Label จาก ID (สำหรับแสดงผล View Mode) ---
+  const getOrgTypeLabel = (id) => {
+      const found = orgTypeOptions.find(opt => opt.value === id);
+      return found ? found.label : "-";
   };
 
   // --- Loading State ---
@@ -210,14 +228,13 @@ const AgencySettings = () => {
     <>
       <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
-        {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
             <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)} disabled={isSaving}>
                 <FaTimes />
             </button>
         </div>
-         
+          
         <div className={styles.agencyModalBody}>
               {/* ส่วนอัปโหลดรูปภาพ */}
               <div className={styles.agencyImageSection}>
@@ -241,19 +258,29 @@ const AgencySettings = () => {
 
               {/* ฟอร์มข้อมูล */}
               <div className={styles.agencyFormContainer}>
-                 
+                  
                 {/* Group 1: ข้อมูลทั่วไป */}
                 <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
                     <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
                 </div>
-                 
+                  
+                {/* ✅ ส่วน Dropdown เลือกประเภทหน่วยงาน */}
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
-                    <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
-                        <option value="เทศบาล">เทศบาล</option>
-                        <option value="อบต">อบต.</option>
+                    <select 
+                        className={styles.agencyInput} 
+                        value={formData.agencyType} 
+                        // แปลงเป็น Int เพราะ value ของ option เป็น number
+                        onChange={(e)=>handleChange('agencyType', parseInt(e.target.value))}
+                    >
+                        <option value="">-- กรุณาเลือก --</option>
+                        {orgTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
@@ -274,7 +301,7 @@ const AgencySettings = () => {
                 {/* Group 3: ที่อยู่ */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
-                 
+                  
                 <div className={styles.agencyAddressGrid}>
                     <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>จังหวัด</label>
@@ -334,11 +361,14 @@ const AgencySettings = () => {
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name || "-"}</h2>
                         <div className={styles.agencyBadges}>
-                            <span className={styles.agencyBadgeType}><FaCity style={{fontSize:10}}/> {formData.agencyType}</span>
+                            {/* ✅ แสดงผลชื่อประเภทหน่วยงานจาก ID */}
+                            <span className={styles.agencyBadgeType}>
+                                <FaCity style={{fontSize:10}}/> {getOrgTypeLabel(formData.agencyType)}
+                            </span>
                         </div>
                     </div>
                 </div>
-                 
+                  
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
@@ -348,7 +378,7 @@ const AgencySettings = () => {
                 {/* Info Box 1: Codes */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
-                     
+                      
                     {/* Admin Code */}
                     <div className={styles.agencyDataRow}>
                         <span>Admin:</span> 
@@ -385,15 +415,14 @@ const AgencySettings = () => {
                 {/* Info Box 2: Address */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
-                    
-                    {/* --- จุดที่ปรับปรุง: แสดงผล ต. อ. จ. จาก State ที่ Fetch มา --- */}
+                      
                     <div className={styles.agencyDataRow}>
                         <span>ที่อยู่:</span> 
                         <span>
                             ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}
                         </span>
                     </div>
-                    
+                      
                     <div className={styles.agencyDataRow}><span>โทรศัพท์:</span> <span style={{color:'#057a55', fontWeight:'bold'}}>{formData.phone}</span></div>
                 </div>
             </div>
@@ -404,7 +433,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR) -> (Static Placeholder)
+// 2-4. หน้าอื่นๆ (Static Placeholder)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
