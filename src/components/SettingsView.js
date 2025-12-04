@@ -7,6 +7,14 @@ import {
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
+// --- Config & Constants ---
+// ------------------------------------------------------------------
+const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
+
+// *** สำคัญ: ID ขององค์กรที่ต้องการดึงข้อมูล (ในระบบจริงควรมาจาก User Session / Context) ***
+const ORGANIZATION_ID = 1; 
+
+// ------------------------------------------------------------------
 // --- Helper Components ---
 // ------------------------------------------------------------------
 const MockToggle = () => (
@@ -17,12 +25,9 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (CONNECTED TO API)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (CONNECTED TO REAL API)
 // ==================================================================================
 const AgencySettings = () => {
-  // *** สมมติว่าได้ ID จากการ Login (คุณต้องเปลี่ยนค่านี้ให้มาจาก User Context หรือ LocalStorage ของคุณ) ***
-  const ORGANIZATION_ID = 1; 
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +39,7 @@ const AgencySettings = () => {
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
-  // Initial State ว่างไว้ก่อน รอ fetch
+  // Initial State
   const [formData, setFormData] = useState({
     name: "",
     adminCode: "",
@@ -51,19 +56,31 @@ const AgencySettings = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // เรียก API ไปที่ endpoint ที่เตรียมไว้
-        const res = await fetch(`/api/organizations?id=${ORGANIZATION_ID}`);
-        
-        if (!res.ok) throw new Error("Failed to fetch data");
-        
-        const data = await res.json();
+        const url = `${API_BASE_URL}?id=${ORGANIZATION_ID}`;
+        console.log("Fetching:", url);
 
-        // Map ข้อมูลจาก DB (snake_case) เข้า Frontend (camelCase)
+        const res = await fetch(url);
+        
+        // อ่านเป็น Text ก่อนเพื่อกัน Error กรณี Server ส่ง HTML (404/500)
+        const textResponse = await res.text();
+
+        if (!res.ok) {
+          throw new Error(`API Error (${res.status}): ${textResponse}`);
+        }
+
+        let data;
+        try {
+          data = JSON.parse(textResponse);
+        } catch (e) {
+          throw new Error("Server returned invalid JSON");
+        }
+
+        // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
-            userCode: data.organization_code || "", // Map organization_code เป็น userCode ตาม UI
-            agencyType: data.org_type_id || "เทศบาล", // หมายเหตุ: ควรจัดการเรื่อง ID กับ Text ให้ตรงกันใน Dropdown
+            userCode: data.organization_code || "",
+            agencyType: data.org_type_id || "เทศบาล",
             province: data.province || "",
             district: data.district || "",
             subDistrict: data.sub_district || "",
@@ -75,59 +92,59 @@ const AgencySettings = () => {
         }
 
       } catch (error) {
-        console.error("Error loading settings:", error);
-        alert("ไม่สามารถดึงข้อมูลหน่วยงานได้");
+        console.error("Fetch error:", error);
+        alert(`โหลดข้อมูลไม่สำเร็จ: ${error.message}`);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [ORGANIZATION_ID]);
+  }, []);
 
   // --- 2. UPDATE DATA (PUT) ---
   const handleSaveData = async () => {
     try {
         setIsSaving(true);
 
-        // Prepare Payload (Map กลับเป็น snake_case ตาม Backend)
+        // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
-            organization_id: ORGANIZATION_ID, // ต้องส่ง ID ไปเพื่อระบุตัวตน
+            organization_id: ORGANIZATION_ID, // ต้องส่ง ID ไปด้วย
             organization_name: formData.name,
-            org_type_id: formData.agencyType, // หรือ org_type ตามที่ backend รองรับ
-            // หมายเหตุ: url_logo ต้องเป็น URL จากการ upload ไฟล์จริงๆ 
-            // ในที่นี้ถ้ายังไม่ได้ทำระบบ upload จะข้ามการส่งไฟล์ Blob ไปก่อน
+            org_type_id: formData.agencyType,
             district: formData.district,
             sub_district: formData.subDistrict,
             contact_phone: formData.phone,
             province: formData.province,
-            // admin_code และ organization_code มักจะไม่ให้แก้ผ่านหน้านี้ หรือถ้าแก้ต้องส่งไปด้วย
+            // หมายเหตุ: url_logo ต้องทำระบบ upload file แยกต่างหาก
         };
 
-        const res = await fetch('/api/organizations', {
+        const res = await fetch(API_BASE_URL, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
+        const textResponse = await res.text();
+
         if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message || "Update failed");
+            throw new Error(`Update failed: ${textResponse}`);
         }
 
-        const updatedData = await res.json();
-        alert("บันทึกข้อมูลสำเร็จ!");
-        setIsEditModalOpen(false);
-
-        // อัปเดต UI ด้วยข้อมูลใหม่จาก Server เพื่อความชัวร์
+        const updatedData = JSON.parse(textResponse);
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
+        
+        // อัปเดต UI ให้ตรงกับ Server ล่าสุด
         setFormData(prev => ({
             ...prev,
             name: updatedData.organization_name
         }));
+        
+        setIsEditModalOpen(false);
 
     } catch (error) {
-        console.error("Error updating:", error);
-        alert(`เกิดข้อผิดพลาด: ${error.message}`);
+        console.error("Update error:", error);
+        alert(`บันทึกไม่สำเร็จ: ${error.message}`);
     } finally {
         setIsSaving(false);
     }
@@ -144,7 +161,7 @@ const AgencySettings = () => {
     alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
   };
 
-  // จัดการรูปภาพ (เฉพาะ Frontend Preview)
+  // จัดการรูปภาพ (Preview Only)
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
@@ -154,20 +171,29 @@ const AgencySettings = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setLogoPreview(imageUrl);
-      // หมายเหตุ: การอัปโหลดไฟล์จริงต้องทำ API upload แยกต่างหาก 
-      // เพื่อให้ได้ URL string (เช่น S3 หรือ Cloudinary) มาส่งให้ Backend
+      // TODO: เพิ่ม Logic Upload รูปขึ้น Server ตรงนี้
     }
   };
+
+  // --- Loading State ---
+  if (isLoading) {
+    return (
+        <div style={{ padding: "50px", textAlign: "center", color: "#666" }}>
+            <FaSpinner className="fa-spin" style={{ fontSize: "24px", marginBottom: "10px" }} />
+            <p>กำลังโหลดข้อมูลหน่วยงาน...</p>
+        </div>
+    );
+  }
 
   // --- POPUP EDIT MODAL ---
   const AgencyEditModal = () => (
     <>
-      <div className={styles.agencyModalBackdrop} onClick={() => setIsEditModalOpen(false)} />
+      <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
         {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
-            <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)}>
+            <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)} disabled={isSaving}>
                 <FaTimes />
             </button>
         </div>
@@ -208,11 +234,10 @@ const AgencySettings = () => {
                     <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
                         <option value="เทศบาล">เทศบาล</option>
                         <option value="อบต">อบต.</option>
-                        {/* ควรแก้ value ให้เป็น ID หาก DB เก็บเป็น int */}
                     </select>
                 </div>
 
-                {/* Group 2: รหัส (Read Only ในโหมดแก้ไข) */}
+                {/* Group 2: รหัส (Read Only) */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
                 <div className={styles.agencyRow2}>
@@ -257,13 +282,20 @@ const AgencySettings = () => {
         </div>
 
         <div className={styles.agencyModalFooter}>
-            <button className={styles.agencyBtnCancel} onClick={() => setIsEditModalOpen(false)}>ยกเลิก</button>
+            <button 
+                className={styles.agencyBtnCancel} 
+                onClick={() => setIsEditModalOpen(false)}
+                disabled={isSaving}
+            >
+                ยกเลิก
+            </button>
             <button 
                 className={styles.agencyBtnSave} 
                 onClick={handleSaveData} 
                 disabled={isSaving}
+                style={{ opacity: isSaving ? 0.7 : 1, cursor: isSaving ? 'not-allowed' : 'pointer' }}
             >
-                {isSaving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+                {isSaving ? <><FaSpinner className="fa-spin"/> กำลังบันทึก...</> : "บันทึกข้อมูล"}
             </button>
         </div>
       </div>
@@ -271,28 +303,22 @@ const AgencySettings = () => {
   );
 
   // --- VIEW MODE ---
-  if (isLoading) {
-    return <div style={{padding:40, textAlign:'center', color:'#666'}}><FaSpinner className="fa-spin"/> กำลังโหลดข้อมูล...</div>;
-  }
-
   return (
     <>
         <div className={styles.agencyViewContainer}>
-            {/* --- UPDATED LAYOUT STRUCTURE --- */}
             <div className={styles.agencyProfileCard}>
                 <div className={styles.agencyProfileHeader}>
                     <div className={styles.agencyLogoCircle}>
                         {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage/>}
                     </div>
                     <div>
-                        <h2 className={styles.agencyOrgName}>{formData.name}</h2>
+                        <h2 className={styles.agencyOrgName}>{formData.name || "-"}</h2>
                         <div className={styles.agencyBadges}>
                             <span className={styles.agencyBadgeType}><FaCity style={{fontSize:10}}/> {formData.agencyType}</span>
                         </div>
                     </div>
                 </div>
                 
-                {/* ย้ายปุ่มมาด้านล่าง (นอก Header) */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
@@ -303,7 +329,7 @@ const AgencySettings = () => {
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
                     
-                    {/* Admin Code Row */}
+                    {/* Admin Code */}
                     <div className={styles.agencyDataRow}>
                         <span>Admin:</span> 
                         <div className={styles.codeRevealGroup}>
@@ -319,7 +345,7 @@ const AgencySettings = () => {
                         </div>
                     </div>
 
-                    {/* User Code Row */}
+                    {/* User Code */}
                     <div className={styles.agencyDataRow}>
                         <span>User:</span> 
                         <div className={styles.codeRevealGroup}>
@@ -350,7 +376,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR) -> (คงเดิม ไม่ได้แก้ไข)
+// 2-4. หน้าอื่นๆ (Map, QR) -> (Static Placeholder)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
