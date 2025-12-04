@@ -1,35 +1,36 @@
 /* ----------------------------------------------------------------
- * Home1.module.css (Re-design: Modern Monotone & Pop-up Layers)
+ * Home1.module.css (Final Full Version: Monotone & Perfect Nav)
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
-/* --- 1. ส่วน Layout หลัก (Background Layer) --- */
+/* --- 1. Global & Layout (โครงสร้างหลัก) --- */
 /* ============================================ */
 
 .appContainer {
-  font-family: 'Inter', 'Kanit', sans-serif;
-  color: #1F2937; /* สีดำเทาเข้ม อ่านง่าย */
+  font-family: 'Kanit', 'Inter', sans-serif;
+  color: #1F2937; /* สีดำเทาเข้ม */
   line-height: 1.6;
   min-height: 100vh;
-  /* ปรับพื้นหลังเป็นสีเทาอ่อน เพื่อให้ Card สีขาวลอยเด่น */
-  background-color: #F3F4F6; 
+  /* พื้นหลังสีเทาอ่อนมาก ช่วยให้การ์ดสีขาวดูเด่นมีมิติ */
+  background-color: #F8F9FA; 
   position: relative;
   overflow-x: hidden;
   padding: 0;
   margin: 0;
 }
 
-/* ลายกระดาษจางๆ (เก็บไว้แต่ปรับให้กลืนกับสีเทา) */
+/* ลาย Texture จางๆ (ถ้ามี) */
 .textureOverlay {
   position: absolute;
   inset: 0;
   background-image: url('https://www.transparenttextures.com/patterns/white-paper.png');
-  opacity: 0.4;
-  mix-blend-mode: overlay;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;
 }
 
+/* ซ่อนวงกลมตกแต่งเดิมที่ไม่เข้าธีม */
 .floatingCircle1,
 .floatingCircle2,
 .floatingCircle3 {
@@ -41,7 +42,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px; /* เพิ่มระยะห่างนิดหน่อย */
+  gap: 24px;
+  /* เว้นพื้นที่ด้านล่างเผื่อเมนูลอย */
   padding: 60px 20px 140px; 
   position: relative;
   z-index: 1;
@@ -49,16 +51,16 @@
 }
 
 .title {
-  font-size: 2rem; /* ใหญ่ขึ้นเล็กน้อย */
-  font-weight: 800; /* หนาขึ้นเพื่อให้ดูหนักแน่น */
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
-  color: #111111; /* ดำสนิท */
-  margin-bottom: 12px;
+  color: #111111;
+  margin-bottom: 8px;
   letter-spacing: -0.5px;
 }
 
 /* ============================================ */
-/* --- 2. ช่องค้นหา (Search - Floating Style) --- */
+/* --- 2. Search Bar (ช่องค้นหา) --- */
 /* ============================================ */
 
 .searchContainer {
@@ -67,30 +69,32 @@
   position: relative;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .searchInput {
   width: 100%;
   padding: 16px 100px 16px 24px;
-  border: 1px solid transparent; /* ไร้ขอบ */
+  border: 1px solid transparent;
   border-radius: 50px;
-  background-color: #FFFFFF; /* สีขาวตัดกับพื้นหลังเทา */
+  background-color: #FFFFFF;
   font-size: 15px;
-  /* เงานุ่มๆ ให้ลอยขึ้นมา */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06); 
+  color: #333;
+  /* เงา Soft Shadow */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
   transition: all 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
 .searchButton {
   position: absolute;
   right: 6px;
-  /* ปุ่มสีดำสนิท ดูเท่ */
+  /* ปุ่มสีดำสนิท */
   background: #000000;
   border: none;
   border-radius: 50%;
@@ -101,7 +105,7 @@
   justify-content: center;
   color: white;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s;
 }
 
@@ -113,8 +117,8 @@
 .clearButton {
   position: absolute;
   right: 60px;
-  background: #f0f0f0;
-  color: #666;
+  background: #F3F4F6;
+  color: #6B7280;
   border: none;
   border-radius: 50%;
   width: 36px;
@@ -127,12 +131,12 @@
 }
 
 .clearButton:hover {
-  background: #e0e0e0;
+  background: #E5E7EB;
   color: #000;
 }
 
 /* ============================================ */
-/* --- 3. เมนูหลัก 3 อัน (Modern Cards) --- */
+/* --- 3. Menu Cards (3 กล่องบน) --- */
 /* ============================================ */
 
 .extraCards {
@@ -148,7 +152,7 @@
 
 .extraCard {
   background: #FFFFFF;
-  border-radius: 20px; /* มุมมนขึ้น */
+  border-radius: 20px;
   padding: 24px;
   display: flex;
   flex-direction: row;
@@ -159,14 +163,12 @@
   font-size: 16px;
   color: #111;
   cursor: pointer;
-  border: none; /* เอาขอบออก ใช้เงาแทน */
-  /* เงาแบบฟุ้งๆ ดูแพง */
+  /* ใช้เงาแทนเส้นขอบ */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   flex: 1;
   min-width: 280px;
-  overflow: hidden;
 }
 
 .extraCard:hover {
@@ -174,26 +176,23 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
-/* ไอคอนวงกลม (Highlight) */
+/* ไอคอนในวงกลม */
 .cardIcon {
-  width: 56px; /* ใหญ่ขึ้น */
+  width: 56px;
   height: 56px;
   min-width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%; /* วงกลม */
-  /* พื้นหลังสีเทาอ่อน ตัดกับไอคอนดำ */
-  background: #F3F4F6; 
-  color: #111111; 
+  border-radius: 50%;
+  background: #F3F4F6; /* พื้นหลังเทาอ่อน */
+  color: #111111; /* ไอคอนดำ */
   transition: all 0.3s ease;
 }
 
-/* Hover แล้วไอคอนเปลี่ยนเป็นดำ พื้นหลังขาว หรือสลับกัน */
 .extraCard:hover .cardIcon {
   background: #000000;
   color: #FFFFFF;
-  transform: rotate(-10deg); /* ลูกเล่นหมุนนิดๆ */
 }
 
 .cardIcon svg {
@@ -205,13 +204,14 @@
   flex-grow: 1;
 }
 
+/* ลูกศร > ด้านขวา */
 .extraCard::after {
   content: '›';
   font-size: 28px;
-  color: #E5E7EB; /* สีเทาจางมากๆ */
+  color: #E5E7EB;
   line-height: 1;
   font-weight: 400;
-  transition: transform 0.3s;
+  transition: transform 0.3s, color 0.3s;
 }
 
 .extraCard:hover::after {
@@ -220,7 +220,7 @@
 }
 
 /* ============================================ */
-/* --- 4. รายชื่อหน่วยงาน (Clean Grid) --- */
+/* --- 4. Agency Grid (รายการหน่วยงาน) --- */
 /* ============================================ */
 
 .agencySection {
@@ -244,12 +244,11 @@
   box-shadow: none;
   width: 100%;
   max-width: 1000px;
-  /* เส้นแบ่งสีเทาอ่อนๆ */
-  border-bottom: 1px solid #E5E7EB; 
+  border-bottom: 1px solid #E5E7EB;
   position: relative;
 }
 
-/* ขีดดำเล็กๆ เน้นหัวข้อ */
+/* ขีดดำใต้หัวข้อ */
 .sectionTitle::before {
   content: '';
   position: absolute;
@@ -257,13 +256,13 @@
   left: 0;
   width: 60px;
   height: 3px;
-  background: #000000; 
+  background: #000000;
   border-radius: 2px;
 }
 
 .agencyGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* กว้างขึ้นนิดนึง */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 24px;
   width: 100%;
   padding: 0 10px;
@@ -278,9 +277,7 @@
   background: #FFFFFF;
   border-radius: 20px;
   padding: 24px 16px;
-  border: none;
-  /* เงาเบาๆ */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   cursor: pointer;
   transition: all 0.3s;
   width: 100%;
@@ -290,8 +287,7 @@
 
 .agencyItem:hover {
   transform: translateY(-5px);
-  /* Hover แล้วเงาชัดขึ้น แต่ยังเป็นสีดำจางๆ */
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .agencyImg {
@@ -299,13 +295,11 @@
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
-  /* ขอบรูปสีขาว เพื่อตัดกับเงา */
-  border: 4px solid #FFFFFF; 
+  border: 4px solid #FFFFFF;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: all 0.3s;
 }
 
-/* Hover ที่การ์ด แล้วขอบรูปกลายเป็นสีดำ */
 .agencyItem:hover .agencyImg {
   border-color: #000000;
   transform: scale(1.05);
@@ -315,7 +309,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* สำคัญ: ไม่ใส่ filter เพื่อให้รูปสีสดใสเด้งออกมา */
+  /* ไม่ใส่ Filter เพื่อให้รูป User ยังคงสีสดใส */
 }
 
 .agencyName {
@@ -326,14 +320,6 @@
   line-height: 1.4;
 }
 
-.agencyType {
-  font-size: 13px;
-  color: #888;
-  background: #F3F4F6;
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-
 .noResults {
   text-align: center;
   font-size: 18px;
@@ -342,7 +328,7 @@
 }
 
 /* ============================================ */
-/* --- 5. ปุ่ม Logout (Red Alert) --- */
+/* --- 5. Logout Button (ปุ่มแดงมุมขวา) --- */
 /* ============================================ */
 
 .logoutIcon {
@@ -364,8 +350,8 @@
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  /* สีแดงตามเดิม ให้เด่นสุดในหน้า */
-  background: linear-gradient(135deg, #DC2626, #B91C1C);
+  /* สีแดงไล่เฉด */
+  background: linear-gradient(135deg, #EF4444, #DC2626);
   box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
   transition: all 0.3s ease;
 }
@@ -376,28 +362,31 @@
 }
 
 /* ============================================ */
-/* --- 6. Bottom Nav (Glassmorphism & Black Active) --- */
+/* --- 6. Bottom Navigation (จุดที่แก้ไข) --- */
 /* ============================================ */
 
 .bottomNav {
   position: fixed;
-  bottom: 24px;
+  bottom: 30px; /* ลอยจากขอบล่าง */
   left: 50%;
   transform: translateX(-50%);
+  
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
-  /* พื้นหลังขาวใสๆ เบลอๆ */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  justify-content: center;
+  gap: 8px; /* ระยะห่างระหว่างปุ่มที่พอดี */
+  
+  background: #FFFFFF;
   padding: 8px 10px;
-  border-radius: 100px;
-  /* เงาขอบล่าง */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 50px; /* แคปซูล */
+  
+  /* เงาและขอบที่ทำให้ดู Clean */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid #F3F4F6;
+  
   z-index: 1000;
+  width: auto;
+  max-width: 95%; /* กันล้นจอในมือถือ */
 }
 
 .bottomNavButtonContainer {
@@ -405,59 +394,64 @@
   display: block;
 }
 
+/* ปุ่มปกติ */
 .bottomNav button {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
-  color: #6B7280; /* สีเทากลาง */
-  padding: 10px 18px;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  flex-direction: row;
+  
+  display: flex;
   align-items: center;
   gap: 8px;
+  
+  padding: 10px 18px; /* ขนาดปุ่ม */
+  border-radius: 40px;
+  
+  color: #6B7280; /* สีเทา */
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  
+  transition: all 0.25s ease;
 }
 
+/* Hover ปุ่มปกติ */
 .bottomNav button:not(.active):hover {
   background: #F3F4F6;
   color: #111;
 }
 
-/* Active State: สีดำสนิท ตัดกับพื้นขาว */
+/* ปุ่ม Active (สีดำ) */
 .bottomNav .active {
-  color: #fff;
+  background: #000000;
+  color: #FFFFFF;
   font-weight: 600;
-  background-color: #000000;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.bottomNav .active:hover {
-  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .bottomNav button svg {
-  font-size: 20px; /* ปรับขนาดไอคอนให้พอดี */
+  font-size: 18px; /* ขนาดไอคอน */
 }
 
-/* --- Sub Menu Popup --- */
+/* --- Popup Menu ย่อย --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 15px);
   left: 50%;
   transform: translateX(-50%);
+  
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-  z-index: 1001;
   padding: 8px;
-  min-width: 180px;
-  border: 1px solid #f0f0f0;
+  min-width: 160px;
+  
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  
   display: flex;
   flex-direction: column;
   gap: 4px;
+  z-index: 1001;
   animation: popUp 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -466,15 +460,29 @@
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
+/* สามเหลี่ยมชี้ลง */
+.subMenuPopup::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  transform: translateX(-50%) rotate(45deg);
+}
+
 .subMenuItem {
-  padding: 10px 16px;
+  padding: 10px 14px;
   font-size: 14px;
   color: #4B5563;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  font-weight: 500;
   text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .subMenuItem:hover {
@@ -482,131 +490,75 @@
   color: #000;
 }
 
-.subMenuItem.active {
-  background: #000;
-  color: #fff;
-}
-
 /* ============================================ */
-/* --- 7. Media Queries (Mobile Optimization) --- */
+/* --- 7. Responsive (มือถือ) --- */
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
   
   .title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
-  /* Mobile Cards: Stack Vertical */
+  /* เรียงการ์ดบนเป็นแนวตั้ง */
   .extraCards {
-    flex-direction: column; 
-    align-items: center;
-    max-width: 100%;
+    flex-direction: column;
     padding: 0 10px;
   }
-
+  
   .extraCard {
-    width: 100%; 
-    max-width: 500px;
-    padding: 20px; /* ลด padding ลงนิดหน่อย */
-  }
-
-  /* Mobile Bottom Nav */
-  .bottomNav {
-    bottom: 0;
-    left: 0;
-    right: 0;
     width: 100%;
-    transform: none;
-    border-radius: 20px 20px 0 0;
-    background: #FFFFFF; /* บนมือถือใช้พื้นหลังทึบเลยดีกว่า */
-    border: none;
-    box-shadow: 0 -4px 30px rgba(0,0,0,0.06);
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    padding: 10px 10px 24px 10px;
-    gap: 0;
+    max-width: 100%;
   }
 
-  .bottomNavButtonContainer {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-  }
-
-  .bottomNav button {
-    flex-direction: column;
-    background: transparent !important;
-    border: none;
-    box-shadow: none !important;
-    height: auto;
-    width: 100%;
-    padding: 8px 0;
-    border-radius: 12px;
-    gap: 4px;
-  }
-
-  .bottomNav button svg {
-    font-size: 24px;
-    margin-bottom: 2px;
-    color: #9CA3AF; /* เทาจาง */
-  }
-
-  .bottomNav button span {
-    font-size: 10px;
-    color: #9CA3AF;
-  }
-
-  /* Active State Mobile */
-  .bottomNav button.active {
-    background-color: #F3F4F6 !important; /* พื้นหลังเทาจางๆ */
-    box-shadow: none !important;
-  }
-
-  .bottomNav button.active svg {
-    color: #000000; /* ไอคอนดำ */
-    transform: scale(1.1);
-  }
-
-  .bottomNav button.active span {
-    color: #000000;
-    font-weight: 700;
-  }
-
-  /* Mobile Popup Adjustments */
-  .subMenuPopup {
-    bottom: calc(100% + 10px);
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    min-width: 150px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .extraCards {
-    padding: 0;
-  }
+  /* ปรับ Grid หน่วยงานในมือถือ */
   .agencyGrid {
     grid-template-columns: repeat(1, 1fr);
   }
+  
   .agencyItem {
-    max-width: 100%; /* เต็มความกว้าง */
-    flex-direction: row; /* เปลี่ยนเป็นแนวนอนให้ดูแลง่ายในมือถือ */
-    text-align: left;
+    max-width: 100%;
+    flex-direction: row; /* แนวนอนเพื่อให้ประหยัดที่ */
     justify-content: flex-start;
   }
+  
   .agencyImg {
     width: 60px;
     height: 60px;
     min-width: 60px;
   }
+  
   .agencyName {
     text-align: left;
     font-size: 15px;
   }
-  .logoutIcon {
-    top: 15px;
-    right: 15px;
+
+  /* Bottom Nav บนมือถือ (ยังคงรูปทรงแคปซูล แต่ปรับขนาด) */
+  .bottomNav {
+    bottom: 20px;
+    padding: 6px;
+    gap: 4px;
+    max-width: 92%;
+    flex-wrap: nowrap;
+    overflow-x: auto; /* เผื่อหน้าจอเล็กมาก */
+  }
+
+  .bottomNav button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .bottomNav button svg {
+    font-size: 16px;
+  }
+  
+  /* ซ่อนข้อความบางปุ่มในมือถือถ้าจอมันเล็กเกินไป */
+  @media screen and (max-width: 380px) {
+    .bottomNav button span {
+      display: none; /* โชว์แต่ไอคอน */
+    }
+    .bottomNav .active span {
+      display: inline-block; /* โชว์ข้อความเฉพาะปุ่มที่เลือก */
+    }
   }
 }
