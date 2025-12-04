@@ -1,7 +1,9 @@
 /* ==================================================================
- * 🎨 1. Variables & Theme
+ * 🔒 Scoped CSS: ทำงานเฉพาะภายใต้ id="my-custom-page" เท่านั้น
  * ================================================================== */
-:root {
+
+/* 1. กำหนดตัวแปรและค่าพื้นฐาน (เฉพาะ Scope นี้) */
+#my-custom-page {
   --color-green: #28a745;
   --color-green-dark: #218838;
   --color-red: #dc3545;
@@ -20,18 +22,11 @@
   --radius-btn: 50px;
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
   --transition: all 0.2s ease-in-out;
-}
 
-/* Hard Reset */
-* {
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-/* ==================================================================
- * 📐 2. Layout & Container
- * ================================================================== */
-.container {
+  font-family: "Sarabun", sans-serif;
+  color: var(--color-text-main);
+  
+  /* Layout พื้นฐานของ container */
   display: flex;
   justify-content: center;
   align-items: center; 
@@ -41,18 +36,25 @@
   overflow-x: hidden; 
   padding: 1rem;
   background: var(--color-surface);
-  font-family: "Sarabun", sans-serif;
-  color: var(--color-text-main);
+}
+
+/* Reset (เฉพาะข้างใน Scope นี้ ไม่กระทบเว็บทั้งหน้า) */
+#my-custom-page * {
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 @media (max-width: 480px) {
-  .container {
+  #my-custom-page {
     padding-left: 0.5rem; 
     padding-right: 0.5rem;
   }
 }
 
-.page {
+/* ==================================================================
+ * 📐 Layout Components
+ * ================================================================== */
+#my-custom-page .page {
   width: 100%;
   max-width: 100%; 
   background: var(--color-bg);
@@ -61,15 +63,15 @@
   box-shadow: var(--shadow-card);
   margin: auto 0;
 }
-.pageCreate { max-width: 500px; }
-.pageSetup { max-width: 700px; }
+#my-custom-page .pageCreate { max-width: 500px; }
+#my-custom-page .pageSetup { max-width: 700px; }
 
-.pageHeader {
+#my-custom-page .pageHeader {
   text-align: center;
   margin-bottom: 2rem;
   padding: 0 0.5rem;
 }
-.pageTitle {
+#my-custom-page .pageTitle {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-text-main);
@@ -77,11 +79,11 @@
   line-height: 1.3;
   word-wrap: break-word; 
 }
-.pageSubtitle {
+#my-custom-page .pageSubtitle {
   font-size: 0.95rem;
   color: var(--color-text-sub);
 }
-.orgNameHighlight {
+#my-custom-page .orgNameHighlight {
   display: inline-block;
   color: #000;
   background: rgba(0,0,0,0.04);
@@ -92,16 +94,16 @@
 }
 
 /* ==================================================================
- * 📝 3. Forms & Inputs
+ * 📝 Forms & Inputs
  * ================================================================== */
-.form {
+#my-custom-page .form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
 }
 
-.formGrid {
+#my-custom-page .formGrid {
   display: flex; 
   flex-direction: column; 
   gap: 1.5rem; 
@@ -109,7 +111,7 @@
   margin-top: 1rem;
 }
 
-.formGroup {
+#my-custom-page .formGroup {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -117,17 +119,18 @@
   min-width: 0; 
 }
 
-.label {
+#my-custom-page .label {
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--color-text-main);
 }
-.label.required::after {
+#my-custom-page .label.required::after {
   content: " *";
   color: var(--color-red);
 }
 
-.input, .select {
+#my-custom-page .input, 
+#my-custom-page .select {
   width: 100%; 
   max-width: 100%; 
   padding: 0.9rem 1.2rem; 
@@ -139,7 +142,7 @@
   transition: var(--transition);
 }
 
-.select {
+#my-custom-page .select {
   appearance: none;
   cursor: pointer;
   white-space: nowrap;
@@ -152,14 +155,15 @@
   background-size: 1.2em;
 }
 
-.input:focus, .select:focus {
+#my-custom-page .input:focus, 
+#my-custom-page .select:focus {
   outline: none;
   background: #fff;
   border-color: var(--color-green);
   box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); 
 }
 
-.errorMessage {
+#my-custom-page .errorMessage {
   color: var(--color-red);
   font-size: 0.9rem;
   text-align: center;
@@ -167,9 +171,9 @@
 }
 
 /* ==================================================================
- * 🔘 4. Buttons (Fixed Layout)
+ * 🔘 Buttons (Scoped)
  * ================================================================== */
-.buttonGroup {
+#my-custom-page .buttonGroup {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -177,16 +181,15 @@
   width: 100%;
 }
 
-/* ปุ่ม Submit (Container) */
-.submitRow {
+#my-custom-page .submitRow {
   margin-top: 2.5rem; 
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-/* สไตล์ปุ่มพื้นฐาน (Default = Mobile Full Width) */
-.button {
+/* Base Button Style */
+#my-custom-page .button {
   width: 100%; 
   padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
@@ -201,49 +204,51 @@
   gap: 0.5rem;
   white-space: nowrap;
 }
-.button:active { transform: scale(0.98); }
+#my-custom-page .button:active { transform: scale(0.98); }
 
-.btnPrimary, .btnSuccess {
+#my-custom-page .btnPrimary, 
+#my-custom-page .btnSuccess {
   background: var(--color-green);
   color: white;
   box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
 }
-.btnPrimary:hover, .btnSuccess:hover {
+#my-custom-page .btnPrimary:hover, 
+#my-custom-page .btnSuccess:hover {
   background: var(--color-green-dark);
   transform: translateY(-2px);
 }
 
-.btnPrimaryBack {
+#my-custom-page .btnPrimaryBack {
   background: var(--color-red);
   color: white;
   box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
 }
-.btnPrimaryBack:hover {
+#my-custom-page .btnPrimaryBack:hover {
   background: var(--color-red-dark);
   transform: translateY(-2px);
 }
 
-.btnSecondary {
+#my-custom-page .btnSecondary {
   background: white;
   color: var(--color-text-main);
   border: 1px solid var(--color-border);
 }
 
-.geoButtonContainer {
+#my-custom-page .geoButtonContainer {
   width: 100%;
 }
 
 /* ==================================================================
- * 📂 5. Accordion
+ * 📂 Accordion
  * ================================================================== */
-.accordion {
+#my-custom-page .accordion {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
   width: 100%;
 }
 
-.accordionItem {
+#my-custom-page .accordionItem {
   background: #fff;
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -252,7 +257,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.accordionHeader {
+#my-custom-page .accordionHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -264,7 +269,7 @@
   text-align: left;
 }
 
-.accordionIcon {
+#my-custom-page .accordionIcon {
   width: 3rem;
   height: 3rem;
   border-radius: 10px;
@@ -277,7 +282,7 @@
   flex-shrink: 0;
 }
 
-.accordionTitle {
+#my-custom-page .accordionTitle {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text-main);
@@ -287,7 +292,7 @@
   text-overflow: ellipsis;
   max-width: 200px; 
 }
-.accordionSubtitle {
+#my-custom-page .accordionSubtitle {
   font-size: 0.85rem;
   color: var(--color-text-sub);
   margin-top: 0.3rem;
@@ -295,35 +300,35 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.accordionArrow {
+#my-custom-page .accordionArrow {
   width: 1.2rem;
   margin-left: auto;
   color: #bbb;
 }
-.rotate180 { transform: rotate(180deg); }
+#my-custom-page .rotate180 { transform: rotate(180deg); }
 
-.accordionContentWrapper {
+#my-custom-page .accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.3s ease-in-out;
 }
-.accordionContentWrapper.open {
+#my-custom-page .accordionContentWrapper.open {
   grid-template-rows: 1fr;
 }
-.accordionContent {
+#my-custom-page .accordionContent {
   overflow: hidden;
 }
-.accordionInner {
+#my-custom-page .accordionInner {
   padding: 0 1.5rem 2rem 1.5rem; 
   border-top: 1px solid #f0f0f0;
 }
 
 /* ==================================================================
- * 🖼️ 6. Special Components
+ * 🖼️ Special Components
  * ================================================================== */
 
 /* --- Logo Upload --- */
-.logoUploadBox {
+#my-custom-page .logoUploadBox {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -334,13 +339,13 @@
   text-align: center;
   width: 100%;
 }
-.logoWrapper {
+#my-custom-page .logoWrapper {
   position: relative;
   width: 140px;
   height: 140px;
   margin: 0 auto;
 }
-.logoPreview {
+#my-custom-page .logoPreview {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -348,7 +353,7 @@
   border: 3px solid white;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
-.editIcon {
+#my-custom-page .editIcon {
   position: absolute;
   bottom: -8px; right: -8px;
   width: 42px; height: 42px;
@@ -362,11 +367,11 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   transition: transform 0.2s;
 }
-.editIcon:hover { transform: scale(1.1); }
-.hiddenFileInput { display: none !important; }
+#my-custom-page .editIcon:hover { transform: scale(1.1); }
+#my-custom-page .hiddenFileInput { display: none !important; }
 
 /* Container สำหรับปุ่มโลโก้ */
-.logoUploadActions {
+#my-custom-page .logoUploadActions {
   display: flex; 
   flex-direction: column; 
   align-items: stretch; 
@@ -375,7 +380,7 @@
 }
 
 /* --- Geo Action Box --- */
-.geoActionBox {
+#my-custom-page .geoActionBox {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -390,25 +395,25 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-.geoActionBox:hover {
+#my-custom-page .geoActionBox:hover {
   background: #f0fdf4;
   border-color: var(--color-green);
 }
-.geoSuccess { background: #d1e7dd; border-style: solid; border-color: var(--color-green); }
-.geoIconCircle {
+#my-custom-page .geoSuccess { background: #d1e7dd; border-style: solid; border-color: var(--color-green); }
+#my-custom-page .geoIconCircle {
   width: 50px; height: 50px;
   background: white; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: var(--color-green); flex-shrink: 0;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.geoTextContent { flex: 1; width: 100%; }
-.geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
-.geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
+#my-custom-page .geoTextContent { flex: 1; width: 100%; }
+#my-custom-page .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
+#my-custom-page .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
 /* --- Code Box Tabs --- */
-.codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
-.tabContainer {
+#my-custom-page .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+#my-custom-page .tabContainer {
   display: flex;
   background: transparent;
   padding: 0;
@@ -418,7 +423,7 @@
 }
 
 /* 1. สไตล์ปุ่มปกติ (Inactive) */
-.tabBtn {
+#my-custom-page .tabBtn {
   flex: 1;
   border: 1px solid #e9ecef;
   background: white;   /* พื้นหลังขาว */
@@ -437,15 +442,13 @@
   white-space: nowrap; 
 }
 
-/* [แก้ไข] เปลี่ยนไอคอนคน (User Code) เป็นสีเหลือง */
-/* ใช้ hue-rotate:150deg เพื่อหมุนสีจากม่วง -> เหลืองทอง */
-/* ใช้ saturate เพิ่มความสด */
-.tabContainer .tabBtn:nth-child(2) {
-  filter: hue-rotate(150deg) saturate(300%);
+/* [User Code Icon Color] เปลี่ยนไอคอนคนเป็นสีน้ำตาลอ่อน (Sepia) */
+#my-custom-page .tabContainer .tabBtn:nth-child(2) {
+  filter: sepia(100%) saturate(120%) brightness(110%);
 }
 
 /* 2. สไตล์ปุ่มที่เลือก (Active) */
-.tabActive {
+#my-custom-page .tabActive {
   background-color: #000000 !important; /* พื้นหลังดำ */
   color: #ffffff !important;            /* ตัวหนังสือขาว */
   border-color: #000000 !important;     /* ขอบดำ */
@@ -453,18 +456,18 @@
   transform: translateY(-2px);
 }
 
-.tabDescription {
+#my-custom-page .tabDescription {
   font-size: 0.9rem;
   color: #888;
   text-align: center;
   margin: 0;
 }
-.codeDisplayBox {
+#my-custom-page .codeDisplayBox {
   display: flex; justify-content: space-between; align-items: center;
   background: white; border: 2px solid #eee; border-radius: 16px; 
   padding: 1rem 1.2rem; width: 100%; overflow: hidden;
 }
-.codeText {
+#my-custom-page .codeText {
   font-family: "Courier New", Courier, monospace;
   font-size: 1.5rem;
   font-weight: 800;
@@ -474,72 +477,72 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.btnCopy {
+#my-custom-page .btnCopy {
   width: 40px !important; height: 40px !important; min-width: 40px !important;
   display: flex; align-items: center; justify-content: center;
   padding: 0 !important; background: #f0fdf4 !important; border: none !important;
   color: var(--color-green); cursor: pointer; border-radius: 50%;
   margin-left: 15px; flex-shrink: 0; transition: all 0.2s;
 }
-.btnCopy:hover {
+#my-custom-page .btnCopy:hover {
   background: var(--color-green) !important; color: white;
 }
 
 /* Input with Icons */
-.inputIconWrapper { position: relative; width: 100%; }
-.inputIcon {
+#my-custom-page .inputIconWrapper { position: relative; width: 100%; }
+#my-custom-page .inputIcon {
   position: absolute; top: 50%; left: 15px; transform: translateY(-50%);
   color: #aaa; display: flex; align-items: center; pointer-events: none; z-index: 2;
 }
-.inputWithIcon { padding-left: 3rem !important; }
-.select.inputWithIcon { padding-right: 3rem !important; }
+#my-custom-page .inputWithIcon { padding-left: 3rem !important; }
+#my-custom-page .select.inputWithIcon { padding-right: 3rem !important; }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Override
+ * 💻 Desktop / Tablet Override (Scoped)
  * ================================================================== */
 @media (min-width: 768px) {
-  .page { padding: 3rem; }
-  .pageTitle { font-size: 2rem; }
+  #my-custom-page .page { padding: 3rem; }
+  #my-custom-page .pageTitle { font-size: 2rem; }
   
-  .formGrid {
+  #my-custom-page .formGrid {
     display: grid;
     grid-template-columns: 1fr 1fr; 
     align-items: start;
     gap: 2rem;
   }
   
-  .submitRow {
+  #my-custom-page .submitRow {
     grid-column: 1 / -1; 
     justify-content: center;
     margin-top: 3rem;
   }
   
-  .logoUploadBox {
+  #my-custom-page .logoUploadBox {
     flex-direction: column; align-items: center; gap: 2rem;
   }
-  .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
+  #my-custom-page .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
 
-  .logoUploadActions {
+  #my-custom-page .logoUploadActions {
     align-items: center; 
   }
   
-  .geoActionBox {
+  #my-custom-page .geoActionBox {
     flex-direction: row; text-align: left; padding: 2rem;
   }
-  .geoIconCircle { width: 60px; height: 60px; }
+  #my-custom-page .geoIconCircle { width: 60px; height: 60px; }
   
-  .buttonGroup {
+  #my-custom-page .buttonGroup {
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
   /* บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
-  .button { 
+  #my-custom-page .button { 
     width: 280px !important; 
     flex: 0 0 auto; 
   }
   
-  .codeText { font-size: 1.8rem; }
-  .codeDisplayBox { padding: 1.5rem 2rem; }
+  #my-custom-page .codeText { font-size: 1.8rem; }
+  #my-custom-page .codeDisplayBox { padding: 1.5rem 2rem; }
   
-  .accordionTitle { max-width: none; }
+  #my-custom-page .accordionTitle { max-width: none; }
 }
