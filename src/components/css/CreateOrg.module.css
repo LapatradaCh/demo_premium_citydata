@@ -1,8 +1,9 @@
 /* ==================================================================
- * 🔒 Scoped CSS: ทำงานเฉพาะภายใต้ id="my-custom-page" เท่านั้น
+ * 🔒 CSS Module: การตั้งชื่อ Class ในนี้จะไม่กระทบไฟล์อื่น
  * ================================================================== */
-/* 1. กำหนดตัวแปรและค่าพื้นฐาน (เฉพาะ Scope นี้) */
-#my-custom-page {
+
+/* กำหนดตัวแปรเฉพาะใน Container นี้ เพื่อไม่ให้สีหลุดไปหน้าอื่น */
+.container {
   --color-green: #28a745;
   --color-green-dark: #218838;
   --color-red: #dc3545;
@@ -11,9 +12,7 @@
   --color-bg: #ffffff;
   --color-surface: #f4f6f8;
   --color-border: #e0e0e0;
-  
-  /* สีหลักเป็นสีดำ */
-  --color-text-main: #000000; 
+  --color-text-main: #000000;
   --color-text-sub: #636e72;
   
   --radius-card: 16px;        
@@ -22,10 +21,7 @@
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
   --transition: all 0.2s ease-in-out;
 
-  font-family: "Sarabun", sans-serif;
-  color: var(--color-text-main);
-  
-  /* Layout พื้นฐานของ container */
+  /* Layout */
   display: flex;
   justify-content: center;
   align-items: center; 
@@ -35,25 +31,27 @@
   overflow-x: hidden; 
   padding: 1rem;
   background: var(--color-surface);
+  font-family: "Sarabun", sans-serif;
+  color: var(--color-text-main);
 }
 
-/* Reset (เฉพาะข้างใน Scope นี้ ไม่กระทบเว็บทั้งหน้า) */
-#my-custom-page * {
+/* Reset ภายใน container นี้เท่านั้น */
+.container * {
   box-sizing: border-box;
   min-width: 0;
 }
 
 @media (max-width: 480px) {
-  #my-custom-page {
+  .container {
     padding-left: 0.5rem; 
     padding-right: 0.5rem;
   }
 }
 
 /* ==================================================================
- * 📐 Layout Components
+ * 📐 Components
  * ================================================================== */
-#my-custom-page .page {
+.page {
   width: 100%;
   max-width: 100%; 
   background: var(--color-bg);
@@ -62,15 +60,15 @@
   box-shadow: var(--shadow-card);
   margin: auto 0;
 }
-#my-custom-page .pageCreate { max-width: 500px; }
-#my-custom-page .pageSetup { max-width: 700px; }
+.pageCreate { max-width: 500px; }
+.pageSetup { max-width: 700px; }
 
-#my-custom-page .pageHeader {
+.pageHeader {
   text-align: center;
   margin-bottom: 2rem;
   padding: 0 0.5rem;
 }
-#my-custom-page .pageTitle {
+.pageTitle {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--color-text-main);
@@ -78,11 +76,11 @@
   line-height: 1.3;
   word-wrap: break-word; 
 }
-#my-custom-page .pageSubtitle {
+.pageSubtitle {
   font-size: 0.95rem;
   color: var(--color-text-sub);
 }
-#my-custom-page .orgNameHighlight {
+.orgNameHighlight {
   display: inline-block;
   color: #000;
   background: rgba(0,0,0,0.04);
@@ -95,14 +93,14 @@
 /* ==================================================================
  * 📝 Forms & Inputs
  * ================================================================== */
-#my-custom-page .form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
 }
 
-#my-custom-page .formGrid {
+.formGrid {
   display: flex; 
   flex-direction: column; 
   gap: 1.5rem; 
@@ -110,7 +108,7 @@
   margin-top: 1rem;
 }
 
-#my-custom-page .formGroup {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -118,18 +116,17 @@
   min-width: 0; 
 }
 
-#my-custom-page .label {
+.label {
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--color-text-main);
 }
-#my-custom-page .label.required::after {
+.label.required::after {
   content: " *";
   color: var(--color-red);
 }
 
-#my-custom-page .input, 
-#my-custom-page .select {
+.input, .select {
   width: 100%; 
   max-width: 100%; 
   padding: 0.9rem 1.2rem; 
@@ -141,7 +138,7 @@
   transition: var(--transition);
 }
 
-#my-custom-page .select {
+.select {
   appearance: none;
   cursor: pointer;
   white-space: nowrap;
@@ -154,15 +151,14 @@
   background-size: 1.2em;
 }
 
-#my-custom-page .input:focus, 
-#my-custom-page .select:focus {
+.input:focus, .select:focus {
   outline: none;
   background: #fff;
   border-color: var(--color-green);
   box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); 
 }
 
-#my-custom-page .errorMessage {
+.errorMessage {
   color: var(--color-red);
   font-size: 0.9rem;
   text-align: center;
@@ -170,9 +166,9 @@
 }
 
 /* ==================================================================
- * 🔘 Buttons (Scoped)
+ * 🔘 Buttons
  * ================================================================== */
-#my-custom-page .buttonGroup {
+.buttonGroup {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
@@ -180,15 +176,14 @@
   width: 100%;
 }
 
-#my-custom-page .submitRow {
+.submitRow {
   margin-top: 2.5rem; 
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-/* Base Button Style */
-#my-custom-page .button {
+.button {
   width: 100%; 
   padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
@@ -203,51 +198,49 @@
   gap: 0.5rem;
   white-space: nowrap;
 }
-#my-custom-page .button:active { transform: scale(0.98); }
+.button:active { transform: scale(0.98); }
 
-#my-custom-page .btnPrimary, 
-#my-custom-page .btnSuccess {
+.btnPrimary, .btnSuccess {
   background: var(--color-green);
   color: white;
   box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
 }
-#my-custom-page .btnPrimary:hover, 
-#my-custom-page .btnSuccess:hover {
+.btnPrimary:hover, .btnSuccess:hover {
   background: var(--color-green-dark);
   transform: translateY(-2px);
 }
 
-#my-custom-page .btnPrimaryBack {
+.btnPrimaryBack {
   background: var(--color-red);
   color: white;
   box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
 }
-#my-custom-page .btnPrimaryBack:hover {
+.btnPrimaryBack:hover {
   background: var(--color-red-dark);
   transform: translateY(-2px);
 }
 
-#my-custom-page .btnSecondary {
+.btnSecondary {
   background: white;
   color: var(--color-text-main);
   border: 1px solid var(--color-border);
 }
 
-#my-custom-page .geoButtonContainer {
+.geoButtonContainer {
   width: 100%;
 }
 
 /* ==================================================================
  * 📂 Accordion
  * ================================================================== */
-#my-custom-page .accordion {
+.accordion {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
   width: 100%;
 }
 
-#my-custom-page .accordionItem {
+.accordionItem {
   background: #fff;
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -256,7 +249,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-#my-custom-page .accordionHeader {
+.accordionHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -268,7 +261,7 @@
   text-align: left;
 }
 
-#my-custom-page .accordionIcon {
+.accordionIcon {
   width: 3rem;
   height: 3rem;
   border-radius: 10px;
@@ -281,7 +274,7 @@
   flex-shrink: 0;
 }
 
-#my-custom-page .accordionTitle {
+.accordionTitle {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-text-main);
@@ -291,7 +284,7 @@
   text-overflow: ellipsis;
   max-width: 200px; 
 }
-#my-custom-page .accordionSubtitle {
+.accordionSubtitle {
   font-size: 0.85rem;
   color: var(--color-text-sub);
   margin-top: 0.3rem;
@@ -299,25 +292,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#my-custom-page .accordionArrow {
+.accordionArrow {
   width: 1.2rem;
   margin-left: auto;
   color: #bbb;
 }
-#my-custom-page .rotate180 { transform: rotate(180deg); }
+.rotate180 { transform: rotate(180deg); }
 
-#my-custom-page .accordionContentWrapper {
+.accordionContentWrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.3s ease-in-out;
 }
-#my-custom-page .accordionContentWrapper.open {
+.accordionContentWrapper.open {
   grid-template-rows: 1fr;
 }
-#my-custom-page .accordionContent {
+.accordionContent {
   overflow: hidden;
 }
-#my-custom-page .accordionInner {
+.accordionInner {
   padding: 0 1.5rem 2rem 1.5rem; 
   border-top: 1px solid #f0f0f0;
 }
@@ -327,7 +320,7 @@
  * ================================================================== */
 
 /* --- Logo Upload --- */
-#my-custom-page .logoUploadBox {
+.logoUploadBox {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -338,13 +331,13 @@
   text-align: center;
   width: 100%;
 }
-#my-custom-page .logoWrapper {
+.logoWrapper {
   position: relative;
   width: 140px;
   height: 140px;
   margin: 0 auto;
 }
-#my-custom-page .logoPreview {
+.logoPreview {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -352,7 +345,7 @@
   border: 3px solid white;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
-#my-custom-page .editIcon {
+.editIcon {
   position: absolute;
   bottom: -8px; right: -8px;
   width: 42px; height: 42px;
@@ -366,20 +359,18 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   transition: transform 0.2s;
 }
-#my-custom-page .editIcon:hover { transform: scale(1.1); }
-#my-custom-page .hiddenFileInput { display: none !important; }
-
-/* Container สำหรับปุ่มโลโก้ */
-#my-custom-page .logoUploadActions {
+.editIcon:hover { transform: scale(1.1); }
+.hiddenFileInput { display: none !important; }
+.logoUploadActions {
   display: flex; 
   flex-direction: column; 
-  align-items: stretch; 
+  align-items: center;
   width: 100%; 
   gap: 1rem;
 }
 
 /* --- Geo Action Box --- */
-#my-custom-page .geoActionBox {
+.geoActionBox {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -394,25 +385,25 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-#my-custom-page .geoActionBox:hover {
+.geoActionBox:hover {
   background: #f0fdf4;
   border-color: var(--color-green);
 }
-#my-custom-page .geoSuccess { background: #d1e7dd; border-style: solid; border-color: var(--color-green); }
-#my-custom-page .geoIconCircle {
+.geoSuccess { background: #d1e7dd; border-style: solid; border-color: var(--color-green); }
+.geoIconCircle {
   width: 50px; height: 50px;
   background: white; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: var(--color-green); flex-shrink: 0;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-#my-custom-page .geoTextContent { flex: 1; width: 100%; }
-#my-custom-page .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
-#my-custom-page .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
+.geoTextContent { flex: 1; width: 100%; }
+.geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
+.geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
 /* --- Code Box Tabs --- */
-#my-custom-page .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
-#my-custom-page .tabContainer {
+.codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+.tabContainer {
   display: flex;
   background: transparent;
   padding: 0;
@@ -420,53 +411,48 @@
   width: 100%;
   gap: 0.8rem;
 }
-
-/* 1. สไตล์ปุ่มปกติ (Inactive) */
-#my-custom-page .tabBtn {
+.tabBtn {
   flex: 1;
   border: 1px solid #e9ecef;
-  background: white;   /* พื้นหลังขาว */
-  color: #000000;      /* ตัวหนังสือดำ */
-  padding: 12px 16px; 
+  background: white;
+  padding: 12px 16px;
   border-radius: 50px;
   font-weight: 700;
+  color: #000; /* เดิมเทา เปลี่ยนเป็นดำ */
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
-/* [User Code Icon Color] เปลี่ยนไอคอนคนเป็นสีน้ำตาลอ่อน (Sepia) */
-#my-custom-page .tabContainer .tabBtn:nth-child(2) {
+/* [User Code Icon Color - Sepia] */
+.tabContainer .tabBtn:nth-child(2) {
   filter: sepia(100%) saturate(120%) brightness(110%);
 }
 
-/* 2. สไตล์ปุ่มที่เลือก (Active) */
-#my-custom-page .tabActive {
-  background-color: #000000 !important; /* พื้นหลังดำ */
-  color: #ffffff !important;            /* ตัวหนังสือขาว */
-  border-color: #000000 !important;     /* ขอบดำ */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+.tabActive {
+  background-color: #000 !important; /* พื้นหลังดำ */
+  color: #fff !important;            /* ตัวหนังสือขาว */
+  border-color: #000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
 }
-
-#my-custom-page .tabDescription {
+.tabDescription {
   font-size: 0.9rem;
   color: #888;
   text-align: center;
   margin: 0;
 }
-#my-custom-page .codeDisplayBox {
+.codeDisplayBox {
   display: flex; justify-content: space-between; align-items: center;
   background: white; border: 2px solid #eee; border-radius: 16px; 
   padding: 1rem 1.2rem; width: 100%; overflow: hidden;
 }
-#my-custom-page .codeText {
+.codeText {
   font-family: "Courier New", Courier, monospace;
   font-size: 1.5rem;
   font-weight: 800;
@@ -476,72 +462,85 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#my-custom-page .btnCopy {
+.btnCopy {
   width: 40px !important; height: 40px !important; min-width: 40px !important;
   display: flex; align-items: center; justify-content: center;
   padding: 0 !important; background: #f0fdf4 !important; border: none !important;
   color: var(--color-green); cursor: pointer; border-radius: 50%;
   margin-left: 15px; flex-shrink: 0; transition: all 0.2s;
 }
-#my-custom-page .btnCopy:hover {
+.btnCopy:hover {
   background: var(--color-green) !important; color: white;
 }
 
 /* Input with Icons */
-#my-custom-page .inputIconWrapper { position: relative; width: 100%; }
-#my-custom-page .inputIcon {
+.inputIconWrapper { position: relative; width: 100%; }
+.inputIcon {
   position: absolute; top: 50%; left: 15px; transform: translateY(-50%);
   color: #aaa; display: flex; align-items: center; pointer-events: none; z-index: 2;
 }
-#my-custom-page .inputWithIcon { padding-left: 3rem !important; }
-#my-custom-page .select.inputWithIcon { padding-right: 3rem !important; }
+.inputWithIcon { padding-left: 3rem !important; }
+.select.inputWithIcon { padding-right: 3rem !important; }
 
 /* ==================================================================
- * 💻 Desktop / Tablet Override (Scoped)
+ * 💻 Desktop / Tablet Override
  * ================================================================== */
 @media (min-width: 768px) {
-  #my-custom-page .page { padding: 3rem; }
-  #my-custom-page .pageTitle { font-size: 2rem; }
+  .page { padding: 3rem; }
+  .pageTitle { font-size: 2rem; }
   
-  #my-custom-page .formGrid {
+  .formGrid {
     display: grid;
     grid-template-columns: 1fr 1fr; 
     align-items: start;
     gap: 2rem;
   }
   
-  #my-custom-page .submitRow {
+  .submitRow {
     grid-column: 1 / -1; 
     justify-content: center;
     margin-top: 3rem;
   }
   
-  #my-custom-page .logoUploadBox {
+  .logoUploadBox {
     flex-direction: column; align-items: center; gap: 2rem;
   }
-  #my-custom-page .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
-
-  #my-custom-page .logoUploadActions {
-    align-items: center; 
-  }
+  .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
   
-  #my-custom-page .geoActionBox {
+  .geoActionBox {
     flex-direction: row; text-align: left; padding: 2rem;
   }
-  #my-custom-page .geoIconCircle { width: 60px; height: 60px; }
+  .geoIconCircle { width: 60px; height: 60px; }
   
-  #my-custom-page .buttonGroup {
+  .buttonGroup {
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
-  /* บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
-  #my-custom-page .button { 
+  /* ปุ่มทุกอันกว้างเท่ากันบนจอคอม */
+  .button { 
     width: 280px !important; 
-    flex: 0 0 auto; 
   }
   
-  #my-custom-page .codeText { font-size: 1.8rem; }
-  #my-custom-page .codeDisplayBox { padding: 1.5rem 2rem; }
+  .codeText { font-size: 1.8rem; }
+  .codeDisplayBox { padding: 1.5rem 2rem; }
   
-  #my-custom-page .accordionTitle { max-width: none; }
+  .accordionTitle { max-width: none; }
+
+  /* Fix: Button on Desktop in Logo Actions */
+  .logoUploadActions {
+      align-items: center;
+  }
+  .logoUploadActions .button {
+      width: 280px !important;
+  }
+}
+
+/* Mobile Button Width Override */
+@media (max-width: 767px) {
+  .logoUploadActions {
+      align-items: stretch;
+  }
+  .logoUploadActions .button {
+      width: 100% !important;
+  }
 }
