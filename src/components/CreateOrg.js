@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/CreateOrg.modulde.css"; // นำเข้า CSS ไฟล์นี้
+import "./css/CreateOrg.module.css"; // นำเข้า CSS ไฟล์นี้
 
 // URL ของ API
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
