@@ -157,14 +157,6 @@
   box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1); 
 }
 
-/* ปุ่ม Submit (บนมือถือเต็มความกว้างปกติ) */
-.submitRow {
-  margin-top: 2.5rem; 
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
 .errorMessage {
   color: var(--color-red);
   font-size: 0.9rem;
@@ -173,7 +165,7 @@
 }
 
 /* ==================================================================
- * 🔘 4. Buttons
+ * 🔘 4. Buttons (Fixed Layout)
  * ================================================================== */
 .buttonGroup {
   margin-top: 2rem;
@@ -183,9 +175,17 @@
   width: 100%;
 }
 
-/* สไตล์ปุ่มพื้นฐาน (บนมือถือเต็มจอ) */
+/* ปุ่ม Submit (Container) */
+.submitRow {
+  margin-top: 2.5rem; 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* สไตล์ปุ่มพื้นฐาน (Default = Mobile Full Width) */
 .button {
-  width: 100%; 
+  width: 100%; /* [สำคัญ] บังคับให้เต็มจอในมือถือเสมอ */
   padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
   font-weight: 700;
@@ -363,16 +363,13 @@
 .editIcon:hover { transform: scale(1.1); }
 .hiddenFileInput { display: none !important; }
 
-/* [EDITED] เพิ่ม CSS ตรงนี้เพื่อบังคับปุ่มหน้าโลโก้ให้เต็มจอในมือถือ */
+/* [Modified] Container สำหรับปุ่มโลโก้ */
 .logoUploadActions {
   display: flex; 
   flex-direction: column; 
-  align-items: center;
+  align-items: stretch; /* [สำคัญ] บังคับให้ลูก (ปุ่ม) ยืดเต็มพื้นที่ใน Mobile */
   width: 100%; 
   gap: 1rem;
-}
-.logoUploadActions .button {
-  width: 100%; /* Force mobile full width */
 }
 
 /* --- Geo Action Box --- */
@@ -502,6 +499,11 @@
     flex-direction: column; align-items: center; gap: 2rem;
   }
   .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
+
+  /* [Modified] Desktop: เปลี่ยนกลับมาเป็น Center เพื่อให้ปุ่มไม่ยืดเต็มจอ */
+  .logoUploadActions {
+    align-items: center; 
+  }
   
   .geoActionBox {
     flex-direction: row; text-align: left; padding: 2rem;
@@ -512,9 +514,10 @@
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
-  /* [EDITED] บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
+  /* [CRITICAL FIX] บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
   .button { 
     width: 280px !important; 
+    flex: 0 0 auto; /* ห้ามยืด ห้ามหด */
   }
   
   .codeText { font-size: 1.8rem; }
