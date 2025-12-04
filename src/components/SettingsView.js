@@ -11,8 +11,8 @@ import {
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
 const OrgSelect = localStorage.getItem("lastSelectedOrg");
-console.log("real org:",OrgSelect);
-console.log("real orgID:",OrgSelect.id);
+// console.log("real org:",OrgSelect);
+// console.log("real orgID:",OrgSelect.id);
 
 // *** สำคัญ: ID ขององค์กรที่ต้องการดึงข้อมูล (ในระบบจริงควรมาจาก User Session / Context) ***
 const ORGANIZATION_ID = 1; 
