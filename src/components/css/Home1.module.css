@@ -362,31 +362,24 @@
 }
 
 /* ============================================ */
-/* --- 6. Bottom Navigation (จุดที่แก้ไข) --- */
+/* --- 6. Bottom Nav (Desktop: Floating) --- */
 /* ============================================ */
 
 .bottomNav {
   position: fixed;
-  bottom: 30px; /* ลอยจากขอบล่าง */
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px; /* ระยะห่างระหว่างปุ่มที่พอดี */
-  
-  background: #FFFFFF;
-  padding: 8px 10px;
-  border-radius: 50px; /* แคปซูล */
-  
-  /* เงาและขอบที่ทำให้ดู Clean */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-  border: 1px solid #F3F4F6;
-  
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  padding: 10px 16px;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  width: auto;
-  max-width: 95%; /* กันล้นจอในมือถือ */
 }
 
 .bottomNavButtonContainer {
@@ -394,171 +387,269 @@
   display: block;
 }
 
-/* ปุ่มปกติ */
 .bottomNav button {
-  background: transparent;
+  background: none;
   border: none;
-  cursor: pointer;
-  
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  padding: 10px 18px; /* ขนาดปุ่ม */
-  border-radius: 40px;
-  
-  color: #6B7280; /* สีเทา */
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  
-  transition: all 0.25s ease;
-}
-
-/* Hover ปุ่มปกติ */
-.bottomNav button:not(.active):hover {
-  background: #F3F4F6;
-  color: #111;
-}
-
-/* ปุ่ม Active (สีดำ) */
-.bottomNav .active {
-  background: #000000;
-  color: #FFFFFF;
+  font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  color: #555;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.bottomNav button:not(.active):hover {
+  background: #e9e9e9;
+  color: #111;
+  transform: translateY(-3px) scale(1.03);
+}
+
+.bottomNav .active {
+  color: #fff;
+  font-weight: 700;
+  background-color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.bottomNav .active:hover {
+  transform: translateY(-2px);
 }
 
 .bottomNav button svg {
-  font-size: 18px; /* ขนาดไอคอน */
+  font-size: 34px;
+  height: 34px;
+  width: 34px;
 }
 
-/* --- Popup Menu ย่อย --- */
+.bottomNav button span {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* --- Sub Menu Desktop (Popup แนวตั้ง) --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 15px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  
   background: #ffffff;
-  border-radius: 16px;
-  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  padding: 6px;
   min-width: 160px;
-  
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   border: 1px solid #eee;
   
   display: flex;
   flex-direction: column;
   gap: 4px;
-  z-index: 1001;
-  animation: popUp 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popUp {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* สามเหลี่ยมชี้ลง */
-.subMenuPopup::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background: #ffffff;
-  border-bottom: 1px solid #eee;
-  border-right: 1px solid #eee;
-  transform: translateX(-50%) rotate(45deg);
 }
 
 .subMenuItem {
   padding: 10px 14px;
   font-size: 14px;
-  color: #4B5563;
-  text-align: center;
-  border-radius: 8px;
+  color: #333;
   cursor: pointer;
-  transition: all 0.2s;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+  text-align: center;
 }
 
 .subMenuItem:hover {
-  background: #F9FAFB;
-  color: #000;
+  background: #f4f4f4;
+}
+
+.subMenuItem.active {
+  background: #000;
+  color: #fff;
 }
 
 /* ============================================ */
-/* --- 7. Responsive (มือถือ) --- */
+/* --- 7. Media Queries (Mobile) --- */
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
   
   .title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
-  /* เรียงการ์ดบนเป็นแนวตั้ง */
+  .logoutIcon button {
+    width: auto; 
+    gap: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  /* --- [Mobile Cards] เรียงแนวตั้ง --- */
   .extraCards {
-    flex-direction: column;
+    flex-direction: column; /* เปลี่ยนเป็นแนวตั้ง */
+    align-items: center;
+    max-width: 100%;
     padding: 0 10px;
   }
-  
+
   .extraCard {
-    width: 100%;
-    max-width: 100%;
+    width: 100%; /* เต็มจอ */
+    max-width: 500px;
   }
 
-  /* ปรับ Grid หน่วยงานในมือถือ */
-  .agencyGrid {
-    grid-template-columns: repeat(1, 1fr);
-  }
-  
-  .agencyItem {
-    max-width: 100%;
-    flex-direction: row; /* แนวนอนเพื่อให้ประหยัดที่ */
-    justify-content: flex-start;
-  }
-  
-  .agencyImg {
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
-  }
-  
-  .agencyName {
-    text-align: left;
-    font-size: 15px;
-  }
-
-  /* Bottom Nav บนมือถือ (ยังคงรูปทรงแคปซูล แต่ปรับขนาด) */
+  /* --- [Mobile Nav] Grid ติดขอบล่าง --- */
   .bottomNav {
-    bottom: 20px;
-    padding: 6px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    
+    box-sizing: border-box;
+    
+    background: #ffffff;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 4px;
-    max-width: 92%;
-    flex-wrap: nowrap;
-    overflow-x: auto; /* เผื่อหน้าจอเล็กมาก */
+    
+    padding: 12px 10px 24px 10px;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transform: none;
+  }
+
+  .bottomNavButtonContainer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
   }
 
   .bottomNav button {
-    padding: 8px 12px;
-    font-size: 12px;
+    position: relative !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: none;
+    box-shadow: none !important;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    height: 56px;
+    width: 100%;
+    border-radius: 16px;
+    padding: 0;
+    margin: 0;
+    transition: all 0.2s ease;
   }
-  
+
   .bottomNav button svg {
-    font-size: 16px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 4px;
+    color: #9CA3AF;
+    transition: all 0.2s ease;
   }
-  
-  /* ซ่อนข้อความบางปุ่มในมือถือถ้าจอมันเล็กเกินไป */
-  @media screen and (max-width: 380px) {
-    .bottomNav button span {
-      display: none; /* โชว์แต่ไอคอน */
-    }
-    .bottomNav .active span {
-      display: inline-block; /* โชว์ข้อความเฉพาะปุ่มที่เลือก */
-    }
+
+  .bottomNav button span {
+    font-size: 10px;
+    color: #9CA3AF;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .bottomNav button.active {
+    background-color: #000000 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    transform: none !important;
+  }
+
+  .bottomNav button.active svg {
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+
+  .bottomNav button.active span {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* --- [Mobile Popup] จัดการตำแหน่ง --- */
+  .subMenuPopup {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    
+    min-width: 140px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    z-index: 1002;
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid #f0f0f0;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: nowrap;
+  }
+   
+  .subMenuPopup::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+  }
+
+  /* ป้องกัน Popup ล้นจอ */
+  .bottomNav > div:first-child .subMenuPopup {
+    left: 4px !important;
+    transform: none !important;
+  }
+  .bottomNav > div:first-child .subMenuPopup::after {
+    left: 28px;
+    transform: none;
+  }
+
+  .bottomNav > div:last-child .subMenuPopup {
+    left: auto !important;
+    right: 4px !important;
+    transform: none !important;
+  }
+  .bottomNav > div:last-child .subMenuPopup::after {
+    left: auto;
+    right: 28px;
+    transform: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .extraCards {
+    padding: 0 10px;
+  }
+  .agencyGrid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .agencyItem {
+    max-width: 250px;
+  }
+  .logoutIcon {
+    top: 15px;
+    right: 15px;
   }
 }
