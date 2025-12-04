@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
-import styles from "./css/SettingsView.module.css";
+import React, { useState, useRef, useEffect } from "react";
+// ตรวจสอบ path ของ css ให้ถูกต้องตามโปรเจ็คของคุณ
+import styles from "./css/SettingsView.module.css"; 
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
-  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy
+  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy, FaSpinner
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
@@ -17,43 +18,149 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (UPDATED LAYOUT)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (Main Logic)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
 
-  // State สำหรับเก็บรูปภาพ
+  // State สำหรับเก็บรูปภาพ (Preview)
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
+  // State ข้อมูลหลัก
   const [formData, setFormData] = useState({
-    name: "เทศบาลตำบลตัวอย่างที่ชื่อยาวมากกกกกกกกกกกกกกก",
-    adminCode: "AL1F8H2",
-    userCode: "US9K2M4",
+    organization_id: null, 
+    name: "",
+    adminCode: "",
+    userCode: "",
     agencyType: "เทศบาล",
-    province: "เชียงใหม่",
-    district: "เมือง",
-    subDistrict: "สุเทพ",
-    phone: "089-999-9999",
+    province: "",
+    district: "",
+    subDistrict: "",
+    phone: "",
+    url_logo: ""
   });
 
-  const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
+  // --- API 1: Fetch Data on Mount (ดึงข้อมูลเมื่อโหลดหน้าเว็บ) ---
+  useEffect(() => {
+    fetchOrganizationData();
+  }, []);
 
-  // ฟังก์ชันสลับสถานะตา (เปิด/ปิดรหัส)
+  const fetchOrganizationData = async () => {
+    try {
+      setIsLoading(true);
+      
+      // [IMPORTANT]: ในระบบจริง คุณต้องดึง ID นี้มาจาก User Session / Auth Context
+      // สำหรับ Demo นี้ ผมจะ hardcode เป็น '1' (หรือ id ที่คุณมีใน DB)
+      // หรือลองดึงจาก localStorage ถ้าคุณเก็บไว้ตอน Login
+      const currentOrgId = localStorage.getItem('current_org_id') || '1'; 
+      
+      // เรียก API GET
+      const response = await fetch(`/api/organizations?id=${currentOrgId}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) throw new Error("ไม่พบข้อมูลหน่วยงาน (กรุณาเช็ค ID)");
+        throw new Error("Failed to fetch data");
+      }
+      
+      const data = await response.json();
+
+      // Map ข้อมูลจาก Database -> State ของ React
+      setFormData({
+        organization_id: data.organization_id,
+        name: data.organization_name || "",
+        adminCode: data.admin_code || "",
+        userCode: data.organization_code || "", // userCode คือ organization_code ใน DB
+        agencyType: data.org_type_id || "เทศบาล",
+        province: data.province || "",
+        district: data.district || "",
+        subDistrict: data.sub_district || "",
+        phone: data.contact_phone || "",
+        url_logo: data.url_logo || ""
+      });
+
+      // ถ้ามี URL รูปเดิม ให้แสดง
+      if (data.url_logo) {
+        setLogoPreview(data.url_logo);
+      }
+
+    } catch (error) {
+      console.error("Error loading data:", error);
+      // alert("ไม่สามารถโหลดข้อมูลได้: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // --- API 2: Update Data (บันทึกข้อมูลแก้ไข) ---
+  const handleSaveChanges = async () => {
+    try {
+      if (!formData.organization_id) {
+        alert("ไม่พบ ID หน่วยงาน ไม่สามารถบันทึกได้");
+        return;
+      }
+
+      // เตรียม Payload ให้ตรงกับที่ Backend ต้องการ
+      const payload = {
+        organization_id: formData.organization_id,
+        organization_name: formData.name,
+        org_type_id: formData.agencyType,
+        district: formData.district,
+        sub_district: formData.subDistrict,
+        province: formData.province,
+        contact_phone: formData.phone,
+        url_logo: formData.url_logo 
+        // หมายเหตุ: การอัปโหลดไฟล์รูปภาพจริงๆ ต้องทำแยก (Upload -> ได้ URL -> ส่ง URL มาเก็บ)
+        // ใน Code นี้จะส่ง URL เดิมกลับไปก่อน
+      };
+
+      const response = await fetch('/api/organizations', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || "Update failed");
+      }
+
+      // อัปเดตสำเร็จ
+      const updatedData = await response.json();
+      alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+      setIsEditModalOpen(false);
+      
+      // ดึงข้อมูลใหม่เพื่อให้แน่ใจว่าหน้าจออัปเดตล่าสุด
+      fetchOrganizationData();
+
+    } catch (error) {
+      console.error("Save Error:", error);
+      alert("เกิดข้อผิดพลาดในการบันทึก: " + error.message);
+    }
+  };
+
+  // --- Handlers ทั่วไป ---
+  const handleChange = (field, value) => { 
+      setFormData({ ...formData, [field]: value }); 
+  };
+
   const toggleCode = (key) => {
     setShowCodes(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // ฟังก์ชันคัดลอกรหัส
   const handleCopy = (text) => {
+    if (!text) return;
     navigator.clipboard.writeText(text);
     alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
   };
 
-  // จัดการรูปภาพ
+  // จัดการการเลือกไฟล์รูปภาพ (Client Preview Only)
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
@@ -61,8 +168,16 @@ const AgencySettings = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // 1. สร้าง URL ชั่วคราวเพื่อแสดงผล
       const imageUrl = URL.createObjectURL(file);
       setLogoPreview(imageUrl);
+
+      // 2. TODO: ตรงนี้คุณต้องเพิ่ม Logic การ Upload ไฟล์ไปยัง Server (เช่น AWS S3 / Firebase)
+      // const uploadUrl = await uploadService(file);
+      // handleChange('url_logo', uploadUrl);
+      
+      // *ชั่วคราว*: แจ้งเตือนว่ายังไม่ได้ทำระบบ Upload
+      console.warn("File selected but upload logic is missing.");
     }
   };
 
@@ -115,20 +230,22 @@ const AgencySettings = () => {
                     <select className={styles.agencyInput} value={formData.agencyType} onChange={(e)=>handleChange('agencyType', e.target.value)}>
                         <option value="เทศบาล">เทศบาล</option>
                         <option value="อบต">อบต.</option>
+                        <option value="สำนักงานเขต">สำนักงานเขต</option>
+                        <option value="หน่วยงานเอกชน">หน่วยงานเอกชน</option>
                     </select>
                 </div>
 
-                {/* Group 2: รหัส */}
+                {/* Group 2: รหัส (Read Only) */}
                 <div className={styles.agencyDivider}></div>
-                <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม</div>
+                <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
                 <div className={styles.agencyRow2}>
                       <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>Admin Code</label>
-                        <input className={styles.agencyInputCode} value={formData.adminCode} onChange={(e)=>handleChange('adminCode', e.target.value)} />
+                        <input className={styles.agencyInputCode} value={formData.adminCode} disabled style={{background: '#f0f0f0', color: '#999'}} />
                       </div>
                       <div className={styles.agencyFormGroup}>
                         <label className={styles.agencyLabel}>User Code</label>
-                        <input className={styles.agencyInputCode} value={formData.userCode} onChange={(e)=>handleChange('userCode', e.target.value)} />
+                        <input className={styles.agencyInputCode} value={formData.userCode} disabled style={{background: '#f0f0f0', color: '#999'}} />
                       </div>
                 </div>
 
@@ -164,36 +281,47 @@ const AgencySettings = () => {
 
         <div className={styles.agencyModalFooter}>
             <button className={styles.agencyBtnCancel} onClick={() => setIsEditModalOpen(false)}>ยกเลิก</button>
-            <button className={styles.agencyBtnSave} onClick={() => setIsEditModalOpen(false)}>บันทึกข้อมูล</button>
+            <button className={styles.agencyBtnSave} onClick={handleSaveChanges}>บันทึกข้อมูล</button>
         </div>
       </div>
     </>
   );
 
+  // --- LOADING STATE ---
+  if (isLoading) {
+    return (
+        <div className={styles.loadingContainer} style={{padding: 50, textAlign:'center', color: '#666'}}>
+            <FaSpinner className="icon-spin" style={{ animation: 'spin 1s linear infinite', fontSize: 24, marginBottom: 10 }} /> 
+            <div>กำลังโหลดข้อมูล...</div>
+            <style>{`@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }`}</style>
+        </div>
+    );
+  }
+
   // --- VIEW MODE ---
   return (
     <>
         <div className={styles.agencyViewContainer}>
-            {/* --- UPDATED LAYOUT STRUCTURE --- */}
+            {/* Card Header Profile */}
             <div className={styles.agencyProfileCard}>
                 <div className={styles.agencyProfileHeader}>
                     <div className={styles.agencyLogoCircle}>
-                        {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage/>}
+                        {logoPreview ? <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} /> : <FaImage style={{color:'#ccc'}}/>}
                     </div>
                     <div>
-                        <h2 className={styles.agencyOrgName}>{formData.name}</h2>
+                        <h2 className={styles.agencyOrgName}>{formData.name || "ยังไม่ระบุชื่อหน่วยงาน"}</h2>
                         <div className={styles.agencyBadges}>
                             <span className={styles.agencyBadgeType}><FaCity style={{fontSize:10}}/> {formData.agencyType}</span>
                         </div>
                     </div>
                 </div>
                 
-                {/* ย้ายปุ่มมาด้านล่าง (นอก Header) */}
                 <button className={styles.agencyBtnEditWarning} onClick={() => setIsEditModalOpen(true)}>
                     <FaEdit /> แก้ไขข้อมูล
                 </button>
             </div>
 
+            {/* Info Grid */}
             <div className={styles.agencyInfoGrid}>
                 {/* Info Box 1: Codes */}
                 <div className={styles.agencyInfoBox}>
@@ -206,11 +334,9 @@ const AgencySettings = () => {
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.admin ? formData.adminCode : "******"}
                             </strong>
-                            {/* ปุ่มตา */}
                             <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')} title="แสดง/ซ่อน">
                                 {showCodes.admin ? <FaEye /> : <FaEyeSlash />}
                             </button>
-                            {/* ปุ่มคัดลอก (Copy) */}
                             <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.adminCode)} title="คัดลอกรหัส">
                                 <FaRegCopy />
                             </button>
@@ -224,11 +350,9 @@ const AgencySettings = () => {
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.user ? formData.userCode : "******"}
                             </strong>
-                            {/* ปุ่มตา */}
                             <button className={styles.iconBtnEye} onClick={() => toggleCode('user')} title="แสดง/ซ่อน">
                                 {showCodes.user ? <FaEye /> : <FaEyeSlash />}
                             </button>
-                            {/* ปุ่มคัดลอก (Copy) */}
                             <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.userCode)} title="คัดลอกรหัส">
                                 <FaRegCopy />
                             </button>
@@ -239,18 +363,28 @@ const AgencySettings = () => {
                 {/* Info Box 2: Address */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
-                    <div className={styles.agencyDataRow}><span>ที่อยู่:</span> <span>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span></div>
-                    <div className={styles.agencyDataRow}><span>โทรศัพท์:</span> <span style={{color:'#057a55', fontWeight:'bold'}}>{formData.phone}</span></div>
+                    <div className={styles.agencyDataRow}>
+                        <span>ที่อยู่:</span> 
+                        <span>
+                           {formData.subDistrict || "-"} {formData.district || "-"} {formData.province || "-"}
+                        </span>
+                    </div>
+                    <div className={styles.agencyDataRow}>
+                        <span>โทรศัพท์:</span> 
+                        <span style={{color:'#057a55', fontWeight:'bold'}}>{formData.phone || "-"}</span>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        {/* Render Modal */}
         {isEditModalOpen && <AgencyEditModal />}
     </>
   );
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR)
+// 2-4. หน้าอื่นๆ (Map, QR) - ส่วนนี้ยังเป็น Mockup
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -285,8 +419,10 @@ const QRCreateSettingsContent = () => (
       <div className={styles.filterGroup}>
         <label>เลือกประเภทปัญหา</label>
         <select>
-          <option>xxxx (ทั้งหมด)</option>
-          <option>xxxx ไฟฟ้า/ประปา</option>
+          <option>ทั้งหมด</option>
+          <option>ไฟฟ้า/ประปา</option>
+          <option>ถนน/ทางเท้า</option>
+          <option>ความสะอาด</option>
         </select>
       </div>
       <div className={styles.filterGroup}>
@@ -301,7 +437,9 @@ const QRCreateSettingsContent = () => (
   </div>
 );
 
-// Main View
+// ==================================================================================
+// MAIN VIEW CONTAINER
+// ==================================================================================
 const SettingsView = () => {
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
@@ -329,14 +467,18 @@ const SettingsView = () => {
           <label style={{paddingLeft:4, marginBottom:8, display:'flex', alignItems:'center', gap:8, fontWeight:700, fontSize:15}}>
             <FaCog /> เมนูตั้งค่าระบบ
           </label>
-          <select value={activeSetting} onChange={(e) => setActiveSetting(e.target.value)}>
+          <select 
+             value={activeSetting} 
+             onChange={(e) => setActiveSetting(e.target.value)}
+             className={styles.settingsSelect} // เพิ่ม class ให้ select
+          >
             {settingsOptions.map((opt) => (<option key={opt.id} value={opt.id}>{opt.label}</option>))}
           </select>
         </div>
       </div>
       <div className={styles.settingsContentArea}>
         {renderSettingContent()}
-      </div>
+      </div> 
     </div>
   );
 };
