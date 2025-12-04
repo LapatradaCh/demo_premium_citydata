@@ -11,13 +11,12 @@ import {
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
 
-// --- ปรับปรุง: ดึง ID จาก LocalStorage ---
-let ORGANIZATION_ID = 1; // ค่า Default กรณีไม่พบข้อมูล
+// --- Logic: ดึง ID จาก LocalStorage ---
+let ORGANIZATION_ID = 1; // Default fallback
 try {
   const storedOrgString = localStorage.getItem("lastSelectedOrg");
   if (storedOrgString) {
     const storedOrg = JSON.parse(storedOrgString);
-    // ตรวจสอบว่ามี id หรือไม่
     if (storedOrg && storedOrg.id) {
       ORGANIZATION_ID = storedOrg.id;
       console.log("Loaded Organization ID:", ORGANIZATION_ID);
@@ -44,7 +43,7 @@ const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-   
+  
   // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
 
@@ -52,15 +51,15 @@ const AgencySettings = () => {
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
-  // Initial State
+  // Initial State (รวม field ที่อยู่)
   const [formData, setFormData] = useState({
     name: "",
     adminCode: "",
     userCode: "",
     agencyType: "เทศบาล",
-    province: "",
-    district: "",
-    subDistrict: "",
+    province: "",     // จ.
+    district: "",     // อ.
+    subDistrict: "",  // ต.
     phone: "",
   });
 
@@ -73,8 +72,6 @@ const AgencySettings = () => {
         console.log("Fetching:", url);
 
         const res = await fetch(url);
-        
-        // อ่านเป็น Text ก่อนเพื่อกัน Error กรณี Server ส่ง HTML (404/500)
         const textResponse = await res.text();
 
         if (!res.ok) {
@@ -84,19 +81,24 @@ const AgencySettings = () => {
         let data;
         try {
           data = JSON.parse(textResponse);
+          // เช็คข้อมูลใน Console ว่า Backend ส่ง district/province มาไหม
+          console.log("API Data Response:", data); 
         } catch (e) {
           throw new Error("Server returned invalid JSON");
         }
 
-        // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
+        // *** MAP DATA: DB (snake_case) -> STATE (camelCase) ***
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
             userCode: data.organization_code || "",
             agencyType: data.org_type_id || "เทศบาล",
-            province: data.province || "",
-            district: data.district || "",
-            subDistrict: data.sub_district || "",
+            
+            // Map ที่อยู่
+            subDistrict: data.sub_district || "", // ต.
+            district: data.district || "",       // อ.
+            province: data.province || "",       // จ.
+            
             phone: data.contact_phone || "",
         });
 
@@ -120,16 +122,19 @@ const AgencySettings = () => {
     try {
         setIsSaving(true);
 
-        // Prepare Payload (Map กลับเป็น snake_case)
+        // Prepare Payload (Map กลับเป็น snake_case เพื่อส่งให้ Backend)
         const payload = {
-            organization_id: ORGANIZATION_ID, // ต้องส่ง ID ไปด้วย
+            organization_id: ORGANIZATION_ID,
             organization_name: formData.name,
             org_type_id: formData.agencyType,
-            district: formData.district,
-            sub_district: formData.subDistrict,
             contact_phone: formData.phone,
+            
+            // ส่งข้อมูลที่อยู่กลับไป
+            sub_district: formData.subDistrict,
+            district: formData.district,
             province: formData.province,
-            // หมายเหตุ: url_logo ต้องทำระบบ upload file แยกต่างหาก
+            
+            // หมายเหตุ: url_logo ต้องทำระบบ upload file แยก
         };
 
         const res = await fetch(API_BASE_URL, {
@@ -164,20 +169,9 @@ const AgencySettings = () => {
   };
 
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
-
-  const toggleCode = (key) => {
-    setShowCodes(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-    alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
-  };
-
-  // จัดการรูปภาพ (Preview Only)
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
+  const toggleCode = (key) => { setShowCodes(prev => ({ ...prev, [key]: !prev[key] })); };
+  const handleCopy = (text) => { navigator.clipboard.writeText(text); alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`); };
+  const handleImageClick = () => { fileInputRef.current.click(); };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -203,7 +197,6 @@ const AgencySettings = () => {
     <>
       <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
       <div className={styles.agencyModalContainer}>
-        {/* Header */}
         <div className={styles.agencyModalHeader}>
             <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
             <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)} disabled={isSaving}>
@@ -212,7 +205,7 @@ const AgencySettings = () => {
         </div>
         
         <div className={styles.agencyModalBody}>
-             {/* ส่วนอัปโหลดรูปภาพ */}
+             {/* Upload Image Section */}
              <div className={styles.agencyImageSection}>
                 <input 
                     type="file" 
@@ -232,10 +225,10 @@ const AgencySettings = () => {
                 <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
              </div>
 
-             {/* ฟอร์มข้อมูล */}
+             {/* Form Inputs */}
              <div className={styles.agencyFormContainer}>
                 
-                {/* Group 1: ข้อมูลทั่วไป */}
+                {/* General Info */}
                 <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
@@ -250,7 +243,7 @@ const AgencySettings = () => {
                     </select>
                 </div>
 
-                {/* Group 2: รหัส (Read Only) */}
+                {/* Codes (Read Only) */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
                 <div className={styles.agencyRow2}>
@@ -264,7 +257,7 @@ const AgencySettings = () => {
                       </div>
                 </div>
 
-                {/* Group 3: ที่อยู่ */}
+                {/* Address Inputs (Editable) */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
                 
@@ -341,34 +334,30 @@ const AgencySettings = () => {
                 {/* Info Box 1: Codes */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
-                    
-                    {/* Admin Code */}
                     <div className={styles.agencyDataRow}>
                         <span>Admin:</span> 
                         <div className={styles.codeRevealGroup}>
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.admin ? formData.adminCode : "******"}
                             </strong>
-                            <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')} title="แสดง/ซ่อน">
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('admin')}>
                                 {showCodes.admin ? <FaEye /> : <FaEyeSlash />}
                             </button>
-                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.adminCode)} title="คัดลอกรหัส">
+                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.adminCode)}>
                                 <FaRegCopy />
                             </button>
                         </div>
                     </div>
-
-                    {/* User Code */}
                     <div className={styles.agencyDataRow}>
                         <span>User:</span> 
                         <div className={styles.codeRevealGroup}>
                             <strong className={styles.agencyCodeFont}>
                                 {showCodes.user ? formData.userCode : "******"}
                             </strong>
-                            <button className={styles.iconBtnEye} onClick={() => toggleCode('user')} title="แสดง/ซ่อน">
+                            <button className={styles.iconBtnEye} onClick={() => toggleCode('user')}>
                                 {showCodes.user ? <FaEye /> : <FaEyeSlash />}
                             </button>
-                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.userCode)} title="คัดลอกรหัส">
+                            <button className={styles.iconBtnCopy} onClick={() => handleCopy(formData.userCode)}>
                                 <FaRegCopy />
                             </button>
                         </div>
@@ -378,7 +367,13 @@ const AgencySettings = () => {
                 {/* Info Box 2: Address */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
-                    <div className={styles.agencyDataRow}><span>ที่อยู่:</span> <span>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span></div>
+                    
+                    {/* *** ส่วนแสดงผลที่อยู่ (ดึงจาก State) *** */}
+                    <div className={styles.agencyDataRow}>
+                        <span>ที่อยู่:</span> 
+                        <span>ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}</span>
+                    </div>
+                    
                     <div className={styles.agencyDataRow}><span>โทรศัพท์:</span> <span style={{color:'#057a55', fontWeight:'bold'}}>{formData.phone}</span></div>
                 </div>
             </div>
