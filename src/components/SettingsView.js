@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import styles from "./css/SettingsView.module.css"; 
+import styles from "./css/SettingsView.module.css";
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
@@ -10,12 +10,6 @@ import {
 // --- Config & Constants ---
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
-const OrgSelect = localStorage.getItem("lastSelectedOrg");
-// console.log("real org:",OrgSelect);
-// console.log("real orgID:",OrgSelect.id);
-
-// *** สำคัญ: ID ขององค์กรที่ต้องการดึงข้อมูล (ในระบบจริงควรมาจาก User Session / Context) ***
-const ORGANIZATION_ID = 1; 
 
 // ------------------------------------------------------------------
 // --- Helper Components ---
@@ -28,21 +22,21 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (CONNECTED TO REAL API)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (Logic: LocalStorage -> API)
 // ==================================================================================
 const AgencySettings = () => {
+  // State เก็บ ID ที่ดึงจาก LocalStorage
+  const [orgId, setOrgId] = useState(null);
+
+  // UI States
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
-  // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
 
-  // State สำหรับเก็บรูปภาพ
+  // Form & Image States
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
-
-  // Initial State
   const [formData, setFormData] = useState({
     name: "",
     adminCode: "",
@@ -54,17 +48,47 @@ const AgencySettings = () => {
     phone: "",
   });
 
-  // --- 1. FETCH DATA (GET) ---
+  // --- STEP 1: LOAD ID FROM LOCALSTORAGE ---
   useEffect(() => {
+    try {
+      // อ่านค่าจาก LocalStorage ตามชื่อ Key ในรูปภาพที่ส่งมา
+      const storedOrg = localStorage.getItem("lastSelectedOrg");
+      
+      if (storedOrg) {
+        const parsedOrg = JSON.parse(storedOrg);
+        
+        // เช็คว่ามี id หรือไม่
+        if (parsedOrg && parsedOrg.id) {
+          console.log("Loaded Org ID:", parsedOrg.id);
+          setOrgId(parsedOrg.id);
+        } else {
+          console.warn("Found lastSelectedOrg but no ID:", parsedOrg);
+          setIsLoading(false); 
+        }
+      } else {
+        console.warn("No lastSelectedOrg in LocalStorage");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error parsing LocalStorage:", error);
+      setIsLoading(false);
+    }
+  }, []);
+
+  // --- STEP 2: FETCH DATA FROM API ---
+  useEffect(() => {
+    // ถ้ายังไม่มี orgId ไม่ต้องยิง API
+    if (!orgId) return;
+
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const url = `${API_BASE_URL}?id=${ORGANIZATION_ID}`;
-        console.log("Fetching:", url);
+        const url = `${API_BASE_URL}?id=${orgId}`;
+        console.log("Fetching API:", url);
 
         const res = await fetch(url);
         
-        // อ่านเป็น Text ก่อนเพื่อกัน Error กรณี Server ส่ง HTML (404/500)
+        // อ่าน response เป็น text ก่อนเพื่อกัน Error HTML
         const textResponse = await res.text();
 
         if (!res.ok) {
@@ -75,10 +99,10 @@ const AgencySettings = () => {
         try {
           data = JSON.parse(textResponse);
         } catch (e) {
-          throw new Error("Server returned invalid JSON");
+          throw new Error("Server response is not valid JSON");
         }
 
-        // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
+        // Map ข้อมูลเข้า State (Snake_case -> CamelCase)
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
@@ -103,23 +127,27 @@ const AgencySettings = () => {
     };
 
     fetchData();
-  }, []);
+  }, [orgId]); // รันใหม่เมื่อ orgId เปลี่ยน
 
-  // --- 2. UPDATE DATA (PUT) ---
+  // --- STEP 3: UPDATE DATA (PUT) ---
   const handleSaveData = async () => {
+    if (!orgId) {
+        alert("ไม่พบ ID หน่วยงาน");
+        return;
+    }
+
     try {
         setIsSaving(true);
 
-        // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
-            organization_id: ORGANIZATION_ID, // ต้องส่ง ID ไปด้วย
+            organization_id: orgId, // ต้องส่ง ID ไปเพื่อระบุ row ที่จะ update
             organization_name: formData.name,
             org_type_id: formData.agencyType,
             district: formData.district,
             sub_district: formData.subDistrict,
             contact_phone: formData.phone,
             province: formData.province,
-            // หมายเหตุ: url_logo ต้องทำระบบ upload file แยกต่างหาก
+            // หมายเหตุ: การอัปโหลดรูปต้องทำ API แยกต่างหาก
         };
 
         const res = await fetch(API_BASE_URL, {
@@ -137,7 +165,7 @@ const AgencySettings = () => {
         const updatedData = JSON.parse(textResponse);
         alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
         
-        // อัปเดต UI ให้ตรงกับ Server ล่าสุด
+        // Update UI
         setFormData(prev => ({
             ...prev,
             name: updatedData.organization_name
@@ -153,32 +181,23 @@ const AgencySettings = () => {
     }
   };
 
+  // --- Event Handlers ---
   const handleChange = (field, value) => { setFormData({ ...formData, [field]: value }); };
-
-  const toggleCode = (key) => {
-    setShowCodes(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
+  const toggleCode = (key) => { setShowCodes(prev => ({ ...prev, [key]: !prev[key] })); };
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
     alert(`คัดลอกรหัส "${text}" เรียบร้อยแล้ว`);
   };
-
-  // จัดการรูปภาพ (Preview Only)
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
-
+  const handleImageClick = () => { fileInputRef.current.click(); };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setLogoPreview(imageUrl);
-      // TODO: เพิ่ม Logic Upload รูปขึ้น Server ตรงนี้
     }
   };
 
-  // --- Loading State ---
+  // --- RENDER: Loading State ---
   if (isLoading) {
     return (
         <div style={{ padding: "50px", textAlign: "center", color: "#666" }}>
@@ -186,6 +205,16 @@ const AgencySettings = () => {
             <p>กำลังโหลดข้อมูลหน่วยงาน...</p>
         </div>
     );
+  }
+
+  // --- RENDER: No ID Found ---
+  if (!orgId) {
+     return (
+        <div style={{ padding: "50px", textAlign: "center", color: "#666" }}>
+            <FaCity style={{ fontSize: "40px", marginBottom: "10px", color:"#ccc" }} />
+            <p>ไม่พบข้อมูลหน่วยงาน (กรุณาเลือกหน่วยงานใหม่จากหน้าแรก)</p>
+        </div>
+     );
   }
 
   // --- POPUP EDIT MODAL ---
@@ -202,7 +231,7 @@ const AgencySettings = () => {
         </div>
         
         <div className={styles.agencyModalBody}>
-             {/* ส่วนอัปโหลดรูปภาพ */}
+             {/* Image Upload */}
              <div className={styles.agencyImageSection}>
                 <input 
                     type="file" 
@@ -222,10 +251,10 @@ const AgencySettings = () => {
                 <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
              </div>
 
-             {/* ฟอร์มข้อมูล */}
+             {/* Form Inputs */}
              <div className={styles.agencyFormContainer}>
                 
-                {/* Group 1: ข้อมูลทั่วไป */}
+                {/* Group 1 */}
                 <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                 <div className={styles.agencyFormGroup}>
                     <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
@@ -240,7 +269,7 @@ const AgencySettings = () => {
                     </select>
                 </div>
 
-                {/* Group 2: รหัส (Read Only) */}
+                {/* Group 2 (Read Only) */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
                 <div className={styles.agencyRow2}>
@@ -254,7 +283,7 @@ const AgencySettings = () => {
                       </div>
                 </div>
 
-                {/* Group 3: ที่อยู่ */}
+                {/* Group 3 */}
                 <div className={styles.agencyDivider}></div>
                 <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
                 
@@ -305,7 +334,7 @@ const AgencySettings = () => {
     </>
   );
 
-  // --- VIEW MODE ---
+  // --- RENDER: MAIN VIEW ---
   return (
     <>
         <div className={styles.agencyViewContainer}>
@@ -379,7 +408,7 @@ const AgencySettings = () => {
 };
 
 // ==================================================================================
-// 2-4. หน้าอื่นๆ (Map, QR) -> (Static Placeholder)
+// 2-4. หน้าอื่นๆ (Static Placeholder)
 // ==================================================================================
 const MapSettingsContent = () => (
   <div className={styles.settingsSection}>
@@ -430,7 +459,7 @@ const QRCreateSettingsContent = () => (
   </div>
 );
 
-// Main View
+// Main View Container
 const SettingsView = () => {
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
