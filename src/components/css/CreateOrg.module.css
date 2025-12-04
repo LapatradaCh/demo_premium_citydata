@@ -437,9 +437,11 @@
   white-space: nowrap; 
 }
 
-/* [แก้ไข] เปลี่ยนไอคอนคน (User Code) เป็นสีน้ำตาลอ่อน (Sepia tone) */
+/* [แก้ไข] เปลี่ยนไอคอนคน (User Code) เป็นสีเหลือง */
+/* ใช้ hue-rotate:150deg เพื่อหมุนสีจากม่วง -> เหลืองทอง */
+/* ใช้ saturate เพิ่มความสด */
 .tabContainer .tabBtn:nth-child(2) {
-  filter: sepia(100%) saturate(120%) brightness(110%);
+  filter: hue-rotate(150deg) saturate(300%);
 }
 
 /* 2. สไตล์ปุ่มที่เลือก (Active) */
