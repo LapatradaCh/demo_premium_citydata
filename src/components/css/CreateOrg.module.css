@@ -437,10 +437,11 @@
   white-space: nowrap; 
 }
 
-/* [เพิ่ม] คำสั่งพิเศษ: ทำให้ปุ่ม User Code (ปุ่มที่ 2) ไอคอนเป็นสีเทา */
-/* เทคนิค: ใช้ grayscale ทำให้ emoji สีม่วง กลายเป็นสีเทา */
+/* [แก้ไข] เปลี่ยนไอคอนคน (User Code) เป็นสีเหลือง */
+/* ใช้ hue-rotate:150deg เพื่อหมุนสีจากม่วง -> เหลืองทอง */
+/* ใช้ saturate เพิ่มความสด */
 .tabContainer .tabBtn:nth-child(2) {
-  filter: grayscale(100%);
+  filter: hue-rotate(150deg) saturate(300%);
 }
 
 /* 2. สไตล์ปุ่มที่เลือก (Active) */
@@ -450,7 +451,6 @@
   border-color: #000000 !important;     /* ขอบดำ */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
   transform: translateY(-2px);
-  /* หมายเหตุ: แม้จะกดแล้ว filter grayscale ก็ยังทำงาน ทำให้ไอคอนยังคงเป็นสีเทาบนพื้นดำ ซึ่งจะดูสวยงามและไม่แยงตา */
 }
 
 .tabDescription {
