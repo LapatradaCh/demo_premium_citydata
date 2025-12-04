@@ -12,8 +12,9 @@
   --color-border: #e0e0e0;
   --color-text-main: #2d3436; 
   --color-text-sub: #636e72;
-  /* [เพิ่มใหม่] สีน้ำตาลสำหรับ Tab ที่ Active */
-  --color-brown: #8B4513; 
+  
+  /* [แก้ไข] เปลี่ยนจากสีน้ำตาล เป็น สีเทาเข้ม ตามที่ขอครับ */
+  --color-gray-dark: #333333; 
   
   --radius-card: 16px;        
   --radius-input: 10px;
@@ -406,7 +407,7 @@
 .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- Code Box Tabs (แก้ไขใหม่) --- */
+/* --- Code Box Tabs --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 .tabContainer {
   display: flex;
@@ -416,11 +417,12 @@
   width: 100%;
   gap: 0.8rem;
 }
+
 .tabBtn {
   flex: 1;
   border: 1px solid #e9ecef;
   background: white;
-  padding: 12px 16px; /* [แก้ไข] เพิ่ม Padding แนวนอน */
+  padding: 12px 16px; 
   border-radius: 50px;
   font-weight: 700;
   color: #adb5bd;
@@ -428,20 +430,22 @@
   cursor: pointer;
   transition: all 0.3s ease;
   
-  /* [เพิ่มใหม่] จัดเรียงไอคอนและข้อความให้อยู่กึ่งกลางและบรรทัดเดียวกัน */
+  /* [Fix] จัดเรียงไอคอนและข้อความให้อยู่บรรทัดเดียวกัน */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  white-space: nowrap; 
 }
+
 .tabActive {
   background-color: var(--color-yellow) !important;
-  color: var(--color-brown) !important; /* [แก้ไข] เปลี่ยนสีข้อความเป็นสีน้ำตาล */
+  color: var(--color-gray-dark) !important; /* [แก้ไข] เรียกใช้สีเทาเข้ม */
   border-color: var(--color-yellow) !important;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
   transform: translateY(-2px);
 }
+
 .tabDescription {
   font-size: 0.9rem;
   color: #888;
@@ -509,7 +513,7 @@
   }
   .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
 
-  /* [Modified] Desktop: เปลี่ยนกลับมาเป็น Center เพื่อให้ปุ่มไม่ยืดเต็มจอ */
+  /* Desktop: เปลี่ยนกลับมาเป็น Center */
   .logoUploadActions {
     align-items: center; 
   }
@@ -523,10 +527,10 @@
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
-  /* [CRITICAL FIX] บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
+  /* [CRITICAL] บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
   .button { 
     width: 280px !important; 
-    flex: 0 0 auto; /* ห้ามยืด ห้ามหด */
+    flex: 0 0 auto; 
   }
   
   .codeText { font-size: 1.8rem; }
