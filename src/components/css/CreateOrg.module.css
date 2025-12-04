@@ -10,11 +10,10 @@
   --color-bg: #ffffff;
   --color-surface: #f4f6f8;
   --color-border: #e0e0e0;
-  --color-text-main: #2d3436; 
-  --color-text-sub: #636e72;
   
-  /* [แก้ไข] เปลี่ยนจากสีน้ำตาล เป็น สีเทาเข้ม ตามที่ขอครับ */
-  --color-gray-dark: #333333; 
+  /* [แก้ไข] เปลี่ยนสีหลักเป็น สีดำสนิท (#000000) */
+  --color-text-main: #000000; 
+  --color-text-sub: #636e72;
   
   --radius-card: 16px;        
   --radius-input: 10px;
@@ -147,7 +146,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 3rem !important; 
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); /* แก้ icon ลูกศรเป็นสีดำด้วย */
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1.2em;
@@ -188,7 +187,7 @@
 
 /* สไตล์ปุ่มพื้นฐาน (Default = Mobile Full Width) */
 .button {
-  width: 100%; /* [สำคัญ] บังคับให้เต็มจอในมือถือเสมอ */
+  width: 100%; 
   padding: 0.9rem 1.5rem; 
   border-radius: var(--radius-btn);
   font-weight: 700;
@@ -366,11 +365,11 @@
 .editIcon:hover { transform: scale(1.1); }
 .hiddenFileInput { display: none !important; }
 
-/* [Modified] Container สำหรับปุ่มโลโก้ */
+/* Container สำหรับปุ่มโลโก้ */
 .logoUploadActions {
   display: flex; 
   flex-direction: column; 
-  align-items: stretch; /* [สำคัญ] บังคับให้ลูก (ปุ่ม) ยืดเต็มพื้นที่ใน Mobile */
+  align-items: stretch; /* บังคับให้ลูก (ปุ่ม) ยืดเต็มพื้นที่ใน Mobile */
   width: 100%; 
   gap: 1rem;
 }
@@ -430,7 +429,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
   
-  /* [Fix] จัดเรียงไอคอนและข้อความให้อยู่บรรทัดเดียวกัน */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -438,9 +436,10 @@
   white-space: nowrap; 
 }
 
+/* [แก้ไข] ส่วนนี้คือปุ่มที่ถูกเลือก (Active) */
 .tabActive {
   background-color: var(--color-yellow) !important;
-  color: var(--color-gray-dark) !important; /* [แก้ไข] เรียกใช้สีเทาเข้ม */
+  color: #000000 !important; /* เปลี่ยนเป็นสีดำสนิท ตามที่ขอ */
   border-color: var(--color-yellow) !important;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
   transform: translateY(-2px);
@@ -501,7 +500,6 @@
     gap: 2rem;
   }
   
-  /* ให้ปุ่มบันทึกอยู่กลาง และกินพื้นที่เต็มแถว */
   .submitRow {
     grid-column: 1 / -1; 
     justify-content: center;
@@ -513,7 +511,6 @@
   }
   .logoWrapper { width: 160px; height: 160px; margin: 0 auto; }
 
-  /* Desktop: เปลี่ยนกลับมาเป็น Center */
   .logoUploadActions {
     align-items: center; 
   }
@@ -527,7 +524,7 @@
     flex-direction: row; justify-content: center; gap: 1.5rem;
   }
   
-  /* [CRITICAL] บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
+  /* บังคับให้ปุ่มทุกหน้ากว้าง 280px เท่ากันบนจอคอม */
   .button { 
     width: 280px !important; 
     flex: 0 0 auto; 
