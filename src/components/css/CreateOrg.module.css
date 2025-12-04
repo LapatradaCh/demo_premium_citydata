@@ -406,7 +406,7 @@
 .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- Code Box Tabs (แก้ไขสีตามที่ขอ) --- */
+/* --- Code Box Tabs --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 .tabContainer {
   display: flex;
@@ -417,7 +417,7 @@
   gap: 0.8rem;
 }
 
-/* [แก้ไข] สถานะปกติ (ยังไม่กด): พื้นหลังขาว ตัวหนังสือดำ */
+/* 1. สไตล์ปุ่มปกติ (Inactive) */
 .tabBtn {
   flex: 1;
   border: 1px solid #e9ecef;
@@ -437,13 +437,20 @@
   white-space: nowrap; 
 }
 
-/* [แก้ไข] สถานะที่เลือก (กดแล้ว): พื้นหลังดำ ตัวหนังสือขาว */
+/* [เพิ่ม] คำสั่งพิเศษ: ทำให้ปุ่ม User Code (ปุ่มที่ 2) ไอคอนเป็นสีเทา */
+/* เทคนิค: ใช้ grayscale ทำให้ emoji สีม่วง กลายเป็นสีเทา */
+.tabContainer .tabBtn:nth-child(2) {
+  filter: grayscale(100%);
+}
+
+/* 2. สไตล์ปุ่มที่เลือก (Active) */
 .tabActive {
   background-color: #000000 !important; /* พื้นหลังดำ */
   color: #ffffff !important;            /* ตัวหนังสือขาว */
   border-color: #000000 !important;     /* ขอบดำ */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* เงาสีดำจางๆ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
   transform: translateY(-2px);
+  /* หมายเหตุ: แม้จะกดแล้ว filter grayscale ก็ยังทำงาน ทำให้ไอคอนยังคงเป็นสีเทาบนพื้นดำ ซึ่งจะดูสวยงามและไม่แยงตา */
 }
 
 .tabDescription {
