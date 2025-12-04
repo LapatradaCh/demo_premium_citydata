@@ -12,6 +12,8 @@
   --color-border: #e0e0e0;
   --color-text-main: #2d3436; 
   --color-text-sub: #636e72;
+  /* [เพิ่มใหม่] สีน้ำตาลสำหรับ Tab ที่ Active */
+  --color-brown: #8B4513; 
   
   --radius-card: 16px;        
   --radius-input: 10px;
@@ -404,7 +406,7 @@
 .geoTitle { margin: 0; font-size: 1.1rem; font-weight: 700; color: #2d3436; }
 .geoSubtitle { margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #636e72; }
 
-/* --- Code Box Tabs --- */
+/* --- Code Box Tabs (แก้ไขใหม่) --- */
 .codeBoxContainer { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
 .tabContainer {
   display: flex;
@@ -418,17 +420,24 @@
   flex: 1;
   border: 1px solid #e9ecef;
   background: white;
-  padding: 12px 4px;
+  padding: 12px 16px; /* [แก้ไข] เพิ่ม Padding แนวนอน */
   border-radius: 50px;
   font-weight: 700;
   color: #adb5bd;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  
+  /* [เพิ่มใหม่] จัดเรียงไอคอนและข้อความให้อยู่กึ่งกลางและบรรทัดเดียวกัน */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap; /* ห้ามตัดบรรทัด */
 }
 .tabActive {
   background-color: var(--color-yellow) !important;
-  color: #2d3436 !important;
+  color: var(--color-brown) !important; /* [แก้ไข] เปลี่ยนสีข้อความเป็นสีน้ำตาล */
   border-color: var(--color-yellow) !important;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
   transform: translateY(-2px);
