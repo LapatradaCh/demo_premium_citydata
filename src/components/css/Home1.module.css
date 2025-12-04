@@ -1,35 +1,36 @@
 /* ----------------------------------------------------------------
- * Home1.module.css (Version: Premium Modern & Depth)
+ * Home1.module.css (Final Full Version: Monotone & Perfect Nav)
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
-/* --- 1. Global & Layout --- */
+/* --- 1. Global & Layout (โครงสร้างหลัก) --- */
 /* ============================================ */
 
 .appContainer {
   font-family: 'Kanit', 'Inter', sans-serif;
-  color: #1F2937;
+  color: #1F2937; /* สีดำเทาเข้ม */
   line-height: 1.6;
   min-height: 100vh;
-  /* ปรับพื้นหลังให้มีมิติด้วยการไล่เฉดแสงจากด้านบน */
-  background: radial-gradient(circle at 50% 10%, #F3F4F6 0%, #F9FAFB 60%, #FFFFFF 100%);
+  /* พื้นหลังสีเทาอ่อนมาก ช่วยให้การ์ดสีขาวดูเด่นมีมิติ */
+  background-color: #F8F9FA; 
   position: relative;
   overflow-x: hidden;
   padding: 0;
   margin: 0;
 }
 
-/* ลาย Texture จางๆ ช่วยลดความโล่ง (Optional) */
+/* ลาย Texture จางๆ (ถ้ามี) */
 .textureOverlay {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3Ccircle cx='13' cy='13' r='1'/%3E%3C/g%3E%3C/svg%3E");
-  opacity: 0.6;
+  background-image: url('https://www.transparenttextures.com/patterns/white-paper.png');
+  opacity: 0.3;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;
 }
 
-/* ซ่อนวงกลมตกแต่งเดิม */
+/* ซ่อนวงกลมตกแต่งเดิมที่ไม่เข้าธีม */
 .floatingCircle1,
 .floatingCircle2,
 .floatingCircle3 {
@@ -41,98 +42,87 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px; /* เพิ่มระยะห่างให้ดูโปร่งขึ้น */
-  padding: 80px 20px 140px; /* เพิ่ม Padding ด้านบน */
+  gap: 24px;
+  /* เว้นพื้นที่ด้านล่างเผื่อเมนูลอย */
+  padding: 60px 20px 140px; 
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  /* เพิ่ม Animation ตอนโหลดหน้า */
-  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .title {
-  font-size: 2.2rem; /* ใหญ่ขึ้นเล็กน้อย */
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
   color: #111111;
-  margin-bottom: 12px;
-  letter-spacing: -0.8px;
-  /* เพิ่มเงา text เล็กน้อยให้ลอย */
-  text-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 /* ============================================ */
-/* --- 2. Search Bar --- */
+/* --- 2. Search Bar (ช่องค้นหา) --- */
 /* ============================================ */
 
 .searchContainer {
   width: 100%;
-  max-width: 540px; /* กว้างขึ้นเล็กน้อย */
+  max-width: 500px;
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .searchInput {
   width: 100%;
-  padding: 18px 110px 18px 28px;
-  border: 1px solid rgba(0,0,0,0.06); /* เส้นขอบบางๆ */
-  border-radius: 60px;
+  padding: 16px 100px 16px 24px;
+  border: 1px solid transparent;
+  border-radius: 50px;
   background-color: #FFFFFF;
-  font-size: 16px;
+  font-size: 15px;
   color: #333;
-  /* เงา 2 ชั้น ดูนุ่มนวล */
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.02), 
-    0 10px 25px -5px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* เงา Soft Shadow */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+  transition: all 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: rgba(0,0,0,0.2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .searchButton {
   position: absolute;
-  right: 8px;
-  background: #111111;
+  right: 6px;
+  /* ปุ่มสีดำสนิท */
+  background: #000000;
   border: none;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
 }
 
 .searchButton:hover {
-  transform: scale(1.08) rotate(5deg);
-  background: #000;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  background: #222;
 }
 
 .clearButton {
   position: absolute;
-  right: 68px;
-  background: transparent;
-  color: #9CA3AF;
+  right: 60px;
+  background: #F3F4F6;
+  color: #6B7280;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,12 +131,12 @@
 }
 
 .clearButton:hover {
-  background: #F3F4F6;
-  color: #EF4444; /* สีแดงตอนลบ */
+  background: #E5E7EB;
+  color: #000;
 }
 
 /* ============================================ */
-/* --- 3. Menu Cards (Premium Look) --- */
+/* --- 3. Menu Cards (3 กล่องบน) --- */
 /* ============================================ */
 
 .extraCards {
@@ -154,16 +144,16 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
   max-width: 1100px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .extraCard {
   background: #FFFFFF;
-  border-radius: 24px;
-  padding: 28px;
+  border-radius: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -171,79 +161,72 @@
   text-align: left;
   font-weight: 600;
   font-size: 16px;
-  color: #1F2937;
+  color: #111;
   cursor: pointer;
-  /* เพิ่ม Border บางๆ ให้ดูคม */
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); 
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* ใช้เงาแทนเส้นขอบ */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   flex: 1;
   min-width: 280px;
-  overflow: hidden;
 }
 
 .extraCard:hover {
-  transform: translateY(-6px);
-  /* เปลี่ยนสีขอบและเงาให้ชัดขึ้น */
-  border-color: rgba(0,0,0,0.8);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
 /* ไอคอนในวงกลม */
 .cardIcon {
-  width: 60px;
-  height: 60px;
-  min-width: 60px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px; /* เปลี่ยนจากวงกลมเป็น Square-rounded */
-  background: #F8F9FA;
-  border: 1px solid #E5E7EB;
-  color: #111;
+  border-radius: 50%;
+  background: #F3F4F6; /* พื้นหลังเทาอ่อน */
+  color: #111111; /* ไอคอนดำ */
   transition: all 0.3s ease;
 }
 
 .extraCard:hover .cardIcon {
   background: #000000;
   color: #FFFFFF;
-  border-color: #000;
-  transform: rotate(-10deg) scale(1.05);
 }
 
 .cardIcon svg {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
 }
 
 .cardTitle {
   flex-grow: 1;
-  font-size: 1.05rem;
 }
 
-/* ลูกศร > */
+/* ลูกศร > ด้านขวา */
 .extraCard::after {
-  content: '→'; /* เปลี่ยนเป็นลูกศรยาวขึ้น */
-  font-size: 24px;
+  content: '›';
+  font-size: 28px;
   color: #E5E7EB;
-  font-weight: 300;
-  transition: all 0.3s;
+  line-height: 1;
+  font-weight: 400;
+  transition: transform 0.3s, color 0.3s;
 }
 
 .extraCard:hover::after {
-  color: #000;
-  transform: translateX(6px);
+  color: #111;
+  transform: translateX(4px);
 }
 
 /* ============================================ */
-/* --- 4. Agency Grid --- */
+/* --- 4. Agency Grid (รายการหน่วยงาน) --- */
 /* ============================================ */
 
 .agencySection {
   width: 100%;
   max-width: 1100px;
-  padding: 40px 0 20px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -254,33 +237,33 @@
   color: #111;
   background: transparent;
   border: none;
-  padding: 0 0 16px 0;
-  font-size: 22px;
+  padding: 0 0 12px 0;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 32px 0;
+  margin: 0 0 24px 0;
   box-shadow: none;
   width: 100%;
-  max-width: 1060px;
+  max-width: 1000px;
   border-bottom: 1px solid #E5E7EB;
   position: relative;
-  letter-spacing: -0.5px;
 }
 
+/* ขีดดำใต้หัวข้อ */
 .sectionTitle::before {
   content: '';
   position: absolute;
   bottom: -1px;
   left: 0;
-  width: 80px;
-  height: 4px;
+  width: 60px;
+  height: 3px;
   background: #000000;
   border-radius: 2px;
 }
 
 .agencyGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
   width: 100%;
   padding: 0 10px;
   justify-items: center;
@@ -290,58 +273,51 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   background: #FFFFFF;
-  border-radius: 24px;
-  padding: 30px 20px;
-  border: 1px solid transparent;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border-radius: 20px;
+  padding: 24px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
   width: 100%;
-  max-width: 240px;
+  max-width: 220px;
   position: relative;
 }
 
 .agencyItem:hover {
-  transform: translateY(-8px);
-  border-color: #E5E7EB;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .agencyImg {
-  width: 96px;
-  height: 96px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid #FFFFFF;
-  /* เพิ่มเงาให้รูปดูเหมือนลอยออกมา */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s;
 }
 
 .agencyItem:hover .agencyImg {
   border-color: #000000;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .agencyImg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* ไม่ใส่ Filter เพื่อให้รูป User ยังคงสีสดใส */
 }
 
 .agencyName {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
-  color: #374151;
-  line-height: 1.5;
-  transition: color 0.2s;
-}
-
-.agencyItem:hover .agencyName {
-  color: #000;
+  color: #111;
+  line-height: 1.4;
 }
 
 .noResults {
@@ -349,17 +325,16 @@
   font-size: 18px;
   color: #9CA3AF;
   margin-top: 40px;
-  font-weight: 300;
 }
 
 /* ============================================ */
-/* --- 5. Logout Button (Redesigned) --- */
+/* --- 5. Logout Button (ปุ่มแดงมุมขวา) --- */
 /* ============================================ */
 
 .logoutIcon {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 1.5rem;
+  right: 1.5rem;
   z-index: 1001;
 }
 
@@ -367,47 +342,43 @@
   display: flex;
   width: auto;
   align-items: center;
-  gap: 0.8rem;
-  color: #DC2626; /* แดงเข้ม */
-  padding: 0.7rem 1.4rem;
-  border: 1px solid rgba(220, 38, 38, 0.1);
+  gap: 0.6rem;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
   border-radius: 50px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  background: #FFFFFF; /* เปลี่ยนเป็นพื้นขาว ขอบแดง */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  /* สีแดงไล่เฉด */
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
   transition: all 0.3s ease;
 }
 
 .logoutIcon button:hover {
   transform: translateY(-2px);
-  background: #DC2626;
-  color: white;
-  border-color: #DC2626;
-  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
 }
 
 /* ============================================ */
-/* --- 6. Bottom Nav (Desktop) --- */
+/* --- 6. Bottom Nav (Desktop: Floating) --- */
 /* ============================================ */
 
 .bottomNav {
   position: fixed;
-  bottom: 24px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.8); /* โปร่งแสงมากขึ้น */
-  backdrop-filter: blur(20px) saturate(180%); /* กระจกฝ้าแบบ Premium */
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  padding: 10px 16px;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
 
@@ -417,75 +388,81 @@
 }
 
 .bottomNav button {
-  background: transparent;
+  background: none;
   border: none;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  color: #6B7280;
-  padding: 10px 20px;
-  border-radius: 30px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  color: #555;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .bottomNav button:not(.active):hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: #e9e9e9;
   color: #111;
+  transform: translateY(-3px) scale(1.03);
 }
 
 .bottomNav .active {
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   background-color: #111;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.bottomNav .active:hover {
+  transform: translateY(-2px);
 }
 
 .bottomNav button svg {
-  font-size: 24px;
+  font-size: 34px;
+  height: 34px;
+  width: 34px;
 }
 
-/* --- Sub Menu Desktop --- */
+.bottomNav button span {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* --- Sub Menu Desktop (Popup แนวตั้ง) --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   z-index: 1001;
-  padding: 8px;
-  min-width: 180px;
-  border: 1px solid rgba(0,0,0,0.05);
+  padding: 6px;
+  min-width: 160px;
+  border: 1px solid #eee;
+  
   display: flex;
   flex-direction: column;
   gap: 4px;
-  animation: fadeInPopup 0.2s ease-out;
-}
-
-@keyframes fadeInPopup {
-  from { opacity: 0; transform: translate(-50%, 10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 .subMenuItem {
-  padding: 12px 16px;
+  padding: 10px 14px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 8px;
   transition: background-color 0.2s ease;
   font-weight: 500;
-  text-align: left;
+  text-align: center;
 }
 
 .subMenuItem:hover {
-  background: #F3F4F6;
+  background: #f4f4f4;
 }
 
 .subMenuItem.active {
@@ -494,56 +471,55 @@
 }
 
 /* ============================================ */
-/* --- 7. Mobile Responsive --- */
+/* --- 7. Media Queries (Mobile) --- */
 /* ============================================ */
 
 @media screen and (max-width: 768px) {
   
   .title {
-    font-size: 1.8rem;
-    padding: 0 10px;
-  }
-  
-  .appBody {
-     padding-top: 70px;
+    font-size: 1.6rem;
   }
 
   .logoutIcon button {
-    padding: 0.5rem 1rem;
-    font-size: 13px;
-    gap: 6px;
+    width: auto; 
+    gap: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
   }
 
-  /* --- [Mobile Cards] --- */
+  /* --- [Mobile Cards] เรียงแนวตั้ง --- */
   .extraCards {
-    flex-direction: column; 
-    align-items: stretch; /* ให้การ์ดยืดเต็ม */
+    flex-direction: column; /* เปลี่ยนเป็นแนวตั้ง */
+    align-items: center;
     max-width: 100%;
-    padding: 0 16px;
-    gap: 16px;
+    padding: 0 10px;
   }
 
   .extraCard {
-    width: 100%;
-    max-width: none;
-    padding: 24px;
+    width: 100%; /* เต็มจอ */
+    max-width: 500px;
   }
 
-  /* --- [Mobile Nav] --- */
+  /* --- [Mobile Nav] Grid ติดขอบล่าง --- */
   .bottomNav {
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
+    
+    box-sizing: border-box;
+    
     background: #ffffff;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.06);
-    padding: 12px 10px 28px; /* เผื่อพื้นที่ iPhone Home Bar */
-    transform: none;
-    border: none;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 0;
+    gap: 4px;
+    
+    padding: 12px 10px 24px 10px;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transform: none;
   }
 
   .bottomNavButtonContainer {
@@ -553,86 +529,127 @@
   }
 
   .bottomNav button {
-    flex-direction: column;
-    height: auto;
-    width: 100%;
-    padding: 8px 0;
-    border-radius: 12px;
+    position: relative !important;
+    overflow: visible !important;
     background: transparent !important;
-    gap: 4px;
+    border: none;
+    box-shadow: none !important;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    height: 56px;
+    width: 100%;
+    border-radius: 16px;
+    padding: 0;
+    margin: 0;
+    transition: all 0.2s ease;
   }
 
   .bottomNav button svg {
-    font-size: 24px;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 4px;
     color: #9CA3AF;
-    margin: 0;
+    transition: all 0.2s ease;
   }
 
   .bottomNav button span {
     font-size: 10px;
     color: #9CA3AF;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .bottomNav button.active {
-    background: transparent !important;
-    box-shadow: none !important;
+    background-color: #000000 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    transform: none !important;
   }
 
   .bottomNav button.active svg {
-    color: #000;
-    transform: translateY(-2px);
+    color: #ffffff;
+    transform: scale(1.05);
   }
 
   .bottomNav button.active span {
-    color: #000;
-    font-weight: 700;
+    color: #ffffff;
+    font-weight: 600;
   }
 
-  /* --- [Mobile Popup] --- */
+  /* --- [Mobile Popup] จัดการตำแหน่ง --- */
   .subMenuPopup {
-    bottom: calc(100% + 15px);
+    position: absolute;
+    bottom: calc(100% + 8px);
     left: 50% !important;
     transform: translateX(-50%) !important;
-    min-width: 160px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    
+    min-width: 140px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    z-index: 1002;
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid #f0f0f0;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: nowrap;
   }
    
   .subMenuPopup::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: -6px;
     left: 50%;
     transform: translateX(-50%);
-    border-width: 8px 8px 0;
+    border-width: 6px 6px 0;
     border-style: solid;
-    border-color: #fff transparent transparent transparent;
+    border-color: #ffffff transparent transparent transparent;
   }
 
-  /* ป้องกัน Popup ล้นจอซ้าย/ขวา */
-  .bottomNav > div:first-child .subMenuPopup { left: 10px !important; transform: none !important; }
-  .bottomNav > div:first-child .subMenuPopup::after { left: 20px; transform: none; }
+  /* ป้องกัน Popup ล้นจอ */
+  .bottomNav > div:first-child .subMenuPopup {
+    left: 4px !important;
+    transform: none !important;
+  }
+  .bottomNav > div:first-child .subMenuPopup::after {
+    left: 28px;
+    transform: none;
+  }
 
-  .bottomNav > div:last-child .subMenuPopup { left: auto !important; right: 10px !important; transform: none !important; }
-  .bottomNav > div:last-child .subMenuPopup::after { left: auto; right: 20px; transform: none; }
+  .bottomNav > div:last-child .subMenuPopup {
+    left: auto !important;
+    right: 4px !important;
+    transform: none !important;
+  }
+  .bottomNav > div:last-child .subMenuPopup::after {
+    left: auto;
+    right: 28px;
+    transform: none;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .extraCards {
+    padding: 0 10px;
+  }
   .agencyGrid {
     grid-template-columns: repeat(1, 1fr);
   }
   .agencyItem {
-    max-width: 100%;
-    flex-direction: row; /* ปรับเป็นแนวนอนในมือถือเล็ก */
-    padding: 16px;
-    justify-content: flex-start;
+    max-width: 250px;
   }
-  .agencyImg {
-    width: 60px;
-    height: 60px;
-    border-width: 2px;
-  }
-  .agencyName {
-    text-align: left;
-    font-size: 15px;
+  .logoutIcon {
+    top: 15px;
+    right: 15px;
   }
 }
