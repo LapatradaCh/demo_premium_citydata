@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// เรียกใช้ CSS Module ตามที่คุณต้องการ
+// เรียกใช้ CSS Module (แบบไม่ Global)
 import styles from "./css/CreateOrg.module.css";
 
 // URL ของ API
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api";
 
-// --- Helper Component: Wrapper สำหรับใส่ไอคอนหน้า Input/Select ---
+// --- Helper Component ---
 const InputWrapper = ({ icon, children }) => (
   <div className={styles.inputIconWrapper}>
     <div className={styles.inputIcon}>{icon}</div>
@@ -229,7 +229,6 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
   return (
     <form onSubmit={handleLocationSubmit}>
-      {/* Geo Action Button */}
       <div 
         className={`${styles.geoActionBox} ${geoStatus === 'success' ? styles.geoSuccess : ''}`}
         onClick={handleFetchGeolocation}
@@ -339,7 +338,6 @@ const TypeSetupForm = ({ onSave, orgId }) => {
     <form onSubmit={handleSubmit}>
       <div className={styles.formGrid}>
         
-        {/* Dropdown 1 */}
         <div className={styles.formGroup}>
           <label className={`${styles.label} ${styles.required}`}>ประเภทหน่วยงาน</label>
           <InputWrapper icon={
@@ -357,7 +355,6 @@ const TypeSetupForm = ({ onSave, orgId }) => {
           </InputWrapper>
         </div>
 
-        {/* Dropdown 2 */}
         <div className={styles.formGroup}>
           <label className={`${styles.label} ${styles.required}`}>ประเภทการใช้งาน</label>
           <InputWrapper icon={
@@ -410,7 +407,6 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
   return (
     <div className={styles.codeBoxContainer}>
-      
       <div className={styles.tabContainer}>
         <button 
           type="button"
@@ -565,7 +561,7 @@ const SetupGuidePage = ({
               <div className={styles.accordionIcon}>🏷️</div>
               <div style={{flex: 1}}>
                 <p className={styles.accordionTitle}>ตั้งค่าประเภทหน่วยงาน</p>
-                <p className="accordionSubtitle">ระบุประเภทและการใช้งาน</p>
+                <p className={styles.accordionSubtitle}>ระบุประเภทและการใช้งาน</p>
               </div>
               <div className={`${styles.accordionArrow} ${activeAccordion === 'types' ? styles.rotate180 : ''}`}>▼</div>
             </button>
@@ -693,7 +689,6 @@ function CreateOrg() {
   };
 
   return (
-    // ครอบด้วย container และใช้ styles
     <div className={styles.container}>
       {page === 'create' ? (
         <QuickCreatePage
