@@ -200,9 +200,18 @@
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  
+  /* ปรับความโปร่งแสงลงเพื่อให้ Effect เบลอเด่นขึ้น */
+  background-color: rgba(0, 0, 0, 0.5);
+  
   display: flex; align-items: center; justify-content: center;
-  z-index: 1000; backdrop-filter: blur(3px);
+  z-index: 1000;
+  
+  /* เพิ่มความเบลอให้ฉากหลัง */
+  backdrop-filter: blur(10px);
+  /* รองรับ Safari/iOS */
+  -webkit-backdrop-filter: blur(10px);
+  
   animation: fadeIn 0.2s ease-out;
 }
 
