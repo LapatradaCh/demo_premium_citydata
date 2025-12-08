@@ -1,8 +1,8 @@
 /* --- 3. css/MapView.module.css --- */
-/* (ฉบับปรับปรุง: ปุ่มตัวกรองไอคอนสี่เหลี่ยมสีขาว) */
+/* (ฉบับแก้ไข: กลับไปใช้ปุ่มตัวกรองสีดำ ยาว และวางซ้อนกัน) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน)
+   1. SHARED COMPONENTS
    ========================================= */
 
 .filterGroup {
@@ -101,7 +101,7 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT (โครงสร้างหลัก)
+   2. MAIN LAYOUT
    ========================================= */
 
 .mapViewContainer {
@@ -140,21 +140,20 @@
 
 
 /* =========================================
-   3. MODERN SEARCH & FILTER (ส่วนที่แก้ไข)
+   3. SEARCH & FILTER (แบบรูปที่ 1: สีดำ/ซ้อนกัน)
    ========================================= */
 
-/* จัดกล่องค้นหาและปุ่มกรองให้อยู่ในแนวนอนเดียวกัน */
 .sidebarSearchTop {
   display: flex;
-  flex-direction: row; /* เรียงเป็นแถวแนวนอน */
-  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
-  gap: 12px;           /* ระยะห่างระหว่างช่องค้นหากับปุ่ม */
+  /* (แก้ไข) กลับมาเรียงแนวตั้ง เพื่อให้ปุ่มอยู่ใต้ช่องค้นหา */
+  flex-direction: column; 
+  align-items: stretch;
+  gap: 12px;
   width: 100%;
   flex-shrink: 0;
   margin-bottom: 16px;
 }
 
-/* Wrapper ช่องค้นหา (ให้ขยายเต็มพื้นที่ที่เหลือ) */
 .searchInputWrapper {
   flex-grow: 1;
   position: relative;
@@ -165,19 +164,18 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px 16px 12px 48px;
-  border-radius: 12px;
-  background-color: #f3f4f6; 
-  border: 1px solid transparent;
+  border-radius: 28px; /* ปรับให้โค้งมนแบบแคปซูลเพื่อให้เข้ากับปุ่ม */
+  background-color: #fff; /* พื้นขาว */
+  border: 1px solid #e0e0e0; /* มีขอบบางๆ */
   font-size: 14px;
   color: #111;
   transition: all 0.2s ease;
-  height: 48px; /* กำหนดความสูงให้เท่ากับปุ่มตัวกรอง */
+  height: 48px;
 }
 
 .searchInput:focus {
-  background-color: #fff;
   border-color: #000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   outline: none;
 }
 
@@ -195,62 +193,59 @@
   pointer-events: none;
 }
 
-/* === (MODIFIED) ปุ่ม Filter แบบไอคอนสี่เหลี่ยม (Square Icon Button) === */
+/* === (แก้ไข) ปุ่มตัวกรองแบบรูปที่ 1 (สีดำ/ยาว/มีตัวหนังสือ) === */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px; /* ระยะห่างไอคอนกับข้อความ */
   
-  /* กำหนดขนาดให้เป็นสี่เหลี่ยมจัตุรัส */
-  width: 48px;
+  /* ขยายเต็มความกว้าง */
+  width: 100%; 
   height: 48px;
-  padding: 0; /* ไม่ต้องมี padding เพราะมีแค่ไอคอน */
+  padding: 0 24px;
   
-  /* สไตล์ใหม่: พื้นขาว ขอบเทา ไอคอนดำ */
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  color: #333333;
-  border-radius: 12px; /* มุมโค้งมน */
+  /* สีดำ ตัวหนังสือขาว */
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
   
+  border-radius: 28px; /* ทรงแคปซูล */
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* เงาบางๆ */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
   
-  /* ยกเลิกสไตล์เดิม */
-  min-width: auto;
-  align-self: auto;
-  max-width: none;
-  gap: 0;
+  /* รีเซ็ตค่า */
+  min-width: 140px; 
+  align-self: center;
 }
 
-/* Hover state ใหม่ */
 .filterToggleButton:hover {
-  background-color: #f9f9f9;
-  border-color: #b0b0b0;
+  background-color: #333;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #000;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 .filterToggleButton:active {
   transform: translateY(0);
-  background-color: #f0f0f0;
+  background-color: #000;
 }
 
-/* ปรับขนาดไอคอน */
 .filterToggleButton svg {
-  font-size: 22px;
+  font-size: 18px;
 }
 
-/* ซ่อนข้อความ "ตัวกรอง" */
+/* (แก้ไข) แสดงข้อความ "ตัวกรอง" กลับมา */
 .filterToggleButton span {
-  display: none;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 
 /* =========================================
-   4. REPORT LIST (รายการแจ้งปัญหา)
+   4. REPORT LIST
    ========================================= */
 
 .sidebarReportListContainer {
@@ -399,7 +394,7 @@
 
 
 /* =========================================
-   5. MAP CONTENT (แผนที่)
+   5. MAP CONTENT
    ========================================= */
 
 .mapContent {
@@ -497,7 +492,7 @@
 
 
 /* =========================================
-   6. FILTER MODAL (ตัวกรองแบบ Modal)
+   6. FILTER MODAL
    ========================================= */
 
 .filterModalBackdrop {
@@ -545,6 +540,7 @@
   font-weight: 700;
 }
 
+/* ปุ่มปิด Modal พื้นแดง */
 .filterModalClose {
   background-color: #dc3545;
   border: none;
@@ -662,10 +658,9 @@
   .mapContent {
     min-height: 400px;
   }
-  /* บน tablet/mobile ก็ให้ปุ่มเป็นสี่เหลี่ยมเหมือนเดิม */
   .filterToggleButton {
-    width: 48px;
-    flex-grow: 0;
+    /* บนมือถือ ก็ให้ปุ่มยาวเหมือนเดิม */
+    width: 100%;
   }
 }
 
