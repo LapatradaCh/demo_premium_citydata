@@ -13,7 +13,10 @@
   font-family: 'Sarabun', sans-serif;
   color: #333;
   padding: 24px;
-  background-color: #F9FAFB;
+  
+  /* ✅ แก้ไข: เปลี่ยนพื้นหลัง Container เป็นสีขาว (จากเดิม #F9FAFB) */
+  background-color: #FFFFFF;
+  
   box-sizing: border-box;
   padding-bottom: 60px;
 }
@@ -70,16 +73,16 @@
 }
 
 /* Status Colors */
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; } /* แดง */
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; } /* ม่วง */
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; } /* เหลือง */
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; } /* เขียว */
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; } /* ฟ้า */
-.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; } /* เขียวมิ้นต์ */
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทาเข้ม */
+.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
+.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
+.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
+.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
+.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
+.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* --- Action Buttons (ปุ่มแก้ไข Premium) --- */
+/* --- Action Buttons --- */
 .actionRow {
   display: flex;
   gap: 12px;
@@ -88,7 +91,7 @@
 }
 
 .editButton {
-  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB); /* ไล่สีพื้นหลัง */
+  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB);
   border: 1px solid #E5E7EB;
   color: #4B5563;
   padding: 10px 16px;
@@ -100,10 +103,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  /* เงานุ่มนวล */
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  white-space: nowrap;
   flex: 1;
 }
 
@@ -111,7 +113,7 @@
   background: linear-gradient(to bottom, #F3F4F6, #E5E7EB);
   border-color: #9CA3AF;
   color: #111827;
-  transform: translateY(-2px); /* ลอยขึ้น */
+  transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -127,7 +129,9 @@
 
 /* --- Image Card --- */
 .imageCard {
-  background-color: #F9FAFB;
+  /* ✅ แก้ไข: เปลี่ยนพื้นหลังกรอบรูปภาพเป็นสีขาว (จากเดิม #F9FAFB) */
+  background-color: #FFFFFF;
+  
   border-radius: 16px;
   overflow: hidden;
   display: flex;
@@ -199,20 +203,12 @@
 /* 5. MODAL STYLES (POP-UP) */
 /* ========================================= */
 .modalOverlay {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   
-  /* แก้ไข: เปลี่ยนเป็น Transparent เพื่อเอาพื้นหลังสีเทาออก */
+  /* Background Transparent */
   background-color: transparent;
   
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-
-  /* แก้ไข: ปรับ Z-Index ให้สูงที่สุด (9999) เพื่อให้ทับเมนูด้านล่างแน่นอน */
+  display: flex; align-items: center; justify-content: center;
   z-index: 9999;
   
   /* Blur Effect */
@@ -235,21 +231,8 @@
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* ปุ่มปิด (X) ใหญ่สีแดง */
 .closeButton {
-  background-color: #EF4444;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  background-color: #EF4444; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: all 0.2s ease; position: absolute; top: 16px; right: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
 .closeButton svg { width: 64px; height: 64px; stroke-width: 3; }
@@ -269,105 +252,23 @@
 .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 .formTextarea { min-height: 80px; resize: vertical; }
 
-/* ✅ Upload Box & Preview (เพิ่มใหม่) */
+/* Upload Box & Preview */
 .uploadBox { 
-  border: 2px dashed #D1D5DB; 
-  border-radius: 8px; 
-  padding: 20px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 10px; 
-  cursor: pointer; 
-  background-color: #F9FAFB; 
-  transition: all 0.2s; 
-  color: #6B7280; 
-  font-size: 13px;
-  position: relative; /* เพื่อให้ปุ่มลบรูปอิงตำแหน่ง */
-  min-height: 120px; /* ความสูงขั้นต่ำ */
+  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; position: relative; min-height: 120px;
 }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* รูปตัวอย่าง (Preview) */
-.previewWrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.imagePreview {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 180px; /* จำกัดความสูง */
-  object-fit: contain;
-  border-radius: 6px;
-  border: 1px solid #E5E7EB;
-}
-/* ปุ่มลบรูปตัวอย่าง (กากบาทเล็ก) */
-.removePreviewBtn {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 24px;
-  height: 24px;
-  background-color: #EF4444;
-  color: white;
-  border: 2px solid white;
-  border-radius: 50%;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  transition: background-color 0.2s;
-}
+.previewWrapper { position: relative; width: 100%; display: flex; justify-content: center; }
+.imagePreview { width: auto; height: auto; max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 6px; border: 1px solid #E5E7EB; }
+.removePreviewBtn { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; background-color: #EF4444; color: white; border: 2px solid white; border-radius: 50%; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background-color 0.2s; }
 .removePreviewBtn:hover { background-color: #DC2626; }
 
-
-/* Modal Buttons (แดง/เขียว) */
+/* Modal Buttons */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
-
-/* ปุ่มยกเลิก (แดงทึบ ไม่มีขอบ) */
-.btnCancel { 
-  flex: 1; 
-  padding: 10px; 
-  border-radius: 8px; 
-  border: none; 
-  background-color: #EF4444; /* สีแดง */
-  color: #FFFFFF; /* ตัวหนังสือขาว */
-  font-weight: 700; 
-  cursor: pointer; 
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.btnCancel:hover { 
-  background-color: #DC2626; 
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* ปุ่มยืนยัน (เขียวทึบ ไม่มีขอบ) */
-.btnConfirm { 
-  flex: 1; 
-  padding: 10px; 
-  border-radius: 8px; 
-  border: none; 
-  background-color: #10B981; /* สีเขียว */
-  color: #FFFFFF; /* ตัวหนังสือขาว */
-  font-weight: 700; 
-  cursor: pointer; 
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.btnConfirm:hover { 
-  background-color: #059669; 
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
+.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #EF4444; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.btnCancel:hover { background-color: #DC2626; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
+.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.btnConfirm:hover { background-color: #059669; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
