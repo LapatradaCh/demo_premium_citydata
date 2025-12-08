@@ -199,17 +199,24 @@
 /* 5. MODAL STYLES (POP-UP) */
 /* ========================================= */
 .modalOverlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
   
-  /* ปรับความโปร่งแสงลงเพื่อให้ Effect เบลอเด่นขึ้น */
-  background-color: rgba(0, 0, 0, 0.5);
+  /* แก้ไข: เปลี่ยนเป็น Transparent เพื่อเอาพื้นหลังสีเทาออก */
+  background-color: transparent;
   
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+
+  /* แก้ไข: ปรับ Z-Index ให้สูงที่สุด (9999) เพื่อให้ทับเมนูด้านล่างแน่นอน */
+  z-index: 9999;
   
-  /* เพิ่มความเบลอให้ฉากหลัง */
+  /* Blur Effect */
   backdrop-filter: blur(10px);
-  /* รองรับ Safari/iOS */
   -webkit-backdrop-filter: blur(10px);
   
   animation: fadeIn 0.2s ease-out;
