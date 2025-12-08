@@ -1,8 +1,6 @@
 /* --- 3. css/MapView.module.css --- */
 /* (สำหรับ MapView.js) */
 
-/* === (REMOVED .calendarPopup) === */
-
 /* === (SHARED) Filter Group === */
 .filterGroup {
   flex: 1 1 auto;
@@ -21,6 +19,7 @@
   margin-bottom: 2px;
 }
 
+/* (ใช้สำหรับ ปุ่มเลือกช่วงเวลาใน Modal) */
 .filterGroup select,
 .timeRangeButton {
   width: 100%;
@@ -59,7 +58,7 @@
   outline: none;
 }
 
-/* === (SHARED) Button === */
+/* === (SHARED) Button (ใช้เฉพาะใน Modal) === */
 .filterApplyButton {
   padding: 12px 20px;
   font-size: 15px;
@@ -189,19 +188,6 @@
   padding: 0 8px 12px 8px;
   border-bottom: 1px solid #f0f0f0;
   flex-shrink: 0;
-}
-
-/* (Public Map Section) */
-.mapSidebarSection {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  flex-shrink: 0;
-}
-.mapSidebarSection:last-child {
-  border-bottom: none;
 }
 
 .mapSidebar .filterGroup label {
@@ -337,9 +323,7 @@
   font-size: 16px;
 }
 
-/* (*** REMOVED: .mapTogglesAbsolute ***) */
-
-/* (*** ADDED: Toggles *inside* Modal/Sidebar ***) */
+/* Toggles inside Modal */
 .mapToggles {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -354,7 +338,7 @@
 }
 
 
-/* --- (*** ADDED: Styles for INTERNAL Map Sidebar ***) --- */
+/* --- Sidebar INTERNAL Map Elements --- */
 
 .sidebarSearchTop {
   display: flex;
@@ -403,13 +387,14 @@
   cursor: pointer;
 }
 
+/* === (MODIFIED) ปุ่มตัวกรองอยู่ตรงกลาง === */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 10px 24px;
   font-size: 14px;
   font-weight: 600;
   color: #fff;
@@ -420,7 +405,12 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   white-space: nowrap;
-  min-width: fit-content;
+
+  /* จัดกึ่งกลาง */
+  align-self: center;
+  width: auto;
+  min-width: 140px;
+  
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -439,6 +429,7 @@
   display: inline;
 }
 
+/* --- Filter Modal --- */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
@@ -526,6 +517,7 @@
   max-height: 50vh;
 }
 
+/* --- Report List in Sidebar --- */
 .sidebarReportListContainer {
   flex-grow: 1;
   overflow-y: auto;
@@ -683,6 +675,9 @@
     margin-bottom: 0;
   }
   .filterToggleButton {
+    /* ในจอขนาดกลาง อาจจะให้ปุ่มกลับมายืดตามเนื้อหาหรือยังคง center ก็ได้ */
+    /* ถ้าต้องการให้แนวนอนอยู่ขวาของ search */
+    align-self: flex-start; 
     max-width: 120px;
   }
   .sidebarSearchTop .searchInput {
@@ -699,6 +694,8 @@
     gap: 12px;
   }
   .filterToggleButton {
+    /* ในมือถือ ให้กลับมาอยู่ตรงกลาง */
+    align-self: center;
     max-width: 100%;
   }
 }
