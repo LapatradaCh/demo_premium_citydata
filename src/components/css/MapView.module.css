@@ -1,5 +1,5 @@
 /* --- 3. css/MapView.module.css --- */
-/* (ฉบับแก้ไข: จัดข้อความปุ่ม "อ่านเพิ่มเติม" ให้อยู่ตรงกลางเป๊ะ) */
+/* (ฉบับแก้ไข Responsive: บนมือถือปุ่มตัวกรองจะลงมาอยู่บรรทัดล่างเพื่อไม่ให้เบียดกันจนแตก) */
 
 /* =========================================
    1. SHARED COMPONENTS
@@ -140,12 +140,12 @@
 
 
 /* =========================================
-   3. SEARCH & FILTER (แบบสีดำ/ซ้อนกัน/ต่อท้าย)
+   3. SEARCH & FILTER (Desktop: แนวนอน)
    ========================================= */
 
 .sidebarSearchTop {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* ปกติเรียงแนวนอน */
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -193,7 +193,7 @@
   pointer-events: none;
 }
 
-/* ปุ่มตัวกรองสีดำ วางข้างๆ */
+/* ปุ่มตัวกรอง (Desktop: วางข้างๆ) */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
@@ -361,21 +361,17 @@
   color: #888;
 }
 
-/* === (แก้ไข) ปุ่ม "อ่านเพิ่มเติม" ให้อยู่ตรงกลาง === */
+/* ปุ่ม "อ่านเพิ่มเติม" อยู่ตรงกลาง */
 .toggleDetailsButton {
   grid-area: toggle;
   background: none;
   border: none;
-  
-  /* ใช้ Flexbox เพื่อจัดกึ่งกลางอย่างสมบูรณ์ */
   display: flex;
   justify-content: center;
   align-items: center;
-  
   margin-top: 12px;
   width: 100%;
   padding: 8px 0;
-  
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
@@ -541,13 +537,15 @@
   font-weight: 700;
 }
 
-/* ปุ่มปิด Modal พื้นแดง */
+/* ปุ่มปิด Modal พื้นแดง (ป้องกันการบีบอัด) */
 .filterModalClose {
   background-color: #dc3545;
   border: none;
   border-radius: 50%;
   width: 36px;
   height: 36px;
+  /* ป้องกันปุ่มเบี้ยว */
+  flex-shrink: 0; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -631,7 +629,7 @@
 
 
 /* =========================================
-   7. RESPONSIVE
+   7. RESPONSIVE (จุดที่แก้ไขไม่ให้แตก)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -651,20 +649,6 @@
   }
 }
 
-@media screen and (max-width: 768px) {
-  .mapSidebar {
-    height: auto;
-    max-height: 60vh;
-  }
-  .mapContent {
-    min-height: 400px;
-  }
-  .filterToggleButton {
-    /* บนมือถือ ก็ให้ปุ่มยาวเหมือนเดิม */
-    width: 100%;
-  }
-}
-
 @media screen and (max-width: 480px) {
   .mapViewContainer {
     gap: 16px;
@@ -674,5 +658,19 @@
   }
   .searchInput {
     padding-left: 40px;
+  }
+
+  /* === MOBILE LAYOUT FIX === */
+  /* บนมือถือ: ให้เปลี่ยนจากแนวนอน (คู่กัน) เป็นแนวตั้ง (ซ้อนกัน) */
+  .sidebarSearchTop {
+    flex-direction: column; 
+    align-items: stretch; /* ยืดให้เต็มความกว้าง */
+    gap: 10px;
+  }
+  
+  /* ปรับปุ่มตัวกรองให้เต็มความกว้าง */
+  .filterToggleButton {
+    width: 100%;
+    min-width: 0;
   }
 }
