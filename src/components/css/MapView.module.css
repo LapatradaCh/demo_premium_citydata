@@ -1,5 +1,5 @@
 /* --- 3. css/MapView.module.css --- */
-/* (ฉบับแก้ไข: ปุ่มตัวกรองสีดำ/มีข้อความ วางต่อท้ายช่องค้นหา) */
+/* (ฉบับแก้ไข: จัดข้อความปุ่ม "อ่านเพิ่มเติม" ให้อยู่ตรงกลางเป๊ะ) */
 
 /* =========================================
    1. SHARED COMPONENTS
@@ -140,15 +140,14 @@
 
 
 /* =========================================
-   3. SEARCH & FILTER (จัดเรียงแนวนอน)
+   3. SEARCH & FILTER (แบบสีดำ/ซ้อนกัน/ต่อท้าย)
    ========================================= */
 
 .sidebarSearchTop {
   display: flex;
-  /* (แก้ไข) เรียงแนวนอน */
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
-  gap: 8px; /* ระยะห่างระหว่างช่องค้นหากับปุ่ม */
+  gap: 8px;
   width: 100%;
   flex-shrink: 0;
   margin-bottom: 16px;
@@ -164,13 +163,13 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px 16px 12px 48px;
-  border-radius: 28px; /* ทรงแคปซูล */
+  border-radius: 28px;
   background-color: #f3f4f6;
   border: 1px solid transparent;
   font-size: 14px;
   color: #111;
   transition: all 0.2s ease;
-  height: 48px; /* ความสูงเท่าปุ่ม */
+  height: 48px;
 }
 
 .searchInput:focus {
@@ -194,7 +193,7 @@
   pointer-events: none;
 }
 
-/* === (แก้ไข) ปุ่มตัวกรองสีดำ วางข้างๆ === */
+/* ปุ่มตัวกรองสีดำ วางข้างๆ */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
@@ -202,13 +201,11 @@
   justify-content: center;
   gap: 6px;
   
-  /* ให้ความกว้างพอดีกับข้อความ */
   width: auto;
-  min-width: 100px; /* ความกว้างขั้นต่ำ */
+  min-width: 100px;
   height: 48px;
   padding: 0 16px;
   
-  /* สไตล์: สีดำ ตัวหนังสือขาว */
   background-color: #000000;
   color: #ffffff;
   border: none;
@@ -234,7 +231,6 @@
   font-size: 16px;
 }
 
-/* แสดงข้อความ "ตัวกรอง" */
 .filterToggleButton span {
   display: inline-block;
   font-weight: 600;
@@ -365,14 +361,21 @@
   color: #888;
 }
 
+/* === (แก้ไข) ปุ่ม "อ่านเพิ่มเติม" ให้อยู่ตรงกลาง === */
 .toggleDetailsButton {
   grid-area: toggle;
   background: none;
   border: none;
+  
+  /* ใช้ Flexbox เพื่อจัดกึ่งกลางอย่างสมบูรณ์ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   margin-top: 12px;
   width: 100%;
   padding: 8px 0;
-  text-align: center;
+  
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
