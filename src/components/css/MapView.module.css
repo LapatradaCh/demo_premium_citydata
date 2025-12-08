@@ -387,31 +387,30 @@
   cursor: pointer;
 }
 
-/* === (MODIFIED) ปุ่มตัวกรองอยู่ตรงกลาง === */
+/* === (MODIFIED) ปุ่มตัวกรองเต็มความกว้าง (Full Width) === */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
+  padding: 12px 24px;
   font-size: 14px;
   font-weight: 600;
   color: #fff;
   background-color: #000;
   border: none;
-  border-radius: 24px;
+  border-radius: 28px;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   white-space: nowrap;
 
-  /* จัดกึ่งกลาง */
-  align-self: center;
-  width: auto;
-  min-width: 140px;
-  
+  /* สั่งให้เต็มความกว้าง */
+  width: 100%;
+  align-self: stretch;
   max-width: 100%;
+  
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -675,10 +674,9 @@
     margin-bottom: 0;
   }
   .filterToggleButton {
-    /* ในจอขนาดกลาง อาจจะให้ปุ่มกลับมายืดตามเนื้อหาหรือยังคง center ก็ได้ */
-    /* ถ้าต้องการให้แนวนอนอยู่ขวาของ search */
-    align-self: flex-start; 
-    max-width: 120px;
+    /* บน Mobile หรือจอเล็ก ให้ปุ่มยังคงเต็มความกว้าง */
+    width: 100%;
+    max-width: 100%;
   }
   .sidebarSearchTop .searchInput {
     padding-left: 52px;
@@ -693,9 +691,5 @@
     flex-direction: column;
     gap: 12px;
   }
-  .filterToggleButton {
-    /* ในมือถือ ให้กลับมาอยู่ตรงกลาง */
-    align-self: center;
-    max-width: 100%;
-  }
+  /* ในมือถือ ปุ่มก็ยังคง Full Width ตาม Default ด้านบน */
 }
