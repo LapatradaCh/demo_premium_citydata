@@ -23,8 +23,6 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// 1. ปรับค่าสี Hex Code ให้ตรงกับในไฟล์ CSS เป๊ะๆ เพื่อให้กราฟสีเดียวกับ Text
-// เพิ่ม Alias ชื่อสั้น/ยาว และสีของ 'ทั้งหมด' เข้าไปเพื่อให้เรียกใช้ง่ายขึ้น
 const STATUS_COLORS = {
   'ทั้งหมด': '#0f172a',         // total (น้ำเงินเข้ม)
   'รอรับเรื่อง': '#ff4d4f',      // waiting (แดง)
@@ -33,14 +31,12 @@ const STATUS_COLORS = {
   'กำลังดำเนินการ': '#ffc107',   // action (เหลือง)
   'ดำเนินการ': '#ffc107',        // Alias
   'เสร็จสิ้น': '#4caf50',        // finished (เขียว)
-  'ส่งต่อ': '#2196f3',         // forward (ฟ้า)
+  'ส่งต่อ': '#2196f3',          // forward (ฟ้า)
   'เชิญร่วม': '#00bcd4',         // invite (Cyan)
-  'ปฏิเสธ': '#64748b',         // reject (เทา)
+  'ปฏิเสธ': '#64748b',          // reject (เทา)
   'NULL': '#d1d5db'
 };
 
-// 2. สร้าง Mapping เพื่อเชื่อมชื่อไทย -> ชื่อ Class ใน CSS
-// (เช่น 'รอรับเรื่อง' -> styles['text-waiting'])
 const STATUS_KEY_MAP = {
   'ทั้งหมด': 'total',
   'รอรับเรื่อง': 'waiting',
@@ -52,7 +48,7 @@ const STATUS_KEY_MAP = {
   'ปฏิเสธ': 'reject'
 };
 
-// --- Mock Data ---
+// --- Mock Data (Trend & Efficiency ยังเป็น Mockup ตามเดิม) ---
 const trendData = [
   { date: '12/11', total: 2, pending: 1, coordinating: 0, completed: 1 },
   { date: '13/11', total: 3, pending: 2, coordinating: 1, completed: 0 },
@@ -82,7 +78,6 @@ const StatisticsView = ({ organizationId }) => {
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
-      // หากต้องการ test โดยไม่มี token/orgId ให้ comment บรรทัดนี้ชั่วคราว
       if (!accessToken || !organizationId) {
         setLoading(false);
         return;
@@ -104,15 +99,18 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Problem Types
+        // 2. Problem Types (แก้ไขตรงนี้ให้รับค่าเวลาจริง)
         const typeRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/count-by-type?organization_id=${organizationId}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
+          // Map ข้อมูลจาก API โดยใช้ avg_resolution_time
           const formatted = data.map(item => ({
             name: item.issue_type_name,
             count: parseInt(item.count, 10),
-            avgTime: Math.floor(Math.random() * 30) + 5 
+            // ถ้ามีค่า avg_resolution_time ให้แปลงเป็นทศนิยม 1 ตำแหน่ง ถ้าไม่มีให้เป็น 0
+            avgTime: item.avg_resolution_time ? parseFloat(parseFloat(item.avg_resolution_time).toFixed(1)) : 0
           })).sort((a, b) => b.count - a.count);
+          
           setProblemTypeData(formatted);
         }
 
@@ -188,7 +186,6 @@ const StatisticsView = ({ organizationId }) => {
     return total > 0 ? (val / total) * 100 : 0;
   };
 
-  // กำหนดข้อมูลพื้นฐานของการ์ด (ตัด bg/color hardcode ออก แล้วใช้ key แทน)
   const statusCardConfig = [
     { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' },
     { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
@@ -220,26 +217,19 @@ const StatisticsView = ({ organizationId }) => {
           <section className={styles.responsiveGrid4}>
             {statusCardConfig.map((card, idx) => {
               const percent = getPercent(card.count, getTotalCases());
-              
-              // Map ชื่อ key (เช่น 'waiting') ไปเป็นชื่อ class ใน CSS (เช่น styles['text-waiting'])
               const cssKey = STATUS_KEY_MAP[card.title] || 'total';
-              
-              const textClass = styles[`text-${cssKey}`];      // e.g. styles['text-waiting']
-              const badgeBaseClass = styles['badge-status'];   // Base class for styling
-              
-              // ดึงสี Solid จาก STATUS_COLORS โดยใช้ชื่อ title เป็น key
+              const textClass = styles[`text-${cssKey}`];      
+              const badgeBaseClass = styles['badge-status'];   
               const solidColor = STATUS_COLORS[card.title] || '#000';
 
               return (
                 <div key={idx} className={styles.statusCard}>
                   <div className={styles.cardHeader}>
                     <span className={styles.cardTitle}>{card.title}</span>
-                    {/* ใช้ Class จาก CSS แทนการใส่ style color ตรงๆ */}
                     <span className={`${styles.cardCount} ${textClass}`}>
                       {card.count}
                     </span>
                   </div>
-                  {/* Override สไตล์ Badge ให้เป็นพื้นหลังสีทึบ + ตัวหนังสือขาว */}
                   <div 
                     className={badgeBaseClass}
                     style={{ 
@@ -276,7 +266,6 @@ const StatisticsView = ({ organizationId }) => {
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
                 <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
-                {/* ใช้สีจาก STATUS_COLORS ที่แก้ให้ตรงกับ CSS แล้ว */}
                 <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
                 <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับ" />
                 <Line type="monotone" dataKey="coordinating" stroke={STATUS_COLORS['กำลังประสานงาน']} strokeWidth={2} dot={{r: 2}} name="ประสาน" />
@@ -316,7 +305,6 @@ const StatisticsView = ({ organizationId }) => {
                   />
                   <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
                   <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                  {/* ใช้สีจาก STATUS_COLORS */}
                   <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับ" barSize={16} />
                   <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังประสานงาน']} name="ประสาน" barSize={16} />
                   <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ดำเนินการ" barSize={16} />
