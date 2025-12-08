@@ -114,65 +114,65 @@ const ReportDetail = ({onGoToInternalMap }) => {
   }, [reportId, refreshKey]);
 
   // --- ★ NEW CODE: 2.5 Trigger View API (Automatic Status Change) ---
-  useEffect(() => {
-    const markAsViewed = async () => {
-      // ตรวจสอบว่ามีข้อมูล Case และยังไม่เคยยิง View ใน Session นี้
-      if (!caseInfo || !caseInfo.real_id || hasViewed) return;
+  // useEffect(() => {
+  //   const markAsViewed = async () => {
+  //     // ตรวจสอบว่ามีข้อมูล Case และยังไม่เคยยิง View ใน Session นี้
+  //     if (!caseInfo || !caseInfo.real_id || hasViewed) return;
 
-      const storedUserId = localStorage.getItem("user_id");
+  //     const storedUserId = localStorage.getItem("user_id");
       
-      // ★ แก้ไข: ดึง Organization ID จาก 'lastSelectedOrg' ที่เป็น JSON
-      const lastSelectedOrgStr = localStorage.getItem("lastSelectedOrg");
-      let storedOrgId = null;
+  //     // ★ แก้ไข: ดึง Organization ID จาก 'lastSelectedOrg' ที่เป็น JSON
+  //     const lastSelectedOrgStr = localStorage.getItem("lastSelectedOrg");
+  //     let storedOrgId = null;
 
-      if (lastSelectedOrgStr) {
-          try {
-              const orgData = JSON.parse(lastSelectedOrgStr);
-              storedOrgId = orgData.id; // ดึง id จาก object เช่น {"id":1, ...}
-          } catch (e) {
-              console.error("Error parsing lastSelectedOrg from localStorage:", e);
-          }
-      }
+  //     if (lastSelectedOrgStr) {
+  //         try {
+  //             const orgData = JSON.parse(lastSelectedOrgStr);
+  //             storedOrgId = orgData.id; // ดึง id จาก object เช่น {"id":1, ...}
+  //         } catch (e) {
+  //             console.error("Error parsing lastSelectedOrg from localStorage:", e);
+  //         }
+  //     }
 
-      // ถ้าไม่มี User หรือ Org ให้ข้ามไป (ยังไม่พร้อมส่ง)
-      if (!storedUserId || !storedOrgId) {
-          console.warn("User ID or Organization ID missing. Skipping view tracking.");
-          return;
-      }
+  //     // ถ้าไม่มี User หรือ Org ให้ข้ามไป (ยังไม่พร้อมส่ง)
+  //     if (!storedUserId || !storedOrgId) {
+  //         console.warn("User ID or Organization ID missing. Skipping view tracking.");
+  //         return;
+  //     }
 
-      try {
-        const viewApiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
+  //     try {
+  //       const viewApiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
         
-        const res = await fetch(viewApiUrl, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: parseInt(storedUserId),
-                organization_id: parseInt(storedOrgId) // ส่ง Org ID ที่แกะออกมาแล้ว
-            })
-        });
+  //       const res = await fetch(viewApiUrl, {
+  //           method: 'PATCH',
+  //           headers: {
+  //               'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify({
+  //               user_id: parseInt(storedUserId),
+  //               organization_id: parseInt(storedOrgId) // ส่ง Org ID ที่แกะออกมาแล้ว
+  //           })
+  //       });
 
-        if (res.ok) {
-            setHasViewed(true); // Mark as viewed to prevent loop
-            // ถ้าสถานะเดิมคือ 'รอรับเรื่อง' ระบบ backend จะเปลี่ยนเป็น 'กำลังประสานงาน'
-            // เราจึงควร Refresh ข้อมูลใหม่เพื่อให้หน้า UI อัปเดตสถานะทันที
-            if (caseInfo.status === 'รอรับเรื่อง') {
-                setRefreshKey(prev => prev + 1);
-            }
-        } else {
-            console.error("Failed to mark case as viewed:", await res.text());
-        }
+  //       if (res.ok) {
+  //           setHasViewed(true); // Mark as viewed to prevent loop
+  //           // ถ้าสถานะเดิมคือ 'รอรับเรื่อง' ระบบ backend จะเปลี่ยนเป็น 'กำลังประสานงาน'
+  //           // เราจึงควร Refresh ข้อมูลใหม่เพื่อให้หน้า UI อัปเดตสถานะทันที
+  //           if (caseInfo.status === 'รอรับเรื่อง') {
+  //               setRefreshKey(prev => prev + 1);
+  //           }
+  //       } else {
+  //           console.error("Failed to mark case as viewed:", await res.text());
+  //       }
 
-      } catch (err) {
-        console.error("Error calling view API:", err);
-      }
-    };
+  //     } catch (err) {
+  //       console.error("Error calling view API:", err);
+  //     }
+  //   };
 
-    markAsViewed();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseInfo, hasViewed]); 
+  //   markAsViewed();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [caseInfo, hasViewed]); 
 
 
   // 3. Handle Update Category
