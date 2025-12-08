@@ -1,8 +1,8 @@
 /* --- 3. css/MapView.module.css --- */
-/* (ฉบับปรับปรุง: แก้ไขสไตล์ปุ่ม Toggle และขนาดไอคอนปิด Modal) */
+/* (ฉบับแก้ไข: ปุ่มปิดสีแดงชัดเจน / ปุ่ม Toggle ขาว-ดำ) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน)
+   1. SHARED COMPONENTS
    ========================================= */
 
 .filterGroup {
@@ -101,7 +101,7 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT (โครงสร้างหลัก)
+   2. MAIN LAYOUT
    ========================================= */
 
 .mapViewContainer {
@@ -193,7 +193,7 @@
   pointer-events: none;
 }
 
-/* ปุ่ม Filter (สไตล์ Icon Button) */
+/* ปุ่ม Filter */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
@@ -237,7 +237,7 @@
 
 
 /* =========================================
-   4. REPORT LIST (รายการแจ้งปัญหา)
+   4. REPORT LIST
    ========================================= */
 
 .sidebarReportListContainer {
@@ -386,7 +386,7 @@
 
 
 /* =========================================
-   5. MAP CONTENT (แผนที่)
+   5. MAP CONTENT
    ========================================= */
 
 .mapContent {
@@ -484,7 +484,7 @@
 
 
 /* =========================================
-   6. FILTER MODAL (ตัวกรองแบบ Modal)
+   6. FILTER MODAL
    ========================================= */
 
 .filterModalBackdrop {
@@ -532,37 +532,35 @@
   font-weight: 700;
 }
 
+/* === (MODIFIED) ปุ่มปิด Modal (แก้ไขให้เห็นชัดเจนตลอดเวลา) === */
 .filterModalClose {
-  background: #dc3545;
+  background-color: #dc3545; /* พื้นหลังสีแดงเสมอ */
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px; /* ขยายขนาดปุ่ม */
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff;
+  color: #fff; /* ไอคอนสีขาว */
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  position: relative;
 }
 
 .filterModalClose:hover {
-  background: #c82333;
-  transform: scale(1.05);
+  background-color: #c82333;
+  transform: scale(1.08);
 }
 
-/* === (MODIFIED) เพิ่มขนาดไอคอนกากบาท === */
+/* ปรับขนาดไอคอนกากบาทให้ใหญ่ขึ้น */
 .filterModalClose svg {
   display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px; /* เพิ่มขนาดจาก 16px เป็น 20px */
+  width: 20px; /* ขยายขนาดไอคอน */
   height: 20px;
-  fill: #ffffff;
-  z-index: 2;
+  fill: currentColor; /* ใช้สีขาวจากตัวแม่ */
+  pointer-events: none;
 }
 
 .filterModalContent {
@@ -580,47 +578,49 @@
   overflow-y: auto;
 }
 
-/* === (MODIFIED) สไตล์ปุ่ม Toggle ใน Modal === */
+/* === (MODIFIED) ปุ่ม Toggle (ขาว/ดำ) === */
 .mapToggles {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
   background: transparent; /* เอาพื้นหลังสีเทาออก */
   padding: 0;
+  border-radius: 0;
 }
 
-/* สไตล์ปุ่มตอนที่ไม่ได้กด (Inactive) */
+/* สไตล์ปุ่มตอนที่ไม่ได้กด (Inactive: พื้นขาว ตัวดำ) */
 .mapToggles .toggleButton {
   width: 100%;
   text-align: center;
-  border: 1px solid #d0d0d0;
-  background-color: #fff; /* พื้นหลังขาว */
-  color: #000; /* ตัวหนังสือดำ */
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  color: #000000;
   border-radius: 12px;
   box-shadow: none;
   font-size: 14px;
+  font-weight: 600;
   padding: 10px;
   transition: all 0.2s ease;
 }
 
-/* สไตล์ปุ่มตอนที่กด (Active) */
+/* สไตล์ปุ่มตอนที่กด (Active: พื้นดำ ตัวขาว) */
 .mapToggles .toggleButtonActive {
   width: 100%;
   text-align: center;
   border: 1px solid #000;
-  background-color: #000; /* พื้นหลังดำ */
-  color: #fff; /* ตัวหนังสือขาว */
+  background-color: #000000;
+  color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   font-size: 14px;
+  font-weight: 600;
   padding: 10px;
   cursor: default;
 }
 
-/* Hover สำหรับปุ่มที่ไม่ได้กด */
 .mapToggles .toggleButton:hover {
   border-color: #000;
-  background-color: #f4f4f4;
+  background-color: #f8f8f8;
 }
 
 
