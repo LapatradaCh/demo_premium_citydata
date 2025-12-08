@@ -1,8 +1,8 @@
 /* --- 3. css/MapView.module.css --- */
-/* (ฉบับแก้ไข: ปุ่มปิดสีแดงชัดเจน / ปุ่ม Toggle ขาว-ดำ) */
+/* (ฉบับปรับปรุง: ปุ่มตัวกรองไอคอนสี่เหลี่ยมสีขาว) */
 
 /* =========================================
-   1. SHARED COMPONENTS
+   1. SHARED COMPONENTS (ใช้ร่วมกัน)
    ========================================= */
 
 .filterGroup {
@@ -101,7 +101,7 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT
+   2. MAIN LAYOUT (โครงสร้างหลัก)
    ========================================= */
 
 .mapViewContainer {
@@ -140,19 +140,21 @@
 
 
 /* =========================================
-   3. MODERN SEARCH & FILTER
+   3. MODERN SEARCH & FILTER (ส่วนที่แก้ไข)
    ========================================= */
 
+/* จัดกล่องค้นหาและปุ่มกรองให้อยู่ในแนวนอนเดียวกัน */
 .sidebarSearchTop {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+  flex-direction: row; /* เรียงเป็นแถวแนวนอน */
+  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  gap: 12px;           /* ระยะห่างระหว่างช่องค้นหากับปุ่ม */
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 }
 
+/* Wrapper ช่องค้นหา (ให้ขยายเต็มพื้นที่ที่เหลือ) */
 .searchInputWrapper {
   flex-grow: 1;
   position: relative;
@@ -169,7 +171,7 @@
   font-size: 14px;
   color: #111;
   transition: all 0.2s ease;
-  height: 48px;
+  height: 48px; /* กำหนดความสูงให้เท่ากับปุ่มตัวกรอง */
 }
 
 .searchInput:focus {
@@ -193,51 +195,62 @@
   pointer-events: none;
 }
 
-/* ปุ่ม Filter */
+/* === (MODIFIED) ปุ่ม Filter แบบไอคอนสี่เหลี่ยม (Square Icon Button) === */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px; 
+  
+  /* กำหนดขนาดให้เป็นสี่เหลี่ยมจัตุรัส */
+  width: 48px;
   height: 48px;
-  padding: 0;
+  padding: 0; /* ไม่ต้องมี padding เพราะมีแค่ไอคอน */
+  
+  /* สไตล์ใหม่: พื้นขาว ขอบเทา ไอคอนดำ */
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  color: #374151;
-  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  color: #333333;
+  border-radius: 12px; /* มุมโค้งมน */
+  
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  min-width: auto; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* เงาบางๆ */
+  transition: all 0.2s ease;
+  
+  /* ยกเลิกสไตล์เดิม */
+  min-width: auto;
   align-self: auto;
   max-width: none;
+  gap: 0;
 }
 
+/* Hover state ใหม่ */
 .filterToggleButton:hover {
-  background-color: #f9fafb;
-  border-color: #000;
+  background-color: #f9f9f9;
+  border-color: #b0b0b0;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #000;
 }
 
 .filterToggleButton:active {
   transform: translateY(0);
-  background-color: #f3f4f6;
+  background-color: #f0f0f0;
 }
 
+/* ปรับขนาดไอคอน */
 .filterToggleButton svg {
-  font-size: 20px;
+  font-size: 22px;
 }
 
+/* ซ่อนข้อความ "ตัวกรอง" */
 .filterToggleButton span {
-  display: none; 
+  display: none;
 }
 
 
 /* =========================================
-   4. REPORT LIST
+   4. REPORT LIST (รายการแจ้งปัญหา)
    ========================================= */
 
 .sidebarReportListContainer {
@@ -386,7 +399,7 @@
 
 
 /* =========================================
-   5. MAP CONTENT
+   5. MAP CONTENT (แผนที่)
    ========================================= */
 
 .mapContent {
@@ -484,7 +497,7 @@
 
 
 /* =========================================
-   6. FILTER MODAL
+   6. FILTER MODAL (ตัวกรองแบบ Modal)
    ========================================= */
 
 .filterModalBackdrop {
@@ -532,18 +545,17 @@
   font-weight: 700;
 }
 
-/* === (MODIFIED) ปุ่มปิด Modal (แก้ไขให้เห็นชัดเจนตลอดเวลา) === */
 .filterModalClose {
-  background-color: #dc3545; /* พื้นหลังสีแดงเสมอ */
+  background-color: #dc3545;
   border: none;
   border-radius: 50%;
-  width: 36px; /* ขยายขนาดปุ่ม */
+  width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff; /* ไอคอนสีขาว */
+  color: #fff;
   transition: all 0.2s ease;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   position: relative;
@@ -554,12 +566,11 @@
   transform: scale(1.08);
 }
 
-/* ปรับขนาดไอคอนกากบาทให้ใหญ่ขึ้น */
 .filterModalClose svg {
   display: block;
-  width: 20px; /* ขยายขนาดไอคอน */
+  width: 20px;
   height: 20px;
-  fill: currentColor; /* ใช้สีขาวจากตัวแม่ */
+  fill: currentColor;
   pointer-events: none;
 }
 
@@ -578,17 +589,16 @@
   overflow-y: auto;
 }
 
-/* === (MODIFIED) ปุ่ม Toggle (ขาว/ดำ) === */
+/* ปุ่ม Toggle ใน Modal (ขาว/ดำ) */
 .mapToggles {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  background: transparent; /* เอาพื้นหลังสีเทาออก */
+  background: transparent;
   padding: 0;
   border-radius: 0;
 }
 
-/* สไตล์ปุ่มตอนที่ไม่ได้กด (Inactive: พื้นขาว ตัวดำ) */
 .mapToggles .toggleButton {
   width: 100%;
   text-align: center;
@@ -603,7 +613,6 @@
   transition: all 0.2s ease;
 }
 
-/* สไตล์ปุ่มตอนที่กด (Active: พื้นดำ ตัวขาว) */
 .mapToggles .toggleButtonActive {
   width: 100%;
   text-align: center;
@@ -652,6 +661,11 @@
   }
   .mapContent {
     min-height: 400px;
+  }
+  /* บน tablet/mobile ก็ให้ปุ่มเป็นสี่เหลี่ยมเหมือนเดิม */
+  .filterToggleButton {
+    width: 48px;
+    flex-grow: 0;
   }
 }
 
