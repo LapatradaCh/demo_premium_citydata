@@ -273,7 +273,11 @@ const StatisticsView = ({ organizationId }) => {
                   <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
                   <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
                   <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
-                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับ" />
+                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับเรื่อง" />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={3} dot={{r: 3}} name="ดำเนินการ" />
+                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={{r: 3}} name="ส่งต่อ" />
+                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={{r: 3}} name="เชิญร่วม" />
+                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={{r: 3}} name="ปฏิเสธ" />
                   <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={2} dot={{r: 2}} name="เสร็จสิ้น" />
                 </LineChart>
               </ResponsiveContainer>
