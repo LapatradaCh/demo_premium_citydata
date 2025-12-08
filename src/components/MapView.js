@@ -79,7 +79,7 @@ const MapView = ({ subTab }) => {
   // เรนเดอร์ Sidebar (แยกฟังก์ชันมาเพื่อให้เหมือนกันทั้ง 2 หน้า)
   const renderSidebar = () => (
     <div className={styles.mapSidebar}>
-      <h3 className={styles.mapSidebarTitle}>เครื่องมือ{title}</h3>
+      <h3 className={styles.mapSidebarTitle}>{title}</h3>
 
       {/* Search + Filter Button */}
       <div className={`${styles.searchTop} ${styles.sidebarSearchTop}`}>
