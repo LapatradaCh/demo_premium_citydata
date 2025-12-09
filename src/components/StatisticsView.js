@@ -46,24 +46,18 @@ const STATUS_KEY_MAP = {
   'ปฏิเสธ': 'reject'
 };
 
-// --- Mock Data (เหลือแค่ efficiencyData ที่ยังเป็น Mock) ---
-const efficiencyData = [
-  { id: 'Ticket-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' },
-  { id: 'Ticket-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
-  { id: 'Ticket-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
-  { id: 'Ticket-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
-  { id: 'Ticket-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
-];
-
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
-  const [timeRange, setTimeRange] = useState('1w'); // Default 1 สัปดาห์
+  const [timeRange, setTimeRange] = useState('1w'); 
   const [statsData, setStatsData] = useState(null);
-  const [trendData, setTrendData] = useState([]); // เปลี่ยนจาก Mock เป็น State ว่าง
+  const [trendData, setTrendData] = useState([]); 
   const [staffData, setStaffData] = useState([]);
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
+  
+  // 1. เปลี่ยน efficiencyData เป็น State (เดิมเป็น Mock)
+  const [efficiencyData, setEfficiencyData] = useState([]); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,14 +68,12 @@ const StatisticsView = ({ organizationId }) => {
         return;
       }
 
-      // ไม่ set loading true ทับซ้อนเวลากด filter เพื่อความลื่นไหลของ UI (หรือจะเปิดก็ได้)
-      // setLoading(true);
-
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
+        // ตรวจสอบ URL API ของคุณให้ถูกต้อง (เช่น path /api/stats/)
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats';
 
-        // 1. Overview Stats (ภาพรวมตลอดกาล ไม่เปลี่ยนตาม filter)
+        // 1. Overview Stats
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -92,14 +84,14 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (ใช้ API ใหม่ + ส่ง timeRange)
+        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
           setTrendData(data);
         }
 
-        // 3. Problem Types (ส่ง timeRange เพื่อกรองตามช่วงเวลาด้วย)
+        // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
@@ -111,21 +103,28 @@ const StatisticsView = ({ organizationId }) => {
           setProblemTypeData(formatted);
         }
 
-        // 4. Satisfaction (ตลอดกาล)
+        // 4. Efficiency / Bottle Neck (ดึงข้อมูลจาก API ใหม่ที่เพิ่งสร้าง)
+        const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
+        if (effRes.ok) {
+            const data = await effRes.json();
+            setEfficiencyData(data);
+        }
+
+        // 5. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
         if (satRes.ok) {
           const data = await satRes.json();
           setSatisfactionData(data);
         }
 
-        // 5. Staff Count
+        // 6. Staff Count
         const staffCountRes = await fetch(`${baseUrl}/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities
+        // 7. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -159,7 +158,7 @@ const StatisticsView = ({ organizationId }) => {
     } else {
       setLoading(false);
     }
-  }, [organizationId, timeRange]); // <-- เมื่อ timeRange เปลี่ยน, fetch ใหม่
+  }, [organizationId, timeRange]);
 
   // Helpers
   const getTotalCases = () => statsData ? Object.values(statsData).reduce((a, b) => a + b, 0) : 0;
@@ -176,7 +175,6 @@ const StatisticsView = ({ organizationId }) => {
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), key: 'reject' },
   ];
 
-  // Helper สำหรับ Render ปุ่ม Filter
   const renderFilterButtons = () => (
     <div style={{ display: 'flex', gap: '6px' }}>
       {['1w', '1m', '3m', '1y', '5y'].map((range) => (
@@ -200,6 +198,23 @@ const StatisticsView = ({ organizationId }) => {
       ))}
     </div>
   );
+
+  // Custom Tooltip สำหรับกราฟ Efficiency เพื่อแสดงรายละเอียดเพิ่มเติม
+  const CustomEfficiencyTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', fontSize: '12px' }}>
+          <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>ID: {label}</p>
+          <p style={{ margin: 0 }}>ประเภท: {data.type}</p>
+          <p style={{ margin: 0, color: STATUS_COLORS['รอรับเรื่อง'] }}>รอรับเรื่อง: {data.stage1} ชม.</p>
+          <p style={{ margin: 0, color: STATUS_COLORS['ดำเนินการ'] }}>ดำเนินการ: {data.stage3} ชม.</p>
+          <p style={{ marginTop: '5px', fontWeight: 'bold' }}>รวม: {data.total} ชม.</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className={styles.container}>
@@ -246,7 +261,7 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
-        {/* --- ส่วนกราฟ Trend ที่เพิ่ม Filter --- */}
+        {/* --- ส่วนกราฟ Trend --- */}
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeader} style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
@@ -256,7 +271,6 @@ const StatisticsView = ({ organizationId }) => {
               </h2>
               <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ</p>
             </div>
-            {/* แสดงปุ่ม Filter ตรงนี้ */}
             {renderFilterButtons()}
           </div>
           
@@ -289,37 +303,40 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
+          {/* --- Section Efficiency (เชื่อม API แล้ว) --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
                 <h2 className={styles.sectionTitle}>
                   <Clock color="#f97316" size={20} />
-                  เวลาแต่ละขั้นตอน
+                  เวลาแต่ละขั้นตอน (Top 10 ช้าสุด)
                 </h2>
-                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p>
+                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (หน่วย: ชั่วโมง)</p>
               </div>
             </div>
-            {/* กราฟนี้ยังเป็น Mockup (efficiencyData) */}
             <div className={styles.chartContainer}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={efficiencyData} 
-                  layout="vertical"
-                  margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={100} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
-                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} />
-                  <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['ดำเนินการ']} name="ดำเนินการ" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['ส่งต่อ']} name="ส่งต่อ" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['เชิญร่วม']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['ปฏิเสธ']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="เสร็จสิ้น" barSize={16} />
-                </BarChart>
-              </ResponsiveContainer>
+              {efficiencyData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart 
+                    data={efficiencyData} 
+                    layout="vertical"
+                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="id" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
+                    {/* ใช้ Custom Tooltip เพื่อแสดงรายละเอียดที่ครบถ้วน */}
+                    <Tooltip cursor={{fill: 'transparent'}} content={<CustomEfficiencyTooltip />} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
+                    
+                    {/* Map dataKey ให้ตรงกับ API: stage1=รอรับเรื่อง, stage3=ดำเนินการ */}
+                    <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} />
+                    <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['ดำเนินการ']} name="ดำเนินการ" barSize={16} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                 <div className={styles.emptyState}>ไม่มีข้อมูลหรืองานที่เสร็จสิ้น</div>
+              )}
             </div>
           </section>
 
