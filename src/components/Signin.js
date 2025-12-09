@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./css/Signin.module.css";
 import logo from "./traffy.png";
-// import { FaSignOutAlt as LogOut } from "react-icons/fa"; // <-- ไม่ได้ใช้แล้ว ลบออกได้
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 
@@ -24,7 +23,8 @@ const JoinORG = () => {
 
   const OTP_EXPIRY_SECONDS = 60;
 
-  const handleLogout = async () => {
+  // ฟังก์ชัน Logout เดิม (สำหรับการเคลียร์ระบบจริงจัง)
+  const performLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id");
     console.log("Initiating logout for token:", accessToken);
@@ -55,7 +55,22 @@ const JoinORG = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id");
       localStorage.removeItem("selectedOrg");
+      localStorage.removeItem("lastSelectedOrg"); // ลบข้อมูล Org ที่ค้างด้วย
       navigate("/");
+    }
+  };
+
+  // --- [NEW LOGIC] ฟังก์ชันจัดการปุ่ม "ย้อนกลับ" ---
+  const handleBack = () => {
+    // ตรวจสอบว่ามีข้อมูลหน่วยงานที่เคยเลือกไว้หรือไม่ (lastSelectedOrg)
+    // ถ้ามี: แปลว่าน่าจะเคยเข้าหน้า Home1 มาแล้ว -> ให้กลับไป Home1
+    // ถ้าไม่มี: แปลว่าเพิ่ง Login เข้ามาใหม่แล้วเด้งมาหน้านี้เลย หรือยังไม่มีสังกัด -> ให้ Logout/กลับไปหน้า login
+    const savedOrg = localStorage.getItem("lastSelectedOrg");
+    
+    if (savedOrg) {
+      navigate("/home1");
+    } else {
+      performLogout();
     }
   };
 
@@ -121,8 +136,6 @@ const JoinORG = () => {
       });
 
       const userId = localStorage.getItem("user_id");
-      console.log("userInfo:", userId);
-
       const data = await response.json();
       setIsLoading(false);
 
@@ -131,29 +144,26 @@ const JoinORG = () => {
       );
       const orgData = await orgCountResponse.json();
       const orgCount = orgData.length || 0;
+      
       const checkORG = () => {
         if (orgCount > 1) {
           navigate("/home1");
         } else if (orgCount === 1) {
           const sourceOrg = orgData[0];
-          console.log("data:",sourceOrg);
-          
-          // 2. สร้าง object ใหม่ 'singleOrg' โดยจัดโครงสร้างให้เหมือนในรูป
-          //    โดยเลือกดึงค่ามาจาก sourceOrg
           const singleOrg = {
-            badge: sourceOrg.badge || null, // ถ้า badge ไม่มีค่า (undefined) ให้ใช้ null แทน
+            badge: sourceOrg.badge || null,
             id: sourceOrg.organization_id,
             img: sourceOrg.url_logo,
             name: sourceOrg.organization_name
           };
           localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
-      
-          // 2.2 ค่อยนำทางไปหน้า Home
-           setTimeout(() => {
-                  navigate('/home');
-            }, 100);
+          
+          setTimeout(() => {
+              navigate('/home');
+          }, 100);
         } else {
-          navigate("/Signin");
+          // กรณีแปลกๆ ที่ join แล้วยังไม่มี org (ไม่น่าเกิด)
+          navigate("/Signin"); 
         }
       };
 
@@ -165,9 +175,9 @@ const JoinORG = () => {
         setGeneratedOTP("");
         checkORG();
       } else if (response.status === 409) {
+        // กรณีเป็นสมาชิกอยู่แล้ว ให้เช็คเงื่อนไขเพื่อไปต่อเลย
         checkORG();
-        console.log("link to your option");
-        setMessage("คุณเป็นสมาชิกของหน่วยงานนี้อยู่แล้ว");
+        console.log("User already in organization");
       } else if (response.status === 404) {
         setMessage("รหัสหน่วยงานไม่ถูกต้อง หรือ ไม่พบข้อมูลผู้ใช้");
       } else {
@@ -182,11 +192,6 @@ const JoinORG = () => {
 
   return (
     <div className={styles.bodySignin}>
-      {/* ================== [CHANGE] ==================
-        ปุ่ม Logout ที่เป็นไอคอนถูกลบออกจากตรงนี้แล้ว
-        ==============================================
-      */}
-
       <div className={styles.otpContainer}>
         <div className={styles.header}>
           <img src={logo} alt="Logo" className={styles.logoImg} />
@@ -244,10 +249,11 @@ const JoinORG = () => {
               {isLoading ? "กำลังดำเนินการ..." : "เข้าร่วมหน่วยงาน"}
             </button>
 
+            {/* ใช้ handleBack แทนการ handleLogout โดยตรง */}
             <button
               type="button"
               className={styles.goBackBtn}
-              onClick={handleLogout}
+              onClick={handleBack}
               disabled={isLoading}
             >
               ย้อนกลับ
