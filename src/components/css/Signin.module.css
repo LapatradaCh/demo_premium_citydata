@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Clean Minimalist - Matching Home1 Tone)
+   Signin.module.css (Clean Minimalist - Home1 Tone with Specified Button Colors)
    ----------------------------------------------------------- */
 
 /* ============================================ */
@@ -10,31 +10,31 @@
 }
 
 :root {
-  /* ดึงโทนสีจากรูปตัวอย่าง */
-  --bg-page: #fafafa;       /* สีพื้นหลังหน้าเว็บ (ขาวอมเทานิดๆ) */
+  /* โทนสีหลักตามหน้า Home1 */
+  --bg-page: #fafafa;       /* สีพื้นหลังหน้าเว็บ (เทาอ่อนมาก) */
   --bg-card: #ffffff;       /* สีพื้นหลังการ์ด (ขาวล้วน) */
-  --text-main: #1f2937;     /* สีตัวอักษรหลัก (ดำเทา) */
-  --text-sub: #6b7280;      /* สีตัวอักษรรอง (เทา) */
-  --border-color: #f3f4f6;  /* สีเส้นขอบ (เทาอ่อนมาก) */
+  --text-main: #000000;     /* สีตัวอักษรหลัก (ดำสนิทตามธีม) */
+  --text-sub: #666666;      /* สีตัวอักษรรอง (เทา) */
+  --border-color: #e5e7eb;  /* สีเส้นขอบอินพุต */
   
-  /* สี Action */
-  --color-primary: #000000; /* สีดำ (เหมือนปุ่มค้นหา/เมนู Active ในรูป) */
-  --color-success: #10b981; /* สีเขียว (ปรับให้ดู Soft ลงแต่ยังสดใส) */
-  --color-danger: #ef4444;  /* สีแดง (เหมือนปุ่มออกจากระบบมุมขวาบน) */
-  --color-blue: #3b82f6;    /* สีฟ้าสำหรับ OTP */
+  /* สี Action เฉพาะเจาะจงตามรูปที่ 2 */
+  --color-success: #28a745; /* สีเขียว (Solid Green ตามรูป) */
+  --color-danger: #dc3545;  /* สีแดง (Solid Red ตามรูป) */
+  --color-dark: #000000;    /* สีดำสำหรับปุ่ม OTP (เพื่อให้เข้าธีม) */
 }
 
 /* ============================================ */
 /* 2. Main Background */
 /* ============================================ */
 .bodySignin {
-  background-color: var(--bg-page); /* พื้นหลังเรียบๆ ตามรูป */
+  background-color: var(--bg-page); /* พื้นหลังเรียบๆ */
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  font-family: 'Kanit', sans-serif; /* แนะนำให้ใช้ฟอนต์เดียวกับเว็บ */
+  /* ควรใช้ฟอนต์เดียวกับหน้า Home1 เช่น 'Kanit', sans-serif */
+  font-family: sans-serif; 
 }
 
 /* ============================================ */
@@ -42,26 +42,18 @@
 /* ============================================ */
 .otpContainer {
   width: 100%;
-  max-width: 460px; /* ขนาดกำลังดี ไม่กว้างเกินไป */
+  max-width: 480px;
   
   background: var(--bg-card);
-  border-radius: 24px; /* ความโค้งมนระดับเดียวกับ Card ในรูป */
+  border-radius: 24px; /* ความโค้งมนตามสไตล์การ์ดในหน้า Home1 */
   padding: 40px 32px;
   
-  /* เงาบางๆ นุ่มๆ แบบ Clean Style */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); 
-  border: 1px solid rgba(0,0,0,0.02); /* เส้นขอบจางๆ แทบมองไม่เห็น */
+  /* เงาบางๆ นุ่มๆ (Soft Shadow) แบบคลีนๆ */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================ */
@@ -79,8 +71,7 @@
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  /* ลด Effect รกๆ ออก เหลือแค่เงาเบาๆ ให้ดูลอย */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
 }
 
@@ -113,9 +104,9 @@
   padding: 0 24px;
   height: 54px; /* ความสูงมาตรฐาน */
   
-  /* สไตล์เดียวกับช่องค้นหาในรูป */
+  /* สไตล์เดียวกับช่องค้นหาในรูป Home1 */
   background-color: #ffffff; 
-  border: 1px solid #e5e7eb; /* ขอบสีเทาอ่อนชัดเจนขึ้นนิดนึง */
+  border: 1px solid var(--border-color);
   border-radius: 99px; /* ทรงแคปซูล (Pill Shape) */
   
   font-size: 1rem;
@@ -125,12 +116,12 @@
 }
 
 .inputField input:focus {
-  border-color: var(--color-primary); /* โฟกัสแล้วขอบดำ ตามธีมเว็บ */
+  border-color: var(--text-main); /* โฟกัสแล้วขอบดำ */
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
 .inputField input::placeholder {
-  color: #9ca3af;
+  color: #aaa;
 }
 
 /* --- Phone & OTP Layout --- */
@@ -149,7 +140,8 @@
   height: 54px;
   border-radius: 50%; /* ปุ่มกลม */
   
-  background-color: var(--color-primary); /* ใช้สีดำตามธีม หรือสีฟ้าถ้าอยากให้เด่น */
+  /* เปลี่ยนปุ่ม OTP เป็นสีดำ เพื่อให้เข้ากับธีมขาว-ดำของหน้า Home1 */
+  background-color: var(--color-dark);
   color: #fff;
   border: none;
   font-size: 13px;
@@ -160,27 +152,26 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .phoneOtpGroup button:hover {
+  background-color: #333; /* ดำจางลงนิดหน่อยตอน Hover */
   transform: scale(1.05);
-  background-color: #333;
 }
 .phoneOtpGroup button:disabled {
-  background-color: #d1d5db;
+  background-color: #ccc;
   cursor: not-allowed;
   transform: none;
 }
 
 /* ============================================ */
-/* 6. Buttons (Pill Shape like UI) */
+/* 6. Action Buttons (Red/Green from Image 2) */
 /* ============================================ */
 .buttonGroup {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 15px;
+  margin-top: 15px;
   width: 100%;
 }
 
@@ -188,36 +179,35 @@
 .goBackBtn {
   width: 100%;
   height: 54px;
-  border-radius: 99px; /* ทรงแคปซูล */
+  border-radius: 99px; /* ทรงแคปซูลตามรูป */
   border: none;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s, box-shadow 0.2s;
+  transition: filter 0.2s, transform 0.1s;
+  /* นำเงาสีๆ ออก เพื่อให้ได้สี Solid แบบในรูปที่ 2 */
+  box-shadow: none;
 }
 
-/* ปุ่มเข้าร่วม - สีเขียวแบบเรียบ Clean */
+/* สีปุ่มยืนยัน - เขียว Solid ตามรูป */
 .submitBtn {
   background-color: var(--color-success);
-  color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 .submitBtn:hover {
-  background-color: #059669;
+  filter: brightness(90%); /* ทำให้เข้มขึ้นเล็กน้อยตอน Hover */
   transform: translateY(-1px);
 }
 
-/* ปุ่มย้อนกลับ - สีแดง (เหมือนปุ่ม logout มุมขวาบนในรูป) */
+/* สีปุ่มย้อนกลับ - แดง Solid ตามรูป */
 .goBackBtn {
   background-color: var(--color-danger);
-  color: white;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
 }
 .goBackBtn:hover {
-  background-color: #dc2626;
+  filter: brightness(90%); /* ทำให้เข้มขึ้นเล็กน้อยตอน Hover */
   transform: translateY(-1px);
 }
 
@@ -247,9 +237,11 @@
     padding: 50px 40px;
   }
   
+  /* บนจอใหญ่ ปรับให้ปุ่มเรียงแนวนอน (ถ้าต้องการ) */
+  /* ถ้าต้องการให้เรียงแนวตั้งตลอด ก็ลบส่วนนี้ออกได้ */
   .buttonGroup {
     flex-direction: row;
-    gap: 16px;
+    gap: 20px;
   }
   
   .submitBtn, .goBackBtn {
