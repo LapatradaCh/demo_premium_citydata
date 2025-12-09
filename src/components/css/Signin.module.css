@@ -1,64 +1,64 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Full Responsive Version)
+   Signin.module.css (Monochrome Version with Original Buttons)
    ----------------------------------------------------------- */
 
 /* ============================================ */
 /* 1. Global Reset & Variables */
 /* ============================================ */
 * {
-  box-sizing: border-box; /* สำคัญ: ช่วยคำนวณ Padding ไม่ให้ดันจนล้น */
+  box-sizing: border-box;
 }
 
 :root {
-  --color-primary: #b78b66;
-  --color-secondary: #4b3b2f;
+  /* เปลี่ยนโทนสีหลักเป็น ดำ/เทา */
+  --color-primary: #000000;       /* สีหลักเปลี่ยนเป็นดำ */
+  --color-secondary: #333333;     /* สีรองเป็นเทาเข้ม */
   --color-bg: #ffffff;
+  --color-border: #d1d1d1;        /* สีขอบเทาอ่อน */
+  
+  /* สีปุ่มเก็บไว้ตามเดิม */
   --color-success: #2ecc71;
   --color-danger: #e63946;
+  --color-blue: #007bff;
 }
 
 /* ============================================ */
 /* 2. Main Background (Body Wrapper) */
 /* ============================================ */
 .bodySignin {
-  /* พื้นหลัง */
-  background-image: linear-gradient(135deg, #eef1f5, #ffffff);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  /* พื้นหลังโทนขาว-เทาเรียบๆ */
+  background-color: #f8f9fa;
+  background-image: none; /* เอา gradient สีเดิมออก */
   
-  /* จัดกึ่งกลาง */
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   
-  /* --- [จุดสำคัญที่แก้เรื่องล้นจอ] --- */
-  padding: 20px; /* กันชนขอบจอทุกด้านไม่ให้เนื้อหาชนขอบ */
+  padding: 20px;
   position: relative;
-  overflow-x: hidden; /* ป้องกันสกรอลล์แนวนอน */
+  overflow-x: hidden;
 }
 
 /* ============================================ */
-/* 3. Card Container (กล่องสีขาวตรงกลาง) */
+/* 3. Card Container */
 /* ============================================ */
 .otpContainer {
   width: 100%;
-  max-width: 480px; /* ความกว้างสูงสุด (เริ่มต้นสำหรับมือถือ/แท็บเล็ตเล็ก) */
+  max-width: 480px;
   
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
+  background: #ffffff; /* พื้นหลังการ์ดขาวล้วน */
   border-radius: 24px;
-  padding: 32px 24px; /* ระยะห่างภายใน */
+  padding: 32px 24px;
   
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* เงาปรับให้ดู Soft ขึ้นแบบ Clean style */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   
   display: flex;
   flex-direction: column;
   align-items: center;
   
-  /* Animation ตอนโหลดหน้า */
   animation: slideUpFade 0.6s ease-out;
 }
 
@@ -81,14 +81,16 @@
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  border: 4px solid var(--color-primary);
-  box-shadow: 0 8px 20px rgba(183, 139, 102, 0.25);
+  /* เปลี่ยนขอบเป็นสีดำหรือเทาเข้ม */
+  border: 4px solid var(--color-secondary); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   object-fit: cover;
   transition: transform 0.3s;
 }
 
 .logoImg:hover {
   transform: rotate(5deg) scale(1.05);
+  border-color: var(--color-primary);
 }
 
 /* ============================================ */
@@ -98,12 +100,12 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 18px; /* ระยะห่างระหว่างบรรทัด */
+  gap: 18px;
 }
 
 .labelUse {
   font-weight: 700;
-  color: var(--color-secondary);
+  color: var(--color-secondary); /* สีข้อความเป็นเทาเข้ม */
   margin-bottom: 8px;
   font-size: 0.95rem;
   display: block;
@@ -118,19 +120,19 @@
 .inputField input {
   width: 100%;
   padding: 0 20px;
-  height: 52px; /* กำหนดความสูงที่แน่นอน */
-  border: 1px solid #e0e0e0;
-  border-radius: 50px; /* ทรงแคปซูล */
+  height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: 50px;
   font-size: 1rem;
   background-color: #fff;
   outline: none;
   transition: all 0.3s ease;
-  color: #333;
+  color: #000; /* สีตัวอักษร input สีดำ */
 }
 
 .inputField input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(183, 139, 102, 0.15);
+  border-color: var(--color-primary); /* Focus เป็นสีดำ */
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
 /* --- Phone & OTP Button Group --- */
@@ -143,7 +145,7 @@
 }
 
 .phoneOtpGroup .inputField {
-  flex: 1; /* ช่องกรอกเบอร์ยืดเต็มที่ */
+  flex: 1;
 }
 
 .phoneOtpGroup button {
@@ -151,7 +153,9 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: #007bff;
+  
+  /* สีปุ่ม OTP (สีฟ้า) ตามเดิม */
+  background-color: var(--color-blue);
   color: #fff;
   border: none;
   font-weight: 700;
@@ -177,7 +181,7 @@
 /* ============================================ */
 .buttonGroup {
   display: flex;
-  flex-direction: column; /* มือถือ: เรียงแนวตั้ง */
+  flex-direction: column;
   gap: 12px;
   margin-top: 10px;
   width: 100%;
@@ -201,17 +205,17 @@
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
-/* สีปุ่มยืนยัน */
+/* สีปุ่มยืนยัน (เขียว) ตามเดิม */
 .submitBtn {
   background: linear-gradient(135deg, #2ecc71, #27ae60);
-  order: 1; /* ในมือถือ ให้ปุ่มยืนยันอยู่บน */
+  order: 1;
 }
 .submitBtn:hover {
   box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
   transform: translateY(-2px);
 }
 
-/* สีปุ่มย้อนกลับ */
+/* สีปุ่มย้อนกลับ (แดง) ตามเดิม */
 .goBackBtn {
   background: linear-gradient(135deg, #e63946, #c92632);
   order: 2;
@@ -236,19 +240,16 @@
 .contactInfo {
   margin-top: 20px;
   text-align: center;
-  color: #888;
+  color: #999; /* สีเทาอ่อน */
   font-size: 0.85rem;
 }
 
 /* ============================================ */
-/* 8. Media Queries (Responsive Logic) */
+/* 8. Media Queries */
 /* ============================================ */
-
-/* สำหรับหน้าจอที่กว้างกว่า 600px (Tablet/PC) */
 @media (min-width: 600px) {
-  
   .otpContainer {
-    max-width: 550px; /* ขยายการ์ดให้กว้างขึ้น */
+    max-width: 550px;
     padding: 40px;
   }
 
@@ -257,7 +258,6 @@
     height: 100px;
   }
 
-  /* ปรับปุ่มให้เรียงแนวนอน */
   .buttonGroup {
     flex-direction: row; 
     gap: 16px;
@@ -266,8 +266,8 @@
 
   .submitBtn, 
   .goBackBtn {
-    flex: 1; /* แบ่งความกว้างเท่ากัน */
-    order: unset; /* ยกเลิกการจัดลำดับแบบมือถือ */
+    flex: 1;
+    order: unset;
   }
   
   .labelUse {
