@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Premium Monochrome - Glassmorphism Style)
+   Signin.module.css (Clean Minimalist - Matching Home1 Tone)
    ----------------------------------------------------------- */
 
 /* ============================================ */
@@ -10,71 +10,58 @@
 }
 
 :root {
-  /* Palette ขาว-ดำ-เทา ที่มีมิติมากขึ้น */
-  --color-primary: #222222;       /* ดำเกือบสนิท */
-  --color-secondary: #555555;     /* เทากลาง */
-  --color-bg-light: #f4f6f9;      /* สีพื้นหลังสว่าง */
-  --color-input-bg: #ffffff;      /* สีพื้นหลัง Input */
-  --color-border: #e1e4e8;        /* สีขอบเทาอ่อน */
+  /* ดึงโทนสีจากรูปตัวอย่าง */
+  --bg-page: #fafafa;       /* สีพื้นหลังหน้าเว็บ (ขาวอมเทานิดๆ) */
+  --bg-card: #ffffff;       /* สีพื้นหลังการ์ด (ขาวล้วน) */
+  --text-main: #1f2937;     /* สีตัวอักษรหลัก (ดำเทา) */
+  --text-sub: #6b7280;      /* สีตัวอักษรรอง (เทา) */
+  --border-color: #f3f4f6;  /* สีเส้นขอบ (เทาอ่อนมาก) */
   
-  /* สีปุ่ม Action (คงเดิมตาม requirement) */
-  --color-success: #2ecc71; /* เขียว */
-  --color-danger: #e63946;  /* แดง */
-  --color-blue: #007bff;    /* น้ำเงิน OTP */
+  /* สี Action */
+  --color-primary: #000000; /* สีดำ (เหมือนปุ่มค้นหา/เมนู Active ในรูป) */
+  --color-success: #10b981; /* สีเขียว (ปรับให้ดู Soft ลงแต่ยังสดใส) */
+  --color-danger: #ef4444;  /* สีแดง (เหมือนปุ่มออกจากระบบมุมขวาบน) */
+  --color-blue: #3b82f6;    /* สีฟ้าสำหรับ OTP */
 }
 
 /* ============================================ */
-/* 2. Main Background (Body Wrapper) */
+/* 2. Main Background */
 /* ============================================ */
 .bodySignin {
-  /* [NEW] เพิ่ม Pattern จุดจางๆ ให้พื้นหลังดูมี Texture ไม่โล่ง */
-  background-color: var(--color-bg-light);
-  background-image: radial-gradient(var(--color-border) 1.5px, transparent 1.5px);
-  background-size: 24px 24px; /* ขนาดของตารางจุด */
-  
+  background-color: var(--bg-page); /* พื้นหลังเรียบๆ ตามรูป */
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  
   padding: 20px;
-  position: relative;
-  overflow-x: hidden;
+  font-family: 'Kanit', sans-serif; /* แนะนำให้ใช้ฟอนต์เดียวกับเว็บ */
 }
 
 /* ============================================ */
-/* 3. Card Container (Glassmorphism Effect) */
+/* 3. Card Container */
 /* ============================================ */
 .otpContainer {
   width: 100%;
-  max-width: 480px;
+  max-width: 460px; /* ขนาดกำลังดี ไม่กว้างเกินไป */
   
-  /* [NEW] เอฟเฟกต์กระจกฝ้า (Glassmorphism) */
-  background: rgba(255, 255, 255, 0.85); /* พื้นหลังขาวโปร่งแสง */
-  backdrop-filter: blur(20px) saturate(180%); /* เบลอฉากหลัง */
-  -webkit-backdrop-filter: blur(20px) saturate(180%); /* สำหรับ Safari */
+  background: var(--bg-card);
+  border-radius: 24px; /* ความโค้งมนระดับเดียวกับ Card ในรูป */
+  padding: 40px 32px;
   
-  border-radius: 30px; /* มุมโค้งมนขึ้น */
-  padding: 40px 30px;
-  
-  /* [NEW] เงาที่ลึกขึ้นและขอบขาวฟุ้งๆ ให้ดูลอยมีมิติ */
-  box-shadow: 
-    0 30px 60px -12px rgba(0, 0, 0, 0.15), /* เงาหลัก */
-    0 18px 36px -18px rgba(0, 0, 0, 0.1),  /* เงารอง */
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9); /* ขอบขาวด้านใน */
-    
-  border: 1px solid rgba(255, 255, 255, 0.4); /* ขอบนอกโปร่งแสง */
+  /* เงาบางๆ นุ่มๆ แบบ Clean Style */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); 
+  border: 1px solid rgba(0,0,0,0.02); /* เส้นขอบจางๆ แทบมองไม่เห็น */
   
   display: flex;
   flex-direction: column;
   align-items: center;
   
-  animation: slideUpFade 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fadeIn 0.5s ease-out;
 }
 
-@keyframes slideUpFade {
-  0% { opacity: 0; transform: translateY(40px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================ */
@@ -85,50 +72,35 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
-  position: relative;
 }
 
 .logoImg {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  border: 5px solid #fff; /* ขอบขาวหนา */
-  /* [NEW] เพิ่มเงาหลายชั้นให้โลโก้ดูเด่น */
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.15),
-    0 0 0 8px rgba(255, 255, 255, 0.5); /* วงแหวนรอบนอก */
   object-fit: cover;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.logoImg:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.2),
-    0 0 0 12px rgba(255, 255, 255, 0.3);
+  /* ลด Effect รกๆ ออก เหลือแค่เงาเบาๆ ให้ดูลอย */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 10px;
 }
 
 /* ============================================ */
-/* 5. Form Elements (Decorated Inputs) */
+/* 5. Form Elements */
 /* ============================================ */
 .otpForm {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 22px; /* เพิ่มระยะห่าง */
+  gap: 20px;
 }
 
 .labelUse {
-  font-weight: 800;
-  color: var(--color-primary);
-  margin-bottom: 10px;
-  font-size: 0.85rem;
-  /* [NEW] ปรับ Label ให้เป็นตัวพิมพ์ใหญ่ ดู Modern */
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-size: 1rem;
   display: block;
   text-align: left;
-  padding-left: 5px;
 }
 
 .inputField {
@@ -136,45 +108,34 @@
   position: relative;
 }
 
-/* สไตล์ Input แบบใหม่ให้ดูมีมิติ */
 .inputField input {
   width: 100%;
-  padding: 0 25px;
-  height: 58px; /* สูงขึ้น */
+  padding: 0 24px;
+  height: 54px; /* ความสูงมาตรฐาน */
   
-  /* [NEW] พื้นหลังและขอบที่หนาขึ้น */
-  background-color: var(--color-input-bg);
-  border: 2px solid var(--color-border);
-  border-radius: 16px; /* โค้งน้อยลงกว่าเดิมนิดหน่อยให้ดูแข็งแรงขึ้น */
+  /* สไตล์เดียวกับช่องค้นหาในรูป */
+  background-color: #ffffff; 
+  border: 1px solid #e5e7eb; /* ขอบสีเทาอ่อนชัดเจนขึ้นนิดนึง */
+  border-radius: 99px; /* ทรงแคปซูล (Pill Shape) */
   
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-size: 1rem;
+  color: var(--text-main);
   outline: none;
-  transition: all 0.3s ease;
-  
-  /* [NEW] เงาด้านในเล็กน้อยให้ดูมีความลึก */
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+  transition: all 0.2s ease;
 }
 
-/* ตอนคลิกที่ Input */
 .inputField input:focus {
-  border-color: var(--color-primary); /* ขอบดำเข้ม */
-  background-color: #fff;
-  /* เงาสีดำจางๆ รอบๆ */
-  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px); /* ขยับขึ้นนิดนึง */
-}
-.inputField input::placeholder {
-    color: #aaa;
-    font-weight: 400;
+  border-color: var(--color-primary); /* โฟกัสแล้วขอบดำ ตามธีมเว็บ */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Phone & OTP Button Group --- */
+.inputField input::placeholder {
+  color: #9ca3af;
+}
+
+/* --- Phone & OTP Layout --- */
 .phoneOtpGroup {
   display: flex;
-  flex-direction: row;
-  align-items: center;
   gap: 12px;
   width: 100%;
 }
@@ -184,130 +145,98 @@
 }
 
 .phoneOtpGroup button {
-  flex-shrink: 0;
-  width: 58px;
-  height: 58px;
-  border-radius: 16px; /* ปรับให้เข้ากับ Input */
+  width: 54px;
+  height: 54px;
+  border-radius: 50%; /* ปุ่มกลม */
   
-  /* สีปุ่ม OTP (สีฟ้า) */
-  background: linear-gradient(135deg, var(--color-blue), #0056b3);
+  background-color: var(--color-primary); /* ใช้สีดำตามธีม หรือสีฟ้าถ้าอยากให้เด่น */
   color: #fff;
   border: none;
-  font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  /* เงาปุ่มสีฟ้า */
-  box-shadow: 0 8px 20px -4px rgba(0, 123, 255, 0.5);
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .phoneOtpGroup button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px -4px rgba(0, 123, 255, 0.6);
-}
-.phoneOtpGroup button:active {
-  transform: scale(0.95);
+  transform: scale(1.05);
+  background-color: #333;
 }
 .phoneOtpGroup button:disabled {
-    background: #ccc;
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ============================================ */
-/* 6. Action Buttons (Green/Red) - Gradients & Shadows */
+/* 6. Buttons (Pill Shape like UI) */
 /* ============================================ */
 .buttonGroup {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 12px;
+  margin-top: 10px;
   width: 100%;
 }
 
 .submitBtn, 
 .goBackBtn {
   width: 100%;
-  padding: 16px 20px;
-  height: 60px;
-  border-radius: 50px; /* ปุ่มหลักยังคงความโค้งมนมาก */
+  height: 54px;
+  border-radius: 99px; /* ทรงแคปซูล */
   border: none;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: white;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  transition: transform 0.1s, box-shadow 0.2s;
 }
 
-/* เอฟเฟกต์แสงวูบวาบบนปุ่ม */
-.submitBtn::after,
-.goBackBtn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: 0.5s;
-}
-.submitBtn:hover::after,
-.goBackBtn:hover::after {
-    left: 100%;
-}
-
-
-/* สีปุ่มยืนยัน (เขียวมีมิติ) */
+/* ปุ่มเข้าร่วม - สีเขียวแบบเรียบ Clean */
 .submitBtn {
-  background: linear-gradient(135deg, #2ecc71, #218c53);
-  box-shadow: 0 10px 30px -8px rgba(46, 204, 113, 0.6);
-  order: 1;
+  background-color: var(--color-success);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 .submitBtn:hover {
-  box-shadow: 0 15px 35px -5px rgba(46, 204, 113, 0.7);
-  transform: translateY(-3px);
+  background-color: #059669;
+  transform: translateY(-1px);
 }
 
-/* สีปุ่มย้อนกลับ (แดงมีมิติ) */
+/* ปุ่มย้อนกลับ - สีแดง (เหมือนปุ่ม logout มุมขวาบนในรูป) */
 .goBackBtn {
-  background: linear-gradient(135deg, #e63946, #a71d2a);
-  box-shadow: 0 10px 30px -8px rgba(230, 57, 70, 0.6);
-  order: 2;
+  background-color: var(--color-danger);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
 }
 .goBackBtn:hover {
-  box-shadow: 0 15px 35px -5px rgba(230, 57, 70, 0.7);
-  transform: translateY(-3px);
+  background-color: #dc2626;
+  transform: translateY(-1px);
 }
 
 /* ============================================ */
-/* 7. Footer & Messages */
+/* 7. Footer */
 /* ============================================ */
 .message {
-  margin-top: 15px;
+  margin-top: 16px;
   text-align: center;
   color: var(--color-danger);
-  font-size: 0.95rem;
-  min-height: 24px;
-  font-weight: 600;
-  padding: 10px;
-  background: rgba(230, 57, 70, 0.1);
-  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .contactInfo {
-  margin-top: 30px;
+  margin-top: 24px;
   text-align: center;
-  color: var(--color-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 1px;
+  color: var(--text-sub);
+  font-size: 0.85rem;
 }
 
 /* ============================================ */
@@ -315,24 +244,15 @@
 /* ============================================ */
 @media (min-width: 600px) {
   .otpContainer {
-    max-width: 520px;
     padding: 50px 40px;
   }
-
-  .logoImg {
-    width: 110px;
-    height: 110px;
-  }
-
+  
   .buttonGroup {
-    flex-direction: row; 
-    gap: 20px;
-    margin-top: 25px;
+    flex-direction: row;
+    gap: 16px;
   }
-
-  .submitBtn, 
-  .goBackBtn {
+  
+  .submitBtn, .goBackBtn {
     flex: 1;
-    order: unset;
   }
 }
