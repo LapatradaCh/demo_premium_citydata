@@ -25,10 +25,10 @@ import styles from './css/StatisticsView.module.css';
 // --- Configuration ---
 const STATUS_COLORS = {
   'ทั้งหมด': '#0f172a',
-  'รอรับเรื่อง': '#ff4d4f',
-  'กำลังดำเนินการ': '#ffc107',
+  'รอรับเรื่อง': '#ff4d4f',      // สีแดง (Stage 1)
+  'กำลังดำเนินการ': '#ffc107',   // สีเหลือง (Stage 2 - ประสานงาน)
   'ดำเนินการ': '#ffc107',
-  'เสร็จสิ้น': '#4caf50',
+  'เสร็จสิ้น': '#4caf50',       // สีเขียว (Stage 3 - ปฏิบัติงาน)
   'ส่งต่อ': '#2196f3',
   'เชิญร่วม': '#00bcd4',
   'ปฏิเสธ': '#64748b',
@@ -46,24 +46,19 @@ const STATUS_KEY_MAP = {
   'ปฏิเสธ': 'reject'
 };
 
-// --- Mock Data (เหลือแค่ efficiencyData ที่ยังเป็น Mock) ---
-const efficiencyData = [
-  { id: 'Ticket-001', stage1: 0.5, stage2: 2, stage3: 24, total: 26.5, type: 'ไฟฟ้า' },
-  { id: 'Ticket-002', stage1: 1.0, stage2: 4, stage3: 12, total: 17.0, type: 'ต้นไม้' },
-  { id: 'Ticket-003', stage1: 0.2, stage2: 1, stage3: 48, total: 49.2, type: 'ต้นไม้' },
-  { id: 'Ticket-004', stage1: 0.8, stage2: 5, stage3: 10, total: 15.8, type: 'ต้นไม้' },
-  { id: 'Ticket-005', stage1: 0.5, stage2: 3, stage3: 20, total: 23.5, type: 'ต้นไม้' },
-];
-
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
-  const [timeRange, setTimeRange] = useState('1w'); // Default 1 สัปดาห์
+  const [timeRange, setTimeRange] = useState('1w');
   const [statsData, setStatsData] = useState(null);
-  const [trendData, setTrendData] = useState([]); // เปลี่ยนจาก Mock เป็น State ว่าง
+  const [trendData, setTrendData] = useState([]); 
   const [staffData, setStaffData] = useState([]);
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
+  
+  // State ใหม่สำหรับข้อมูลประสิทธิภาพ
+  const [efficiencyData, setEfficiencyData] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,14 +69,12 @@ const StatisticsView = ({ organizationId }) => {
         return;
       }
 
-      // ไม่ set loading true ทับซ้อนเวลากด filter เพื่อความลื่นไหลของ UI (หรือจะเปิดก็ได้)
-      // setLoading(true);
-
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
-        const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats';
+        // ปรับ Base URL ตาม Environment ของคุณ
+        const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
-        // 1. Overview Stats (ภาพรวมตลอดกาล ไม่เปลี่ยนตาม filter)
+        // 1. Overview Stats
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -92,14 +85,14 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (ใช้ API ใหม่ + ส่ง timeRange)
+        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
           setTrendData(data);
         }
 
-        // 3. Problem Types (ส่ง timeRange เพื่อกรองตามช่วงเวลาด้วย)
+        // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
@@ -111,7 +104,7 @@ const StatisticsView = ({ organizationId }) => {
           setProblemTypeData(formatted);
         }
 
-        // 4. Satisfaction (ตลอดกาล)
+        // 4. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
         if (satRes.ok) {
           const data = await satRes.json();
@@ -147,6 +140,14 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
+        // 7. Efficiency (ดึงข้อมูล 3 Stages)
+        // หมายเหตุ: ตรวจสอบ path ให้ตรงกับที่ backend deploy (เช่น /api/stats/efficiency)
+        const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
+        if (effRes.ok) {
+            const data = await effRes.json();
+            setEfficiencyData(data);
+        }
+
       } catch (err) {
         console.error("API Error:", err);
       } finally {
@@ -159,7 +160,7 @@ const StatisticsView = ({ organizationId }) => {
     } else {
       setLoading(false);
     }
-  }, [organizationId, timeRange]); // <-- เมื่อ timeRange เปลี่ยน, fetch ใหม่
+  }, [organizationId, timeRange]);
 
   // Helpers
   const getTotalCases = () => statsData ? Object.values(statsData).reduce((a, b) => a + b, 0) : 0;
@@ -176,7 +177,6 @@ const StatisticsView = ({ organizationId }) => {
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), key: 'reject' },
   ];
 
-  // Helper สำหรับ Render ปุ่ม Filter
   const renderFilterButtons = () => (
     <div style={{ display: 'flex', gap: '6px' }}>
       {['1w', '1m', '3m', '1y', '5y'].map((range) => (
@@ -222,7 +222,7 @@ const StatisticsView = ({ organizationId }) => {
             {statusCardConfig.map((card, idx) => {
               const percent = getPercent(card.count, getTotalCases());
               const cssKey = STATUS_KEY_MAP[card.title] || 'total';
-              const textClass = styles[`text-${cssKey}`];      
+              const textClass = styles[`text-${cssKey}`];       
               const badgeBaseClass = styles['badge-status'];   
               const solidColor = STATUS_COLORS[card.title] || '#000';
 
@@ -246,7 +246,7 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
-        {/* --- ส่วนกราฟ Trend ที่เพิ่ม Filter --- */}
+        {/* --- Trend Graph --- */}
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeader} style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
@@ -256,7 +256,6 @@ const StatisticsView = ({ organizationId }) => {
               </h2>
               <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ</p>
             </div>
-            {/* แสดงปุ่ม Filter ตรงนี้ */}
             {renderFilterButtons()}
           </div>
           
@@ -289,6 +288,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
+          {/* --- Efficiency Graph (3 Stages) --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -299,27 +299,80 @@ const StatisticsView = ({ organizationId }) => {
                 <p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p>
               </div>
             </div>
-            {/* กราฟนี้ยังเป็น Mockup (efficiencyData) */}
+            
             <div className={styles.chartContainer}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={efficiencyData} 
-                  layout="vertical"
-                  margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="id" type="category" width={100} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
-                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} />
-                  <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['ดำเนินการ']} name="ดำเนินการ" barSize={16} />
-                  <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['ส่งต่อ']} name="ส่งต่อ" barSize={16} />
-                  <Bar dataKey="stage4" stackId="a" fill={STATUS_COLORS['เชิญร่วม']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage5" stackId="a" fill={STATUS_COLORS['ปฏิเสธ']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage6" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="เสร็จสิ้น" barSize={16} />
-                </BarChart>
-              </ResponsiveContainer>
+              {efficiencyData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart 
+                    data={efficiencyData} 
+                    layout="vertical"
+                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                    <XAxis type="number" hide />
+                    
+                    {/* ใช้ Title เป็นแกน Y และปรับ width เพื่อให้ข้อความไม่ตกขอบ */}
+                    <YAxis 
+                      dataKey="title" 
+                      type="category" 
+                      width={140} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 10, fill: '#4b5563'}} 
+                    />
+
+                    {/* Custom Tooltip สำหรับแสดงข้อมูล 3 Stages และชื่อเต็ม */}
+                    <Tooltip 
+                      cursor={{fill: 'transparent'}} 
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div style={{
+                                backgroundColor: '#fff', 
+                                padding: '12px', 
+                                border: '1px solid #e5e7eb', 
+                                borderRadius: '8px', 
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                            }}>
+                              <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title}</p>
+                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
+                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>
+                                <span style={{fontSize: '11px', color: '#6b7280'}}>รอรับเรื่อง: {data.stage1} ชม.</span>
+                              </div>
+                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
+                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>
+                                <span style={{fontSize: '11px', color: '#6b7280'}}>ประสานงาน: {data.stage2} ชม.</span>
+                              </div>
+                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
+                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>
+                                <span style={{fontSize: '11px', color: '#6b7280'}}>ปฏิบัติงาน: {data.stage3} ชม.</span>
+                              </div>
+                              <hr style={{margin: '6px 0', borderColor: '#e5e7eb'}}/>
+                              <p style={{fontSize: '11px', fontWeight: 'bold', color: '#374151'}}>รวม: {data.total} ชม.</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
+                    
+                    {/* Stage 1: สีแดง (รอรับเรื่อง) */}
+                    <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
+                    
+                    {/* Stage 2: สีเหลือง (ประสานงาน) */}
+                    <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
+                    
+                    {/* Stage 3: สีเขียว (ปฏิบัติงาน) */}
+                    <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
+                    
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>
+              )}
             </div>
           </section>
 
@@ -359,7 +412,8 @@ const StatisticsView = ({ organizationId }) => {
         </div>
 
         <div className={styles.responsiveGrid2}>
-            {/* ส่วนความพึงพอใจและเจ้าหน้าที่ คงเดิม */}
+            
+            {/* --- Satisfaction --- */}
             <section className={styles.sectionCard}>
                 <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', fontSize: '16px'}}>ความพึงพอใจ</h3>
                 {satisfactionData ? (
@@ -387,6 +441,7 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
+            {/* --- Staff Activities --- */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
