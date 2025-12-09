@@ -23,7 +23,7 @@ const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColo
 
 const ReportDetail = ({onGoToInternalMap }) => {
   const reportId = localStorage.getItem("selectedCaseId");
-  
+   
   // Data States
   const [caseInfo, setCaseInfo] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
@@ -42,7 +42,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [statusComment, setStatusComment] = useState(""); 
-  
+   
   // State เพื่อป้องกันการเรียก View API ซ้ำ
   const [hasViewed, setHasViewed] = useState(false);
 
@@ -70,9 +70,9 @@ const ReportDetail = ({onGoToInternalMap }) => {
       try {
         setLoading(true);
         setError(null);
-        
+         
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/crud_case_detail?id=${idToFetch}`;
-        
+         
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
@@ -88,6 +88,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
             real_id: result.info.issue_cases_id,
             title: result.info.title || "ไม่มีหัวข้อ",
             category: result.info.issue_category_name || "ทั่วไป",
+            // ★ UPDATE 1: เพิ่ม field description
+            description: result.info.description || "-", 
             rating: result.info.rating ? parseFloat(result.info.rating) : 0.0,
             status: result.info.status || "รอรับเรื่อง",
             locationDetail: (lat && lng) 
@@ -113,68 +115,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // --- ★ NEW CODE: 2.5 Trigger View API (Automatic Status Change) ---
-  // useEffect(() => {
-  //   const markAsViewed = async () => {
-  //     // ตรวจสอบว่ามีข้อมูล Case และยังไม่เคยยิง View ใน Session นี้
-  //     if (!caseInfo || !caseInfo.real_id || hasViewed) return;
-
-  //     const storedUserId = localStorage.getItem("user_id");
-      
-  //     // ★ แก้ไข: ดึง Organization ID จาก 'lastSelectedOrg' ที่เป็น JSON
-  //     const lastSelectedOrgStr = localStorage.getItem("lastSelectedOrg");
-  //     let storedOrgId = null;
-
-  //     if (lastSelectedOrgStr) {
-  //         try {
-  //             const orgData = JSON.parse(lastSelectedOrgStr);
-  //             storedOrgId = orgData.id; // ดึง id จาก object เช่น {"id":1, ...}
-  //         } catch (e) {
-  //             console.error("Error parsing lastSelectedOrg from localStorage:", e);
-  //         }
-  //     }
-
-  //     // ถ้าไม่มี User หรือ Org ให้ข้ามไป (ยังไม่พร้อมส่ง)
-  //     if (!storedUserId || !storedOrgId) {
-  //         console.warn("User ID or Organization ID missing. Skipping view tracking.");
-  //         return;
-  //     }
-
-  //     try {
-  //       const viewApiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/${caseInfo.real_id}/view`;
-        
-  //       const res = await fetch(viewApiUrl, {
-  //           method: 'PATCH',
-  //           headers: {
-  //               'Content-Type': 'application/json',
-  //           },
-  //           body: JSON.stringify({
-  //               user_id: parseInt(storedUserId),
-  //               organization_id: parseInt(storedOrgId) // ส่ง Org ID ที่แกะออกมาแล้ว
-  //           })
-  //       });
-
-  //       if (res.ok) {
-  //           setHasViewed(true); // Mark as viewed to prevent loop
-  //           // ถ้าสถานะเดิมคือ 'รอรับเรื่อง' ระบบ backend จะเปลี่ยนเป็น 'กำลังประสานงาน'
-  //           // เราจึงควร Refresh ข้อมูลใหม่เพื่อให้หน้า UI อัปเดตสถานะทันที
-  //           if (caseInfo.status === 'รอรับเรื่อง') {
-  //               setRefreshKey(prev => prev + 1);
-  //           }
-  //       } else {
-  //           console.error("Failed to mark case as viewed:", await res.text());
-  //       }
-
-  //     } catch (err) {
-  //       console.error("Error calling view API:", err);
-  //     }
-  //   };
-
-  //   markAsViewed();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [caseInfo, hasViewed]); 
-
-
   // 3. Handle Update Category
   const handleUpdateCategory = async () => {
     if (!selectedIssueType || !caseInfo) {
@@ -187,7 +127,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
     try {
         setIsUpdating(true);
-        
+         
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -276,6 +216,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
     id: "LOADING...",
     title: "กำลังโหลด...",
     category: "-",
+    description: "-", // ★ เพิ่ม fallback
     rating: 0.0,
     status: "รอรับเรื่อง", 
     locationDetail: "-",
@@ -286,7 +227,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
   };
 
   const [statusValue, setStatusValue] = useState(info.status);
-  
+   
   useEffect(() => {
     if (showStatusModal) {
       setStatusValue(info.status);
@@ -339,11 +280,11 @@ const ReportDetail = ({onGoToInternalMap }) => {
     const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     const month = months[dateObj.getMonth()];
     const year = (dateObj.getFullYear() + 543).toString().slice(-2);
-    
+     
     let hours = dateObj.getHours();
     let minutes = dateObj.getMinutes();
     minutes = minutes < 10 ? '0' + minutes : minutes;
-    
+     
     return { date: `${day} ${month} ${year}`, time: `${hours}:${minutes} น.` };
   };
 
@@ -402,7 +343,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
   return (
     <div className={styles.container}>
-      
+       
       {/* Top Section */}
       <div className={styles.topSection}>
         <div className={`${styles.card} ${styles.infoCard}`}>
@@ -412,6 +353,13 @@ const ReportDetail = ({onGoToInternalMap }) => {
             <div className={styles.categoryText}>
                <span>ประเภท: {info.category}</span>
             </div>
+            
+            {/* ★ UPDATE 2: เพิ่มส่วนแสดงรายละเอียด (Description) ตรงนี้ */}
+            <div style={{ marginTop: '10px', marginBottom: '16px', fontSize: '0.95rem', color: '#374151' }}>
+                <p style={{ fontWeight: '600', marginBottom: '2px', fontSize:'0.85rem', color:'#6B7280' }}>รายละเอียด:</p>
+                <p style={{ lineHeight: '1.5' }}>{info.description}</p>
+            </div>
+
           </div>
           
           <div>
@@ -547,7 +495,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
       </div>
 
       {/* ================= MODALS ================= */}
-      
+       
       {/* 1. Modal เปลี่ยนประเภทปัญหา */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
@@ -558,10 +506,10 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 <IconClose />
               </button>
             </div>
-            
+             
             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
-                  
+                   
                   {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888'}}>กำลังโหลดประเภท...</p>}
 
                   {issueTypeList.map((typeItem) => {
@@ -619,7 +567,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
                       <option value="ปฏิเสธ">ปฏิเสธ</option>
                     </select>
                 </div>
-                
+                 
                 <div className={styles.formGroup}>
                    <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
                    <textarea 
