@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import styles from "./css/Signin.module.css";
-import logo from "./traffy.png";
+import styles from "./css/Signin.module.css"; // ตรวจสอบ path ให้ถูกต้อง
+import logo from "./traffy.png"; // ตรวจสอบ path รูปภาพ
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 
@@ -20,14 +20,12 @@ const JoinORG = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-
   const OTP_EXPIRY_SECONDS = 60;
 
-  // ฟังก์ชัน Logout เดิม (สำหรับการเคลียร์ระบบจริงจัง)
+  // ฟังก์ชัน Logout (กรณีต้องออกจากระบบ)
   const performLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id");
-    console.log("Initiating logout for token:", accessToken);
 
     try {
       if (accessToken && userId) {
@@ -40,49 +38,41 @@ const JoinORG = () => {
           },
           body: JSON.stringify({ user_id: userId }),
         });
-        console.log("Backend has been notified of the logout.");
       }
     } catch (error) {
-      console.error(
-        "Failed to notify backend, but proceeding with client-side logout.",
-        error
-      );
+      console.error("Logout notify failed", error);
     } finally {
-      console.log("Executing client-side cleanup.");
       if (liff.isLoggedIn()) {
         liff.logout();
       }
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user_id");
       localStorage.removeItem("selectedOrg");
-      localStorage.removeItem("lastSelectedOrg"); // ลบข้อมูล Org ที่ค้างด้วย
+      localStorage.removeItem("lastSelectedOrg");
       navigate("/");
     }
   };
 
-  // --- [NEW LOGIC] ฟังก์ชันจัดการปุ่ม "ย้อนกลับ" ---
+  // Logic ปุ่มย้อนกลับ: เช็คว่าเคยเลือก Org มาก่อนไหม
   const handleBack = () => {
-    // ตรวจสอบว่ามีข้อมูลหน่วยงานที่เคยเลือกไว้หรือไม่ (lastSelectedOrg)
-    // ถ้ามี: แปลว่าน่าจะเคยเข้าหน้า Home1 มาแล้ว -> ให้กลับไป Home1
-    // ถ้าไม่มี: แปลว่าเพิ่ง Login เข้ามาใหม่แล้วเด้งมาหน้านี้เลย หรือยังไม่มีสังกัด -> ให้ Logout/กลับไปหน้า login
     const savedOrg = localStorage.getItem("lastSelectedOrg");
-    
     if (savedOrg) {
+      // ถ้ามีข้อมูล Org เก่า แสดงว่าเคย Login แล้ว -> กลับไปหน้า Home1 (Dashboard)
       navigate("/home1");
     } else {
+      // ถ้าไม่มี -> Logout กลับหน้าแรก
       performLogout();
     }
   };
 
   const handleGetOTP = () => {
     if (!phoneNumber.trim()) return setMessage("กรุณาใส่เบอร์โทรศัพท์ก่อน");
-    if (!/^\d{9,10}$/.test(phoneNumber))
-      return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
+    if (!/^\d{9,10}$/.test(phoneNumber)) return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     setGeneratedOTP(otp);
     setOtpSentTime(Date.now());
-    setMessage(`ส่ง OTP ไปที่ ${phoneNumber} แล้ว (จำลองการส่ง: ${otp})`);
+    setMessage(`ส่ง OTP ไปที่ ${phoneNumber} แล้ว (จำลอง: ${otp})`);
     setOtpActive(true);
 
     let timeLeft = OTP_EXPIRY_SECONDS;
@@ -92,7 +82,7 @@ const JoinORG = () => {
         clearInterval(interval);
         setOtpActive(false);
         setGeneratedOTP("");
-        setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
+        setMessage("รหัส OTP หมดอายุแล้ว");
       }
     }, 1000);
   };
@@ -102,50 +92,35 @@ const JoinORG = () => {
     setMessage("");
 
     const userIdFromStorage = localStorage.getItem("user_id");
-
-    if (!userIdFromStorage) {
-      setMessage("ไม่พบข้อมูลผู้ใช้, กรุณาเข้าสู่ระบบใหม่");
-      return;
-    }
-
-    if (!unitCode || !phoneNumber || !otpCode)
-      return setMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+    if (!userIdFromStorage) return setMessage("ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบใหม่");
+    
+    if (!unitCode || !phoneNumber || !otpCode) return setMessage("กรุณากรอกข้อมูลให้ครบ");
     if (!generatedOTP) return setMessage("กรุณากดปุ่ม OTP ก่อน");
 
     const elapsed = (Date.now() - otpSentTime) / 1000;
-    if (elapsed > OTP_EXPIRY_SECONDS) {
-      setMessage("รหัส OTP หมดอายุแล้ว กรุณากดปุ่ม OTP อีกครั้ง");
-      setGeneratedOTP("");
-      return;
-    }
-    if (otpCode !== generatedOTP) {
-      return setMessage("รหัส OTP ไม่ถูกต้อง");
-    }
+    if (elapsed > OTP_EXPIRY_SECONDS) return setMessage("OTP หมดอายุแล้ว");
+    if (otpCode !== generatedOTP) return setMessage("รหัส OTP ไม่ถูกต้อง");
 
     setIsLoading(true);
     try {
       const response = await fetch(DB_API, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: userIdFromStorage,
           organization_code: unitCode,
         }),
       });
 
-      const userId = localStorage.getItem("user_id");
       const data = await response.json();
       setIsLoading(false);
 
-      const orgCountResponse = await fetch(
-        `${ORG_COUNT_API_BASE}?user_id=${userId}`
-      );
-      const orgData = await orgCountResponse.json();
-      const orgCount = orgData.length || 0;
-      
-      const checkORG = () => {
+      // ฟังก์ชันเช็ค Org หลังจาก Join สำเร็จ
+      const checkORG = async () => {
+        const orgRes = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userIdFromStorage}`);
+        const orgData = await orgRes.json();
+        const orgCount = orgData.length || 0;
+
         if (orgCount > 1) {
           navigate("/home1");
         } else if (orgCount === 1) {
@@ -157,36 +132,23 @@ const JoinORG = () => {
             name: sourceOrg.organization_name
           };
           localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
-          
-          setTimeout(() => {
-              navigate('/home');
-          }, 100);
+          setTimeout(() => navigate('/home'), 100);
         } else {
-          // กรณีแปลกๆ ที่ join แล้วยังไม่มี org (ไม่น่าเกิด)
-          navigate("/Signin"); 
+          navigate("/Signin");
         }
       };
 
-      if (response.status === 201) {
-        setMessage(`เข้าร่วมหน่วยงาน ${unitCode} สำเร็จ!`);
-        setUnitCode("");
-        setPhoneNumber("");
-        setOtpCode("");
-        setGeneratedOTP("");
+      if (response.status === 201 || response.status === 409) {
+        if (response.status === 201) setMessage("เข้าร่วมสำเร็จ!");
         checkORG();
-      } else if (response.status === 409) {
-        // กรณีเป็นสมาชิกอยู่แล้ว ให้เช็คเงื่อนไขเพื่อไปต่อเลย
-        checkORG();
-        console.log("User already in organization");
       } else if (response.status === 404) {
-        setMessage("รหัสหน่วยงานไม่ถูกต้อง หรือ ไม่พบข้อมูลผู้ใช้");
+        setMessage("รหัสหน่วยงานไม่ถูกต้อง");
       } else {
-        setMessage(data.message || "เกิดข้อผิดพลาดในการเข้าร่วม");
+        setMessage(data.message || "เกิดข้อผิดพลาด");
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Failed to join organization:", error);
-      setMessage("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + error.message);
+      setMessage("Error: " + error.message);
     }
   };
 
@@ -198,58 +160,67 @@ const JoinORG = () => {
         </div>
 
         <form className={styles.otpForm} onSubmit={handleSubmit}>
-          <label className={styles.labelUse}>รหัสหน่วยงาน</label>
-          <div className={styles.inputField}>
-            <input
-              type="text"
-              value={unitCode}
-              onChange={(e) => setUnitCode(e.target.value)}
-              placeholder="รหัสหน่วยงาน"
-              disabled={isLoading}
-            />
-          </div>
-
-          <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
-          <div className={styles.phoneOtpGroup}>
+          {/* Unit Code Input */}
+          <div>
+            <label className={styles.labelUse}>รหัสหน่วยงาน</label>
             <div className={styles.inputField}>
               <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="0812345678"
+                type="text"
+                value={unitCode}
+                onChange={(e) => setUnitCode(e.target.value)}
+                placeholder="ระบุรหัสหน่วยงาน..."
                 disabled={isLoading}
               />
             </div>
-            <button
-              type="button"
-              onClick={handleGetOTP}
-              disabled={otpActive || isLoading}
-            >
-              {otpActive ? "..." : "OTP"}
-            </button>
           </div>
 
-          <label className={styles.labelUse}>รหัส OTP</label>
-          <div className={styles.inputField}>
-            <input
-              type="text"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="กรอกรหัส OTP"
-              disabled={isLoading}
-            />
+          {/* Phone & OTP */}
+          <div>
+            <label className={styles.labelUse}>เบอร์โทรศัพท์</label>
+            <div className={styles.phoneOtpGroup}>
+              <div className={styles.inputField}>
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="08xxxxxxxx"
+                  disabled={isLoading}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleGetOTP}
+                disabled={otpActive || isLoading}
+              >
+                {otpActive ? "..." : "OTP"}
+              </button>
+            </div>
           </div>
 
+          {/* OTP Code Input */}
+          <div>
+            <label className={styles.labelUse}>รหัส OTP</label>
+            <div className={styles.inputField}>
+              <input
+                type="text"
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                placeholder="กรอกรหัส 4 หลัก"
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          {/* Action Buttons */}
           <div className={styles.buttonGroup}>
             <button
               type="submit"
               className={styles.submitBtn}
               disabled={isLoading}
             >
-              {isLoading ? "กำลังดำเนินการ..." : "เข้าร่วมหน่วยงาน"}
+              {isLoading ? "กำลังโหลด..." : "เข้าร่วมหน่วยงาน"}
             </button>
 
-            {/* ใช้ handleBack แทนการ handleLogout โดยตรง */}
             <button
               type="button"
               className={styles.goBackBtn}
