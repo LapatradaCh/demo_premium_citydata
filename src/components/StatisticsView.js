@@ -313,11 +313,11 @@ const StatisticsView = ({ organizationId }) => {
                   <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ fontSize: '12px' }} />
                   <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                   <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} />
-                  <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['ดำเนินการ']} name="ดำเนินการ" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['ส่งต่อ']} name="ส่งต่อ" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['เชิญร่วม']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['ปฏิเสธ']} name="เชิญร่วม" barSize={16} />
-                  <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="เสร็จสิ้น" barSize={16} />
+                  <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['ดำเนินการ']} name="ดำเนินการ" barSize={16} />
+                  <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['ส่งต่อ']} name="ส่งต่อ" barSize={16} />
+                  <Bar dataKey="stage4" stackId="a" fill={STATUS_COLORS['เชิญร่วม']} name="เชิญร่วม" barSize={16} />
+                  <Bar dataKey="stage5" stackId="a" fill={STATUS_COLORS['ปฏิเสธ']} name="เชิญร่วม" barSize={16} />
+                  <Bar dataKey="stage6" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="เสร็จสิ้น" barSize={16} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
