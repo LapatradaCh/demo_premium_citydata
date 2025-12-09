@@ -19,7 +19,8 @@
     width: 100%; 
     background: #fff; 
     border: 1px solid #e0e0e0; 
-    border-radius: 16px; 
+    /* [CHANGE] เพิ่มความโค้งมนของกล่องหลัก */
+    border-radius: 24px; 
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
@@ -59,12 +60,13 @@
     display: block;
     width: 100%;
     height: 48px; 
-    padding: 10px 40px 10px 16px; 
+    padding: 10px 40px 10px 20px; /* เพิ่ม padding ซ้ายนิดหน่อยเพื่อให้ดูสมดุลกับความโค้ง */
     margin-top: 8px; 
     margin-bottom: 12px;
     background-color: #f9fafb;
     border: 1px solid #d1d5db;
-    border-radius: 12px;
+    /* [CHANGE] ปรับให้มนเหมือนแคปซูล */
+    border-radius: 50px;
     font-size: 15px;
     color: #333;
     font-family: inherit;
@@ -72,14 +74,13 @@
     transition: all 0.2s ease;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 14px center;
+    background-position: right 18px center; /* ขยับลูกศรเข้ามานิดนึง */
     background-size: 16px;
 }
 
 .settingsSection select:hover,
 .filterGroup select:hover {
     background-color: #fff;
-    /* [CHANGE] เปลี่ยนสีเส้นขอบเป็นเขียว #28a745 */
     border-color: #28a745; 
 }
 
@@ -87,9 +88,7 @@
 .filterGroup select:focus {
     outline: none;
     background-color: #fff;
-    /* [CHANGE] เปลี่ยนสีเส้นขอบเป็นเขียว #28a745 */
     border-color: #28a745;
-    /* [CHANGE] เปลี่ยนเงาเป็นสีเขียว */
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
 
@@ -100,7 +99,8 @@
     width: 100%; 
     background: #fff; 
     border: 1px solid #f0f0f0; 
-    border-radius: 16px; 
+    /* [CHANGE] เพิ่มความโค้งมน */
+    border-radius: 24px; 
     padding: 20px 24px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: flex;
@@ -117,27 +117,34 @@
     min-width: 150px; 
 }
 
-.searchInput { width: 100%; padding: 12px 18px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background-color: #fcfcfc; }
+.searchInput { 
+    width: 100%; 
+    padding: 12px 20px; 
+    /* [CHANGE] ปรับช่องค้นหาให้มน */
+    border-radius: 50px; 
+    border: 1px solid #ccc; 
+    font-size: 14px; 
+    background-color: #fcfcfc; 
+}
 
 .filterApplyButton { 
-    padding: 12px 20px; 
+    padding: 12px 24px; 
     font-size: 15px; 
     font-weight: 700; 
     color: #fff; 
-    /* [CHANGE] เปลี่ยนปุ่ม Filter เป็นสีเขียว #28a745 */
     background-color: #28a745; 
     border: none; 
-    border-radius: 12px; 
+    /* [CHANGE] ปรับปุ่มให้มนสุดๆ */
+    border-radius: 50px; 
     cursor: pointer; 
     text-align: center; 
     white-space: nowrap;
 }
 .filterApplyButton:hover { 
-    /* [CHANGE] สีเขียวเข้มขึ้นตอน Hover */
     background-color: #218838; 
 }
 
-.qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
+.qrCodePlaceholder { width: 100%; min-height: 250px; background: #f9f9f9; border: 2px dashed #e0e0e0; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #aaa; margin-bottom: 20px; }
 .mockQrIcon { font-size: 80px; color: #e0e0e0; }
 .qrForm { display: flex; flex-direction: column; gap: 16px; }
 
@@ -145,16 +152,18 @@
 /* === 5. AGENCY & CARD STYLES === */
 /* ========================================= */
 :root { 
-    /* [CHANGE] อัปเดตตัวแปรสีหลักให้ตรงกันทั้งระบบ */
-    --agency-primary: #28a745; /* สีเขียว */
-    --agency-warning: #f59e0b; /* สีเหลือง (คงเดิม) */
+    --agency-primary: #28a745; 
+    --agency-warning: #f59e0b; 
     --agency-border: #e0e0e0; 
 }
 
 .agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 
 .agencyProfileCard { 
-    background: #fff; border: 1px solid var(--agency-border); border-radius: 16px; padding: 24px; 
+    background: #fff; border: 1px solid var(--agency-border); 
+    /* [CHANGE] เพิ่มความโค้งมนของการ์ด */
+    border-radius: 24px; 
+    padding: 24px; 
     display: flex; flex-direction: column; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
     max-width: 100%; overflow: hidden; 
 }
@@ -163,15 +172,40 @@
 .agencyLogoCircle { width: 80px; height: 80px; flex-shrink: 0; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
 .agencyOrgName { margin: 0 0 8px 0; font-size: 22px; color: #333; line-height: 1.4; word-break: break-word; }
 .agencyBadges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
+.agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap:5px; }
 
-.agencyBtnEditWarning { padding: 10px 24px; border-radius: 10px; border: none; background: var(--agency-warning); color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; justify-content: center; font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); font-size: 14px; width: 100%; white-space: nowrap; }
+.agencyBtnEditWarning { 
+    padding: 10px 24px; 
+    /* [CHANGE] ปรับปุ่มแก้ไขให้มน */
+    border-radius: 50px; 
+    border: none; 
+    background: var(--agency-warning); 
+    color: #fff; 
+    cursor: pointer; 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: 700; 
+    transition: all 0.2s; 
+    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); 
+    font-size: 14px; 
+    width: 100%; 
+    white-space: nowrap; 
+}
 .agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
 
 @media (min-width: 600px) { .agencyBtnEditWarning { width: fit-content; align-self: flex-end; } }
 
 .agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; overflow: hidden; }
+.agencyInfoBox { 
+    background: #fff; 
+    border: 1px solid #e0e0e0; 
+    /* [CHANGE] ปรับความโค้งของกล่องข้อมูลย่อย */
+    border-radius: 24px; 
+    padding: 20px; 
+    overflow: hidden; 
+}
 .agencyBoxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
 .agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 
@@ -184,13 +218,12 @@
 
 /* Modal */
 .agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
-.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
-.agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 16px 16px 0 0; }
+.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
+.agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 24px 24px 0 0; }
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-/* [CHANGE] แก้ไขปุ่มปิด (กากบาท) */
 .agencyBtnCloseRed { 
-    background: #dc3545; /* สีแดงสด */
+    background: #dc3545; 
     border: none; 
     font-size: 22px; 
     color: white; 
@@ -206,7 +239,6 @@
 }
 .agencyBtnCloseRed:hover { 
     background: #bb2d3b; 
-    /* [CHANGE] เอา transform: rotate(90deg) ออก เพื่อไม่ให้หมุน */
     transform: none; 
 }
 
@@ -221,25 +253,49 @@
 .agencySectionTitle { font-size: 14px; font-weight: 700; color: var(--agency-primary); margin: 5px 0 0 0; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
 .agencyLabel { font-size: 13px; font-weight: 600; color: #444; }
-.agencyInput { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #fff; transition: border 0.2s; }
+
+.agencyInput { 
+    width: 100%; 
+    padding: 12px 20px; 
+    border: 1px solid #d1d5db; 
+    /* [CHANGE] ช่องกรอกข้อมูลโค้งมน */
+    border-radius: 50px; 
+    font-size: 14px; 
+    background: #fff; 
+    transition: border 0.2s; 
+}
 .agencyInput:focus { 
     outline: none; 
     border-color: var(--agency-primary); 
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
-.agencyInputCode { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; font-family: monospace; background: #f8f9fa; color: #333; font-weight: 600; letter-spacing: 1px; text-align: center; }
+.agencyInputCode { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #d1d5db; 
+    /* [CHANGE] ช่องรหัสโค้งมน */
+    border-radius: 50px; 
+    font-size: 15px; 
+    font-family: monospace; 
+    background: #f8f9fa; 
+    color: #333; 
+    font-weight: 600; 
+    letter-spacing: 1px; 
+    text-align: center; 
+}
+
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
 .req { color: #dc3545; }
-.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 16px 16px; }
+.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 24px 24px; }
 
-/* [CHANGE] ปุ่ม Cancel สีแดง */
+/* [CHANGE] ปุ่ม Cancel สีแดง + โค้งมน */
 .agencyBtnCancel { 
     padding: 10px 24px; 
-    border-radius: 8px; 
+    border-radius: 50px; 
     border: none; 
-    background: #dc3545; /* สีแดงสด */
+    background: #dc3545; 
     color: #fff; 
     cursor: pointer; 
     font-weight: 600; 
@@ -248,12 +304,12 @@
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
-/* [CHANGE] ปุ่ม Save สีเขียว */
+/* [CHANGE] ปุ่ม Save สีเขียว + โค้งมน */
 .agencyBtnSave { 
     padding: 10px 24px; 
-    border-radius: 8px; 
+    border-radius: 50px; 
     border: none; 
-    background: var(--agency-primary); /* ใช้สีเขียวจากตัวแปร */
+    background: var(--agency-primary); 
     color: #fff; 
     cursor: pointer; 
     font-weight: 600; 
@@ -267,7 +323,7 @@
 }
 
 .filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
-.filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
+.filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 24px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
 .filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
 .filterModalClose { background: #dc3545; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
 .filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
@@ -277,7 +333,6 @@
 .mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
 .mockSlider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
 .mockToggle input:checked + .mockSlider { 
-    /* [CHANGE] Toggle เป็นสีเขียว #28a745 */
     background-color: #28a745; 
 }
 .mockToggle input:checked + .mockSlider:before { transform: translateX(22px); }
