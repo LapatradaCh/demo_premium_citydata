@@ -3,17 +3,17 @@
 /* =======================================================
    1. THEME UTILITIES
    ======================================================= */
-/* คงเดิม */
+/* Text Colors */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-.text-action       { color: #FFAB00 !important; } /* สีเหลืองทองอำพัน */
+.text-action       { color: #FFAB00 !important; } /* สีทองสวย */
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
-
+/* Badge */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -33,7 +33,7 @@
    ======================================================= */
 .container {
   min-height: 100vh;
-  background-color: #ffffff; /* พื้นหลังขาวสะอาด */
+  background-color: #ffffff;
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
@@ -167,8 +167,8 @@
   background-color: #ffffff;
   padding: 24px;
   border-radius: 20px;
-  border: 1px solid #e2e8f0; /* ขอบบางๆ สีเทาอ่อน */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* เงาฟุ้งๆ */
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -184,8 +184,6 @@
   flex-wrap: wrap;
   gap: 16px;
   padding-bottom: 12px;
-  /* ลบเส้นขอบล่างออกเพื่อให้คลีนขึ้นตามแบบรูปที่ 2 */
-  /* border-bottom: 1px solid #f1f5f9; */ 
 }
 
 .sectionTitle {
@@ -212,12 +210,11 @@
   margin-top: 4px;
 }
 
-/* --- FILTER BUTTONS STYLE (เหมือนรูปเป๊ะ) --- */
+/* --- FILTER BUTTONS STYLE (PILL SHAPE) --- */
 .filterContainer {
-  /* กรอบรวม: พื้นขาวมนๆ มีเงาและขอบจางๆ */
   background-color: #ffffff;
   padding: 6px 8px;
-  border-radius: 12px; /* หรือ 50px ถ้าชอบมนมาก */
+  border-radius: 12px;
   display: flex;
   gap: 8px;
   border: 1px solid #e2e8f0;
@@ -225,17 +222,16 @@
 }
 
 .filterButton {
-  /* ปุ่มปกติ: พื้นขาว ลอยนูนนิดๆ ตัวหนังสือสีเทาฟ้า */
   padding: 6px 18px;
-  border-radius: 8px; /* หรือ 20px ให้เป็นเม็ดยา */
+  border-radius: 8px;
   border: 1px solid transparent;
   background-color: #ffffff;
-  color: #64748b; /* สีเทาฟ้าแบบในรูป */
+  color: #64748b;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 700; /* ตัวหนา */
+  font-weight: 700;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* เงาปุ่ม */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .filterButton:hover {
@@ -245,11 +241,10 @@
 }
 
 .filterButtonActive {
-  /* ปุ่มกดแล้ว: พื้นขาวเหมือนเดิม แต่ตัวหนังสือสีส้ม */
   background-color: #ffffff;
-  color: #FFAB00; /* สีส้ม */
-  border: 1px solid #f1f5f9; /* ขอบจางๆ */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* เงาชัดขึ้น */
+  color: #FFAB00; /* Active Color: Gold */
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transform: scale(1.02);
 }
 
@@ -288,7 +283,7 @@
 }
 .emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 
-/* --- GRID SYSTEM & RESPONSIVE --- */
+/* --- GRID SYSTEM --- */
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 @media (max-width: 1200px) {
