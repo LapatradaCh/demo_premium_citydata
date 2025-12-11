@@ -3,17 +3,15 @@
 /* =======================================================
    1. THEME UTILITIES
    ======================================================= */
-/* Text Colors */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-.text-action       { color: #FFAB00 !important; } /* สีเหลืองทองอำพัน */
+.text-action       { color: #FFAB00 !important; } 
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
-/* Badge */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -40,7 +38,6 @@
   box-sizing: border-box;
 }
 
-/* Header */
 .header {
   background-color: #ffffff;
   padding: 16px 32px;
@@ -67,7 +64,6 @@
   margin-top: 4px;
 }
 
-/* Main Content */
 .main {
   padding: 24px 32px;
   margin: 0 auto;
@@ -162,7 +158,7 @@
   z-index: 0;
 }
 
-/* --- SECTION CARDS & CHART HEADER --- */
+/* --- SECTION CARDS --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -210,105 +206,99 @@
   margin-top: 4px;
 }
 
-/* --- FILTER BUTTONS STYLE (PILL SHAPE) --- */
+/* --- FILTER BUTTONS (ต้นแบบ) --- */
 .filterContainer {
   background-color: #ffffff;
-  padding: 6px 8px;
+  padding: 4px;
   border-radius: 12px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .filterButton {
-  padding: 6px 18px;
+  padding: 6px 14px;
   border-radius: 8px;
   border: 1px solid transparent;
   background-color: #ffffff;
   color: #64748b;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .filterButton:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 5px rgba(0,0,0,0.08);
   color: #334155;
 }
 
 .filterButtonActive {
   background-color: #ffffff;
-  color: #FFAB00; /* Active Color: Gold */
+  color: #FFAB00;
   border: 1px solid #f1f5f9;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transform: scale(1.02);
 }
 
-/* --- MINI LEGEND BUTTONS (ปุ่มเล็กแบบในรูป) --- */
+/* --- INTERACTIVE LEGEND (แก้ใหม่ให้เหมือน Filter Button) --- */
 .legendContainer {
   display: flex;
-  flex-direction: row;       /* บังคับแนวนอน */
-  justify-content: center;   /* จัดกึ่งกลาง */
-  flex-wrap: wrap;           /* ให้ปัดลงบรรทัดใหม่ได้ถ้าจอเล็กมาก */
-  align-items: center;
-  gap: 6px;                  /* ระยะห่างระหว่างปุ่ม 6px */
-  margin-top: 16px;
+  flex-direction: row;       /* เรียงแนวนอน */
+  justify-content: center;   /* กึ่งกลาง */
+  flex-wrap: wrap;           /* ถ้าจอเล็กมากให้ปัดลง */
+  gap: 8px;                  /* ระยะห่างระหว่างปุ่ม */
+  margin-top: 20px;
   width: 100%;
 }
 
-.miniLegendBtn {
-  /* รูปทรงปุ่ม */
+.legendBtn {
+  /* ทำสไตล์ให้เหมือน .filterButton */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;                  
+  gap: 6px;
   
-  /* ขนาดปุ่ม: ทำให้เล็กกะทัดรัด */
-  padding: 4px 10px;         
-  height: 28px;              
-  border-radius: 6px;        /* ความมนแบบสี่เหลี่ยมมน */
+  padding: 6px 14px;         /* ขนาดกะทัดรัด */
+  border-radius: 8px;        /* ความมนแบบสี่เหลี่ยมมน */
   
-  /* สีและเส้นขอบ */
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
-  color: #64748b;
   
-  /* ตัวหนังสือ */
-  font-size: 11px;           
+  font-size: 12px;
   font-weight: 500;
-  white-space: nowrap;       
+  color: #64748b;
   
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* เงาจางๆ */
+  
+  min-width: auto;           /* ไม่ฟิกซ์ความกว้าง */
 }
 
-.miniLegendBtn:hover {
-  background-color: #f8fafc;
-  border-color: #cbd5e1;
+.legendBtn:hover {
   transform: translateY(-1px);
+  box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+  background-color: #f8fafc;
 }
 
-/* สถานะตอนกดปุ่ม (Active) */
-.miniLegendBtnActive {
+/* ปุ่มสถานะ Active */
+.legendBtnActive {
   background-color: #ffffff;
-  border-width: 1px;
-  border-color: currentColor; /* สีขอบตามสีสถานะ */
-  color: inherit;             /* สีตัวหนังสือตามสีสถานะ */
+  border: 1px solid currentColor; /* ขอบสีเดียวกับตัวหนังสือ */
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transform: scale(1.03);
 }
 
 .legendDot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
-  flex-shrink: 0;
 }
 
 /* Custom Tooltip */
@@ -368,6 +358,8 @@
   .filterContainer { width: 100%; justify-content: space-between; padding: 4px; }
   .filterButton { flex: 1; padding: 6px 0; text-align: center; box-shadow: none; border: 1px solid #f1f5f9; }
   .filterButtonActive { box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-color: #FFAB00; }
+  
+  /* Mobile Legend Adjustment */
   .legendContainer { gap: 6px; }
-  .miniLegendBtn { padding: 4px 8px; font-size: 10px; }
+  .legendBtn { padding: 4px 10px; font-size: 11px; }
 }
