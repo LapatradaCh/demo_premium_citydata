@@ -10,18 +10,21 @@ import {
 // --- Config & Constants ---
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
-// URL สำหรับดึงประเภทองค์กร (Master Data)
 const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
 
-// --- ปรับปรุง: ดึง ID จาก LocalStorage ---
-let ORGANIZATION_ID = null; // ค่า Default กรณีไม่พบข้อมูล
+// --- Logic ดึง ID จาก LocalStorage ---
+let ORGANIZATION_ID = null; // เริ่มต้นเป็น null
+
 try {
-  const storedOrgString = localStorage.getItem("lastSelectedOrg");
-  if (storedOrgString) {
-    const storedOrg = JSON.parse(storedOrgString);
-    if (storedOrg && storedOrg.id) {
-      ORGANIZATION_ID = storedOrg.id;
-      console.log("Loaded Organization ID:", ORGANIZATION_ID);
+  // ตรวจสอบว่ารันบน Browser หรือไม่
+  if (typeof window !== "undefined") {
+    const storedOrgString = localStorage.getItem("lastSelectedOrg");
+    if (storedOrgString) {
+      const storedOrg = JSON.parse(storedOrgString);
+      if (storedOrg && storedOrg.id) {
+        ORGANIZATION_ID = storedOrg.id;
+        console.log("Loaded Organization ID:", ORGANIZATION_ID);
+      }
     }
   }
 } catch (error) {
@@ -39,21 +42,17 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
-// 1. ส่วน "ข้อมูลหน่วยงาน" (CONNECTED TO REAL API)
+// 1. ส่วน "ข้อมูลหน่วยงาน" (ย้ายออกมาข้างนอกแล้ว ✅ แก้ปัญหาพิมพ์แล้วหลุด)
 // ==================================================================================
 const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
     
-  // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
-
-  // State สำหรับเก็บรูปภาพ
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
-  // ✅ State สำหรับเก็บตัวเลือก Dropdown (Master Data)
   const [orgTypeOptions, setOrgTypeOptions] = useState([]);
 
   // Initial State
@@ -61,7 +60,7 @@ const AgencySettings = () => {
     name: "",
     adminCode: "",
     userCode: "",
-    agencyType: "", // เก็บเป็น ID (Integer)
+    agencyType: "", // เก็บเป็น UUID String
     province: "",
     district: "",
     subDistrict: "",
@@ -77,7 +76,7 @@ const AgencySettings = () => {
             const res = await fetch(API_ORG_TYPES_URL);
             if(res.ok) {
                 const data = await res.json();
-                // data format: [{ value: 1, label: 'เทศบาล' }, ...]
+                // data format: [{ value: 'uuid-string', label: 'เทศบาล' }, ...]
                 setOrgTypeOptions(data);
             }
         } catch (error) {
@@ -88,10 +87,13 @@ const AgencySettings = () => {
     // 1.2 ฟังก์ชันดึงข้อมูลหน่วยงาน
     const fetchOrgData = async () => {
       try {
+        if (!ORGANIZATION_ID) {
+             throw new Error("ไม่พบ Organization ID ในระบบ (กรุณา Login ใหม่)");
+        }
+
         setIsLoading(true);
         const url = `${API_BASE_URL}?id=${ORGANIZATION_ID}`;
         
-        // เรียกดึง Types ก่อน หรือทำคู่กันก็ได้ แต่แยกฟังก์ชันไว้แล้วเรียกตรงนี้
         await fetchOrgTypes(); 
 
         const res = await fetch(url);
@@ -108,13 +110,12 @@ const AgencySettings = () => {
           throw new Error("Server returned invalid JSON");
         }
 
-        // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
             userCode: data.organization_code || "",
             
-            // ✅ Map ID มาใส่ state (ถ้าไม่มีค่า ให้เป็นว่าง)
+            // ✅ ไม่ต้อง parseInt เพราะ ID เป็น UUID String
             agencyType: data.org_type_id || "", 
             
             province: data.province || "",
@@ -143,12 +144,11 @@ const AgencySettings = () => {
     try {
         setIsSaving(true);
 
-        // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
             organization_id: ORGANIZATION_ID,
             organization_name: formData.name,
             
-            // ✅ ส่ง ID กลับไป (เช่น 1, 2)
+            // ✅ แก้ไข: ส่งค่า String UUID ตรงๆ (ลบ parseInt ออก)
             org_type_id: formData.agencyType, 
             
             district: formData.district,
@@ -207,13 +207,13 @@ const AgencySettings = () => {
     }
   };
 
-  // --- Helper: หาชื่อ Label จาก ID (สำหรับแสดงผล View Mode) ---
   const getOrgTypeLabel = (id) => {
-      const found = orgTypeOptions.find(opt => opt.value === id);
+      // id อาจจะเป็น string หรือ int ก็ได้ ขึ้นอยู่กับ API
+      // ใช้ loose equality (==) เผื่อ string/number mismatch หรือแปลงเป็น string ทั้งคู่
+      const found = orgTypeOptions.find(opt => String(opt.value) === String(id));
       return found ? found.label : "-";
   };
 
-  // --- Loading State ---
   if (isLoading) {
     return (
         <div style={{ padding: "50px", textAlign: "center", color: "#666" }}>
@@ -272,7 +272,7 @@ const AgencySettings = () => {
                     <select 
                         className={styles.agencyInput} 
                         value={formData.agencyType} 
-                        // แปลงเป็น Int เพราะ value ของ option เป็น number
+                        // ✅ แก้ไข: ไม่ใช้ parseInt เพื่อเก็บค่า UUID String
                         onChange={(e)=>handleChange('agencyType', e.target.value)}
                     >
                         <option value="">-- กรุณาเลือก --</option>
@@ -361,7 +361,6 @@ const AgencySettings = () => {
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name || "-"}</h2>
                         <div className={styles.agencyBadges}>
-                            {/* ✅ แสดงผลชื่อประเภทหน่วยงานจาก ID */}
                             <span className={styles.agencyBadgeType}>
                                 <FaCity style={{fontSize:10}}/> {getOrgTypeLabel(formData.agencyType)}
                             </span>
