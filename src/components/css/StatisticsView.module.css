@@ -248,58 +248,63 @@
   transform: scale(1.02);
 }
 
-/* --- INTERACTIVE LEGEND (COMPACT ROW FIX) --- */
+/* --- MINI LEGEND BUTTONS (ปุ่มเล็กแบบในรูป) --- */
 .legendContainer {
   display: flex;
-  flex-direction: row;        /* บังคับแนวนอน */
-  justify-content: center;    /* จัดกึ่งกลาง */
-  flex-wrap: wrap;            /* ยอมให้ปัดบรรทัดได้เมื่อจอเล็ก */
+  flex-direction: row;       /* บังคับแนวนอน */
+  justify-content: center;   /* จัดกึ่งกลาง */
+  flex-wrap: wrap;           /* ให้ปัดลงบรรทัดใหม่ได้ถ้าจอเล็กมาก */
   align-items: center;
-  gap: 6px;                   /* ระยะห่างกระชับ */
+  gap: 6px;                  /* ระยะห่างระหว่างปุ่ม 6px */
   margin-top: 16px;
   width: 100%;
 }
 
-.legendBtn {
+.miniLegendBtn {
+  /* รูปทรงปุ่ม */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;                   /* ระยะห่างจุดกับตัวหนังสือ */
-  padding: 4px 10px;          /* ลดขอบในให้ปุ่มเล็ก */
-  border-radius: 16px;        /* ความมนพอดีตัว */
+  gap: 4px;                  
+  
+  /* ขนาดปุ่ม: ทำให้เล็กกะทัดรัด */
+  padding: 4px 10px;         
+  height: 28px;              
+  border-radius: 6px;        /* ความมนแบบสี่เหลี่ยมมน */
+  
+  /* สีและเส้นขอบ */
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
+  color: #64748b;
+  
+  /* ตัวหนังสือ */
+  font-size: 11px;           
+  font-weight: 500;
+  white-space: nowrap;       
+  
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  /* Typography */
-  font-size: 11px;            /* ตัวหนังสือเล็ก */
-  font-weight: 500;
-  color: #64748b;
-  white-space: nowrap;        /* ห้ามตัดคำ เพื่อให้ปุ่มเรียงกันสวย */
-  
-  /* Remove Fixed Width */
-  min-width: auto;            /* ให้หดตัวเท่าข้อความ */
   box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
-.legendBtn:hover {
-  transform: translateY(-1px);
+.miniLegendBtn:hover {
   background-color: #f8fafc;
   border-color: #cbd5e1;
+  transform: translateY(-1px);
 }
 
-.legendBtnActive {
-  background-color: #fff;
-  border: 1px solid;          /* ขอบสีตามสถานะ (รับจาก inline style) */
-  border-color: currentColor; 
-  font-weight: 700;           /* ตัวหนาเมื่อเลือก */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transform: scale(1.02);
+/* สถานะตอนกดปุ่ม (Active) */
+.miniLegendBtnActive {
+  background-color: #ffffff;
+  border-width: 1px;
+  border-color: currentColor; /* สีขอบตามสีสถานะ */
+  color: inherit;             /* สีตัวหนังสือตามสีสถานะ */
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .legendDot {
-  width: 6px;                 /* จุดสีเล็กลง */
+  width: 6px;
   height: 6px;
   border-radius: 50%;
   display: inline-block;
@@ -364,5 +369,5 @@
   .filterButton { flex: 1; padding: 6px 0; text-align: center; box-shadow: none; border: 1px solid #f1f5f9; }
   .filterButtonActive { box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-color: #FFAB00; }
   .legendContainer { gap: 6px; }
-  .legendBtn { padding: 4px 8px; font-size: 10px; }
+  .miniLegendBtn { padding: 4px 8px; font-size: 10px; }
 }
