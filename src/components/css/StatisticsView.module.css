@@ -8,13 +8,14 @@
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-.text-action       { color: #f97316 !important; } /* สีส้ม สำหรับสถานะดำเนินการ */
+/* ปรับเป็นสีเหลืองทองตามรูปภาพ */
+.text-action       { color: #D49E12 !important; } 
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
-/* Badge (ใช้ในตารางหรือจุดอื่นๆ ที่ไม่ใช่การ์ดบน) */
+/* Badge */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -85,19 +86,19 @@
 /* --- NEW DASHBOARD LAYOUT --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่ (Fixed), ขวา Grid (Auto) */
+  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่, ขวา Grid */
   gap: 24px;
   width: 100%;
 }
 
 .rightGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์ */
-  grid-template-rows: repeat(2, 1fr);    /* 2 แถว */
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 24px;
 }
 
-/* --- STATUS CARDS (Solid Color Style) --- */
+/* --- STATUS CARDS (Solid Color) --- */
 .statusCard {
   border-radius: 20px;
   padding: 24px;
@@ -111,7 +112,7 @@
   border: none;
   position: relative;
   overflow: hidden;
-  color: #ffffff; /* ตัวหนังสือขาว */
+  color: #ffffff;
 }
 
 .statusCard:hover {
@@ -252,10 +253,11 @@
   margin-bottom: 20px;
 }
 
+/* ปรับสีตัวเลขคะแนนใหญ่ให้เป็นสีทอง */
 .scoreBig {
   font-size: 56px;
   font-weight: 800;
-  color: #ca8a04; /* สีเหลืองทองเข้ม สำหรับตัวเลขคะแนน */
+  color: #D49E12; /* Golden Yellow */
   line-height: 0.9;
 }
 
@@ -337,7 +339,7 @@
 
 @media (max-width: 1200px) {
   .dashboardTopSection {
-    grid-template-columns: 1fr; /* บนมือถือ/จอเล็ก ให้เรียงลงมา */
+    grid-template-columns: 1fr;
   }
   .totalCard {
       height: 200px;
