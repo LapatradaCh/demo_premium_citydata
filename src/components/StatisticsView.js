@@ -38,18 +38,7 @@ const STATUS_COLORS = {
   'NULL': '#d1d5db'
 };
 
-const STATUS_KEY_MAP = {
-  'ทั้งหมด': 'total',
-  'รอรับเรื่อง': 'waiting',
-  'กำลังประสาน': 'coordinating',
-  'ดำเนินการ': 'action',
-  'เสร็จสิ้น': 'finished',
-  'ส่งต่อ': 'forward',
-  'เชิญร่วม': 'invite',
-  'ปฏิเสธ': 'reject'
-};
-
-// Config สำหรับปุ่มกดด้านล่าง (Legend Buttons)
+// Config ปุ่มกดสถานะ (ทั้งหมด ขึ้นก่อน)
 const LEGEND_CONFIG = [
   { key: 'total', label: 'ทั้งหมด', color: STATUS_COLORS['ทั้งหมด'] },
   { key: 'pending', label: 'รอรับเรื่อง', color: STATUS_COLORS['รอรับเรื่อง'] },
@@ -64,7 +53,7 @@ const LEGEND_CONFIG = [
 const renderCustomDefs = () => (
   <defs>
     <filter id="shadow" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#FFAB00" floodOpacity="0.25" />
+      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#FFAB00" floodOpacity="0.3" />
     </filter>
     <filter id="shadowGray" height="200%">
       <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
@@ -73,10 +62,8 @@ const renderCustomDefs = () => (
 );
 
 const StatisticsView = ({ organizationId }) => {
-  // --- States ---
-  const [timeRange, setTimeRange] = useState('1M'); // Default เป็น 1M
-  // State เลือกเส้นกราฟ (Default: 'total')
-  const [activeTrendKey, setActiveTrendKey] = useState('total');
+  const [timeRange, setTimeRange] = useState('1M'); // Default 1M
+  const [activeTrendKey, setActiveTrendKey] = useState('total'); // Default เลือกทั้งหมด
 
   const [statsData, setStatsData] = useState(null);
   const [trendData, setTrendData] = useState([]); 
@@ -192,7 +179,6 @@ const StatisticsView = ({ organizationId }) => {
   const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
   const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
-  // Config การ์ด
   const totalCardData = { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' };
   const otherStatusConfig = [
     { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
@@ -203,7 +189,6 @@ const StatisticsView = ({ organizationId }) => {
     { title: 'ปฏิเสธ', count: getStatusCount('ปฏิเสธ'), key: 'reject' },
   ];
 
-  // Render ปุ่ม Filter แบบ Pill
   const renderFilterButtons = () => (
     <div className={styles.filterContainer}>
       {['1W', '1M', '3M', '1Y', '5Y'].map((range) => (
@@ -218,7 +203,7 @@ const StatisticsView = ({ organizationId }) => {
     </div>
   );
 
-  // Render ปุ่ม Legend (กดเลือกกราฟ)
+  // Function Render ปุ่ม Legend ด้านล่างกราฟ
   const renderCustomLegend = () => {
     return (
       <div className={styles.legendContainer}>
@@ -230,11 +215,16 @@ const StatisticsView = ({ organizationId }) => {
               onClick={() => setActiveTrendKey(item.key)}
               className={`${styles.legendBtn} ${isActive ? styles.legendBtnActive : ''}`}
               style={{
-                color: isActive ? item.color : '#94a3b8',
-                opacity: isActive ? 1 : 0.8,
+                // ถ้าเลือกใช้สีสถานะ ถ้าไม่เลือกใช้สีเทา
+                color: isActive ? item.color : '#64748b', 
+                // ถ้าเลือกขอบสีสถานะ ถ้าไม่เลือกขอบเทาจางๆ
+                borderColor: isActive ? item.color : '#e2e8f0', 
               }}
             >
-              <span className={styles.legendDot} style={{ backgroundColor: item.color }} />
+              <span 
+                className={styles.legendDot} 
+                style={{ backgroundColor: item.color }} 
+              />
               {item.label}
             </button>
           );
@@ -283,7 +273,7 @@ const StatisticsView = ({ organizationId }) => {
           </section>
         )}
 
-        {/* --- Trend Graph --- */}
+        {/* --- TREND GRAPH --- */}
         <section className={styles.sectionCard}>
           <div className={styles.chartHeaderWrapper}>
             <div>
@@ -291,7 +281,7 @@ const StatisticsView = ({ organizationId }) => {
                 <TrendingUp color="#3b82f6" size={20} />
                 แนวโน้ม ({timeRange})
               </h2>
-              <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ (คลิกปุ่มด้านล่างเพื่อเลือกดู)</p>
+              <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ</p>
             </div>
             {renderFilterButtons()}
           </div>
@@ -325,16 +315,83 @@ const StatisticsView = ({ organizationId }) => {
                     }}
                   />
                   
-                  {/* ไม่ใช้ Legend ปกติของ Recharts */}
+                  {/* --- ปรับแก้เงื่อนไข hide: ถ้าเป็น 'total' ให้โชว์ทุกเส้น, ถ้าเป็นอื่นให้โชว์เฉพาะเส้นนั้น --- */}
 
-                  {/* Lines: จะแสดงเมื่อ activeTrendKey ตรงกัน */}
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
-                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'pending'} />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7, strokeWidth: 0 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'action'} />
-                  <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'completed'} />
-                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'forward'} />
-                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'invite'} />
-                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'reject'} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="total" 
+                    stroke={STATUS_COLORS['ทั้งหมด']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    activeDot={{ r: 6 }} 
+                    name="ทั้งหมด" 
+                    filter="url(#shadowGray)" 
+                    hide={activeTrendKey !== 'total'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="pending" 
+                    stroke={STATUS_COLORS['รอรับเรื่อง']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    activeDot={{ r: 6 }} 
+                    name="รอรับเรื่อง" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="action" 
+                    stroke={STATUS_COLORS['ดำเนินการ']} 
+                    strokeWidth={4} 
+                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
+                    activeDot={{ r: 7 }} 
+                    name="ดำเนินการ" 
+                    filter="url(#shadow)" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="completed" 
+                    stroke={STATUS_COLORS['เสร็จสิ้น']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    activeDot={{ r: 6 }} 
+                    name="เสร็จสิ้น" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="forward" 
+                    stroke={STATUS_COLORS['ส่งต่อ']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    name="ส่งต่อ" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="invite" 
+                    stroke={STATUS_COLORS['เชิญร่วม']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    name="เชิญร่วม" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} 
+                  />
+                  
+                  <Line 
+                    type="monotone" 
+                    dataKey="reject" 
+                    stroke={STATUS_COLORS['ปฏิเสธ']} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    name="ปฏิเสธ" 
+                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} 
+                  />
 
                 </LineChart>
               </ResponsiveContainer>
@@ -343,19 +400,16 @@ const StatisticsView = ({ organizationId }) => {
             )}
           </div>
           
-          {/* Custom Interactive Legend */}
+          {/* Custom Interactive Legend (ปุ่มเล็ก แนวนอน) */}
           {renderCustomLegend()}
 
         </section>
 
         <div className={styles.responsiveGrid2}>
-          {/* ... ส่วนอื่นคงเดิม ... */}
+          {/* ... ส่วนกราฟอื่นๆ ... */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-              <div>
-                <h2 className={styles.sectionTitle}><Clock color="#FFAB00" size={20} />เวลาแต่ละขั้นตอน</h2>
-                <p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p>
-              </div>
+              <div><h2 className={styles.sectionTitle}><Clock color="#FFAB00" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
@@ -377,9 +431,7 @@ const StatisticsView = ({ organizationId }) => {
                               <p style={{fontSize: '11px', fontWeight: 'bold', color: '#374151'}}>รวม: {data.total} ชม.</p>
                             </div>
                           );
-                        }
-                        return null;
-                      }} />
+                        } return null; }} />
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
@@ -392,10 +444,7 @@ const StatisticsView = ({ organizationId }) => {
 
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-              <div>
-                <h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2>
-                <p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange})</p>
-              </div>
+              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange})</p></div>
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
