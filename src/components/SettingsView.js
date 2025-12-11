@@ -223,132 +223,6 @@ const AgencySettings = () => {
     );
   }
 
-  // --- POPUP EDIT MODAL ---
-  const AgencyEditModal = () => (
-    <>
-      <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
-      <div className={styles.agencyModalContainer}>
-        <div className={styles.agencyModalHeader}>
-            <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
-            <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)} disabled={isSaving}>
-                <FaTimes />
-            </button>
-        </div>
-          
-        <div className={styles.agencyModalBody}>
-              {/* ส่วนอัปโหลดรูปภาพ */}
-              <div className={styles.agencyImageSection}>
-                <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    style={{ display: "none" }} 
-                    accept="image/*"
-                    onChange={handleFileChange}
-                />
-                <div className={styles.agencyImageCircle} onClick={handleImageClick}>
-                    {logoPreview ? (
-                        <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} />
-                    ) : (
-                        <FaImage size={32} color="#ccc"/>
-                    )}
-                    <div className={styles.agencyEditOverlay}><FaEdit/></div>
-                </div>
-                <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
-              </div>
-
-              {/* ฟอร์มข้อมูล */}
-              <div className={styles.agencyFormContainer}>
-                  
-                {/* Group 1: ข้อมูลทั่วไป */}
-                <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
-                <div className={styles.agencyFormGroup}>
-                    <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
-                    <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
-                </div>
-                  
-                {/* ✅ ส่วน Dropdown เลือกประเภทหน่วยงาน */}
-                <div className={styles.agencyFormGroup}>
-                    <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
-                    <select 
-                        className={styles.agencyInput} 
-                        value={formData.agencyType} 
-                        // แปลงเป็น Int เพราะ value ของ option เป็น number
-                        onChange={(e)=>handleChange('agencyType', e.target.value)}
-                    >
-                        <option value="">-- กรุณาเลือก --</option>
-                        {orgTypeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Group 2: รหัส (Read Only) */}
-                <div className={styles.agencyDivider}></div>
-                <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
-                <div className={styles.agencyRow2}>
-                      <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>Admin Code</label>
-                        <input className={styles.agencyInputCode} value={formData.adminCode} disabled style={{background: '#f0f0f0', color:'#999'}} />
-                      </div>
-                      <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>User Code</label>
-                        <input className={styles.agencyInputCode} value={formData.userCode} disabled style={{background: '#f0f0f0', color:'#999'}} />
-                      </div>
-                </div>
-
-                {/* Group 3: ที่อยู่ */}
-                <div className={styles.agencyDivider}></div>
-                <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
-                  
-                <div className={styles.agencyAddressGrid}>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>จังหวัด</label>
-                        <input className={styles.agencyInput} value={formData.province} onChange={(e)=>handleChange('province', e.target.value)} />
-                    </div>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>อำเภอ/เขต</label>
-                        <input className={styles.agencyInput} value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
-                    </div>
-                    <div className={styles.agencyFormGroup}>
-                        <label className={styles.agencyLabel}>ตำบล/แขวง</label>
-                        <input className={styles.agencyInput} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
-                    </div>
-                </div>
-
-                <div className={styles.agencyFormGroup} style={{marginTop: 10}}>
-                    <label className={styles.agencyLabel}>เบอร์โทรศัพท์ติดต่อ <span className={styles.req}>*</span></label>
-                    <div style={{position:'relative'}}>
-                        <FaPhoneAlt style={{position:'absolute', left:12, top:13, color:'#999', fontSize:12}}/>
-                        <input className={styles.agencyInput} style={{paddingLeft: 35}} value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
-                    </div>
-                </div>
-
-             </div>
-        </div>
-
-        <div className={styles.agencyModalFooter}>
-            <button 
-                className={styles.agencyBtnCancel} 
-                onClick={() => setIsEditModalOpen(false)}
-                disabled={isSaving}
-            >
-                ยกเลิก
-            </button>
-            <button 
-                className={styles.agencyBtnSave} 
-                onClick={handleSaveData} 
-                disabled={isSaving}
-                style={{ opacity: isSaving ? 0.7 : 1, cursor: isSaving ? 'not-allowed' : 'pointer' }}
-            >
-                {isSaving ? <><FaSpinner className="fa-spin"/> กำลังบันทึก...</> : "บันทึกข้อมูล"}
-            </button>
-        </div>
-      </div>
-    </>
-  );
-
   // --- VIEW MODE ---
   return (
     <>
@@ -427,7 +301,132 @@ const AgencySettings = () => {
                 </div>
             </div>
         </div>
-        {isEditModalOpen && <AgencyEditModal />}
+        
+        {/* ✅ POPUP EDIT MODAL (ย้ายออกมาจาก Function ด้านใน เพื่อแก้ปัญหาพิมพ์แล้วหลุด) */}
+        {isEditModalOpen && (
+            <>
+              <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
+              <div className={styles.agencyModalContainer}>
+                <div className={styles.agencyModalHeader}>
+                    <h3 className={styles.agencyModalTitle}>แก้ไขข้อมูลหน่วยงาน</h3>
+                    <button className={styles.agencyBtnCloseRed} onClick={() => setIsEditModalOpen(false)} disabled={isSaving}>
+                        <FaTimes />
+                    </button>
+                </div>
+                  
+                <div className={styles.agencyModalBody}>
+                      {/* ส่วนอัปโหลดรูปภาพ */}
+                      <div className={styles.agencyImageSection}>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            style={{ display: "none" }} 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+                        <div className={styles.agencyImageCircle} onClick={handleImageClick}>
+                            {logoPreview ? (
+                                <img src={logoPreview} alt="Logo" className={styles.uploadedLogo} />
+                            ) : (
+                                <FaImage size={32} color="#ccc"/>
+                            )}
+                            <div className={styles.agencyEditOverlay}><FaEdit/></div>
+                        </div>
+                        <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
+                      </div>
+
+                      {/* ฟอร์มข้อมูล */}
+                      <div className={styles.agencyFormContainer}>
+                          
+                        {/* Group 1: ข้อมูลทั่วไป */}
+                        <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
+                        <div className={styles.agencyFormGroup}>
+                            <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
+                            <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
+                        </div>
+                          
+                        {/* ✅ ส่วน Dropdown เลือกประเภทหน่วยงาน */}
+                        <div className={styles.agencyFormGroup}>
+                            <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
+                            <select 
+                                className={styles.agencyInput} 
+                                value={formData.agencyType} 
+                                // แปลงเป็น Int เพราะ value ของ option เป็น number
+                                onChange={(e)=>handleChange('agencyType', e.target.value)}
+                            >
+                                <option value="">-- กรุณาเลือก --</option>
+                                {orgTypeOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Group 2: รหัส (Read Only) */}
+                        <div className={styles.agencyDivider}></div>
+                        <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
+                        <div className={styles.agencyRow2}>
+                              <div className={styles.agencyFormGroup}>
+                                <label className={styles.agencyLabel}>Admin Code</label>
+                                <input className={styles.agencyInputCode} value={formData.adminCode} disabled style={{background: '#f0f0f0', color:'#999'}} />
+                              </div>
+                              <div className={styles.agencyFormGroup}>
+                                <label className={styles.agencyLabel}>User Code</label>
+                                <input className={styles.agencyInputCode} value={formData.userCode} disabled style={{background: '#f0f0f0', color:'#999'}} />
+                              </div>
+                        </div>
+
+                        {/* Group 3: ที่อยู่ */}
+                        <div className={styles.agencyDivider}></div>
+                        <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
+                          
+                        <div className={styles.agencyAddressGrid}>
+                            <div className={styles.agencyFormGroup}>
+                                <label className={styles.agencyLabel}>จังหวัด</label>
+                                <input className={styles.agencyInput} value={formData.province} onChange={(e)=>handleChange('province', e.target.value)} />
+                            </div>
+                            <div className={styles.agencyFormGroup}>
+                                <label className={styles.agencyLabel}>อำเภอ/เขต</label>
+                                <input className={styles.agencyInput} value={formData.district} onChange={(e)=>handleChange('district', e.target.value)} />
+                            </div>
+                            <div className={styles.agencyFormGroup}>
+                                <label className={styles.agencyLabel}>ตำบล/แขวง</label>
+                                <input className={styles.agencyInput} value={formData.subDistrict} onChange={(e)=>handleChange('subDistrict', e.target.value)} />
+                            </div>
+                        </div>
+
+                        <div className={styles.agencyFormGroup} style={{marginTop: 10}}>
+                            <label className={styles.agencyLabel}>เบอร์โทรศัพท์ติดต่อ <span className={styles.req}>*</span></label>
+                            <div style={{position:'relative'}}>
+                                <FaPhoneAlt style={{position:'absolute', left:12, top:13, color:'#999', fontSize:12}}/>
+                                <input className={styles.agencyInput} style={{paddingLeft: 35}} value={formData.phone} onChange={(e)=>handleChange('phone', e.target.value)} />
+                            </div>
+                        </div>
+
+                     </div>
+                </div>
+
+                <div className={styles.agencyModalFooter}>
+                    <button 
+                        className={styles.agencyBtnCancel} 
+                        onClick={() => setIsEditModalOpen(false)}
+                        disabled={isSaving}
+                    >
+                        ยกเลิก
+                    </button>
+                    <button 
+                        className={styles.agencyBtnSave} 
+                        onClick={handleSaveData} 
+                        disabled={isSaving}
+                        style={{ opacity: isSaving ? 0.7 : 1, cursor: isSaving ? 'not-allowed' : 'pointer' }}
+                    >
+                        {isSaving ? <><FaSpinner className="fa-spin"/> กำลังบันทึก...</> : "บันทึกข้อมูล"}
+                    </button>
+                </div>
+              </div>
+            </>
+        )}
     </>
   );
 };
