@@ -149,7 +149,7 @@ const AgencySettings = () => {
             organization_name: formData.name,
             
             // ✅ ส่ง ID กลับไป (เช่น 1, 2)
-            org_type_id: parseInt(formData.agencyType), 
+            org_type_id: formData.agencyType, 
             
             district: formData.district,
             sub_district: formData.subDistrict,
@@ -273,7 +273,7 @@ const AgencySettings = () => {
                         className={styles.agencyInput} 
                         value={formData.agencyType} 
                         // แปลงเป็น Int เพราะ value ของ option เป็น number
-                        onChange={(e)=>handleChange('agencyType', parseInt(e.target.value))}
+                        onChange={(e)=>handleChange('agencyType', e.target.value)}
                     >
                         <option value="">-- กรุณาเลือก --</option>
                         {orgTypeOptions.map((option) => (
