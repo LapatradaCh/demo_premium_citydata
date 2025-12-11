@@ -22,20 +22,19 @@ import {
 // Import CSS Module
 import styles from './css/StatisticsView.module.css';
 
-// --- Configuration (อิงตามโค้ดตัวอย่างของคุณ) ---
+// --- Configuration ---
 const STATUS_COLORS = {
   'ทั้งหมด': '#0f172a',
-  'รอรับเรื่อง': '#ff4d4f',       // สีแดง (Stage 1)
-  'กำลังดำเนินการ': '#ffc107',    // สีเหลือง (Stage 2 - ประสานงาน)
-  'ดำเนินการ': '#ffc107',         // Mapping ให้เหมือนกัน
-  'เสร็จสิ้น': '#4caf50',        // สีเขียว (Stage 3 - ปฏิบัติงาน)
+  'รอรับเรื่อง': '#ff4d4f',
+  'กำลังดำเนินการ': '#ffc107',
+  'ดำเนินการ': '#ffc107',
+  'เสร็จสิ้น': '#4caf50',
   'ส่งต่อ': '#2196f3',
   'เชิญร่วม': '#00bcd4',
   'ปฏิเสธ': '#64748b',
   'NULL': '#d1d5db'
 };
 
-// Config ปุ่มกดสถานะ (ทั้งหมด ขึ้นก่อน)
 const LEGEND_CONFIG = [
   { key: 'total', label: 'ทั้งหมด', color: STATUS_COLORS['ทั้งหมด'] },
   { key: 'pending', label: 'รอรับเรื่อง', color: STATUS_COLORS['รอรับเรื่อง'] },
@@ -46,7 +45,6 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
-// Drop Shadow Definition
 const renderCustomDefs = () => (
   <defs>
     <filter id="shadow" height="200%">
@@ -60,8 +58,8 @@ const renderCustomDefs = () => (
 
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
-  const [timeRange, setTimeRange] = useState('1m'); // ปรับตามความเหมาะสม (code ตัวอย่างใช้ 1w)
-  const [activeTrendKey, setActiveTrendKey] = useState('total'); // State ควบคุมการโชว์เส้นกราฟ
+  const [timeRange, setTimeRange] = useState('1m'); 
+  const [activeTrendKey, setActiveTrendKey] = useState('total');
 
   const [statsData, setStatsData] = useState(null);
   const [trendData, setTrendData] = useState([]); 
@@ -69,7 +67,7 @@ const StatisticsView = ({ organizationId }) => {
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
-  const [efficiencyData, setEfficiencyData] = useState([]); // State สำหรับ Efficiency
+  const [efficiencyData, setEfficiencyData] = useState([]); 
   
   const [loading, setLoading] = useState(true);
 
@@ -84,7 +82,6 @@ const StatisticsView = ({ organizationId }) => {
 
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
-        // Base URL
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
         // 1. Overview Stats
@@ -153,7 +150,7 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency (ใช้ endpoint จากโค้ดตัวอย่าง)
+        // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -203,7 +200,6 @@ const StatisticsView = ({ organizationId }) => {
     </div>
   );
 
-  // Render ปุ่ม Legend แนวนอน (Interactive Chips)
   const renderCustomLegend = () => {
     return (
       <div className={styles.legendContainer}>
@@ -313,8 +309,6 @@ const StatisticsView = ({ organizationId }) => {
                     }}
                   />
                   
-                  {/* --- Logic: ถ้า activeTrendKey เป็น 'total' ไม่ซ่อนเส้นไหนเลย (hide=false), ถ้าไม่ใช่ ให้ซ่อนเส้นที่ไม่ตรงกับ key --- */}
-
                   <Line 
                     type="monotone" 
                     dataKey="total" 
@@ -398,14 +392,13 @@ const StatisticsView = ({ organizationId }) => {
             )}
           </div>
           
-          {/* Custom Interactive Legend (แนวนอน) */}
           {renderCustomLegend()}
 
         </section>
 
         <div className={styles.responsiveGrid2}>
           
-          {/* --- Efficiency Graph (ปรับใช้ตาม Code ตัวอย่างที่ถูกต้อง) --- */}
+          {/* --- Efficiency Graph --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
@@ -417,7 +410,7 @@ const StatisticsView = ({ organizationId }) => {
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     
-                    {/* ใช้ Title เป็นแกน Y */}
+                    {/* แก้ไข: เพิ่ม reversed เพื่อให้ข้อมูลเรียงจากบนลงล่าง */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
@@ -425,9 +418,9 @@ const StatisticsView = ({ organizationId }) => {
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10, fill: '#4b5563'}} 
+                      reversed={true} 
                     />
                     
-                    {/* Tooltip แบบละเอียดจาก Code ตัวอย่าง */}
                     <Tooltip 
                       cursor={{fill: 'transparent'}} 
                       content={({ active, payload }) => {
@@ -462,11 +455,8 @@ const StatisticsView = ({ organizationId }) => {
                     
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                     
-                    {/* Stage 1: สีแดง */}
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
-                    {/* Stage 2: สีเหลือง */}
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
-                    {/* Stage 3: สีเขียว */}
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
                   
                   </BarChart>
@@ -485,7 +475,18 @@ const StatisticsView = ({ organizationId }) => {
                   <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
+                    
+                    {/* แก้ไข: เพิ่ม reversed */}
+                    <YAxis 
+                      dataKey="name" 
+                      type="category" 
+                      width={80} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 10}} 
+                      reversed={true}
+                    />
+                    
                     <Tooltip contentStyle={{ fontSize: '12px' }} />
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                     <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
@@ -536,7 +537,18 @@ const StatisticsView = ({ organizationId }) => {
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
-                          <YAxis dataKey="name" type="category" width={140} axisLine={false} tickLine={false} tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} />
+                          
+                          {/* แก้ไข: เพิ่ม reversed */}
+                          <YAxis 
+                            dataKey="name" 
+                            type="category" 
+                            width={140} 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
+                            reversed={true}
+                          />
+                          
                           <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', fontSize: '12px' }} />
                           {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL' && k !== 'ทั้งหมด' && k !== 'กำลังประสาน' && k !== 'ดำเนินการ').map((status) => (
                             <Bar key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={20} name={status} />
