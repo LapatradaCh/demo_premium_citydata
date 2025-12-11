@@ -8,8 +8,8 @@
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-/* สีเหลืองทอง */
-.text-action       { color: #D49E12 !important; } 
+/* สีเหลืองทองอำพัน (สวย สดใส) */
+.text-action       { color: #FFAB00 !important; } 
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
 .text-invite       { color: #00bcd4 !important; }
@@ -253,11 +253,11 @@
   margin-bottom: 20px;
 }
 
-/* สีเหลืองทองสำหรับตัวเลขคะแนน */
+/* สีเหลืองทองอำพัน สำหรับตัวเลขคะแนน */
 .scoreBig {
   font-size: 56px;
   font-weight: 800;
-  color: #D49E12; 
+  color: #FFAB00; 
   line-height: 0.9;
 }
 
