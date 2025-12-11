@@ -1,7 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
-/* ... (ส่วน Theme Utilities เดิม ลบ text-color ทิ้งหรือเก็บไว้ก็ได้ แต่เราจะไม่ได้ใช้ใน card แล้ว) ... */
+/* =======================================================
+   1. THEME UTILITIES
+   ======================================================= */
 
+/* --- Text Color Classes --- */
+.text-total        { color: #0f172a !important; }
+.text-waiting      { color: #ff4d4f !important; }
+.text-coordinating { color: #9c27b0 !important; }
+.text-action       { color: #f97316 !important; } /* เปลี่ยนเป็นสีส้ม */
+.text-finished     { color: #4caf50 !important; }
+.text-forward      { color: #2196f3 !important; }
+.text-invite       { color: #00bcd4 !important; }
+.text-reject       { color: #64748b !important; }
+
+/* Badge สำหรับใช้ในตารางหรือที่อื่นๆ ที่ไม่ใช่การ์ดบน */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -10,15 +23,16 @@
   width: fit-content;
   display: inline-block;
   line-height: 1.5;
-  background-color: rgba(255, 255, 255, 0.2); /* พื้นหลังจางๆ สีขาว */
+  background-color: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
-  color: #ffffff; /* ตัวหนังสือขาวเสมอ */
+  color: #ffffff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* =======================================================
    2. MAIN LAYOUT
    ======================================================= */
+
 .container {
   min-height: 100vh;
   background-color: #ffffff;
@@ -28,7 +42,7 @@
   box-sizing: border-box;
 }
 
-/* ... (Header Styles เดิม คงไว้) ... */
+/* Header */
 .header {
   background-color: #ffffff;
   padding: 16px 32px;
@@ -42,12 +56,14 @@
   width: 100% !important;
   box-sizing: border-box;
 }
+
 .headerLeft h1, .headerLeft span {
   font-weight: 700 !important;
   color: #0f172a;
   font-size: 20px;
   margin: 0;
 }
+
 .headerSubtitle {
   font-size: 13px;
   color: #64748b;
@@ -66,10 +82,10 @@
   box-sizing: border-box;
 }
 
-/* --- NEW DASHBOARD LAYOUT (Grid System ใหม่) --- */
+/* --- NEW DASHBOARD LAYOUT --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่, ขวา Grid */
+  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่ (Fixed width), ขวา Grid (Auto) */
   gap: 24px;
   width: 100%;
 }
@@ -83,7 +99,7 @@
 
 /* --- STATUS CARDS (Solid Color Style) --- */
 .statusCard {
-  border-radius: 20px; /* มนขึ้น */
+  border-radius: 20px;
   padding: 24px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,7 +108,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  border: none; /* เอาขอบออกเพราะเราใช้สีพื้นหลังแล้ว */
+  border: none;
   position: relative;
   overflow: hidden;
   color: #ffffff; /* ตัวหนังสือขาว */
@@ -117,17 +133,19 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
+  z-index: 1;
 }
 
 .cardTitle {
   font-size: 16px;
   font-weight: 600;
-  opacity: 0.9; /* ขาวจางนิดๆ */
+  opacity: 0.95;
   color: #ffffff; 
   white-space: nowrap;
 }
+
 .totalCard .cardTitle {
-    font-size: 24px; /* หัวข้อใหญ่ขึ้นสำหรับ Total */
+    font-size: 24px;
 }
 
 .cardCount {
@@ -136,28 +154,31 @@
   line-height: 1;
   text-align: right;
   margin-bottom: 8px;
-  color: #ffffff !important; /* บังคับขาว */
+  color: #ffffff !important;
+  z-index: 1;
 }
+
 .totalCard .cardCount {
-    font-size: 80px; /* ตัวเลขใหญ่มากสำหรับ Total */
+    font-size: 80px;
     margin-top: auto;
     margin-bottom: 20px;
     text-align: center;
 }
 
-/* Decoration Circle (วงกลมตกแต่งจางๆ) */
+/* Decoration Circle */
 .cardDecoration {
     position: absolute;
     bottom: -20px;
     right: -20px;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     background: rgba(255,255,255,0.1);
     border-radius: 50%;
     pointer-events: none;
+    z-index: 0;
 }
 
-/* ... (Section Cards, Charts, Satisfaction, Staff styles คงเดิม) ... */
+/* --- SECTION CARDS --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -179,6 +200,7 @@
   padding-bottom: 12px;
   border-bottom: 1px solid #f1f5f9;
 }
+
 .sectionTitle {
   font-size: 18px;
   font-weight: 700;
@@ -188,6 +210,7 @@
   gap: 10px;
   margin: 0;
 }
+
 .sectionTitle::before {
   content: '';
   display: inline-block;
@@ -196,43 +219,128 @@
   background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
   border-radius: 4px;
 }
+
 .sectionSubtitle {
   font-size: 13px;
   color: #64748b;
   font-weight: 500;
 }
-.chartContainer { height: 350px; width: 100%; position: relative; }
-.staffChartContainer { height: 500px; width: 100%; position: relative; }
-.chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
 
-/* Satisfaction */
-.satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; }
-.scoreBig { font-size: 56px; font-weight: 800; color: #ca8a04; line-height: 0.9; }
-.starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; }
-.starLabel { width: 28px; font-weight: 700; color: #334155; }
-.progressTrack { flex: 1; height: 12px; background-color: #e2e8f0; border-radius: 99px; overflow: hidden; }
-.progressBar { height: 100%; border-radius: 99px; }
-.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
-
-/* Top Header Staff */
-.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.topBadge {
-  background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
-  border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe;
-  display: flex; align-items: center;
+/* --- CHARTS --- */
+.chartContainer {
+  height: 350px;
+  width: 100%;
+  position: relative;
 }
-.emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 
-/* Grids */
-.responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
+.staffChartContainer {
+  height: 500px;
+  width: 100%;
+  position: relative;
+}
 
-/* --- RESPONSIVE --- */
+.chartContainer *,
+.staffChartContainer * {
+  font-family: 'Prompt', sans-serif !important;
+}
+
+/* --- SATISFACTION --- */
+.satisfactionHeader {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.scoreBig {
+  font-size: 56px;
+  font-weight: 800;
+  color: #f97316; /* เปลี่ยนเป็นสีส้ม */
+  line-height: 0.9;
+}
+
+.starRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.starLabel {
+  width: 28px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: 99px;
+}
+
+.starPercent {
+  width: 40px;
+  text-align: right;
+  color: #475569;
+  font-weight: 600;
+}
+
+/* --- TOP HEADER (Staff) --- */
+.topHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.topBadge {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+}
+
+.h3Custom {
+  /* ใช้สำหรับหัวข้อที่ไม่ได้อยู่ใน sectionHeader ปกติ */
+}
+
+.emptyState {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- GRID SYSTEM & RESPONSIVE --- */
+.responsiveGrid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
 @media (max-width: 1200px) {
   .dashboardTopSection {
-    grid-template-columns: 1fr; /* เรียงลงมาแทน */
+    grid-template-columns: 1fr; /* บนมือถือ/จอเล็ก ให้เรียงลงมา */
   }
   .totalCard {
-      height: 200px; /* กำหนดความสูงเมื่ออยู่บนมือถือ */
+      height: 200px;
   }
 }
 
@@ -241,7 +349,8 @@
   .main { padding: 16px; gap: 16px; }
   
   .rightGrid {
-    grid-template-columns: repeat(2, 1fr) !important; /* เหลือ 2 คอลัมน์บนมือถือ */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
   }
   
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
