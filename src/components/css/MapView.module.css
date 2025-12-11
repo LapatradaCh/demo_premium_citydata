@@ -674,3 +674,185 @@
     min-width: 0;
   }
 }
+
+
+/* =========================================
+   8. JOIN ORGANIZATION (เพิ่มใหม่)
+   (สำหรับหน้าเข้าร่วมหน่วยงาน ตาม Design ที่ออกแบบให้ใหม่)
+   ========================================= */
+
+/* พื้นหลังของหน้า (ครอบทั้งหมด) */
+.joinPageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f6f9; /* สีพื้นหลังเทาอมฟ้า ดูสะอาดตา */
+  padding: 20px;
+}
+
+/* 1. การ์ดหลัก (Main Card) */
+.joinCard {
+  background: #ffffff;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 32px;
+  border-radius: 24px; /* ขอบมน 24px */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); /* เงาฟุ้งสวยงาม */
+  border: none;
+  text-align: center;
+  position: relative;
+}
+
+/* 2. โลโก้ */
+.joinLogo {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+.joinLogo:hover {
+  transform: scale(1.05);
+}
+
+/* 3. Input Fields (ช่องกรอกข้อมูล) */
+.joinInput {
+  width: 100%;
+  box-sizing: border-box; /* สำคัญ: ป้องกัน Input ล้นกรอบ */
+  background-color: #f3f5f7; /* พื้นหลังสีเทาอ่อน แทนเส้นขอบ */
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.2s ease;
+  margin-top: 8px; /* ระยะห่างจาก Label */
+}
+
+.joinInput:focus {
+  background-color: #ffffff;
+  border-color: #057a55; /* สีเขียวเมื่อพิมพ์ */
+  outline: none;
+  box-shadow: 0 4px 12px rgba(5, 122, 85, 0.1);
+}
+
+/* Label หัวข้อ */
+.joinLabel {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  color: #444;
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding-left: 4px;
+}
+
+/* 4. กลุ่มเบอร์โทรและปุ่ม OTP */
+.phoneGroup {
+  display: flex;
+  align-items: flex-end; /* จัดให้ตรงแนวล่าง */
+  gap: 10px;
+  position: relative;
+  width: 100%;
+}
+
+/* ปุ่ม OTP (สีดำ ทรงแคปซูล) */
+.otpButton {
+  flex-shrink: 0;
+  height: 50px; /* ความสูงให้ใกล้เคียง Input */
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.otpButton:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.otpButton:active {
+  transform: scale(0.95);
+}
+
+/* 5. ปุ่ม Action (เขียว/แดง) */
+.actionButtonContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+  justify-content: space-between;
+}
+
+.btnJoin, .btnBack {
+  flex: 1; /* ขยายเต็มพื้นที่เท่าๆ กัน */
+  padding: 14px 0;
+  border-radius: 50px; /* ทรงแคปซูล */
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ปุ่มเข้าร่วม (เขียว) */
+.btnJoin {
+  background-color: #057a55;
+}
+.btnJoin:hover {
+  background-color: #046c4e;
+  box-shadow: 0 8px 16px rgba(5, 122, 85, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ปุ่มย้อนกลับ (แดง) */
+.btnBack {
+  background-color: #dc3545;
+}
+.btnBack:hover {
+  background-color: #c82333;
+  box-shadow: 0 8px 16px rgba(220, 53, 69, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ข้อความด้านล่าง */
+.footerText {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+/* Responsive สำหรับมือถือ */
+@media screen and (max-width: 480px) {
+   .joinCard {
+      padding: 30px 20px;
+   }
+   .phoneGroup {
+      flex-direction: column; /* เรียงซ้อนกันเมื่อจอเล็ก */
+      align-items: stretch;
+   }
+   .otpButton {
+      width: 100%;
+   }
+   .actionButtonContainer {
+      flex-direction: column; /* ปุ่มเรียงซ้อนกัน */
+   }
+}
