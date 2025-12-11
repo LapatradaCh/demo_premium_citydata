@@ -112,6 +112,7 @@ const MapView = ({ subTab }) => {
         }
 
         console.log(`Fetched total: ${allData.length} cases`);
+        console.log(`Fetched all data: `,allData);
         setReports(allData);
 
       } catch (err) {
