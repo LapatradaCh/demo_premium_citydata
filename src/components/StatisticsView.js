@@ -22,18 +22,15 @@ import {
 // Import CSS Module
 import styles from './css/StatisticsView.module.css';
 
-// --- Configuration ---
-// สีเหลืองทองอำพัน
-const PRETTY_YELLOW = '#FFAB00'; 
-
+// --- Configuration (อิงตามโค้ดตัวอย่างของคุณ) ---
 const STATUS_COLORS = {
-  'ทั้งหมด': '#1e293b',
-  'รอรับเรื่อง': '#ef4444',
-  'กำลังดำเนินการ': PRETTY_YELLOW,
-  'ดำเนินการ': PRETTY_YELLOW,
-  'เสร็จสิ้น': '#22c55e',
-  'ส่งต่อ': '#3b82f6',
-  'เชิญร่วม': '#06b6d4',
+  'ทั้งหมด': '#0f172a',
+  'รอรับเรื่อง': '#ff4d4f',       // สีแดง (Stage 1)
+  'กำลังดำเนินการ': '#ffc107',    // สีเหลือง (Stage 2 - ประสานงาน)
+  'ดำเนินการ': '#ffc107',         // Mapping ให้เหมือนกัน
+  'เสร็จสิ้น': '#4caf50',        // สีเขียว (Stage 3 - ปฏิบัติงาน)
+  'ส่งต่อ': '#2196f3',
+  'เชิญร่วม': '#00bcd4',
   'ปฏิเสธ': '#64748b',
   'NULL': '#d1d5db'
 };
@@ -53,7 +50,7 @@ const LEGEND_CONFIG = [
 const renderCustomDefs = () => (
   <defs>
     <filter id="shadow" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#FFAB00" floodOpacity="0.3" />
+      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#ffc107" floodOpacity="0.3" />
     </filter>
     <filter id="shadowGray" height="200%">
       <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
@@ -62,8 +59,9 @@ const renderCustomDefs = () => (
 );
 
 const StatisticsView = ({ organizationId }) => {
-  const [timeRange, setTimeRange] = useState('1M'); // Default 1M
-  const [activeTrendKey, setActiveTrendKey] = useState('total'); // Default เลือกทั้งหมด
+  // --- States ---
+  const [timeRange, setTimeRange] = useState('1m'); // ปรับตามความเหมาะสม (code ตัวอย่างใช้ 1w)
+  const [activeTrendKey, setActiveTrendKey] = useState('total'); // State ควบคุมการโชว์เส้นกราฟ
 
   const [statsData, setStatsData] = useState(null);
   const [trendData, setTrendData] = useState([]); 
@@ -71,7 +69,8 @@ const StatisticsView = ({ organizationId }) => {
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
-  const [efficiencyData, setEfficiencyData] = useState([]);
+  const [efficiencyData, setEfficiencyData] = useState([]); // State สำหรับ Efficiency
+  
   const [loading, setLoading] = useState(true);
 
   // --- Data Fetching ---
@@ -85,6 +84,7 @@ const StatisticsView = ({ organizationId }) => {
 
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
+        // Base URL
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
         // 1. Overview Stats
@@ -153,7 +153,7 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
+        // 7. Efficiency (ใช้ endpoint จากโค้ดตัวอย่าง)
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -191,19 +191,19 @@ const StatisticsView = ({ organizationId }) => {
 
   const renderFilterButtons = () => (
     <div className={styles.filterContainer}>
-      {['1W', '1M', '3M', '1Y', '5Y'].map((range) => (
+      {['1w', '1m', '3m', '1y', '5y'].map((range) => (
         <button
           key={range}
           onClick={() => setTimeRange(range)}
           className={`${styles.filterButton} ${timeRange === range ? styles.filterButtonActive : ''}`}
         >
-          {range}
+          {range.toUpperCase()}
         </button>
       ))}
     </div>
   );
 
-  // Function Render ปุ่ม Legend ด้านล่างกราฟ
+  // Render ปุ่ม Legend แนวนอน (Interactive Chips)
   const renderCustomLegend = () => {
     return (
       <div className={styles.legendContainer}>
@@ -215,9 +215,7 @@ const StatisticsView = ({ organizationId }) => {
               onClick={() => setActiveTrendKey(item.key)}
               className={`${styles.legendBtn} ${isActive ? styles.legendBtnActive : ''}`}
               style={{
-                // ถ้าเลือกใช้สีสถานะ ถ้าไม่เลือกใช้สีเทา
                 color: isActive ? item.color : '#64748b', 
-                // ถ้าเลือกขอบสีสถานะ ถ้าไม่เลือกขอบเทาจางๆ
                 borderColor: isActive ? item.color : '#e2e8f0', 
               }}
             >
@@ -279,7 +277,7 @@ const StatisticsView = ({ organizationId }) => {
             <div>
               <h2 className={styles.sectionTitle}>
                 <TrendingUp color="#3b82f6" size={20} />
-                แนวโน้ม ({timeRange})
+                แนวโน้ม ({timeRange.toUpperCase()})
               </h2>
               <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ</p>
             </div>
@@ -315,7 +313,7 @@ const StatisticsView = ({ organizationId }) => {
                     }}
                   />
                   
-                  {/* --- ปรับแก้เงื่อนไข hide: ถ้าเป็น 'total' ให้โชว์ทุกเส้น, ถ้าเป็นอื่นให้โชว์เฉพาะเส้นนั้น --- */}
+                  {/* --- Logic: ถ้า activeTrendKey เป็น 'total' ไม่ซ่อนเส้นไหนเลย (hide=false), ถ้าไม่ใช่ ให้ซ่อนเส้นที่ไม่ตรงกับ key --- */}
 
                   <Line 
                     type="monotone" 
@@ -400,16 +398,17 @@ const StatisticsView = ({ organizationId }) => {
             )}
           </div>
           
-          {/* Custom Interactive Legend (ปุ่มเล็ก แนวนอน) */}
+          {/* Custom Interactive Legend (แนวนอน) */}
           {renderCustomLegend()}
 
         </section>
 
         <div className={styles.responsiveGrid2}>
-          {/* ... ส่วนกราฟอื่นๆ ... */}
+          
+          {/* --- Efficiency Graph (ปรับใช้ตาม Code ตัวอย่างที่ถูกต้อง) --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-              <div><h2 className={styles.sectionTitle}><Clock color="#FFAB00" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
+              <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
@@ -417,25 +416,59 @@ const StatisticsView = ({ organizationId }) => {
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
-                    <YAxis dataKey="title" type="category" width={140} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#4b5563'}} />
-                    <Tooltip cursor={{fill: 'transparent'}} content={({ active, payload }) => {
+                    
+                    {/* ใช้ Title เป็นแกน Y */}
+                    <YAxis 
+                      dataKey="title" 
+                      type="category" 
+                      width={140} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 10, fill: '#4b5563'}} 
+                    />
+                    
+                    {/* Tooltip แบบละเอียดจาก Code ตัวอย่าง */}
+                    <Tooltip 
+                      cursor={{fill: 'transparent'}} 
+                      content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
                             <div className={styles.customTooltip}>
                               <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title}</p>
-                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>รอรับเรื่อง: {data.stage1} ชม.</div>
-                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>ประสานงาน: {data.stage2} ชม.</div>
-                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>ปฏิบัติงาน: {data.stage3} ชม.</div>
+                              
+                              <div className={styles.tooltipItem}>
+                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>
+                                <span>รอรับเรื่อง: {data.stage1} ชม.</span>
+                              </div>
+                              
+                              <div className={styles.tooltipItem}>
+                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>
+                                <span>ประสานงาน: {data.stage2} ชม.</span>
+                              </div>
+                              
+                              <div className={styles.tooltipItem}>
+                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>
+                                <span>ปฏิบัติงาน: {data.stage3} ชม.</span>
+                              </div>
+                              
                               <hr style={{margin: '6px 0', borderColor: '#e5e7eb'}}/>
                               <p style={{fontSize: '11px', fontWeight: 'bold', color: '#374151'}}>รวม: {data.total} ชม.</p>
                             </div>
                           );
-                        } return null; }} />
+                        } return null; 
+                      }} 
+                    />
+                    
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
+                    
+                    {/* Stage 1: สีแดง */}
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
+                    {/* Stage 2: สีเหลือง */}
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
+                    {/* Stage 3: สีเขียว */}
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
+                  
                   </BarChart>
                 </ResponsiveContainer>
               ) : <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>}
@@ -444,7 +477,7 @@ const StatisticsView = ({ organizationId }) => {
 
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange})</p></div>
+              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
@@ -471,7 +504,7 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        <span style={{color: PRETTY_YELLOW}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        <span style={{color: STATUS_COLORS['กำลังดำเนินการ']}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -481,7 +514,7 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    <div className={styles.progressBar} style={{backgroundColor: PRETTY_YELLOW, width: `${percent}%`}}></div>
+                                    <div className={styles.progressBar} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ'], width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
