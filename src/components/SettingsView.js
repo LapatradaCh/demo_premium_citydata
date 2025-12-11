@@ -14,7 +14,7 @@ const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizatio
 const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
 
 // --- ปรับปรุง: ดึง ID จาก LocalStorage ---
-let ORGANIZATION_ID = 1; // ค่า Default กรณีไม่พบข้อมูล
+let ORGANIZATION_ID = null; // ค่า Default กรณีไม่พบข้อมูล
 try {
   const storedOrgString = localStorage.getItem("lastSelectedOrg");
   if (storedOrgString) {
