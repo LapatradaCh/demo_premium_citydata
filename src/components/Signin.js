@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import styles from "./css/Signin.module.css"; // ตรวจสอบ path ให้ถูกต้อง
-import logo from "./traffy.png"; // ตรวจสอบ path รูปภาพ
+import styles from "./css/Signin.module.css"; 
+import logo from "./traffy.png"; 
 import { useNavigate } from "react-router-dom";
 import liff from "@line/liff";
 
-const DB_API =
-  "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
-const ORG_COUNT_API_BASE =
-  "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+const DB_API = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
+const ORG_COUNT_API_BASE = "https://premium-citydata-api-ab.vercel.app/api/users_organizations";
 
 const JoinORG = () => {
   const [unitCode, setUnitCode] = useState("");
@@ -22,7 +20,7 @@ const JoinORG = () => {
   const navigate = useNavigate();
   const OTP_EXPIRY_SECONDS = 60;
 
-  // ฟังก์ชัน Logout (กรณีต้องออกจากระบบ)
+  // --- ฟังก์ชัน Logout ---
   const performLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id");
@@ -53,18 +51,17 @@ const JoinORG = () => {
     }
   };
 
-  // Logic ปุ่มย้อนกลับ: เช็คว่าเคยเลือก Org มาก่อนไหม
+  // --- Logic ปุ่มย้อนกลับ ---
   const handleBack = () => {
     const savedOrg = localStorage.getItem("lastSelectedOrg");
     if (savedOrg) {
-      // ถ้ามีข้อมูล Org เก่า แสดงว่าเคย Login แล้ว -> กลับไปหน้า Home1 (Dashboard)
       navigate("/home1");
     } else {
-      // ถ้าไม่มี -> Logout กลับหน้าแรก
       performLogout();
     }
   };
 
+  // --- OTP Logic ---
   const handleGetOTP = () => {
     if (!phoneNumber.trim()) return setMessage("กรุณาใส่เบอร์โทรศัพท์ก่อน");
     if (!/^\d{9,10}$/.test(phoneNumber)) return setMessage("เบอร์โทรศัพท์ไม่ถูกต้อง");
@@ -87,6 +84,7 @@ const JoinORG = () => {
     }, 1000);
   };
 
+  // --- Submit Logic (ส่วนสำคัญที่แก้ไข) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -102,7 +100,9 @@ const JoinORG = () => {
     if (otpCode !== generatedOTP) return setMessage("รหัส OTP ไม่ถูกต้อง");
 
     setIsLoading(true);
+
     try {
+      // 1. ยิง API เพื่อ Join หรือ Upgrade
       const response = await fetch(DB_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -113,39 +113,59 @@ const JoinORG = () => {
       });
 
       const data = await response.json();
-      setIsLoading(false);
 
-      // ฟังก์ชันเช็ค Org หลังจาก Join สำเร็จ
+      // 2. ฟังก์ชันตรวจสอบ Org หลังจากทำรายการสำเร็จ
       const checkORG = async () => {
-        const orgRes = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userIdFromStorage}`);
-        const orgData = await orgRes.json();
-        const orgCount = orgData.length || 0;
+        try {
+          // ดึงข้อมูล Org ล่าสุดใหม่เสมอ เพื่อให้ได้ orgCount ที่ถูกต้อง
+          const orgRes = await fetch(`${ORG_COUNT_API_BASE}?user_id=${userIdFromStorage}`);
+          const orgData = await orgRes.json();
+          const orgCount = orgData.length || 0;
 
-        if (orgCount > 1) {
-          navigate("/home1");
-        } else if (orgCount === 1) {
-          const sourceOrg = orgData[0];
-          const singleOrg = {
-            badge: sourceOrg.badge || null,
-            id: sourceOrg.organization_id,
-            img: sourceOrg.url_logo,
-            name: sourceOrg.organization_name
-          };
-          localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
-          setTimeout(() => navigate('/home'), 100);
-        } else {
-          navigate("/Signin");
+          // --- Logic Redirect ตามที่คุณต้องการ ---
+          if (orgCount > 1) {
+            navigate("/home1"); // มีหลาย Org ให้ไปหน้าเลือก
+          } else if (orgCount === 1) {
+            // มี Org เดียว ให้เข้า Dashboard เลย
+            const sourceOrg = orgData[0];
+            const singleOrg = {
+              badge: sourceOrg.badge || null,
+              id: sourceOrg.organization_id,
+              img: sourceOrg.url_logo,
+              name: sourceOrg.organization_name,
+              role: sourceOrg.role // เพิ่ม role เข้าไปด้วย (เผื่อใช้)
+            };
+            localStorage.setItem("lastSelectedOrg", JSON.stringify(singleOrg));
+            
+            // Delay เล็กน้อยก่อน redirect
+            setTimeout(() => navigate('/home'), 100);
+          } else {
+            navigate("/Signin"); // กรณีไม่มี Org (ไม่น่าเกิดขึ้นถ้า success)
+          }
+        } catch (err) {
+          console.error("Error fetching orgs:", err);
+          setMessage("เกิดข้อผิดพลาดในการโหลดข้อมูลองค์กร");
+          setIsLoading(false);
         }
       };
 
-      if (response.status === 201 || response.status === 409) {
-        if (response.status === 201) setMessage("เข้าร่วมสำเร็จ!");
-        checkORG();
+      // 3. ตรวจสอบ Response Status
+      // 201 = Created (Join ใหม่สำเร็จ)
+      // 200 = OK (Upgrade เป็น Admin สำเร็จ)
+      if (response.status === 201 || response.status === 200) {
+        setMessage("ดำเนินการสำเร็จ!");
+        await checkORG(); // <-- เรียก Check Org และ Redirect
+      } else if (response.status === 409) {
+        setIsLoading(false);
+        setMessage("คุณเป็นสมาชิกในหน่วยงานนี้อยู่แล้ว");
       } else if (response.status === 404) {
-        setMessage("รหัสหน่วยงานไม่ถูกต้อง");
+        setIsLoading(false);
+        setMessage("รหัสหน่วยงานหรือรหัส Admin ไม่ถูกต้อง");
       } else {
+        setIsLoading(false);
         setMessage(data.message || "เกิดข้อผิดพลาด");
       }
+
     } catch (error) {
       setIsLoading(false);
       setMessage("Error: " + error.message);
@@ -162,7 +182,7 @@ const JoinORG = () => {
         <form className={styles.otpForm} onSubmit={handleSubmit}>
           {/* Unit Code Input */}
           <div>
-            <label className={styles.labelUse}>รหัสหน่วยงาน</label>
+            <label className={styles.labelUse}>รหัสหน่วยงาน / รหัส Admin</label>
             <div className={styles.inputField}>
               <input
                 type="text"
