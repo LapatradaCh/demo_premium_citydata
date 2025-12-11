@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
-  Activity,
-  Clock,
+  Activity, 
+  Clock, 
   Users 
 } from 'lucide-react';
 import { 
@@ -19,18 +19,16 @@ import {
   ComposedChart
 } from 'recharts';
 
-// Import CSS Module
 import styles from './css/StatisticsView.module.css';
 
-// --- Configuration ---
-// สีเหลืองทองอำพัน (สวย สว่าง ดูแพง)
+// สีเหลืองทองอำพัน
 const PRETTY_YELLOW = '#FFAB00'; 
 
 const STATUS_COLORS = {
   'ทั้งหมด': '#1e293b',
   'รอรับเรื่อง': '#ef4444',
-  'กำลังดำเนินการ': PRETTY_YELLOW, // สีเหลืองสวย
-  'ดำเนินการ': PRETTY_YELLOW,      // สีเหลืองสวย
+  'กำลังดำเนินการ': PRETTY_YELLOW,
+  'ดำเนินการ': PRETTY_YELLOW,
   'เสร็จสิ้น': '#22c55e',
   'ส่งต่อ': '#3b82f6',
   'เชิญร่วม': '#06b6d4',
@@ -49,18 +47,21 @@ const STATUS_KEY_MAP = {
   'ปฏิเสธ': 'reject'
 };
 
-// SVG Definitions for drop shadow
+// Drop Shadow สำหรับเส้นกราฟ
 const renderCustomDefs = () => (
   <defs>
     <filter id="shadow" height="200%">
-      <feDropShadow dx="0" dy="5" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
+      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#FFAB00" floodOpacity="0.25" />
+    </filter>
+    {/* Shadow สีเทาสำหรับเส้นอื่นๆ */}
+    <filter id="shadowGray" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
     </filter>
   </defs>
 );
 
 const StatisticsView = ({ organizationId }) => {
-  // --- States ---
-  const [timeRange, setTimeRange] = useState('1w');
+  const [timeRange, setTimeRange] = useState('1M'); // Default เป็น 1M ตามรูป
   const [statsData, setStatsData] = useState(null);
   const [trendData, setTrendData] = useState([]); 
   const [staffData, setStaffData] = useState([]);
@@ -70,6 +71,7 @@ const StatisticsView = ({ organizationId }) => {
   const [efficiencyData, setEfficiencyData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ... (useEffect Fetch Data เหมือนเดิม) ...
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
@@ -77,13 +79,10 @@ const StatisticsView = ({ organizationId }) => {
         setLoading(false);
         return;
       }
-
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
-        // ปรับ Base URL ตาม Environment ของคุณ
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
-        // 1. Overview Stats
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -94,14 +93,12 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
           setTrendData(data);
         }
 
-        // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
@@ -113,21 +110,18 @@ const StatisticsView = ({ organizationId }) => {
           setProblemTypeData(formatted);
         }
 
-        // 4. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
         if (satRes.ok) {
           const data = await satRes.json();
           setSatisfactionData(data);
         }
 
-        // 5. Staff Count
         const staffCountRes = await fetch(`${baseUrl}/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -137,10 +131,8 @@ const StatisticsView = ({ organizationId }) => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
                const count = item.count || 0; 
-
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
-               
                grouped[name][status] += count;
                grouped[name].total += count;
             });
@@ -149,35 +141,26 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
             setEfficiencyData(data);
         }
-
       } catch (err) {
         console.error("API Error:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    if (organizationId) {
-      fetchData();
-    } else {
-      setLoading(false);
-    }
+    if (organizationId) fetchData();
+    else setLoading(false);
   }, [organizationId, timeRange]);
 
-  // Helpers
   const getTotalCases = () => statsData ? Object.values(statsData).reduce((a, b) => a + b, 0) : 0;
   const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
   const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
-  // แยก Config: Total (ซ้าย) และ Others (ขวา)
   const totalCardData = { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' };
-  
   const otherStatusConfig = [
     { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
     { title: 'ดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), key: 'action' },
@@ -189,13 +172,13 @@ const StatisticsView = ({ organizationId }) => {
 
   const renderFilterButtons = () => (
     <div className={styles.filterContainer}>
-      {['1w', '1m', '3m', '1y', '5y'].map((range) => (
+      {['1W', '1M', '3M', '1Y', '5Y'].map((range) => (
         <button
           key={range}
           onClick={() => setTimeRange(range)}
           className={`${styles.filterButton} ${timeRange === range ? styles.filterButtonActive : ''}`}
         >
-          {range.toUpperCase()}
+          {range}
         </button>
       ))}
     </div>
@@ -218,10 +201,7 @@ const StatisticsView = ({ organizationId }) => {
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
-          /* --- NEW LAYOUT: LEFT BIG, RIGHT GRID --- */
           <section className={styles.dashboardTopSection}>
-            
-            {/* 1. BIG TOTAL CARD (Left) */}
             <div 
                 className={`${styles.statusCard} ${styles.totalCard}`}
                 style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}
@@ -238,43 +218,31 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
             </div>
 
-            {/* 2. GRID 3x2 (Right) */}
             <div className={styles.rightGrid}>
                 {otherStatusConfig.map((card, idx) => {
                     const percent = getPercent(card.count, getTotalCases());
                     const solidColor = STATUS_COLORS[card.title] || '#64748b';
-
                     return (
-                        <div 
-                            key={idx} 
-                            className={styles.statusCard}
-                            style={{ backgroundColor: solidColor }}
-                        >
+                        <div key={idx} className={styles.statusCard} style={{ backgroundColor: solidColor }}>
                             <div className={styles.cardDecoration}></div>
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardTitle}>{card.title}</span>
-                                <div className={styles.badgeStatus}>
-                                    {percent.toFixed(0)}%
-                                </div>
+                                <div className={styles.badgeStatus}>{percent.toFixed(0)}%</div>
                             </div>
-                            <span className={styles.cardCount}>
-                                {card.count}
-                            </span>
+                            <span className={styles.cardCount}>{card.count}</span>
                         </div>
                     );
                 })}
             </div>
-
           </section>
         )}
 
-        {/* --- Trend Graph --- */}
         <section className={styles.sectionCard}>
           <div className={styles.chartHeaderWrapper}>
             <div>
               <h2 className={styles.sectionTitle}>
                 <TrendingUp color="#3b82f6" size={20} />
-                แนวโน้ม ({timeRange.toUpperCase()})
+                แนวโน้ม ({timeRange})
               </h2>
               <p className={styles.sectionSubtitle}>ยอดรับเรื่อง vs สถานะ</p>
             </div>
@@ -284,25 +252,22 @@ const StatisticsView = ({ organizationId }) => {
           <div className={styles.chartContainer}>
             {trendData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart 
-                  data={trendData} 
-                  margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
-                >
+                <LineChart data={trendData} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
+                  {/* Grid บางๆ เป็นเส้นประ ดูคลีน */}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="date" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 500}} 
+                    tick={{fill: '#94a3b8', fontSize: 11}} 
                     dy={15} 
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 500}} 
+                    tick={{fill: '#94a3b8', fontSize: 11}} 
                   />
-                  
                   <Tooltip 
                     cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '4 4' }}
                     content={({ active, payload, label }) => {
@@ -322,58 +287,34 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={40} 
-                    iconType="circle"
-                    wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500, color: '#64748b' }} 
-                  />
+                  <Legend verticalAlign="bottom" height={40} iconType="circle" wrapperStyle={{ paddingTop: '20px', fontSize: '12px', color: '#64748b' }} />
 
-                  {/* Main Lines with Monotone and Shadow */}
+                  {/* เส้นทั้งหมด */}
                   <Line 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke={STATUS_COLORS['ทั้งหมด']} 
-                    strokeWidth={3} 
-                    dot={false}
-                    activeDot={{ r: 6, strokeWidth: 0 }}
-                    name="ทั้งหมด" 
-                    filter="url(#shadow)"
+                    type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }} name="ทั้งหมด" filter="url(#shadowGray)"
                   />
+                  {/* เส้นรอรับเรื่อง */}
                   <Line 
-                    type="monotone" 
-                    dataKey="pending" 
-                    stroke={STATUS_COLORS['รอรับเรื่อง']} 
-                    strokeWidth={3} 
-                    dot={false}
-                    activeDot={{ r: 6, strokeWidth: 0 }}
-                    name="รอรับเรื่อง" 
+                    type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }} name="รอรับเรื่อง" 
                   />
+                  {/* เส้นดำเนินการ (เด่นสุด) */}
                   <Line 
-                    type="monotone" 
-                    dataKey="action" 
-                    stroke={STATUS_COLORS['ดำเนินการ']} 
-                    strokeWidth={4} 
-                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
-                    activeDot={{ r: 7, strokeWidth: 0 }}
-                    name="ดำเนินการ" 
-                    filter="url(#shadow)"
+                    type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} 
+                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7, strokeWidth: 0 }}
+                    name="ดำเนินการ" filter="url(#shadow)"
                   />
+                  {/* เส้นเสร็จสิ้น */}
                   <Line 
-                    type="monotone" 
-                    dataKey="completed" 
-                    stroke={STATUS_COLORS['เสร็จสิ้น']} 
-                    strokeWidth={3} 
-                    dot={false}
-                    activeDot={{ r: 6, strokeWidth: 0 }}
-                    name="เสร็จสิ้น" 
+                    type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }} name="เสร็จสิ้น" 
                   />
-                  {/* Hidden Lines but available in logic */}
+                  
+                  {/* เส้นซ่อนไว้ */}
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={2} dot={false} name="ส่งต่อ" hide />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={2} dot={false} name="เชิญร่วม" hide />
                   <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={2} dot={false} name="ปฏิเสธ" hide />
-                  
                 </LineChart>
               </ResponsiveContainer>
             ) : (
@@ -383,85 +324,46 @@ const StatisticsView = ({ organizationId }) => {
         </section>
 
         <div className={styles.responsiveGrid2}>
-          
-          {/* --- Efficiency Graph --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
                 <h2 className={styles.sectionTitle}>
-                  <Clock color="#f97316" size={20} />
+                  <Clock color="#FFAB00" size={20} />
                   เวลาแต่ละขั้นตอน
                 </h2>
                 <p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p>
               </div>
             </div>
-            
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={efficiencyData} 
-                    layout="vertical"
-                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
-                  >
+                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
-                    
-                    <YAxis 
-                      dataKey="title" 
-                      type="category" 
-                      width={140} 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{fontSize: 10, fill: '#4b5563'}} 
-                    />
-
-                    <Tooltip 
-                      cursor={{fill: 'transparent'}} 
-                      content={({ active, payload }) => {
+                    <YAxis dataKey="title" type="category" width={140} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#4b5563'}} />
+                    <Tooltip cursor={{fill: 'transparent'}} content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div style={{
-                                backgroundColor: '#fff', 
-                                padding: '12px', 
-                                border: '1px solid #e5e7eb', 
-                                borderRadius: '8px', 
-                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                            }}>
+                            <div className={styles.customTooltip}>
                               <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title}</p>
-                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
-                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>
-                                <span style={{fontSize: '11px', color: '#6b7280'}}>รอรับเรื่อง: {data.stage1} ชม.</span>
-                              </div>
-                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
-                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>
-                                <span style={{fontSize: '11px', color: '#6b7280'}}>ประสานงาน: {data.stage2} ชม.</span>
-                              </div>
-                              <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
-                                <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>
-                                <span style={{fontSize: '11px', color: '#6b7280'}}>ปฏิบัติงาน: {data.stage3} ชม.</span>
-                              </div>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>รอรับเรื่อง: {data.stage1} ชม.</div>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>ประสานงาน: {data.stage2} ชม.</div>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>ปฏิบัติงาน: {data.stage3} ชม.</div>
                               <hr style={{margin: '6px 0', borderColor: '#e5e7eb'}}/>
                               <p style={{fontSize: '11px', fontWeight: 'bold', color: '#374151'}}>รวม: {data.total} ชม.</p>
                             </div>
                           );
                         }
                         return null;
-                      }}
-                    />
-                    
+                      }} />
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                    
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
-                    
                   </BarChart>
                 </ResponsiveContainer>
-              ) : (
-                <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>
-              )}
+              ) : <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>}
             </div>
           </section>
 
@@ -472,17 +374,13 @@ const StatisticsView = ({ organizationId }) => {
                   <Activity color="#6366f1" size={20} />
                   ประเภท vs เวลา
                 </h2>
-                <p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p>
+                <p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange})</p>
               </div>
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart 
-                    data={problemTypeData.slice(0, 5)} 
-                    layout="vertical"
-                    margin={{ top: 0, right: 10, left: -20, bottom: 0 }}
-                  >
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
                     <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fontSize: 10}} />
@@ -493,23 +391,17 @@ const StatisticsView = ({ organizationId }) => {
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
-            ) : (
-              <p className={styles.emptyState}>ไม่มีข้อมูล</p>
-            )}
+            ) : <p className={styles.emptyState}>ไม่มีข้อมูล</p>}
           </section>
-
         </div>
 
         <div className={styles.responsiveGrid2}>
-            
-            {/* --- Satisfaction --- */}
             <section className={styles.sectionCard}>
                 <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', marginBottom: '16px', fontSize: '16px'}}>ความพึงพอใจ</h3>
                 {satisfactionData ? (
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        {/* ใช้สีเหลืองสวย PRETTY_YELLOW */}
                         <span style={{color: PRETTY_YELLOW}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
@@ -520,7 +412,6 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    {/* ใช้สีเหลืองสวย PRETTY_YELLOW */}
                                     <div className={styles.progressBar} style={{backgroundColor: PRETTY_YELLOW, width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
@@ -532,7 +423,6 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
-            {/* --- Staff Activities --- */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
@@ -541,17 +431,13 @@ const StatisticsView = ({ organizationId }) => {
                         ทั้งหมด: {totalStaffCount} คน
                     </div>
                 </div>
-                
                 <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
-                          <YAxis 
-                            dataKey="name" type="category" width={140} axisLine={false} tickLine={false} 
-                            tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
-                          />
+                          <YAxis dataKey="name" type="category" width={140} axisLine={false} tickLine={false} tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} />
                           <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', fontSize: '12px' }} />
                           {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL' && k !== 'ทั้งหมด' && k !== 'กำลังประสาน' && k !== 'ดำเนินการ').map((status) => (
                             <Bar key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={20} name={status} />
@@ -559,9 +445,7 @@ const StatisticsView = ({ organizationId }) => {
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : (
-                        <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>
-                    )}
+                    ) : <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
                 </div>
             </section>
         </div>
