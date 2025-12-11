@@ -23,16 +23,16 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// ใช้สีเดิมแต่ปรับให้สดขึ้นนิดหน่อยสำหรับพื้นหลัง
+// ใช้สีส้มแทนสีเหลืองเดิม
 const STATUS_COLORS = {
-  'ทั้งหมด': '#1e293b',      // Slate 800
-  'รอรับเรื่อง': '#ef4444',    // Red 500
-  'กำลังดำเนินการ': '#f59e0b', // Amber 500
-  'ดำเนินการ': '#f59e0b',
-  'เสร็จสิ้น': '#22c55e',      // Green 500
-  'ส่งต่อ': '#3b82f6',        // Blue 500
-  'เชิญร่วม': '#06b6d4',      // Cyan 500
-  'ปฏิเสธ': '#64748b',        // Slate 500
+  'ทั้งหมด': '#1e293b',        // Slate 800 (เข้มขรึม)
+  'รอรับเรื่อง': '#ef4444',      // Red 500
+  'กำลังดำเนินการ': '#f97316',   // Orange 500 (เปลี่ยนจากเหลือง)
+  'ดำเนินการ': '#f97316',        // Orange 500
+  'เสร็จสิ้น': '#22c55e',        // Green 500
+  'ส่งต่อ': '#3b82f6',          // Blue 500
+  'เชิญร่วม': '#06b6d4',        // Cyan 500
+  'ปฏิเสธ': '#64748b',          // Slate 500
   'NULL': '#d1d5db'
 };
 
@@ -59,7 +59,6 @@ const StatisticsView = ({ organizationId }) => {
   const [efficiencyData, setEfficiencyData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ... (useEffect fetchData เหมือนเดิมทุกประการ ไม่ต้องแก้ไขส่วนนี้) ...
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
@@ -164,7 +163,7 @@ const StatisticsView = ({ organizationId }) => {
   const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
   const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
-  // แยก Config ออกเป็น 2 ส่วน: Total และ Others
+  // แยก Config: Total (ซ้าย) และ Others (ขวา)
   const totalCardData = { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' };
   
   const otherStatusConfig = [
@@ -217,7 +216,7 @@ const StatisticsView = ({ organizationId }) => {
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
-          /* --- NEW LAYOUT SECTION --- */
+          /* --- NEW LAYOUT: LEFT BIG, RIGHT GRID --- */
           <section className={styles.dashboardTopSection}>
             
             {/* 1. BIG TOTAL CARD (Left) */}
@@ -434,7 +433,8 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        <span style={{color: '#ffc107'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        {/* ใช้สีส้มตรงดาว */}
+                        <span style={{color: STATUS_COLORS['ดำเนินการ']}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -444,7 +444,8 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    <div className={styles.progressBar} style={{backgroundColor: '#ffc107', width: `${percent}%`}}></div>
+                                    {/* ใช้สีส้มตรงหลอดพลัง */}
+                                    <div className={styles.progressBar} style={{backgroundColor: STATUS_COLORS['ดำเนินการ'], width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
