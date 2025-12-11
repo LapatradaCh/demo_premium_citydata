@@ -4,11 +4,14 @@ import styles from "./css/MapView.module.css";
 // 1. Import Components ของ Map
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
-// 2. Import MarkerClusterGroup (ต้อง npm install react-leaflet-cluster ก่อน)
+// 2. Import MarkerClusterGroup
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+
+// 3. Import leaflet.heat (ต้อง npm install leaflet.heat ก่อน)
+import "leaflet.heat";
 
 import {
   FaMapMarkerAlt,
@@ -17,7 +20,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-// --- แก้ไขปัญหา Icon Default ของ Leaflet หาไม่เจอ ---
+// --- แก้ไขปัญหา Icon Default ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -25,7 +28,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// --- 3. สร้าง Custom Icon: หมุดสีแดง (Red Marker) ---
+// --- Custom Icon: หมุดแดง ---
 const redIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -35,15 +38,51 @@ const redIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-// --- 4. ฟังก์ชันสร้าง Icon สำหรับ Cluster (กลุ่ม) ให้เป็นสีส้ม ---
+// --- Custom Icon: Cluster สีส้ม ---
 const createCustomClusterIcon = (cluster) => {
   const count = cluster.getChildCount();
-  // ใช้ L.divIcon ร่วมกับ CSS Class ที่เราสร้าง
   return L.divIcon({
     html: `<span>${count}</span>`,
-    className: styles.customClusterIcon, // ต้องมี CSS นี้ในไฟล์ MapView.module.css
+    className: styles.customClusterIcon, 
     iconSize: L.point(40, 40, true),
   });
+};
+
+// --- Component ใหม่: Heatmap Layer ---
+const HeatmapLayer = ({ data }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+
+    // 1. กรองข้อมูลและแปลงเป็น format [lat, lng, intensity]
+    // intensity (ความเข้ม) ใส่เป็น 1 ไปก่อน (หรือจะใส่ตามความรุนแรงของเคสก็ได้)
+    const points = data
+      .filter(p => !isNaN(parseFloat(p.latitude)) && !isNaN(parseFloat(p.longitude)))
+      .map(p => [parseFloat(p.latitude), parseFloat(p.longitude), 0.8]); 
+
+    // 2. สร้าง HeatLayer
+    const heat = L.heatLayer(points, {
+      radius: 25,   // รัศมีความกว้างของจุด
+      blur: 15,     // ความฟุ้ง
+      maxZoom: 17,  // ซูมเท่าไหร่ถึงจะเห็นชัดสุด
+      minOpacity: 0.4,
+      gradient: {
+        0.4: 'blue',
+        0.6: 'cyan',
+        0.7: 'lime',
+        0.8: 'yellow',
+        1.0: 'red'
+      }
+    }).addTo(map);
+
+    // 3. Cleanup: ลบ Layer ออกเมื่อ component หายไป (เช่น กดสลับกลับไปดูหมุด)
+    return () => {
+      map.removeLayer(heat);
+    };
+  }, [data, map]);
+
+  return null;
 };
 
 // Helper: ตัดคำ
@@ -52,7 +91,7 @@ const truncateText = (text, maxLength) => {
   return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
 };
 
-// Component: Auto Zoom (ปรับมุมกล้องให้เห็นครบทุกหมุด)
+// Component: Auto Zoom
 const FitBoundsToMarkers = ({ markers }) => {
   const map = useMap();
   useEffect(() => {
@@ -60,10 +99,8 @@ const FitBoundsToMarkers = ({ markers }) => {
       const validMarkers = markers.filter(m => 
         !isNaN(parseFloat(m.latitude)) && !isNaN(parseFloat(m.longitude))
       );
-
       if (validMarkers.length > 0) {
         const bounds = L.latLngBounds(validMarkers.map(m => [parseFloat(m.latitude), parseFloat(m.longitude)]));
-        // padding [50, 50] คือเว้นระยะขอบเล็กน้อยไม่ให้หมุดชิดจอเกินไป
         map.fitBounds(bounds, { padding: [50, 50] });
       }
     }
@@ -72,7 +109,7 @@ const FitBoundsToMarkers = ({ markers }) => {
 };
 
 const MapView = ({ subTab }) => {
-  const [mapMode, setMapMode] = useState("pins");
+  const [mapMode, setMapMode] = useState("pins"); // 'pins' หรือ 'heatmap'
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [reports, setReports] = useState([]);
@@ -83,10 +120,9 @@ const MapView = ({ subTab }) => {
   const modalTitle = `ตัวกรอง (${title})`;
   const summaryTitle = `รายการแจ้ง (${title})`;
 
-  // พิกัด Default (กรุงเทพฯ)
   const defaultCenter = [13.7563, 100.5018];
 
-  // --- Logic ดึงข้อมูลแบบ Pagination Loop ---
+  // --- Logic ดึงข้อมูล (Pagination Loop) ---
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
@@ -190,7 +226,8 @@ const MapView = ({ subTab }) => {
                 <div className={styles.filterGroup}>
                    <label>รูปแบบแสดงผล</label>
                    <div className={styles.mapToggles}>
-                    <button className={mapMode === "pins" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("pins")}>หมุด</button>
+                    {/* ปุ่มสลับโหมด Pins vs Heatmap */}
+                    <button className={mapMode === "pins" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("pins")}>หมุด (Pins)</button>
                     <button className={mapMode === "heatmap" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("heatmap")}>Heatmap</button>
                    </div>
                 </div>
@@ -248,11 +285,16 @@ const MapView = ({ subTab }) => {
                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
 
-             {/* สั่งให้แผนที่ Fit ไปหาหมุดทุกตัวที่มี */}
+             {/* Auto Zoom */}
              {reports.length > 0 && <FitBoundsToMarkers markers={reports} />}
 
+             {/* --- CASE 1: โหมด Heatmap --- */}
+             {mapMode === "heatmap" && (
+                <HeatmapLayer data={reports} />
+             )}
+
+             {/* --- CASE 2: โหมด Pins (หมุด) พร้อม Cluster --- */}
              {mapMode === "pins" && (
-                // --- 5. MarkerClusterGroup พร้อม Custom Icon Function ---
                 <MarkerClusterGroup 
                     chunkedLoading
                     iconCreateFunction={createCustomClusterIcon}
@@ -263,7 +305,6 @@ const MapView = ({ subTab }) => {
                     if (isNaN(lat) || isNaN(lng)) return null;
 
                     return (
-                      // --- 6. ใช้ icon={redIcon} ให้กับ Marker ---
                       <Marker key={report.issue_cases_id} position={[lat, lng]} icon={redIcon}>
                         <Popup>
                           <div className={styles.popupContent}>
