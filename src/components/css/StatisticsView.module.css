@@ -1,21 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
-/* =======================================================
-   1. THEME UTILITIES (Map กับ JSX styles['...'])
-   ======================================================= */
+/* ... (ส่วน Theme Utilities เดิม ลบ text-color ทิ้งหรือเก็บไว้ก็ได้ แต่เราจะไม่ได้ใช้ใน card แล้ว) ... */
 
-/* --- Text Color Classes (สำหรับตัวเลขจำนวน) --- */
-/* สำคัญ: ชื่อ Class ต้องตรงกับ Key ใน STATUS_KEY_MAP ในไฟล์ JS */
-.text-total        { color: #0f172a !important; } /* ทั้งหมด */
-.text-waiting      { color: #ff4d4f !important; } /* รอรับเรื่อง */
-.text-coordinating { color: #9c27b0 !important; } /* กำลังประสาน */
-.text-action       { color: #ffc107 !important; } /* ดำเนินการ */
-.text-finished     { color: #4caf50 !important; } /* เสร็จสิ้น */
-.text-forward      { color: #2196f3 !important; } /* ส่งต่อ */
-.text-invite       { color: #00bcd4 !important; } /* เชิญร่วม */
-.text-reject       { color: #64748b !important; } /* ปฏิเสธ */
-
-/* --- Badge Base Style --- */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -24,24 +10,25 @@
   width: fit-content;
   display: inline-block;
   line-height: 1.5;
-  transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 0.2); /* พื้นหลังจางๆ สีขาว */
+  backdrop-filter: blur(4px);
+  color: #ffffff; /* ตัวหนังสือขาวเสมอ */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* =======================================================
    2. MAIN LAYOUT
    ======================================================= */
-
 .container {
   min-height: 100vh;
   background-color: #ffffff;
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
-  max-width: none !important;
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* Header */
+/* ... (Header Styles เดิม คงไว้) ... */
 .header {
   background-color: #ffffff;
   padding: 16px 32px;
@@ -55,14 +42,12 @@
   width: 100% !important;
   box-sizing: border-box;
 }
-
 .headerLeft h1, .headerLeft span {
   font-weight: 700 !important;
   color: #0f172a;
   font-size: 20px;
   margin: 0;
 }
-
 .headerSubtitle {
   font-size: 13px;
   color: #64748b;
@@ -77,60 +62,102 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
   width: 100% !important;
-  max-width: 100% !important;
   box-sizing: border-box;
 }
 
-/* --- STATUS CARDS --- */
+/* --- NEW DASHBOARD LAYOUT (Grid System ใหม่) --- */
+.dashboardTopSection {
+  display: grid;
+  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่, ขวา Grid */
+  gap: 24px;
+  width: 100%;
+}
+
+.rightGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์ */
+  grid-template-rows: repeat(2, 1fr);    /* 2 แถว */
+  gap: 24px;
+}
+
+/* --- STATUS CARDS (Solid Color Style) --- */
 .statusCard {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 20px 24px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px; /* มนขึ้น */
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  min-height: 140px;
+  border: none; /* เอาขอบออกเพราะเราใช้สีพื้นหลังแล้ว */
+  position: relative;
+  overflow: hidden;
+  color: #ffffff; /* ตัวหนังสือขาว */
 }
 
 .statusCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-  border-color: #cbd5e1;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
+}
+
+/* Card ใหญ่ (ทั้งหมด) */
+.totalCard {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 12px;
 }
 
 .cardTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #334155;
+  opacity: 0.9; /* ขาวจางนิดๆ */
+  color: #ffffff; 
   white-space: nowrap;
+}
+.totalCard .cardTitle {
+    font-size: 24px; /* หัวข้อใหญ่ขึ้นสำหรับ Total */
 }
 
 .cardCount {
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 800;
   line-height: 1;
   text-align: right;
   margin-bottom: 8px;
-  /* สีจะถูกกำหนดผ่าน class .text-... */
+  color: #ffffff !important; /* บังคับขาว */
+}
+.totalCard .cardCount {
+    font-size: 80px; /* ตัวเลขใหญ่มากสำหรับ Total */
+    margin-top: auto;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* --- SECTION CARDS --- */
+/* Decoration Circle (วงกลมตกแต่งจางๆ) */
+.cardDecoration {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* ... (Section Cards, Charts, Satisfaction, Staff styles คงเดิม) ... */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -152,7 +179,6 @@
   padding-bottom: 12px;
   border-bottom: 1px solid #f1f5f9;
 }
-
 .sectionTitle {
   font-size: 18px;
   font-weight: 700;
@@ -162,7 +188,6 @@
   gap: 10px;
   margin: 0;
 }
-
 .sectionTitle::before {
   content: '';
   display: inline-block;
@@ -171,168 +196,58 @@
   background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
   border-radius: 4px;
 }
-
 .sectionSubtitle {
   font-size: 13px;
   color: #64748b;
   font-weight: 500;
 }
+.chartContainer { height: 350px; width: 100%; position: relative; }
+.staffChartContainer { height: 500px; width: 100%; position: relative; }
+.chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
 
-/* --- CHARTS --- */
-.chartContainer {
-  height: 350px;
-  width: 100%;
-  position: relative;
-}
+/* Satisfaction */
+.satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; }
+.scoreBig { font-size: 56px; font-weight: 800; color: #ca8a04; line-height: 0.9; }
+.starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; }
+.starLabel { width: 28px; font-weight: 700; color: #334155; }
+.progressTrack { flex: 1; height: 12px; background-color: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.progressBar { height: 100%; border-radius: 99px; }
+.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
 
-.staffChartContainer {
-  height: 500px;
-  width: 100%;
-  position: relative;
-}
-
-/* Override font family inside charts */
-.chartContainer *,
-.staffChartContainer * {
-  font-family: 'Prompt', sans-serif !important;
-}
-
-/* --- SATISFACTION --- */
-.satisfactionHeader {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.scoreBig {
-  font-size: 56px;
-  font-weight: 800;
-  color: #ca8a04;
-  line-height: 0.9;
-}
-
-.starRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.starLabel {
-  width: 28px;
-  font-weight: 700;
-  color: #334155;
-}
-
-.progressTrack {
-  flex: 1;
-  height: 12px;
-  background-color: #e2e8f0;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.progressBar {
-  height: 100%;
-  border-radius: 99px;
-  /* สี background ถูกกำหนด inline style ใน JS */
-}
-
-.starPercent {
-  width: 40px;
-  text-align: right;
-  color: #475569;
-  font-weight: 600;
-}
-
-/* --- TOP HEADER (Staff) --- */
-.topHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
+/* Top Header Staff */
+.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .topBadge {
-  background-color: #eff6ff;
-  color: #1d4ed8;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid #bfdbfe;
-  display: flex;
-  align-items: center;
+  background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
+  border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe;
+  display: flex; align-items: center;
 }
+.emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 
-.h3Custom {
-  /* ใช้สำหรับหัวข้อที่ไม่ได้อยู่ใน sectionHeader ปกติ */
-}
+/* Grids */
+.responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
-.emptyState {
-  text-align: center;
-  color: #9ca3af;
-  padding: 40px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* --- GRID SYSTEM & RESPONSIVE --- */
-.responsiveGrid4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  width: 100%;
-}
-
-.responsiveGrid2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  width: 100%;
-}
-
-@media (max-width: 1024px) {
-  .responsiveGrid4 {
-    grid-template-columns: repeat(2, 1fr);
+/* --- RESPONSIVE --- */
+@media (max-width: 1200px) {
+  .dashboardTopSection {
+    grid-template-columns: 1fr; /* เรียงลงมาแทน */
+  }
+  .totalCard {
+      height: 200px; /* กำหนดความสูงเมื่ออยู่บนมือถือ */
   }
 }
 
 @media (max-width: 768px) {
-  .header {
-    padding: 16px 20px;
+  .header { padding: 16px 20px; }
+  .main { padding: 16px; gap: 16px; }
+  
+  .rightGrid {
+    grid-template-columns: repeat(2, 1fr) !important; /* เหลือ 2 คอลัมน์บนมือถือ */
   }
-  .main {
-    padding: 16px;
-    gap: 16px;
-  }
-  .responsiveGrid4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-  .responsiveGrid2 {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-  .statusCard {
-    padding: 16px !important;
-    min-height: auto !important;
-  }
-  .cardTitle {
-    font-size: 13px !important;
-  }
-  .cardCount {
-    font-size: 32px !important;
-    margin-bottom: 4px !important;
-  }
-  .chartContainer {
-    height: 260px !important;
-  }
-  .staffChartContainer {
-    height: 400px !important;
-  }
+  
+  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .statusCard { padding: 16px !important; min-height: auto !important; }
+  .cardTitle { font-size: 13px !important; }
+  .cardCount { font-size: 32px !important; margin-bottom: 4px !important; }
+  .chartContainer { height: 260px !important; }
+  .staffChartContainer { height: 400px !important; }
 }
