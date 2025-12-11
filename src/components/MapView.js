@@ -114,6 +114,8 @@ const MapView = ({ subTab }) => {
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const mainFilters = ["ประเภท", "สถานะ"];
+
 
   const isPublic = subTab === "แผนที่สาธารณะ";
   const title = isPublic ? "แผนที่สาธารณะ" : "แผนที่ภายใน";
