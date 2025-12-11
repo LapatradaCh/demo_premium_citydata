@@ -206,7 +206,7 @@
   margin-top: 4px;
 }
 
-/* --- FILTER BUTTONS (ต้นแบบ) --- */
+/* --- FILTER BUTTONS --- */
 .filterContainer {
   background-color: #ffffff;
   padding: 4px;
@@ -244,26 +244,25 @@
   transform: scale(1.02);
 }
 
-/* --- INTERACTIVE LEGEND (แก้ใหม่ให้เหมือน Filter Button) --- */
+/* --- INTERACTIVE LEGEND (แก้ไขส่วนนี้) --- */
 .legendContainer {
   display: flex;
-  flex-direction: row;       /* เรียงแนวนอน */
-  justify-content: center;   /* กึ่งกลาง */
-  flex-wrap: wrap;           /* ถ้าจอเล็กมากให้ปัดลง */
-  gap: 8px;                  /* ระยะห่างระหว่างปุ่ม */
+  flex-direction: row;        /* เรียงแนวนอน */
+  justify-content: center;    /* กึ่งกลาง */
+  flex-wrap: wrap;            /* ปัดลงบรรทัดใหม่เมื่อจอเล็ก */
+  gap: 8px;                   /* ระยะห่างระหว่างปุ่ม */
   margin-top: 20px;
   width: 100%;
 }
 
 .legendBtn {
-  /* ทำสไตล์ให้เหมือน .filterButton */
-  display: flex;
+  display: inline-flex;       /* จัดให้ขนาดตามเนื้อหา */
   align-items: center;
   justify-content: center;
   gap: 6px;
   
-  padding: 6px 14px;         /* ขนาดกะทัดรัด */
-  border-radius: 8px;        /* ความมนแบบสี่เหลี่ยมมน */
+  padding: 6px 14px;          
+  border-radius: 8px;         
   
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
@@ -274,9 +273,10 @@
   
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* เงาจางๆ */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
   
-  min-width: auto;           /* ไม่ฟิกซ์ความกว้าง */
+  width: auto;                /* ไม่ยืดเต็มความกว้าง */
+  min-width: auto;
 }
 
 .legendBtn:hover {
@@ -299,6 +299,7 @@
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 /* Custom Tooltip */
