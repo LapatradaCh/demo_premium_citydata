@@ -8,7 +8,7 @@
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-/* สีเหลืองทองอำพัน (สวย สดใส) */
+/* สีเหลืองทองอำพัน (Amber Gold) */
 .text-action       { color: #FFAB00 !important; } 
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
@@ -193,11 +193,14 @@
   width: 100%;
 }
 
-.sectionHeader {
+/* --- CHART HEADER & FILTERS (NEW) --- */
+.chartHeaderWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid #f1f5f9;
 }
@@ -225,6 +228,75 @@
   font-size: 13px;
   color: #64748b;
   font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Filter Buttons (Pill Style) */
+.filterContainer {
+  background-color: #f8fafc;
+  padding: 4px;
+  border-radius: 12px;
+  display: flex;
+  gap: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.filterButton {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  color: #0f172a;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.filterButtonActive {
+  background-color: #ffffff;
+  color: #FFAB00; /* สีเหลืองทอง */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transform: scale(1.02);
+  border: 1px solid #f1f5f9;
+}
+
+/* Custom Tooltip */
+.customTooltip {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.tooltipLabel {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
+}
+
+.dotIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 /* --- CHARTS --- */
@@ -361,4 +433,8 @@
   .cardCount { font-size: 32px !important; margin-bottom: 4px !important; }
   .chartContainer { height: 260px !important; }
   .staffChartContainer { height: 400px !important; }
+  
+  .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .filterContainer { width: 100%; justify-content: space-between; }
+  .filterButton { flex: 1; padding: 6px 0; }
 }
