@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./css/MapView.module.css";
-// เพิ่ม useMap
+
+// 1. Import Components ของ Map
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-// Import Cluster Group
+
+// 2. Import MarkerClusterGroup (ต้อง npm install react-leaflet-cluster ก่อน)
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import "leaflet/dist/leaflet.css";
@@ -15,7 +17,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-// --- แก้ไขปัญหา Icon ของ Leaflet ---
+// --- แก้ไขปัญหา Icon Default ของ Leaflet หาไม่เจอ ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -23,13 +25,34 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
+// --- 3. สร้าง Custom Icon: หมุดสีแดง (Red Marker) ---
+const redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// --- 4. ฟังก์ชันสร้าง Icon สำหรับ Cluster (กลุ่ม) ให้เป็นสีส้ม ---
+const createCustomClusterIcon = (cluster) => {
+  const count = cluster.getChildCount();
+  // ใช้ L.divIcon ร่วมกับ CSS Class ที่เราสร้าง
+  return L.divIcon({
+    html: `<span>${count}</span>`,
+    className: styles.customClusterIcon, // ต้องมี CSS นี้ในไฟล์ MapView.module.css
+    iconSize: L.point(40, 40, true),
+  });
+};
+
 // Helper: ตัดคำ
 const truncateText = (text, maxLength) => {
   if (!text) return "";
   return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
 };
 
-// Component: Auto Zoom
+// Component: Auto Zoom (ปรับมุมกล้องให้เห็นครบทุกหมุด)
 const FitBoundsToMarkers = ({ markers }) => {
   const map = useMap();
   useEffect(() => {
@@ -40,6 +63,7 @@ const FitBoundsToMarkers = ({ markers }) => {
 
       if (validMarkers.length > 0) {
         const bounds = L.latLngBounds(validMarkers.map(m => [parseFloat(m.latitude), parseFloat(m.longitude)]));
+        // padding [50, 50] คือเว้นระยะขอบเล็กน้อยไม่ให้หมุดชิดจอเกินไป
         map.fitBounds(bounds, { padding: [50, 50] });
       }
     }
@@ -59,9 +83,10 @@ const MapView = ({ subTab }) => {
   const modalTitle = `ตัวกรอง (${title})`;
   const summaryTitle = `รายการแจ้ง (${title})`;
 
+  // พิกัด Default (กรุงเทพฯ)
   const defaultCenter = [13.7563, 100.5018];
 
-  // --- Logic ดึงข้อมูล (Pagination Loop) ---
+  // --- Logic ดึงข้อมูลแบบ Pagination Loop ---
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
@@ -139,7 +164,6 @@ const MapView = ({ subTab }) => {
     }
   };
 
-  // Render Sidebar
   const renderSidebar = () => (
     <div className={styles.mapSidebar}>
       <h3 className={styles.mapSidebarTitle}>{title}</h3>
@@ -224,18 +248,23 @@ const MapView = ({ subTab }) => {
                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
 
+             {/* สั่งให้แผนที่ Fit ไปหาหมุดทุกตัวที่มี */}
              {reports.length > 0 && <FitBoundsToMarkers markers={reports} />}
 
-             {/* ใช้ MarkerClusterGroup ครอบ Loop ของ Markers */}
              {mapMode === "pins" && (
-                <MarkerClusterGroup chunkedLoading>
+                // --- 5. MarkerClusterGroup พร้อม Custom Icon Function ---
+                <MarkerClusterGroup 
+                    chunkedLoading
+                    iconCreateFunction={createCustomClusterIcon}
+                >
                   {reports.map((report) => {
                     const lat = parseFloat(report.latitude);
                     const lng = parseFloat(report.longitude);
                     if (isNaN(lat) || isNaN(lng)) return null;
 
                     return (
-                      <Marker key={report.issue_cases_id} position={[lat, lng]}>
+                      // --- 6. ใช้ icon={redIcon} ให้กับ Marker ---
+                      <Marker key={report.issue_cases_id} position={[lat, lng]} icon={redIcon}>
                         <Popup>
                           <div className={styles.popupContent}>
                             <strong>#{report.case_code}</strong><br/>
