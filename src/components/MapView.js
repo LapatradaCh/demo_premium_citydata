@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./css/MapView.module.css";
-// เพิ่ม useMap เพื่อใช้คุมการซูม
+// เพิ่ม useMap
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+// Import Cluster Group
+import MarkerClusterGroup from "react-leaflet-cluster";
+
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -12,7 +15,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-// --- แก้ไขปัญหา Icon ของ Leaflet หาไฟล์ไม่เจอ ---
+// --- แก้ไขปัญหา Icon ของ Leaflet ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -20,27 +23,24 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Helper: ตัดคำให้สั้นลงถ้ามันยาวเกินไป
+// Helper: ตัดคำ
 const truncateText = (text, maxLength) => {
   if (!text) return "";
   return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
 };
 
-// Component: ช่วยจัดมุมกล้องให้เห็นครบทุกหมุด (Auto Zoom)
+// Component: Auto Zoom
 const FitBoundsToMarkers = ({ markers }) => {
   const map = useMap();
   useEffect(() => {
     if (markers.length > 0) {
-      // 1. กรองเฉพาะที่มีพิกัดถูกต้อง
       const validMarkers = markers.filter(m => 
         !isNaN(parseFloat(m.latitude)) && !isNaN(parseFloat(m.longitude))
       );
 
       if (validMarkers.length > 0) {
-        // 2. สร้างกรอบ (Bounds) ที่ครอบคลุมทุกจุด
         const bounds = L.latLngBounds(validMarkers.map(m => [parseFloat(m.latitude), parseFloat(m.longitude)]));
-        // 3. สั่งให้แผนที่ Fit ตามกรอบนั้น
-        map.fitBounds(bounds, { padding: [50, 50] }); // padding 50px รอบๆ
+        map.fitBounds(bounds, { padding: [50, 50] });
       }
     }
   }, [markers, map]);
@@ -54,17 +54,14 @@ const MapView = ({ subTab }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const mainFilters = ["ประเภท", "สถานะ"];
-
   const isPublic = subTab === "แผนที่สาธารณะ";
   const title = isPublic ? "แผนที่สาธารณะ" : "แผนที่ภายใน";
   const modalTitle = `ตัวกรอง (${title})`;
   const summaryTitle = `รายการแจ้ง (${title})`;
 
-  // พิกัด Default (กรุงเทพฯ) ใช้กรณีไม่มีข้อมูลเลย
   const defaultCenter = [13.7563, 100.5018];
 
-  // --- Logic ดึงข้อมูลแบบ Pagination Loop (ดึงจนกว่าจะหมด) ---
+  // --- Logic ดึงข้อมูล (Pagination Loop) ---
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
@@ -82,9 +79,8 @@ const MapView = ({ subTab }) => {
         let allData = [];
         let page = 1;
         let hasMore = true;
-        const limit = 100; // ดึงทีละ 100 เพื่อความเสถียร
+        const limit = 100;
 
-        // วนลูปดึงข้อมูลทีละหน้า
         while (hasMore) {
           const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}&limit=${limit}&page=${page}`;
           
@@ -93,7 +89,6 @@ const MapView = ({ subTab }) => {
           
           const data = await res.json();
           
-          // Normalize Data (จัดการกับ format array หรือ object.data)
           let currentBatch = [];
           if (Array.isArray(data)) {
             currentBatch = data;
@@ -102,23 +97,18 @@ const MapView = ({ subTab }) => {
           }
 
           if (currentBatch.length === 0) {
-            hasMore = false; // ไม่มีข้อมูลแล้ว หยุดลูป
+            hasMore = false;
           } else {
-            allData = [...allData, ...currentBatch]; // รวมข้อมูล
-            
+            allData = [...allData, ...currentBatch];
             if (currentBatch.length < limit) {
-              hasMore = false; // ข้อมูลชุดนี้ไม่เต็มหน้า แสดงว่าเป็นหน้าสุดท้าย
+              hasMore = false;
             } else {
-              page++; // ไปหน้าถัดไป
+              page++;
             }
           }
         }
 
-        // --- Print Array ออกมาดูใน Console ---
         console.log("จำนวนที่ดึงมาได้ทั้งหมด:", allData.length);
-        console.log("ข้อมูล Array ทั้งหมด:", allData); 
-        // ------------------------------------
-
         setReports(allData);
 
       } catch (err) {
@@ -234,28 +224,31 @@ const MapView = ({ subTab }) => {
                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
 
-             {/* สั่งให้แผนที่ Fit ไปหาหมุดทุกตัวที่มี */}
              {reports.length > 0 && <FitBoundsToMarkers markers={reports} />}
 
-             {/* วนลูปสร้าง Marker จากข้อมูล reports ที่ดึงมา */}
-             {mapMode === "pins" && reports.map((report) => {
-               const lat = parseFloat(report.latitude);
-               const lng = parseFloat(report.longitude);
-               // ข้ามข้อมูลที่พิกัดใช้ไม่ได้
-               if (isNaN(lat) || isNaN(lng)) return null;
+             {/* ใช้ MarkerClusterGroup ครอบ Loop ของ Markers */}
+             {mapMode === "pins" && (
+                <MarkerClusterGroup chunkedLoading>
+                  {reports.map((report) => {
+                    const lat = parseFloat(report.latitude);
+                    const lng = parseFloat(report.longitude);
+                    if (isNaN(lat) || isNaN(lng)) return null;
 
-               return (
-                 <Marker key={report.issue_cases_id} position={[lat, lng]}>
-                   <Popup>
-                     <div className={styles.popupContent}>
-                       <strong>#{report.case_code}</strong><br/>
-                       {report.title}<br/>
-                       <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
-                     </div>
-                   </Popup>
-                 </Marker>
-               );
-             })}
+                    return (
+                      <Marker key={report.issue_cases_id} position={[lat, lng]}>
+                        <Popup>
+                          <div className={styles.popupContent}>
+                            <strong>#{report.case_code}</strong><br/>
+                            {report.title}<br/>
+                            <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
+             )}
+
            </MapContainer>
         )}
       </div>
