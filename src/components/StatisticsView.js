@@ -23,16 +23,15 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// กำหนดสีของสถานะ: ให้สถานะ "ดำเนินการ" เป็นสีส้ม
 const STATUS_COLORS = {
-  'ทั้งหมด': '#1e293b',        // Slate 800 (เข้มขรึม)
-  'รอรับเรื่อง': '#ef4444',      // Red 500
-  'กำลังดำเนินการ': '#f97316',   // Orange 500 (สีส้ม)
-  'ดำเนินการ': '#f97316',        // Orange 500 (สีส้ม)
-  'เสร็จสิ้น': '#22c55e',        // Green 500
-  'ส่งต่อ': '#3b82f6',          // Blue 500
-  'เชิญร่วม': '#06b6d4',        // Cyan 500
-  'ปฏิเสธ': '#64748b',          // Slate 500
+  'ทั้งหมด': '#0f172a',
+  'รอรับเรื่อง': '#ff4d4f',      // สีแดง (Stage 1)
+  'กำลังดำเนินการ': '#ffc107',   // สีเหลือง (Stage 2 - ประสานงาน)
+  'ดำเนินการ': '#ffc107',
+  'เสร็จสิ้น': '#4caf50',       // สีเขียว (Stage 3 - ปฏิบัติงาน)
+  'ส่งต่อ': '#2196f3',
+  'เชิญร่วม': '#00bcd4',
+  'ปฏิเสธ': '#64748b',
   'NULL': '#d1d5db'
 };
 
@@ -56,7 +55,10 @@ const StatisticsView = ({ organizationId }) => {
   const [totalStaffCount, setTotalStaffCount] = useState(0); 
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
+  
+  // State ใหม่สำหรับข้อมูลประสิทธิภาพ
   const [efficiencyData, setEfficiencyData] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -138,7 +140,8 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
+        // 7. Efficiency (ดึงข้อมูล 3 Stages)
+        // หมายเหตุ: ตรวจสอบ path ให้ตรงกับที่ backend deploy (เช่น /api/stats/efficiency)
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -164,10 +167,8 @@ const StatisticsView = ({ organizationId }) => {
   const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
   const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
-  // แยก Config: Total (ซ้าย) และ Others (ขวา)
-  const totalCardData = { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' };
-  
-  const otherStatusConfig = [
+  const statusCardConfig = [
+    { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' },
     { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
     { title: 'ดำเนินการ', count: getStatusCount('กำลังดำเนินการ'), key: 'action' },
     { title: 'เสร็จสิ้น', count: getStatusCount('เสร็จสิ้น'), key: 'finished' },
@@ -217,53 +218,31 @@ const StatisticsView = ({ organizationId }) => {
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
-          /* --- NEW LAYOUT: LEFT BIG, RIGHT GRID --- */
-          <section className={styles.dashboardTopSection}>
-            
-            {/* 1. BIG TOTAL CARD (Left) */}
-            <div 
-                className={`${styles.statusCard} ${styles.totalCard}`}
-                style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}
-            >
-                <div className={styles.cardDecoration}></div>
-                <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>{totalCardData.title}</span>
+          <section className={styles.responsiveGrid4}>
+            {statusCardConfig.map((card, idx) => {
+              const percent = getPercent(card.count, getTotalCases());
+              const cssKey = STATUS_KEY_MAP[card.title] || 'total';
+              const textClass = styles[`text-${cssKey}`];       
+              const badgeBaseClass = styles['badge-status'];   
+              const solidColor = STATUS_COLORS[card.title] || '#000';
+
+              return (
+                <div key={idx} className={styles.statusCard}>
+                  <div className={styles.cardHeader}>
+                    <span className={styles.cardTitle}>{card.title}</span>
+                    <span className={`${styles.cardCount} ${textClass}`}>
+                      {card.count}
+                    </span>
+                  </div>
+                  <div 
+                    className={badgeBaseClass}
+                    style={{ backgroundColor: solidColor, color: '#ffffff' }}
+                  >
+                    {percent.toFixed(2)}%
+                  </div>
                 </div>
-                <span className={styles.cardCount}>
-                  {totalCardData.count}
-                </span>
-                <div className={styles.badgeStatus} style={{ alignSelf: 'center', marginTop: 'auto' }}>
-                   100%
-                </div>
-            </div>
-
-            {/* 2. GRID 3x2 (Right) */}
-            <div className={styles.rightGrid}>
-                {otherStatusConfig.map((card, idx) => {
-                    const percent = getPercent(card.count, getTotalCases());
-                    const solidColor = STATUS_COLORS[card.title] || '#64748b';
-
-                    return (
-                        <div 
-                            key={idx} 
-                            className={styles.statusCard}
-                            style={{ backgroundColor: solidColor }}
-                        >
-                            <div className={styles.cardDecoration}></div>
-                            <div className={styles.cardHeader}>
-                                <span className={styles.cardTitle}>{card.title}</span>
-                                <div className={styles.badgeStatus}>
-                                    {percent.toFixed(0)}%
-                                </div>
-                            </div>
-                            <span className={styles.cardCount}>
-                                {card.count}
-                            </span>
-                        </div>
-                    );
-                })}
-            </div>
-
+              );
+            })}
           </section>
         )}
 
@@ -309,7 +288,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
           
-          {/* --- Efficiency Graph --- */}
+          {/* --- Efficiency Graph (3 Stages) --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div>
@@ -332,6 +311,7 @@ const StatisticsView = ({ organizationId }) => {
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     
+                    {/* ใช้ Title เป็นแกน Y และปรับ width เพื่อให้ข้อความไม่ตกขอบ */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
@@ -341,6 +321,7 @@ const StatisticsView = ({ organizationId }) => {
                       tick={{fontSize: 10, fill: '#4b5563'}} 
                     />
 
+                    {/* Custom Tooltip สำหรับแสดงข้อมูล 3 Stages และชื่อเต็ม */}
                     <Tooltip 
                       cursor={{fill: 'transparent'}} 
                       content={({ active, payload }) => {
@@ -378,8 +359,13 @@ const StatisticsView = ({ organizationId }) => {
                     
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
                     
+                    {/* Stage 1: สีแดง (รอรับเรื่อง) */}
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
+                    
+                    {/* Stage 2: สีเหลือง (ประสานงาน) */}
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
+                    
+                    {/* Stage 3: สีเขียว (ปฏิบัติงาน) */}
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
                     
                   </BarChart>
@@ -434,8 +420,7 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        {/* ดาวเป็นสีเหลืองทอง #fbbf24 */}
-                        <span style={{color: '#fbbf24'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        <span style={{color: '#ffc107'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -445,8 +430,7 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    {/* หลอดพลังเป็นสีเหลืองทอง #fbbf24 */}
-                                    <div className={styles.progressBar} style={{backgroundColor: '#fbbf24', width: `${percent}%`}}></div>
+                                    <div className={styles.progressBar} style={{backgroundColor: '#ffc107', width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
