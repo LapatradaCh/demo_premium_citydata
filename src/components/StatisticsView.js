@@ -18,7 +18,6 @@ import {
   ResponsiveContainer, 
   ComposedChart
 } from 'recharts';
-
 import styles from './css/StatisticsView.module.css';
 
 // สีเหลืองทองอำพัน
