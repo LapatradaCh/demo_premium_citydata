@@ -8,7 +8,7 @@
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-/* ปรับเป็นสีเหลืองทองตามรูปภาพ */
+/* สีเหลืองทอง */
 .text-action       { color: #D49E12 !important; } 
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
@@ -253,11 +253,11 @@
   margin-bottom: 20px;
 }
 
-/* ปรับสีตัวเลขคะแนนใหญ่ให้เป็นสีทอง */
+/* สีเหลืองทองสำหรับตัวเลขคะแนน */
 .scoreBig {
   font-size: 56px;
   font-weight: 800;
-  color: #D49E12; /* Golden Yellow */
+  color: #D49E12; 
   line-height: 0.9;
 }
 
