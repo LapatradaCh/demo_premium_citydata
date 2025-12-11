@@ -49,6 +49,15 @@ const STATUS_KEY_MAP = {
   'ปฏิเสธ': 'reject'
 };
 
+// SVG Definitions for drop shadow
+const renderCustomDefs = () => (
+  <defs>
+    <filter id="shadow" height="200%">
+      <feDropShadow dx="0" dy="5" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
+    </filter>
+  </defs>
+);
+
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
   const [timeRange, setTimeRange] = useState('1w');
@@ -179,22 +188,12 @@ const StatisticsView = ({ organizationId }) => {
   ];
 
   const renderFilterButtons = () => (
-    <div style={{ display: 'flex', gap: '6px' }}>
+    <div className={styles.filterContainer}>
       {['1w', '1m', '3m', '1y', '5y'].map((range) => (
         <button
           key={range}
           onClick={() => setTimeRange(range)}
-          style={{
-            padding: '4px 10px',
-            borderRadius: '6px',
-            border: timeRange === range ? '1px solid #2563eb' : '1px solid #e5e7eb',
-            backgroundColor: timeRange === range ? '#2563eb' : '#fff',
-            color: timeRange === range ? '#fff' : '#4b5563',
-            cursor: 'pointer',
-            fontSize: '12px',
-            fontWeight: 500,
-            transition: 'all 0.2s'
-          }}
+          className={`${styles.filterButton} ${timeRange === range ? styles.filterButtonActive : ''}`}
         >
           {range.toUpperCase()}
         </button>
@@ -271,7 +270,7 @@ const StatisticsView = ({ organizationId }) => {
 
         {/* --- Trend Graph --- */}
         <section className={styles.sectionCard}>
-          <div className={styles.sectionHeader} style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className={styles.chartHeaderWrapper}>
             <div>
               <h2 className={styles.sectionTitle}>
                 <TrendingUp color="#3b82f6" size={20} />
@@ -287,20 +286,94 @@ const StatisticsView = ({ organizationId }) => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart 
                   data={trendData} 
-                  margin={{ top: 5, right: 10, left: -20, bottom: 0 }}
+                  margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 10}} />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', fontSize: '12px' }} />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px', paddingTop: '10px'}} />
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={{r: 3}} name="ทั้งหมด" />
-                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={2} dot={{r: 2}} name="รอรับเรื่อง" />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={3} dot={{r: 3}} name="ดำเนินการ" />
-                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={{r: 3}} name="ส่งต่อ" />
-                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={{r: 3}} name="เชิญร่วม" />
-                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={{r: 3}} name="ปฏิเสธ" />
-                  <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={2} dot={{r: 2}} name="เสร็จสิ้น" />
+                  {renderCustomDefs()}
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 500}} 
+                    dy={15} 
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 500}} 
+                  />
+                  
+                  <Tooltip 
+                    cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '4 4' }}
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className={styles.customTooltip}>
+                            <p className={styles.tooltipLabel}>{label}</p>
+                            {payload.map((entry, index) => (
+                              <div key={index} className={styles.tooltipItem}>
+                                <div className={styles.dotIndicator} style={{backgroundColor: entry.color}}></div>
+                                <span>{entry.name}: {entry.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={40} 
+                    iconType="circle"
+                    wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500, color: '#64748b' }} 
+                  />
+
+                  {/* Main Lines with Monotone and Shadow */}
+                  <Line 
+                    type="monotone" 
+                    dataKey="total" 
+                    stroke={STATUS_COLORS['ทั้งหมด']} 
+                    strokeWidth={3} 
+                    dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }}
+                    name="ทั้งหมด" 
+                    filter="url(#shadow)"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="pending" 
+                    stroke={STATUS_COLORS['รอรับเรื่อง']} 
+                    strokeWidth={3} 
+                    dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }}
+                    name="รอรับเรื่อง" 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="action" 
+                    stroke={STATUS_COLORS['ดำเนินการ']} 
+                    strokeWidth={4} 
+                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
+                    activeDot={{ r: 7, strokeWidth: 0 }}
+                    name="ดำเนินการ" 
+                    filter="url(#shadow)"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="completed" 
+                    stroke={STATUS_COLORS['เสร็จสิ้น']} 
+                    strokeWidth={3} 
+                    dot={false}
+                    activeDot={{ r: 6, strokeWidth: 0 }}
+                    name="เสร็จสิ้น" 
+                  />
+                  {/* Hidden Lines but available in logic */}
+                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={2} dot={false} name="ส่งต่อ" hide />
+                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={2} dot={false} name="เชิญร่วม" hide />
+                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={2} dot={false} name="ปฏิเสธ" hide />
+                  
                 </LineChart>
               </ResponsiveContainer>
             ) : (
