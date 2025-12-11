@@ -231,7 +231,26 @@ const MapView = ({ subTab }) => {
                     <button className={mapMode === "heatmap" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("heatmap")}>Heatmap</button>
                    </div>
                 </div>
-              </div>
+                {mainFilters.map((label, i) => (
+                  <div className={styles.filterGroup} key={i}>
+                    <label>{label}</label>
+                    <select defaultValue="all">
+                      <option value="all">ทั้งหมด</option>
+                      {label === "ประเภท" && (
+                        <>
+                          <option value="t1">ไฟฟ้า/ประปา</option>
+                          <option value="t2">ถนน/ทางเท้า</option>
+                        </>
+                      )}
+                      {label === "สถานะ" && (
+                        <>
+                          <option value="pending">รอรับเรื่อง</option>
+                          <option value="completed">เสร็จสิ้น</option>
+                        </>
+                      )}
+                    </select>
+                  </div>
+                ))}              </div>
               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
             </div>
           </div>
