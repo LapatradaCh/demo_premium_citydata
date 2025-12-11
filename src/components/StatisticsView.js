@@ -23,14 +23,14 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// สีเหลืองทอง
-const GOLDEN_YELLOW = '#D49E12'; 
+// สีเหลืองทองอำพัน (สวย สว่าง ดูแพง)
+const PRETTY_YELLOW = '#FFAB00'; 
 
 const STATUS_COLORS = {
   'ทั้งหมด': '#1e293b',
   'รอรับเรื่อง': '#ef4444',
-  'กำลังดำเนินการ': GOLDEN_YELLOW, // สีเหลืองทอง
-  'ดำเนินการ': GOLDEN_YELLOW,      // สีเหลืองทอง
+  'กำลังดำเนินการ': PRETTY_YELLOW, // สีเหลืองสวย
+  'ดำเนินการ': PRETTY_YELLOW,      // สีเหลืองสวย
   'เสร็จสิ้น': '#22c55e',
   'ส่งต่อ': '#3b82f6',
   'เชิญร่วม': '#06b6d4',
@@ -436,8 +436,8 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        {/* ใช้สีเหลืองทอง GOLDEN_YELLOW */}
-                        <span style={{color: GOLDEN_YELLOW}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        {/* ใช้สีเหลืองสวย PRETTY_YELLOW */}
+                        <span style={{color: PRETTY_YELLOW}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -447,8 +447,8 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    {/* ใช้สีเหลืองทอง GOLDEN_YELLOW */}
-                                    <div className={styles.progressBar} style={{backgroundColor: GOLDEN_YELLOW, width: `${percent}%`}}></div>
+                                    {/* ใช้สีเหลืองสวย PRETTY_YELLOW */}
+                                    <div className={styles.progressBar} style={{backgroundColor: PRETTY_YELLOW, width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
