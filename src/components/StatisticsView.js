@@ -23,14 +23,14 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// กำหนดสีเหลืองทองตามรูปภาพ
+// สีเหลืองทอง
 const GOLDEN_YELLOW = '#D49E12'; 
 
 const STATUS_COLORS = {
   'ทั้งหมด': '#1e293b',
   'รอรับเรื่อง': '#ef4444',
-  'กำลังดำเนินการ': GOLDEN_YELLOW, // ใช้สีเหลืองทอง
-  'ดำเนินการ': GOLDEN_YELLOW,      // ใช้สีเหลืองทอง
+  'กำลังดำเนินการ': GOLDEN_YELLOW, // สีเหลืองทอง
+  'ดำเนินการ': GOLDEN_YELLOW,      // สีเหลืองทอง
   'เสร็จสิ้น': '#22c55e',
   'ส่งต่อ': '#3b82f6',
   'เชิญร่วม': '#06b6d4',
