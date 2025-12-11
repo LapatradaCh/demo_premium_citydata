@@ -8,13 +8,13 @@
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
-.text-action       { color: #f97316 !important; } /* เปลี่ยนเป็นสีส้ม */
+.text-action       { color: #f97316 !important; } /* สีส้ม สำหรับสถานะดำเนินการ */
 .text-finished     { color: #4caf50 !important; }
 .text-forward      { color: #2196f3 !important; }
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
-/* Badge สำหรับใช้ในตารางหรือที่อื่นๆ ที่ไม่ใช่การ์ดบน */
+/* Badge (ใช้ในตารางหรือจุดอื่นๆ ที่ไม่ใช่การ์ดบน) */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -85,7 +85,7 @@
 /* --- NEW DASHBOARD LAYOUT --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่ (Fixed width), ขวา Grid (Auto) */
+  grid-template-columns: 320px 1fr; /* ซ้าย Card ใหญ่ (Fixed), ขวา Grid (Auto) */
   gap: 24px;
   width: 100%;
 }
@@ -255,7 +255,7 @@
 .scoreBig {
   font-size: 56px;
   font-weight: 800;
-  color: #f97316; /* เปลี่ยนเป็นสีส้ม */
+  color: #ca8a04; /* สีเหลืองทองเข้ม สำหรับตัวเลขคะแนน */
   line-height: 0.9;
 }
 
