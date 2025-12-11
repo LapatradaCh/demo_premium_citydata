@@ -27,18 +27,29 @@ import styles from './css/StatisticsView.module.css';
 const PRETTY_YELLOW = '#FFAB00'; 
 
 const STATUS_COLORS = {
-  'ทั้งหมด': '#1e293b',        // สีเข้มสำหรับทั้งหมด
-  'รอรับเรื่อง': '#ef4444',      // แดง
-  'กำลังดำเนินการ': PRETTY_YELLOW, // เหลืองทอง
-  'ดำเนินการ': PRETTY_YELLOW,      // เหลืองทอง
-  'เสร็จสิ้น': '#22c55e',        // เขียว
-  'ส่งต่อ': '#3b82f6',          // ฟ้า
-  'เชิญร่วม': '#06b6d4',        // ฟ้าอมเขียว
-  'ปฏิเสธ': '#64748b',          // เทา
+  'ทั้งหมด': '#1e293b',
+  'รอรับเรื่อง': '#ef4444',
+  'กำลังดำเนินการ': PRETTY_YELLOW,
+  'ดำเนินการ': PRETTY_YELLOW,
+  'เสร็จสิ้น': '#22c55e',
+  'ส่งต่อ': '#3b82f6',
+  'เชิญร่วม': '#06b6d4',
+  'ปฏิเสธ': '#64748b',
   'NULL': '#d1d5db'
 };
 
-// Config สำหรับปุ่มกดเลือกกราฟ (เรียงลำดับตามต้องการ)
+const STATUS_KEY_MAP = {
+  'ทั้งหมด': 'total',
+  'รอรับเรื่อง': 'waiting',
+  'กำลังประสาน': 'coordinating',
+  'ดำเนินการ': 'action',
+  'เสร็จสิ้น': 'finished',
+  'ส่งต่อ': 'forward',
+  'เชิญร่วม': 'invite',
+  'ปฏิเสธ': 'reject'
+};
+
+// Config สำหรับปุ่มกดด้านล่าง (เรียงลำดับ)
 const LEGEND_CONFIG = [
   { key: 'total', label: 'ทั้งหมด', color: STATUS_COLORS['ทั้งหมด'] },
   { key: 'pending', label: 'รอรับเรื่อง', color: STATUS_COLORS['รอรับเรื่อง'] },
@@ -49,7 +60,7 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
-// Drop Shadow Definition (เงาใต้เส้นกราฟ)
+// Drop Shadow Definition
 const renderCustomDefs = () => (
   <defs>
     <filter id="shadow" height="200%">
@@ -63,10 +74,8 @@ const renderCustomDefs = () => (
 
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
-  const [timeRange, setTimeRange] = useState('1M'); // Default Range
-  
-  // State สำหรับเลือกดูเส้นกราฟ (Default: 'total')
-  const [activeTrendKey, setActiveTrendKey] = useState('total');
+  const [timeRange, setTimeRange] = useState('1M'); // Default 1M
+  const [activeTrendKey, setActiveTrendKey] = useState('total'); // Default เลือกทั้งหมด
 
   const [statsData, setStatsData] = useState(null);
   const [trendData, setTrendData] = useState([]); 
@@ -182,7 +191,7 @@ const StatisticsView = ({ organizationId }) => {
   const getStatusCount = (statusKey) => statsData?.[statusKey] || 0;
   const getPercent = (val, total) => total > 0 ? (val / total) * 100 : 0;
 
-  // Config การ์ดด้านบน (Cards)
+  // Config การ์ดบน
   const totalCardData = { title: 'ทั้งหมด', count: getTotalCases(), key: 'total' };
   const otherStatusConfig = [
     { title: 'รอรับเรื่อง', count: getStatusCount('รอรับเรื่อง'), key: 'waiting' },
@@ -208,7 +217,7 @@ const StatisticsView = ({ organizationId }) => {
     </div>
   );
 
-  // Render ปุ่ม Legend (Custom Interactive Legend)
+  // Render ปุ่ม Legend แบบเล็ก (Mini Pill)
   const renderCustomLegend = () => {
     return (
       <div className={styles.legendContainer}>
@@ -218,13 +227,15 @@ const StatisticsView = ({ organizationId }) => {
             <button
               key={item.key}
               onClick={() => setActiveTrendKey(item.key)}
-              className={`${styles.legendBtn} ${isActive ? styles.legendBtnActive : ''}`}
+              className={`${styles.miniLegendBtn} ${isActive ? styles.miniLegendBtnActive : ''}`}
               style={{
-                // ถ้า Active ให้ใช้สีของมัน ถ้าไม่ Active ให้เป็นสีเทาจางๆ
-                color: isActive ? item.color : '#94a3b8',
-                opacity: isActive ? 1 : 0.8,
+                // ใช้สีสถานะกับตัวหนังสือและขอบ ถ้าเลือก
+                color: isActive ? item.color : '#64748b',
+                // ถ้ายังไม่เลือก ขอบเป็นสีเทาอ่อน ถ้าเลือกแล้วขอบเป็นสีสถานะ
+                borderColor: isActive ? item.color : '#e2e8f0', 
               }}
             >
+              {/* จุดสีเล็กๆ */}
               <span 
                 className={styles.legendDot} 
                 style={{ backgroundColor: item.color }} 
@@ -254,10 +265,8 @@ const StatisticsView = ({ organizationId }) => {
         {loading && !statsData ? (
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
-          /* --- DASHBOARD TOP SECTION (Cards) --- */
+          /* --- TOP SECTION (CARDS) --- */
           <section className={styles.dashboardTopSection}>
-            
-            {/* 1. Card ใหญ่ (ทั้งหมด) */}
             <div 
                 className={`${styles.statusCard} ${styles.totalCard}`}
                 style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}
@@ -274,7 +283,6 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
             </div>
 
-            {/* 2. Grid ขวา */}
             <div className={styles.rightGrid}>
                 {otherStatusConfig.map((card, idx) => {
                     const percent = getPercent(card.count, getTotalCases());
@@ -300,11 +308,10 @@ const StatisticsView = ({ organizationId }) => {
                     );
                 })}
             </div>
-
           </section>
         )}
 
-        {/* --- Trend Graph with Interactive Legend --- */}
+        {/* --- TREND GRAPH --- */}
         <section className={styles.sectionCard}>
           <div className={styles.chartHeaderWrapper}>
             <div>
@@ -359,57 +366,11 @@ const StatisticsView = ({ organizationId }) => {
                     }}
                   />
                   
-                  {/* เราไม่ใช้ Legend ปกติของ Recharts เพราะเราสร้างปุ่มกดเองด้านล่าง */}
-
-                  {/* LINES: จะแสดงก็ต่อเมื่อ activeTrendKey ตรงกับ Key ของเส้นนั้น */}
-                  {/* ใช้ prop 'hide' ในการควบคุมการแสดงผล */}
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke={STATUS_COLORS['ทั้งหมด']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6, strokeWidth: 0 }} 
-                    name="ทั้งหมด" 
-                    filter="url(#shadowGray)"
-                    hide={activeTrendKey !== 'total'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="pending" 
-                    stroke={STATUS_COLORS['รอรับเรื่อง']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6, strokeWidth: 0 }} 
-                    name="รอรับเรื่อง" 
-                    hide={activeTrendKey !== 'pending'}
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="action" 
-                    stroke={STATUS_COLORS['ดำเนินการ']} 
-                    strokeWidth={4} 
-                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
-                    activeDot={{ r: 7, strokeWidth: 0 }} 
-                    name="ดำเนินการ" 
-                    filter="url(#shadow)"
-                    hide={activeTrendKey !== 'action'}
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="completed" 
-                    stroke={STATUS_COLORS['เสร็จสิ้น']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6, strokeWidth: 0 }} 
-                    name="เสร็จสิ้น" 
-                    hide={activeTrendKey !== 'completed'}
-                  />
-                  
+                  {/* LINES: ใช้ prop 'hide' ตาม activeTrendKey */}
+                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
+                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'pending'} />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'action'} />
+                  <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'completed'} />
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'invite'} />
                   <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'reject'} />
@@ -421,12 +382,11 @@ const StatisticsView = ({ organizationId }) => {
             )}
           </div>
           
-          {/* Custom Interactive Legend (ปุ่มเล็กๆ เรียงกัน) */}
+          {/* แสดงปุ่มเลือกกราฟ (Mini Legend) */}
           {renderCustomLegend()}
 
         </section>
 
-        {/* --- Bottom Sections --- */}
         <div className={styles.responsiveGrid2}>
           
           {/* Efficiency Graph */}
@@ -540,7 +500,6 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        {/* สีทอง */}
                         <span style={{color: PRETTY_YELLOW}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
@@ -551,7 +510,6 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    {/* สีทอง */}
                                     <div className={styles.progressBar} style={{backgroundColor: PRETTY_YELLOW, width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
