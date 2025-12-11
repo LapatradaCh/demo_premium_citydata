@@ -23,12 +23,12 @@ import {
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
-// ใช้สีส้มแทนสีเหลืองเดิม
+// กำหนดสีของสถานะ: ให้สถานะ "ดำเนินการ" เป็นสีส้ม
 const STATUS_COLORS = {
   'ทั้งหมด': '#1e293b',        // Slate 800 (เข้มขรึม)
   'รอรับเรื่อง': '#ef4444',      // Red 500
-  'กำลังดำเนินการ': '#f97316',   // Orange 500 (เปลี่ยนจากเหลือง)
-  'ดำเนินการ': '#f97316',        // Orange 500
+  'กำลังดำเนินการ': '#f97316',   // Orange 500 (สีส้ม)
+  'ดำเนินการ': '#f97316',        // Orange 500 (สีส้ม)
   'เสร็จสิ้น': '#22c55e',        // Green 500
   'ส่งต่อ': '#3b82f6',          // Blue 500
   'เชิญร่วม': '#06b6d4',        // Cyan 500
@@ -69,6 +69,7 @@ const StatisticsView = ({ organizationId }) => {
 
       try {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
+        // ปรับ Base URL ตาม Environment ของคุณ
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
         // 1. Overview Stats
@@ -433,8 +434,8 @@ const StatisticsView = ({ organizationId }) => {
                   <>
                     <div className={styles.satisfactionHeader}>
                         <span className={styles.scoreBig}>{satisfactionData.overall_average.toFixed(2)}</span>
-                        {/* ใช้สีส้มตรงดาว */}
-                        <span style={{color: STATUS_COLORS['ดำเนินการ']}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
+                        {/* ดาวเป็นสีเหลืองทอง #fbbf24 */}
+                        <span style={{color: '#fbbf24'}}>{'★'.repeat(Math.round(satisfactionData.overall_average))}</span>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                         {[5, 4, 3, 2, 1].map((star) => {
@@ -444,8 +445,8 @@ const StatisticsView = ({ organizationId }) => {
                             <div key={star} className={styles.starRow}>
                                 <span className={styles.starLabel}>{star}★</span>
                                 <div className={styles.progressTrack}>
-                                    {/* ใช้สีส้มตรงหลอดพลัง */}
-                                    <div className={styles.progressBar} style={{backgroundColor: STATUS_COLORS['ดำเนินการ'], width: `${percent}%`}}></div>
+                                    {/* หลอดพลังเป็นสีเหลืองทอง #fbbf24 */}
+                                    <div className={styles.progressBar} style={{backgroundColor: '#fbbf24', width: `${percent}%`}}></div>
                                 </div>
                                 <span className={styles.starPercent}>{Math.round(percent)}%</span>
                             </div>
