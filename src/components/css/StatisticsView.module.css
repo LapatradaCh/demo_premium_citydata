@@ -32,7 +32,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* ป้องกันสกรอลล์แนวนอน */
+    overflow-x: hidden;
 }
 
 .container {
@@ -80,7 +80,7 @@ html, body {
   gap: 24px;
   width: 100% !important;
   box-sizing: border-box;
-  max-width: 1600px; /* จำกัดความกว้างไม่ให้ยืดเกินไปในจอใหญ่ */
+  max-width: 1600px;
 }
 
 /* --- DASHBOARD GRID --- */
@@ -364,7 +364,7 @@ html, body {
 /* --- Laptop / Small Desktop (max 1200px) --- */
 @media (max-width: 1200px) {
   .dashboardTopSection {
-    grid-template-columns: 1fr; /* Stack Total Card above Grid */
+    grid-template-columns: 1fr;
   }
   .totalCard {
     height: auto;
@@ -378,7 +378,6 @@ html, body {
     text-align: right;
   }
   .rightGrid {
-     /* ใช้ 3 คอลัมน์ได้เพราะมีพื้นที่เต็มความกว้างแล้ว */
      grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -386,7 +385,7 @@ html, body {
 /* --- Tablet / iPad (max 992px) --- */
 @media (max-width: 992px) {
     .rightGrid {
-        grid-template-columns: repeat(2, 1fr); /* ลดเหลือ 2 คอลัมน์ */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -395,16 +394,13 @@ html, body {
   .header { padding: 16px 20px; }
   .main { padding: 16px; gap: 16px; }
   
-  /* บังคับ 2 คอลัมน์ที่จุดนี้ */
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
   
-  /* Status Card ปรับขนาด */
   .statusCard { padding: 16px !important; min-height: auto !important; }
   .cardTitle { font-size: 13px !important; }
   .cardCount { font-size: 32px !important; margin-bottom: 4px !important; }
   
-  /* ปรับ Total Card กลับมาแนวตั้ง */
   .totalCard { 
       flex-direction: column; 
       align-items: flex-start;
@@ -413,24 +409,24 @@ html, body {
   }
   .totalCard .cardCount { text-align: left; font-size: 56px; margin-top: 10px; }
 
-  /* !!! CRITICAL FIX: กราฟหาย !!! */
-  /* บังคับความสูงและ display เพื่อให้กราฟมีพื้นที่วาด */
+  /* !!! CRITICAL FIX FOR MOBILE CHARTS !!! */
   .chartContainer { 
+      display: block !important;
       height: 300px !important; 
       min-height: 300px !important; 
-      display: block !important;
       width: 100% !important;
+      overflow: hidden;
   }
   .staffChartContainer { 
+      display: block !important;
       height: 400px !important; 
       min-height: 400px !important;
-      display: block !important;
       width: 100% !important;
+      overflow: hidden;
   }
   
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
   
-  /* Filter Responsive */
   .filterContainer { width: 100%; justify-content: flex-start; padding: 4px; overflow-x: auto; }
   .filterButton { flex: 0 0 auto; } 
 
@@ -440,34 +436,29 @@ html, body {
 
 /* --- Mobile Small (max 576px) --- */
 @media (max-width: 576px) {
-    /* เปลี่ยน Grid เป็น 1 คอลัมน์ เพื่อให้อ่านง่ายบนมือถือแนวตั้ง */
     .rightGrid {
         grid-template-columns: 1fr !important;
     }
-    
     .header {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
     }
-    
     .totalCard .cardCount {
         font-size: 48px;
     }
 
-    /* ลดความสูงกราฟลงเล็กน้อยให้พอดีจอเล็ก */
     .chartContainer { 
-        height: 260px !important; 
-        min-height: 260px !important;
+        height: 280px !important; 
+        min-height: 280px !important;
     }
     
-    /* ปรับปุ่ม Filter ให้กดง่ายขึ้นบนมือถือ */
     .filterContainer {
-        flex-wrap: wrap; /* ให้ปุ่มตกบรรทัด */
+        flex-wrap: wrap; 
         justify-content: space-between;
     }
     .filterButton {
-        flex: 1 1 45%; /* ให้ปุ่มขยายเกือบครึ่งจอ */
+        flex: 1 1 45%; 
         text-align: center;
         margin-bottom: 2px;
     }
