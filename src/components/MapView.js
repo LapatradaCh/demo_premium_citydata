@@ -10,7 +10,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// 3. Import leaflet.heat
+// 3. Import leaflet.heat (ต้อง npm install leaflet.heat ก่อน)
 import "leaflet.heat";
 
 import {
@@ -28,38 +28,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// --- Custom Icons: ประกาศสีต่างๆ ---
-// Helper function สร้าง Icon
-const createIcon = (colorUrl) => new L.Icon({
-  iconUrl: colorUrl,
+// --- Custom Icon: หมุดแดง ---
+const redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
-
-// กำหนดตัวแปรสี
-const redIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png');
-const greenIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png');
-const orangeIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png');
-const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png');
-const blueIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
-const greyIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
-
-// ฟังก์ชันเลือกสีตามสถานะ
-const getIconByStatus = (status) => {
-  switch (status) {
-    case "รอรับเรื่อง": return redIcon;
-    case "กำลังประสานงาน": return violetIcon;
-    case "กำลังดำเนินการ": return orangeIcon;
-    case "เสร็จสิ้น": return greenIcon;
-    case "ส่งต่อ": return blueIcon;
-    case "เชิญร่วม": return blueIcon;
-    case "ปฏิเสธ": return greyIcon;
-    default: return redIcon;
-  }
-};
 
 // --- Custom Icon: Cluster สีส้ม ---
 const createCustomClusterIcon = (cluster) => {
@@ -78,15 +55,17 @@ const HeatmapLayer = ({ data }) => {
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    // กรองและแปลงเป็น format [lat, lng, intensity]
+    // 1. กรองข้อมูลและแปลงเป็น format [lat, lng, intensity]
+    // intensity (ความเข้ม) ใส่เป็น 1 ไปก่อน (หรือจะใส่ตามความรุนแรงของเคสก็ได้)
     const points = data
       .filter(p => !isNaN(parseFloat(p.latitude)) && !isNaN(parseFloat(p.longitude)))
       .map(p => [parseFloat(p.latitude), parseFloat(p.longitude), 0.8]); 
 
+    // 2. สร้าง HeatLayer
     const heat = L.heatLayer(points, {
-      radius: 25,
-      blur: 15,
-      maxZoom: 17,
+      radius: 25,   // รัศมีความกว้างของจุด
+      blur: 15,     // ความฟุ้ง
+      maxZoom: 17,  // ซูมเท่าไหร่ถึงจะเห็นชัดสุด
       minOpacity: 0.4,
       gradient: {
         0.4: 'blue',
@@ -97,6 +76,7 @@ const HeatmapLayer = ({ data }) => {
       }
     }).addTo(map);
 
+    // 3. Cleanup: ลบ Layer ออกเมื่อ component หายไป (เช่น กดสลับกลับไปดูหมุด)
     return () => {
       map.removeLayer(heat);
     };
@@ -135,6 +115,7 @@ const MapView = ({ subTab }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const mainFilters = ["ประเภท", "สถานะ"];
+
 
   const isPublic = subTab === "แผนที่สาธารณะ";
   const title = isPublic ? "แผนที่สาธารณะ" : "แผนที่ภายใน";
@@ -247,6 +228,7 @@ const MapView = ({ subTab }) => {
                 <div className={styles.filterGroup}>
                    <label>รูปแบบแสดงผล</label>
                    <div className={styles.mapToggles}>
+                    {/* ปุ่มสลับโหมด Pins vs Heatmap */}
                     <button className={mapMode === "pins" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("pins")}>หมุด (Pins)</button>
                     <button className={mapMode === "heatmap" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("heatmap")}>Heatmap</button>
                    </div>
@@ -327,16 +309,16 @@ const MapView = ({ subTab }) => {
              {/* Auto Zoom */}
              {reports.length > 0 && <FitBoundsToMarkers markers={reports} />}
 
-             {/* Heatmap Mode */}
+             {/* --- CASE 1: โหมด Heatmap --- */}
              {mapMode === "heatmap" && (
                 <HeatmapLayer data={reports} />
              )}
 
-             {/* Pins Mode */}
+             {/* --- CASE 2: โหมด Pins (หมุด) พร้อม Cluster --- */}
              {mapMode === "pins" && (
                 <MarkerClusterGroup 
-                   chunkedLoading
-                   iconCreateFunction={createCustomClusterIcon}
+                    chunkedLoading
+                    iconCreateFunction={createCustomClusterIcon}
                 >
                   {reports.map((report) => {
                     const lat = parseFloat(report.latitude);
@@ -344,11 +326,7 @@ const MapView = ({ subTab }) => {
                     if (isNaN(lat) || isNaN(lng)) return null;
 
                     return (
-                      <Marker 
-                        key={report.issue_cases_id} 
-                        position={[lat, lng]} 
-                        icon={getIconByStatus(report.status)} // เรียกใช้ฟังก์ชันเลือกสี
-                      >
+                      <Marker key={report.issue_cases_id} position={[lat, lng]} icon={redIcon}>
                         <Popup>
                           <div className={styles.popupContent}>
                             <strong>#{report.case_code}</strong><br/>
@@ -361,33 +339,8 @@ const MapView = ({ subTab }) => {
                   })}
                 </MarkerClusterGroup>
              )}
-           </MapContainer>
-        )}
 
-        {/* Legend: คำอธิบายสีหมุด (แสดงเฉพาะโหมด Pins) */}
-        {!loading && mapMode === "pins" && (
-            <div className={styles.mapLegend}>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" alt="red"/>
-                    <span>รอรับเรื่อง</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png" alt="violet"/>
-                    <span>กำลังประสานงาน</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" alt="orange"/>
-                    <span>กำลังดำเนินการ</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" alt="green"/>
-                    <span>เสร็จสิ้น</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" alt="blue"/>
-                    <span>ส่งต่อ / เชิญร่วม</span>
-                </div>
-            </div>
+           </MapContainer>
         )}
       </div>
     </div>
