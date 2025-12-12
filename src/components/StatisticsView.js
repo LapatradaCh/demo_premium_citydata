@@ -15,7 +15,7 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  // ResponsiveContainer, // ❌ เอาออกไปก่อน ตัวปัญหา
+  ResponsiveContainer, // ✅ นำกลับมาใช้สำหรับ Desktop
   ComposedChart
 } from 'recharts';
 
@@ -66,9 +66,9 @@ const StatisticsView = ({ organizationId }) => {
    
   const [loading, setLoading] = useState(true);
 
-  // --- Mobile Check ---
+  // --- Mobile Check & Window Width ---
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const isMobile = windowWidth < 768;
+  const isMobile = windowWidth < 992; // ปรับ breakpoint เป็น 992 เพื่อให้ tablet ใช้โหมด mobile ด้วย (ชัวร์กว่า)
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -104,7 +104,6 @@ const StatisticsView = ({ organizationId }) => {
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          console.log("Trend Data Check:", data); // เช็คว่ามีข้อมูลมาจริงไหม
           const formattedTrend = data.map(item => ({
             ...item,
             total: Number(item.total || 0),
@@ -247,15 +246,33 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // ✅ คำนวณความกว้างกราฟเอง ไม่ง้อ ResponsiveContainer
-  // ถ้าจอกว้างกว่า 1200 ให้กราฟกว้าง 800 (หรือตาม Layout), ถ้าจอมือถือให้กว้างพอดีจอ
-  // แต่ผมใส่ overflow-x auto ไว้ที่ div พ่อแล้ว ดังนั้นใส่ width กว้างๆ ได้เลย
-  const chartWidth = isMobile ? windowWidth - 80 : 500; 
+  // ✅ SPECIAL WRAPPER: พระเอกขี่ม้าขาวแก้ปัญหานี้
+  // ถ้าเป็น Desktop -> ใช้ ResponsiveContainer เต็มกล่อง
+  // ถ้าเป็น Mobile -> ใช้ div ธรรมดา + Fix pixel width (คำนวณจากจอ)
+  const HybridChartWrapper = ({ children, height = 300 }) => {
+    if (!isMobile) {
+        // DESKTOP: Balance with box
+        return (
+            <ResponsiveContainer width="100%" height="100%">
+                {children}
+            </ResponsiveContainer>
+        );
+    }
+    
+    // MOBILE: Force Size to prevent disappearing
+    // คำนวณความกว้าง: เอาความกว้างจอ - padding ซ้ายขวา
+    const mobileWidth = windowWidth - 64; 
+
+    return (
+        <div style={{ width: '100%', height: height, overflowX: 'auto', overflowY: 'hidden' }}>
+            {/* Clone child เพื่อยัด prop width/height เข้าไปตรงๆ เฉพาะตอน Mobile */}
+            {React.cloneElement(children, { width: mobileWidth, height: height })}
+        </div>
+    );
+  };
 
   const chartCommonProps = {
-      isAnimationActive: false,
-      width: chartWidth,
-      height: 300,
+      isAnimationActive: false, // ป้องกันกราฟกระพริบตอนโหลด
   };
 
   return (
@@ -317,14 +334,13 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* ✅ ใส่ overflow-x: auto เพื่อให้กราฟเลื่อนได้ถ้าจอเล็ก */}
-          <div className={styles.chartWrapper} style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+          <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
-                // ❌ ไม่ใช้ ResponsiveContainer แล้ว ใส่ Chart เพียวๆ เลย
+              <HybridChartWrapper height={300}>
                 <LineChart 
                     {...chartCommonProps}
                     data={trendData} 
-                    margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
@@ -363,6 +379,7 @@ const StatisticsView = ({ organizationId }) => {
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
                   <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
                 </LineChart>
+              </HybridChartWrapper>
             ) : (
               <div className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลในช่วงเวลานี้</div>
             )}
@@ -378,8 +395,9 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            <div className={styles.chartWrapper} style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+            <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
+                <HybridChartWrapper height={300}>
                   <BarChart {...chartCommonProps} data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
@@ -413,6 +431,7 @@ const StatisticsView = ({ organizationId }) => {
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
                   </BarChart>
+                </HybridChartWrapper>
               ) : <div className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลประสิทธิภาพ</div>}
             </div>
           </section>
@@ -423,8 +442,9 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            <div className={styles.chartWrapper} style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+            <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
+                  <HybridChartWrapper height={300}>
                     <ComposedChart 
                         {...chartCommonProps}
                         data={problemTypeData.slice(0, 5)} 
@@ -448,6 +468,7 @@ const StatisticsView = ({ organizationId }) => {
                       <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
                       <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
+                  </HybridChartWrapper>
                 ) : <p className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูล</p>}
             </div>
           </section>
@@ -487,15 +508,10 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div className={`${styles.chartWrapper} ${styles.largeHeight}`} style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+                <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
-                        <BarChart 
-                          {...chartCommonProps}
-                          height={500} 
-                          layout="vertical" 
-                          data={staffData} 
-                          margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
-                        >
+                      <HybridChartWrapper height={500}>
+                        <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
@@ -514,6 +530,7 @@ const StatisticsView = ({ organizationId }) => {
                           ))}
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
                         </BarChart>
+                      </HybridChartWrapper>
                     ) : <div className={styles.emptyState} style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
                 </div>
             </section>
