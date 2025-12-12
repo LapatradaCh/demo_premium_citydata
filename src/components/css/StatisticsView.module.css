@@ -32,12 +32,12 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* ป้องกันการเลื่อนซ้ายขวาเกินจอ */
+    overflow-x: hidden;
 }
 
 .container {
   min-height: 100vh;
-  background-color: #f8fafc; /* เปลี่ยนพื้นหลังให้อ่อนลงนิดหน่อยเพื่อให้การ์ดเด่น */
+  background-color: #f8fafc;
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
@@ -88,7 +88,6 @@ html, body {
 /* --- DASHBOARD GRID --- */
 .dashboardTopSection {
   display: grid;
-  /* ใช้ minmax เพื่อให้รองรับจอที่เล็กลงได้ดีขึ้น */
   grid-template-columns: minmax(300px, 320px) 1fr;
   gap: 24px;
   width: 100%;
@@ -193,7 +192,6 @@ html, body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   display: flex;
   flex-direction: column;
-  /* จุดสำคัญ: min-width: 0 ช่วยให้ Grid Item หดตัวได้เมื่อจอเล็ก */
   min-width: 0; 
   overflow: hidden;
   width: 100%;
@@ -246,7 +244,7 @@ html, body {
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   max-width: 100%;
-  overflow-x: auto; /* ให้เลื่อนแนวนอนได้ในมือถือ */
+  overflow-x: auto; 
 }
 
 .filterButton {
@@ -355,97 +353,59 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   5. THE ABSOLUTE FIX (ตัวแก้กราฟหาย/ไม่เต็ม)
+   5. CHART WRAPPER (ตัวแก้กราฟไม่ขึ้น)
    ======================================================= */
+/* แก้ไขให้เรียบง่าย ไม่ใช้ position absolute hack */
 .chartWrapper {
-    position: relative; /* สำคัญ */
     width: 100%;
-    /* ความสูงเริ่มต้นสำหรับจอเล็ก */
-    height: 300px; 
+    /* กำหนดความสูงมาตรฐาน */
+    height: 300px;
+    min-height: 300px;
     margin-bottom: 20px;
-    background-color: transparent;
-    overflow: hidden;
+    /* ป้องกันกราฟล้นและบั๊กการคำนวณพื้นที่ */
+    overflow: hidden; 
 }
 
-/* บังคับ Recharts Container ให้เต็มพื้นที่ Wrapper ตลอดเวลา */
-.chartWrapper :global(.recharts-responsive-container) {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* เพิ่มความสูงสำหรับกราฟ Staff ที่มีข้อมูลเยอะ */
 .largeHeight {
     height: 500px;
+    min-height: 500px;
 }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (ปรับปรุงใหม่)
+   6. RESPONSIVE MEDIA QUERIES
    ======================================================= */
 
-/* จอ Desktop กลางถึงใหญ่ */
+/* จอ Desktop กลางถึงใหญ่ (992px ขึ้นไป) */
 @media (min-width: 992px) {
     .chartWrapper {
-        height: 350px; /* เพิ่มความสูงกราฟในจอใหญ่ */
+        height: 350px;
+        min-height: 350px;
+    }
+    .largeHeight {
+        height: 500px;
+        min-height: 500px;
     }
 }
 
 /* จอ Laptop เล็ก หรือ Tablet แนวนอน */
 @media (max-width: 1200px) {
-  .dashboardTopSection {
-    grid-template-columns: 1fr; /* ยุบ Total Card ลงมา */
-  }
-  
-  .totalCard {
-    height: auto;
-    min-height: 140px;
-    flex-direction: row;
-    align-items: center;
-    gap: 24px;
-  }
-  
-  .totalCard .cardCount {
-    margin: 0;
-    text-align: right;
-    font-size: 60px;
-  }
-
-  /* ปรับ Grid การ์ดเล็กให้เป็น 3 แถว */
-  .rightGrid {
-     grid-template-columns: repeat(3, 1fr);
-  }
+  .dashboardTopSection { grid-template-columns: 1fr; }
+  .totalCard { height: auto; min-height: 140px; flex-direction: row; align-items: center; gap: 24px; }
+  .totalCard .cardCount { margin: 0; text-align: right; font-size: 60px; }
+  .rightGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* จอ Tablet แนวตั้ง */
 @media (max-width: 992px) {
-    .rightGrid {
-        grid-template-columns: repeat(2, 1fr); /* เหลือ 2 คอลัมน์ */
-    }
+    .rightGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* จอ Mobile ใหญ่ */
 @media (max-width: 768px) {
-  .header {
-    padding: 12px 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .main {
-    padding: 16px;
-    gap: 16px;
-  }
+  .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .main { padding: 16px; gap: 16px; }
+  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
     
-  /* Grid การ์ดเล็กเหลือ 2 คอลัมน์ แต่ลด gap */
-  .rightGrid { 
-      grid-template-columns: repeat(2, 1fr) !important; 
-      gap: 12px !important; 
-  }
-    
-  /* ปรับ Layout ภายในการ์ด */
   .statusCard { 
       padding: 16px !important; 
       min-height: 120px !important; 
@@ -453,12 +413,10 @@ html, body {
       justify-content: space-between;
       align-items: flex-start;
   }
-
   .cardHeader { margin-bottom: 8px !important; width: 100%; }
   .cardTitle { font-size: 13px !important; white-space: normal; }
   .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; }
     
-  /* Total Card ในมือถือ */
   .totalCard { 
       flex-direction: row !important; 
       align-items: center;
@@ -469,63 +427,19 @@ html, body {
   .totalCard .cardTitle { font-size: 18px !important; }
   .totalCard .cardCount { text-align: right; font-size: 48px !important; margin: 0 !important; }
 
-  /* กราฟเหลือ 1 คอลัมน์ */
-  .responsiveGrid2 { 
-      grid-template-columns: 1fr !important; 
-      gap: 16px !important; 
-  }
+  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  .chartHeaderWrapper {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
-  }
-
-  .filterContainer {
-      width: 100%;
-      justify-content: space-between;
-      padding: 4px;
-      overflow-x: auto;
-  }
-  
-  .filterButton {
-      flex: 1;
-      text-align: center;
-      padding: 6px 4px;
-      font-size: 11px;
-  }
-    
-  .legendContainer {
-      gap: 6px;
-      justify-content: flex-start;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      flex-wrap: nowrap;
-  }
-  
-  .legendBtn {
-      padding: 4px 8px;
-      font-size: 11px;
-      white-space: nowrap;
-      flex-shrink: 0;
-  }
-    
+  .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .filterContainer { width: 100%; justify-content: space-between; padding: 4px; overflow-x: auto; }
+  .filterButton { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; }
+  .legendContainer { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 8px; flex-wrap: nowrap; }
+  .legendBtn { padding: 4px 8px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
   .scoreBig { font-size: 42px; }
 }
 
-/* จอ Mobile เล็กมาก (iPhone SE, Fold) */
+/* จอ Mobile เล็กมาก */
 @media (max-width: 480px) {
-    .rightGrid {
-        grid-template-columns: 1fr !important; /* เหลือ 1 คอลัมน์เต็ม */
-    }
-
-    .statusCard {
-        flex-direction: row !important;
-        align-items: center;
-        min-height: auto !important;
-    }
-
-    .cardCount {
-        font-size: 28px !important;
-    }
+    .rightGrid { grid-template-columns: 1fr !important; }
+    .statusCard { flex-direction: row !important; align-items: center; min-height: auto !important; }
+    .cardCount { font-size: 28px !important; }
 }
