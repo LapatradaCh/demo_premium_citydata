@@ -104,17 +104,29 @@ const StatisticsView = ({ organizationId }) => {
         if (statsRes.ok) {
           const data = await statsRes.json();
           const statsObject = data.reduce((acc, item) => {
+            // แปลงเป็นตัวเลข
             acc[item.status] = parseInt(item.count, 10);
             return acc;
           }, {});
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph
+        // 2. Trend Graph (จุดสำคัญที่ต้องแก้: แปลง String เป็น Number)
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          setTrendData(data);
+          // Map ข้อมูลเพื่อแปลง String -> Number
+          const formattedTrend = data.map(item => ({
+            ...item,
+            total: Number(item.total || 0),
+            pending: Number(item.pending || 0),
+            action: Number(item.action || 0),
+            completed: Number(item.completed || 0),
+            forward: Number(item.forward || 0),
+            invite: Number(item.invite || 0),
+            reject: Number(item.reject || 0),
+          }));
+          setTrendData(formattedTrend);
         }
 
         // 3. Problem Types
@@ -123,7 +135,7 @@ const StatisticsView = ({ organizationId }) => {
           const data = await typeRes.json();
           const formatted = data.map(item => ({
             name: item.issue_type_name,
-            count: parseInt(item.count, 10),
+            count: parseInt(item.count, 10), // แปลงเป็นตัวเลข
             avgTime: item.avg_resolution_time ? parseFloat(parseFloat(item.avg_resolution_time).toFixed(1)) : 0
           })).sort((a, b) => b.count - a.count);
           setProblemTypeData(formatted);
@@ -143,7 +155,7 @@ const StatisticsView = ({ organizationId }) => {
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities
+        // 6. Staff Activities (จุดสำคัญ: แปลงค่า count เป็นตัวเลขก่อนบวก)
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -152,9 +164,12 @@ const StatisticsView = ({ organizationId }) => {
             rawData.forEach(item => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
-               const count = item.count || 0; 
+               // สำคัญ: ต้อง parseInt ตรงนี้ ไม่งั้นจะเป็นการต่อ String
+               const count = item.count ? parseInt(item.count, 10) : 0; 
+               
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
+               
                grouped[name][status] += count;
                grouped[name].total += count;
             });
@@ -163,13 +178,17 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
+        // 7. Efficiency (จุดสำคัญ: แปลง String เป็น Number)
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
             const mappedData = data.map(d => ({
                 ...d,
-                short_title: truncateText(d.title, 15)
+                short_title: truncateText(d.title, 15),
+                // แปลงค่าเวลาเป็นตัวเลข (ถ้า API ส่งมาเป็น String)
+                stage1: Number(d.stage1 || 0),
+                stage2: Number(d.stage2 || 0),
+                stage3: Number(d.stage3 || 0),
             }));
             setEfficiencyData(mappedData);
         }
@@ -300,13 +319,12 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* FIX: เพิ่ม minHeight เพื่อบังคับขนาดให้กราฟแสดงผลเสมอ */}
           <div 
             className={styles.chartContainer} 
             style={{ 
                 width: '100%', 
                 height: isMobile ? '300px' : '380px',
-                minHeight: isMobile ? '300px' : '380px' // สำคัญ!
+                minHeight: isMobile ? '300px' : '380px'
             }}
           >
             {trendData.length > 0 ? (
@@ -371,7 +389,7 @@ const StatisticsView = ({ organizationId }) => {
                 style={{ 
                     width: '100%', 
                     height: isMobile ? '300px' : '380px',
-                    minHeight: isMobile ? '300px' : '380px' // สำคัญ
+                    minHeight: isMobile ? '300px' : '380px'
                 }}
             >
               {efficiencyData.length > 0 ? (
@@ -425,7 +443,7 @@ const StatisticsView = ({ organizationId }) => {
                 style={{ 
                     width: '100%', 
                     height: isMobile ? '300px' : '380px',
-                    minHeight: isMobile ? '300px' : '380px' // สำคัญ
+                    minHeight: isMobile ? '300px' : '380px'
                 }}
             >
                 {problemTypeData.length > 0 ? (
@@ -493,7 +511,7 @@ const StatisticsView = ({ organizationId }) => {
                     style={{ 
                         width: '100%', 
                         height: isMobile ? '550px' : '500px',
-                        minHeight: isMobile ? '550px' : '500px' // สำคัญ
+                        minHeight: isMobile ? '550px' : '500px'
                     }}
                 >
                     {staffData.length > 0 ? (
