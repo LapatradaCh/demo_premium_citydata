@@ -241,8 +241,8 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // Force chart heights using JS to assist CSS
-  const chartHeightStyle = { height: isMobile ? '300px' : '380px', width: '100%' };
+  // ใช้ JS ช่วยกำหนด style height เพื่อความมั่นใจ
+  const chartHeightStyle = { height: isMobile ? '350px' : '380px', width: '100%' };
   const staffChartHeightStyle = { height: isMobile ? '550px' : '500px', width: '100%' };
 
   return (
@@ -304,7 +304,6 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* Chart Container */}
           <div className={styles.chartContainer} style={chartHeightStyle}>
             {trendData.length > 0 ? (
               <ResponsiveContainer width="99%" height="100%" minWidth={0}>
