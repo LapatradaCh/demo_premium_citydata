@@ -44,17 +44,6 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
-const renderCustomDefs = () => (
-  <defs>
-    <filter id="shadow" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#ffc107" floodOpacity="0.3" />
-    </filter>
-    <filter id="shadowGray" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
-    </filter>
-  </defs>
-);
-
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -315,19 +304,17 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
+          <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
-                width="100%" 
+                width="99%" /* เปลี่ยนเป็น 99% เพื่อแก้บั๊กกราฟไม่ขึ้น */
                 height="100%" 
                 key={`trend-${isMobile}-${trendData.length}`} 
               >
-                {/* เอา width/height ออกจาก LineChart เพื่อให้ ResponsiveContainer จัดการเอง */}
                 <LineChart 
                     data={trendData} 
                     margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
-                  {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="date" 
@@ -357,9 +344,9 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
+                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" hide={activeTrendKey !== 'total'} />
                   <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
                   <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
@@ -381,14 +368,13 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
+            <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
-                  width="100%" 
+                  width="99%" /* แก้ไข width */
                   height="100%" 
                   key={`eff-${isMobile}-${efficiencyData.length}`}
                 >
-                  {/* เอา width/height ออกจาก BarChart */}
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
@@ -433,14 +419,13 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
+            <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
-                    width="100%" 
+                    width="99%" /* แก้ไข width */
                     height="100%" 
                     key={`type-${isMobile}-${problemTypeData.length}`}
                   >
-                    {/* เอา width/height ออกจาก ComposedChart */}
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
@@ -503,14 +488,13 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div className={`${styles.chartWrapper} ${styles.largeHeight}`} style={{ width: '100%', height: 500, minHeight: 500 }}>
+                <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
-                        width="100%" 
+                        width="99%" /* แก้ไข width */
                         height="100%" 
                         key={`staff-${isMobile}-${staffData.length}`}
                       >
-                        {/* เอา width/height ออกจาก BarChart */}
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
