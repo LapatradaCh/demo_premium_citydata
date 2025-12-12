@@ -19,7 +19,7 @@ import {
   ComposedChart
 } from 'recharts';
 
-// Import CSS Module
+// Import CSS Module (ตรวจสอบ path ให้ถูกต้อง)
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
@@ -56,7 +56,7 @@ const renderCustomDefs = () => (
   </defs>
 );
 
-// Helper function: ตัดคำถ้ายาวเกินไป (ใช้กับแกน Y ในมือถือ)
+// ฟังก์ชันตัดคำสำหรับหน้าจอมือถือ
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -80,7 +80,6 @@ const StatisticsView = ({ organizationId }) => {
   const [loading, setLoading] = useState(true);
 
   // --- Mobile Check State ---
-  // เช็คขนาดหน้าจอเพื่อปรับ styling ของ Recharts โดยตรง
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -170,10 +169,9 @@ const StatisticsView = ({ organizationId }) => {
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
-            // Map data และสร้าง field short_title สำหรับ mobile
             const mappedData = data.map(d => ({
                 ...d,
-                short_title: truncateText(d.title, 15) // ตัดเหลือ 15 ตัวอักษร
+                short_title: truncateText(d.title, 15)
             }));
             setEfficiencyData(mappedData);
         }
@@ -246,13 +244,12 @@ const StatisticsView = ({ organizationId }) => {
   };
 
   // --- Styles for Chart Containers ---
-  // บังคับความสูงผ่าน JS เพื่อให้แม่นยำขึ้นใน responsive
-  // ใน mobile: สูง 350px, PC: สูง 350px (เท่ากันแต่ flex ต่างกัน)
+  // สำคัญ: บังคับความสูงกราฟที่นี่ เพื่อให้ Container ของ Recharts ไม่บีบตัว
   const chartHeightStyle = { height: isMobile ? '350px' : '350px', width: '100%' };
-  // กราฟเจ้าหน้าที่ ใน mobile ให้สูงพิเศษ 550px เพื่อให้แสดงรายชื่อได้ครบไม่เบียด
   const staffChartHeightStyle = { height: isMobile ? '550px' : '500px', width: '100%' };
 
   return (
+    // Container หลัก
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
@@ -270,6 +267,7 @@ const StatisticsView = ({ organizationId }) => {
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
           <section className={styles.dashboardTopSection}>
+            {/* การ์ดใบใหญ่ (Total) */}
             <div className={`${styles.statusCard} ${styles.totalCard}`} style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}>
                 <div className={styles.cardDecoration}></div>
                 <div className={styles.cardHeader}>
@@ -278,6 +276,8 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
                 <span className={styles.cardCount}>{totalCardData.count}</span>
             </div>
+            
+            {/* Grid ของการ์ดใบเล็ก */}
             <div className={styles.rightGrid}>
                 {otherStatusConfig.map((card, idx) => {
                     const percent = getPercent(card.count, getTotalCases());
@@ -310,6 +310,7 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
+          {/* Container สำหรับกราฟ: สำคัญมากสำหรับการแสดงผลในมือถือ */}
           <div className={styles.chartContainer} style={chartHeightStyle}>
             {trendData.length > 0 ? (
               <ResponsiveContainer width="99%" height="100%" minWidth={0}>
@@ -322,7 +323,7 @@ const StatisticsView = ({ organizationId }) => {
                     tickLine={false} 
                     tick={{fill: '#94a3b8', fontSize: 10}} 
                     dy={10} 
-                    minTickGap={20} // ป้องกันวันที่ทับกัน
+                    minTickGap={20}
                   />
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
                   <Tooltip 
@@ -375,9 +376,9 @@ const StatisticsView = ({ organizationId }) => {
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
-                      dataKey={isMobile ? "short_title" : "title"} // ใช้ชื่อย่อใน mobile
+                      dataKey={isMobile ? "short_title" : "title"}
                       type="category" 
-                      width={isMobile ? 100 : 140} // ปรับความกว้าง Label แกน Y
+                      width={isMobile ? 100 : 140}
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10, fill: '#4b5563'}} 
@@ -425,7 +426,7 @@ const StatisticsView = ({ organizationId }) => {
                         dataKey="name" 
                         type="category" 
                         width={isMobile ? 90 : 100} 
-                        tickFormatter={(value) => truncateText(value, 12)} // ตัดคำแกน Y
+                        tickFormatter={(value) => truncateText(value, 12)}
                         axisLine={false} 
                         tickLine={false} 
                         tick={{fontSize: 10}} 
@@ -485,10 +486,10 @@ const StatisticsView = ({ organizationId }) => {
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={isMobile ? 100 : 140} // ให้พื้นที่ชื่อเจ้าหน้าที่มากขึ้น
+                            width={isMobile ? 100 : 140}
                             axisLine={false} 
                             tickLine={false} 
-                            tickFormatter={(val) => truncateText(val, isMobile ? 12 : 20)} // ตัดชื่อถ้าหน้าจอเล็ก
+                            tickFormatter={(val) => truncateText(val, isMobile ? 12 : 20)}
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
