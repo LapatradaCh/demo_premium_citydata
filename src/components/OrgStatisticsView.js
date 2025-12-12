@@ -280,7 +280,7 @@ const OrganizationStatisticsView = () => {
         // *** หมายเหตุ: เปลี่ยน 74 เป็น ID ของ User ที่ login อยู่จริง หรือดึงจาก Context/LocalStorage ***
         const userOrgId = 74; 
         
-        const res = await fetch(`/api/dashboard/org-stats?org_id=${userOrgId}`);
+        const res = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${userOrgId}`);
         const data = await res.json();
         
         if (res.ok) {
