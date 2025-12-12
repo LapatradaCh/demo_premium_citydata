@@ -315,7 +315,8 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          <div className={styles.chartWrapper}>
+          {/* Added explicit height style here */}
+          <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
                 width="100%" 
@@ -366,21 +367,22 @@ const StatisticsView = ({ organizationId }) => {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyState}>ไม่มีข้อมูลในช่วงเวลานี้</div>
+              <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลในช่วงเวลานี้</div>
             )}
           </div>
           {renderCustomLegend()}
         </section>
 
         <div className={styles.responsiveGrid2}>
-          
+           
           {/* --- Efficiency Graph --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            <div className={styles.chartWrapper}>
+            {/* Added explicit height style here */}
+            <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
                   width="100%" 
@@ -421,7 +423,7 @@ const StatisticsView = ({ organizationId }) => {
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>}
+              ) : <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลประสิทธิภาพ</div>}
             </div>
           </section>
 
@@ -431,7 +433,8 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            <div className={styles.chartWrapper}>
+            {/* Added explicit height style here */}
+            <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
                     width="100%" 
@@ -461,7 +464,7 @@ const StatisticsView = ({ organizationId }) => {
                       <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
                   </ResponsiveContainer>
-                ) : <p className={styles.emptyState}>ไม่มีข้อมูล</p>}
+                ) : <p className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูล</p>}
             </div>
           </section>
         </div>
@@ -500,7 +503,8 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
+                {/* Added explicit height style here (taller for staff list) */}
+                <div className={`${styles.chartWrapper} ${styles.largeHeight}`} style={{ width: '100%', height: 500, minHeight: 500 }}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
                         width="100%" 
@@ -527,7 +531,7 @@ const StatisticsView = ({ organizationId }) => {
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : <div className={styles.emptyState}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
+                    ) : <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
                 </div>
             </section>
         </div>
