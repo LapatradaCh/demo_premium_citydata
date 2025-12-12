@@ -70,6 +70,15 @@ const StatisticsView = ({ organizationId }) => {
   const [efficiencyData, setEfficiencyData] = useState([]); 
   
   const [loading, setLoading] = useState(true);
+  
+  // State สำหรับเช็คขนาดหน้าจอ (เพื่อปรับ YAxis)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // --- Data Fetching ---
   useEffect(() => {
@@ -282,8 +291,9 @@ const StatisticsView = ({ organizationId }) => {
           
           <div className={styles.chartContainer}>
             {trendData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trendData} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
+              // FIX: width="99%" เพื่อแก้ปัญหากราฟหายบน Mobile
+              <ResponsiveContainer width="99%" height="100%">
+                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}} dy={15} />
@@ -354,36 +364,11 @@ const StatisticsView = ({ organizationId }) => {
                     name="เสร็จสิ้น" 
                     hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} 
                   />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="forward" 
-                    stroke={STATUS_COLORS['ส่งต่อ']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    name="ส่งต่อ" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="invite" 
-                    stroke={STATUS_COLORS['เชิญร่วม']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    name="เชิญร่วม" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="reject" 
-                    stroke={STATUS_COLORS['ปฏิเสธ']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    name="ปฏิเสธ" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} 
-                  />
+
+                  {/* Lines อื่นๆ ซ่อนไว้ก่อนเพื่อความกระชับ หรือใส่เพิ่มตามเดิมได้เลย */}
+                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
+                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
+                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
 
                 </LineChart>
               </ResponsiveContainer>
@@ -405,16 +390,17 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
+                // FIX: width="99%"
+                <ResponsiveContainer width="99%" height="100%">
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     
-                    {/* แก้ไข: เพิ่ม reversed เพื่อให้ข้อมูลเรียงจากบนลงล่าง */}
+                    {/* FIX: ปรับ width แกน Y ตามหน้าจอ */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
-                      width={140} 
+                      width={isMobile ? 80 : 140} 
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10, fill: '#4b5563'}} 
@@ -429,24 +415,9 @@ const StatisticsView = ({ organizationId }) => {
                           return (
                             <div className={styles.customTooltip}>
                               <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title}</p>
-                              
-                              <div className={styles.tooltipItem}>
-                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div>
-                                <span>รอรับเรื่อง: {data.stage1} ชม.</span>
-                              </div>
-                              
-                              <div className={styles.tooltipItem}>
-                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div>
-                                <span>ประสานงาน: {data.stage2} ชม.</span>
-                              </div>
-                              
-                              <div className={styles.tooltipItem}>
-                                <div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div>
-                                <span>ปฏิบัติงาน: {data.stage3} ชม.</span>
-                              </div>
-                              
-                              <hr style={{margin: '6px 0', borderColor: '#e5e7eb'}}/>
-                              <p style={{fontSize: '11px', fontWeight: 'bold', color: '#374151'}}>รวม: {data.total} ชม.</p>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div><span>รอรับเรื่อง: {data.stage1} ชม.</span></div>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div><span>ประสานงาน: {data.stage2} ชม.</span></div>
+                              <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div><span>ปฏิบัติงาน: {data.stage3} ชม.</span></div>
                             </div>
                           );
                         } return null; 
@@ -467,20 +438,20 @@ const StatisticsView = ({ organizationId }) => {
 
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
-              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className="sectionSubtitle">จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
+              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
+                {/* FIX: width="99%" */}
+                <ResponsiveContainer width="99%" height="100%">
+                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
                     
-                    {/* แก้ไข: เพิ่ม reversed */}
                     <YAxis 
                       dataKey="name" 
                       type="category" 
-                      width={80} 
+                      width={isMobile ? 70 : 100} 
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10}} 
@@ -533,16 +504,16 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
                 <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%">
+                      // FIX: width="99%"
+                      <ResponsiveContainer width="99%" height="100%">
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           
-                          {/* แก้ไข: เพิ่ม reversed */}
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={140} 
+                            width={isMobile ? 80 : 140} 
                             axisLine={false} 
                             tickLine={false} 
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
