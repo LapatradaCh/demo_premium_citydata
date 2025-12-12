@@ -91,7 +91,6 @@ html, body {
   width: 100%;
 }
 
-/* Grid ปกติสำหรับ PC (3 คอลัมน์) */
 .rightGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -109,7 +108,7 @@ html, body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
-  flex-direction: column; /* แนวตั้งเป็นหลัก */
+  flex-direction: column;
   justify-content: space-between;
   min-height: 140px;
   height: 100%;
@@ -176,7 +175,7 @@ html, body {
   z-index: 0;
 }
 
-/* Chart Cards */
+/* Chart Cards Container */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -189,6 +188,8 @@ html, body {
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
+  /* เพิ่ม min-height เพื่อให้การ์ดไม่ยุบหายเวลากราฟโหลด */
+  min-height: 450px; 
 }
 
 .chartHeaderWrapper {
@@ -316,18 +317,23 @@ html, body {
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
-/* Charts Containers */
+/* =======================================================
+   5. CHARTS AREA (CRITICAL FIX FOR VISIBILITY)
+   ======================================================= */
+/* แก้ไข: ใส่ height !important เพื่อบังคับความสูงกราฟ */
 .chartContainer { 
-    height: 350px; 
-    width: 100%; 
+    height: 380px !important; 
+    width: 100% !important; 
     position: relative; 
-    min-width: 0;
+    min-width: 0; /* แก้บั๊ก Flexbox */
+    overflow: hidden;
 }
 .staffChartContainer { 
-    height: 500px; 
-    width: 100%; 
+    height: 500px !important; 
+    width: 100% !important; 
     position: relative; 
     min-width: 0;
+    overflow: hidden;
 }
 .chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
 
@@ -352,15 +358,12 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (CRITICAL UPDATE)
+   6. RESPONSIVE MEDIA QUERIES (UPDATED)
    ======================================================= */
 @media (max-width: 1200px) {
   .dashboardTopSection { grid-template-columns: 1fr; }
-  
-  /* Tablet: ให้การ์ด Total เป็นแนวนอนจะได้ไม่กินที่สูงเกินไป */
   .totalCard { height: auto; min-height: 140px; flex-direction: row; align-items: center; gap: 24px; }
   .totalCard .cardCount { margin: 0; text-align: right; font-size: 60px; }
-  
   .rightGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -372,14 +375,13 @@ html, body {
   .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .main { padding: 16px; gap: 16px; }
   
-  /* GRID ADJUSTMENT FOR MOBILE: */
-  /* เปลี่ยนจาก 1fr (แถวเดียว) เป็น 2 คอลัมน์ (เหมือนรูป PC) */
+  /* Grid: Mobile เป็น 2 คอลัมน์ */
   .rightGrid { 
       grid-template-columns: repeat(2, 1fr) !important; 
       gap: 12px !important; 
   }
   
-  /* การ์ดในมือถือ กลับมาเป็นแนวตั้ง (ตัวเลขอยู่ล่าง) เพื่อให้เหมาะกับตาราง 2 ช่อง */
+  /* Card: แนวตั้งสำหรับ Grid เล็ก */
   .statusCard { 
       padding: 16px !important; 
       min-height: 120px !important; 
@@ -388,10 +390,10 @@ html, body {
       align-items: flex-start;
   }
   .cardHeader { margin-bottom: 8px !important; width: 100%; }
-  .cardTitle { font-size: 13px !important; white-space: normal; } /* ยอมให้ตัดคำถ้าชื่อยาว */
-  .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; } /* ตัวเลขชิดขวาล่าง */
+  .cardTitle { font-size: 13px !important; white-space: normal; }
+  .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; }
   
-  /* การ์ด Total (สีดำ) ให้เต็มจอด้านบนเหมือนเดิม แต่จัด layout ให้กระชับ */
+  /* Total Card: ยังคงเป็นแนวนอนด้านบน */
   .totalCard { 
       flex-direction: row !important; 
       align-items: center;
@@ -404,20 +406,18 @@ html, body {
 
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  /* CHART FIX: ความสูงกราฟต้องมากพอในมือถือ */
+  /* Charts: Mobile ต้องสูงและมี display block */
   .chartContainer { 
       display: block !important;
-      height: 350px !important; 
-      min-height: 350px !important; 
+      height: 300px !important; /* ความสูงมือถือ */
+      min-height: 300px !important; 
       width: 100% !important;
-      overflow: hidden;
   }
   .staffChartContainer { 
       display: block !important;
       height: 550px !important; 
       min-height: 550px !important; 
       width: 100% !important;
-      overflow: hidden;
   }
   
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -431,7 +431,6 @@ html, body {
 }
 
 @media (max-width: 400px) {
-    /* ถ้าจอมือถือเล็กมากๆ (เช่น iPhone SE) อาจต้องกลับมาเป็น 1 แถวเพื่อให้อ่านออก */
     .rightGrid { grid-template-columns: 1fr !important; }
     .statusCard { flex-direction: row !important; align-items: center; min-height: auto !important; }
     .cardCount { font-size: 28px !important; }
