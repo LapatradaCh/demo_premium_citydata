@@ -6,9 +6,17 @@ import {
   Users 
 } from 'lucide-react';
 import { 
-  LineChart, Line, BarChart, Bar, 
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, ComposedChart
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer, 
+  ComposedChart
 } from 'recharts';
 
 import styles from './css/StatisticsView.module.css';
@@ -36,7 +44,6 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
-// Helper ตัดคำให้สั้นลงถ้าชื่อยาวเกิน
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -59,9 +66,9 @@ const StatisticsView = ({ organizationId }) => {
    
   const [loading, setLoading] = useState(true);
 
-  // --- Mobile Logic ---
+  // --- Mobile Check & Window Width ---
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const isMobile = windowWidth < 992;
+  const isMobile = windowWidth < 992; 
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -69,7 +76,7 @@ const StatisticsView = ({ organizationId }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // --- Data Fetching ---
+  // --- Data Fetching (แบบเต็ม ไม่ย่อ) ---
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem('accessToken');
@@ -82,18 +89,22 @@ const StatisticsView = ({ organizationId }) => {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
-        // 1. Overview
+        // 1. Overview Stats
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
-          setStatsData(data.reduce((acc, item) => { acc[item.status] = parseInt(item.count, 10); return acc; }, {}));
+          const statsObject = data.reduce((acc, item) => {
+            acc[item.status] = parseInt(item.count, 10);
+            return acc;
+          }, {});
+          setStatsData(statsObject);
         }
 
-        // 2. Trend
+        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          setTrendData(data.map(item => ({
+          const formattedTrend = data.map(item => ({
             ...item,
             total: Number(item.total || 0),
             pending: Number(item.pending || 0),
@@ -102,27 +113,35 @@ const StatisticsView = ({ organizationId }) => {
             forward: Number(item.forward || 0),
             invite: Number(item.invite || 0),
             reject: Number(item.reject || 0),
-          })));
+          }));
+          setTrendData(formattedTrend);
         }
 
         // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
-          setProblemTypeData(data.map(item => ({
+          const formatted = data.map(item => ({
             name: item.issue_type_name,
             count: parseInt(item.count, 10),
             avgTime: item.avg_resolution_time ? parseFloat(parseFloat(item.avg_resolution_time).toFixed(1)) : 0
-          })).sort((a, b) => b.count - a.count));
+          })).sort((a, b) => b.count - a.count);
+          setProblemTypeData(formatted);
         }
 
         // 4. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
-        if (satRes.ok) setSatisfactionData(await satRes.json());
+        if (satRes.ok) {
+          const data = await satRes.json();
+          setSatisfactionData(data);
+        }
 
         // 5. Staff Count
         const staffCountRes = await fetch(`${baseUrl}/staff-count?organization_id=${organizationId}`, { headers });
-        if (staffCountRes.ok) { const data = await staffCountRes.json(); setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0); }
+        if (staffCountRes.ok) {
+          const data = await staffCountRes.json();
+          setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
+        }
 
         // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
@@ -134,25 +153,30 @@ const StatisticsView = ({ organizationId }) => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
                const count = item.count ? parseInt(item.count, 10) : 0; 
+               
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
-               grouped[name][status] += count; grouped[name].total += count;
+               
+               grouped[name][status] += count;
+               grouped[name].total += count;
             });
           }
-          setStaffData(Object.values(grouped).sort((a, b) => b.total - a.total).slice(0, 10));
+          const staffArray = Object.values(grouped).sort((a, b) => b.total - a.total).slice(0, 10);
+          setStaffData(staffArray);
         }
 
         // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
-            setEfficiencyData(data.map(d => ({
+            const mappedData = data.map(d => ({
                 ...d,
                 short_title: truncateText(d.title, 15),
                 stage1: Number(d.stage1 || 0),
                 stage2: Number(d.stage2 || 0),
                 stage3: Number(d.stage3 || 0),
-            })));
+            }));
+            setEfficiencyData(mappedData);
         }
 
       } catch (err) {
@@ -223,8 +247,11 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // ✅ Chart Wrapper
+  // ✅ Chart Wrapper (แก้ไขให้รองรับ Legend ใน Mobile)
   const ChartWrapper = ({ children, height = 300 }) => {
+    // ถ้าเป็น Mobile เพิ่มความสูงเผื่อ Legend บรรทัดที่ 2-3
+    const adjustedHeight = isMobile ? height + 60 : height; 
+    
     if (!isMobile) {
         return (
             <ResponsiveContainer width="100%" height={height}>
@@ -232,25 +259,29 @@ const StatisticsView = ({ organizationId }) => {
             </ResponsiveContainer>
         );
     }
-    // Mobile: Calculate width based on window size
+    
+    // Mobile Width Calculation
     const mobileWidth = windowWidth - 72; 
 
     return (
-        <div style={{ width: '100%', height: height, overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
-            {React.cloneElement(children, { width: mobileWidth, height: height })}
+        <div style={{ width: '100%', height: adjustedHeight, overflowX: 'auto', overflowY: 'hidden', display: 'flex', justifyContent: 'center' }}>
+            {React.cloneElement(children, { width: mobileWidth, height: adjustedHeight })}
         </div>
     );
   };
 
   const commonProps = {
-      isAnimationActive: false,
+      isAnimationActive: false, // ป้องกันกราฟไม่วาด
   };
 
-  // Style สำหรับ Legend ภายในกราฟ BarChart
-  const internalLegendStyle = {
-      fontSize: '11px',
-      paddingTop: '10px'
-  };
+  // Legend Style Helper (Icon วงกลม)
+  const renderInternalLegend = () => (
+      <Legend 
+        verticalAlign="bottom" 
+        iconType="circle" 
+        wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} 
+      />
+  );
 
   return (
     <div className={styles.container}>
@@ -314,9 +345,10 @@ const StatisticsView = ({ organizationId }) => {
           <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ChartWrapper height={300}>
+                {/* เพิ่ม margin-bottom ให้เยอะขึ้น เพื่อไม่ให้ Legend ทับแกน */}
                 <LineChart 
                     data={trendData} 
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
@@ -357,7 +389,8 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ChartWrapper height={300}>
-                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
+                  {/* เพิ่ม margin bottom เผื่อ Legend */}
+                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 30, left: 0, bottom: 40 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
@@ -370,8 +403,8 @@ const StatisticsView = ({ organizationId }) => {
                       reversed={true} 
                     />
                     <Tooltip cursor={{fill: 'transparent'}} />
-                    {/* ✅ เพิ่ม iconType="circle" */}
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
+                    {/* ✅ แสดง Legend และให้เป็นวงกลม */}
+                    {renderInternalLegend()}
                     <Bar {...commonProps} dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={12} radius={[4, 0, 0, 4]} />
                     <Bar {...commonProps} dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={12} />
                     <Bar {...commonProps} dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={12} radius={[0, 4, 4, 0]} />
@@ -393,7 +426,7 @@ const StatisticsView = ({ organizationId }) => {
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
-                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
+                        margin={{ top: 0, right: 30, left: 0, bottom: 40 }}
                     >
                       <CartesianGrid stroke="#f3f4f6" />
                       <XAxis type="number" hide />
@@ -408,8 +441,8 @@ const StatisticsView = ({ organizationId }) => {
                         reversed={true}
                       />
                       <Tooltip />
-                      {/* ✅ เพิ่ม iconType="circle" */}
-                      <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
+                      {/* ✅ แสดง Legend */}
+                      {renderInternalLegend()}
                       <Bar {...commonProps} dataKey="count" name="จำนวน" barSize={12} fill={STATUS_COLORS['ส่งต่อ']} />
                       <Bar {...commonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={12} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
@@ -456,7 +489,7 @@ const StatisticsView = ({ organizationId }) => {
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ChartWrapper height={400}>
-                        <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
+                        <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 40 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
@@ -470,8 +503,8 @@ const StatisticsView = ({ organizationId }) => {
                             reversed={true}
                           />
                           <Tooltip cursor={{fill: 'transparent'}} />
-                          {/* ✅ เพิ่ม iconType="circle" */}
-                          <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={internalLegendStyle} />
+                          {/* ✅ แสดง Legend พร้อมไอคอนวงกลม */}
+                          {renderInternalLegend()}
                           {Object.keys(STATUS_COLORS).filter(k => !['NULL', 'ทั้งหมด', 'กำลังประสาน', 'ดำเนินการ'].includes(k)).map((status) => (
                             <Bar {...commonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={16} name={status} />
                           ))}
