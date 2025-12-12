@@ -20,7 +20,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-// --- แก้ไขปัญหา Icon Default ของ Leaflet ---
+// --- แก้ไขปัญหา Icon Default ---
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -28,43 +28,37 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// --- HELPER: เลือก CSS Class ตามสถานะ (ใช้ร่วมกันทั้ง List และ Map) ---
-const getStatusClass = (status) => {
-  switch (status) {
-    case "รอรับเรื่อง": return styles.pending;       // สีแดง
-    case "กำลังประสานงาน": return styles.coordinating; // สีม่วง
-    case "กำลังดำเนินการ": return styles.in_progress;  // สีส้ม
-    case "เสร็จสิ้น": return styles.completed;       // สีเขียว
-    case "ส่งต่อ": return styles.forwarded;          // สีฟ้าเข้ม
-    case "เชิญร่วม": return styles.invited;          // สีฟ้าอ่อน
-    case "ปฏิเสธ": return styles.rejected;           // สีเทา
-    default: return styles.other;
-  }
-};
+// --- Custom Icons: ประกาศสีต่างๆ ---
+// Helper function สร้าง Icon
+const createIcon = (colorUrl) => new L.Icon({
+  iconUrl: colorUrl,
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
-// --- CUSTOM PIN: สร้างหมุด CSS (รูปหยดน้ำ) ---
-const createCustomPin = (status) => {
-  // แมปสถานะไปหาชื่อ Class ใน CSS (เช่น styles.waiting, styles.completed)
-  let pinColorClass = "";
-  switch (status) {
-    case "รอรับเรื่อง": pinColorClass = styles.waiting; break;
-    case "กำลังประสานงาน": pinColorClass = styles.coordinating; break;
-    case "กำลังดำเนินการ": pinColorClass = styles.in_progress; break;
-    case "เสร็จสิ้น": pinColorClass = styles.completed; break;
-    case "ส่งต่อ": pinColorClass = styles.forwarded; break;
-    case "เชิญร่วม": pinColorClass = styles.invited; break;
-    case "ปฏิเสธ": pinColorClass = styles.rejected; break;
-    default: pinColorClass = styles.waiting;
-  }
+// กำหนดตัวแปรสี
+const redIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png');
+const greenIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png');
+const orangeIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png');
+const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png');
+const blueIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
+const greyIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
 
-  // ใช้ L.divIcon แทน L.Icon เพื่อใส่ HTML/CSS เอง
-  return L.divIcon({
-    className: styles.leafletMarkerContainer, // Class เปล่าๆ เพื่อลบ default box ของ leaflet
-    html: `<div class="${styles.pin} ${pinColorClass}"></div>`, // HTML ของหมุด
-    iconSize: [30, 30],   // ขนาด
-    iconAnchor: [15, 30], // จุดปัก (Tip of the pin): [กึ่งกลางแนวนอน, ด้านล่างสุด]
-    popupAnchor: [0, -35] // จุดที่ Popup เด้งขึ้นมา
-  });
+// ฟังก์ชันเลือกสีตามสถานะ
+const getIconByStatus = (status) => {
+  switch (status) {
+    case "รอรับเรื่อง": return redIcon;
+    case "กำลังประสานงาน": return violetIcon;
+    case "กำลังดำเนินการ": return orangeIcon;
+    case "เสร็จสิ้น": return greenIcon;
+    case "ส่งต่อ": return blueIcon;
+    case "เชิญร่วม": return blueIcon;
+    case "ปฏิเสธ": return greyIcon;
+    default: return redIcon;
+  }
 };
 
 // --- Custom Icon: Cluster สีส้ม ---
@@ -214,6 +208,19 @@ const MapView = ({ subTab }) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "รอรับเรื่อง": return styles.pending;
+      case "กำลังประสานงาน": return styles.coordinating;
+      case "กำลังดำเนินการ": return styles.in_progress;
+      case "เสร็จสิ้น": return styles.completed;
+      case "ส่งต่อ": return styles.forwarded;
+      case "เชิญร่วม": return styles.invited;
+      case "ปฏิเสธ": return styles.rejected;
+      default: return styles.other;
+    }
+  };
+
   const renderSidebar = () => (
     <div className={styles.mapSidebar}>
       <h3 className={styles.mapSidebarTitle}>{title}</h3>
@@ -275,7 +282,7 @@ const MapView = ({ subTab }) => {
           <strong>{summaryTitle}</strong> ({loading ? "โหลด..." : `${reports.length} รายการ`})
         </div>
         <div className={styles.reportTableContainer}>
-          {loading ? <p style={{color: '#64748b', textAlign: 'center'}}>กำลังโหลดข้อมูล...</p> : reports.length === 0 ? <p style={{color: '#64748b', textAlign: 'center'}}>ไม่มีข้อมูลเรื่องแจ้ง</p> : (
+          {loading ? <p>กำลังโหลดข้อมูล...</p> : reports.length === 0 ? <p>ไม่มีข้อมูลเรื่องแจ้ง</p> : (
             reports.map((report) => (
               <div key={report.issue_cases_id} className={styles.reportTableRow}>
                 <img src={report.cover_image_url || "https://via.placeholder.com/50"} className={styles.reportImage} alt="" />
@@ -289,11 +296,11 @@ const MapView = ({ subTab }) => {
                 {expandedCardId === report.issue_cases_id && (
                   <div className={styles.mainDetails}>
                     <p>รายละเอียด: {report.description}</p>
-                    <p className={styles.locationDetails}><FaMapMarkerAlt /> {report.latitude}, {report.longitude}</p>
+                    <p>พิกัด: {report.latitude}, {report.longitude}</p>
                   </div>
                 )}
                 <button className={styles.toggleDetailsButton} onClick={() => handleToggleDetails(expandedCardId === report.issue_cases_id ? null : report.issue_cases_id)}>
-                  {expandedCardId === report.issue_cases_id ? "ซ่อนรายละเอียด" : "ดูรายละเอียด"}
+                  {expandedCardId === report.issue_cases_id ? "ซ่อน" : "อ่านเพิ่ม"}
                 </button>
               </div>
             ))
@@ -340,15 +347,13 @@ const MapView = ({ subTab }) => {
                       <Marker 
                         key={report.issue_cases_id} 
                         position={[lat, lng]} 
-                        icon={createCustomPin(report.status)} // เรียกใช้ฟังก์ชัน CSS Pin
+                        icon={getIconByStatus(report.status)} // เรียกใช้ฟังก์ชันเลือกสี
                       >
                         <Popup>
-                          <div style={{fontFamily: 'Prompt', textAlign: 'center'}}>
-                            <strong style={{color: '#3b82f6'}}>#{report.case_code}</strong><br/>
-                            <p style={{margin: '4px 0', fontSize: '13px'}}>{report.title}</p>
-                            <span className={`${styles.statusTag} ${getStatusClass(report.status)}`} style={{marginTop: '4px', display:'inline-block'}}>
-                                {report.status}
-                            </span>
+                          <div className={styles.popupContent}>
+                            <strong>#{report.case_code}</strong><br/>
+                            {report.title}<br/>
+                            <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
                           </div>
                         </Popup>
                       </Marker>
@@ -359,28 +364,28 @@ const MapView = ({ subTab }) => {
            </MapContainer>
         )}
 
-        {/* Legend: คำอธิบายสีหมุด (แสดงเฉพาะโหมด Pins และใช้ CSS Class แทนรูปภาพ) */}
+        {/* Legend: คำอธิบายสีหมุด (แสดงเฉพาะโหมด Pins) */}
         {!loading && mapMode === "pins" && (
             <div className={styles.mapLegend}>
                 <div className={styles.legendItem}>
-                    <div className={`${styles.legendDot} ${styles.waiting}`}></div>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" alt="red"/>
                     <span>รอรับเรื่อง</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <div className={`${styles.legendDot} ${styles.coordinating}`}></div>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png" alt="violet"/>
                     <span>กำลังประสานงาน</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <div className={`${styles.legendDot} ${styles.in_progress}`}></div>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" alt="orange"/>
                     <span>กำลังดำเนินการ</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <div className={`${styles.legendDot} ${styles.completed}`}></div>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" alt="green"/>
                     <span>เสร็จสิ้น</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <div className={`${styles.legendDot} ${styles.forwarded}`}></div>
-                    <span>ส่งต่อ/เชิญร่วม</span>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" alt="blue"/>
+                    <span>ส่งต่อ / เชิญร่วม</span>
                 </div>
             </div>
         )}
