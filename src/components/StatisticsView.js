@@ -314,7 +314,6 @@ const StatisticsView = ({ organizationId }) => {
           <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ChartWrapper height={300}>
-                {/* LineChart ใช้ Custom Legend ด้านนอก เลยไม่ต้องใส่ <Legend> ข้างใน */}
                 <LineChart 
                     data={trendData} 
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -358,7 +357,6 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ChartWrapper height={300}>
-                  {/* แก้ margin-left: 0 และเพิ่ม width ของ YAxis เพื่อให้ชื่อไม่หลุด */}
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
@@ -372,8 +370,8 @@ const StatisticsView = ({ organizationId }) => {
                       reversed={true} 
                     />
                     <Tooltip cursor={{fill: 'transparent'}} />
-                    {/* ✅ เพิ่ม Legend กลับเข้ามา */}
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} />
+                    {/* ✅ เพิ่ม iconType="circle" */}
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
                     <Bar {...commonProps} dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={12} radius={[4, 0, 0, 4]} />
                     <Bar {...commonProps} dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={12} />
                     <Bar {...commonProps} dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={12} radius={[0, 4, 4, 0]} />
@@ -392,7 +390,6 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ChartWrapper height={300}>
-                    {/* แก้ margin-left: 0 */}
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
@@ -403,16 +400,16 @@ const StatisticsView = ({ organizationId }) => {
                       <YAxis 
                         dataKey="name" 
                         type="category" 
-                        width={isMobile ? 100 : 120} 
-                        tickFormatter={(value) => truncateText(value, 12)}
+                        width={isMobile ? 80 : 100} 
+                        tickFormatter={(value) => truncateText(value, 10)}
                         axisLine={false} 
                         tickLine={false} 
                         tick={{fontSize: 10}} 
                         reversed={true}
                       />
                       <Tooltip />
-                      {/* ✅ เพิ่ม Legend กลับเข้ามา */}
-                      <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} />
+                      {/* ✅ เพิ่ม iconType="circle" */}
+                      <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
                       <Bar {...commonProps} dataKey="count" name="จำนวน" barSize={12} fill={STATUS_COLORS['ส่งต่อ']} />
                       <Bar {...commonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={12} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
@@ -459,22 +456,21 @@ const StatisticsView = ({ organizationId }) => {
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ChartWrapper height={400}>
-                        {/* แก้ margin-left: 0 และเพิ่ม width YAxis */}
                         <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={isMobile ? 120 : 140}
+                            width={isMobile ? 90 : 120}
                             axisLine={false} 
                             tickLine={false} 
-                            tickFormatter={(val) => truncateText(val, isMobile ? 15 : 20)}
+                            tickFormatter={(val) => truncateText(val, 12)}
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
                           <Tooltip cursor={{fill: 'transparent'}} />
-                          {/* ✅ เพิ่ม Legend กลับเข้ามา */}
+                          {/* ✅ เพิ่ม iconType="circle" */}
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={internalLegendStyle} />
                           {Object.keys(STATUS_COLORS).filter(k => !['NULL', 'ทั้งหมด', 'กำลังประสาน', 'ดำเนินการ'].includes(k)).map((status) => (
                             <Bar {...commonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={16} name={status} />
