@@ -1,18 +1,17 @@
-/* --- 3. css/MapView.module.css --- */
-/* (ฉบับแก้ไข Responsive: บนมือถือปุ่มตัวกรองจะลงมาอยู่บรรทัดล่างเพื่อไม่ให้เบียดกันจนแตก) */
+/* --- css/MapView.module.css --- */
 
 /* =========================================
    1. SHARED COMPONENTS
    ========================================= */
 
 .customClusterIcon {
-  background: #ff5722; /* สีส้มจัดจ้าน */
-  color: white; /* ตัวเลขสีขาว */
+  background: #ff5722;
+  color: white;
   font-weight: bold;
   text-align: center;
-  border-radius: 50%; /* ทำเป็นวงกลม */
-  border: 3px solid white; /* ขอบขาวหนาๆ เพื่อให้ตัดกับแผนที่ */
-  box-shadow: 0 0 10px rgba(0,0,0,0.5); /* เงาเพื่อให้ดูลอยออกมา */
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,23 +206,20 @@
   pointer-events: none;
 }
 
-/* ปุ่มตัวกรอง (Desktop: วางข้างๆ) */
+/* ปุ่มตัวกรอง */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  
   width: auto;
   min-width: 100px;
   height: 48px;
   padding: 0 16px;
-  
   background-color: #000000;
   color: #ffffff;
   border: none;
-  
   border-radius: 28px;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -375,7 +371,6 @@
   color: #888;
 }
 
-/* ปุ่ม "อ่านเพิ่มเติม" อยู่ตรงกลาง */
 .toggleDetailsButton {
   grid-area: toggle;
   background: none;
@@ -440,6 +435,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* Legend (คำอธิบายสีหมุด) */
 .mapLegend {
   position: absolute;
   bottom: 20px;
@@ -448,11 +444,11 @@
   backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 12px 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 5;
+  z-index: 1000; /* ให้ลอยอยู่เหนือแผนที่ */
 }
 
 .legendItem {
@@ -463,44 +459,10 @@
   font-weight: 600;
   color: #444;
 }
-.legendItem svg { font-size: 16px; }
-
-/* Mock Elements */
-.mockMapPin {
-  position: absolute;
-  font-size: 36px;
-  transform: translate(-50%, -100%);
-  cursor: pointer;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.legendItem img {
+  width: 16px;
+  height: 25px;
 }
-.mockMapPin:hover {
-  transform: translate(-50%, -110%) scale(1.1);
-}
-.mockMapPopup {
-  position: absolute;
-  width: 220px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  z-index: 10;
-}
-.mockPopupImage {
-  width: 100%;
-  height: 110px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-.mockPopupText {
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-}
-
 
 /* =========================================
    6. FILTER MODAL
@@ -551,14 +513,12 @@
   font-weight: 700;
 }
 
-/* ปุ่มปิด Modal พื้นแดง (ป้องกันการบีบอัด) */
 .filterModalClose {
   background-color: #dc3545;
   border: none;
   border-radius: 50%;
   width: 36px;
   height: 36px;
-  /* ป้องกันปุ่มเบี้ยว */
   flex-shrink: 0; 
   display: flex;
   align-items: center;
@@ -598,7 +558,6 @@
   overflow-y: auto;
 }
 
-/* ปุ่ม Toggle ใน Modal (ขาว/ดำ) */
 .mapToggles {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -643,7 +602,7 @@
 
 
 /* =========================================
-   7. RESPONSIVE (จุดที่แก้ไขไม่ให้แตก)
+   7. RESPONSIVE
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -675,14 +634,12 @@
   }
 
   /* === MOBILE LAYOUT FIX === */
-  /* บนมือถือ: ให้เปลี่ยนจากแนวนอน (คู่กัน) เป็นแนวตั้ง (ซ้อนกัน) */
   .sidebarSearchTop {
     flex-direction: column; 
-    align-items: stretch; /* ยืดให้เต็มความกว้าง */
+    align-items: stretch;
     gap: 10px;
   }
   
-  /* ปรับปุ่มตัวกรองให้เต็มความกว้าง */
   .filterToggleButton {
     width: 100%;
     min-width: 0;
