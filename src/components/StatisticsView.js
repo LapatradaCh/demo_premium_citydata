@@ -110,7 +110,7 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (แปลง String -> Number)
+        // 2. Trend Graph (แปลง String -> Number ให้ชัวร์)
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
@@ -153,7 +153,7 @@ const StatisticsView = ({ organizationId }) => {
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities (แปลง count เป็นตัวเลข)
+        // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -175,7 +175,7 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency (แปลง String -> Number)
+        // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -315,13 +315,13 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* FIX: ใช้ CSS Class แทน Inline Style */}
-          <div className={styles.chartResponsiveWrapper}>
+          {/* FIX: ใช้ CSS Class ควบคุมความสูงแทน Inline Style */}
+          <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
                 width="100%" 
                 height="100%" 
-                key={`trend-${isMobile}`} // กระตุ้นการ Render ใหม่เมื่อเปลี่ยนโหมดจอ
+                key={`trend-${isMobile}`} // ใช้ Key บังคับ Re-render
               >
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
                   {renderCustomDefs()}
@@ -378,8 +378,8 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            {/* FIX: ใช้ CSS Class แทน Inline Style */}
-            <div className={styles.chartResponsiveWrapper}>
+            {/* FIX: ใช้ CSS Class */}
+            <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
                   width="100%" 
@@ -430,8 +430,8 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            {/* FIX: ใช้ CSS Class แทน Inline Style */}
-            <div className={styles.chartResponsiveWrapper}>
+            {/* FIX: ใช้ CSS Class */}
+            <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
                     width="100%" 
@@ -496,8 +496,8 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                {/* FIX: ใช้ CSS Class + Modifier Class สำหรับกราฟ Staff */}
-                <div className={`${styles.chartResponsiveWrapper} ${styles.staffHeight}`}>
+                {/* FIX: ใช้ Template Literals เชื่อม 2 Class (chartWrapper + largeHeight) */}
+                <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
                         width="100%" 
