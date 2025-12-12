@@ -47,15 +47,15 @@ const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet
 const blueIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
 const greyIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
 
-// ฟังก์ชันเลือกสีตามสถานะ
+// ฟังก์ชันเลือกสีตามสถานะ: รอรับเรื่อง, ดำเนินการ, เสร็จสิ้น, ส่งต่อ, เชิญร่วม, ปฏิเสธ
 const getIconByStatus = (status) => {
   switch (status) {
     case "รอรับเรื่อง": return redIcon;
-    case "กำลังประสานงาน": return violetIcon;
-    case "กำลังดำเนินการ": return orangeIcon;
+    case "ดำเนินการ": return orangeIcon;
+    case "กำลังดำเนินการ": return orangeIcon; // เผื่อไว้
     case "เสร็จสิ้น": return greenIcon;
     case "ส่งต่อ": return blueIcon;
-    case "เชิญร่วม": return blueIcon;
+    case "เชิญร่วม": return violetIcon; // ใช้สีม่วง
     case "ปฏิเสธ": return greyIcon;
     default: return redIcon;
   }
@@ -211,7 +211,7 @@ const MapView = ({ subTab }) => {
   const getStatusClass = (status) => {
     switch (status) {
       case "รอรับเรื่อง": return styles.pending;
-      case "กำลังประสานงาน": return styles.coordinating;
+      case "ดำเนินการ": return styles.in_progress;
       case "กำลังดำเนินการ": return styles.in_progress;
       case "เสร็จสิ้น": return styles.completed;
       case "ส่งต่อ": return styles.forwarded;
@@ -265,7 +265,11 @@ const MapView = ({ subTab }) => {
                       {label === "สถานะ" && (
                         <>
                           <option value="pending">รอรับเรื่อง</option>
+                          <option value="in_progress">ดำเนินการ</option>
                           <option value="completed">เสร็จสิ้น</option>
+                          <option value="forwarded">ส่งต่อ</option>
+                          <option value="invited">เชิญร่วม</option>
+                          <option value="rejected">ปฏิเสธ</option>
                         </>
                       )}
                     </select>
@@ -372,12 +376,8 @@ const MapView = ({ subTab }) => {
                     <span>รอรับเรื่อง</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png" alt="violet"/>
-                    <span>กำลังประสานงาน</span>
-                </div>
-                <div className={styles.legendItem}>
                     <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" alt="orange"/>
-                    <span>กำลังดำเนินการ</span>
+                    <span>ดำเนินการ</span>
                 </div>
                 <div className={styles.legendItem}>
                     <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" alt="green"/>
@@ -385,7 +385,15 @@ const MapView = ({ subTab }) => {
                 </div>
                 <div className={styles.legendItem}>
                     <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" alt="blue"/>
-                    <span>ส่งต่อ / เชิญร่วม</span>
+                    <span>ส่งต่อ</span>
+                </div>
+                <div className={styles.legendItem}>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png" alt="violet"/>
+                    <span>เชิญร่วม</span>
+                </div>
+                 <div className={styles.legendItem}>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png" alt="grey"/>
+                    <span>ปฏิเสธ</span>
                 </div>
             </div>
         )}
