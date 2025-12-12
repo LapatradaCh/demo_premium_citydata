@@ -314,9 +314,8 @@ html, body {
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 /* =======================================================
-   5. CHARTS AREA (CRITICAL FIX)
+   5. CHARTS AREA
    ======================================================= */
-/* เพิ่ม min-width: 0 เพื่อแก้บั๊ก flexbox บีบกราฟ */
 .chartContainer { 
     height: 350px; 
     width: 100%; 
@@ -352,11 +351,11 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES
+   6. RESPONSIVE MEDIA QUERIES (UPDATED)
    ======================================================= */
 @media (max-width: 1200px) {
   .dashboardTopSection { grid-template-columns: 1fr; }
-  .totalCard { height: auto; min-height: 180px; flex-direction: row; align-items: center; gap: 24px; }
+  .totalCard { height: auto; min-height: 160px; flex-direction: row; align-items: center; gap: 24px; }
   .totalCard .cardCount { margin: 0; text-align: right; }
   .rightGrid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -366,54 +365,61 @@ html, body {
 }
 
 @media (max-width: 768px) {
-  .header { padding: 16px 20px; }
+  .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .main { padding: 16px; gap: 16px; }
   
-  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+  /* ปรับ Grid ให้เป็นการ์ดใบเดียวในมือถือเพื่อให้อ่านง่าย */
+  .rightGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
   
-  .statusCard { padding: 16px !important; min-height: auto !important; }
-  .cardTitle { font-size: 13px !important; }
-  .cardCount { font-size: 32px !important; margin-bottom: 4px !important; }
-  
-  .totalCard { 
-      flex-direction: column; 
-      align-items: flex-start;
-      height: auto;
-      padding: 24px;
+  .statusCard { 
+      padding: 16px !important; 
+      min-height: auto !important; 
+      flex-direction: row !important; /* จัดแนวนอนประหยัดที่ */
+      align-items: center;
+      justify-content: space-between;
   }
-  .totalCard .cardCount { text-align: left; font-size: 56px; margin-top: 10px; }
+  .cardHeader { margin-bottom: 0 !important; display: flex; align-items: center; gap: 8px; }
+  .cardTitle { font-size: 14px !important; }
+  .cardCount { font-size: 24px !important; margin: 0 !important; }
+  .badgeStatus { padding: 2px 8px; font-size: 10px; }
 
-  /* !!! CRITICAL FIX: บังคับความสูงกราฟในโหมดมือถือ !!! */
+  .totalCard { 
+      flex-direction: column !important; 
+      align-items: flex-start;
+      padding: 20px;
+  }
+  .totalCard .cardCount { text-align: left; font-size: 48px !important; margin-top: 10px !important; }
+
+  /* !!! CRITICAL FIX: เพิ่มความสูงกราฟในมือถือให้ดูง่ายขึ้น !!! */
   .chartContainer { 
       display: block !important;
-      height: 300px !important; 
-      min-height: 300px !important; 
+      height: 350px !important; 
+      min-height: 350px !important; 
       width: 100% !important;
       overflow: hidden;
   }
+  
+  /* กราฟเจ้าหน้าที่ต้องสูงพิเศษเพราะรายชื่อเยอะ */
   .staffChartContainer { 
       display: block !important;
-      height: 400px !important; 
-      min-height: 400px !important;
+      height: 550px !important; 
+      min-height: 550px !important; 
       width: 100% !important;
       overflow: hidden;
   }
   
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .filterContainer { width: 100%; justify-content: flex-start; padding: 4px; overflow-x: auto; }
-  .filterButton { flex: 0 0 auto; } 
-  .legendContainer { gap: 6px; }
-  .legendBtn { padding: 4px 10px; font-size: 11px; }
+  .filterContainer { width: 100%; justify-content: space-between; padding: 4px; overflow-x: auto; }
+  .filterButton { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; }
+  
+  .legendContainer { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 8px; flex-wrap: nowrap; }
+  .legendBtn { padding: 4px 8px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+  
+  .scoreBig { font-size: 42px; }
 }
 
 @media (max-width: 576px) {
-    .rightGrid { grid-template-columns: 1fr !important; }
-    .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .totalCard .cardCount { font-size: 48px; }
-    
-    .chartContainer { height: 280px !important; min-height: 280px !important; }
-    .filterContainer { flex-wrap: wrap; justify-content: space-between; }
-    .filterButton { flex: 1 1 45%; text-align: center; margin-bottom: 2px; }
-    .scoreBig { font-size: 42px; }
+    .filterContainer { flex-wrap: wrap; }
+    .filterButton { flex: 1 1 30%; }
 }
