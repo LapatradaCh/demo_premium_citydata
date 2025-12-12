@@ -188,7 +188,7 @@ html, body {
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  /* ให้ Card มีความสูงขั้นต่ำป้องกันการยุบ */
+  /* เพิ่ม min-height เพื่อกันการ์ดยุบตัว */
   min-height: 450px; 
 }
 
@@ -317,43 +317,6 @@ html, body {
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
-/* =======================================================
-   5. CHARTS AREA (ปรับปรุงใหม่เพื่อบังคับแสดงผล)
-   ======================================================= */
-.chartContainer { 
-    position: relative; 
-    width: 100%; 
-    height: 320px;       /* ความสูงพื้นฐานสำหรับ Mobile */
-    overflow: visible;   /* ให้กราฟล้นได้ถ้าจำเป็น */
-    margin-bottom: 16px;
-    z-index: 1;
-}
-
-.staffChartContainer { 
-    position: relative; 
-    width: 100%; 
-    height: 500px;
-    overflow: visible;
-    z-index: 1;
-}
-
-/* Override global recharts style */
-.chartContainer :global(.recharts-responsive-container),
-.staffChartContainer :global(.recharts-responsive-container) {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100%;
-}
-
-/* เพิ่มความสูงสำหรับ Desktop */
-@media (min-width: 768px) {
-  .chartContainer {
-    height: 380px; 
-  }
-}
-
-.chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
-
 /* Satisfaction */
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .scoreBig { font-size: 56px; font-weight: 800; color: #FFAB00; line-height: 0.9; }
@@ -375,6 +338,26 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
+   RECHARTS RESPONSIVE FIX (ส่วนใหม่ที่เพิ่มเข้ามา)
+   ======================================================= */
+.chartResponsiveWrapper {
+    position: relative;
+    width: 100%;
+    /* ความสูงเริ่มต้นสำหรับมือถือ */
+    height: 320px; 
+    min-width: 0;
+    overflow: visible;
+}
+
+/* บังคับตัวกราฟให้ยืดเต็มกล่องแม่เสมอ */
+.chartResponsiveWrapper :global(.recharts-responsive-container) {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* =======================================================
    6. RESPONSIVE MEDIA QUERIES
    ======================================================= */
 @media (max-width: 1200px) {
@@ -386,6 +369,16 @@ html, body {
 
 @media (max-width: 992px) {
     .rightGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* สำหรับจอ Desktop ตั้งแต่ 768px ขึ้นไป */
+@media (min-width: 768px) {
+    .chartResponsiveWrapper {
+        height: 380px; 
+    }
+    .staffHeight {
+        height: 500px;
+    }
 }
 
 @media (max-width: 768px) {
