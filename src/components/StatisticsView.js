@@ -56,6 +56,14 @@ const renderCustomDefs = () => (
   </defs>
 );
 
+// Helper function: ตัดคำถ้ายาวเกินไป (ใช้กับแกน Y ในมือถือ)
+const truncateText = (text, maxLength) => {
+    if (!text) return '';
+    const str = String(text);
+    if (str.length <= maxLength) return str;
+    return str.substring(0, maxLength) + '...';
+};
+
 const StatisticsView = ({ organizationId }) => {
   // --- States ---
   const [timeRange, setTimeRange] = useState('1m'); 
@@ -72,7 +80,7 @@ const StatisticsView = ({ organizationId }) => {
   const [loading, setLoading] = useState(true);
 
   // --- Mobile Check State ---
-  // เช็คขนาดหน้าจอเพื่อปรับ styling โดยตรง
+  // เช็คขนาดหน้าจอเพื่อปรับ styling ของ Recharts โดยตรง
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -162,7 +170,12 @@ const StatisticsView = ({ organizationId }) => {
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
-            setEfficiencyData(data);
+            // Map data และสร้าง field short_title สำหรับ mobile
+            const mappedData = data.map(d => ({
+                ...d,
+                short_title: truncateText(d.title, 15) // ตัดเหลือ 15 ตัวอักษร
+            }));
+            setEfficiencyData(mappedData);
         }
 
       } catch (err) {
@@ -232,10 +245,12 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // --- กำหนดความสูงกราฟแบบตายตัวเพื่อแก้ปัญหา Response ---
-  // ถ้าเป็น Mobile ให้สูง 300px, PC สูง 350px
-  const chartHeightStyle = { height: isMobile ? '300px' : '350px', width: '100%' };
-  const staffChartHeightStyle = { height: isMobile ? '400px' : '500px', width: '100%' };
+  // --- Styles for Chart Containers ---
+  // บังคับความสูงผ่าน JS เพื่อให้แม่นยำขึ้นใน responsive
+  // ใน mobile: สูง 350px, PC: สูง 350px (เท่ากันแต่ flex ต่างกัน)
+  const chartHeightStyle = { height: isMobile ? '350px' : '350px', width: '100%' };
+  // กราฟเจ้าหน้าที่ ใน mobile ให้สูงพิเศษ 550px เพื่อให้แสดงรายชื่อได้ครบไม่เบียด
+  const staffChartHeightStyle = { height: isMobile ? '550px' : '500px', width: '100%' };
 
   return (
     <div className={styles.container}>
@@ -257,9 +272,11 @@ const StatisticsView = ({ organizationId }) => {
           <section className={styles.dashboardTopSection}>
             <div className={`${styles.statusCard} ${styles.totalCard}`} style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}>
                 <div className={styles.cardDecoration}></div>
-                <div className={styles.cardHeader}><span className={styles.cardTitle}>{totalCardData.title}</span></div>
+                <div className={styles.cardHeader}>
+                    <span className={styles.cardTitle}>{totalCardData.title}</span>
+                    <div className={styles.badgeStatus}>100%</div>
+                </div>
                 <span className={styles.cardCount}>{totalCardData.count}</span>
-                <div className={styles.badgeStatus} style={{ alignSelf: 'center', marginTop: 'auto' }}>100%</div>
             </div>
             <div className={styles.rightGrid}>
                 {otherStatusConfig.map((card, idx) => {
@@ -268,7 +285,10 @@ const StatisticsView = ({ organizationId }) => {
                     return (
                         <div key={idx} className={styles.statusCard} style={{ backgroundColor: solidColor }}>
                             <div className={styles.cardDecoration}></div>
-                            <div className={styles.cardHeader}><span className={styles.cardTitle}>{card.title}</span><div className={styles.badgeStatus}>{percent.toFixed(0)}%</div></div>
+                            <div className={styles.cardHeader}>
+                                <span className={styles.cardTitle}>{card.title}</span>
+                                <div className={styles.badgeStatus}>{percent.toFixed(0)}%</div>
+                            </div>
                             <span className={styles.cardCount}>{card.count}</span>
                         </div>
                     );
@@ -290,16 +310,21 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* ใช้ Inline Style บังคับความสูง */}
           <div className={styles.chartContainer} style={chartHeightStyle}>
             {trendData.length > 0 ? (
-              // FIX: ใช้ width="99%" แก้บั๊ก Recharts
               <ResponsiveContainer width="99%" height="100%" minWidth={0}>
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}} dy={15} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}} />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#94a3b8', fontSize: 10}} 
+                    dy={10} 
+                    minTickGap={20} // ป้องกันวันที่ทับกัน
+                  />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
                   <Tooltip 
                     cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '4 4' }}
                     content={({ active, payload, label }) => {
@@ -350,9 +375,9 @@ const StatisticsView = ({ organizationId }) => {
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
-                      dataKey="title" 
+                      dataKey={isMobile ? "short_title" : "title"} // ใช้ชื่อย่อใน mobile
                       type="category" 
-                      width={isMobile ? 80 : 140} 
+                      width={isMobile ? 100 : 140} // ปรับความกว้าง Label แกน Y
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10, fill: '#4b5563'}} 
@@ -365,7 +390,7 @@ const StatisticsView = ({ organizationId }) => {
                           const data = payload[0].payload;
                           return (
                             <div className={styles.customTooltip}>
-                              <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title}</p>
+                              <p style={{fontWeight: 'bold', fontSize: '12px', marginBottom: '8px', color: '#1f2937'}}>{data.full_title || data.title}</p>
                               <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['รอรับเรื่อง']}}></div><span>รอรับเรื่อง: {data.stage1} ชม.</span></div>
                               <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['กำลังดำเนินการ']}}></div><span>ประสานงาน: {data.stage2} ชม.</span></div>
                               <div className={styles.tooltipItem}><div className={styles.dotIndicator} style={{backgroundColor: STATUS_COLORS['เสร็จสิ้น']}}></div><span>ปฏิบัติงาน: {data.stage3} ชม.</span></div>
@@ -399,7 +424,8 @@ const StatisticsView = ({ organizationId }) => {
                       <YAxis 
                         dataKey="name" 
                         type="category" 
-                        width={isMobile ? 70 : 100} 
+                        width={isMobile ? 90 : 100} 
+                        tickFormatter={(value) => truncateText(value, 12)} // ตัดคำแกน Y
                         axisLine={false} 
                         tickLine={false} 
                         tick={{fontSize: 10}} 
@@ -450,7 +476,6 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                {/* ใช้ Inline Style บังคับความสูงกราฟแท่ง */}
                 <div className={styles.staffChartContainer} style={staffChartHeightStyle}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer width="99%" height="100%" minWidth={0}>
@@ -460,9 +485,10 @@ const StatisticsView = ({ organizationId }) => {
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={isMobile ? 80 : 140} 
+                            width={isMobile ? 100 : 140} // ให้พื้นที่ชื่อเจ้าหน้าที่มากขึ้น
                             axisLine={false} 
                             tickLine={false} 
+                            tickFormatter={(val) => truncateText(val, isMobile ? 12 : 20)} // ตัดชื่อถ้าหน้าจอเล็ก
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
