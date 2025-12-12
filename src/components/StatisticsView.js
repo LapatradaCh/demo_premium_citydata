@@ -81,9 +81,7 @@ const StatisticsView = ({ organizationId }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
-    const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -116,7 +114,6 @@ const StatisticsView = ({ organizationId }) => {
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          // Map ข้อมูลเพื่อแปลง String -> Number ให้ชัวร์
           const formattedTrend = data.map(item => ({
             ...item,
             total: Number(item.total || 0),
@@ -318,16 +315,16 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* FIX: ใช้ Inline Style บังคับความสูง และใช้ div หุ้ม */}
-          <div style={{ width: '100%', height: isMobile ? 320 : 380, position: 'relative' }}>
+          {/* FIX: ใช้ CSS Class แทน Inline Style */}
+          <div className={styles.chartResponsiveWrapper}>
             {trendData.length > 0 ? (
-              /* FIX: ใส่ key เพื่อบังคับ Render ใหม่เมื่อ Resize จอ */
               <ResponsiveContainer 
                 width="100%" 
                 height="100%" 
-                key={`trend-${isMobile}-${timeRange}`}
+                key={`trend-${isMobile}`} // กระตุ้นการ Render ใหม่เมื่อเปลี่ยนโหมดจอ
               >
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
+                  {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="date" 
@@ -357,10 +354,9 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  {/* เอา filter ออกชั่วคราวเพื่อความชัวร์ */}
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" hide={activeTrendKey !== 'total'} />
+                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
                   <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
                   <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
@@ -382,8 +378,8 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            {/* FIX: Inline Height + Key */}
-            <div style={{ width: '100%', height: isMobile ? 320 : 380, position: 'relative' }}>
+            {/* FIX: ใช้ CSS Class แทน Inline Style */}
+            <div className={styles.chartResponsiveWrapper}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
                   width="100%" 
@@ -434,8 +430,8 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            {/* FIX: Inline Height + Key */}
-            <div style={{ width: '100%', height: isMobile ? 320 : 380, position: 'relative' }}>
+            {/* FIX: ใช้ CSS Class แทน Inline Style */}
+            <div className={styles.chartResponsiveWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
                     width="100%" 
@@ -500,8 +496,8 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                {/* FIX: Inline Height + Key สำหรับกราฟ Staff */}
-                <div style={{ width: '100%', height: isMobile ? 550 : 500, position: 'relative' }}>
+                {/* FIX: ใช้ CSS Class + Modifier Class สำหรับกราฟ Staff */}
+                <div className={`${styles.chartResponsiveWrapper} ${styles.staffHeight}`}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
                         width="100%" 
