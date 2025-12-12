@@ -338,19 +338,20 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   RECHARTS RESPONSIVE FIX (ส่วนใหม่ที่เพิ่มเข้ามา)
+   RECHARTS RESPONSIVE FIX (กล่องควบคุมกราฟ)
    ======================================================= */
-.chartResponsiveWrapper {
+.chartWrapper {
     position: relative;
     width: 100%;
     /* ความสูงเริ่มต้นสำหรับมือถือ */
-    height: 320px; 
+    height: 300px; 
     min-width: 0;
     overflow: visible;
+    margin-bottom: 20px;
 }
 
 /* บังคับตัวกราฟให้ยืดเต็มกล่องแม่เสมอ */
-.chartResponsiveWrapper :global(.recharts-responsive-container) {
+.chartWrapper :global(.recharts-responsive-container) {
     width: 100% !important;
     height: 100% !important;
     min-width: 100%;
@@ -373,10 +374,11 @@ html, body {
 
 /* สำหรับจอ Desktop ตั้งแต่ 768px ขึ้นไป */
 @media (min-width: 768px) {
-    .chartResponsiveWrapper {
+    .chartWrapper {
         height: 380px; 
     }
-    .staffHeight {
+    /* กราฟที่ต้องการความสูงพิเศษในจอใหญ่ */
+    .largeHeight {
         height: 500px;
     }
 }
