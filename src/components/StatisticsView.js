@@ -44,17 +44,6 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
-const renderCustomDefs = () => (
-  <defs>
-    <filter id="shadow" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#ffc107" floodOpacity="0.3" />
-    </filter>
-    <filter id="shadowGray" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#000" floodOpacity="0.1" />
-    </filter>
-  </defs>
-);
-
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -104,18 +93,16 @@ const StatisticsView = ({ organizationId }) => {
         if (statsRes.ok) {
           const data = await statsRes.json();
           const statsObject = data.reduce((acc, item) => {
-            // แปลงเป็นตัวเลข
-            acc[item.status] = parseInt(item.count, 10);
+            acc[item.status] = parseInt(item.count, 10); // แปลงเป็น int
             return acc;
           }, {});
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (จุดสำคัญที่ต้องแก้: แปลง String เป็น Number)
+        // 2. Trend Graph (แปลง String -> Number)
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          // Map ข้อมูลเพื่อแปลง String -> Number
           const formattedTrend = data.map(item => ({
             ...item,
             total: Number(item.total || 0),
@@ -135,7 +122,7 @@ const StatisticsView = ({ organizationId }) => {
           const data = await typeRes.json();
           const formatted = data.map(item => ({
             name: item.issue_type_name,
-            count: parseInt(item.count, 10), // แปลงเป็นตัวเลข
+            count: parseInt(item.count, 10), // แปลงเป็น int
             avgTime: item.avg_resolution_time ? parseFloat(parseFloat(item.avg_resolution_time).toFixed(1)) : 0
           })).sort((a, b) => b.count - a.count);
           setProblemTypeData(formatted);
@@ -155,7 +142,7 @@ const StatisticsView = ({ organizationId }) => {
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities (จุดสำคัญ: แปลงค่า count เป็นตัวเลขก่อนบวก)
+        // 6. Staff Activities (แปลง String -> Number ก่อนรวมค่า)
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -164,8 +151,7 @@ const StatisticsView = ({ organizationId }) => {
             rawData.forEach(item => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
-               // สำคัญ: ต้อง parseInt ตรงนี้ ไม่งั้นจะเป็นการต่อ String
-               const count = item.count ? parseInt(item.count, 10) : 0; 
+               const count = item.count ? parseInt(item.count, 10) : 0; // แปลงเป็น int
                
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
@@ -178,14 +164,13 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency (จุดสำคัญ: แปลง String เป็น Number)
+        // 7. Efficiency (แปลง String -> Number)
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
             const mappedData = data.map(d => ({
                 ...d,
                 short_title: truncateText(d.title, 15),
-                // แปลงค่าเวลาเป็นตัวเลข (ถ้า API ส่งมาเป็น String)
                 stage1: Number(d.stage1 || 0),
                 stage2: Number(d.stage2 || 0),
                 stage3: Number(d.stage3 || 0),
@@ -319,18 +304,10 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          <div 
-            className={styles.chartContainer} 
-            style={{ 
-                width: '100%', 
-                height: isMobile ? '300px' : '380px',
-                minHeight: isMobile ? '300px' : '380px'
-            }}
-          >
+          <div className={styles.chartContainer}>
             {trendData.length > 0 ? (
               <ResponsiveContainer width="99%" height="100%" key={`trend-${isMobile}`}>
-                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-                  {renderCustomDefs()}
+                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
                     dataKey="date" 
@@ -360,9 +337,10 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
+                  {/* ลบ filter ออกเพื่อป้องกันกราฟหาย */}
+                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" hide={activeTrendKey !== 'total'} />
                   <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
                   <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
@@ -384,14 +362,7 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            <div 
-                className={styles.chartContainer} 
-                style={{ 
-                    width: '100%', 
-                    height: isMobile ? '300px' : '380px',
-                    minHeight: isMobile ? '300px' : '380px'
-                }}
-            >
+            <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer width="99%" height="100%" key={`eff-${isMobile}`}>
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
@@ -438,14 +409,7 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            <div 
-                className={styles.chartContainer} 
-                style={{ 
-                    width: '100%', 
-                    height: isMobile ? '300px' : '380px',
-                    minHeight: isMobile ? '300px' : '380px'
-                }}
-            >
+            <div className={styles.chartContainer}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer width="99%" height="100%" key={`type-${isMobile}`}>
                     <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
@@ -506,14 +470,7 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div 
-                    className={styles.staffChartContainer} 
-                    style={{ 
-                        width: '100%', 
-                        height: isMobile ? '550px' : '500px',
-                        minHeight: isMobile ? '550px' : '500px'
-                    }}
-                >
+                <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer width="99%" height="100%" key={`staff-${isMobile}`}>
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
