@@ -81,7 +81,7 @@ const StatisticsView = ({ organizationId }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -110,7 +110,7 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (แปลง String -> Number)
+        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
@@ -153,7 +153,7 @@ const StatisticsView = ({ organizationId }) => {
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities (แปลง count เป็นตัวเลข)
+        // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -175,7 +175,7 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency (แปลง String -> Number)
+        // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -320,13 +320,11 @@ const StatisticsView = ({ organizationId }) => {
               <ResponsiveContainer 
                 width="100%" 
                 height="100%" 
-                // แก้ไขตรงนี้: เพิ่ม trendData.length เข้าไปใน key เพื่อบังคับ re-render เมื่อข้อมูลมา
                 key={`trend-${isMobile}-${trendData.length}`} 
               >
+                {/* เอา width/height ออกจาก LineChart เพื่อให้ ResponsiveContainer จัดการเอง */}
                 <LineChart 
                     data={trendData} 
-                    width="100%" // เพิ่ม width 100% ให้กับตัว Chart
-                    height="100%" // เพิ่ม height 100% ให้กับตัว Chart
                     margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
                   {renderCustomDefs()}
@@ -388,16 +386,10 @@ const StatisticsView = ({ organizationId }) => {
                 <ResponsiveContainer 
                   width="100%" 
                   height="100%" 
-                  // แก้ไขตรงนี้: เพิ่ม efficiencyData.length เข้าไปใน key
                   key={`eff-${isMobile}-${efficiencyData.length}`}
                 >
-                  <BarChart 
-                    data={efficiencyData} 
-                    layout="vertical" 
-                    width="100%" // เพิ่ม width 100%
-                    height="100%" // เพิ่ม height 100%
-                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
-                  >
+                  {/* เอา width/height ออกจาก BarChart */}
+                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
@@ -446,14 +438,12 @@ const StatisticsView = ({ organizationId }) => {
                   <ResponsiveContainer 
                     width="100%" 
                     height="100%" 
-                    // แก้ไขตรงนี้: เพิ่ม problemTypeData.length เข้าไปใน key
                     key={`type-${isMobile}-${problemTypeData.length}`}
                   >
+                    {/* เอา width/height ออกจาก ComposedChart */}
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
-                        width="100%" // เพิ่ม width 100%
-                        height="100%" // เพิ่ม height 100%
                         margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid stroke="#f3f4f6" />
@@ -518,16 +508,10 @@ const StatisticsView = ({ organizationId }) => {
                       <ResponsiveContainer 
                         width="100%" 
                         height="100%" 
-                        // แก้ไขตรงนี้: เพิ่ม staffData.length เข้าไปใน key
                         key={`staff-${isMobile}-${staffData.length}`}
                       >
-                        <BarChart 
-                          layout="vertical" 
-                          data={staffData} 
-                          width="100%" // เพิ่ม width 100%
-                          height="100%" // เพิ่ม height 100%
-                          margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
-                        >
+                        {/* เอา width/height ออกจาก BarChart */}
+                        <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
