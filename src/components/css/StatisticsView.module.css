@@ -338,24 +338,24 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   RECHARTS RESPONSIVE FIX (กล่องควบคุมกราฟ)
+   THE ABSOLUTE FIX (ท่าไม้ตายแก้กราฟไม่ขึ้น)
    ======================================================= */
 .chartWrapper {
-    position: relative;
+    position: relative; /* สำคัญ */
     width: 100%;
-    /* ความสูงเริ่มต้นสำหรับมือถือ */
-    height: 300px; 
-    min-width: 0;
-    overflow: visible;
+    height: 300px; /* ความสูงตั้งต้น */
     margin-bottom: 20px;
+    background-color: transparent;
+    overflow: hidden;
 }
 
-/* บังคับตัวกราฟให้ยืดเต็มกล่องแม่เสมอ */
+/* บังคับกราฟลอยทับกล่องแม่ */
 .chartWrapper :global(.recharts-responsive-container) {
+    position: absolute !important;
+    top: 0;
+    left: 0;
     width: 100% !important;
     height: 100% !important;
-    min-width: 100%;
-    min-height: 100%;
 }
 
 /* =======================================================
@@ -377,7 +377,6 @@ html, body {
     .chartWrapper {
         height: 380px; 
     }
-    /* กราฟที่ต้องการความสูงพิเศษในจอใหญ่ */
     .largeHeight {
         height: 500px;
     }
