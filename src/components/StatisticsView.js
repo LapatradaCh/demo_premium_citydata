@@ -74,7 +74,7 @@ const StatisticsView = ({ organizationId }) => {
   const [satisfactionData, setSatisfactionData] = useState(null);
   const [problemTypeData, setProblemTypeData] = useState([]);
   const [efficiencyData, setEfficiencyData] = useState([]); 
-  
+   
   const [loading, setLoading] = useState(true);
 
   // --- Mobile Check ---
@@ -300,10 +300,17 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* FIX: ใส่ key เพื่อ force re-render และใส่ inline style บังคับความสูง */}
-          <div className={styles.chartContainer} style={{ width: '100%', height: isMobile ? '300px' : '380px' }}>
+          {/* FIX: เพิ่ม minHeight เพื่อบังคับขนาดให้กราฟแสดงผลเสมอ */}
+          <div 
+            className={styles.chartContainer} 
+            style={{ 
+                width: '100%', 
+                height: isMobile ? '300px' : '380px',
+                minHeight: isMobile ? '300px' : '380px' // สำคัญ!
+            }}
+          >
             {trendData.length > 0 ? (
-              <ResponsiveContainer width="99%" height="100%" key={isMobile ? 'trend-mobile' : 'trend-desktop'}>
+              <ResponsiveContainer width="99%" height="100%" key={`trend-${isMobile}`}>
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -359,9 +366,16 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            <div className={styles.chartContainer} style={{ width: '100%', height: isMobile ? '300px' : '380px' }}>
+            <div 
+                className={styles.chartContainer} 
+                style={{ 
+                    width: '100%', 
+                    height: isMobile ? '300px' : '380px',
+                    minHeight: isMobile ? '300px' : '380px' // สำคัญ
+                }}
+            >
               {efficiencyData.length > 0 ? (
-                <ResponsiveContainer width="99%" height="100%" key={isMobile ? 'eff-mobile' : 'eff-desktop'}>
+                <ResponsiveContainer width="99%" height="100%" key={`eff-${isMobile}`}>
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
@@ -406,9 +420,16 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            <div className={styles.chartContainer} style={{ width: '100%', height: isMobile ? '300px' : '380px' }}>
+            <div 
+                className={styles.chartContainer} 
+                style={{ 
+                    width: '100%', 
+                    height: isMobile ? '300px' : '380px',
+                    minHeight: isMobile ? '300px' : '380px' // สำคัญ
+                }}
+            >
                 {problemTypeData.length > 0 ? (
-                  <ResponsiveContainer width="99%" height="100%" key={isMobile ? 'type-mobile' : 'type-desktop'}>
+                  <ResponsiveContainer width="99%" height="100%" key={`type-${isMobile}`}>
                     <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
                       <CartesianGrid stroke="#f3f4f6" />
                       <XAxis type="number" hide />
@@ -467,9 +488,16 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div className={styles.staffChartContainer} style={{ width: '100%', height: isMobile ? '550px' : '500px' }}>
+                <div 
+                    className={styles.staffChartContainer} 
+                    style={{ 
+                        width: '100%', 
+                        height: isMobile ? '550px' : '500px',
+                        minHeight: isMobile ? '550px' : '500px' // สำคัญ
+                    }}
+                >
                     {staffData.length > 0 ? (
-                      <ResponsiveContainer width="99%" height="100%" key={isMobile ? 'staff-mobile' : 'staff-desktop'}>
+                      <ResponsiveContainer width="99%" height="100%" key={`staff-${isMobile}`}>
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
