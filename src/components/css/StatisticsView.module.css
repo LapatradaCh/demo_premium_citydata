@@ -100,8 +100,6 @@ html, body {
 /* =======================================================
    3. CARDS COMPONENTS
    ======================================================= */
-
-/* Status Cards (Small) */
 .statusCard {
   border-radius: 20px;
   padding: 24px;
@@ -125,7 +123,6 @@ html, body {
   filter: brightness(1.05);
 }
 
-/* Total Card (Big) */
 .totalCard {
   padding: 32px;
   display: flex;
@@ -177,7 +174,6 @@ html, body {
   z-index: 0;
 }
 
-/* Section/Graph Cards */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -226,9 +222,7 @@ html, body {
   margin-top: 4px;
 }
 
-/* =======================================================
-   4. FILTERS & LEGENDS
-   ======================================================= */
+/* --- FILTERS --- */
 .filterContainer {
   background-color: #ffffff;
   padding: 4px;
@@ -240,7 +234,6 @@ html, body {
   max-width: 100%;
   overflow-x: auto;
 }
-
 .filterButton {
   padding: 6px 14px;
   border-radius: 8px;
@@ -267,7 +260,7 @@ html, body {
   transform: scale(1.02);
 }
 
-/* Legend */
+/* --- LEGEND & TOOLTIP --- */
 .legendContainer {
   display: flex;
   flex-direction: row;        
@@ -308,7 +301,6 @@ html, body {
 }
 .legendDot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
-/* Tooltip */
 .customTooltip {
   background-color: rgba(255, 255, 255, 0.98);
   border: 1px solid #f1f5f9;
@@ -322,17 +314,20 @@ html, body {
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 /* =======================================================
-   5. CHARTS AREA
+   5. CHARTS AREA (CRITICAL FIX)
    ======================================================= */
+/* เพิ่ม min-width: 0 เพื่อแก้บั๊ก flexbox บีบกราฟ */
 .chartContainer { 
     height: 350px; 
     width: 100%; 
     position: relative; 
+    min-width: 0;
 }
 .staffChartContainer { 
     height: 500px; 
     width: 100%; 
     position: relative; 
+    min-width: 0;
 }
 .chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
 
@@ -345,7 +340,7 @@ html, body {
 .progressBar { height: 100%; border-radius: 99px; }
 .starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
 
-/* Top Header (Staff) */
+/* Top Header */
 .topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .topBadge {
   background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
@@ -354,42 +349,22 @@ html, body {
 }
 .emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 
-/* Grid System Bottom */
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
    6. RESPONSIVE MEDIA QUERIES
    ======================================================= */
-
-/* --- Laptop / Small Desktop (max 1200px) --- */
 @media (max-width: 1200px) {
-  .dashboardTopSection {
-    grid-template-columns: 1fr;
-  }
-  .totalCard {
-    height: auto;
-    min-height: 180px;
-    flex-direction: row;
-    align-items: center;
-    gap: 24px;
-  }
-  .totalCard .cardCount {
-    margin: 0;
-    text-align: right;
-  }
-  .rightGrid {
-     grid-template-columns: repeat(3, 1fr);
-  }
+  .dashboardTopSection { grid-template-columns: 1fr; }
+  .totalCard { height: auto; min-height: 180px; flex-direction: row; align-items: center; gap: 24px; }
+  .totalCard .cardCount { margin: 0; text-align: right; }
+  .rightGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* --- Tablet / iPad (max 992px) --- */
 @media (max-width: 992px) {
-    .rightGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .rightGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* --- Mobile Large (max 768px) --- */
 @media (max-width: 768px) {
   .header { padding: 16px 20px; }
   .main { padding: 16px; gap: 16px; }
@@ -409,7 +384,7 @@ html, body {
   }
   .totalCard .cardCount { text-align: left; font-size: 56px; margin-top: 10px; }
 
-  /* !!! CRITICAL FIX FOR MOBILE CHARTS !!! */
+  /* !!! CRITICAL FIX: บังคับความสูงกราฟในโหมดมือถือ !!! */
   .chartContainer { 
       display: block !important;
       height: 300px !important; 
@@ -426,42 +401,19 @@ html, body {
   }
   
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
-  
   .filterContainer { width: 100%; justify-content: flex-start; padding: 4px; overflow-x: auto; }
   .filterButton { flex: 0 0 auto; } 
-
   .legendContainer { gap: 6px; }
   .legendBtn { padding: 4px 10px; font-size: 11px; }
 }
 
-/* --- Mobile Small (max 576px) --- */
 @media (max-width: 576px) {
-    .rightGrid {
-        grid-template-columns: 1fr !important;
-    }
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    .totalCard .cardCount {
-        font-size: 48px;
-    }
-
-    .chartContainer { 
-        height: 280px !important; 
-        min-height: 280px !important;
-    }
+    .rightGrid { grid-template-columns: 1fr !important; }
+    .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .totalCard .cardCount { font-size: 48px; }
     
-    .filterContainer {
-        flex-wrap: wrap; 
-        justify-content: space-between;
-    }
-    .filterButton {
-        flex: 1 1 45%; 
-        text-align: center;
-        margin-bottom: 2px;
-    }
-
+    .chartContainer { height: 280px !important; min-height: 280px !important; }
+    .filterContainer { flex-wrap: wrap; justify-content: space-between; }
+    .filterButton { flex: 1 1 45%; text-align: center; margin-bottom: 2px; }
     .scoreBig { font-size: 42px; }
 }
