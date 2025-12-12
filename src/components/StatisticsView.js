@@ -72,7 +72,6 @@ const StatisticsView = ({ organizationId }) => {
   const [loading, setLoading] = useState(true);
 
   // --- Mobile Check State --- 
-  // เพิ่มส่วนนี้เพื่อเช็คว่าจอเล็กหรือไม่ เพื่อปรับขนาดกราฟให้เหมาะสม
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -94,7 +93,7 @@ const StatisticsView = ({ organizationId }) => {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
-        // 1. Overview Stats
+        // Fetching logic remains the same...
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -105,14 +104,12 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
           setTrendData(data);
         }
 
-        // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
@@ -124,21 +121,18 @@ const StatisticsView = ({ organizationId }) => {
           setProblemTypeData(formatted);
         }
 
-        // 4. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
         if (satRes.ok) {
           const data = await satRes.json();
           setSatisfactionData(data);
         }
 
-        // 5. Staff Count
         const staffCountRes = await fetch(`${baseUrl}/staff-count?organization_id=${organizationId}`, { headers });
         if (staffCountRes.ok) {
           const data = await staffCountRes.json();
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -148,10 +142,8 @@ const StatisticsView = ({ organizationId }) => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
                const count = item.count || 0; 
-
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
-               
                grouped[name][status] += count;
                grouped[name].total += count;
             });
@@ -160,7 +152,6 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -225,10 +216,7 @@ const StatisticsView = ({ organizationId }) => {
                 borderColor: isActive ? item.color : '#e2e8f0', 
               }}
             >
-              <span 
-                className={styles.legendDot} 
-                style={{ backgroundColor: item.color }} 
-              />
+              <span className={styles.legendDot} style={{ backgroundColor: item.color }} />
               {item.label}
             </button>
           );
@@ -236,6 +224,11 @@ const StatisticsView = ({ organizationId }) => {
       </div>
     );
   };
+
+  // --- กำหนดความสูงกราฟแบบ Fix ค่า (Mobile: 300px, Desktop: 400px) ---
+  // การใส่ inline style แบบนี้จะแก้ปัญหากราฟหายได้แน่นอนกว่า CSS Class
+  const chartHeightStyle = { height: isMobile ? '300px' : '400px', width: '100%' };
+  const staffChartHeightStyle = { height: isMobile ? '400px' : '500px', width: '100%' };
 
   return (
     <div className={styles.container}>
@@ -290,11 +283,11 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          <div className={styles.chartContainer}>
+          {/* FIX: ใส่ style height โดยตรงที่ div */}
+          <div className={styles.chartContainer} style={chartHeightStyle}>
             {trendData.length > 0 ? (
-              // แก้ปัญหา Recharts: ใช้ 99% แทน 100% เพื่อไม่ให้กราฟหาย
               <ResponsiveContainer width="99%" height="100%">
-                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
                   {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}} dy={15} />
@@ -319,66 +312,21 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke={STATUS_COLORS['ทั้งหมด']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6 }} 
-                    name="ทั้งหมด" 
-                    filter="url(#shadowGray)" 
-                    hide={activeTrendKey !== 'total'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="pending" 
-                    stroke={STATUS_COLORS['รอรับเรื่อง']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6 }} 
-                    name="รอรับเรื่อง" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="action" 
-                    stroke={STATUS_COLORS['ดำเนินการ']} 
-                    strokeWidth={4} 
-                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
-                    activeDot={{ r: 7 }} 
-                    name="ดำเนินการ" 
-                    filter="url(#shadow)" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} 
-                  />
-                  
-                  <Line 
-                    type="monotone" 
-                    dataKey="completed" 
-                    stroke={STATUS_COLORS['เสร็จสิ้น']} 
-                    strokeWidth={3} 
-                    dot={false} 
-                    activeDot={{ r: 6 }} 
-                    name="เสร็จสิ้น" 
-                    hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} 
-                  />
-
+                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" filter="url(#shadowGray)" hide={activeTrendKey !== 'total'} />
+                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
+                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" filter="url(#shadow)" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
+                  <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
+                  {/* ... other lines ... */}
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
                   <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
-
                 </LineChart>
               </ResponsiveContainer>
             ) : (
               <div className={styles.emptyState}>ไม่มีข้อมูลในช่วงเวลานี้</div>
             )}
           </div>
-          
           {renderCustomLegend()}
-
         </section>
 
         <div className={styles.responsiveGrid2}>
@@ -388,15 +336,13 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.sectionHeader}>
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
-            <div className={styles.chartContainer}>
+            {/* FIX: ใส่ style height โดยตรงที่ div */}
+            <div className={styles.chartContainer} style={chartHeightStyle}>
               {efficiencyData.length > 0 ? (
-                // ใช้ 99% แทน 100%
                 <ResponsiveContainer width="99%" height="100%">
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
-                    
-                    {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ ถ้าเป็นมือถือให้เหลือน้อยลง */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
@@ -406,7 +352,6 @@ const StatisticsView = ({ organizationId }) => {
                       tick={{fontSize: 10, fill: '#4b5563'}} 
                       reversed={true} 
                     />
-                    
                     <Tooltip 
                       cursor={{fill: 'transparent'}} 
                       content={({ active, payload }) => {
@@ -423,50 +368,45 @@ const StatisticsView = ({ organizationId }) => {
                         } return null; 
                       }} 
                     />
-                    
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                    
                     <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
                     <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
                     <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
-                  
                   </BarChart>
                 </ResponsiveContainer>
               ) : <div className={styles.emptyState}>ไม่มีข้อมูลประสิทธิภาพ</div>}
             </div>
           </section>
 
+          {/* --- Problem Type Graph --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
-            {problemTypeData.length > 0 ? (
-              <div className={styles.chartContainer}>
-                {/* ใช้ 99% แทน 100% */}
-                <ResponsiveContainer width="99%" height="100%">
-                  <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid stroke="#f3f4f6" />
-                    <XAxis type="number" hide />
-                    
-                    {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ */}
-                    <YAxis 
-                      dataKey="name" 
-                      type="category" 
-                      width={isMobile ? 70 : 100} 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{fontSize: 10}} 
-                      reversed={true}
-                    />
-                    
-                    <Tooltip contentStyle={{ fontSize: '12px' }} />
-                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                    <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
-                    <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-            ) : <p className={styles.emptyState}>ไม่มีข้อมูล</p>}
+            {/* FIX: ใส่ style height โดยตรงที่ div */}
+            <div className={styles.chartContainer} style={chartHeightStyle}>
+                {problemTypeData.length > 0 ? (
+                  <ResponsiveContainer width="99%" height="100%">
+                    <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid stroke="#f3f4f6" />
+                      <XAxis type="number" hide />
+                      <YAxis 
+                        dataKey="name" 
+                        type="category" 
+                        width={isMobile ? 70 : 100} 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{fontSize: 10}} 
+                        reversed={true}
+                      />
+                      <Tooltip contentStyle={{ fontSize: '12px' }} />
+                      <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
+                      <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
+                      <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                ) : <p className={styles.emptyState}>ไม่มีข้อมูล</p>}
+            </div>
           </section>
         </div>
 
@@ -503,15 +443,13 @@ const StatisticsView = ({ organizationId }) => {
                     <h3 className={styles.h3Custom} style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '16px'}}>ประสิทธิภาพเจ้าหน้าที่</h3>
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
-                <div className={styles.staffChartContainer}>
+                {/* FIX: ใส่ style height โดยตรงที่ div */}
+                <div className={styles.staffChartContainer} style={staffChartHeightStyle}>
                     {staffData.length > 0 ? (
-                      // ใช้ 99% แทน 100%
                       <ResponsiveContainer width="99%" height="100%">
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
-                          
-                          {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ */}
                           <YAxis 
                             dataKey="name" 
                             type="category" 
@@ -521,7 +459,6 @@ const StatisticsView = ({ organizationId }) => {
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
-                          
                           <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', fontSize: '12px' }} />
                           {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL' && k !== 'ทั้งหมด' && k !== 'กำลังประสาน' && k !== 'ดำเนินการ').map((status) => (
                             <Bar key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={20} name={status} />
