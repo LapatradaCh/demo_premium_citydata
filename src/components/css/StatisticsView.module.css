@@ -268,7 +268,7 @@ html, body {
 .legendContainer {
   display: flex;
   flex-direction: row;        
-  justify-content: center;    
+  justify-content: center;     
   flex-wrap: wrap;            
   gap: 8px;                   
   margin-top: 20px;
@@ -318,20 +318,18 @@ html, body {
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 /* =======================================================
-   5. CHARTS AREA (จุดสำคัญ: บังคับความสูงกราฟ)
+   5. CHARTS AREA (ปรับปรุงใหม่)
    ======================================================= */
 .chartContainer { 
-    height: 380px !important; 
+    position: relative; /* สำคัญ */
+    min-width: 0; /* ป้องกัน flexbox ดัน */
     width: 100% !important; 
-    position: relative; 
-    min-width: 0; 
     overflow: hidden;
 }
 .staffChartContainer { 
-    height: 500px !important; 
-    width: 100% !important; 
-    position: relative; 
+    position: relative; /* สำคัญ */
     min-width: 0;
+    width: 100% !important; 
     overflow: hidden;
 }
 .chartContainer *, .staffChartContainer * { font-family: 'Prompt', sans-serif !important; }
@@ -357,7 +355,7 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (จุดสำคัญ: Mobile View)
+   6. RESPONSIVE MEDIA QUERIES (ปรับปรุง Mobile)
    ======================================================= */
 @media (max-width: 1200px) {
   .dashboardTopSection { grid-template-columns: 1fr; }
@@ -373,14 +371,13 @@ html, body {
 @media (max-width: 768px) {
   .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .main { padding: 16px; gap: 16px; }
-  
-  /* แก้ไข: ปรับการ์ดในมือถือให้เป็น 2 คอลัมน์ ไม่เรียงยาว */
+   
+  /* การ์ดในมือถือ */
   .rightGrid { 
       grid-template-columns: repeat(2, 1fr) !important; 
       gap: 12px !important; 
   }
-  
-  /* ปรับแต่งภายในการ์ดให้เหมาะกับช่องเล็ก */
+   
   .statusCard { 
       padding: 16px !important; 
       min-height: 120px !important; 
@@ -391,8 +388,7 @@ html, body {
   .cardHeader { margin-bottom: 8px !important; width: 100%; }
   .cardTitle { font-size: 13px !important; white-space: normal; }
   .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; }
-  
-  /* การ์ด Total ใบใหญ่ */
+   
   .totalCard { 
       flex-direction: row !important; 
       align-items: center;
@@ -405,32 +401,18 @@ html, body {
 
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  /* แก้ไขกราฟหาย: บังคับความสูงในมือถือ */
-  .chartContainer { 
-      display: block !important;
-      height: 350px !important; /* บังคับความสูง */
-      min-height: 350px !important; 
-      width: 100% !important;
-  }
-  .staffChartContainer { 
-      display: block !important;
-      height: 550px !important; 
-      min-height: 550px !important; 
-      width: 100% !important;
-  }
-  
+  /* ลบการ Override ความสูงแบบซับซ้อนใน CSS และปล่อยให้ Inline Style ทำงาน */
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
   .filterContainer { width: 100%; justify-content: space-between; padding: 4px; overflow-x: auto; }
   .filterButton { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; }
-  
+   
   .legendContainer { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 8px; flex-wrap: nowrap; }
   .legendBtn { padding: 4px 8px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
-  
+   
   .scoreBig { font-size: 42px; }
 }
 
 @media (max-width: 400px) {
-    /* ถ้าจอเล็กมากให้กลับมาเป็น 1 แถว */
     .rightGrid { grid-template-columns: 1fr !important; }
     .statusCard { flex-direction: row !important; align-items: center; min-height: auto !important; }
     .cardCount { font-size: 28px !important; }
