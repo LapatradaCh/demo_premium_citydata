@@ -39,27 +39,26 @@ const createIcon = (colorUrl) => new L.Icon({
   shadowSize: [41, 41]
 });
 
-// กำหนดตัวแปรสี (ใช้รูปภาพหมุดเดิม)
+// กำหนดตัวแปรสี
 const redIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png');
 const greenIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png');
 const orangeIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png');
-const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'); // สำหรับประสานงาน
+const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png');
 const blueIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
-const goldIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png'); // ใช้แทนสีเหลือง
 const greyIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
 
-// ฟังก์ชันเลือกสีตามสถานะ (อัปเดตตามรูป Dashboard: 6 กลุ่ม)
+// ฟังก์ชันเลือกสีตามสถานะ
 const getIconByStatus = (status) => {
-  const s = status ? status.trim() : "";
-  
-  if (s === "รอรับเรื่อง") return redIcon;
-  if (s.includes("ดำเนินการ") || s === "กำลังดำเนินการ") return goldIcon; // ใช้สีทอง/เหลือง แทนส้ม
-  if (s === "เสร็จสิ้น") return greenIcon;
-  if (s === "ส่งต่อ") return blueIcon;
-  if (s === "เชิญร่วม") return blueIcon; // ใช้ฟ้าเหมือนกัน หรือจะใช้ violet ก็ได้ถ้ามีรูป
-  if (s === "ปฏิเสธ") return greyIcon;
-  
-  return redIcon; // Default
+  switch (status) {
+    case "รอรับเรื่อง": return redIcon;
+    case "กำลังประสานงาน": return violetIcon;
+    case "กำลังดำเนินการ": return orangeIcon;
+    case "เสร็จสิ้น": return greenIcon;
+    case "ส่งต่อ": return blueIcon;
+    case "เชิญร่วม": return blueIcon;
+    case "ปฏิเสธ": return greyIcon;
+    default: return redIcon;
+  }
 };
 
 // --- Custom Icon: Cluster สีส้ม ---
@@ -209,17 +208,17 @@ const MapView = ({ subTab }) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
   };
 
-  // Helper สำหรับ CSS Class (ใช้ร่วมกับไฟล์ CSS ที่คุณมีอยู่แล้ว)
   const getStatusClass = (status) => {
-    const s = status ? status.trim() : "";
-    if (s === "รอรับเรื่อง") return styles.pending;
-    if (s === "กำลังประสานงาน") return styles.coordinating;
-    if (s.includes("ดำเนินการ")) return styles.in_progress; // ใช้ class in_progress สำหรับ "กำลังดำเนินการ"
-    if (s === "เสร็จสิ้น") return styles.completed;
-    if (s === "ส่งต่อ") return styles.forwarded;
-    if (s === "เชิญร่วม") return styles.invited;
-    if (s === "ปฏิเสธ") return styles.rejected;
-    return styles.other;
+    switch (status) {
+      case "รอรับเรื่อง": return styles.pending;
+      case "กำลังประสานงาน": return styles.coordinating;
+      case "กำลังดำเนินการ": return styles.in_progress;
+      case "เสร็จสิ้น": return styles.completed;
+      case "ส่งต่อ": return styles.forwarded;
+      case "เชิญร่วม": return styles.invited;
+      case "ปฏิเสธ": return styles.rejected;
+      default: return styles.other;
+    }
   };
 
   const renderSidebar = () => (
@@ -348,7 +347,7 @@ const MapView = ({ subTab }) => {
                       <Marker 
                         key={report.issue_cases_id} 
                         position={[lat, lng]} 
-                        icon={getIconByStatus(report.status)} // เรียกใช้ฟังก์ชันเลือกสีหมุดตาม JS เดิม
+                        icon={getIconByStatus(report.status)} // เรียกใช้ฟังก์ชันเลือกสี
                       >
                         <Popup>
                           <div className={styles.popupContent}>
@@ -365,7 +364,7 @@ const MapView = ({ subTab }) => {
            </MapContainer>
         )}
 
-        {/* Legend: คำอธิบายสีหมุด (ปรับปรุงให้ตรงกับ Dashboard: 6 สถานะ) */}
+        {/* Legend: คำอธิบายสีหมุด (แสดงเฉพาะโหมด Pins) */}
         {!loading && mapMode === "pins" && (
             <div className={styles.mapLegend}>
                 <div className={styles.legendItem}>
@@ -373,7 +372,11 @@ const MapView = ({ subTab }) => {
                     <span>รอรับเรื่อง</span>
                 </div>
                 <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png" alt="gold"/>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png" alt="violet"/>
+                    <span>กำลังประสานงาน</span>
+                </div>
+                <div className={styles.legendItem}>
+                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" alt="orange"/>
                     <span>กำลังดำเนินการ</span>
                 </div>
                 <div className={styles.legendItem}>
@@ -382,15 +385,7 @@ const MapView = ({ subTab }) => {
                 </div>
                 <div className={styles.legendItem}>
                     <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" alt="blue"/>
-                    <span>ส่งต่อ</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" alt="blue"/>
-                    <span>เชิญร่วม</span>
-                </div>
-                <div className={styles.legendItem}>
-                    <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png" alt="grey"/>
-                    <span>ปฏิเสธ</span>
+                    <span>ส่งต่อ / เชิญร่วม</span>
                 </div>
             </div>
         )}
