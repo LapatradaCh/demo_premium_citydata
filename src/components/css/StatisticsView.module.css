@@ -33,11 +33,11 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #f8fafc; /* ปรับสีพื้นหลังเล็กน้อยให้อ่านง่ายขึ้น */
 }
 
 .container {
   min-height: 100vh;
-  background-color: #ffffff;
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
@@ -58,7 +58,8 @@ html, body {
   width: 100% !important;
   box-sizing: border-box;
 }
-.headerLeft h1, .headerLeft span {
+
+.headerLeft h1 {
   font-weight: 700 !important;
   color: #0f172a;
   font-size: 20px;
@@ -86,7 +87,8 @@ html, body {
 /* --- DASHBOARD GRID --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  /* ปรับให้รองรับ Responsive โดยอัตโนมัติ */
+  grid-template-columns: 320px 1fr; 
   gap: 24px;
   width: 100%;
 }
@@ -111,13 +113,14 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   min-height: 140px;
-  height: 100%;
+  height: 100%; /* ให้ยืดตาม Grid */
   border: none;
   position: relative;
   overflow: hidden;
   color: #ffffff;
   box-sizing: border-box;
 }
+
 .statusCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
@@ -132,6 +135,7 @@ html, body {
   height: 100%; 
   box-sizing: border-box;
 }
+
 .cardHeader {
   display: flex;
   justify-content: space-between;
@@ -139,6 +143,7 @@ html, body {
   margin-bottom: 12px;
   z-index: 1;
 }
+
 .cardTitle {
   font-size: 16px;
   font-weight: 600;
@@ -163,6 +168,7 @@ html, body {
   margin-bottom: 20px;
   text-align: center;
 }
+
 .cardDecoration {
   position: absolute;
   bottom: -20px;
@@ -175,7 +181,7 @@ html, body {
   z-index: 0;
 }
 
-/* Chart Cards Container */
+/* --- CHART CARDS (ส่วนที่แก้ปัญหากราฟ) --- */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -184,12 +190,12 @@ html, body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  /* สำคัญมาก: min-width: 0 ช่วยแก้ปัญหากราฟไม่ขึ้นใน Flex/Grid item */
+  min-width: 0; 
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  /* เพิ่ม min-height เพื่อกันการ์ดยุบตัว */
-  min-height: 450px; 
+  height: auto;
 }
 
 .chartHeaderWrapper {
@@ -224,9 +230,10 @@ html, body {
   color: #64748b;
   font-weight: 500;
   margin-top: 4px;
+  display: block;
 }
 
-/* Filters */
+/* Filters & Legend */
 .filterContainer {
   background-color: #ffffff;
   padding: 4px;
@@ -237,7 +244,12 @@ html, body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   max-width: 100%;
   overflow-x: auto;
+  /* ซ่อน Scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+.filterContainer::-webkit-scrollbar { display: none; }
+
 .filterButton {
   padding: 6px 14px;
   border-radius: 8px;
@@ -248,76 +260,42 @@ html, body {
   font-size: 12px;
   font-weight: 600;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   white-space: nowrap;
-}
-.filterButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 5px rgba(0,0,0,0.08);
-  color: #334155;
 }
 .filterButtonActive {
   background-color: #ffffff;
   color: #FFAB00;
   border: 1px solid #f1f5f9;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transform: scale(1.02);
 }
 
-/* Legend & Tooltip */
 .legendContainer {
   display: flex;
   flex-direction: row;        
-  justify-content: center;     
-  flex-wrap: wrap;            
-  gap: 8px;                   
-  margin-top: 20px;
+  justify-content: center;      
+  flex-wrap: wrap;             
+  gap: 8px;                     
+  margin-top: auto; /* ดัน Legend ไปล่างสุดถ้ามีที่ว่าง */
   width: 100%;
+  padding-top: 10px;
 }
 .legendBtn {
-  display: inline-flex;       
+  display: inline-flex;        
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 14px;          
-  border-radius: 8px;         
+  padding: 6px 14px;           
+  border-radius: 8px;          
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   font-size: 12px;
   font-weight: 500;
   color: #64748b;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
-  width: auto;                
-}
-.legendBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 5px rgba(0,0,0,0.08);
-  background-color: #f8fafc;
-}
-.legendBtnActive {
-  background-color: #ffffff;
-  border: 1px solid currentColor;
-  font-weight: 700;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transform: scale(1.03);
 }
 .legendDot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
-.customTooltip {
-  background-color: rgba(255, 255, 255, 0.98);
-  border: 1px solid #f1f5f9;
-  border-radius: 12px;
-  padding: 12px 16px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  z-index: 999;
-}
-.tooltipLabel { font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
-.tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
-.dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
-
-/* Satisfaction */
+/* Satisfaction Section */
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .scoreBig { font-size: 56px; font-weight: 800; color: #FFAB00; line-height: 0.9; }
 .starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; width: 100%; }
@@ -326,30 +304,24 @@ html, body {
 .progressBar { height: 100%; border-radius: 99px; }
 .starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
 
-/* Top Header */
-.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-.topBadge {
-  background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
-  border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe;
-  display: flex; align-items: center;
-}
-.emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
-
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   THE ABSOLUTE FIX (ท่าไม้ตายแก้กราฟไม่ขึ้น)
+   4. CHART WRAPPER (FIXED)
    ======================================================= */
+/* ปรับปรุงใหม่: ใช้ min-height และ flex แทน fixed height 
+   เพื่อให้ยืดหยุ่นในหน้าจอต่างกัน 
+*/
 .chartWrapper {
-    position: relative; /* สำคัญ */
+    position: relative;
     width: 100%;
-    height: 300px; /* ความสูงตั้งต้น */
+    /* ความสูงเริ่มต้นสำหรับมือถือ */
+    min-height: 300px; 
+    flex: 1; /* ให้กราฟขยายเต็มพื้นที่ที่เหลือในการ์ด */
     margin-bottom: 20px;
-    background-color: transparent;
     overflow: hidden;
 }
 
-/* บังคับกราฟลอยทับกล่องแม่ */
 .chartWrapper :global(.recharts-responsive-container) {
     position: absolute !important;
     top: 0;
@@ -359,73 +331,109 @@ html, body {
 }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES
+   5. RESPONSIVE MEDIA QUERIES
    ======================================================= */
+
+/* Tablet & Smaller Laptops (Max 1200px) */
 @media (max-width: 1200px) {
-  .dashboardTopSection { grid-template-columns: 1fr; }
-  .totalCard { height: auto; min-height: 140px; flex-direction: row; align-items: center; gap: 24px; }
-  .totalCard .cardCount { margin: 0; text-align: right; font-size: 60px; }
-  .rightGrid { grid-template-columns: repeat(3, 1fr); }
+  .dashboardTopSection {
+    grid-template-columns: 1fr; /* เปลี่ยนเป็น 1 คอลัมน์ */
+  }
+  
+  /* ให้การ์ด Total (สีดำ) เป็นแนวนอนและเล็กลง */
+  .totalCard {
+    flex-direction: row;
+    align-items: center;
+    min-height: auto;
+    padding: 24px;
+  }
+  .totalCard .cardCount {
+    font-size: 56px;
+    margin: 0;
+  }
 }
 
+/* Tablet Portrait (Max 992px) */
 @media (max-width: 992px) {
-    .rightGrid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* สำหรับจอ Desktop ตั้งแต่ 768px ขึ้นไป */
-@media (min-width: 768px) {
-    .chartWrapper {
-        height: 380px; 
-    }
-    .largeHeight {
-        height: 500px;
+    .rightGrid {
+        grid-template-columns: repeat(2, 1fr); /* การ์ดสีๆ เหลือ 2 คอลัมน์ */
     }
 }
 
+/* Mobile Large (Max 768px) */
 @media (max-width: 768px) {
-  .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .main { padding: 16px; gap: 16px; }
-   
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .main {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  /* การ์ดสถานะ (สีๆ) */
   .rightGrid { 
       grid-template-columns: repeat(2, 1fr) !important; 
       gap: 12px !important; 
   }
-   
+  
   .statusCard { 
       padding: 16px !important; 
-      min-height: 120px !important; 
-      flex-direction: column !important; 
-      justify-content: space-between;
-      align-items: flex-start;
+      min-height: 110px !important; 
+      justify-content: center;
   }
-  .cardHeader { margin-bottom: 8px !important; width: 100%; }
+  
+  .cardHeader { margin-bottom: 6px !important; }
   .cardTitle { font-size: 13px !important; white-space: normal; }
-  .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; }
-   
-  .totalCard { 
-      flex-direction: row !important; 
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px !important;
-      min-height: auto !important;
-  }
+  .cardCount { font-size: 36px !important; margin: 0 !important; }
+  
+  /* ปรับการ์ด Total ให้ responsive */
   .totalCard .cardTitle { font-size: 18px !important; }
-  .totalCard .cardCount { text-align: right; font-size: 48px !important; margin: 0 !important; }
+  .totalCard .cardCount { font-size: 48px !important; }
 
-  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
-
-  .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .filterContainer { width: 100%; justify-content: space-between; padding: 4px; overflow-x: auto; }
-  .filterButton { flex: 1; text-align: center; padding: 6px 4px; font-size: 11px; }
-   
-  .legendContainer { gap: 6px; justify-content: flex-start; overflow-x: auto; padding-bottom: 8px; flex-wrap: nowrap; }
-  .legendBtn { padding: 4px 8px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
-   
+  /* Grid 2 คอลัมน์ของกราฟ ให้เหลือ 1 คอลัมน์ */
+  .responsiveGrid2 { 
+      grid-template-columns: 1fr !important; 
+      gap: 16px !important; 
+  }
+  
+  /* ส่วน Header ของกราฟ */
+  .chartHeaderWrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+  }
+  
+  .filterContainer {
+      width: 100%;
+      justify-content: space-between;
+  }
+  .filterButton { flex: 1; text-align: center; }
+  
+  /* ลดขนาดกราฟในมือถือเล็กน้อย */
+  .chartWrapper {
+      min-height: 250px; 
+  }
+  
   .scoreBig { font-size: 42px; }
 }
 
-@media (max-width: 400px) {
-    .rightGrid { grid-template-columns: 1fr !important; }
-    .statusCard { flex-direction: row !important; align-items: center; min-height: auto !important; }
-    .cardCount { font-size: 28px !important; }
+/* Mobile Small (Max 480px) */
+@media (max-width: 480px) {
+    .rightGrid {
+        grid-template-columns: 1fr !important; /* การ์ดสีเหลือ 1 แถว */
+    }
+    
+    .statusCard {
+        flex-direction: row !important;
+        align-items: center;
+        justify-content: space-between;
+        min-height: auto !important;
+        padding: 20px !important;
+    }
+    
+    .cardCount { font-size: 32px !important; }
 }
