@@ -81,7 +81,7 @@ const StatisticsView = ({ organizationId }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth <768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -315,16 +315,18 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* Added explicit height style here */}
           <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
                 width="100%" 
                 height="100%" 
-                key={`trend-${isMobile}`} 
+                // แก้ไขตรงนี้: เพิ่ม trendData.length เข้าไปใน key เพื่อบังคับ re-render เมื่อข้อมูลมา
+                key={`trend-${isMobile}-${trendData.length}`} 
               >
                 <LineChart 
                     data={trendData} 
+                    width="100%" // เพิ่ม width 100% ให้กับตัว Chart
+                    height="100%" // เพิ่ม height 100% ให้กับตัว Chart
                     margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
                   {renderCustomDefs()}
@@ -381,15 +383,21 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            {/* Added explicit height style here */}
             <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
                   width="100%" 
                   height="100%" 
-                  key={`eff-${isMobile}`}
+                  // แก้ไขตรงนี้: เพิ่ม efficiencyData.length เข้าไปใน key
+                  key={`eff-${isMobile}-${efficiencyData.length}`}
                 >
-                  <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
+                  <BarChart 
+                    data={efficiencyData} 
+                    layout="vertical" 
+                    width="100%" // เพิ่ม width 100%
+                    height="100%" // เพิ่ม height 100%
+                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
@@ -433,17 +441,19 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            {/* Added explicit height style here */}
             <div className={styles.chartWrapper} style={{ width: '100%', height: 300, minHeight: 300 }}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
                     width="100%" 
                     height="100%" 
-                    key={`type-${isMobile}`}
+                    // แก้ไขตรงนี้: เพิ่ม problemTypeData.length เข้าไปใน key
+                    key={`type-${isMobile}-${problemTypeData.length}`}
                   >
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
+                        width="100%" // เพิ่ม width 100%
+                        height="100%" // เพิ่ม height 100%
                         margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid stroke="#f3f4f6" />
@@ -503,15 +513,21 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                {/* Added explicit height style here (taller for staff list) */}
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`} style={{ width: '100%', height: 500, minHeight: 500 }}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
                         width="100%" 
                         height="100%" 
-                        key={`staff-${isMobile}`}
+                        // แก้ไขตรงนี้: เพิ่ม staffData.length เข้าไปใน key
+                        key={`staff-${isMobile}-${staffData.length}`}
                       >
-                        <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+                        <BarChart 
+                          layout="vertical" 
+                          data={staffData} 
+                          width="100%" // เพิ่ม width 100%
+                          height="100%" // เพิ่ม height 100%
+                          margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
+                        >
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
