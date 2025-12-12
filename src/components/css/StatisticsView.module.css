@@ -13,13 +13,13 @@
 .text-reject       { color: #64748b !important; }
 
 .badge-status {
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 700;
   width: fit-content;
   display: inline-block;
-  line-height: 1.5;
+  line-height: 1.4;
   background-color: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
   color: #ffffff;
@@ -90,6 +90,8 @@ html, body {
   gap: 24px;
   width: 100%;
 }
+
+/* Grid ปกติสำหรับ PC (3 คอลัมน์) */
 .rightGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -107,7 +109,7 @@ html, body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* แนวตั้งเป็นหลัก */
   justify-content: space-between;
   min-height: 140px;
   height: 100%;
@@ -174,6 +176,7 @@ html, body {
   z-index: 0;
 }
 
+/* Chart Cards */
 .sectionCard {
   background-color: #ffffff;
   padding: 24px;
@@ -222,7 +225,7 @@ html, body {
   margin-top: 4px;
 }
 
-/* --- FILTERS --- */
+/* Filters */
 .filterContainer {
   background-color: #ffffff;
   padding: 4px;
@@ -260,7 +263,7 @@ html, body {
   transform: scale(1.02);
 }
 
-/* --- LEGEND & TOOLTIP --- */
+/* Legend & Tooltip */
 .legendContainer {
   display: flex;
   flex-direction: row;        
@@ -313,9 +316,7 @@ html, body {
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
-/* =======================================================
-   5. CHARTS AREA
-   ======================================================= */
+/* Charts Containers */
 .chartContainer { 
     height: 350px; 
     width: 100%; 
@@ -351,12 +352,15 @@ html, body {
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (UPDATED)
+   6. RESPONSIVE MEDIA QUERIES (CRITICAL UPDATE)
    ======================================================= */
 @media (max-width: 1200px) {
   .dashboardTopSection { grid-template-columns: 1fr; }
-  .totalCard { height: auto; min-height: 160px; flex-direction: row; align-items: center; gap: 24px; }
-  .totalCard .cardCount { margin: 0; text-align: right; }
+  
+  /* Tablet: ให้การ์ด Total เป็นแนวนอนจะได้ไม่กินที่สูงเกินไป */
+  .totalCard { height: auto; min-height: 140px; flex-direction: row; align-items: center; gap: 24px; }
+  .totalCard .cardCount { margin: 0; text-align: right; font-size: 60px; }
+  
   .rightGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -368,30 +372,39 @@ html, body {
   .header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .main { padding: 16px; gap: 16px; }
   
-  /* ปรับ Grid ให้เป็นการ์ดใบเดียวในมือถือเพื่อให้อ่านง่าย */
-  .rightGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
+  /* GRID ADJUSTMENT FOR MOBILE: */
+  /* เปลี่ยนจาก 1fr (แถวเดียว) เป็น 2 คอลัมน์ (เหมือนรูป PC) */
+  .rightGrid { 
+      grid-template-columns: repeat(2, 1fr) !important; 
+      gap: 12px !important; 
+  }
   
+  /* การ์ดในมือถือ กลับมาเป็นแนวตั้ง (ตัวเลขอยู่ล่าง) เพื่อให้เหมาะกับตาราง 2 ช่อง */
   .statusCard { 
       padding: 16px !important; 
-      min-height: auto !important; 
-      flex-direction: row !important; /* จัดแนวนอนประหยัดที่ */
+      min-height: 120px !important; 
+      flex-direction: column !important; 
+      justify-content: space-between;
+      align-items: flex-start;
+  }
+  .cardHeader { margin-bottom: 8px !important; width: 100%; }
+  .cardTitle { font-size: 13px !important; white-space: normal; } /* ยอมให้ตัดคำถ้าชื่อยาว */
+  .cardCount { font-size: 32px !important; margin: 0 !important; align-self: flex-end; } /* ตัวเลขชิดขวาล่าง */
+  
+  /* การ์ด Total (สีดำ) ให้เต็มจอด้านบนเหมือนเดิม แต่จัด layout ให้กระชับ */
+  .totalCard { 
+      flex-direction: row !important; 
       align-items: center;
       justify-content: space-between;
+      padding: 20px !important;
+      min-height: auto !important;
   }
-  .cardHeader { margin-bottom: 0 !important; display: flex; align-items: center; gap: 8px; }
-  .cardTitle { font-size: 14px !important; }
-  .cardCount { font-size: 24px !important; margin: 0 !important; }
-  .badgeStatus { padding: 2px 8px; font-size: 10px; }
+  .totalCard .cardTitle { font-size: 18px !important; }
+  .totalCard .cardCount { text-align: right; font-size: 48px !important; margin: 0 !important; }
 
-  .totalCard { 
-      flex-direction: column !important; 
-      align-items: flex-start;
-      padding: 20px;
-  }
-  .totalCard .cardCount { text-align: left; font-size: 48px !important; margin-top: 10px !important; }
+  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  /* !!! CRITICAL FIX: เพิ่มความสูงกราฟในมือถือให้ดูง่ายขึ้น !!! */
+  /* CHART FIX: ความสูงกราฟต้องมากพอในมือถือ */
   .chartContainer { 
       display: block !important;
       height: 350px !important; 
@@ -399,8 +412,6 @@ html, body {
       width: 100% !important;
       overflow: hidden;
   }
-  
-  /* กราฟเจ้าหน้าที่ต้องสูงพิเศษเพราะรายชื่อเยอะ */
   .staffChartContainer { 
       display: block !important;
       height: 550px !important; 
@@ -419,7 +430,9 @@ html, body {
   .scoreBig { font-size: 42px; }
 }
 
-@media (max-width: 576px) {
-    .filterContainer { flex-wrap: wrap; }
-    .filterButton { flex: 1 1 30%; }
+@media (max-width: 400px) {
+    /* ถ้าจอมือถือเล็กมากๆ (เช่น iPhone SE) อาจต้องกลับมาเป็น 1 แถวเพื่อให้อ่านออก */
+    .rightGrid { grid-template-columns: 1fr !important; }
+    .statusCard { flex-direction: row !important; align-items: center; min-height: auto !important; }
+    .cardCount { font-size: 28px !important; }
 }
