@@ -96,7 +96,7 @@
   transform: scale(0.98);
 }
 
-/* Status Tags - แก้ไขชุดสีใหม่ทั้งหมด */
+/* Status Tags - ปรับปรุงตามสถานะ: รอรับเรื่อง,ดำเนินการ,เสร็จสิ้น,ส่งต่อ,เชิญร่วม,ปฏิเสธ */
 .statusTag {
   padding: 4px 10px;
   border-radius: 22px;
@@ -107,14 +107,14 @@
   text-align: center;
   white-space: nowrap;
 }
-/* ใช้รหัสสีใหม่ตามที่ระบุ */
-.statusTag.pending      { background: #ff4d4f; color: white; } /* รอรับเรื่อง */
-.statusTag.coordinating { background: #9c27b0; color: white; } /* กำลังประสานงาน */
-.statusTag.in_progress  { background: #FFAB00; color: white; } /* กำลังดำเนินการ (ปรับ text เป็นขาว) */
-.statusTag.completed    { background: #4caf50; color: white; } /* เสร็จสิ้น */
-.statusTag.forwarded    { background: #2196f3; color: white; } /* ส่งต่อ */
-.statusTag.invited      { background: #00bcd4; color: white; } /* เชิญร่วม */
-.statusTag.rejected     { background: #64748b; color: white; } /* ปฏิเสธ */
+
+.statusTag.pending      { background: #ff4d4f; color: white; } /* รอรับเรื่อง (แดง) */
+.statusTag.in_progress  { background: #FFAB00; color: white; } /* ดำเนินการ (ส้ม) */
+.statusTag.completed    { background: #4caf50; color: white; } /* เสร็จสิ้น (เขียว) */
+.statusTag.forwarded    { background: #2196f3; color: white; } /* ส่งต่อ (ฟ้า) */
+.statusTag.invited      { background: #9c27b0; color: white; } /* เชิญร่วม (ม่วง) */
+.statusTag.rejected     { background: #64748b; color: white; } /* ปฏิเสธ (เทา) */
+.statusTag.other        { background: #999; color: white; }    /* อื่นๆ */
 
 
 /* =========================================
