@@ -71,7 +71,8 @@ const StatisticsView = ({ organizationId }) => {
   
   const [loading, setLoading] = useState(true);
 
-  // --- 1. เพิ่ม State เช็คขนาดหน้าจอ ---
+  // --- Mobile Check State --- 
+  // เพิ่มส่วนนี้เพื่อเช็คว่าจอเล็กหรือไม่ เพื่อปรับขนาดกราฟให้เหมาะสม
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -291,7 +292,7 @@ const StatisticsView = ({ organizationId }) => {
           
           <div className={styles.chartContainer}>
             {trendData.length > 0 ? (
-              // --- 2. เปลี่ยนเป็น 99% ---
+              // แก้ปัญหา Recharts: ใช้ 99% แทน 100% เพื่อไม่ให้กราฟหาย
               <ResponsiveContainer width="99%" height="100%">
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
@@ -389,13 +390,13 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
-                // --- 2. เปลี่ยนเป็น 99% ---
+                // ใช้ 99% แทน 100%
                 <ResponsiveContainer width="99%" height="100%">
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     
-                    {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
+                    {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ ถ้าเป็นมือถือให้เหลือน้อยลง */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
@@ -441,13 +442,13 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
-                {/* --- 2. เปลี่ยนเป็น 99% --- */}
+                {/* ใช้ 99% แทน 100% */}
                 <ResponsiveContainer width="99%" height="100%">
                   <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
                     
-                    {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
+                    {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ */}
                     <YAxis 
                       dataKey="name" 
                       type="category" 
@@ -504,13 +505,13 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
                 <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
-                      // --- 2. เปลี่ยนเป็น 99% ---
+                      // ใช้ 99% แทน 100%
                       <ResponsiveContainer width="99%" height="100%">
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           
-                          {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
+                          {/* ปรับขนาดแกน Y ตามขนาดหน้าจอ */}
                           <YAxis 
                             dataKey="name" 
                             type="category" 
