@@ -19,7 +19,6 @@ import {
   ComposedChart
 } from 'recharts';
 
-// Import CSS Module (ตรวจสอบ path ให้ถูกต้อง)
 import styles from './css/StatisticsView.module.css';
 
 // --- Configuration ---
@@ -56,7 +55,6 @@ const renderCustomDefs = () => (
   </defs>
 );
 
-// ฟังก์ชันตัดคำสำหรับหน้าจอมือถือ
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -79,7 +77,7 @@ const StatisticsView = ({ organizationId }) => {
   
   const [loading, setLoading] = useState(true);
 
-  // --- Mobile Check State ---
+  // --- Mobile Check ---
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -243,13 +241,11 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // --- Styles for Chart Containers ---
-  // สำคัญ: บังคับความสูงกราฟที่นี่ เพื่อให้ Container ของ Recharts ไม่บีบตัว
-  const chartHeightStyle = { height: isMobile ? '350px' : '350px', width: '100%' };
+  // Force chart heights using JS to assist CSS
+  const chartHeightStyle = { height: isMobile ? '300px' : '380px', width: '100%' };
   const staffChartHeightStyle = { height: isMobile ? '550px' : '500px', width: '100%' };
 
   return (
-    // Container หลัก
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
@@ -267,7 +263,6 @@ const StatisticsView = ({ organizationId }) => {
            <p style={{textAlign: 'center', color: '#9ca3af', padding: '2rem'}}>กำลังโหลดข้อมูล...</p>
         ) : (
           <section className={styles.dashboardTopSection}>
-            {/* การ์ดใบใหญ่ (Total) */}
             <div className={`${styles.statusCard} ${styles.totalCard}`} style={{ backgroundColor: STATUS_COLORS['ทั้งหมด'] }}>
                 <div className={styles.cardDecoration}></div>
                 <div className={styles.cardHeader}>
@@ -277,7 +272,6 @@ const StatisticsView = ({ organizationId }) => {
                 <span className={styles.cardCount}>{totalCardData.count}</span>
             </div>
             
-            {/* Grid ของการ์ดใบเล็ก */}
             <div className={styles.rightGrid}>
                 {otherStatusConfig.map((card, idx) => {
                     const percent = getPercent(card.count, getTotalCases());
@@ -310,7 +304,7 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* Container สำหรับกราฟ: สำคัญมากสำหรับการแสดงผลในมือถือ */}
+          {/* Chart Container */}
           <div className={styles.chartContainer} style={chartHeightStyle}>
             {trendData.length > 0 ? (
               <ResponsiveContainer width="99%" height="100%" minWidth={0}>
