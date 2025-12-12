@@ -110,7 +110,7 @@ const StatisticsView = ({ organizationId }) => {
           setStatsData(statsObject);
         }
 
-        // 2. Trend Graph (แปลง String -> Number ให้ชัวร์)
+        // 2. Trend Graph (แปลง String -> Number)
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
@@ -153,7 +153,7 @@ const StatisticsView = ({ organizationId }) => {
           setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
         }
 
-        // 6. Staff Activities
+        // 6. Staff Activities (แปลง count เป็นตัวเลข)
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
         if (staffRes.ok) {
           const rawData = await staffRes.json();
@@ -175,7 +175,7 @@ const StatisticsView = ({ organizationId }) => {
           setStaffData(staffArray);
         }
 
-        // 7. Efficiency
+        // 7. Efficiency (แปลง String -> Number)
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
@@ -315,15 +315,17 @@ const StatisticsView = ({ organizationId }) => {
             {renderFilterButtons()}
           </div>
           
-          {/* FIX: ใช้ CSS Class ควบคุมความสูงแทน Inline Style */}
           <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
                 width="100%" 
                 height="100%" 
-                key={`trend-${isMobile}`} // ใช้ Key บังคับ Re-render
+                key={`trend-${isMobile}`} 
               >
-                <LineChart data={trendData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
+                <LineChart 
+                    data={trendData} 
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                >
                   {renderCustomDefs()}
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis 
@@ -378,7 +380,6 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
             </div>
             
-            {/* FIX: ใช้ CSS Class */}
             <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
@@ -430,7 +431,6 @@ const StatisticsView = ({ organizationId }) => {
               <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
             </div>
             
-            {/* FIX: ใช้ CSS Class */}
             <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
@@ -438,7 +438,11 @@ const StatisticsView = ({ organizationId }) => {
                     height="100%" 
                     key={`type-${isMobile}`}
                   >
-                    <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
+                    <ComposedChart 
+                        data={problemTypeData.slice(0, 5)} 
+                        layout="vertical" 
+                        margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
+                    >
                       <CartesianGrid stroke="#f3f4f6" />
                       <XAxis type="number" hide />
                       <YAxis 
@@ -496,7 +500,6 @@ const StatisticsView = ({ organizationId }) => {
                     <div className={styles.topBadge}><Users size={14} style={{marginRight: '4px'}}/>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                {/* FIX: ใช้ Template Literals เชื่อม 2 Class (chartWrapper + largeHeight) */}
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
