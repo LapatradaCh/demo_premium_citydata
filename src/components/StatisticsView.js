@@ -6,17 +6,9 @@ import {
   Users 
 } from 'lucide-react';
 import { 
-  LineChart, 
-  Line, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer, 
-  ComposedChart
+  LineChart, Line, BarChart, Bar, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+  ResponsiveContainer, ComposedChart
 } from 'recharts';
 
 import styles from './css/StatisticsView.module.css';
@@ -44,6 +36,7 @@ const LEGEND_CONFIG = [
   { key: 'reject', label: 'ปฏิเสธ', color: STATUS_COLORS['ปฏิเสธ'] },
 ];
 
+// Helper ตัดคำให้สั้นลงถ้าชื่อยาวเกิน
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -68,7 +61,7 @@ const StatisticsView = ({ organizationId }) => {
 
   // --- Mobile Logic ---
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const isMobile = windowWidth < 992; // ใช้ 992px เป็นจุดตัด Mobile/Tablet
+  const isMobile = windowWidth < 992;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -89,22 +82,18 @@ const StatisticsView = ({ organizationId }) => {
         const headers = { 'Authorization': `Bearer ${accessToken}` };
         const baseUrl = 'https://premium-citydata-api-ab.vercel.app/api/stats'; 
 
-        // 1. Overview Stats
+        // 1. Overview
         const statsRes = await fetch(`${baseUrl}/overview?organization_id=${organizationId}`, { headers });
         if (statsRes.ok) {
           const data = await statsRes.json();
-          const statsObject = data.reduce((acc, item) => {
-            acc[item.status] = parseInt(item.count, 10);
-            return acc;
-          }, {});
-          setStatsData(statsObject);
+          setStatsData(data.reduce((acc, item) => { acc[item.status] = parseInt(item.count, 10); return acc; }, {}));
         }
 
-        // 2. Trend Graph
+        // 2. Trend
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
-          const formattedTrend = data.map(item => ({
+          setTrendData(data.map(item => ({
             ...item,
             total: Number(item.total || 0),
             pending: Number(item.pending || 0),
@@ -113,35 +102,27 @@ const StatisticsView = ({ organizationId }) => {
             forward: Number(item.forward || 0),
             invite: Number(item.invite || 0),
             reject: Number(item.reject || 0),
-          }));
-          setTrendData(formattedTrend);
+          })));
         }
 
         // 3. Problem Types
         const typeRes = await fetch(`${baseUrl}/count-by-type?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (typeRes.ok) {
           const data = await typeRes.json();
-          const formatted = data.map(item => ({
+          setProblemTypeData(data.map(item => ({
             name: item.issue_type_name,
             count: parseInt(item.count, 10),
             avgTime: item.avg_resolution_time ? parseFloat(parseFloat(item.avg_resolution_time).toFixed(1)) : 0
-          })).sort((a, b) => b.count - a.count);
-          setProblemTypeData(formatted);
+          })).sort((a, b) => b.count - a.count));
         }
 
         // 4. Satisfaction
         const satRes = await fetch(`${baseUrl}/overall-rating?organization_id=${organizationId}`, { headers });
-        if (satRes.ok) {
-          const data = await satRes.json();
-          setSatisfactionData(data);
-        }
+        if (satRes.ok) setSatisfactionData(await satRes.json());
 
         // 5. Staff Count
         const staffCountRes = await fetch(`${baseUrl}/staff-count?organization_id=${organizationId}`, { headers });
-        if (staffCountRes.ok) {
-          const data = await staffCountRes.json();
-          setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0);
-        }
+        if (staffCountRes.ok) { const data = await staffCountRes.json(); setTotalStaffCount(data.staff_count ? parseInt(data.staff_count, 10) : 0); }
 
         // 6. Staff Activities
         const staffRes = await fetch(`${baseUrl}/staff-activities?organization_id=${organizationId}`, { headers });
@@ -153,30 +134,25 @@ const StatisticsView = ({ organizationId }) => {
                const name = item.staff_name || "Unknown";
                const status = item.new_status || "NULL"; 
                const count = item.count ? parseInt(item.count, 10) : 0; 
-               
                if (!grouped[name]) grouped[name] = { name: name, total: 0 };
                if (!grouped[name][status]) grouped[name][status] = 0;
-               
-               grouped[name][status] += count;
-               grouped[name].total += count;
+               grouped[name][status] += count; grouped[name].total += count;
             });
           }
-          const staffArray = Object.values(grouped).sort((a, b) => b.total - a.total).slice(0, 10);
-          setStaffData(staffArray);
+          setStaffData(Object.values(grouped).sort((a, b) => b.total - a.total).slice(0, 10));
         }
 
         // 7. Efficiency
         const effRes = await fetch(`${baseUrl}/efficiency?organization_id=${organizationId}`, { headers });
         if (effRes.ok) {
             const data = await effRes.json();
-            const mappedData = data.map(d => ({
+            setEfficiencyData(data.map(d => ({
                 ...d,
                 short_title: truncateText(d.title, 15),
                 stage1: Number(d.stage1 || 0),
                 stage2: Number(d.stage2 || 0),
                 stage3: Number(d.stage3 || 0),
-            }));
-            setEfficiencyData(mappedData);
+            })));
         }
 
       } catch (err) {
@@ -247,9 +223,7 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
-  // ✅ Chart Wrapper Logic
-  // Mobile: คำนวณความกว้างหน้าจอ - padding เพื่อให้กราฟพอดีเป๊ะ
-  // Desktop: ใช้ ResponsiveContainer
+  // ✅ Chart Wrapper
   const ChartWrapper = ({ children, height = 300 }) => {
     if (!isMobile) {
         return (
@@ -258,20 +232,24 @@ const StatisticsView = ({ organizationId }) => {
             </ResponsiveContainer>
         );
     }
-    
-    // คำนวณความกว้างสำหรับมือถือ: Window Width - 72px (เผื่อ Padding ซ้ายขวาของ Container และ Card)
+    // Mobile: Calculate width based on window size
     const mobileWidth = windowWidth - 72; 
 
     return (
         <div style={{ width: '100%', height: height, overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
-            {/* Clone child เพื่อยัด prop width/height เข้าไปตรงๆ เฉพาะตอน Mobile */}
             {React.cloneElement(children, { width: mobileWidth, height: height })}
         </div>
     );
   };
 
   const commonProps = {
-      isAnimationActive: false, // ป้องกันกราฟกระพริบ
+      isAnimationActive: false,
+  };
+
+  // Style สำหรับ Legend ภายในกราฟ BarChart
+  const internalLegendStyle = {
+      fontSize: '11px',
+      paddingTop: '10px'
   };
 
   return (
@@ -336,7 +314,7 @@ const StatisticsView = ({ organizationId }) => {
           <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ChartWrapper height={300}>
-                {/* เพิ่ม right margin เพื่อกันตัวหนังสือตกขอบ */}
+                {/* LineChart ใช้ Custom Legend ด้านนอก เลยไม่ต้องใส่ <Legend> ข้างใน */}
                 <LineChart 
                     data={trendData} 
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -380,19 +358,22 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ChartWrapper height={300}>
+                  {/* แก้ margin-left: 0 และเพิ่ม width ของ YAxis เพื่อให้ชื่อไม่หลุด */}
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     <YAxis 
                       dataKey={isMobile ? "short_title" : "title"}
                       type="category" 
-                      width={isMobile ? 100 : 130}
+                      width={isMobile ? 100 : 130} 
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 10, fill: '#4b5563'}} 
                       reversed={true} 
                     />
                     <Tooltip cursor={{fill: 'transparent'}} />
+                    {/* ✅ เพิ่ม Legend กลับเข้ามา */}
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} />
                     <Bar {...commonProps} dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={12} radius={[4, 0, 0, 4]} />
                     <Bar {...commonProps} dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={12} />
                     <Bar {...commonProps} dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={12} radius={[0, 4, 4, 0]} />
@@ -411,6 +392,7 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ChartWrapper height={300}>
+                    {/* แก้ margin-left: 0 */}
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
                         layout="vertical" 
@@ -421,14 +403,16 @@ const StatisticsView = ({ organizationId }) => {
                       <YAxis 
                         dataKey="name" 
                         type="category" 
-                        width={isMobile ? 80 : 100} 
-                        tickFormatter={(value) => truncateText(value, 10)}
+                        width={isMobile ? 100 : 120} 
+                        tickFormatter={(value) => truncateText(value, 12)}
                         axisLine={false} 
                         tickLine={false} 
                         tick={{fontSize: 10}} 
                         reversed={true}
                       />
                       <Tooltip />
+                      {/* ✅ เพิ่ม Legend กลับเข้ามา */}
+                      <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} />
                       <Bar {...commonProps} dataKey="count" name="จำนวน" barSize={12} fill={STATUS_COLORS['ส่งต่อ']} />
                       <Bar {...commonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={12} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
@@ -475,22 +459,25 @@ const StatisticsView = ({ organizationId }) => {
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ChartWrapper height={400}>
+                        {/* แก้ margin-left: 0 และเพิ่ม width YAxis */}
                         <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={isMobile ? 90 : 120}
+                            width={isMobile ? 120 : 140}
                             axisLine={false} 
                             tickLine={false} 
-                            tickFormatter={(val) => truncateText(val, 12)}
+                            tickFormatter={(val) => truncateText(val, isMobile ? 15 : 20)}
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
                           <Tooltip cursor={{fill: 'transparent'}} />
+                          {/* ✅ เพิ่ม Legend กลับเข้ามา */}
+                          <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={internalLegendStyle} />
                           {Object.keys(STATUS_COLORS).filter(k => !['NULL', 'ทั้งหมด', 'กำลังประสาน', 'ดำเนินการ'].includes(k)).map((status) => (
-                            <Bar {...commonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={16} />
+                            <Bar {...commonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={16} name={status} />
                           ))}
                         </BarChart>
                       </ChartWrapper>
