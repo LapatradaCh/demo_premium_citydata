@@ -70,8 +70,8 @@ const StatisticsView = ({ organizationId }) => {
   const [efficiencyData, setEfficiencyData] = useState([]); 
   
   const [loading, setLoading] = useState(true);
-  
-  // State สำหรับเช็คขนาดหน้าจอ (เพื่อปรับ YAxis)
+
+  // --- 1. เพิ่ม State เช็คขนาดหน้าจอ ---
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -291,7 +291,7 @@ const StatisticsView = ({ organizationId }) => {
           
           <div className={styles.chartContainer}>
             {trendData.length > 0 ? (
-              // FIX: width="99%" เพื่อแก้ปัญหากราฟหายบน Mobile
+              // --- 2. เปลี่ยนเป็น 99% ---
               <ResponsiveContainer width="99%" height="100%">
                 <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                   {renderCustomDefs()}
@@ -365,7 +365,6 @@ const StatisticsView = ({ organizationId }) => {
                     hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} 
                   />
 
-                  {/* Lines อื่นๆ ซ่อนไว้ก่อนเพื่อความกระชับ หรือใส่เพิ่มตามเดิมได้เลย */}
                   <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
                   <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
                   <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
@@ -390,13 +389,13 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             <div className={styles.chartContainer}>
               {efficiencyData.length > 0 ? (
-                // FIX: width="99%"
+                // --- 2. เปลี่ยนเป็น 99% ---
                 <ResponsiveContainer width="99%" height="100%">
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" hide />
                     
-                    {/* FIX: ปรับ width แกน Y ตามหน้าจอ */}
+                    {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
                     <YAxis 
                       dataKey="title" 
                       type="category" 
@@ -442,12 +441,13 @@ const StatisticsView = ({ organizationId }) => {
             </div>
             {problemTypeData.length > 0 ? (
               <div className={styles.chartContainer}>
-                {/* FIX: width="99%" */}
+                {/* --- 2. เปลี่ยนเป็น 99% --- */}
                 <ResponsiveContainer width="99%" height="100%">
                   <ComposedChart data={problemTypeData.slice(0, 5)} layout="vertical" margin={{ top: 0, right: 10, left: -10, bottom: 0 }}>
                     <CartesianGrid stroke="#f3f4f6" />
                     <XAxis type="number" hide />
                     
+                    {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
                     <YAxis 
                       dataKey="name" 
                       type="category" 
@@ -504,12 +504,13 @@ const StatisticsView = ({ organizationId }) => {
                 </div>
                 <div className={styles.staffChartContainer}>
                     {staffData.length > 0 ? (
-                      // FIX: width="99%"
+                      // --- 2. เปลี่ยนเป็น 99% ---
                       <ResponsiveContainer width="99%" height="100%">
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           
+                          {/* --- 3. ปรับ width แกน Y ตามหน้าจอ --- */}
                           <YAxis 
                             dataKey="name" 
                             type="category" 
