@@ -103,6 +103,9 @@ const StatisticsView = ({ organizationId }) => {
         const trendRes = await fetch(`${baseUrl}/trend?organization_id=${organizationId}&range=${timeRange}`, { headers });
         if (trendRes.ok) {
           const data = await trendRes.json();
+          // Debug Data
+          console.log("Trend Data Raw:", data);
+          
           const formattedTrend = data.map(item => ({
             ...item,
             total: Number(item.total || 0),
@@ -245,6 +248,11 @@ const StatisticsView = ({ organizationId }) => {
     );
   };
 
+  // Safe mode props for Charts
+  const chartCommonProps = {
+      isAnimationActive: false, // ปิด Animation ป้องกันกราฟไม่วาด
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -307,9 +315,9 @@ const StatisticsView = ({ organizationId }) => {
           <div className={styles.chartWrapper}>
             {trendData.length > 0 ? (
               <ResponsiveContainer 
-                width="99%" /* เปลี่ยนเป็น 99% เพื่อแก้บั๊กกราฟไม่ขึ้น */
-                height="100%" 
-                key={`trend-${isMobile}-${trendData.length}`} 
+                width="100%" 
+                height={300} // Force Height ตรงๆ
+                key={`trend-${timeRange}-${trendData.length}`} // Force Re-render เมื่อข้อมูลเปลี่ยน
               >
                 <LineChart 
                     data={trendData} 
@@ -344,17 +352,18 @@ const StatisticsView = ({ organizationId }) => {
                       return null;
                     }}
                   />
-                  <Line type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="ทั้งหมด" hide={activeTrendKey !== 'total'} />
-                  <Line type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
-                  <Line type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} activeDot={{ r: 7 }} name="ดำเนินการ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
-                  <Line type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} activeDot={{ r: 6 }} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
-                  <Line type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
-                  <Line type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
-                  <Line type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
+                  {/* Remove Filters & Disable Animation */}
+                  <Line {...chartCommonProps} type="monotone" dataKey="total" stroke={STATUS_COLORS['ทั้งหมด']} strokeWidth={3} dot={false} name="ทั้งหมด" hide={activeTrendKey !== 'total'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="pending" stroke={STATUS_COLORS['รอรับเรื่อง']} strokeWidth={3} dot={false} name="รอรับเรื่อง" hide={activeTrendKey !== 'total' && activeTrendKey !== 'pending'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="action" stroke={STATUS_COLORS['ดำเนินการ']} strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} name="ดำเนินการ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'action'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="completed" stroke={STATUS_COLORS['เสร็จสิ้น']} strokeWidth={3} dot={false} name="เสร็จสิ้น" hide={activeTrendKey !== 'total' && activeTrendKey !== 'completed'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="forward" stroke={STATUS_COLORS['ส่งต่อ']} strokeWidth={3} dot={false} name="ส่งต่อ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'forward'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="invite" stroke={STATUS_COLORS['เชิญร่วม']} strokeWidth={3} dot={false} name="เชิญร่วม" hide={activeTrendKey !== 'total' && activeTrendKey !== 'invite'} />
+                  <Line {...chartCommonProps} type="monotone" dataKey="reject" stroke={STATUS_COLORS['ปฏิเสธ']} strokeWidth={3} dot={false} name="ปฏิเสธ" hide={activeTrendKey !== 'total' && activeTrendKey !== 'reject'} />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลในช่วงเวลานี้</div>
+              <div className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลในช่วงเวลานี้</div>
             )}
           </div>
           {renderCustomLegend()}
@@ -371,9 +380,9 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
               {efficiencyData.length > 0 ? (
                 <ResponsiveContainer 
-                  width="99%" /* แก้ไข width */
-                  height="100%" 
-                  key={`eff-${isMobile}-${efficiencyData.length}`}
+                  width="100%"
+                  height={300} // Force Height
+                  key={`eff-${efficiencyData.length}`}
                 >
                   <BarChart data={efficiencyData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
@@ -404,12 +413,12 @@ const StatisticsView = ({ organizationId }) => {
                       }} 
                     />
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                    <Bar dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
-                    <Bar dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
-                    <Bar dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
+                    <Bar {...chartCommonProps} dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={16} radius={[4, 0, 0, 4]} />
+                    <Bar {...chartCommonProps} dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={16} />
+                    <Bar {...chartCommonProps} dataKey="stage3" stackId="a" fill={STATUS_COLORS['เสร็จสิ้น']} name="ปฏิบัติงาน" barSize={16} radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลประสิทธิภาพ</div>}
+              ) : <div className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลประสิทธิภาพ</div>}
             </div>
           </section>
 
@@ -422,9 +431,9 @@ const StatisticsView = ({ organizationId }) => {
             <div className={styles.chartWrapper}>
                 {problemTypeData.length > 0 ? (
                   <ResponsiveContainer 
-                    width="99%" /* แก้ไข width */
-                    height="100%" 
-                    key={`type-${isMobile}-${problemTypeData.length}`}
+                    width="100%" 
+                    height={300} // Force Height
+                    key={`type-${problemTypeData.length}`}
                   >
                     <ComposedChart 
                         data={problemTypeData.slice(0, 5)} 
@@ -445,11 +454,11 @@ const StatisticsView = ({ organizationId }) => {
                       />
                       <Tooltip contentStyle={{ fontSize: '12px' }} />
                       <Legend verticalAlign="bottom" height={36} wrapperStyle={{fontSize: '11px'}} />
-                      <Bar dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
-                      <Bar dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
+                      <Bar {...chartCommonProps} dataKey="count" name="จำนวน" barSize={16} fill={STATUS_COLORS['ส่งต่อ']} />
+                      <Bar {...chartCommonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={16} fill={STATUS_COLORS['กำลังดำเนินการ']} />
                     </ComposedChart>
                   </ResponsiveContainer>
-                ) : <p className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูล</p>}
+                ) : <p className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูล</p>}
             </div>
           </section>
         </div>
@@ -491,9 +500,9 @@ const StatisticsView = ({ organizationId }) => {
                 <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
                     {staffData.length > 0 ? (
                       <ResponsiveContainer 
-                        width="99%" /* แก้ไข width */
-                        height="100%" 
-                        key={`staff-${isMobile}-${staffData.length}`}
+                        width="100%" 
+                        height={500} // Force Height for Staff
+                        key={`staff-${staffData.length}`}
                       >
                         <BarChart layout="vertical" data={staffData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
@@ -510,12 +519,12 @@ const StatisticsView = ({ organizationId }) => {
                           />
                           <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', fontSize: '12px' }} />
                           {Object.keys(STATUS_COLORS).filter(k => k !== 'NULL' && k !== 'ทั้งหมด' && k !== 'กำลังประสาน' && k !== 'ดำเนินการ').map((status) => (
-                            <Bar key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={20} name={status} />
+                            <Bar {...chartCommonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={20} name={status} />
                           ))}
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : <div className={styles.emptyState} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
+                    ) : <div className={styles.emptyState} style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูลกิจกรรมเจ้าหน้าที่</div>}
                 </div>
             </section>
         </div>
