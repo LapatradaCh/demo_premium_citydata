@@ -88,21 +88,22 @@ const WorkloadView = ({ data }) => {
         </div>
       </div>
 
-      {/* Stacked Bar Chart - Layout ปรับตามรูปตัวอย่าง */}
+      {/* Stacked Bar Chart */}
       <div className={styles.mockStackedBarChart}>
         {sortedData.map((item, index) => {
           const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
           return (
             <div key={index} style={{ marginBottom: '24px' }}>
               
-              {/* Header: ชื่อเขต (ซ้าย) | สถิติ (ขวา) */}
+              {/* Header: ชื่อเขต | สถิติ */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
                 <span style={{ fontSize: '16px', fontWeight: '700', color: '#333' }}>
                   {item.name}
                 </span>
                 <div style={{ fontSize: '14px' }}>
+                  {/* แก้ไข: เพิ่มจำนวนเคส และวงเล็บเปอร์เซ็นต์ตามที่ขอ */}
                   <span style={{ color: '#10B981', fontWeight: '700', marginRight: '8px' }}>
-                    สำเร็จ {itemSuccessRate.toFixed(0)}%
+                    สำเร็จ {item.completed} ({itemSuccessRate.toFixed(0)}%)
                   </span>
                   <span style={{ color: '#999', fontSize: '13px' }}>
                     | รวม {item.total}
@@ -124,7 +125,6 @@ const WorkloadView = ({ data }) => {
                        style={{ 
                          width: `${width}%`, 
                          background: COLORS[key],
-                         // จัดตัวเลขให้อยู่ตรงกลางแท่ง
                          display: 'flex',
                          alignItems: 'center',
                          justifyContent: 'center',
@@ -135,8 +135,12 @@ const WorkloadView = ({ data }) => {
                        }}
                        title={`${LABELS[key]}: ${val}`}
                      >
-                       {/* แสดงตัวเลขเฉพาะถ้าแท่งกว้างพอ (>8%) */}
-                       {width > 8 && val}
+                       {/* แก้ไข: แสดง จำนวน (เปอร์เซ็นต์%) ในแท่งกราฟ */}
+                       {width > 12 && (
+                         <span style={{ whiteSpace: 'nowrap' }}>
+                            {val} ({width.toFixed(0)}%)
+                         </span>
+                       )}
                      </div>
                    );
                  })}
@@ -172,7 +176,7 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
-       {/* Highlight Cards (กล่องเขียว/แดง) */}
+       {/* Highlight Cards */}
        <div className={styles.satisfactionHighlightGrid}>
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
              <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
@@ -235,7 +239,7 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       {/* SLA Header Box (กล่องสีฟ้า) */}
+       {/* SLA Header Box */}
        <div className={styles.slaHeaderBox}>
           <div className={styles.slaTargetInfo}>
              <div className={styles.slaTargetTitle}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
@@ -302,7 +306,7 @@ const ProblemTypeView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหาในพื้นที่</h4>
        
-       {/* Header Summary (กล่องสรุป) */}
+       {/* Header Summary */}
        <div className={styles.donutHeaderBox}>
           <div className={styles.donutTotalBlock}>
              <span className={styles.donutTotalTitle}>เรื่องร้องเรียนทั้งหมด</span>
