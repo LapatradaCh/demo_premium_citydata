@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ path ให้ตรง
+import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ path ให้ตรงกับโปรเจกต์ของคุณ
 import { 
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers 
@@ -88,29 +88,63 @@ const WorkloadView = ({ data }) => {
         </div>
       </div>
 
-      {/* Stacked Bar Chart */}
+      {/* Stacked Bar Chart - Layout ปรับตามรูปตัวอย่าง */}
       <div className={styles.mockStackedBarChart}>
-        {sortedData.map((item, index) => (
-          <div key={index} className={styles.mockHBarItem}>
-            <span className={styles.mockHBarLabel}>{item.name}</span>
-            <div className={styles.mockStackedHBar}>
-               {Object.keys(COLORS).map(key => {
-                 const val = item[key] || 0;
-                 const width = item.total > 0 ? (val / item.total) * 100 : 0;
-                 if (width === 0) return null;
-                 return (
-                   <div 
-                     key={key}
-                     className={styles.mockStackedBarSegment}
-                     style={{ width: `${width}%`, background: COLORS[key] }}
-                     title={`${LABELS[key]}: ${val}`}
-                   />
-                 );
-               })}
+        {sortedData.map((item, index) => {
+          const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
+          return (
+            <div key={index} style={{ marginBottom: '24px' }}>
+              
+              {/* Header: ชื่อเขต (ซ้าย) | สถิติ (ขวา) */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
+                <span style={{ fontSize: '16px', fontWeight: '700', color: '#333' }}>
+                  {item.name}
+                </span>
+                <div style={{ fontSize: '14px' }}>
+                  <span style={{ color: '#10B981', fontWeight: '700', marginRight: '8px' }}>
+                    สำเร็จ {itemSuccessRate.toFixed(0)}%
+                  </span>
+                  <span style={{ color: '#999', fontSize: '13px' }}>
+                    | รวม {item.total}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bar Graph */}
+              <div className={styles.mockStackedHBar}>
+                 {Object.keys(COLORS).map(key => {
+                   const val = item[key] || 0;
+                   const width = item.total > 0 ? (val / item.total) * 100 : 0;
+                   if (width === 0) return null;
+                   
+                   return (
+                     <div 
+                       key={key}
+                       className={styles.mockStackedBarSegment}
+                       style={{ 
+                         width: `${width}%`, 
+                         background: COLORS[key],
+                         // จัดตัวเลขให้อยู่ตรงกลางแท่ง
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         color: '#fff',
+                         fontSize: '11px',
+                         fontWeight: 'bold',
+                         textShadow: '0px 1px 2px rgba(0,0,0,0.2)' 
+                       }}
+                       title={`${LABELS[key]}: ${val}`}
+                     >
+                       {/* แสดงตัวเลขเฉพาะถ้าแท่งกว้างพอ (>8%) */}
+                       {width > 8 && val}
+                     </div>
+                   );
+                 })}
+              </div>
             </div>
-            <span className={styles.mockHBarValue}>{item.total}</span>
-          </div>
-        ))}
+          );
+        })}
+
         {/* Legend */}
         <div className={styles.mockStackedBarLegend}>
            {Object.keys(COLORS).map(key => (
@@ -138,7 +172,7 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
-       {/* Highlight Cards */}
+       {/* Highlight Cards (กล่องเขียว/แดง) */}
        <div className={styles.satisfactionHighlightGrid}>
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
              <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
@@ -158,7 +192,7 @@ const SatisfactionView = ({ data }) => {
           </div>
        </div>
 
-       {/* List */}
+       {/* Ranking List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
@@ -177,6 +211,7 @@ const SatisfactionView = ({ data }) => {
                      <div className={styles.reportCardScoreReviews}>({item.reviews} รีวิว)</div>
                   </div>
                </div>
+               {/* Progress Bar */}
                <div className={styles.reportCardProgressBg}>
                   <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
@@ -200,7 +235,7 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       {/* SLA Header Box */}
+       {/* SLA Header Box (กล่องสีฟ้า) */}
        <div className={styles.slaHeaderBox}>
           <div className={styles.slaTargetInfo}>
              <div className={styles.slaTargetTitle}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
@@ -216,7 +251,7 @@ const EfficiencyView = ({ data }) => {
 
        {/* Graph Container */}
        <div className={styles.mockHorizontalBarChart} style={{ marginTop:'20px' }}>
-          {/* SLA Line */}
+          {/* เส้นประ SLA */}
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
@@ -267,7 +302,7 @@ const ProblemTypeView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหาในพื้นที่</h4>
        
-       {/* Header Summary */}
+       {/* Header Summary (กล่องสรุป) */}
        <div className={styles.donutHeaderBox}>
           <div className={styles.donutTotalBlock}>
              <span className={styles.donutTotalTitle}>เรื่องร้องเรียนทั้งหมด</span>
@@ -284,7 +319,7 @@ const ProblemTypeView = ({ data }) => {
           </div>
        </div>
 
-       {/* Chart & Legend */}
+       {/* Donut Chart & Legend */}
        <div className={styles.donutContainer}>
           <div className={styles.donutWrapper}>
              <svg viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
@@ -325,7 +360,7 @@ const ProblemTypeView = ({ data }) => {
 };
 
 // ==========================================
-// 3. MAIN COMPONENT
+// 3. MAIN COMPONENT (CONNECTED)
 // ==========================================
 
 export default function OrganizationStatisticsView() {
@@ -341,6 +376,7 @@ export default function OrganizationStatisticsView() {
     const fetchStats = async () => {
       try {
         setLoading(true);
+        // Fetch Data from Real API
         const [orgRes, probRes] = await Promise.all([
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${USER_ORG_ID}`),
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-count-issue-type?org_id=${USER_ORG_ID}`)
