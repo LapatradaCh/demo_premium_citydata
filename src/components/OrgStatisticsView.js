@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 // Import CSS Module ที่คุณสร้าง
-import styles from "./css/OrganizationStatisticsView.module.css";
+import styles from "./css/OrgStatisticsView.module.css";
 // ใช้ Icon จาก Lucide React
 import {
   BarChart2,
