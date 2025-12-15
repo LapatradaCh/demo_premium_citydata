@@ -1,5 +1,3 @@
-ปรับcode front endด้านล่างให้ตรงกับ mockup ไฟล์html ที่แนบให้ พร้อมใส่api จริง ทั้ง 2 ตัวเข้าไปด้วย
-
 
 import React, { useState, useEffect } from "react";
 import styles from "./css/OrgStatisticsVieร้อมw.module.css";
