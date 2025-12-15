@@ -1,4 +1,4 @@
-/* --- src/css/OrgStatisticsView.module.css --- */
+/* --- css/OrgStatisticsView.module.css --- */
 
 /* =========================================
    1. GLOBAL LAYOUT
@@ -31,16 +31,16 @@
   top: 24px;
 }
 
-/* --- หัวข้อเมนู --- */
+/* --- หัวข้อเมนู (ปรับเป็นสีดำตามคำขอ) --- */
 .orgStatsMenuTitle {
-  font-size: 14px;
+  font-size: 14px; /* ปรับขนาดให้อ่านง่ายขึ้นเล็กน้อย */
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-weight: 800;
-  color: #000000;
+  font-weight: 800; /* หนาพิเศษ */
+  color: #000000;   /* สีดำสนิท */
   margin: 0 0 16px 0;
   padding: 0 12px 12px 12px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #f0f0f0; /* เส้นคั่นหนาขึ้นนิดนึง */
 }
 
 .orgStatsMenuNav {
@@ -206,7 +206,7 @@
   text-align: right;
 }
 
-/* --- LEGEND --- */
+/* --- LEGEND (ส่วนสถานะด้านล่างแบบกลมมน) --- */
 .mockStackedBarLegend {
   display: flex;
   flex-wrap: wrap;
@@ -225,7 +225,7 @@
   color: #444;
   font-weight: 600;
   padding: 8px 16px;
-  border-radius: 50px;
+  border-radius: 50px; /* กลมมน */
   box-shadow: 0 2px 5px rgba(0,0,0,0.03);
   transition: transform 0.2s;
 }
