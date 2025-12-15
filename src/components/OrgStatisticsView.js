@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import styles from "./css/OrgStatisticsVieร้อมw.module.css";
+import styles from "./css/OrgStatisticsView.module.css";
 import {
   FaChartBar,
   FaStar,
