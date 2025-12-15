@@ -1,191 +1,44 @@
-/* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* THEME: MONOCHROME UI + COLORFUL DATA + FIXED MENU LAYOUT */
+/* --- css/OrganizationStatisticsView.module.css --- */
 
 /* =========================================
-   1. SHARED COMPONENTS & CARDS
+   1. GLOBAL CONTAINER & LAYOUT
    ========================================= */
-
-.chartBox {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 24px 28px;
-  /* เงาสีดำจางๆ (ไม่มีสีอื่นเจือปน) */
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  flex-grow: 1;
-  position: relative;
-  overflow: hidden;
-}
-
-.chartBox:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.chartBoxTitle {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111; /* ดำเกือบสนิท */
-  margin: 0 0 20px 0;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* ขีดด้านหน้าหัวข้อเปลี่ยนเป็นสีดำ */
-.chartBoxTitle::before {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 20px;
-  background: #000; 
-  border-radius: 2px;
-}
-
-.chartNote {
-  font-size: 13px;
-  font-weight: 500;
-  color: #888; /* สีเทากลาง */
-  font-style: italic;
-  text-align: right;
-  margin-top: -24px;
-  margin-bottom: 12px;
-}
-
-/* Horizontal Bar Chart (กราฟยังคงมีสีสัน) */
-.mockHorizontalBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  padding: 10px 0;
-  flex-grow: 1;
-  justify-content: center;
-}
-
-.mockHBarItem {
-  display: grid;
-  grid-template-columns: 160px 1fr 60px;
-  gap: 16px;
-  align-items: center;
-}
-
-.mockHBarLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #444; /* เทาเข้ม */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-
-.mockHBar {
-  height: 12px;
-  background: #f2f2f2;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.mockHBarFill {
-  height: 100%;
-  /* Gradient สียังคงเดิมเพื่อให้ข้อมูลเด่น */
-  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-  border-radius: 10px;
-  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 2px 4px rgba(79, 172, 254, 0.3);
-}
-
-.mockHBarValue {
-  font-size: 16px;
-  font-weight: 800;
-  color: #000; /* ตัวเลขสีดำชัดๆ */
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* Satisfaction Breakdown Row */
-.satisfactionBreakdownRow {
-  display: grid;
-  grid-template-columns: 35px 1fr 60px;
-  align-items: center;
-  gap: 12px;
-}
-
-.satisfactionBreakdownLabel {
-  font-size: 14px;
-  font-weight: 700;
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.satisfactionBreakdownLabel svg { display: none; }
-
-.satisfactionBreakdownBar {
-  height: 8px;
-  background: #f2f2f2;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.satisfactionBreakdownBarFill {
-  height: 100%;
-  background: #ffc107; /* สีเหลืองทองคงเดิม */
-  border-radius: 4px;
-  transition: width 0.5s ease-out;
-}
-
-.satisfactionBreakdownPercent {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
-  text-align: right;
-}
-
-/* =========================================
-   2. ORG STATISTICS VIEW
-   ========================================= */
-
 .orgStatsContainer {
   display: flex;
   flex-direction: row;
   gap: 32px;
   width: 100%;
-  max-width: 1280px;
+  max-width: 1400px; /* ขยายความกว้างสูงสุดเพื่อให้ดูโปร่ง */
   align-items: flex-start;
-  min-height: 60vh;
-  padding: 0 20px;
+  min-height: 70vh;
+  padding: 20px;
+  font-family: 'Sarabun', sans-serif; /* แนะนำให้ใช้ font นี้ถ้ามี */
 }
 
-/* Sidebar (Desktop) - Clean B&W + FIXED WIDTH */
+/* =========================================
+   2. SIDEBAR (เมนูซ้าย)
+   ========================================= */
 .orgStatsSidebar {
   flex-shrink: 0;
-  /* ปรับความกว้างเป็น 300px เพื่อให้ภาษาไทยยาวๆ อยู่บรรทัดเดียว */
-  width: 300px; 
+  width: 300px; /* FIX: กว้าง 300px เพื่อให้ข้อความยาวๆ ไม่ตกบรรทัด */
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  /* Soft Shadow เงานุ่มๆ */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0,0,0,0.05);
   padding: 24px 16px;
-  max-height: 100%;
   position: sticky;
-  top: 20px;
+  top: 24px; /* ให้เมนูเลื่อนตามลงมา */
+  display: flex;
+  flex-direction: column;
 }
 
 .orgStatsMenuTitle {
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 800;
-  color: #999;
+  color: #a0a0a0;
   margin: 0 0 16px 0;
   padding: 0 12px 12px 12px;
   border-bottom: 1px solid #f0f0f0;
@@ -197,62 +50,66 @@
   gap: 8px;
 }
 
-/* ปุ่มเมนูสไตล์ Minimal B&W + Single Line Fix */
+/* ปุ่มเมนู (State ปกติ) */
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
-  gap: 12px; /* ลดช่องว่างนิดนึง */
+  gap: 16px;
   width: 100%;
-  padding: 14px 18px;
-  min-height: 52px; /* ล็อคความสูงขั้นต่ำให้เท่ากันทุกปุ่ม */
+  padding: 0 20px;
   
-  font-size: 15px;
+  /* FIX: ล็อคความสูงให้เท่ากันทุกปุ่ม */
+  height: 60px; 
+  min-height: 60px;
+  
+  font-size: 16px;
   font-weight: 600;
-  color: #666; /* สีเทากลาง */
+  color: #666;
   background: transparent;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   
-  /* บังคับไม่ให้ตัดบรรทัด */
+  /* FIX: บังคับข้อความให้อยู่บรรทัดเดียว */
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .orgStatsMenuButton svg {
-  font-size: 18px;
+  font-size: 20px;
   color: #999;
-  flex-shrink: 0; /* ไม่ให้ไอคอนโดนบีบ */
+  flex-shrink: 0;
   transition: color 0.2s ease;
 }
 
 .orgStatsMenuButton:hover {
   background-color: #f5f5f5;
   color: #000;
-  padding-left: 22px; /* ขยับนิดนึงตอน Hover */
-}
-.orgStatsMenuButton:hover svg {
-  color: #000;
+  transform: translateX(4px); /* ขยับขวานิดนึงตอนชี้ */
 }
 
-/* Active State: ถมดำ ตัวหนังสือขาว (Black theme) */
+/* ปุ่มเมนู (Active State: ดำ/ขาว) */
 .orgStatsMenuButton.active {
-  background-color: #000000;
+  background-color: #111111; /* ดำเกือบสนิท */
   color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transform: translateX(4px);
 }
 
 .orgStatsMenuButton.active svg {
   color: #ffffff;
 }
 
+/* =========================================
+   3. CONTENT AREA (เนื้อหาขวา)
+   ========================================= */
 .orgStatsContent {
   flex-grow: 1;
-  min-width: 0;
+  min-width: 0; /* ป้องกัน Flexbox ดันจนล้น */
 }
 
 .orgGraphDashboard {
@@ -260,36 +117,111 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  flex-grow: 1;
-  align-items: stretch;
 }
 
-/* Stacked Bar Chart */
+/* การ์ดครอบกราฟ (Chart Box) */
+.chartBox {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.chartBox:hover {
+  transform: translateY(-4px); /* ลอยขึ้นเล็กน้อย */
+}
+
+.chartBoxTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ขีด Signature หน้าหัวข้อ */
+.chartBoxTitle::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 24px;
+  background: #000;
+  border-radius: 3px;
+}
+
+.chartNote {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  font-style: italic;
+  text-align: right;
+  margin-top: -30px;
+  margin-bottom: 24px;
+}
+
+/* =========================================
+   4. STACKED BAR CHART (กราฟสถานะ)
+   ========================================= */
 .mockStackedBarChart {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   width: 100%;
-  padding: 10px 0;
+}
+
+.mockHBarItem {
+  display: grid;
+  grid-template-columns: 180px 1fr 50px; /* พื้นที่ชื่อหน่วยงาน | กราฟ | ตัวเลข */
+  gap: 20px;
+  align-items: center;
+}
+
+.mockHBarLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mockStackedHBar {
-  height: 32px;
-  background: #f0f0f0;
-  border-radius: 12px;
+  height: 36px;
+  background: #f1f3f5;
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   width: 100%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .mockStackedBarSegment {
   height: 100%;
-  transition: all 0.3s ease;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
   cursor: pointer;
-  border-right: 2px solid #fff;
 }
-.mockStackedBarSegment:last-child { border-right: none; }
-.mockStackedBarSegment:hover { filter: brightness(1.1); transform: scaleY(1.05); }
+.mockStackedBarSegment:hover {
+  filter: brightness(1.1);
+  z-index: 10;
+}
+
+.mockHBarValue {
+  font-size: 18px;
+  font-weight: 800;
+  color: #000;
+  text-align: right;
+}
 
 .mockStackedBarLegend {
   display: flex;
@@ -297,152 +229,31 @@
   justify-content: center;
   gap: 12px 24px;
   margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px dashed #ddd;
-  font-size: 13px;
-  color: #666;
+  padding-top: 24px;
+  border-top: 1px dashed #e0e0e0;
 }
 
 .mockStackedBarLegend span {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f5f5f5;
-  padding: 4px 12px;
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  background: #f9f9f9;
+  padding: 6px 14px;
   border-radius: 20px;
 }
 
 .mockStackedBarLegend span span {
-  width: 10px; height: 10px; border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 /* =========================================
-   3. REPORT CARD VIEW
+   5. REPORT CARD LIST (ความพึงพอใจ)
    ========================================= */
-
-.reportCardViewContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
-  width: 100%;
-  max-width: 1280px;
-  align-items: flex-start;
-  min-height: 70vh;
-}
-
-.reportCardSidebar {
-  flex-shrink: 0;
-  /* ปรับความกว้างให้เท่ากับ Sidebar หลัก */
-  width: 300px; 
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0,0,0,0.05);
-  padding: 24px 16px;
-}
-
-.reportCardSidebarTitle {
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-weight: 800;
-  color: #999;
-  margin: 0 0 16px 0;
-  padding: 0 12px 12px 12px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.reportCardMenuNav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* ใช้สไตล์เดียวกับเมนูหลัก (ขาวดำ) */
-.reportCardMenuButton {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  padding: 12px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #666;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-  
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.reportCardMenuButton:hover {
-  background-color: #f5f5f5;
-  color: #000;
-  padding-left: 22px;
-}
-.reportCardMenuButton.active {
-  background-color: #000;
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-.reportCardMenuButton svg { font-size: 16px; color: inherit; }
-
-.reportCardMainContent {
-  flex-grow: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.reportCardFilterBar {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  padding: 10px 0;
-}
-.reportCardFilterBar .filterGroup { flex-grow: 1; min-width: 150px; }
-.reportCardFilterBar select {
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  font-size: 14px;
-  color: #333;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-  transition: border-color 0.2s;
-}
-.reportCardFilterBar select:focus {
-  outline: none;
-  border-color: #000; /* Focus เป็นสีดำ */
-}
-
-/* ปุ่มค้นหาสีดำ */
-.searchButton {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-.searchButton:hover {
-  background-color: #333;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -451,271 +262,226 @@
 
 .reportCardItem {
   background: #ffffff;
-  border: 1px solid #f0f0f0;
-  border-radius: 20px;
+  border: 1px solid #eee;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
-  overflow: hidden;
 }
+
 .reportCardItem:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: #000;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
 }
 
 .reportCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 20px;
 }
 
 .reportCardTitleGroup {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
 }
 
-/* เลขลำดับเป็นสีดำ */
 .reportCardRank {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 900;
   color: #000;
-  padding-right: 16px;
-  border-right: 3px solid #f0f0f0;
-  line-height: 1;
+  min-width: 32px;
 }
 
-.reportCardTitle {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
 .reportCardName {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #222;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: color 0.2s;
+  color: #333;
 }
-.reportCardName svg { font-size: 16px; color: #999; }
-.reportCardName:hover { color: #000; } /* Hover เป็นดำสนิท */
-
-.reportCardDetailTags { display: none; }
 
 .reportCardScoreGroup {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
+  text-align: right;
 }
+
 .reportCardScoreText {
   font-size: 32px;
   font-weight: 800;
-  color: #ffc107; /* คะแนนยังคงสีเหลืองได้เพื่อให้เด่น */
-  text-shadow: none;
-}
-.reportCardScoreStars {
   color: #ffc107;
-  font-size: 18px;
-  display: flex;
-  gap: 2px;
+  line-height: 1;
+  display: block;
 }
+
+.reportCardScoreStars {
+  display: block;
+  margin: 4px 0;
+}
+
 .reportCardScoreReviews {
-  font-size: 13px;
+  font-size: 12px;
   color: #999;
-  font-weight: 500;
 }
 
+/* ส่วนขยาย Breakdown (เมื่อคลิก) */
 .reportCardExpandedContent {
-  padding-top: 20px;
-  border-top: 1px dashed #ddd;
   margin-top: 20px;
-  background-color: #fafafa; /* พื้นหลังสีเทาจางๆ */
-  margin: 20px -24px -24px -24px;
-  padding: 24px;
-  border-radius: 0 0 20px 20px;
+  padding-top: 20px;
+  border-top: 1px dashed #eee;
+  animation: slideDown 0.3s ease-out;
 }
 
-/* Satisfaction Breakdown */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Satisfaction Breakdown Inner Layout */
 .satisfactionCardBreakdown {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 200px 1fr;
   gap: 32px;
   align-items: center;
 }
 
 .satisfactionCardHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 12px;
+  text-align: center;
   border-right: 1px solid #f0f0f0;
   padding-right: 32px;
-  height: 100%;
 }
 
 .satisfactionCardScore {
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 800;
-  color: #ffc107; /* Highlight สีเหลือง */
-  line-height: 1;
-  letter-spacing: -2px;
-}
-
-.satisfactionCardStarGroup {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.satisfactionCardStar {
   color: #ffc107;
-  font-size: 24px;
-}
-.satisfactionCardTotal {
-  font-size: 14px;
-  color: #777;
-  font-weight: 500;
-  margin-left: 8px;
+  line-height: 1;
 }
 
 .satisfactionCardRows {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+}
+
+.satisfactionBreakdownRow {
+  display: grid;
+  grid-template-columns: 30px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.satisfactionBreakdownLabel {
+  font-weight: 700;
+  color: #666;
+  text-align: right;
+}
+
+.satisfactionBreakdownBar {
+  height: 8px;
+  background: #f1f1f1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.satisfactionBreakdownBarFill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.satisfactionBreakdownPercent {
+  font-size: 13px;
+  color: #888;
+  text-align: right;
 }
 
 /* =========================================
-   4. MEDIA QUERIES (Mobile Optimized)
+   6. SIMPLE BAR CHART (เวลาเฉลี่ย)
    ========================================= */
-
-@media screen and (max-width: 1024px) {
-  .orgStatsContainer { padding: 0 16px; }
-  .reportCardViewContainer { flex-direction: column; padding: 0 16px; }
-  .reportCardSidebar { width: 100%; max-height: 40vh; position: static; }
-  .reportCardMenuNav { flex-direction: row; overflow-x: auto; padding-bottom: 8px; border-bottom: 1px solid #eee; }
-  .reportCardMenuButton { flex-shrink: 0; width: auto; white-space: nowrap; padding: 8px 12px; }
-  .reportCardMenuButton:hover { padding-left: 8px; }
+.mockHorizontalBarChart {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* --- MOBILE SPECIFIC FIXES --- */
-@media screen and (max-width: 768px) {
+.mockHBar {
+  height: 16px;
+  background: #f1f3f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mockHBarFill {
+  height: 100%;
+  /* Gradient สีเทา Metallic */
+  background: linear-gradient(90deg, #868e96 0%, #343a40 100%);
+  border-radius: 8px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* =========================================
+   7. RESPONSIVE (Mobile)
+   ========================================= */
+@media screen and (max-width: 900px) {
   .orgStatsContainer {
     flex-direction: column;
-    min-height: unset;
-    gap: 20px;
-    padding: 0 16px;
+    padding: 10px;
   }
 
-  /* 1. Sidebar Container: Reset Width for Mobile */
   .orgStatsSidebar {
-    width: 100%; /* กลับมาเต็มจอ */
-    max-height: none;
-    overflow: visible;
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    margin-bottom: 0;
-    position: static;
-  }
-  .orgStatsMenuTitle { display: none; }
-
-  /* 2. Menu Nav */
-  .orgStatsMenuNav {
-    display: flex;
-    flex-direction: row;
     width: 100%;
-    background-color: transparent; 
-    padding: 0;
-    gap: 10px; 
-    border-bottom: none;
+    position: static;
+    margin-bottom: 24px;
+    padding: 16px;
   }
 
-  /* 3. Mobile Buttons (Cards) */
+  /* ปุ่มเมนูแนวนอนในมือถือ */
+  .orgStatsMenuNav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 12px;
+  }
+
   .orgStatsMenuButton {
-    flex: 1 1 0px; 
-    width: 0;
-    display: flex;
+    flex: 0 0 auto; /* ไม่ยืด ไม่หด */
+    width: 110px;
+    height: auto;
+    min-height: 80px;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 12px 4px;
-    min-height: 70px;
-    
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 16px;
-    
-    font-size: 12px;
-    color: #444;
-    font-weight: 600;
-    line-height: 1.3;
-    white-space: normal; /* Mobile ยอมให้ตัดคำได้ */
-    
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    white-space: normal; /* ในมือถือยอมให้ตัดคำได้ */
+    border: 1px solid #eee;
+    background: #fff;
+    padding: 12px 8px;
   }
-  .orgStatsMenuButton:hover { padding-left: 12px; transform: none; }
   
   .orgStatsMenuButton svg {
     margin-bottom: 8px;
-    margin-right: 0;
-    font-size: 22px;
-    color: #888;
+    font-size: 24px;
   }
 
-  /* 4. Active State Mobile: ดำเข้ม */
-  .orgStatsMenuButton.active {
-    background-color: #111;
-    color: #fff;
-    border-color: #111;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    transform: translateY(-4px);
+  /* Layout ภายในกราฟสำหรับมือถือ */
+  .mockHBarItem {
+    grid-template-columns: 100px 1fr 40px;
+    gap: 10px;
   }
-  .orgStatsMenuButton.active svg { color: #fff; }
-
-  .orgStatsContent { padding: 0; }
-
-  /* Styles ส่วนอื่นๆ */
-  .reportCardFilterBar { flex-wrap: wrap; }
-  .reportCardFilterBar .filterGroup { width: calc(50% - 8px); min-width: unset; }
-  .searchButton { width: 100%; justify-content: center; }
   
-  .reportCardHeader { flex-direction: column; align-items: stretch; }
-  .reportCardScoreGroup { align-items: flex-start; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #eee; }
-  
-  .reportCardRank { font-size: 24px; border-right: none; padding-right: 0; }
-  .reportCardName { font-size: 18px; }
-  
-  .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 24px; }
-  .satisfactionCardHeader { 
-    border-right: none; 
-    border-bottom: 1px solid #f0f0f0; 
-    padding-right: 0; 
-    padding-bottom: 20px; 
-    align-items: center; 
-    flex-direction: row; 
-    justify-content: center; 
-    gap: 20px; 
+  .satisfactionCardBreakdown {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
-  .satisfactionCardScore { font-size: 56px; }
-}
-
-@media screen and (max-width: 480px) {
-  .mockHBarItem { grid-template-columns: 100px 1fr 50px; gap: 8px; }
-  .mockHBarLabel { font-size: 13px; }
-  .chartBox { padding: 20px; }
   
-  .satisfactionCardScore { font-size: 42px; }
-  .satisfactionCardStar { font-size: 20px; }
+  .satisfactionCardHeader {
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 20px;
+    padding-right: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
   
-  .orgStatsMenuButton { font-size: 11px; padding: 10px 2px; }
-  .orgStatsMenuButton svg { font-size: 20px; }
+  .satisfactionCardScore {
+    font-size: 48px;
+  }
 }
