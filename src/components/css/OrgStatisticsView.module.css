@@ -21,7 +21,7 @@
    ========================================= */
 .orgStatsSidebar {
   flex-shrink: 0;
-  width: 280px; /* FIX: กว้างพอให้ข้อความไม่ตกบรรทัด */
+  width: 280px; /* ความกว้างคงที่ */
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
@@ -55,7 +55,7 @@
   gap: 16px;
   width: 100%;
   padding: 0 20px;
-  height: 56px; /* FIX: สูงเท่ากันทุกปุ่ม */
+  height: 56px; /* สูงเท่ากันทุกปุ่ม */
   
   font-size: 15px;
   font-weight: 600;
@@ -67,7 +67,7 @@
   text-align: left;
   transition: all 0.2s ease;
   
-  /* FIX: บังคับข้อความบรรทัดเดียว */
+  /* บังคับข้อความบรรทัดเดียว */
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -110,123 +110,6 @@
   gap: 32px;
 }
 
-/* =========================================
-   4. STATUS SUMMARY CARDS (การ์ดสรุปยอดด้านบน)
-   ========================================= */
-.statusSummaryContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  width: 100%;
-}
-
-/* การ์ดใบใหญ่ (Total) สีดำ */
-.totalSummaryCard {
-  flex-shrink: 0;
-  width: 280px;
-  background-color: #0f172a; /* Dark Navy Black */
-  border-radius: 24px;
-  padding: 32px;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
-}
-
-.totalCardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  z-index: 2;
-}
-
-.totalLabel { font-size: 24px; font-weight: 700; }
-.totalPercent { font-size: 16px; opacity: 0.7; font-weight: 500;}
-
-.totalValue {
-  font-size: 96px; /* เลขใหญ่สะใจ */
-  font-weight: 800;
-  line-height: 1;
-  text-align: center;
-  margin: 20px 0;
-  z-index: 2;
-  letter-spacing: -4px;
-}
-
-/* Grid การ์ดเล็ก (3 คอลัมน์ x 2 แถว) */
-.statusGrid {
-  flex-grow: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.statusCard {
-  border-radius: 16px;
-  padding: 16px 20px;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 110px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  transition: transform 0.2s;
-}
-
-.statusCard:hover { transform: translateY(-4px); }
-
-.statusCardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-}
-
-.statusLabel { font-size: 14px; font-weight: 700; }
-.statusPercent { font-size: 12px; opacity: 0.9; }
-
-.statusValue {
-  font-size: 36px;
-  font-weight: 800;
-  text-align: right;
-  z-index: 2;
-  line-height: 1;
-  margin-top: 4px;
-}
-
-/* --- DECORATIVE CIRCLE (วงกลมลายน้ำ) --- */
-.decorativeCircle {
-  position: absolute;
-  bottom: -25px;
-  right: -25px;
-  
-  /* FIX: ใช้ px ที่แน่นอนเพื่อป้องกันการยืด */
-  width: 120px;
-  height: 120px;
-  border-radius: 50%; /* กลมดิ๊ก */
-  
-  background: rgba(255, 255, 255, 0.15);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* วงกลมของการ์ดใหญ่ให้ใหญ่ขึ้น */
-.totalSummaryCard .decorativeCircle {
-  width: 180px;
-  height: 180px;
-  bottom: -40px;
-  right: -40px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* =========================================
-   5. CHART DASHBOARD AREA
-   ========================================= */
 .orgGraphDashboard {
   display: flex;
   flex-direction: column;
@@ -275,7 +158,7 @@
 }
 
 /* =========================================
-   6. STACKED BAR CHART
+   4. STACKED BAR CHART & LEGEND
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -300,7 +183,7 @@
 .mockStackedHBar {
   height: 36px;
   background: #f1f3f5;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   width: 100%;
@@ -323,32 +206,52 @@
   text-align: right;
 }
 
+/* --- LEGEND (ส่วนสถานะด้านล่างแบบกลมมน) --- */
 .mockStackedBarLegend {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px 24px;
   margin-top: 24px;
-  padding-top: 20px;
+  padding-top: 24px;
   border-top: 1px dashed #eee;
 }
 
-.mockStackedBarLegend span {
+/* ดีไซน์ปุ่มสถานะแบบ Pill Shape (กลมมน) */
+.mockStackedBarLegendItem {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #555;
-  font-weight: 500;
-  background: #fcfcfc;
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid #eee;
+  font-size: 14px;
+  color: #444;
+  font-weight: 600;
+  
+  /* พื้นหลังจะถูกใส่สีจางๆ ผ่าน JS */
+  padding: 8px 16px;
+  
+  /* ทรงแคปซูล */
+  border-radius: 50px; 
+  
+  /* เงาเล็กน้อย */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  transition: transform 0.2s;
 }
-.mockStackedBarLegend span span { width: 10px; height: 10px; border-radius: 50%; }
+
+.mockStackedBarLegendItem:hover {
+  transform: translateY(-2px);
+}
+
+/* จุดสีวงกลมด้านใน */
+.legendDot {
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
 
 /* =========================================
-   7. REPORT CARDS (Satisfaction)
+   5. REPORT CARDS (Satisfaction)
    ========================================= */
 .reportCardList { display: flex; flex-direction: column; gap: 16px; }
 
@@ -388,7 +291,7 @@
 .satisfactionBreakdownPercent { font-size: 13px; color: #888; text-align: right; }
 
 /* =========================================
-   8. SIMPLE BAR CHART
+   6. SIMPLE BAR CHART
    ========================================= */
 .mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; }
 .mockHBar { height: 16px; background: #f1f3f5; border-radius: 8px; overflow: hidden; }
@@ -400,15 +303,8 @@
 }
 
 /* =========================================
-   9. MOBILE RESPONSIVE
+   7. MOBILE RESPONSIVE
    ========================================= */
-@media screen and (max-width: 1024px) {
-  .statusSummaryContainer { flex-direction: column; }
-  .totalSummaryCard { width: 100%; flex-direction: row; align-items: center; height: auto; padding: 24px 32px; }
-  .totalValue { font-size: 64px; margin: 0; }
-  .statusGrid { grid-template-columns: repeat(2, 1fr); }
-}
-
 @media screen and (max-width: 768px) {
   .orgStatsContainer { flex-direction: column; padding: 16px; }
   .orgStatsSidebar { width: 100%; position: static; margin-bottom: 24px; padding: 16px; }
@@ -416,7 +312,6 @@
   .orgStatsMenuButton { flex: 0 0 auto; width: 120px; height: auto; flex-direction: column; justify-content: center; text-align: center; white-space: normal; padding: 16px 8px; border: 1px solid #eee; background: #fff; }
   .orgStatsMenuButton svg { margin-bottom: 8px; }
   
-  .statusGrid { grid-template-columns: 1fr; }
   .mockHBarItem { grid-template-columns: 100px 1fr 40px; gap: 10px; }
   .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 24px; }
   .satisfactionCardHeader { border-right: none; border-bottom: 1px solid #eee; padding-bottom: 24px; padding-right: 0; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 16px; }
