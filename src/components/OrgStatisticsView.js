@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./css/OrgStatisticsView.module.css";
+import styles from "./css/OrgStatisticsView.module.css"; // ตรวจสอบ path ให้ถูกต้อง
 import {
   FaChartBar,
   FaStar,
@@ -9,28 +9,28 @@ import {
 } from "react-icons/fa";
 
 // ============================================================================
-// 1. SUB-COMPONENTS (ส่วนประกอบย่อย)
+// 1. SUB-COMPONENTS
 // ============================================================================
 
-// --- แสดงรายละเอียด Breakdown ดาว (ใช้ใน Card) ---
+// --- แสดงรายละเอียด Breakdown ดาว ---
 const CardSatisfactionBreakdown = ({ score, totalReviews, breakdownData }) => (
   <div className={styles.satisfactionCardBreakdown}>
     <div className={styles.satisfactionCardHeader}>
       <span className={styles.satisfactionCardScore}>{score}</span>
       <span className={styles.satisfactionCardStarGroup}>
         {[...Array(5)].map((_, i) => (
-          <FaStar key={i} className={styles.satisfactionCardStar} />
+          <FaStar key={i} className={styles.satisfactionCardStar} color="#ffc107" size={24} />
         ))}
-        <span className={styles.satisfactionCardTotal}>
-          ({totalReviews} ความเห็น)
-        </span>
       </span>
+      <div className={styles.satisfactionCardTotal} style={{marginTop: '8px', color: '#888'}}>
+          จาก {totalReviews} ความเห็น
+      </div>
     </div>
 
     <div className={styles.satisfactionCardRows}>
       {breakdownData.map((item) => (
         <div key={item.stars} className={styles.satisfactionBreakdownRow}>
-          <span className={styles.satisfactionBreakdownLabel}>
+          <span className={styles.satisfactionBreakdownLabel} style={{fontWeight:'bold', color:'#555'}}>
             {item.stars}
           </span>
           <div className={styles.satisfactionBreakdownBar}>
@@ -38,7 +38,7 @@ const CardSatisfactionBreakdown = ({ score, totalReviews, breakdownData }) => (
               className={styles.satisfactionBreakdownBarFill}
               style={{
                 width: `${item.percent}%`,
-                backgroundColor: item.percent > 0 ? "#ffc107" : "#f0f0f0",
+                backgroundColor: "#ffc107", // สีเหลืองทอง
               }}
             ></div>
           </div>
@@ -51,17 +51,12 @@ const CardSatisfactionBreakdown = ({ score, totalReviews, breakdownData }) => (
   </div>
 );
 
-// --- Card แต่ละใบ (ใช้แสดงความพึงพอใจ) ---
+// --- Card Item ---
 const ReportCardItem = ({ id, name, details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div
-      className={`${styles.reportCardItem} ${
-        isExpanded ? styles.expanded : ""
-      }`}
-    >
-      {/* ส่วนหัว Card */}
+    <div className={`${styles.reportCardItem} ${isExpanded ? styles.expanded : ""}`}>
       <div className={styles.reportCardHeader}>
         <div className={styles.reportCardTitleGroup}>
           <span className={styles.reportCardRank}>{id}</span>
@@ -72,18 +67,18 @@ const ReportCardItem = ({ id, name, details }) => {
               style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
             >
               {name}
-              {isExpanded ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
+              {isExpanded ? <FaChevronUp size={12} color="#999" /> : <FaChevronDown size={12} color="#999" />}
             </span>
           </div>
         </div>
 
-        <div className={styles.reportCardScoreGroup}>
+        <div className={styles.reportCardScoreGroup} style={{textAlign:'right'}}>
           <span className={styles.reportCardScoreText}>
             {typeof details.score === 'number' ? details.score.toFixed(2) : details.score}
           </span>
           <span className={styles.reportCardScoreStars}>
             {[...Array(5)].map((_, i) => (
-              <FaStar key={i} />
+              <FaStar key={i} color="#ffc107" />
             ))}
           </span>
           <span className={styles.reportCardScoreReviews}>
@@ -92,7 +87,6 @@ const ReportCardItem = ({ id, name, details }) => {
         </div>
       </div>
 
-      {/* ส่วนขยาย Breakdown */}
       {isExpanded && (
         <div className={styles.reportCardExpandedContent}>
           <CardSatisfactionBreakdown
@@ -106,14 +100,12 @@ const ReportCardItem = ({ id, name, details }) => {
   );
 };
 
-// --- List ของ Card (รับ data จาก API) ---
 const ReportCardViewSimplified = ({ data }) => {
   if (!data || data.length === 0) {
-    return <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>ไม่มีข้อมูลรีวิว</div>;
+    return <div style={{ padding: "40px", textAlign: "center", color: "#999" }}>ไม่มีข้อมูลรีวิว</div>;
   }
-
   return (
-    <div className={styles.reportCardList} style={{ padding: "10px 0" }}>
+    <div className={styles.reportCardList}>
       {data.map((item) => (
         <ReportCardItem
           key={item.id}
@@ -126,16 +118,25 @@ const ReportCardViewSimplified = ({ data }) => {
   );
 };
 
-// --- กราฟ Stacked Bar (รับ data จาก API และคำนวณ %) ---
+// --- กราฟ Stacked Bar (ปรับสีตามรูปที่ 4) ---
 const MockOrgStackedBarChart = ({ data }) => {
   if (!data || data.length === 0) {
-    return <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>ไม่มีข้อมูลกราฟ</div>;
+    return <div style={{ padding: "40px", textAlign: "center", color: "#999" }}>ไม่มีข้อมูลกราฟ</div>;
   }
 
-  // Helper คำนวณ % ความกว้าง (กันหารด้วย 0)
   const getWidth = (val, total) => {
     if (!total || total === 0) return 0;
     return (val / total) * 100;
+  };
+
+  // *** สีสถานะอิงตามรูปที่ 4 ***
+  const COLORS = {
+    pending: "#FF4D4F",    // แดง (รอรับเรื่อง)
+    inProgress: "#FFC107", // เหลือง (ดำเนินการ)
+    completed: "#4CAF50",  // เขียว (เสร็จสิ้น)
+    forwarded: "#2196F3",  // ฟ้า (ส่งต่อ)
+    invited: "#00BCD4",    // ฟ้าอมเขียว (เชิญร่วม)
+    rejected: "#6C757D"    // เทา (ปฏิเสธ)
   };
 
   return (
@@ -144,47 +145,45 @@ const MockOrgStackedBarChart = ({ data }) => {
         <div key={`${item.name}-${index}`} className={styles.mockHBarItem}>
           <span className={styles.mockHBarLabel}>{item.name}</span>
           <div className={styles.mockStackedHBar}>
-            {/* 1. รอรับเรื่อง (สีแดง) */}
+            {/* 1. รอรับเรื่อง (แดง) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.pending, item.total)}%`, background: "#dc3545" }}
+              style={{ width: `${getWidth(item.pending, item.total)}%`, background: COLORS.pending }}
               title={`รอรับเรื่อง: ${item.pending}`}
             ></div>
             
-            {/* (ตัด 'กำลังประสานงาน' ออกแล้ว) */}
-
-            {/* 2. กำลังดำเนินการ (สีเหลือง) */}
+            {/* 2. กำลังดำเนินการ (เหลือง) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.inProgress, item.total)}%`, background: "#ffc107" }}
+              style={{ width: `${getWidth(item.inProgress, item.total)}%`, background: COLORS.inProgress }}
               title={`กำลังดำเนินการ: ${item.inProgress}`}
             ></div>
 
-            {/* 3. เสร็จสิ้น (สีเขียวเข้ม) */}
+            {/* 3. เสร็จสิ้น (เขียว) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.completed, item.total)}%`, background: "#057A55" }}
+              style={{ width: `${getWidth(item.completed, item.total)}%`, background: COLORS.completed }}
               title={`เสร็จสิ้น: ${item.completed}`}
             ></div>
 
-            {/* 4. ส่งต่อ (สีน้ำเงิน) */}
+            {/* 4. ส่งต่อ (ฟ้า) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.forwarded, item.total)}%`, background: "#007bff" }}
+              style={{ width: `${getWidth(item.forwarded, item.total)}%`, background: COLORS.forwarded }}
               title={`ส่งต่อ: ${item.forwarded}`}
             ></div>
 
-            {/* 5. เชิญร่วม (สีเขียวมิ้นต์) */}
+            {/* 5. เชิญร่วม (ฟ้าอมเขียว/Cyan) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.invited, item.total)}%`, background: "#20c997" }}
+              style={{ width: `${getWidth(item.invited, item.total)}%`, background: COLORS.invited }}
               title={`เชิญร่วม: ${item.invited}`}
             ></div>
 
-            {/* 6. ปฏิเสธ (สีเทา) */}
+            {/* 6. ปฏิเสธ (เทา) */}
             <div
               className={styles.mockStackedBarSegment}
-              style={{ width: `${getWidth(item.rejected, item.total)}%`, background: "#6c757d" }}
+              style={{ width: `${getWidth(item.rejected, item.total)}%`, background: COLORS.rejected }}
               title={`ปฏิเสธ: ${item.rejected}`}
             ></div>
           </div>
@@ -192,39 +191,25 @@ const MockOrgStackedBarChart = ({ data }) => {
         </div>
       ))}
 
-      {/* Legend (ลบ 'กำลังประสานงาน' ออก) */}
+      {/* Legend แบบใหม่ สวยงาม */}
       <div className={styles.mockStackedBarLegend}>
-        <span>
-          <span style={{ background: "#dc3545" }}></span> รอรับเรื่อง
-        </span>
-        {/* ตัด กำลังประสานงาน ออก */}
-        <span>
-          <span style={{ background: "#ffc107" }}></span> กำลังดำเนินการ
-        </span>
-        <span>
-          <span style={{ background: "#057A55" }}></span> เสร็จสิ้น
-        </span>
-        <span>
-          <span style={{ background: "#007bff" }}></span> ส่งต่อ
-        </span>
-        <span>
-          <span style={{ background: "#20c997" }}></span> เชิญร่วม
-        </span>
-        <span>
-          <span style={{ background: "#6c757d" }}></span> ปฏิเสธ
-        </span>
+        <span><span style={{ background: COLORS.pending }}></span> รอรับเรื่อง</span>
+        <span><span style={{ background: COLORS.inProgress }}></span> ดำเนินการ</span>
+        <span><span style={{ background: COLORS.completed }}></span> เสร็จสิ้น</span>
+        <span><span style={{ background: COLORS.forwarded }}></span> ส่งต่อ</span>
+        <span><span style={{ background: COLORS.invited }}></span> เชิญร่วม</span>
+        <span><span style={{ background: COLORS.rejected }}></span> ปฏิเสธ</span>
       </div>
     </div>
   );
 };
 
 // --- กราฟแท่งธรรมดา (Simple Bar) ---
-const MockSimpleBarChart = ({ data, barColor, valueSuffix }) => {
+const MockSimpleBarChart = ({ data, valueSuffix }) => {
   if (!data || data.length === 0) {
-    return <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>ไม่มีข้อมูลกราฟ</div>;
+    return <div style={{ padding: "40px", textAlign: "center", color: "#999" }}>ไม่มีข้อมูลกราฟ</div>;
   }
-
-  const maxValue = Math.max(...data.map((d) => d.value)) || 1; // กันหาร 0
+  const maxValue = Math.max(...data.map((d) => d.value)) || 1; 
 
   return (
     <div className={styles.mockHorizontalBarChart}>
@@ -236,12 +221,12 @@ const MockSimpleBarChart = ({ data, barColor, valueSuffix }) => {
               className={styles.mockHBarFill}
               style={{
                 width: `${(item.value / maxValue) * 100}%`,
-                background: barColor,
+                // ใช้สีเทาไล่เฉด (Monochrome Theme)
+                background: "linear-gradient(90deg, #6c757d 0%, #495057 100%)"
               }}
-              title={`${item.value} ${valueSuffix}`}
             ></div>
           </div>
-          <span className={styles.mockHBarValue}>
+          <span className={styles.mockHBarValue} style={{fontSize: '16px'}}>
             {item.value.toFixed(1)} {valueSuffix}
           </span>
         </div>
@@ -251,13 +236,11 @@ const MockSimpleBarChart = ({ data, barColor, valueSuffix }) => {
 };
 
 // ============================================================================
-// 2. MAIN COMPONENT (หน้าจอหลัก)
+// 2. MAIN COMPONENT
 // ============================================================================
 
 const OrganizationStatisticsView = () => {
   const [activeOrgTab, setActiveOrgTab] = useState("ratio");
-  
-  // State สำหรับเก็บข้อมูลจริงจาก API
   const [statsData, setStatsData] = useState({
     stackedData: [],
     reportData: [],
@@ -265,28 +248,23 @@ const OrganizationStatisticsView = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  // เมนูด้านซ้าย
   const menuItems = [
     { id: "ratio", title: "จำนวนเรื่องแจ้ง", icon: <FaChartBar /> },
     { id: "satisfaction", title: "เปรียบเทียบความพึงพอใจ", icon: <FaStar /> },
     { id: "avg_time", title: "เปรียบเทียบเวลาเฉลี่ย", icon: <FaHourglassHalf /> },
   ];
 
-  // Fetch Data เมื่อ Component โหลด
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // *** หมายเหตุ: เปลี่ยน 74 เป็น ID ของ User ที่ login อยู่จริง หรือดึงจาก Context/LocalStorage ***
+        // ID องค์กร (เปลี่ยนตามการใช้งานจริง)
         const userOrgId = 74; 
-        
         const res = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${userOrgId}`);
         const data = await res.json();
         
         if (res.ok) {
           setStatsData(data);
-        } else {
-          console.error("Failed to fetch stats:", data);
         }
       } catch (error) {
         console.error("API Error:", error);
@@ -294,16 +272,14 @@ const OrganizationStatisticsView = () => {
         setLoading(false);
       }
     };
-
     fetchStats();
   }, []);
 
-  // ฟังก์ชันเลือกแสดงเนื้อหาตาม Tab
   const renderContent = () => {
     if (loading) {
       return (
-        <div className={styles.chartBox} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-          <span>กำลังโหลดข้อมูลสถิติ...</span>
+        <div className={styles.chartBox} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+          <span style={{color:'#888', fontWeight:'500'}}>กำลังโหลดข้อมูลสถิติ...</span>
         </div>
       );
     }
@@ -339,7 +315,6 @@ const OrganizationStatisticsView = () => {
           <div className={styles.chartNote}>(*ยิ่งน้อยยิ่งดี)</div>
           <MockSimpleBarChart
             data={statsData.avgTimeData}
-            barColor="#6c757d"
             valueSuffix="วัน"
           />
         </div>
@@ -369,7 +344,7 @@ const OrganizationStatisticsView = () => {
         </nav>
       </div>
 
-      {/* 2. พื้นที่แสดงเนื้อหาด้านขวา */}
+      {/* 2. เนื้อหาด้านขวา */}
       <div className={styles.orgStatsContent}>
         <div className={styles.orgGraphDashboard}>{renderContent()}</div>
       </div>
