@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./css/OrganizationStatisticsView.module.css"; // ตรวจสอบชื่อไฟล์ CSS ให้ตรงกับที่คุณเซฟ
+import styles from "./css/OrgStatisticsView.module.css"; // ตรวจสอบชื่อไฟล์ CSS ให้ตรงกับที่คุณเซฟ
 import {
   FaChartBar,
   FaStar,
