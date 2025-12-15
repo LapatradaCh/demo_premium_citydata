@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styles from './css/OrgStatisticsView.module.css'; // Import CSS Module
+import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ path ให้ตรง
 import { 
   BarChart2, Star, Clock, AlertCircle, 
-  CheckCircle, PieChart, Layers, Filter 
+  CheckCircle, PieChart, Layers 
 } from 'lucide-react';
 
 // ==========================================
@@ -11,7 +11,7 @@ import {
 const TARGET_SLA_DAYS = 3.0; 
 
 const COLORS = {
-  pending: "#FF4D4F",    // แดง (ตาม CSS เดิม)
+  pending: "#FF4D4F",    // แดง
   inProgress: "#FFC107", // เหลือง
   completed: "#4CAF50",  // เขียว
   forwarded: "#2196F3",  // ฟ้า
@@ -57,47 +57,34 @@ const WorkloadView = ({ data }) => {
     <div className={styles.chartBox}>
       <div className={styles.chartBoxTitle}>
         ปริมาณงานและการจัดการ (ภาพรวม)
-        {/* Sorting Controls (Inline style for simple layout) */}
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px', fontSize: '12px' }}>
+        <div className={styles.headerControls}>
              <button 
                onClick={() => setSortBy('total')}
-               style={{ 
-                 padding: '4px 12px', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer',
-                 background: sortBy === 'total' ? '#000' : '#fff', color: sortBy === 'total' ? '#fff' : '#666'
-               }}
+               className={`${styles.controlBtn} ${sortBy === 'total' ? styles.activeTotal : ''}`}
              >ทั้งหมด</button>
              <button 
                onClick={() => setSortBy('pending')}
-               style={{ 
-                  padding: '4px 12px', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer',
-                  background: sortBy === 'pending' ? '#FF4D4F' : '#fff', color: sortBy === 'pending' ? '#fff' : '#666'
-               }}
+               className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
              >งานค้าง</button>
         </div>
       </div>
 
-      {/* KPI Section (Inline styles used to match Mockup idea without altering CSS file) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
-        {/* Card 1 */}
-        <div style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', padding: '20px', borderRadius: '16px', color: '#fff' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.9, fontSize: '14px' }}>
-              <CheckCircle size={16} /> อัตราความสำเร็จ
-            </div>
-            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px' }}>{globalStats.successRate.toFixed(1)}%</div>
+      {/* KPI Section */}
+      <div className={styles.kpiGrid}>
+        <div className={`${styles.kpiCard} ${styles.kpiCardSuccess}`}>
+            <div className={styles.kpiHeader}><CheckCircle size={16} /> อัตราความสำเร็จ</div>
+            <div className={styles.kpiValue}>{globalStats.successRate.toFixed(1)}%</div>
+            <div className={styles.kpiSubtext}>จากเรื่องร้องเรียนทั้งหมด</div>
         </div>
-        {/* Card 2 */}
-        <div style={{ border: '1px solid #f0f0f0', padding: '20px', borderRadius: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#666', fontSize: '14px' }}>
-              <PieChart size={16} /> เรื่องทั้งหมด
-            </div>
-            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px', color: '#333' }}>{globalStats.total.toLocaleString()}</div>
+        <div className={`${styles.kpiCard} ${styles.kpiCardNormal}`}>
+            <div className={styles.kpiHeader}><PieChart size={16} /> เรื่องทั้งหมด</div>
+            <div className={styles.kpiValue}>{globalStats.total.toLocaleString()}</div>
+            <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
-        {/* Card 3 */}
-        <div style={{ border: '1px solid #FF4D4F', background: '#FFF5F5', padding: '20px', borderRadius: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FF4D4F', fontSize: '14px' }}>
-              <AlertCircle size={16} /> งานค้าง (Critical)
-            </div>
-            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px', color: '#FF4D4F' }}>{globalStats.pending.toLocaleString()}</div>
+        <div className={`${styles.kpiCard} ${styles.kpiCardCritical}`}>
+            <div className={styles.kpiHeader}><AlertCircle size={16} /> งานค้าง (Critical)</div>
+            <div className={styles.kpiValue}>{globalStats.pending.toLocaleString()}</div>
+            <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
       </div>
 
@@ -124,7 +111,6 @@ const WorkloadView = ({ data }) => {
             <span className={styles.mockHBarValue}>{item.total}</span>
           </div>
         ))}
-
         {/* Legend */}
         <div className={styles.mockStackedBarLegend}>
            {Object.keys(COLORS).map(key => (
@@ -145,38 +131,54 @@ const SatisfactionView = ({ data }) => {
   
   if(data.length === 0) return <div className={styles.chartBox}><div style={{textAlign:'center', padding:'40px', color:'#999'}}>ไม่มีข้อมูล</div></div>;
 
+  const bestOrg = sortedData[0];
+  const worstOrg = sortedData[sortedData.length - 1];
+
   return (
     <div className={styles.chartBox}>
-       <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจ</h4>
+       <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
+       {/* Highlight Cards */}
+       <div className={styles.satisfactionHighlightGrid}>
+          <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
+             <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
+             <div className={styles.highlightName}>{bestOrg?.name || '-'}</div>
+             <div className={styles.highlightScore}>
+                {bestOrg?.satisfaction.toFixed(1) || '0.0'} 
+                <span className={styles.highlightScoreMax}>/ 5.0</span>
+             </div>
+          </div>
+          <div className={`${styles.highlightCard} ${styles.highlightCardRed}`}>
+             <div className={styles.highlightTitle}>ต้องปรับปรุง</div>
+             <div className={styles.highlightName}>{worstOrg?.name || '-'}</div>
+             <div className={styles.highlightScore}>
+                {worstOrg?.satisfaction.toFixed(1) || '0.0'}
+                <span className={styles.highlightScoreMax}>/ 5.0</span>
+             </div>
+          </div>
+       </div>
+
+       {/* List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
                <div className={styles.reportCardHeader}>
                   <div className={styles.reportCardTitleGroup}>
                      <span className={styles.reportCardRank} style={{ color: index < 3 ? '#FFC107' : '#999' }}>#{index + 1}</span>
-                     <div>
-                        <div className={styles.reportCardName}>{item.name}</div>
-                     </div>
+                     <div><div className={styles.reportCardName}>{item.name}</div></div>
                   </div>
                   <div className={styles.reportCardScoreGroup}>
                      <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
                      <div className={styles.reportCardScoreStars}>
                         {[...Array(5)].map((_, i) => (
-                           <Star key={i} size={14} 
-                                 fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} 
-                                 stroke="none" 
-                                 style={{marginRight:2}} />
+                           <Star key={i} size={14} fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} stroke="none" style={{marginRight:2}} />
                         ))}
                      </div>
                      <div className={styles.reportCardScoreReviews}>({item.reviews} รีวิว)</div>
                   </div>
                </div>
-               
-               {/* Progress Bar (Visual Only) */}
-               <div style={{ marginTop: '16px', height: '6px', background: '#f5f5f5', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ 
-                      height: '100%', 
+               <div className={styles.reportCardProgressBg}>
+                  <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
                       background: item.satisfaction >= 4 ? '#4CAF50' : item.satisfaction >= 3 ? '#FFC107' : '#FF4D4F' 
                   }}></div>
@@ -196,31 +198,30 @@ const EfficiencyView = ({ data }) => {
 
   return (
     <div className={styles.chartBox}>
-       <h4 className={styles.chartBoxTitle}>
-          เวลาเฉลี่ยในการแก้ไขปัญหา (วัน)
-          <span style={{ fontSize:'12px', fontWeight:'normal', marginLeft:'auto', color:'#666' }}>
-            ค่าเฉลี่ยรวม: <b>{overallAvg.toFixed(1)} วัน</b>
-          </span>
-       </h4>
-       <div className={styles.chartNote}>(*ยิ่งน้อยยิ่งดี / เส้นประคือเป้าหมาย {TARGET_SLA_DAYS} วัน)</div>
+       <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
+       
+       {/* SLA Header Box */}
+       <div className={styles.slaHeaderBox}>
+          <div className={styles.slaTargetInfo}>
+             <div className={styles.slaTargetTitle}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
+             <div className={styles.slaTargetSub}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
+          </div>
+          <div className={styles.slaAvgInfo}>
+             <span className={styles.slaAvgLabel}>เวลาเฉลี่ยรวมทุกเขต</span>
+             <div className={styles.slaAvgValue}>
+                {overallAvg.toFixed(1)} <span className={styles.slaUnit}>วัน</span>
+             </div>
+          </div>
+       </div>
 
-       <div className={styles.mockHorizontalBarChart} style={{ position: 'relative' }}>
-          
-          {/* SLA Line Overlay */}
-          <div style={{ 
-            position: 'absolute', 
-            left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)`, // Adjust calculation roughly to fit grid
-            top: 0, bottom: 0, 
-            borderLeft: '2px dashed #FF4D4F', 
-            zIndex: 10,
-            opacity: 0.5,
-            pointerEvents: 'none'
-          }}>
-             <span style={{ position: 'absolute', top: '-25px', left: '-30px', background: '#FF4D4F', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px' }}>
-                Target {TARGET_SLA_DAYS} วัน
-             </span>
+       {/* Graph Container */}
+       <div className={styles.mockHorizontalBarChart} style={{ marginTop:'20px' }}>
+          {/* SLA Line */}
+          <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
+             <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
 
+          {/* Bars */}
           {sortedData.map((item, index) => {
              const isOver = item.avgTime > TARGET_SLA_DAYS;
              return (
@@ -231,7 +232,7 @@ const EfficiencyView = ({ data }) => {
                         className={styles.mockHBarFill} 
                         style={{ 
                            width: `${(item.avgTime / maxVal) * 100}%`,
-                           background: isOver ? 'linear-gradient(90deg, #FF4D4F 0%, #D32F2F 100%)' : 'linear-gradient(90deg, #4CAF50 0%, #2E7D32 100%)'
+                           background: isOver ? '#FF4D4F' : '#4CAF50'
                         }}
                      ></div>
                   </div>
@@ -249,8 +250,10 @@ const EfficiencyView = ({ data }) => {
 // --- TAB 4: PROBLEM TYPES (Donut) ---
 const ProblemTypeView = ({ data }) => {
   const total = data.reduce((acc, item) => acc + item.count, 0);
+  const topType = data.length > 0 ? data.reduce((prev, current) => (prev.count > current.count) ? prev : current) : { name: '-', count: 0 };
+  const topTypePercent = total > 0 ? (topType.count / total) * 100 : 0;
+
   let cumulativePercent = 0;
-  
   const donutData = data.map((item, index) => {
     const percent = total > 0 ? item.count / total : 0;
     const startPercent = cumulativePercent;
@@ -262,11 +265,28 @@ const ProblemTypeView = ({ data }) => {
 
   return (
     <div className={styles.chartBox}>
-       <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหา (ภาพรวม)</h4>
+       <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหาในพื้นที่</h4>
        
-       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
-          {/* SVG Donut */}
-          <div style={{ width: '260px', height: '260px', position: 'relative' }}>
+       {/* Header Summary */}
+       <div className={styles.donutHeaderBox}>
+          <div className={styles.donutTotalBlock}>
+             <span className={styles.donutTotalTitle}>เรื่องร้องเรียนทั้งหมด</span>
+             <div className={styles.donutTotalNum}>
+                {total.toLocaleString()} <span className={styles.donutTotalUnit}>เรื่อง</span>
+             </div>
+          </div>
+          <div className={styles.donutTopTypeBox}>
+             <div className={styles.donutTopLabel}>ประเภทที่พบมากที่สุด</div>
+             <div className={styles.donutTopBadge}>
+                <span style={{width:8, height:8, borderRadius:'50%', background:'#2563eb'}}></span>
+                {topType.name} ({topTypePercent.toFixed(0)}%)
+             </div>
+          </div>
+       </div>
+
+       {/* Chart & Legend */}
+       <div className={styles.donutContainer}>
+          <div className={styles.donutWrapper}>
              <svg viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
                 {donutData.map((item) => {
                    const [startX, startY] = getCoordinates(item.startPercent);
@@ -279,23 +299,22 @@ const ProblemTypeView = ({ data }) => {
                 })}
                 <circle cx="0" cy="0" r="0.65" fill="#fff" />
              </svg>
-             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                <span style={{ fontSize: '36px', fontWeight: '800', color: '#333' }}>{data.length}</span>
-                <span style={{ fontSize: '12px', color: '#999' }}>ประเภท</span>
+             <div className={styles.donutCenterText}>
+                <span className={styles.donutTotalValue}>{data.length}</span>
+                <span className={styles.donutLabel}>ประเภท</span>
              </div>
           </div>
 
-          {/* Legend Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px', width: '100%' }}>
+          <div className={styles.donutLegendGrid}>
              {donutData.map((item) => (
-                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f9f9f9', borderRadius: '8px' }}>
-                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: item.color }}></span>
-                      <span style={{ fontWeight: '600', color: '#555', fontSize: '14px' }}>{item.name}</span>
+                <div key={item.id} className={styles.donutLegendItem}>
+                   <div className={styles.donutLegendInfo}>
+                      <span className={styles.donutColorDot} style={{ background: item.color }}></span>
+                      <span className={styles.donutName}>{item.name}</span>
                    </div>
-                   <div style={{ textAlign: 'right' }}>
-                      <span style={{ fontWeight: '800', color: '#000' }}>{item.count}</span>
-                      <span style={{ marginLeft: '6px', color: '#999', fontSize: '12px' }}>({(item.percent * 100).toFixed(0)}%)</span>
+                   <div className={styles.donutValues}>
+                      <span className={styles.donutCount}>{item.count}</span>
+                      <span className={styles.donutPercent}>({(item.percent * 100).toFixed(0)}%)</span>
                    </div>
                 </div>
              ))}
@@ -306,7 +325,7 @@ const ProblemTypeView = ({ data }) => {
 };
 
 // ==========================================
-// 3. MAIN APP
+// 3. MAIN COMPONENT
 // ==========================================
 
 export default function OrganizationStatisticsView() {
@@ -329,7 +348,6 @@ export default function OrganizationStatisticsView() {
 
         if (orgRes.ok) {
           const rawOrg = await orgRes.json();
-          // Map to match format
           setOrgData(rawOrg.map(item => ({
              ...item,
              pending: item.pending || 0,
@@ -377,7 +395,6 @@ export default function OrganizationStatisticsView() {
 
   return (
     <div className={styles.orgStatsContainer}>
-      
       {/* Sidebar */}
       <div className={styles.orgStatsSidebar}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
