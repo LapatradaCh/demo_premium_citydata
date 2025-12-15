@@ -461,7 +461,7 @@ export default function OrganizationDashboard() {
         // Fetch Both APIs in parallel
         const [orgRes, probRes] = await Promise.all([
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${USER_ORG_ID}`),
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/problem-types?org_id=${USER_ORG_ID}`)
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-count-issue-type?org_id=${USER_ORG_ID}`)
         ]);
 
         if (!orgRes.ok || !probRes.ok) {
