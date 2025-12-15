@@ -37,7 +37,7 @@ html, body {
 
 .container {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: #ffffff; /* แก้ไข: เปลี่ยนจากสีเทาเป็นสีขาว */
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
@@ -237,7 +237,7 @@ html, body {
 
 /* Filters */
 .filterContainer {
-  background-color: #f8fafc;
+  background-color: #ffffff; /* แก้ไข: เปลี่ยนจากสีเทาเป็นสีขาว */
   padding: 4px;
   border-radius: 12px;
   display: flex;
@@ -283,7 +283,7 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 14px;           
+  padding: 6px 14px;            
   border-radius: 8px;          
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
