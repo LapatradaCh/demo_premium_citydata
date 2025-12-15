@@ -31,16 +31,15 @@
   top: 24px;
 }
 
-/* --- หัวข้อเมนู (ปรับเป็นสีดำตามคำขอ) --- */
 .orgStatsMenuTitle {
-  font-size: 14px; /* ปรับขนาดให้อ่านง่ายขึ้นเล็กน้อย */
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-weight: 800; /* หนาพิเศษ */
-  color: #000000;   /* สีดำสนิท */
+  font-weight: 800;
+  color: #000000;
   margin: 0 0 16px 0;
   padding: 0 12px 12px 12px;
-  border-bottom: 2px solid #f0f0f0; /* เส้นคั่นหนาขึ้นนิดนึง */
+  border-bottom: 2px solid #f0f0f0;
 }
 
 .orgStatsMenuNav {
@@ -49,7 +48,6 @@
   gap: 8px;
 }
 
-/* ปุ่มเมนู (State ปกติ) */
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
@@ -57,7 +55,6 @@
   width: 100%;
   padding: 0 20px;
   height: 56px;
-  
   font-size: 15px;
   font-weight: 600;
   color: #666;
@@ -67,7 +64,6 @@
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
-  
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -86,7 +82,6 @@
   transform: translateX(4px);
 }
 
-/* ปุ่มเมนู (Active State: ดำ/ขาว) */
 .orgStatsMenuButton.active {
   background-color: #111111;
   color: #ffffff;
@@ -137,6 +132,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap; /* รองรับ Mobile */
 }
 
 .chartBoxTitle::before {
@@ -206,7 +202,6 @@
   text-align: right;
 }
 
-/* --- LEGEND (ส่วนสถานะด้านล่างแบบกลมมน) --- */
 .mockStackedBarLegend {
   display: flex;
   flex-wrap: wrap;
@@ -225,7 +220,7 @@
   color: #444;
   font-weight: 600;
   padding: 8px 16px;
-  border-radius: 50px; /* กลมมน */
+  border-radius: 50px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.03);
   transition: transform 0.2s;
 }
@@ -243,7 +238,7 @@
 }
 
 /* =========================================
-   5. REPORT CARDS
+   5. REPORT CARDS (Satisfaction)
    ========================================= */
 .reportCardList { display: flex; flex-direction: column; gap: 16px; }
 
@@ -271,20 +266,24 @@
 }
 @keyframes slideDown { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
 
-.satisfactionCardBreakdown { display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center; }
-.satisfactionCardHeader { text-align: center; border-right: 1px solid #f0f0f0; padding-right: 32px; }
-.satisfactionCardScore { font-size: 56px; font-weight: 800; color: #ffc107; line-height: 1; }
-.satisfactionCardRows { display: flex; flex-direction: column; gap: 8px; }
-.satisfactionBreakdownRow { display: grid; grid-template-columns: 30px 1fr 40px; align-items: center; gap: 12px; }
-.satisfactionBreakdownLabel { font-weight: 700; color: #666; text-align: right; }
-.satisfactionBreakdownBar { height: 8px; background: #f1f1f1; border-radius: 4px; overflow: hidden; }
-.satisfactionBreakdownBarFill { height: 100%; border-radius: 4px; }
-.satisfactionBreakdownPercent { font-size: 13px; color: #888; text-align: right; }
+/* Progress Bar Visual (เพิ่มใหม่) */
+.reportCardProgressBg {
+  margin-top: 16px;
+  height: 6px;
+  background: #f5f5f5;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.reportCardProgressBar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
 
 /* =========================================
-   6. SIMPLE BAR CHART
+   6. SIMPLE BAR CHART (SLA / Efficiency)
    ========================================= */
-.mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; }
+.mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; position: relative; }
 .mockHBar { height: 16px; background: #f1f3f5; border-radius: 8px; overflow: hidden; }
 .mockHBarFill {
   height: 100%;
@@ -293,18 +292,185 @@
   transition: width 0.6s ease;
 }
 
+/* เพิ่ม: เส้น SLA Overlay */
+.slaLineContainer {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-left: 2px dashed #FF4D4F;
+  z-index: 10;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.slaLabel {
+  position: absolute;
+  top: -25px;
+  left: -30px;
+  background: #FF4D4F;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
 /* =========================================
-   7. MOBILE RESPONSIVE
+   [NEW] 7. KPI CARDS (สำหรับ Workload Tab)
+   ========================================= */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.kpiCard {
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.kpiCard:hover { transform: translateY(-2px); }
+
+/* Card Variant: Success */
+.kpiCardSuccess {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+.kpiCardSuccess .kpiIcon { opacity: 0.9; color: #fff; }
+.kpiCardSuccess .kpiValue { color: #fff; }
+.kpiCardSuccess .kpiLabel { color: rgba(255,255,255,0.9); }
+
+/* Card Variant: Normal */
+.kpiCardNormal {
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.kpiCardNormal .kpiIcon { color: #666; }
+.kpiCardNormal .kpiValue { color: #333; }
+.kpiCardNormal .kpiLabel { color: #666; }
+
+/* Card Variant: Critical */
+.kpiCardCritical {
+  background: #FFF5F5;
+  border: 1px solid #FF4D4F;
+}
+.kpiCardCritical .kpiIcon { color: #FF4D4F; }
+.kpiCardCritical .kpiValue { color: #FF4D4F; }
+.kpiCardCritical .kpiLabel { color: #FF4D4F; }
+
+/* KPI Inner Elements */
+.kpiHeader { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 8px; }
+.kpiValue { font-size: 32px; font-weight: 800; line-height: 1.2; }
+.kpiSubtext { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+
+/* =========================================
+   [NEW] 8. HEADER CONTROLS (ปุ่ม Filter)
+   ========================================= */
+.headerControls {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.controlBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background: #fff;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.controlBtn:hover { background: #f8f8f8; }
+
+.controlBtn.activeTotal { background: #000; color: #fff; border-color: #000; }
+.controlBtn.activeCritical { background: #FF4D4F; color: #fff; border-color: #FF4D4F; }
+
+/* =========================================
+   [NEW] 9. DONUT CHART LAYOUT
+   ========================================= */
+.donutContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.donutWrapper {
+  width: 260px;
+  height: 260px;
+  position: relative;
+}
+
+.donutCenterText {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.donutTotalValue { font-size: 36px; font-weight: 800; color: #333; }
+.donutLabel { font-size: 12px; color: #999; }
+
+.donutLegendGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.donutLegendItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.donutLegendItem:hover { background: #fff; border-color: #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+.donutLegendInfo { display: flex; align-items: center; gap: 10px; }
+.donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
+.donutName { font-weight: 600; color: #555; font-size: 14px; }
+
+.donutValues { text-align: right; }
+.donutCount { font-weight: 800; color: #000; font-size: 16px; }
+.donutPercent { margin-left: 6px; color: #999; font-size: 12px; }
+
+/* =========================================
+   10. MOBILE RESPONSIVE
    ========================================= */
 @media screen and (max-width: 768px) {
   .orgStatsContainer { flex-direction: column; padding: 16px; }
   .orgStatsSidebar { width: 100%; position: static; margin-bottom: 24px; padding: 16px; }
+  
   .orgStatsMenuNav { flex-direction: row; overflow-x: auto; gap: 12px; padding-bottom: 4px; }
   .orgStatsMenuButton { flex: 0 0 auto; width: 120px; height: auto; flex-direction: column; justify-content: center; text-align: center; white-space: normal; padding: 16px 8px; border: 1px solid #eee; background: #fff; }
   .orgStatsMenuButton svg { margin-bottom: 8px; }
   
+  /* Responsive Adjustments */
+  .chartBoxTitle { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .headerControls { margin-left: 0; width: 100%; }
+  .controlBtn { flex: 1; text-align: center; }
+
   .mockHBarItem { grid-template-columns: 100px 1fr 40px; gap: 10px; }
+  
   .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 24px; }
   .satisfactionCardHeader { border-right: none; border-bottom: 1px solid #eee; padding-bottom: 24px; padding-right: 0; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 16px; }
   .satisfactionCardScore { font-size: 48px; }
+  
+  .donutContainer { gap: 24px; }
+  .donutWrapper { width: 200px; height: 200px; }
+  .donutLegendGrid { grid-template-columns: 1fr; }
 }
