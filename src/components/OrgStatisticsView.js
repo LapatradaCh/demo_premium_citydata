@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
-import styles from "./css/OrgStatisticsView.module.css";
+import React, { useState, useEffect } from "react";
+import styles from "./css/OrganizationStatisticsView.module.css";
 import {
   FaChartBar,
   FaStar,
@@ -9,17 +9,17 @@ import {
 } from "react-icons/fa";
 
 // ============================================================================
-// 1. CONFIGURATION & UTILS
+// 1. CONFIGURATION
 // ============================================================================
 
-// สีสถานะตามรูปที่ 4 และ 5
+// สีสถานะตามรูปที่ 4
 const STATUS_COLORS = {
-  pending: "#FF4D4F",    // แดง (รอรับเรื่อง)
-  inProgress: "#FFC107", // เหลือง (ดำเนินการ)
-  completed: "#4CAF50",  // เขียว (เสร็จสิ้น)
-  forwarded: "#2196F3",  // ฟ้า (ส่งต่อ)
-  invited: "#00BCD4",    // ฟ้าอมเขียว (เชิญร่วม)
-  rejected: "#6C757D"    // เทา (ปฏิเสธ)
+  pending: "#FF4D4F",    // แดง
+  inProgress: "#FFC107", // เหลือง
+  completed: "#4CAF50",  // เขียว
+  forwarded: "#2196F3",  // ฟ้า
+  invited: "#00BCD4",    // ฟ้าอมเขียว (Cyan)
+  rejected: "#6C757D"    // เทา
 };
 
 const STATUS_LABELS = {
@@ -34,62 +34,6 @@ const STATUS_LABELS = {
 // ============================================================================
 // 2. SUB-COMPONENTS
 // ============================================================================
-
-// --- STATUS SUMMARY SECTION (ส่วนสรุปยอดด้านบน) ---
-const StatusSummarySection = ({ data }) => {
-  // ค่า Default ป้องกัน Error
-  const stats = data || { total: 0, pending: 0, inProgress: 0, completed: 0, forwarded: 0, invited: 0, rejected: 0 };
-  
-  // เรียงลำดับการ์ดตามรูปที่ 5
-  const CARDS = [
-    { key: "pending", color: STATUS_COLORS.pending },
-    { key: "inProgress", color: STATUS_COLORS.inProgress },
-    { key: "completed", color: STATUS_COLORS.completed },
-    { key: "forwarded", color: STATUS_COLORS.forwarded },
-    { key: "invited", color: STATUS_COLORS.invited },
-    { key: "rejected", color: STATUS_COLORS.rejected },
-  ];
-
-  const getPercent = (val) => {
-    if(stats.total === 0) return "0%";
-    return `${Math.round((val / stats.total) * 100)}%`;
-  };
-
-  return (
-    <div className={styles.statusSummaryContainer}>
-      {/* การ์ดใหญ่ (Total) */}
-      <div className={styles.totalSummaryCard}>
-        <div className={styles.totalCardHeader}>
-          <span className={styles.totalLabel}>ทั้งหมด</span>
-          <span className={styles.totalPercent}>100%</span>
-        </div>
-        <div className={styles.totalValue}>{stats.total}</div>
-        <div className={styles.decorativeCircle}></div>
-      </div>
-
-      {/* Grid การ์ดเล็ก */}
-      <div className={styles.statusGrid}>
-        {CARDS.map((card) => {
-          const value = stats[card.key] || 0;
-          return (
-            <div 
-              key={card.key} 
-              className={styles.statusCard}
-              style={{ backgroundColor: card.color }}
-            >
-              <div className={styles.statusCardHeader}>
-                <span className={styles.statusLabel}>{STATUS_LABELS[card.key]}</span>
-                <span className={styles.statusPercent}>{getPercent(value)}</span>
-              </div>
-              <div className={styles.statusValue}>{value}</div>
-              <div className={styles.decorativeCircle}></div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 // --- CHART COMPONENTS ---
 const MockOrgStackedBarChart = ({ data }) => {
@@ -116,11 +60,22 @@ const MockOrgStackedBarChart = ({ data }) => {
         </div>
       ))}
 
+      {/* --- LEGEND แบบกลมมน (Pill) พร้อมพื้นหลังจางๆ --- */}
       <div className={styles.mockStackedBarLegend}>
         {Object.keys(STATUS_COLORS).map(key => (
-          <span key={key}>
-            <span style={{ background: STATUS_COLORS[key] }}></span> {STATUS_LABELS[key]}
-          </span>
+          <div 
+            key={key} 
+            className={styles.mockStackedBarLegendItem}
+            // ใส่สีพื้นหลังจางๆ (Opacity 10%)
+            style={{ backgroundColor: `${STATUS_COLORS[key]}15` }}
+          >
+            {/* จุดสีวงกลม */}
+            <span 
+              className={styles.legendDot} 
+              style={{ background: STATUS_COLORS[key] }}
+            ></span> 
+            {STATUS_LABELS[key]}
+          </div>
         ))}
       </div>
     </div>
@@ -210,20 +165,6 @@ const OrganizationStatisticsView = () => {
   const [statsData, setStatsData] = useState({ stackedData: [], reportData: [], avgTimeData: [] });
   const [loading, setLoading] = useState(true);
 
-  // คำนวณยอดรวม (Summary) จากข้อมูล Stacked Data ที่ได้จาก API
-  const summaryData = useMemo(() => {
-    if (!statsData.stackedData || statsData.stackedData.length === 0) return null;
-    return statsData.stackedData.reduce((acc, curr) => ({
-      total: acc.total + curr.total,
-      pending: acc.pending + curr.pending,
-      inProgress: acc.inProgress + curr.inProgress,
-      completed: acc.completed + curr.completed,
-      forwarded: acc.forwarded + curr.forwarded,
-      invited: acc.invited + curr.invited,
-      rejected: acc.rejected + curr.rejected,
-    }), { total: 0, pending: 0, inProgress: 0, completed: 0, forwarded: 0, invited: 0, rejected: 0 });
-  }, [statsData.stackedData]);
-
   const menuItems = [
     { id: "ratio", title: "จำนวนเรื่องแจ้ง", icon: <FaChartBar /> },
     { id: "satisfaction", title: "เปรียบเทียบความพึงพอใจ", icon: <FaStar /> },
@@ -234,7 +175,7 @@ const OrganizationStatisticsView = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // *** หมายเหตุ: เปลี่ยน 74 เป็น Dynamic Org ID ของ User ***
+        // *** อย่าลืมเปลี่ยน ID ตามการใช้งานจริง ***
         const userOrgId = 74; 
         const res = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${userOrgId}`);
         const data = await res.json();
@@ -300,9 +241,7 @@ const OrganizationStatisticsView = () => {
       </div>
 
       <div className={styles.orgStatsContent}>
-        {/* แสดง Summary Cards เฉพาะเมื่อโหลดเสร็จและมีข้อมูล */}
-        {!loading && summaryData && <StatusSummarySection data={summaryData} />}
-        
+        {/* ไม่มีส่วน Summary ด้านบนแล้ว */}
         <div className={styles.orgGraphDashboard}>
           {renderContent()}
         </div>
