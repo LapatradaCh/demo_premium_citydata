@@ -293,7 +293,7 @@ const AgencySettings = () => {
                     <div className={styles.agencyDataRow}>
                         <span>ที่อยู่:</span> 
                         <span>
-                            ต.{formData.subDistrict} อ.{formData.district} จ.{formData.province}
+                            {formData.subDistrict} {formData.district} {formData.province}
                         </span>
                     </div>
                       
