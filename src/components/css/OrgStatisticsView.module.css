@@ -1,7 +1,7 @@
 /* --- css/OrgStatisticsView.module.css --- */
 
 /* =========================================
-   1. GLOBAL LAYOUT
+   1. GLOBAL & LAYOUT
    ========================================= */
 .orgStatsContainer {
   display: flex;
@@ -17,7 +17,7 @@
 }
 
 /* =========================================
-   2. SIDEBAR (เมนูซ้าย) - แก้ไขการจัดเรียง
+   2. SIDEBAR (เมนูซ้าย)
    ========================================= */
 .orgStatsSidebar {
   flex-shrink: 0;
@@ -51,7 +51,7 @@
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* จัดชิดซ้ายเสมอ */
+  justify-content: flex-start;
   gap: 16px;
   width: 100%;
   padding: 0 20px;
@@ -65,26 +65,25 @@
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .orgStatsMenuButton svg {
   font-size: 20px;
-  width: 24px; /* ล็อคความกว้างไอคอน */
+  width: 24px; 
   display: flex;
   justify-content: center;
   align-items: center;
   color: #999;
   flex-shrink: 0;
-  transition: color 0.2s ease;
 }
 
 .orgStatsMenuButton:hover {
   background-color: #f8f9fa;
   color: #000;
-  transform: none; /* ไม่ขยับ */
+  transform: none;
 }
 
 .orgStatsMenuButton.active {
@@ -92,12 +91,9 @@
   color: #ffffff;
   font-weight: 700;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transform: none; /* ไม่ขยับ */
+  transform: none;
 }
-
-.orgStatsMenuButton.active svg {
-  color: #ffffff;
-}
+.orgStatsMenuButton.active svg { color: #ffffff; }
 
 /* =========================================
    3. CONTENT AREA
@@ -109,14 +105,12 @@
   flex-direction: column;
   gap: 32px;
 }
-
 .orgGraphDashboard {
   display: flex;
   flex-direction: column;
   gap: 24px;
   width: 100%;
 }
-
 .chartBox {
   background: #ffffff;
   border-radius: 24px;
@@ -126,7 +120,6 @@
   display: flex;
   flex-direction: column;
 }
-
 .chartBoxTitle {
   font-size: 20px;
   font-weight: 800;
@@ -139,7 +132,6 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .chartBoxTitle::before {
   content: '';
   display: block;
@@ -148,7 +140,6 @@
   background: #000;
   border-radius: 3px;
 }
-
 .chartNote {
   font-size: 13px;
   color: #999;
@@ -159,7 +150,7 @@
 }
 
 /* =========================================
-   4. KPI CARDS (Tab 1) - แก้ไขสีตามสั่ง
+   4. KPI CARDS (Tab 1)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -174,54 +165,44 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: transform 0.2s ease;
-  border: none; /* เอาขอบเดิมออก */
+  border: none;
 }
 
-/* 1. อัตราความสำเร็จ: เขียวล้วน */
+/* 1. อัตราความสำเร็จ: เขียวล้วน ตัวหนังสือขาว */
 .kpiCardSuccess {
-  background: #4CAF50;
-  color: #fff;
+  background: #4CAF50 !important;
+  color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
-/* 2. เรื่องทั้งหมด: ดำล้วน */
+/* 2. เรื่องทั้งหมด: ดำล้วน ตัวหนังสือขาว */
 .kpiCardNormal {
-  background: #000000;
-  color: #fff;
+  background: #000000 !important;
+  color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* 3. งานค้าง (Critical): แดงล้วน */
+/* 3. งานค้าง (Critical): แดงล้วน ตัวหนังสือขาว */
 .kpiCardCritical {
-  background: #FF4D4F;
-  color: #fff;
+  background: #FF4D4F !important;
+  color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
 }
 
-.kpiHeader { 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  font-size: 14px; 
-  margin-bottom: 8px; 
-  color: rgba(255,255,255, 0.9); /* ปรับสี text header ให้อ่อนลงนิดนึงบนพื้นเข้ม */
+/* บังคับสีข้อความด้านในให้เป็นขาว */
+.kpiCardSuccess .kpiHeader, .kpiCardSuccess .kpiValue, .kpiCardSuccess .kpiSubtext,
+.kpiCardNormal .kpiHeader, .kpiCardNormal .kpiValue, .kpiCardNormal .kpiSubtext,
+.kpiCardCritical .kpiHeader, .kpiCardCritical .kpiValue, .kpiCardCritical .kpiSubtext {
+  color: #ffffff !important;
+  opacity: 1 !important;
 }
 
-.kpiValue { 
-  font-size: 32px; 
-  font-weight: 800; 
-  line-height: 1.2;
-  color: #ffffff; 
-}
 
-.kpiSubtext { 
-  font-size: 12px; 
-  margin-top: 4px;
-  color: rgba(255,255,255, 0.8); /* ปรับสี subtext */
-}
+.kpiHeader { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 8px; }
+.kpiValue { font-size: 32px; font-weight: 800; line-height: 1.2; }
+.kpiSubtext { font-size: 12px; margin-top: 4px; }
 
-/* Filter Buttons - แก้ไม่ให้ตัดบรรทัด */
+/* ปุ่ม Filter */
 .headerControls { margin-left: auto; display: flex; gap: 8px; font-size: 13px; }
 .controlBtn { 
   padding: 6px 16px; 
@@ -232,20 +213,19 @@
   color: #666; 
   font-weight: 600; 
   transition: all 0.2s;
-  white-space: nowrap; /* บังคับบรรทัดเดียว */
+  white-space: nowrap;
 }
 .controlBtn:hover { background: #f8f8f8; }
 .controlBtn.activeTotal { background: #000; color: #fff; border-color: #000; }
 .controlBtn.activeCritical { background: #FF4D4F; color: #fff; border-color: #FF4D4F; }
 
 /* =========================================
-   5. STACKED BAR CHART & SLA BARS - ปรับสี
+   5. STACKED BAR CHART
    ========================================= */
 .mockStackedBarChart { display: flex; flex-direction: column; gap: 24px; }
 .mockHBarItem { display: grid; grid-template-columns: 180px 1fr 50px; gap: 20px; align-items: center; }
 .mockHBarLabel { font-size: 15px; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* พื้นหลังรางเลื่อน */
 .mockStackedHBar { 
   height: 36px; 
   background: #f1f3f5; 
@@ -256,42 +236,52 @@
   border: 2px solid #fff; 
   box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
 }
-
-/* Segment สีต่างๆ (ใช้ class นี้ใน html ของคุณเพื่อคุมสี) */
 .mockStackedBarSegment { height: 100%; position: relative; cursor: pointer; transition: width 0.5s ease; }
 .mockStackedBarSegment:hover { filter: brightness(1.1); z-index: 5; }
 
-/* Utility Classes สำหรับสี (ใช้กับกราฟแท่งทั้งหมด) */
-.fillGreen { background-color: #4CAF50; }
-.fillYellow { background-color: #FFC107; }
-.fillRed { background-color: #FF4D4F; }
-.fillBlue { background-color: #2196F3; }
-.fillDark { background-color: #333; }
+/* Utility Classes สำหรับสี Bar (ให้ตรงกับ KPI) */
+.fillGreen, .bg-success { background-color: #4CAF50 !important; }
+.fillRed, .bg-critical { background-color: #FF4D4F !important; }
+.fillYellow { background-color: #FFC107 !important; }
+.fillBlue { background-color: #2196F3 !important; }
+.fillDark { background-color: #333 !important; }
 
 .mockHBarValue { font-size: 18px; font-weight: 800; color: #000; text-align: right; }
-
 .mockStackedBarLegend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin-top: 24px; padding-top: 24px; border-top: 1px dashed #eee; }
 .mockStackedBarLegendItem { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #444; font-weight: 600; padding: 8px 16px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: transform 0.2s; }
 .mockStackedBarLegendItem:hover { transform: translateY(-2px); }
 .legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
 /* =========================================
-   6. SATISFACTION (Tab 2) - ปรับดีไซน์ Premium
+   6. SATISFACTION (Tab 2) - แก้ไขสี Highlights
    ========================================= */
 .satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.highlightCard { padding: 16px; border-radius: 12px; border: 1px solid transparent; display: flex; flex-direction: column; }
-.highlightCardGreen { background-color: #ecfdf5; border-color: #d1fae5; color: #065f46; }
-.highlightCardGreen .highlightName { color: #059669; }
-.highlightCardGreen .highlightScore { color: #10b981; }
-.highlightCardRed { background-color: #fef2f2; border-color: #fee2e2; color: #991b1b; }
-.highlightCardRed .highlightName { color: #dc2626; }
-.highlightCardRed .highlightScore { color: #ef4444; }
-.highlightTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; opacity: 0.9; }
+.highlightCard { padding: 16px; border-radius: 12px; border: none; display: flex; flex-direction: column; }
+
+/* Highlight เขียว: พื้นเข้ม ตัวหนังสือขาว */
+.highlightCardGreen { 
+  background-color: #4CAF50 !important; 
+  color: #ffffff !important;
+}
+/* Highlight แดง: พื้นเข้ม ตัวหนังสือขาว */
+.highlightCardRed { 
+  background-color: #FF4D4F !important; 
+  color: #ffffff !important;
+}
+
+/* บังคับสีข้อความด้านใน Highlight ให้เป็นขาว */
+.highlightCardGreen .highlightTitle, .highlightCardGreen .highlightName, .highlightCardGreen .highlightScore, .highlightCardGreen .highlightScoreMax,
+.highlightCardRed .highlightTitle, .highlightCardRed .highlightName, .highlightCardRed .highlightScore, .highlightCardRed .highlightScoreMax {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.highlightTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .highlightName { font-size: 20px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .highlightScore { font-size: 36px; font-weight: 800; line-height: 1; }
-.highlightScoreMax { font-size: 14px; font-weight: 500; opacity: 0.7; }
+.highlightScoreMax { font-size: 14px; font-weight: 500; }
 
-/* Report List Items (อันดับ) */
+/* รายการอันดับ */
 .reportCardList { display: flex; flex-direction: column; gap: 16px; }
 .reportCardItem { 
   background: #fff; 
@@ -299,32 +289,31 @@
   border-radius: 16px; 
   padding: 24px; 
   transition: all 0.3s; 
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02); /* เพิ่มเงา */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 .reportCardItem:hover { border-color: #000; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
 
 .reportCardHeader { display: flex; justify-content: space-between; align-items: flex-start; }
 .reportCardTitleGroup { display: flex; align-items: center; gap: 16px; }
 
-/* ปรับ Rank Badge */
+/* Badge อันดับ */
 .reportCardRank { 
   font-size: 18px; 
   font-weight: 900; 
   color: #fff; 
-  background: #333; /* Default badge color */
-  min-width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  background: #333;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  margin-right: 8px;
 }
-
-/* เพิ่ม class ใน code: .rank1, .rank2, .rank3 เพื่อสีที่ต่างกัน */
-.reportCardRank.rank1 { background: #FFC107; box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4); } /* ทอง */
-.reportCardRank.rank2 { background: #9E9E9E; } /* เงิน */
-.reportCardRank.rank3 { background: #A1887F; } /* ทองแดง */
+.reportCardRank.rank1 { background: #FFC107; }
+.reportCardRank.rank2 { background: #9E9E9E; }
+.reportCardRank.rank3 { background: #A1887F; }
 
 .reportCardName { font-size: 18px; font-weight: 700; color: #333; }
 .reportCardScoreGroup { text-align: right; }
@@ -332,23 +321,23 @@
 .reportCardScoreStars { margin: 4px 0; }
 .reportCardScoreReviews { font-size: 12px; color: #999; }
 
-/* ปรับ Progress Bar ให้หนาขึ้น */
+/* Progress Bar หนา */
 .reportCardProgressBg { 
   margin-top: 16px; 
-  height: 10px; /* หนาขึ้น */
+  height: 12px; 
   background: #f1f3f5; 
-  border-radius: 5px; 
+  border-radius: 6px; 
   overflow: hidden; 
 }
 .reportCardProgressBar { 
   height: 100%; 
-  border-radius: 5px; 
+  border-radius: 6px; 
   transition: width 0.5s ease; 
-  /* สีบาร์จะถูกกำหนดผ่าน inline style หรือ utility classes (.fillGreen, .fillRed) */
+  /* สีจะถูกคุมโดย utility class เช่น .bg-success */
 }
 
 /* =========================================
-   7. EFFICIENCY / SLA (Tab 3)
+   7. SLA (Tab 3)
    ========================================= */
 .slaHeaderBox { background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 16px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
 .slaTargetInfo { display: flex; flex-direction: column; gap: 4px; }
@@ -363,8 +352,12 @@
 .mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; position: relative; }
 .mockHBar { height: 16px; background: #f1f3f5; border-radius: 8px; overflow: hidden; }
 
-/* ใช้ utility class .fillGreen / .fillRed แทน */
-.mockHBarFill { height: 100%; border-radius: 8px; transition: width 0.6s ease; }
+.mockHBarFill { 
+  height: 100%; 
+  border-radius: 8px; 
+  transition: width 0.6s ease;
+  /* สีจะถูกคุมโดย utility class เช่น .bg-success, .bg-critical */
+}
 
 .slaLineContainer { position: absolute; top: 0; bottom: 0; border-left: 2px dashed #FF4D4F; z-index: 10; opacity: 0.5; pointer-events: none; }
 .slaLabel { position: absolute; top: -25px; left: -30px; background: #FF4D4F; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -403,22 +396,8 @@
   .orgStatsContainer { flex-direction: column; padding: 16px; }
   .orgStatsSidebar { width: 100%; position: static; margin-bottom: 24px; padding: 16px; }
   .orgStatsMenuNav { flex-direction: row; overflow-x: auto; gap: 12px; padding-bottom: 4px; }
-  
-  .orgStatsMenuButton { 
-    flex: 0 0 auto; 
-    width: 120px; 
-    height: auto; 
-    flex-direction: column; 
-    justify-content: center; 
-    text-align: center; 
-    white-space: normal; 
-    padding: 16px 8px; 
-    border: 1px solid #eee; 
-    background: #fff; 
-  }
-  
+  .orgStatsMenuButton { flex: 0 0 auto; width: 120px; height: auto; flex-direction: column; justify-content: center; text-align: center; white-space: normal; padding: 16px 8px; border: 1px solid #eee; background: #fff; }
   .orgStatsMenuButton svg { margin-bottom: 8px; width: auto; }
-  
   .mockHBarItem { grid-template-columns: 100px 1fr 40px; gap: 10px; }
   .satisfactionHighlightGrid { grid-template-columns: 1fr; }
   .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; gap: 16px; }
