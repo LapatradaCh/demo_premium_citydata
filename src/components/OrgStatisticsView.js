@@ -163,7 +163,7 @@ const WorkloadView = ({ data }) => {
                       title={`${LABELS[key]}: ${val}`}
                     >
                        {/* Tooltip on Hover */}
-                       <div className="hidden group-hover/segment:block absolute bottom-full mb-1 bg-gray-800 text-white text-[10px] px-2 py-1 rounded z-20 whitespace-nowrap">
+                       <div className="hidden group-hover/segment:block absolute bottom-full mb-1 bg-gray-800 text-white text-[10px] px-2 py-1 rounded z-20 whitespace-nowrap shadow-lg">
                           {LABELS[key]}: {val}
                        </div>
                        {width > 8 && <span className="text-[10px] text-white font-bold drop-shadow-md pointer-events-none">{val}</span>}
@@ -461,7 +461,7 @@ export default function OrganizationDashboard() {
         // Fetch Both APIs in parallel
         const [orgRes, probRes] = await Promise.all([
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${USER_ORG_ID}`),
-          fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-count-issue-type?org_id=${USER_ORG_ID}`)
+          fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/problem-types?org_id=${USER_ORG_ID}`)
         ]);
 
         if (!orgRes.ok || !probRes.ok) {
