@@ -76,7 +76,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #999; /* สามารถเปลี่ยนเป็น #9CA3AF (Gray) ตามธีมใหม่ได้ถ้าต้องการ */
+  color: #9CA3AF; /* สีเทาตาม Palette ใหม่ */
   flex-shrink: 0;
 }
 
@@ -142,7 +142,7 @@
 }
 .chartNote {
   font-size: 13px;
-  color: #999; /* หรือใช้ #9CA3AF */
+  color: #9CA3AF;
   font-style: italic;
   text-align: right;
   margin-top: -30px;
@@ -150,7 +150,7 @@
 }
 
 /* =========================================
-   4. KPI CARDS (อัปเดตสีใหม่ตามรหัสที่ให้มา)
+   4. KPI CARDS (บังคับใช้สีเดียวกับกราฟ)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -168,28 +168,28 @@
   border: none;
 }
 
-/* 1. อัตราความสำเร็จ: ใช้สี Emerald (#10B981) */
+/* 1. อัตราความสำเร็จ: ใช้ #10B981 (Emerald) เท่านั้น */
 .kpiCardSuccess {
   background: #10B981 !important; 
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* 2. เรื่องทั้งหมด: ดำล้วนเหมือนเดิม (ดูดีสุด) */
+/* 2. เรื่องทั้งหมด: ดำล้วน */
 .kpiCardNormal {
   background: #000000 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* 3. งานค้าง (Critical): ใช้สี Red ใหม่ (#EF4444) */
+/* 3. งานค้าง (Critical): ใช้ #EF4444 (Red) เท่านั้น */
 .kpiCardCritical {
   background: #EF4444 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* บังคับตัวหนังสือขาว */
+/* บังคับ Text ขาวในการ์ด */
 .kpiCardSuccess .kpiHeader, .kpiCardSuccess .kpiValue, .kpiCardSuccess .kpiSubtext,
 .kpiCardNormal .kpiHeader, .kpiCardNormal .kpiValue, .kpiCardNormal .kpiSubtext,
 .kpiCardCritical .kpiHeader, .kpiCardCritical .kpiValue, .kpiCardCritical .kpiSubtext {
@@ -239,15 +239,22 @@
 .mockStackedBarSegment:hover { filter: brightness(1.1); z-index: 5; }
 
 /* ----------------------------------------------------
-   UTILITY COLORS (อัปเดตตาม Palette ที่ให้มา)
+   UTILITY COLORS (บังคับใช้รหัสสีเดียวกันทุกจุด)
    ---------------------------------------------------- */
-.fillGreen, .bg-emerald, .bg-success { background-color: #10B981 !important; } /* Emerald */
-.fillRed, .bg-red, .bg-critical     { background-color: #EF4444 !important; } /* Red */
-.fillYellow, .bg-amber              { background-color: #F59E0B !important; } /* Amber */
-.fillBlue, .bg-blue                 { background-color: #3B82F6 !important; } /* Blue */
-.fillCyan, .bg-cyan                 { background-color: #06B6D4 !important; } /* Cyan */
-.fillViolet, .bg-violet             { background-color: #8B5CF6 !important; } /* Violet */
-.fillGray, .bg-gray                 { background-color: #9CA3AF !important; } /* Gray */
+/* เขียวเดียวกันทั้งหน้า (#10B981) */
+.fillGreen, .bg-emerald, .bg-success, .bar-green { background-color: #10B981 !important; }
+
+/* แดงเดียวกันทั้งหน้า (#EF4444) */
+.fillRed, .bg-red, .bg-critical, .bar-red { background-color: #EF4444 !important; }
+
+/* เหลือง/ส้ม เดียวกันทั้งหน้า (#F59E0B) */
+.fillYellow, .bg-amber, .bar-yellow { background-color: #F59E0B !important; }
+
+/* สีอื่นๆ */
+.fillBlue, .bg-blue     { background-color: #3B82F6 !important; }
+.fillCyan, .bg-cyan     { background-color: #06B6D4 !important; }
+.fillViolet, .bg-violet { background-color: #8B5CF6 !important; }
+.fillGray, .bg-gray     { background-color: #9CA3AF !important; }
 
 .mockHBarValue { font-size: 18px; font-weight: 800; color: #000; text-align: right; }
 .mockStackedBarLegend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin-top: 24px; padding-top: 24px; border-top: 1px dashed #eee; }
@@ -256,24 +263,24 @@
 .legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
 /* =========================================
-   6. SATISFACTION (Tab 2) - อัปเดตสี
+   6. SATISFACTION (Tab 2) - บังคับสี Highlights
    ========================================= */
 .satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .highlightCard { padding: 16px; border-radius: 12px; border: none; display: flex; flex-direction: column; }
 
-/* Highlight เขียว: ใช้ Emerald #10B981 */
+/* Highlight เขียว: ใช้ #10B981 เดียวกันกับ KPI */
 .highlightCardGreen { 
   background-color: #10B981 !important; 
   color: #ffffff !important;
 }
-/* Highlight แดง: ใช้ Red #EF4444 */
+/* Highlight แดง: ใช้ #EF4444 เดียวกันกับ KPI */
 .highlightCardRed { 
   background-color: #EF4444 !important; 
   color: #ffffff !important;
 }
 
-.highlightCardGreen .highlightTitle, .highlightCardGreen .highlightName, .highlightCardGreen .highlightScore, .highlightCardGreen .highlightScoreMax,
-.highlightCardRed .highlightTitle, .highlightCardRed .highlightName, .highlightCardRed .highlightScore, .highlightCardRed .highlightScoreMax {
+/* บังคับตัวหนังสือข้างใน Highlight ให้เป็นสีขาว */
+.highlightCardGreen *, .highlightCardRed * {
   color: #ffffff !important;
   opacity: 1 !important;
 }
@@ -298,7 +305,7 @@
 .reportCardHeader { display: flex; justify-content: space-between; align-items: flex-start; }
 .reportCardTitleGroup { display: flex; align-items: center; gap: 16px; }
 
-/* Badge อันดับ (อัปเดตสี) */
+/* Badge อันดับ */
 .reportCardRank { 
   font-size: 18px; 
   font-weight: 900; 
@@ -313,17 +320,15 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   margin-right: 8px;
 }
-/* Rank 1: ใช้สี Amber (#F59E0B) แทนสีทองเดิม */
-.reportCardRank.rank1 { background: #F59E0B; } 
-/* Rank 2: ใช้สี Gray (#9CA3AF) */
-.reportCardRank.rank2 { background: #9CA3AF; }
-/* Rank 3: อาจจะใช้สีส้มอ่อนหรือสีเดิม */
-.reportCardRank.rank3 { background: #A1887F; }
+
+/* Badge สีตาม Palette ใหม่ */
+.reportCardRank.rank1 { background: #F59E0B !important; } /* Amber */
+.reportCardRank.rank2 { background: #9CA3AF !important; } /* Gray */
+.reportCardRank.rank3 { background: #A1887F !important; }
 
 .reportCardName { font-size: 18px; font-weight: 700; color: #333; }
 .reportCardScoreGroup { text-align: right; }
-/* Score Text: ใช้สี Amber (#F59E0B) */
-.reportCardScoreText { font-size: 32px; font-weight: 800; color: #F59E0B; line-height: 1; }
+.reportCardScoreText { font-size: 32px; font-weight: 800; color: #F59E0B; line-height: 1; } /* คะแนนสีทอง */
 .reportCardScoreStars { margin: 4px 0; }
 .reportCardScoreReviews { font-size: 12px; color: #9CA3AF; }
 
@@ -342,7 +347,7 @@
 }
 
 /* =========================================
-   7. SLA (Tab 3) - อัปเดตสี
+   7. SLA (Tab 3) - บังคับสี Chart
    ========================================= */
 .slaHeaderBox { background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 16px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
 .slaTargetInfo { display: flex; flex-direction: column; gap: 4px; }
@@ -361,10 +366,10 @@
   height: 100%; 
   border-radius: 8px; 
   transition: width 0.6s ease;
-  /* สีจะถูกกำหนดผ่าน inline style หรือ class .bg-emerald / .bg-red */
+  /* สีจะถูก override ด้วย utility class .bg-success / .bg-critical ด้านบน */
 }
 
-/* เส้นประ Target: ใช้สี Red (#EF4444) */
+/* เส้นประ Target: สีแดงเดียวกัน (#EF4444) */
 .slaLineContainer { position: absolute; top: 0; bottom: 0; border-left: 2px dashed #EF4444; z-index: 10; opacity: 0.5; pointer-events: none; }
 .slaLabel { position: absolute; top: -25px; left: -30px; background: #EF4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
