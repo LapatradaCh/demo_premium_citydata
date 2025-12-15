@@ -1,21 +1,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import styles from './css/OrgStatisticsView.module.css'; // Import CSS Module
 import { 
-  BarChart2, Star, Clock, Filter, AlertCircle, 
-  CheckCircle, PieChart, Layers 
+  BarChart2, Star, Clock, AlertCircle, 
+  CheckCircle, PieChart, Layers, Filter 
 } from 'lucide-react';
 
 // ==========================================
 // 1. CONFIG & UTILS
 // ==========================================
-const TARGET_SLA_DAYS = 3.0; // เป้าหมาย KPI
+const TARGET_SLA_DAYS = 3.0; 
 
 const COLORS = {
-  pending: "#EF4444",    // red-500
-  inProgress: "#F59E0B", // amber-500
-  completed: "#10B981",  // emerald-500
-  forwarded: "#3B82F6",  // blue-500
-  rejected: "#9CA3AF",   // gray-400
-  invited: "#06B6D4"     // cyan-500 (เพิ่ม invited เข้ามาตาม API)
+  pending: "#FF4D4F",    // แดง (ตาม CSS เดิม)
+  inProgress: "#FFC107", // เหลือง
+  completed: "#4CAF50",  // เขียว
+  forwarded: "#2196F3",  // ฟ้า
+  invited: "#00BCD4",    // ฟ้าอมเขียว
+  rejected: "#6C757D"    // เทา
 };
 
 const LABELS = {
@@ -23,8 +24,8 @@ const LABELS = {
   inProgress: "ดำเนินการ",
   completed: "เสร็จสิ้น",
   forwarded: "ส่งต่อ",
-  rejected: "ปฏิเสธ",
-  invited: "เชิญร่วม"
+  invited: "เชิญร่วม",
+  rejected: "ปฏิเสธ"
 };
 
 const PROBLEM_COLORS = [
@@ -36,7 +37,7 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD ---
+// --- TAB 1: WORKLOAD (ปริมาณงาน) ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total');
 
@@ -53,196 +54,199 @@ const WorkloadView = ({ data }) => {
   }, [data]);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* KPI CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-4 text-white shadow-md relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 opacity-90 mb-1">
-              <CheckCircle size={18} />
-              <span className="text-sm font-medium">อัตราความสำเร็จ</span>
+    <div className={styles.chartBox}>
+      <div className={styles.chartBoxTitle}>
+        ปริมาณงานและการจัดการ (ภาพรวม)
+        {/* Sorting Controls (Inline style for simple layout) */}
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px', fontSize: '12px' }}>
+             <button 
+               onClick={() => setSortBy('total')}
+               style={{ 
+                 padding: '4px 12px', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer',
+                 background: sortBy === 'total' ? '#000' : '#fff', color: sortBy === 'total' ? '#fff' : '#666'
+               }}
+             >ทั้งหมด</button>
+             <button 
+               onClick={() => setSortBy('pending')}
+               style={{ 
+                  padding: '4px 12px', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer',
+                  background: sortBy === 'pending' ? '#FF4D4F' : '#fff', color: sortBy === 'pending' ? '#fff' : '#666'
+               }}
+             >งานค้าง</button>
+        </div>
+      </div>
+
+      {/* KPI Section (Inline styles used to match Mockup idea without altering CSS file) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        {/* Card 1 */}
+        <div style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', padding: '20px', borderRadius: '16px', color: '#fff' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.9, fontSize: '14px' }}>
+              <CheckCircle size={16} /> อัตราความสำเร็จ
             </div>
-            <div className="text-3xl font-bold">{globalStats.successRate.toFixed(1)}%</div>
-            <div className="text-xs opacity-80 mt-1">จากเรื่องร้องเรียนทั้งหมด</div>
-          </div>
-          <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px' }}>{globalStats.successRate.toFixed(1)}%</div>
         </div>
-
-        <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex flex-col justify-center">
-          <div className="flex items-center gap-2 text-gray-500 mb-1 text-sm">
-            <PieChart size={18} />
-            <span>เรื่องร้องเรียนทั้งหมด</span>
-          </div>
-          <div className="text-3xl font-bold text-gray-800">{globalStats.total.toLocaleString()} <span className="text-sm font-normal text-gray-400">เรื่อง</span></div>
-        </div>
-
-        <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex flex-col justify-center border-l-4 border-l-red-500">
-          <div className="flex items-center gap-2 text-red-500 mb-1 text-sm">
-            <AlertCircle size={18} />
-            <span>รอรับเรื่อง (ค้าง)</span>
-          </div>
-          <div className="text-3xl font-bold text-gray-800">{globalStats.pending.toLocaleString()} <span className="text-sm font-normal text-gray-400">เรื่อง</span></div>
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Filter size={16} />
-          <span>เรียงลำดับตาม:</span>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => setSortBy('total')} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${sortBy === 'total' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-gray-200'}`}>งานทั้งหมด</button>
-          <button onClick={() => setSortBy('pending')} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${sortBy === 'pending' ? 'bg-red-500 text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-gray-200'}`}>งานค้าง</button>
-        </div>
-      </div>
-
-      {/* Chart */}
-      <div className="space-y-4">
-        {sortedData.map((item) => {
-          const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
-          return (
-            <div key={item.id || item.name} className="group">
-              <div className="flex justify-between mb-1 items-end">
-                <span className="font-medium text-gray-700 text-sm">{item.name}</span>
-                <div className="text-right">
-                  <span className="text-xs font-semibold text-emerald-600 mr-2">สำเร็จ {itemSuccessRate.toFixed(0)}%</span>
-                  <span className="text-gray-400 text-xs">| รวม {item.total}</span>
-                </div>
-              </div>
-              <div className="relative h-8 bg-gray-100 rounded-full overflow-hidden flex shadow-inner">
-                {Object.keys(COLORS).map((key) => {
-                  const val = item[key] || 0; // Handle undefined keys
-                  const width = item.total > 0 ? (val / item.total) * 100 : 0;
-                  if (width === 0) return null;
-                  return (
-                    <div 
-                      key={key}
-                      style={{ width: `${width}%`, backgroundColor: COLORS[key] }}
-                      className="h-full first:pl-2 last:pr-2 flex items-center justify-center relative"
-                      title={`${LABELS[key]}: ${val}`}
-                    >
-                       {width > 10 && <span className="text-[10px] text-white font-bold drop-shadow-md">{val}</span>}
-                    </div>
-                  );
-                })}
-              </div>
+        {/* Card 2 */}
+        <div style={{ border: '1px solid #f0f0f0', padding: '20px', borderRadius: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#666', fontSize: '14px' }}>
+              <PieChart size={16} /> เรื่องทั้งหมด
             </div>
-          );
-        })}
+            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px', color: '#333' }}>{globalStats.total.toLocaleString()}</div>
+        </div>
+        {/* Card 3 */}
+        <div style={{ border: '1px solid #FF4D4F', background: '#FFF5F5', padding: '20px', borderRadius: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FF4D4F', fontSize: '14px' }}>
+              <AlertCircle size={16} /> งานค้าง (Critical)
+            </div>
+            <div style={{ fontSize: '32px', fontWeight: '800', marginTop: '8px', color: '#FF4D4F' }}>{globalStats.pending.toLocaleString()}</div>
+        </div>
       </div>
 
-       {/* Legend */}
-       <div className="flex flex-wrap justify-center gap-4 mt-8 pt-4 border-t border-gray-100">
-        {Object.keys(COLORS).map(key => (
-          <div key={key} className="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
-            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[key] }}></span>
-            {LABELS[key]}
+      {/* Stacked Bar Chart */}
+      <div className={styles.mockStackedBarChart}>
+        {sortedData.map((item, index) => (
+          <div key={index} className={styles.mockHBarItem}>
+            <span className={styles.mockHBarLabel}>{item.name}</span>
+            <div className={styles.mockStackedHBar}>
+               {Object.keys(COLORS).map(key => {
+                 const val = item[key] || 0;
+                 const width = item.total > 0 ? (val / item.total) * 100 : 0;
+                 if (width === 0) return null;
+                 return (
+                   <div 
+                     key={key}
+                     className={styles.mockStackedBarSegment}
+                     style={{ width: `${width}%`, background: COLORS[key] }}
+                     title={`${LABELS[key]}: ${val}`}
+                   />
+                 );
+               })}
+            </div>
+            <span className={styles.mockHBarValue}>{item.total}</span>
           </div>
         ))}
+
+        {/* Legend */}
+        <div className={styles.mockStackedBarLegend}>
+           {Object.keys(COLORS).map(key => (
+             <div key={key} className={styles.mockStackedBarLegendItem}>
+               <span className={styles.legendDot} style={{ background: COLORS[key] }}></span>
+               {LABELS[key]}
+             </div>
+           ))}
+        </div>
       </div>
     </div>
   );
 };
 
-// --- TAB 2: SATISFACTION ---
+// --- TAB 2: SATISFACTION (ความพึงพอใจ) ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
-  const getScoreColor = (score) => {
-    if (score >= 4.5) return 'text-emerald-500 bg-emerald-50 border-emerald-100';
-    if (score >= 3.0) return 'text-amber-500 bg-amber-50 border-amber-100';
-    return 'text-red-500 bg-red-50 border-red-100';
-  };
-
-  if(data.length === 0) return <div className="p-10 text-center text-gray-400">ไม่มีข้อมูล</div>;
+  
+  if(data.length === 0) return <div className={styles.chartBox}><div style={{textAlign:'center', padding:'40px', color:'#999'}}>ไม่มีข้อมูล</div></div>;
 
   return (
-    <div className="space-y-4 animate-fadeIn">
-      {/* Highlights */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
-          <div className="text-emerald-800 text-xs font-semibold uppercase tracking-wider">คะแนนสูงสุด</div>
-          <div className="text-xl font-bold text-emerald-600 mt-1">{sortedData[0]?.name || '-'}</div>
-          <div className="text-3xl font-bold text-emerald-500 mt-2">{sortedData[0]?.satisfaction.toFixed(1) || 0} <span className="text-sm font-normal text-emerald-400">/ 5.0</span></div>
-        </div>
-        <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-          <div className="text-red-800 text-xs font-semibold uppercase tracking-wider">ต้องปรับปรุง</div>
-          <div className="text-xl font-bold text-red-600 mt-1">{sortedData[sortedData.length - 1]?.name || '-'}</div>
-          <div className="text-3xl font-bold text-red-500 mt-2">{sortedData[sortedData.length - 1]?.satisfaction.toFixed(1) || 0} <span className="text-sm font-normal text-red-400">/ 5.0</span></div>
-        </div>
-      </div>
-
-      {/* List */}
-      <div className="space-y-3">
-        {sortedData.map((item, index) => (
-          <div key={item.id || index} className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-            <div className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm ${index < 3 ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-500'}`}>
-              {index + 1}
+    <div className={styles.chartBox}>
+       <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจ</h4>
+       
+       <div className={styles.reportCardList}>
+          {sortedData.map((item, index) => (
+            <div key={index} className={styles.reportCardItem}>
+               <div className={styles.reportCardHeader}>
+                  <div className={styles.reportCardTitleGroup}>
+                     <span className={styles.reportCardRank} style={{ color: index < 3 ? '#FFC107' : '#999' }}>#{index + 1}</span>
+                     <div>
+                        <div className={styles.reportCardName}>{item.name}</div>
+                     </div>
+                  </div>
+                  <div className={styles.reportCardScoreGroup}>
+                     <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
+                     <div className={styles.reportCardScoreStars}>
+                        {[...Array(5)].map((_, i) => (
+                           <Star key={i} size={14} 
+                                 fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} 
+                                 stroke="none" 
+                                 style={{marginRight:2}} />
+                        ))}
+                     </div>
+                     <div className={styles.reportCardScoreReviews}>({item.reviews} รีวิว)</div>
+                  </div>
+               </div>
+               
+               {/* Progress Bar (Visual Only) */}
+               <div style={{ marginTop: '16px', height: '6px', background: '#f5f5f5', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ 
+                      height: '100%', 
+                      width: `${(item.satisfaction / 5) * 100}%`, 
+                      background: item.satisfaction >= 4 ? '#4CAF50' : item.satisfaction >= 3 ? '#FFC107' : '#FF4D4F' 
+                  }}></div>
+               </div>
             </div>
-            <div className="flex-1">
-              <div className="flex justify-between items-baseline mb-1">
-                <span className="font-semibold text-gray-800">{item.name}</span>
-                <span className="text-xs text-gray-400">({item.reviews} รีวิว)</span>
-              </div>
-              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div className={`h-full rounded-full ${item.satisfaction >= 3 ? 'bg-emerald-400' : 'bg-red-400'}`} style={{ width: `${(item.satisfaction / 5) * 100}%` }}></div>
-              </div>
-            </div>
-            <div className={`px-3 py-1 rounded-lg border font-bold text-lg flex items-center gap-1 ${getScoreColor(item.satisfaction)}`}>
-              {item.satisfaction.toFixed(1)} <Star size={14} className="fill-current" />
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+       </div>
     </div>
   );
 };
 
-// --- TAB 3: EFFICIENCY ---
+// --- TAB 3: EFFICIENCY (SLA) ---
 const EfficiencyView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => a.avgTime - b.avgTime);
   const maxVal = Math.max(...data.map(d => d.avgTime), TARGET_SLA_DAYS * 1.5) || 10;
   const overallAvg = data.reduce((acc, curr) => acc + curr.avgTime, 0) / (data.length || 1);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex justify-between items-center bg-blue-50 p-4 rounded-xl border border-blue-100 mb-2">
-        <div>
-          <h4 className="font-bold text-blue-900">เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</h4>
-        </div>
-        <div className="text-right">
-          <span className="block text-xs text-blue-600">เวลาเฉลี่ยรวม</span>
-          <span className="font-bold text-2xl text-blue-800">{overallAvg.toFixed(1)} <span className="text-sm font-normal">วัน</span></span>
-        </div>
-      </div>
+    <div className={styles.chartBox}>
+       <h4 className={styles.chartBoxTitle}>
+          เวลาเฉลี่ยในการแก้ไขปัญหา (วัน)
+          <span style={{ fontSize:'12px', fontWeight:'normal', marginLeft:'auto', color:'#666' }}>
+            ค่าเฉลี่ยรวม: <b>{overallAvg.toFixed(1)} วัน</b>
+          </span>
+       </h4>
+       <div className={styles.chartNote}>(*ยิ่งน้อยยิ่งดี / เส้นประคือเป้าหมาย {TARGET_SLA_DAYS} วัน)</div>
 
-      <div className="relative pt-6 pb-2">
-        <div className="absolute top-0 bottom-0 border-l-2 border-dashed border-gray-400 z-10" style={{ left: `${(TARGET_SLA_DAYS / maxVal) * 100}%` }}></div>
+       <div className={styles.mockHorizontalBarChart} style={{ position: 'relative' }}>
+          
+          {/* SLA Line Overlay */}
+          <div style={{ 
+            position: 'absolute', 
+            left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)`, // Adjust calculation roughly to fit grid
+            top: 0, bottom: 0, 
+            borderLeft: '2px dashed #FF4D4F', 
+            zIndex: 10,
+            opacity: 0.5,
+            pointerEvents: 'none'
+          }}>
+             <span style={{ position: 'absolute', top: '-25px', left: '-30px', background: '#FF4D4F', color: 'white', fontSize: '10px', padding: '2px 6px', borderRadius: '4px' }}>
+                Target {TARGET_SLA_DAYS} วัน
+             </span>
+          </div>
 
-        <div className="space-y-5 relative z-0">
           {sortedData.map((item, index) => {
-            const isOver = item.avgTime > TARGET_SLA_DAYS;
-            return (
-              <div key={item.id || index} className="relative">
-                <div className="flex justify-between text-sm mb-1">
-                  <span className={isOver ? 'text-red-700 font-medium' : 'text-gray-700 font-medium'}>{item.name}</span>
-                  <span className={isOver ? 'text-red-600 font-bold' : 'text-emerald-600 font-bold'}>{item.avgTime.toFixed(1)} วัน</span>
-                </div>
-                <div className="h-8 bg-gray-100 rounded-r-md relative">
-                  <div className={`h-full rounded-r-md flex items-center justify-end pr-2 transition-all duration-700 ${isOver ? 'bg-red-400' : 'bg-emerald-400'}`} style={{ width: `${(item.avgTime / maxVal) * 100}%` }}>
-                    {isOver && <AlertCircle size={14} className="text-white opacity-80" />}
+             const isOver = item.avgTime > TARGET_SLA_DAYS;
+             return (
+               <div key={index} className={styles.mockHBarItem}>
+                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#FF4D4F' : '#444' }}>{item.name}</span>
+                  <div className={styles.mockHBar}>
+                     <div 
+                        className={styles.mockHBarFill} 
+                        style={{ 
+                           width: `${(item.avgTime / maxVal) * 100}%`,
+                           background: isOver ? 'linear-gradient(90deg, #FF4D4F 0%, #D32F2F 100%)' : 'linear-gradient(90deg, #4CAF50 0%, #2E7D32 100%)'
+                        }}
+                     ></div>
                   </div>
-                </div>
-              </div>
-            );
+                  <span className={styles.mockHBarValue} style={{ color: isOver ? '#FF4D4F' : '#000' }}>
+                     {item.avgTime.toFixed(1)} วัน
+                  </span>
+               </div>
+             );
           })}
-        </div>
-      </div>
+       </div>
     </div>
   );
 };
 
-// --- TAB 4: PROBLEM TYPES ---
+// --- TAB 4: PROBLEM TYPES (Donut) ---
 const ProblemTypeView = ({ data }) => {
   const total = data.reduce((acc, item) => acc + item.count, 0);
   let cumulativePercent = 0;
@@ -257,60 +261,55 @@ const ProblemTypeView = ({ data }) => {
   const getCoordinates = (percent) => [Math.cos(2 * Math.PI * percent), Math.sin(2 * Math.PI * percent)];
 
   return (
-    <div className="animate-fadeIn">
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-8 flex justify-between items-center">
-         <div>
-          <h4 className="text-gray-600 text-sm font-medium">เรื่องร้องเรียนทั้งหมด</h4>
-          <p className="text-3xl font-bold text-gray-800 mt-1">{total.toLocaleString()} <span className="text-sm font-normal text-gray-500">เรื่อง</span></p>
-         </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-        <div className="relative w-64 h-64 flex-shrink-0">
-          <svg viewBox="-1 -1 2 2" className="transform -rotate-90 w-full h-full">
-            {donutData.map((item) => {
-              const [startX, startY] = getCoordinates(item.startPercent);
-              const [endX, endY] = getCoordinates(item.startPercent + item.percent);
-              const largeArcFlag = item.percent > 0.5 ? 1 : 0;
-              const pathData = item.percent === 1 
-                ? `M 1 0 A 1 1 0 1 1 -1 0 A 1 1 0 1 1 1 0`
-                : `M ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`;
-              return <path key={item.id} d={pathData} fill={item.color} stroke="white" strokeWidth="0.02" />;
-            })}
-            <circle cx="0" cy="0" r="0.65" fill="white" />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-3xl font-bold text-gray-800">{data.length}</span>
-            <span className="text-xs text-gray-500">ประเภท</span>
+    <div className={styles.chartBox}>
+       <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหา (ภาพรวม)</h4>
+       
+       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
+          {/* SVG Donut */}
+          <div style={{ width: '260px', height: '260px', position: 'relative' }}>
+             <svg viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
+                {donutData.map((item) => {
+                   const [startX, startY] = getCoordinates(item.startPercent);
+                   const [endX, endY] = getCoordinates(item.startPercent + item.percent);
+                   const largeArcFlag = item.percent > 0.5 ? 1 : 0;
+                   const pathData = item.percent === 1 
+                      ? `M 1 0 A 1 1 0 1 1 -1 0 A 1 1 0 1 1 1 0`
+                      : `M ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`;
+                   return <path key={item.id} d={pathData} fill={item.color} stroke="#fff" strokeWidth="0.02" />;
+                })}
+                <circle cx="0" cy="0" r="0.65" fill="#fff" />
+             </svg>
+             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                <span style={{ fontSize: '36px', fontWeight: '800', color: '#333' }}>{data.length}</span>
+                <span style={{ fontSize: '12px', color: '#999' }}>ประเภท</span>
+             </div>
           </div>
-        </div>
 
-        <div className="flex-1 w-full grid grid-cols-1 gap-3">
-          {donutData.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50">
-              <div className="flex items-center gap-3">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
-                <span className="text-gray-700 font-medium text-sm">{item.name}</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-24 h-1.5 bg-gray-100 rounded-full hidden sm:block overflow-hidden">
-                  <div className="h-full" style={{ width: `${item.percent * 100}%`, backgroundColor: item.color }}></div>
+          {/* Legend Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px', width: '100%' }}>
+             {donutData.map((item) => (
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f9f9f9', borderRadius: '8px' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: item.color }}></span>
+                      <span style={{ fontWeight: '600', color: '#555', fontSize: '14px' }}>{item.name}</span>
+                   </div>
+                   <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontWeight: '800', color: '#000' }}>{item.count}</span>
+                      <span style={{ marginLeft: '6px', color: '#999', fontSize: '12px' }}>({(item.percent * 100).toFixed(0)}%)</span>
+                   </div>
                 </div>
-                <span className="text-gray-900 font-bold w-12 text-right">{item.count}</span>
-                <span className="text-gray-400 text-xs w-10 text-right">{(item.percent * 100).toFixed(0)}%</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+             ))}
+          </div>
+       </div>
     </div>
   );
 };
 
 // ==========================================
-// 3. MAIN COMPONENT (CONNECTED)
+// 3. MAIN APP
 // ==========================================
-export default function OrganizationDashboard() {
+
+export default function OrganizationStatisticsView() {
   const [activeTab, setActiveTab] = useState('workload');
   const [loading, setLoading] = useState(true);
   const [orgData, setOrgData] = useState([]);
@@ -330,10 +329,9 @@ export default function OrganizationDashboard() {
 
         if (orgRes.ok) {
           const rawOrg = await orgRes.json();
-          // Map to match the component's expected format
+          // Map to match format
           setOrgData(rawOrg.map(item => ({
              ...item,
-             // Ensure all keys exist for the stacked chart
              pending: item.pending || 0,
              inProgress: item.inProgress || 0,
              completed: item.completed || 0,
@@ -359,7 +357,7 @@ export default function OrganizationDashboard() {
   }, []);
 
   const renderContent = () => {
-    if (loading) return <div className="h-96 flex items-center justify-center text-gray-400">กำลังโหลดข้อมูล...</div>;
+    if (loading) return <div className={styles.chartBox}><div style={{height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999'}}>กำลังโหลดข้อมูล...</div></div>;
     
     switch (activeTab) {
       case 'workload': return <WorkloadView data={orgData} />;
@@ -370,72 +368,39 @@ export default function OrganizationDashboard() {
     }
   };
 
+  const menuItems = [
+    { id: 'workload', label: 'จำนวนเรื่องแจ้ง', icon: <BarChart2 size={18} /> },
+    { id: 'satisfaction', label: 'เปรียบเทียบความพึงพอใจ', icon: <Star size={18} /> },
+    { id: 'efficiency', label: 'เวลาเฉลี่ย (SLA)', icon: <Clock size={18} /> },
+    { id: 'problemType', label: 'ประเภทปัญหา', icon: <Layers size={18} /> },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900">
-      {/* Sidebar (Desktop) */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-10 hidden md:flex">
-        <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <span className="w-2 h-6 bg-blue-600 rounded-sm"></span>
-            สถิติองค์กร
-          </h2>
-          <p className="text-xs text-gray-400 mt-1 ml-4">Live Dashboard</p>
-        </div>
-        
-        <nav className="flex-1 p-4 space-y-2">
-          {[
-            { id: 'workload', label: 'ปริมาณงาน', icon: <BarChart2 size={20} />, color: 'blue' },
-            { id: 'satisfaction', label: 'ความพึงพอใจ', icon: <Star size={20} />, color: 'yellow' },
-            { id: 'efficiency', label: 'ประสิทธิภาพ (SLA)', icon: <Clock size={20} />, color: 'emerald' },
-            { id: 'problemType', label: 'ประเภทปัญหา', icon: <Layers size={20} />, color: 'purple' },
-          ].map(menu => (
+    <div className={styles.orgStatsContainer}>
+      
+      {/* Sidebar */}
+      <div className={styles.orgStatsSidebar}>
+        <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
+        <nav className={styles.orgStatsMenuNav}>
+          {menuItems.map((item) => (
             <button 
-              key={menu.id}
-              onClick={() => setActiveTab(menu.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 
-                ${activeTab === menu.id 
-                  ? `bg-${menu.color}-50 text-${menu.color}-700 shadow-sm font-medium` 
-                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`${styles.orgStatsMenuButton} ${activeTab === item.id ? styles.active : ''}`}
             >
-              {menu.icon}
-              <span>{menu.label}</span>
+              {item.icon}
+              <span>{item.label}</span>
             </button>
           ))}
         </nav>
-      </aside>
+      </div>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
-          {/* Mobile Header */}
-          <div className="md:hidden mb-4 pb-4 border-b">
-             <h2 className="text-xl font-bold">สถิติองค์กร</h2>
-             {/* Simple Mobile Nav could go here */}
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden min-h-[600px]">
-            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white">
-              <div>
-                <h3 className="text-xl font-bold text-gray-800">
-                  {activeTab === 'workload' && "ภาพรวมปริมาณงานรายเขต"}
-                  {activeTab === 'satisfaction' && "อันดับความพึงพอใจประชาชน"}
-                  {activeTab === 'efficiency' && "ความรวดเร็วในการแก้ไขปัญหา (SLA)"}
-                  {activeTab === 'problemType' && "สัดส่วนประเภทปัญหาในพื้นที่"}
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-sm text-gray-400">
-                {activeTab === 'workload' && <BarChart2 size={20} />}
-                {activeTab === 'satisfaction' && <Star size={20} />}
-                {activeTab === 'efficiency' && <Clock size={20} />}
-                {activeTab === 'problemType' && <Layers size={20} />}
-              </div>
-            </div>
-            <div className="p-6">
-              {renderContent()}
-            </div>
-          </div>
+      <div className={styles.orgStatsContent}>
+        <div className={styles.orgGraphDashboard}>
+           {renderContent()}
         </div>
-      </main>
+      </div>
     </div>
   );
 }
