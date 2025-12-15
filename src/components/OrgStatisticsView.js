@@ -12,7 +12,6 @@ import {
 // 1. CONFIGURATION
 // ============================================================================
 
-// สีสถานะตามรูปที่ 4
 const STATUS_COLORS = {
   pending: "#FF4D4F",    // แดง
   inProgress: "#FFC107", // เหลือง
@@ -35,7 +34,7 @@ const STATUS_LABELS = {
 // 2. SUB-COMPONENTS
 // ============================================================================
 
-// --- CHART COMPONENTS ---
+// --- STACKED BAR CHART ---
 const MockOrgStackedBarChart = ({ data }) => {
   if (!data || data.length === 0) return <div style={{padding:'40px', textAlign:'center', color:'#999'}}>ไม่มีข้อมูล</div>;
 
@@ -60,16 +59,15 @@ const MockOrgStackedBarChart = ({ data }) => {
         </div>
       ))}
 
-      {/* --- LEGEND แบบกลมมน (Pill) พร้อมพื้นหลังจางๆ --- */}
+      {/* --- LEGEND แบบกลมมน (Pill) --- */}
       <div className={styles.mockStackedBarLegend}>
         {Object.keys(STATUS_COLORS).map(key => (
           <div 
             key={key} 
             className={styles.mockStackedBarLegendItem}
-            // ใส่สีพื้นหลังจางๆ (Opacity 10%)
+            // พื้นหลังจางๆ 10%
             style={{ backgroundColor: `${STATUS_COLORS[key]}15` }}
           >
-            {/* จุดสีวงกลม */}
             <span 
               className={styles.legendDot} 
               style={{ background: STATUS_COLORS[key] }}
@@ -82,7 +80,7 @@ const MockOrgStackedBarChart = ({ data }) => {
   );
 };
 
-// --- REPORT CARD COMPONENTS ---
+// --- REPORT CARD ---
 const CardSatisfactionBreakdown = ({ score, totalReviews, breakdownData }) => (
   <div className={styles.satisfactionCardBreakdown}>
     <div className={styles.satisfactionCardHeader}>
@@ -175,7 +173,7 @@ const OrganizationStatisticsView = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // *** อย่าลืมเปลี่ยน ID ตามการใช้งานจริง ***
+        // *** ID องค์กรตามจริง ***
         const userOrgId = 74; 
         const res = await fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${userOrgId}`);
         const data = await res.json();
@@ -225,6 +223,7 @@ const OrganizationStatisticsView = () => {
   return (
     <div className={styles.orgStatsContainer}>
       <div className={styles.orgStatsSidebar}>
+        {/* หัวข้อสีดำ ตามที่ขอ */}
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
         <nav className={styles.orgStatsMenuNav}>
           {menuItems.map((item) => (
@@ -241,7 +240,6 @@ const OrganizationStatisticsView = () => {
       </div>
 
       <div className={styles.orgStatsContent}>
-        {/* ไม่มีส่วน Summary ด้านบนแล้ว */}
         <div className={styles.orgGraphDashboard}>
           {renderContent()}
         </div>
