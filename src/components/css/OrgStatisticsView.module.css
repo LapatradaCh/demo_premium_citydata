@@ -1,89 +1,116 @@
 /* --- 5. css/OrganizationStatisticsView.module.css --- */
-/* (Mobile Clean Cards - แนวนอน 3 ปุ่ม Active เป็นปุ่มทึบสีดำ) */
 
 /* =========================================
-   1. SHARED COMPONENTS (ใช้ร่วมกัน - ส่วนนี้คงเดิม)
+   1. SHARED COMPONENTS & CARDS
    ========================================= */
 
 .chartBox {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
+  background: #ffffff;
+  /* ปรับ Border Radius ให้โค้งมนขึ้นเล็กน้อย */
+  border-radius: 20px;
+  padding: 24px 28px;
+  /* ใช้เงาแบบ Soft Shadow ที่ดูพรีเมียม */
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   flex-grow: 1;
+  position: relative;
+  overflow: hidden; /* เพื่อให้มุมโค้งไม่มีอะไรเกิน */
 }
+
 .chartBox:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.08);
 }
+
 .chartBoxTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: 18px; /* เพิ่มขนาดตัวอักษรหัวข้อ */
+  font-weight: 700;
+  color: #2c3e50; /* ใช้สีเข้มที่ไม่ใช่ดำสนิท */
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f2f6;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
+/* เพิ่มขีดสีด้านหน้าหัวข้อเพื่อความสวยงาม */
+.chartBoxTitle::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: #007bff; /* หรือสีธีมหลักของคุณ */
+  border-radius: 2px;
+}
+
 .chartNote {
   font-size: 13px;
   font-weight: 500;
-  color: #888;
+  color: #95a5a6;
   font-style: italic;
   text-align: right;
   margin-top: -24px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-/* Horizontal Bar Chart */
+/* Horizontal Bar Chart (กราฟแท่งแนวนอน) */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
   padding: 10px 0;
   flex-grow: 1;
   justify-content: center;
 }
+
 .mockHBarItem {
   display: grid;
-  grid-template-columns: 140px 1fr 60px;
-  gap: 12px;
+  grid-template-columns: 160px 1fr 60px; /* เพิ่มพื้นที่ชื่อหน่วยงาน */
+  gap: 16px;
   align-items: center;
 }
+
 .mockHBarLabel {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #222;
+  color: #555;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
-  padding-right: 8px;
 }
+
 .mockHBar {
-  height: 20px;
-  background: #f0f0f0;
-  border-radius: 6px;
+  height: 12px; /* ปรับให้เล็กลงเพื่อให้ดู Modern */
+  background: #edf2f7;
+  border-radius: 10px;
   overflow: hidden;
 }
+
 .mockHBarFill {
   height: 100%;
-  background: #007bff;
-  border-radius: 4px 0 0 4px;
-  transition: width 0.5s ease-out;
+  /* Gradient สีฟ้าให้ดูมีมิติ */
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Animation เด้งดึ๋ง */
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
+
 .mockHBar:hover .mockHBarFill {
-  filter: brightness(1.1);
+  filter: brightness(1.05);
 }
+
 .mockHBarValue {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
+  font-size: 16px;
+  font-weight: 800;
+  color: #2c3e50;
   text-align: right;
   white-space: nowrap;
 }
@@ -91,38 +118,43 @@
 /* Satisfaction Breakdown Row (Shared) */
 .satisfactionBreakdownRow {
   display: grid;
-  grid-template-columns: 35px 1fr 50px;
+  grid-template-columns: 35px 1fr 60px; /* ปรับ column ขวาสุดให้กว้างขึ้น */
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
+
 .satisfactionBreakdownLabel {
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #555;
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: flex-end;
 }
+
 .satisfactionBreakdownLabel svg {
   display: none;
 }
+
 .satisfactionBreakdownBar {
-  height: 12px;
-  background: #f0f0f0;
-  border-radius: 6px;
+  height: 8px; /* เส้นเล็กคม */
+  background: #f1f2f6;
+  border-radius: 4px;
   overflow: hidden;
 }
+
 .satisfactionBreakdownBarFill {
   height: 100%;
   background: #ffc107;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: width 0.5s ease-out;
 }
+
 .satisfactionBreakdownPercent {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
   text-align: right;
   white-space: nowrap;
 }
@@ -134,78 +166,101 @@
 .orgStatsContainer {
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 32px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   align-items: flex-start;
   min-height: 60vh;
+  padding: 0 20px; /* กันชิดขอบจอเกินไป */
 }
 
-/* Sidebar (Desktop) */
+/* Sidebar (Desktop) - ปรับให้ดู Clean */
 .orgStatsSidebar {
   flex-shrink: 0;
-  width: 240px;
+  width: 260px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  padding: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0,0,0,0.03);
+  padding: 24px 16px;
   max-height: 100%;
   overflow-y: auto;
+  position: sticky; /* ให้เมนูตามลงมา */
+  top: 20px;
 }
 
 .orgStatsMenuTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 12px 0;
-  padding: 0 8px 12px 8px;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: #95a5a6;
+  margin: 0 0 16px 0;
+  padding: 0 12px 12px 12px;
+  border-bottom: 1px solid #f1f2f6;
 }
 
 .orgStatsMenuNav {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
+/* ปุ่มเมนู Desktop แบบ Modern Minimal */
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-  padding: 12px 14px;
-  font-size: 14px;
+  padding: 14px 18px;
+  font-size: 15px;
   font-weight: 600;
-  color: #333;
-  background: none;
+  color: #555;
+  background: transparent;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .orgStatsMenuButton svg {
-  font-size: 16px;
-  color: #555;
+  font-size: 18px;
+  color: #888;
   transition: color 0.2s ease;
 }
 
 .orgStatsMenuButton:hover {
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
   color: #000;
 }
 
+/* Active State แบบ Desktop: ไม่ถมดำ แต่ใช้แถบสีเน้น */
 .orgStatsMenuButton.active {
-  background-color: #000;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f0f7ff; /* สีฟ้าจางๆ */
+  color: #007bff;
+  font-weight: 700;
 }
 
 .orgStatsMenuButton.active svg {
-  color: #fff;
+  color: #007bff;
 }
+
+/* แถบสีด้านซ้ายตอน Active */
+.orgStatsMenuButton.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 4px;
+  background-color: #007bff;
+  border-radius: 0 4px 4px 0;
+}
+
 
 .orgStatsContent {
   flex-grow: 1;
@@ -215,13 +270,13 @@
 .orgGraphDashboard {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px; /* เพิ่มระยะห่างระหว่างกราฟ */
   width: 100%;
   flex-grow: 1;
   align-items: stretch;
 }
 
-/* Stacked Bar Chart */
+/* Stacked Bar Chart (กราฟแท่งซ้อนกัน) */
 .mockStackedBarChart {
   display: flex;
   flex-direction: column;
@@ -231,45 +286,55 @@
 }
 
 .mockStackedHBar {
-  height: 24px;
+  height: 32px; /* สูงขึ้นเพื่อให้เห็นสีชัด */
   background: #f0f0f0;
-  border-radius: 6px;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   width: 100%;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* เงาด้านใน */
 }
 
 .mockStackedBarSegment {
   height: 100%;
   transition: all 0.3s ease;
   cursor: pointer;
+  border-right: 2px solid #fff; /* เพิ่มเส้นคั่นระหว่างสี */
+}
+.mockStackedBarSegment:last-child {
+  border-right: none;
 }
 .mockStackedBarSegment:hover {
   filter: brightness(1.1);
+  transform: scaleY(1.05); /* ขยายแนวตั้งนิดหน่อยตอนชี้ */
 }
 
 .mockStackedBarLegend {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 8px 16px;
-  margin-top: 20px;
+  justify-content: center; /* จัดกึ่งกลาง */
+  gap: 12px 24px;
+  margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-  font-size: 12px;
-  color: #555;
+  border-top: 1px dashed #e0e0e0;
+  font-size: 13px;
+  color: #666;
 }
 
 .mockStackedBarLegend span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  background: #f8f9fa;
+  padding: 4px 12px;
+  border-radius: 20px; /* ทำเป็น Capsule */
 }
 
 .mockStackedBarLegend span span {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%; /* วงกลม */
+  padding: 0;
 }
 
 /* =========================================
@@ -279,61 +344,65 @@
 .reportCardViewContainer {
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 32px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   align-items: flex-start;
   min-height: 70vh;
 }
 
 .reportCardSidebar {
+  /* ใช้ Style เดียวกับ Sidebar หลัก */
   flex-shrink: 0;
-  width: 240px;
+  width: 260px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  padding: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0,0,0,0.03);
+  padding: 24px 16px;
 }
 
 .reportCardSidebarTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
-  margin: 0 0 12px 0;
-  padding: 0 8px 12px 8px;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: #95a5a6;
+  margin: 0 0 16px 0;
+  padding: 0 12px 12px 12px;
+  border-bottom: 1px solid #f1f2f6;
 }
 
 .reportCardMenuNav {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .reportCardMenuButton {
+  /* Style เดียวกับปุ่มเมนูหลัก */
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 18px;
   font-size: 14px;
   font-weight: 600;
   color: #555;
   background: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
 }
 .reportCardMenuButton:hover {
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
   color: #000;
 }
 .reportCardMenuButton.active {
-  background-color: #f2f2ff;
-  color: #5d40db;
+  background-color: #f3f0ff; /* ม่วงอ่อน */
+  color: #5d40db; /* สีม่วงหลัก */
   font-weight: 700;
 }
 .reportCardMenuButton svg {
@@ -346,7 +415,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .reportCardFilterBar {
@@ -360,45 +429,59 @@
   min-width: 150px;
 }
 .reportCardFilterBar select {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  transition: border-color 0.2s;
 }
+.reportCardFilterBar select:focus {
+  outline: none;
+  border-color: #5d40db;
+}
+
 .searchButton {
   background-color: #5d40db;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(93, 64, 219, 0.3);
 }
 .searchButton:hover {
   background-color: #4a30b4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(93, 64, 219, 0.4);
 }
 
 .reportCardList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .reportCardItem {
   background: #ffffff;
   border: 1px solid #f0f0f0;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
   overflow: hidden;
 }
 .reportCardItem:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(93, 64, 219, 0.1);
 }
 
 .reportCardHeader {
@@ -411,35 +494,36 @@
 .reportCardTitleGroup {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 16px;
 }
 
 .reportCardRank {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   color: #5d40db;
-  padding-right: 12px;
-  border-right: 2px solid #5d40db;
+  padding-right: 16px;
+  border-right: 3px solid #f0f0f0;
+  line-height: 1;
 }
 
 .reportCardTitle {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 .reportCardName {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  color: #111;
+  color: #2c3e50;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   transition: color 0.2s;
 }
 .reportCardName svg {
-  font-size: 14px;
-  color: #777;
+  font-size: 16px;
+  color: #95a5a6;
 }
 .reportCardName:hover {
   color: #5d40db;
@@ -448,52 +532,47 @@
 .reportCardDetailTags {
   display: none;
 }
-.reportCardDetailTags span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #057a55;
-  white-space: nowrap;
-}
 
 .reportCardScoreGroup {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 6px;
 }
 .reportCardScoreText {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
   color: #ffc107;
+  text-shadow: 0 2px 5px rgba(255, 193, 7, 0.2);
 }
 .reportCardScoreStars {
   color: #ffc107;
-  font-size: 16px;
+  font-size: 18px;
   display: flex;
-  gap: 1px;
+  gap: 2px;
 }
 .reportCardScoreReviews {
-  font-size: 12px;
-  color: #777;
+  font-size: 13px;
+  color: #95a5a6;
   font-weight: 500;
 }
 
 .reportCardExpandedContent {
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-  margin-top: 16px;
-  background-color: #fff8e6;
-  margin: 16px -16px -16px -16px;
-  padding: 16px;
-  border-radius: 0 0 16px 16px;
+  padding-top: 20px;
+  border-top: 1px dashed #e0e0e0;
+  margin-top: 20px;
+  background-color: #fffcf5; /* พื้นหลังสีครีมจางๆ */
+  margin: 20px -24px -24px -24px;
+  padding: 24px;
+  border-radius: 0 0 20px 20px;
 }
 
+/* Satisfaction Breakdown (กราฟความพึงพอใจ) */
 .satisfactionCardBreakdown {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 20px;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
   align-items: center;
 }
 
@@ -501,28 +580,35 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  border-right: 1px solid #ffeeba;
-  padding-right: 20px;
+  justify-content: center;
+  gap: 12px;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 32px;
+  height: 100%;
 }
+
 .satisfactionCardScore {
-  font-size: 38px;
+  font-size: 64px; /* ใหญ่สะใจตามคำขอ */
   font-weight: 800;
   color: #ffc107;
   line-height: 1;
+  letter-spacing: -2px;
+  text-shadow: 0 4px 10px rgba(255, 193, 7, 0.25); /* เพิ่ม Glow */
 }
+
 .satisfactionCardStarGroup {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 .satisfactionCardStar {
   color: #ffc107;
-  font-size: 18px;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 3px rgba(255,193,7,0.4));
 }
 .satisfactionCardTotal {
-  font-size: 13px;
-  color: #555;
+  font-size: 14px;
+  color: #888;
   font-weight: 500;
   margin-left: 8px;
 }
@@ -530,7 +616,7 @@
 .satisfactionCardRows {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 /* =========================================
@@ -538,23 +624,25 @@
    ========================================= */
 
 @media screen and (max-width: 1024px) {
-  .orgStatsContainer { align-self: unset; }
-  .reportCardViewContainer { flex-direction: column; align-self: unset; }
-  .reportCardSidebar { width: 100%; max-height: 40vh; }
+  .orgStatsContainer { align-self: unset; padding: 0 16px; }
+  .reportCardViewContainer { flex-direction: column; align-self: unset; padding: 0 16px; }
+  .reportCardSidebar { width: 100%; max-height: 40vh; position: static; }
   .reportCardMenuNav { flex-direction: row; flex-wrap: wrap; overflow-x: auto; padding-bottom: 8px; border-bottom: 1px solid #eee; }
   .reportCardMenuButton { flex-shrink: 0; width: auto; white-space: nowrap; padding: 8px 12px; }
   .reportCardMenuButton span { display: inline; }
 }
 
-/* --- MOBILE SPECIFIC FIXES (Design: Clean Cards with Solid Active State) --- */
+/* --- MOBILE SPECIFIC FIXES --- */
+/* ปรับปรุง Design เดิม (Horizontal Cards) ให้สวยขึ้น */
 @media screen and (max-width: 768px) {
   .orgStatsContainer {
     flex-direction: column;
     min-height: unset;
     gap: 20px;
+    padding: 0 16px;
   }
 
-  /* 1. Sidebar Container: พื้นที่ว่างๆ */
+  /* 1. Sidebar Container: Reset */
   .orgStatsSidebar {
     width: 100%;
     max-height: none;
@@ -564,25 +652,25 @@
     border: none;
     box-shadow: none;
     margin-bottom: 0;
+    position: static;
   }
   .orgStatsSidebar::-webkit-scrollbar { display: none; }
 
   /* ซ่อนหัวข้อ */
   .orgStatsMenuTitle { display: none; }
 
-  /* 2. Menu Nav: พื้นหลังโปร่ง */
+  /* 2. Menu Nav: Horizontal */
   .orgStatsMenuNav {
     display: flex;
     flex-direction: row;
     width: 100%;
-    
     background-color: transparent; 
     padding: 0;
     gap: 12px; 
     border-bottom: none;
   }
 
-  /* 3. Button Styles: ดีไซน์การ์ดขาวมีขอบ (สถานะปกติ) */
+  /* 3. Button Styles: Mobile Card Style */
   .orgStatsMenuButton {
     flex: 1 1 0px; 
     width: 0;
@@ -593,75 +681,89 @@
     justify-content: center;
     text-align: center;
     
-    padding: 10px 4px;
-    min-height: 60px;
+    padding: 12px 4px;
+    min-height: 70px;
     
-    background-color: #fff; /* พื้นขาว */
-    border: 1px solid #e0e0e0; /* ขอบสีเทาบางๆ */
-    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px; /* โค้งมนขึ้น */
     
     font-size: 12px;
-    color: #555; /* ตัวหนังสือสีเทา */
-    font-weight: 500;
-    line-height: 1.25;
+    color: #555;
+    font-weight: 600;
+    line-height: 1.3;
     
     white-space: normal;
     
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+    /* เงาเบาๆ */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   
-  /* จัดการ icon (สถานะปกติ) */
+  /* Reset pseudo-elements จาก Desktop */
+  .orgStatsMenuButton::before { display: none; }
+  .orgStatsMenuButton.active::before { display: none; }
+  
+  /* Icon Mobile */
   .orgStatsMenuButton svg {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     margin-right: 0;
-    font-size: 20px;
-    color: #999; /* ไอคอนสีเทา */
+    font-size: 22px;
+    color: #999;
   }
   
   .orgStatsMenuButton::after { display: none; }
 
-  /* 4. Active State: ***ปุ่มทึบสีดำ ตัวหนังสือ/ไอคอนสีขาว*** */
+  /* 4. Mobile Active State: ปุ่มทึบสีดำ (ตามเดิม) แต่สวยขึ้น */
   .orgStatsMenuButton.active {
-    background-color: #333; /* พื้นหลังสีดำเข้ม */
-    color: #fff; /* ตัวหนังสือสีขาว */
+    background-color: #222; /* ดำเข้มเกือบสนิท */
+    color: #fff;
+    border-color: #222;
     
-    border-color: #333; /* ขอบสีเดียวกับพื้นหลัง (ให้ดูกลมกลืน) */
-    
-    /* เงาเข้มขึ้นเล็กน้อยให้ดูลอย */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    
-    font-weight: 700;
-    transform: translateY(-2px);
+    /* เงาลอย */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    transform: translateY(-4px); /* ลอยขึ้นเมื่อ Active */
   }
   
   .orgStatsMenuButton.active svg {
-    color: #fff; /* ไอคอนสีขาว */
+    color: #ffc107; /* ไอคอนสีทองตัดดำ */
   }
 
   .orgStatsContent { padding: 0; }
 
-  /* --- Styles ส่วนอื่นๆ คงเดิม --- */
+  /* --- Styles ส่วนอื่นๆ --- */
   .reportCardFilterBar { flex-wrap: wrap; }
   .reportCardFilterBar .filterGroup { width: calc(50% - 8px); min-width: unset; }
-  .searchButton { width: 100%; }
+  .searchButton { width: 100%; justify-content: center; }
+  
   .reportCardHeader { flex-direction: column; align-items: stretch; }
-  .reportCardScoreGroup { align-items: flex-start; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #eee; }
-  .reportCardRank { font-size: 20px; }
-  .reportCardName { font-size: 16px; }
-  .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 16px; }
-  .satisfactionCardHeader { border-right: none; border-bottom: 1px solid #ffeeba; padding-right: 0; padding-bottom: 16px; align-items: center; flex-direction: row; justify-content: center; gap: 16px; }
+  .reportCardScoreGroup { align-items: flex-start; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #eee; }
+  
+  .reportCardRank { font-size: 24px; border-right: none; padding-right: 0; }
+  .reportCardName { font-size: 18px; }
+  
+  .satisfactionCardBreakdown { grid-template-columns: 1fr; gap: 24px; }
+  .satisfactionCardHeader { 
+    border-right: none; 
+    border-bottom: 1px solid #f0f0f0; 
+    padding-right: 0; 
+    padding-bottom: 20px; 
+    align-items: center; 
+    flex-direction: row; 
+    justify-content: center; 
+    gap: 20px; 
+  }
+  .satisfactionCardScore { font-size: 56px; } /* ปรับลดลงนิดหน่อยสำหรับมือถือ */
 }
 
 @media screen and (max-width: 480px) {
-  .mockHBarItem { grid-template-columns: 90px 1fr 45px; gap: 8px; }
-  .mockHBarLabel { font-size: 12px; }
-  .chartBox { padding: 16px; }
-  .reportCardRank { font-size: 18px; }
-  .reportCardName { font-size: 15px; }
-  .reportCardFilterBar .filterGroup { width: 100%; }
-  .satisfactionCardScore { font-size: 32px; }
+  .mockHBarItem { grid-template-columns: 100px 1fr 50px; gap: 8px; }
+  .mockHBarLabel { font-size: 13px; }
+  .chartBox { padding: 20px; }
   
-  .orgStatsMenuButton { font-size: 11px; padding: 8px 2px; }
-  .orgStatsMenuButton svg { font-size: 18px; }
+  .satisfactionCardScore { font-size: 42px; }
+  .satisfactionCardStar { font-size: 20px; }
+  
+  .orgStatsMenuButton { font-size: 11px; padding: 10px 2px; }
+  .orgStatsMenuButton svg { font-size: 20px; }
 }
