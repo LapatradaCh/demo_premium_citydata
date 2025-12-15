@@ -17,7 +17,7 @@
 }
 
 /* =========================================
-   2. SIDEBAR (เมนูซ้าย)
+   2. SIDEBAR (เมนูซ้าย) - แก้ไขการจัดเรียง
    ========================================= */
 .orgStatsSidebar {
   flex-shrink: 0;
@@ -51,6 +51,8 @@
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
+  /* จัดชิดซ้ายเสมอ */
+  justify-content: flex-start;
   gap: 16px;
   width: 100%;
   padding: 0 20px;
@@ -71,6 +73,11 @@
 
 .orgStatsMenuButton svg {
   font-size: 20px;
+  /* ล็อคความกว้างไอคอนเพื่อให้ตัวหนังสือตรงกัน */
+  width: 24px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #999;
   flex-shrink: 0;
   transition: color 0.2s ease;
@@ -79,7 +86,8 @@
 .orgStatsMenuButton:hover {
   background-color: #f8f9fa;
   color: #000;
-  transform: translateX(4px);
+  /* ลบ transform เพื่อไม่ให้ขยับ */
+  transform: none; 
 }
 
 .orgStatsMenuButton.active {
@@ -87,7 +95,8 @@
   color: #ffffff;
   font-weight: 700;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transform: translateX(4px);
+  /* ลบ transform เพื่อไม่ให้ขยับ */
+  transform: none; 
 }
 
 .orgStatsMenuButton.active svg {
@@ -304,12 +313,28 @@
    ========================================= */
 @media screen and (max-width: 768px) {
   .orgStatsContainer { flex-direction: column; padding: 16px; }
+  
+  /* ปรับ Sidebar ให้เป็นเมนูแนวนอนด้านบนเมื่อจอเล็ก */
   .orgStatsSidebar { width: 100%; position: static; margin-bottom: 24px; padding: 16px; }
   .orgStatsMenuNav { flex-direction: row; overflow-x: auto; gap: 12px; padding-bottom: 4px; }
-  .orgStatsMenuButton { flex: 0 0 auto; width: 120px; height: auto; flex-direction: column; justify-content: center; text-align: center; white-space: normal; padding: 16px 8px; border: 1px solid #eee; background: #fff; }
-  .orgStatsMenuButton svg { margin-bottom: 8px; }
   
-  /* Elements */
+  /* ปรับปุ่มให้เป็นแนวตั้งเพื่อประหยัดที่ในแนวนอน */
+  .orgStatsMenuButton { 
+    flex: 0 0 auto; 
+    width: 120px; 
+    height: auto; 
+    flex-direction: column; 
+    justify-content: center; 
+    text-align: center; 
+    white-space: normal; 
+    padding: 16px 8px; 
+    border: 1px solid #eee; 
+    background: #fff; 
+  }
+  
+  .orgStatsMenuButton svg { margin-bottom: 8px; width: auto; } /* คืนค่า width อัตโนมัติในโหมดมือถือ */
+  
+  /* Elements อื่นๆ */
   .mockHBarItem { grid-template-columns: 100px 1fr 40px; gap: 10px; }
   .satisfactionHighlightGrid { grid-template-columns: 1fr; }
   .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; gap: 16px; }
