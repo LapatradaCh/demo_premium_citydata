@@ -276,14 +276,17 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 <p className={styles.descText}>{info.description}</p>
             </div>
 
-            {/* --- Info Boxes (New Grid Layout) --- */}
+            {/* --- Info Boxes (New Grid Layout with Icons) --- */}
             <div className={styles.metaGrid}>
+                
                 {/* Box 1: Category */}
                 <div className={styles.metaBox}>
-                    <span className={styles.metaLabel}>
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-                        หมวดหมู่ปัญหา
-                    </span>
+                    <div className={styles.metaHeader}>
+                        <div className={`${styles.iconWrapper} ${styles.iconBlue}`}>
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+                        </div>
+                        <span className={styles.metaLabel}>หมวดหมู่</span>
+                    </div>
                     <span className={styles.metaValue}>
                         {info.category}
                     </span>
@@ -291,18 +294,20 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
                 {/* Box 2: Rating */}
                 <div className={styles.metaBox}>
-                    <span className={styles.metaLabel}>
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        ความพึงพอใจ
-                    </span>
+                    <div className={styles.metaHeader}>
+                        <div className={`${styles.iconWrapper} ${styles.iconYellow}`}>
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <span className={styles.metaLabel}>ความพึงพอใจ</span>
+                    </div>
                     <div className={styles.metaValue}>
+                        <span className={styles.ratingNumber}>{info.rating.toFixed(1)}</span>
                         <div className={styles.starContainer}>
                             ★★★★★
                             <div className={styles.starFilled} style={{ width: `${(info.rating / 5) * 100}%` }}>
                                 ★★★★★
                             </div>
                         </div>
-                        <span className={styles.ratingNumber}>{info.rating.toFixed(1)}</span>
                     </div>
                 </div>
             </div>
@@ -310,10 +315,10 @@ const ReportDetail = ({onGoToInternalMap }) => {
           </div>
           
           <div className={styles.actionRow}>
-             <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
+             <button className={styles.btnSecondary} onClick={() => setShowTypeModal(true)}>
                 <IconEdit /> เปลี่ยนหมวดหมู่
              </button>
-             <button className={styles.editButton} onClick={() => setShowStatusModal(true)}>
+             <button className={styles.btnPrimary} onClick={() => setShowStatusModal(true)}>
                 <IconRefresh /> อัปเดตสถานะ
              </button>
           </div>
