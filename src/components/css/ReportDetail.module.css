@@ -58,7 +58,7 @@
   font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
 }
 
-/* --- ส่วนรายละเอียด (Description) ปรับใหม่ตามขอ --- */
+/* --- ส่วนรายละเอียด (Description) --- */
 /* กล่องสีเทาอ่อน ไม่มีขีดดำ อ่านง่าย */
 .descriptionContainer {
   background-color: #F3F4F6;
@@ -81,7 +81,7 @@
   color: #1F2937;
   line-height: 1.6;
   margin: 0;
-  white-space: pre-line; /* เว้นวรรคตามที่พิมพ์มา */
+  white-space: pre-line;
 }
 
 /* --- Status Badges (สีสดใส) --- */
@@ -90,8 +90,7 @@
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
   border: 1px solid transparent;
-  /* จัดตำแหน่งให้สวยงาม */
-  margin-left: auto; 
+  margin-left: auto; /* ดันไปขวาสุด */
 }
 
 /* กำหนดสีสถานะ */
@@ -193,7 +192,7 @@
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. MODALS */
+/* 5. MODALS & FORMS */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -208,14 +207,29 @@
   display: flex; flex-direction: column; gap: 20px;
   max-height: 90vh; overflow-y: auto;
   animation: slideUp 0.3s ease-out;
+  position: relative;
 }
+
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
+
+/* --- ปุ่มปิด (Close Button) แก้ไขแล้ว --- */
 .closeButton {
-  background: transparent; border: none; width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center; cursor: pointer; color: #9CA3AF;
+  background-color: #EF4444; /* พื้นหลังสีแดง */
+  color: #FFFFFF;            /* กากบาทสีขาว */
+  border: none;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.closeButton:hover { color: #EF4444; background-color: #FEF2F2; border-radius: 50%; }
+.closeButton:hover { 
+  background-color: #DC2626; 
+  transform: scale(1.1);
+}
+.closeButton svg { width: 18px; height: 18px; stroke-width: 3px; }
 
 /* Form Elements */
 .formGroup { display: flex; flex-direction: column; gap: 8px; }
