@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import styles from './css/ReportDetail.module.css'; // ตรวจสอบ Path ให้ถูก
+import styles from './css/ReportDetail.module.css'; // ตรวจสอบ Path
 
 // --- Icons Components ---
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
@@ -12,38 +12,27 @@ const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="curre
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconClose = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-// Timeline Icons
+// Timeline Icons (เก็บไว้เผื่อใช้ แต่ CSS ซ่อนไว้ตามแบบเอกสาร)
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
-const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
-const IconWrench = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
-const IconCheck = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>);
-const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>);
-const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
-const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
+// ... icons อื่นๆ ใช้ตัวเดิม ...
 
 const ReportDetail = ({ onGoToInternalMap }) => {
   const reportId = localStorage.getItem("selectedCaseId");
   
-  // Data States
   const [caseInfo, setCaseInfo] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0); 
-
-  // Modal & Input States
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
-
-  // Update Logic States
   const [issueTypeList, setIssueTypeList] = useState([]);
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [statusComment, setStatusComment] = useState(""); 
   
-  // Fetch Issue Types
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -59,7 +48,6 @@ const ReportDetail = ({ onGoToInternalMap }) => {
     fetchIssueTypes();
   }, []);
 
-  // Fetch Case Detail
   useEffect(() => {
     const idToFetch = reportId;
     const fetchCaseDetail = async () => {
@@ -85,9 +73,7 @@ const ReportDetail = ({ onGoToInternalMap }) => {
             description: result.info.description || "-", 
             rating: result.info.rating ? parseFloat(result.info.rating) : 0.0,
             status: result.info.status || "รอรับเรื่อง",
-            locationDetail: (lat && lng) 
-              ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` 
-              : (result.info.location_detail || "ไม่ระบุพิกัด"),
+            locationDetail: (lat && lng) ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` : (result.info.location_detail || "ไม่ระบุพิกัด"),
             lat: lat,
             lng: lng,
             image: result.info.cover_image_url || null,
@@ -97,26 +83,20 @@ const ReportDetail = ({ onGoToInternalMap }) => {
         setCaseInfo(mappedInfo);
         setTimelineData(result.timeline || []);
         setLoading(false);
-
       } catch (err) {
         console.error("Error fetching details:", err);
         setError(err.message);
         setLoading(false);
       }
     };
-
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // Update Category
+  // ... Update Functions (Category/Status) Code เดิม ...
   const handleUpdateCategory = async () => {
-    if (!selectedIssueType || !caseInfo) {
-        alert("กรุณาเลือกประเภทปัญหา");
-        return;
-    }
+    if (!selectedIssueType || !caseInfo) { alert("กรุณาเลือกประเภทปัญหา"); return; }
     const storedUserId = localStorage.getItem("user_id");
     const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
-
     try {
         setIsUpdating(true);
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
@@ -131,91 +111,35 @@ const ReportDetail = ({ onGoToInternalMap }) => {
                 user_id: currentUserId 
             })
         });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || errorData.message || 'Update failed');
-        }
-
+        if (!response.ok) throw new Error('Update failed');
         setShowTypeModal(false);
         setRefreshKey(prev => prev + 1); 
         alert('เปลี่ยนประเภทปัญหาเรียบร้อยแล้ว');
-
-    } catch (err) {
-        alert('เกิดข้อผิดพลาด: ' + err.message);
-    } finally {
-        setIsUpdating(false);
-    }
+    } catch (err) { alert('เกิดข้อผิดพลาด: ' + err.message); } finally { setIsUpdating(false); }
   };
 
-  // Update Status
   const handleUpdateStatus = async () => {
     if (!caseInfo) return;
-    let finalImageUrl = null;
-    // Note: Image upload logic handled separately or assumed pre-uploaded if needed in real implementation
-    // For this code, we just send status text
     const storedUserId = localStorage.getItem("user_id");
     const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
-
     try {
         setIsUpdating(true);
         const payload = {
-            action: 'update_status',            
-            case_id: caseInfo.real_id,          
-            user_id: currentUserId,              
-            new_status: statusValue,            
-            comment: statusComment,              
-            image_url: finalImageUrl            
+            action: 'update_status', case_id: caseInfo.real_id, user_id: currentUserId, new_status: statusValue, comment: statusComment, image_url: null            
         };
-
         const response = await fetch('https://premium-citydata-api-ab.vercel.app/api/crud_case_detail', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Update failed');
-        }
-
+        if (!response.ok) throw new Error('Update failed');
         alert("ปรับสถานะเรียบร้อยแล้ว");
-        setShowStatusModal(false);
-        setStatusComment("");       
-        setSelectedImage(null);     
-        setRefreshKey(prev => prev + 1); 
-
-    } catch (err) {
-        alert("เกิดข้อผิดพลาด: " + err.message);
-    } finally {
-        setIsUpdating(false);
-    }
+        setShowStatusModal(false); setStatusComment(""); setSelectedImage(null); setRefreshKey(prev => prev + 1); 
+    } catch (err) { alert("เกิดข้อผิดพลาด: " + err.message); } finally { setIsUpdating(false); }
   };
 
-
-  const info = caseInfo || {
-    id: "LOADING...",
-    title: "กำลังโหลด...",
-    category: "-",
-    description: "-", 
-    rating: 0.0,
-    status: "รอรับเรื่อง", 
-    locationDetail: "-",
-    lat: null, 
-    lng: null,
-    image: null,
-    agency: "-" 
-  };
-
+  const info = caseInfo || { id: "LOADING...", title: "กำลังโหลด...", category: "-", description: "-", rating: 0.0, status: "รอรับเรื่อง", locationDetail: "-", lat: null, lng: null, image: null, agency: "-" };
   const [statusValue, setStatusValue] = useState(info.status);
-   
-  useEffect(() => {
-    if (showStatusModal) {
-      setStatusValue(info.status);
-    }
-  }, [showStatusModal, info.status]);
+  useEffect(() => { if (showStatusModal) setStatusValue(info.status); }, [showStatusModal, info.status]);
 
-  // Helper Functions
   const getStatusClass = (status = "") => {
     if (!status) return styles.statusDefault;
     if (status.includes('รอ')) return styles.statusPending;
@@ -227,36 +151,21 @@ const ReportDetail = ({ onGoToInternalMap }) => {
     if (status.includes('ปฏิเสธ')) return styles.statusReject;
     return styles.statusDefault;
   };
-
+  
   const getTimelineColorType = (status = "") => {
-    if (!status) return 'red';
-    if (status.includes('รอ')) return 'red';
-    if (status.includes('ประสาน')) return 'purple';
-    if (status.includes('ดำเนินการ')) return 'yellow';
-    if (status.includes('เสร็จ')) return 'green';
-    if (status.includes('ส่งต่อ')) return 'blue';
-    if (status.includes('เชิญ')) return 'teal';
-    if (status.includes('ปฏิเสธ')) return 'dark';
-    return 'red';
-  };
-
-  const getTimelineIcon = (status = "") => {
-    if (!status) return <IconClock />;
-    if (status.includes('รอ')) return <IconClock />;
-    if (status.includes('ประสาน')) return <IconPhone />;
-    if (status.includes('ดำเนินการ')) return <IconWrench />;
-    if (status.includes('เสร็จ')) return <IconCheck />;
-    if (status.includes('ส่งต่อ')) return <IconArrowRight />;
-    if (status.includes('เชิญ')) return <IconUsers />;
-    if (status.includes('ปฏิเสธ')) return <IconX />;
-    return <IconClock />;
+    if (!status) return 'textRed';
+    if (status.includes('รอ')) return 'textRed';
+    if (status.includes('ประสาน')) return 'textPurple';
+    if (status.includes('ดำเนินการ')) return 'textYellow';
+    if (status.includes('เสร็จ')) return 'textGreen';
+    if (status.includes('ส่งต่อ')) return 'textBlue';
+    return 'textDark';
   };
 
   const formatThaiDateTime = (isoString) => {
     if (!isoString) return { date: '-', time: '-' };
     const dateObj = new Date(isoString);
     if (isNaN(dateObj.getTime())) return { date: '-', time: '-' };
-
     const day = dateObj.getDate();
     const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     const month = months[dateObj.getMonth()];
@@ -274,11 +183,9 @@ const ReportDetail = ({ onGoToInternalMap }) => {
         return {
             type: getTimelineColorType(log.status),
             status: log.status,
-            date: date,
-            time: time,
+            date: date, time: time,
             header: `โดย: ${log.changed_by || 'ระบบ'}`, 
             detail: log.detail,
-            icon: getTimelineIcon(log.status)
         };
     });
   }, [timelineData]);
@@ -288,81 +195,50 @@ const ReportDetail = ({ onGoToInternalMap }) => {
     const query = info.lat && info.lng ? `${info.lat},${info.lng}` : encodeURIComponent(info.locationDetail || "แผนที่");
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleRemoveImage = (e) => {
-    e.stopPropagation(); 
-    setSelectedImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = ''; 
-  };
+  const handleFileChange = (e) => { const file = e.target.files[0]; if (file) setSelectedImage(URL.createObjectURL(file)); };
+  const triggerFileInput = () => { fileInputRef.current.click(); };
+  const handleRemoveImage = (e) => { e.stopPropagation(); setSelectedImage(null); if (fileInputRef.current) fileInputRef.current.value = ''; };
 
   if (loading) return <div className={styles.container}><div style={{padding:'40px', textAlign:'center', color: '#6B7280'}}>กำลังโหลดข้อมูล...</div></div>;
-  if (error) return (
-    <div className={styles.container}>
-        <div style={{padding:'40px', textAlign:'center', color:'red'}}>
-            เกิดข้อผิดพลาด: {error}
-            <br/>
-            <button onClick={() => window.location.reload()} style={{marginTop:'10px', padding:'5px 10px'}}>ลองใหม่</button>
-        </div>
-    </div>
-  );
+  if (error) return (<div className={styles.container}><div style={{padding:'40px', textAlign:'center', color:'red'}}>Error: {error}</div></div>);
 
   return (
     <div className={styles.container}>
-       
-      {/* Top Section */}
+      
+      {/* 1. TOP SECTION (STACKED) */}
       <div className={styles.topSection}>
+        
+        {/* INFO CARD (บนสุด) */}
         <div className={`${styles.card} ${styles.infoCard}`}>
-          <div>
-            <p className={styles.label}>รหัสเรื่อง: {info.id}</p>
-            <h2 className={styles.title}>{info.title}</h2>
-            <div className={styles.categoryText}>
-               <span>ประเภท: {info.category}</span>
-            </div>
-            
-            {/* Description Section */}
-            <div style={{ marginTop: '12px', marginBottom: '20px', fontSize: '0.95rem', color: '#374151' }}>
-                <p style={{ fontWeight: '600', marginBottom: '4px', fontSize:'0.85rem', color:'#94A3B8', textTransform:'uppercase', letterSpacing:'0.5px' }}>รายละเอียด:</p>
-                <p style={{ lineHeight: '1.6', color: '#475569' }}>{info.description}</p>
-            </div>
-
-            {/* Status & Rating */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', marginBottom: '8px' }}>
-                <div className={`${styles.statusBadge} ${getStatusClass(info.status)}`}>
-                    <span>{info.status}</span>
+            <div>
+                <p className={styles.label}>รหัสเรื่อง: {info.id}</p>
+                <h2 className={styles.title}>{info.title}</h2>
+                <div className={styles.categoryText}>
+                    <span>ประเภท: {info.category}</span>
                 </div>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ color: '#F59E0B', fontSize: '18px' }}>★</span>
-                    <span style={{ fontSize: '14px', color: '#4B5563', fontWeight: '600' }}>
-                        {info.rating > 0 ? info.rating.toFixed(1) : '0.0'}
-                    </span>
+                <div style={{ marginTop: '10px', marginBottom: '15px' }}>
+                    <div className={`${styles.statusBadge} ${getStatusClass(info.status)}`}>
+                        {info.status}
+                    </div>
+                </div>
+
+                <div style={{ fontSize: '14px', color: '#334155', lineHeight: '1.6', marginBottom: '15px' }}>
+                     <strong>รายละเอียด:</strong> {info.description}
+                </div>
+
+                <div className={styles.actionRow}>
+                    <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
+                        <IconEdit /> เปลี่ยนประเภท
+                    </button>
+                    <button className={styles.editButton} onClick={() => setShowStatusModal(true)}>
+                        <IconRefresh /> ปรับสถานะ
+                    </button>
                 </div>
             </div>
-
-            <div className={styles.actionRow}>
-             <button className={styles.editButton} onClick={() => setShowTypeModal(true)}>
-                <IconEdit /> เปลี่ยนประเภท
-             </button>
-             <button className={styles.editButton} onClick={() => setShowStatusModal(true)}>
-                <IconRefresh /> ปรับสถานะ
-             </button>
-            </div>
-          </div>
         </div>
 
-        {/* Image Card */}
+        {/* IMAGE CARD (ต่อจากด้านบน) */}
         <div className={styles.imageCard}>
           {info.image ? (
             <img src={info.image} alt="Report Issue" className={styles.realImage} />
@@ -375,194 +251,117 @@ const ReportDetail = ({ onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* Middle Section */}
+      {/* 2. MIDDLE SECTION (STACKED) */}
       <div className={styles.middleSection}>
         <div className={`${styles.card} ${styles.locationCard}`}>
-          <div>
             <div className={styles.sectionHeader}><IconMapPin /> ตำแหน่งที่แจ้ง</div>
             <p className={styles.locationText}>{info.locationDetail}</p>
-          </div>
-          <div className={styles.buttonGroup}>
-            <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
-              <IconInternalMap /> แผนที่ภายใน
-            </button>
-            <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
-              <IconGoogle /> Google Maps
-            </button>
-          </div>
+            <div className={styles.buttonGroup}>
+                <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
+                   <IconInternalMap /> แผนที่ภายใน
+                </button>
+                <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
+                   <IconGoogle /> Google Maps
+                </button>
+            </div>
         </div>
 
         <div className={`${styles.card} ${styles.agencyCard}`}>
-          <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
-          <ul className={styles.agencyList}>
-            <li className={styles.agencyItem}>{info.agency}</li>
-          </ul>
+             <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่เกี่ยวข้อง</div>
+             <ul className={styles.agencyList}>
+                <li className={styles.agencyItem}>{info.agency}</li>
+             </ul>
         </div>
       </div>
 
-      {/* Bottom Section (Timeline) */}
+      {/* 3. TIMELINE (TABLE STYLE) */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
-        <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
-        {timelineEvents.length === 0 ? (
+         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
+         {timelineEvents.length === 0 ? (
             <div style={{padding:'20px', textAlign:'center', color:'#9CA3AF'}}>ยังไม่มีประวัติการดำเนินงาน</div>
-        ) : (
+         ) : (
             <div className={styles.timelineContainer}>
-            {timelineEvents.map((event, index) => {
-                let colorTitleClass = styles.textRed;
-                let colorBgClass = styles.bgRed;
-                switch(event.type) {
-                case 'blue': colorTitleClass = styles.textBlue; colorBgClass = styles.bgBlue; break;
-                case 'green': colorTitleClass = styles.textGreen; colorBgClass = styles.bgGreen; break;
-                case 'yellow': colorTitleClass = styles.textYellow; colorBgClass = styles.bgYellow; break;
-                case 'purple': colorTitleClass = styles.textPurple; colorBgClass = styles.bgPurple; break;
-                case 'teal': colorTitleClass = styles.textTeal; colorBgClass = styles.bgTeal; break;
-                case 'dark': colorTitleClass = styles.textDark; colorBgClass = styles.bgDark; break;
-                default: colorTitleClass = styles.textRed; colorBgClass = styles.bgRed;
-                }
-
-                return (
-                <div key={index} className={styles.timelineRow}>
-                    <div className={styles.timeLeft}>
-                    <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
-                    <span className={styles.statusTime}>{event.date}</span>
-                    <span className={styles.statusTime}>{event.time}</span>
+                {timelineEvents.map((event, index) => (
+                    <div key={index} className={styles.timelineRow}>
+                        <div className={styles.timeLeft}>
+                            <span className={styles.statusTime}>{event.date}</span>
+                            <span className={styles.statusTime}>{event.time}</span>
+                            <span className={`${styles.statusTitle} ${styles[event.type]}`} style={{marginTop:'4px'}}>{event.status}</span>
+                        </div>
+                        <div className={styles.timeRight}>
+                            <div className={styles.durationText}>{event.header}</div>
+                            <div className={styles.detailBody}>{event.detail}</div>
+                        </div>
                     </div>
-                    <div className={styles.timeCenter}>
-                    <div className={`${styles.iconCircle} ${colorBgClass}`}>{event.icon}</div>
-                    <div className={styles.line}></div>
-                    </div>
-                    <div className={styles.timeRight}>
-                    <div className={styles.mobileHeader}>
-                        <span className={`${styles.statusTitle} ${colorTitleClass}`}>{event.status}</span>
-                        <span className={styles.statusTime}>{event.date} {event.time}</span>
-                    </div>
-                    <div className={styles.durationText}>{event.header}</div>
-                    <div className={styles.detailBody}>{event.detail}</div>
-                    </div>
-                </div>
-                );
-            })}
+                ))}
             </div>
-        )}
+         )}
       </div>
 
-      {/* ================= MODALS ================= */}
-       
-      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
+      {/* --- MODALS (Code เดิมใช้ได้เลย) --- */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>เปลี่ยนประเภทปัญหา</h3>
-              <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}>
-                <IconClose />
-              </button>
-            </div>
-             
-            <div className={styles.modalScrollableContent}>
+             <div className={styles.modalHeader}>
+                 <h3 className={styles.modalTitle}>เปลี่ยนประเภทปัญหา</h3>
+                 <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}><IconClose /></button>
+             </div>
+             <div className={styles.modalScrollableContent}>
                 <div className={styles.typeGrid}>
-                   
-                  {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888'}}>กำลังโหลดประเภท...</p>}
-
-                  {issueTypeList.map((typeItem) => {
-                    const isSelected = selectedIssueType 
-                          ? selectedIssueType.issue_id === typeItem.issue_id 
-                          : info.category === typeItem.name;
-
-                    return (
-                        <div 
-                            key={typeItem.issue_id} 
-                            className={`${styles.typeItem} ${isSelected ? styles.selected : ''}`}
-                            onClick={() => setSelectedIssueType(typeItem)}
-                        >
-                        <div className={styles.typeCircle}><span>?</span></div>
-                        <span className={styles.typeLabel}>{typeItem.name}</span>
-                        </div>
-                    );
-                  })}
+                   {issueTypeList.map((typeItem) => (
+                       <div key={typeItem.issue_id} className={`${styles.typeItem} ${((selectedIssueType && selectedIssueType.issue_id === typeItem.issue_id) || (!selectedIssueType && info.category === typeItem.name)) ? styles.selected : ''}`} onClick={() => setSelectedIssueType(typeItem)}>
+                          <div className={styles.typeCircle}>?</div>
+                          <span className={styles.typeLabel}>{typeItem.name}</span>
+                       </div>
+                   ))}
                 </div>
-            </div>
-
-            <div className={styles.modalActions}>
-               <button 
-                  className={styles.btnConfirm} 
-                  onClick={handleUpdateCategory}
-                  disabled={isUpdating}
-               >
-                  {isUpdating ? 'กำลังบันทึก...' : 'เปลี่ยน'}
-               </button>
-            </div>
+             </div>
+             <div className={styles.modalActions}>
+                <button className={styles.btnConfirm} onClick={handleUpdateCategory} disabled={isUpdating}>{isUpdating ? '...' : 'ยืนยัน'}</button>
+             </div>
           </div>
         </div>
       )}
 
-      {/* 2. Modal ปรับสถานะเรื่องแจ้ง (Update Status) */}
       {showStatusModal && (
-        <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
-              <button className={styles.closeButton} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
-                <IconClose />
-              </button>
-            </div>
-            <div className={styles.modalScrollableContent}>
-                <div className={styles.formGroup}>
-                   <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
-                   <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
-                      <option value="รอรับเรื่อง">รอรับเรื่อง</option>
-                      <option value="กำลังประสานงาน">กำลังประสานงาน</option>
-                      <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
-                      <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-                      <option value="ส่งต่อ">ส่งต่อ</option>
-                      <option value="เชิญร่วม">เชิญร่วม</option>
-                      <option value="ปฏิเสธ">ปฏิเสธ</option>
-                    </select>
-                </div>
-                 
-                <div className={styles.formGroup}>
-                   <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
-                   <textarea 
-                        className={styles.formTextarea} 
-                        placeholder="รายละเอียดการดำเนินงาน..."
-                        value={statusComment}
-                        onChange={(e) => setStatusComment(e.target.value)}
-                    ></textarea>
-                </div>
-
-                <div className={styles.formGroup}>
-                   <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
-                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
-                   <div className={styles.uploadBox} onClick={triggerFileInput}>
-                      {selectedImage ? (
-                        <div className={styles.previewWrapper}>
-                          <img src={selectedImage} alt="Preview" className={styles.imagePreview} />
-                          <button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button>
-                        </div>
-                      ) : (
-                        <>
-                          <IconCamera />
-                          <span>แนบรูปภาพ</span>
-                        </>
-                      )}
-                   </div>
-                </div>
-            </div>
-            <div className={styles.modalActions}>
-               <button className={styles.btnCancel} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยกเลิก</button>
-               
-               <button 
-                  className={styles.btnConfirm} 
-                  onClick={handleUpdateStatus}
-                  disabled={isUpdating}
-               >
-                  {isUpdating ? 'กำลังบันทึก...' : 'ยืนยัน'}
-               </button>
-            </div>
-          </div>
+        <div className={styles.modalOverlay} onClick={() => setShowStatusModal(false)}>
+           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                  <h3 className={styles.modalTitle}>ปรับสถานะ</h3>
+                  <button className={styles.closeButton} onClick={() => setShowStatusModal(false)}><IconClose /></button>
+              </div>
+              <div className={styles.modalScrollableContent}>
+                  <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>สถานะ</label>
+                      <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
+                          <option value="รอรับเรื่อง">รอรับเรื่อง</option>
+                          <option value="กำลังประสานงาน">กำลังประสานงาน</option>
+                          <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+                          <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                          <option value="ส่งต่อ">ส่งต่อ</option>
+                          <option value="เชิญร่วม">เชิญร่วม</option>
+                          <option value="ปฏิเสธ">ปฏิเสธ</option>
+                      </select>
+                  </div>
+                  <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>รายละเอียด</label>
+                      <textarea className={styles.formTextarea} value={statusComment} onChange={(e) => setStatusComment(e.target.value)} placeholder="รายละเอียดการดำเนินงาน..."></textarea>
+                  </div>
+                  <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>รูปภาพ</label>
+                      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{display:'none'}} />
+                      <div className={styles.uploadBox} onClick={triggerFileInput}>
+                          {selectedImage ? <div className={styles.previewWrapper}><img src={selectedImage} className={styles.imagePreview} /><button className={styles.removePreviewBtn} onClick={handleRemoveImage}>×</button></div> : <div>+ แนบรูปภาพ</div>}
+                      </div>
+                  </div>
+              </div>
+              <div className={styles.modalActions}>
+                  <button className={styles.btnCancel} onClick={() => setShowStatusModal(false)}>ยกเลิก</button>
+                  <button className={styles.btnConfirm} onClick={handleUpdateStatus} disabled={isUpdating}>{isUpdating ? '...' : 'ยืนยัน'}</button>
+              </div>
+           </div>
         </div>
       )}
-
     </div>
   );
 };
