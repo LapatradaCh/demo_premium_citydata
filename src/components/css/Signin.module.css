@@ -18,8 +18,8 @@
   --border-color: #e5e7eb;  /* สีเส้นขอบอินพุต */
   
   /* สี Action เฉพาะเจาะจงตามรูปที่ 2 */
-  --color-success: #28a745; /* สีเขียว (Solid Green ตามรูป) */
-  --color-danger: #dc3545;  /* สีแดง (Solid Red ตามรูป) */
+  --color-success: #28a745; 
+  --color-danger: #dc3545;
   --color-dark: #000000;    /* สีดำสำหรับปุ่ม OTP (เพื่อให้เข้าธีม) */
 }
 
