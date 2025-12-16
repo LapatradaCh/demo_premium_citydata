@@ -151,7 +151,7 @@
 }
 
 /* =========================================
-   4. KPI CARDS (Solid Colors)
+   4. KPI CARDS & FILTER BUTTONS
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -202,7 +202,7 @@
 .kpiValue { font-size: 32px; font-weight: 800; line-height: 1.2; }
 .kpiSubtext { font-size: 12px; margin-top: 4px; }
 
-/* ปุ่ม Filter */
+/* --- ปุ่ม Filter (แก้ให้ทำงานถูกต้อง) --- */
 .headerControls { margin-left: auto; display: flex; gap: 8px; font-size: 13px; }
 .controlBtn { 
   padding: 6px 16px; 
@@ -216,8 +216,21 @@
   white-space: nowrap;
 }
 .controlBtn:hover { background: #f8f8f8; }
-.controlBtn.activeTotal { background: #000; color: #fff; border-color: #000; }
-.controlBtn.activeCritical { background: #EF4444; color: #fff; border-color: #EF4444; }
+
+/* State Active: ทั้งหมด (สีฟ้าอ่อน) */
+.activeTotal { 
+  background-color: #e6f7ff !important; 
+  color: #1890ff !important; 
+  border-color: #1890ff !important; 
+}
+
+/* State Active: งานค้าง (สีแดงเข้ม) */
+.activeCritical { 
+  background-color: #FF4D4F !important; 
+  color: #ffffff !important; 
+  border-color: #FF4D4F !important; 
+  font-weight: 700;
+}
 
 /* =========================================
    5. CHART & UTILITY COLORS (Palette)
@@ -240,19 +253,12 @@
 .mockStackedBarSegment:hover { filter: brightness(1.1); z-index: 5; }
 
 /* --- รวมรหัสสีทั้งหมดที่นี่ --- */
-/* Emerald (#10B981) */
 .fillGreen, .bg-emerald, .bg-success, .bar-green { background-color: #10B981 !important; }
-/* Red (#EF4444) */
 .fillRed, .bg-red, .bg-critical, .bar-red { background-color: #EF4444 !important; }
-/* Amber (#F59E0B) */
 .fillYellow, .bg-amber, .bar-yellow { background-color: #F59E0B !important; }
-/* Blue (#3B82F6) */
 .fillBlue, .bg-blue { background-color: #3B82F6 !important; }
-/* Cyan (#06B6D4) */
 .fillCyan, .bg-cyan { background-color: #06B6D4 !important; }
-/* Violet (#8B5CF6) */
 .fillViolet, .bg-violet { background-color: #8B5CF6 !important; }
-/* Gray (#9CA3AF) */
 .fillGray, .bg-gray { background-color: #9CA3AF !important; }
 
 .mockHBarValue { font-size: 18px; font-weight: 800; color: #000; text-align: right; }
@@ -267,19 +273,15 @@
 .satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .highlightCard { padding: 16px; border-radius: 12px; border: none; display: flex; flex-direction: column; }
 
-/* Highlight Cards: บังคับใช้สีเขียว/แดง ทึบ เพื่อให้เหมือน KPI เป๊ะ 
-   ตามโจทย์ "เอาสีเดียวกันทั้งหน้า"
-*/
 .highlightCardGreen { 
-  background-color: #10B981 !important; /* Emerald */
+  background-color: #10B981 !important; 
   color: #ffffff !important;
 }
 .highlightCardRed { 
-  background-color: #EF4444 !important; /* Red */
+  background-color: #EF4444 !important; 
   color: #ffffff !important;
 }
 
-/* บังคับ Text ในกล่อง Highlight ให้เป็นขาว */
 .highlightCardGreen *, .highlightCardRed * {
   color: #ffffff !important;
   opacity: 1 !important;
@@ -290,7 +292,6 @@
 .highlightScore { font-size: 36px; font-weight: 800; line-height: 1; }
 .highlightScoreMax { font-size: 14px; font-weight: 500; }
 
-/* รายการอันดับ */
 .reportCardList { display: flex; flex-direction: column; gap: 16px; }
 .reportCardItem { 
   background: #fff; 
@@ -305,7 +306,6 @@
 .reportCardHeader { display: flex; justify-content: space-between; align-items: flex-start; }
 .reportCardTitleGroup { display: flex; align-items: center; gap: 16px; }
 
-/* Badge อันดับ: ใช้สีตาม Palette */
 .reportCardRank { 
   font-size: 18px; 
   font-weight: 900; 
@@ -320,17 +320,16 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   margin-right: 8px;
 }
-.reportCardRank.rank1 { background: #F59E0B !important; } /* Amber */
-.reportCardRank.rank2 { background: #9CA3AF !important; } /* Gray */
+.reportCardRank.rank1 { background: #F59E0B !important; } 
+.reportCardRank.rank2 { background: #9CA3AF !important; } 
 .reportCardRank.rank3 { background: #A1887F !important; }
 
 .reportCardName { font-size: 18px; font-weight: 700; color: #333; }
 .reportCardScoreGroup { text-align: right; }
-.reportCardScoreText { font-size: 32px; font-weight: 800; color: #F59E0B; line-height: 1; } /* คะแนนสีทอง */
+.reportCardScoreText { font-size: 32px; font-weight: 800; color: #F59E0B; line-height: 1; } 
 .reportCardScoreStars { margin: 4px 0; }
 .reportCardScoreReviews { font-size: 12px; color: #9CA3AF; }
 
-/* Progress Bar */
 .reportCardProgressBg { 
   margin-top: 16px; 
   height: 12px; 
@@ -356,7 +355,6 @@
 .slaAvgValue { font-size: 32px; font-weight: 800; color: #1e40af; line-height: 1; }
 .slaUnit { font-size: 16px; font-weight: 500; margin-left: 4px; }
 
-/* Chart */
 .mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; position: relative; }
 .mockHBar { height: 16px; background: #f1f3f5; border-radius: 8px; overflow: hidden; }
 
@@ -364,10 +362,8 @@
   height: 100%; 
   border-radius: 8px; 
   transition: width 0.6s ease;
-  /* สีจะถูก override ด้วย utility class .bg-success / .bg-critical ด้านบน */
 }
 
-/* เส้นประ Target: สีแดง (#EF4444) */
 .slaLineContainer { position: absolute; top: 0; bottom: 0; border-left: 2px dashed #EF4444; z-index: 10; opacity: 0.5; pointer-events: none; }
 .slaLabel { position: absolute; top: -25px; left: -30px; background: #EF4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
@@ -413,23 +409,4 @@
   .slaAvgInfo, .donutTopTypeBox { text-align: left; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; }
   .controlBtn { flex: 1; text-align: center; }
-}
-
-
-.activeCritical {
-  /* พื้นหลังสีแดง (ใช้ code สีเดียวกับตัวแปร COLORS.pending ในไฟล์ js ของคุณ) */
-  background-color: #FF4D4F !important; 
-  /* เส้นขอบสีแดง */
-  border-color: #FF4D4F !important;
-  /* ตัวอักษรสีขาว */
-  color: #ffffff !important;
-  /* (ตัวเลือกเสริม) ทำให้ตัวหนาขึ้น */
-  font-weight: 500;
-}
-
-/* (แถม) ส่วนของปุ่ม "ทั้งหมด" ถ้าอยากให้ Active แล้วเป็นสีฟ้า */
-.activeTotal {
-  border-color: #1890ff;
-  color: #1890ff;
-  background-color: #e6f7ff;
 }
