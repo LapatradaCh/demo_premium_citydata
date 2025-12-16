@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ path ให้ตรงกับโปรเจกต์ของคุณ
+import styles from './css/OrgStatisticsView.module.css'; 
 import { 
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers 
@@ -63,7 +63,6 @@ const WorkloadView = ({ data }) => {
                className={`${styles.controlBtn} ${sortBy === 'total' ? styles.activeTotal : ''}`}
              >ทั้งหมด</button>
              
-             {/* --- จุดที่แก้ไข: เปลี่ยนข้อความเป็น "งานค้าง (วิกฤต)" --- */}
              <button 
                onClick={() => setSortBy('pending')}
                className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
@@ -94,6 +93,12 @@ const WorkloadView = ({ data }) => {
       <div className={styles.mockStackedBarChart}>
         {sortedData.map((item, index) => {
           const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
+          
+          // --- ส่วนที่เพิ่มใหม่: คำนวณ % งานค้าง ---
+          const pendingRate = item.total > 0 ? (item.pending / item.total) * 100 : 0;
+          // ตั้งค่าเกณฑ์แจ้งเตือนที่ 40% (ปรับตัวเลขได้ตามต้องการ)
+          const isCriticalPending = pendingRate >= 40; 
+
           return (
             <div key={index} style={{ marginBottom: '24px' }}>
               
@@ -145,6 +150,23 @@ const WorkloadView = ({ data }) => {
                    );
                  })}
               </div>
+
+              {/* --- ส่วนที่เพิ่มใหม่: แสดงข้อความแจ้งเตือนสีแดง --- */}
+              {isCriticalPending && (
+                <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    marginTop: '8px', 
+                    color: '#EF4444', 
+                    fontSize: '13px', 
+                    fontWeight: '600' 
+                }}>
+                    <AlertCircle size={14} />
+                    <span>งานค้างสูงผิดปกติ ({pendingRate.toFixed(0)}%)</span>
+                </div>
+              )}
+
             </div>
           );
         })}
