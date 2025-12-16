@@ -338,15 +338,15 @@
 }
 .btnCancel:hover { background-color: #DC2626; }
 
-/* ✅ ปุ่มยืนยัน (เปลี่ยนสีเป็น #28a745) */
+/* ✅ ปุ่มยืนยัน (สีเขียว #28a745) */
 .btnConfirm { 
   flex: 1; 
   padding: 12px; border-radius: 50px; border: none; 
-  background-color: #28a745; /* สีเขียวใหม่ */
+  background-color: #28a745; 
   color: #FFFFFF; 
   font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
-.btnConfirm:hover { background-color: #218838; /* สีเขียวเข้มขึ้น */ }
+.btnConfirm:hover { background-color: #218838; }
 
 /* Type Selector */
 .typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
