@@ -13,10 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  
-  /* ✅ แก้ไข: เอาลายจุดออก กลับมาเป็นขาวล้วน Clean ๆ */
-  background-color: #FFFFFF;
-  
+  background-color: #FFFFFF; /* พื้นหลังสีขาวล้วน (Clean) */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -26,10 +23,8 @@
   border-radius: 16px;
   border: 1px solid #E5E7EB;
   padding: 24px;
-  
-  /* เงาแบบ Soft Shadow ดูมีมิติ */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 8px 16px rgba(0,0,0,0.04);
-  
+  /* เงา Soft Shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
@@ -38,7 +33,6 @@
 }
 
 .card:hover {
-  /* Hover Effect: ยกการ์ดขึ้นเล็กน้อย + เงาชัดขึ้น */
   transform: translateY(-4px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 12px 24px rgba(0,0,0,0.08);
   border-color: #CBD5E1;
@@ -166,7 +160,6 @@
 /* --- Action Buttons --- */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
 
-/* Secondary Button (White) */
 .btnSecondary {
   background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
@@ -175,7 +168,6 @@
 }
 .btnSecondary:hover { border-color: #CBD5E1; background-color: #F8FAFC; color: #1E293B; }
 
-/* Primary Button (Dark) */
 .btnPrimary {
   background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
@@ -192,7 +184,7 @@
 /* Image Card */
 .imageCard {
   background-color: #FFFFFF;
-  border: 1px solid #E5E7EB; /* เส้นทึบเรียบร้อย */
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 0; min-height: 300px; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
@@ -202,7 +194,7 @@
 .imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
 /* ========================================= */
-/* 3. MIDDLE SECTION */
+/* 3. MIDDLE & BOTTOM SECTIONS */
 /* ========================================= */
 .sectionHeader { 
   font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
@@ -222,62 +214,69 @@
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 .googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
-/* ========================================= */
-/* 4. TIMELINE */
-/* ========================================= */
+/* Timeline */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
 .timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
-
 .timeLeft { text-align: right; padding-right: 15px; padding-top: 2px; }
 .statusTitle { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
 .statusTime { font-size: 12px; color: #9CA3AF; line-height: 1.4; }
-
 .timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
 .line { width: 2px; background-color: #E5E7EB; flex-grow: 1; margin-top: 4px; min-height: 40px; }
 .timelineRow:last-child .line { display: none; }
-.iconCircle { 
-  width: 32px; height: 32px; border-radius: 50%; 
-  display: flex; align-items: center; justify-content: center; z-index: 2; 
-  color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
+.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
 .bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
 .bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
 .bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
 .bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
 .bgDefault { background: linear-gradient(135deg, #6B7280, #374151); } .textDefault { color: #374151; }
-
 .timeRight { padding-left: 15px; padding-bottom: 30px; }
 .durationText { font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 4px; }
 .detailBody { font-size: 14px; color: #6B7280; line-height: 1.5; }
-
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. MODALS & FORMS */
+/* 5. DRAWER / SIDE PANEL (NEW) */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-  animation: fadeIn 0.2s ease-out;
-}
-.modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 420px;
-  border-radius: 16px; padding: 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  display: flex; flex-direction: column; gap: 20px;
-  max-height: 90vh; overflow-y: auto;
-  animation: slideUp 0.3s ease-out;
-  position: relative;
+  background-color: rgba(0,0,0,0.5); backdrop-filter: blur(2px);
+  z-index: 9990; opacity: 0; animation: fadeInOverlay 0.3s forwards;
 }
 
-.modalHeader { display: flex; justify-content: space-between; align-items: center; }
+.modalContent {
+  position: fixed; top: 0; right: 0;
+  width: 100%; max-width: 450px; height: 100%;
+  background-color: #FFFFFF; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  animation: slideInRight 0.3s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 9999;
+}
+
+.modalHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px; border-bottom: 1px solid #E5E7EB; background-color: #FFFFFF;
+  flex-shrink: 0;
+}
+
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* ปุ่มปิด (สีแดง - ใหญ่) */
+.modalBody {
+  flex-grow: 1; overflow-y: auto; padding: 24px;
+  scrollbar-width: thin; scrollbar-color: #CBD5E1 #F1F5F9;
+}
+.modalBody::-webkit-scrollbar { width: 8px; }
+.modalBody::-webkit-scrollbar-track { background: #F1F5F9; }
+.modalBody::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
+
+.modalActions {
+  display: flex; gap: 12px; padding: 20px 24px;
+  border-top: 1px solid #E5E7EB; background-color: #F8FAFC; flex-shrink: 0;
+}
+
+/* Close Button (Large Red) */
 .closeButton {
   background-color: #EF4444; color: #FFFFFF; border: none;
   width: 40px; height: 40px; border-radius: 50%;
@@ -307,23 +306,22 @@
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
 /* Modal Buttons */
-.modalActions { display: flex; gap: 12px; margin-top: 10px; }
-.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #F3F4F6; color: #374151; font-weight: 600; cursor: pointer; }
-.btnCancel:hover { background-color: #E5E7EB; }
+.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #FFFFFF; border: 1px solid #D1D5DB; color: #374151; font-weight: 600; cursor: pointer; }
+.btnCancel:hover { background-color: #F3F4F6; }
 .btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 600; cursor: pointer; }
 .btnConfirm:hover { background-color: #059669; }
 
 /* Type Selector */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.typeGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .typeItem {
   display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-  padding: 12px; border-radius: 12px; border: 1px solid transparent;
+  padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; background-color: #FFFFFF;
 }
-.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
-.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
+.typeItem:hover { background-color: #F9FAFB; border-color: #CBD5E1; }
+.typeItem.selected { background-color: #F0FDF4; border-color: #10B981; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
 @media (max-width: 768px) {
   .topSection, .middleSection { grid-template-columns: 1fr; }
@@ -332,4 +330,5 @@
   .timelineRow { grid-template-columns: 40px 1fr; }
   .timeLeft { display: none; }
   .mobileHeader { display: block; margin-bottom: 4px; }
+  .modalContent { max-width: 100%; }
 }
