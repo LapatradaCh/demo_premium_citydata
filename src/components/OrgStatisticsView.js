@@ -374,7 +374,7 @@ export default function OrganizationStatisticsView() {
   const [problemData, setProblemData] = useState([]);
 
   // *** ID องค์กรตามจริง ***
-  local= localStorage.getItem("lastSelectedOrg");
+  const local= localStorage.getItem("lastSelectedOrg");
   console.log("get id:", local);
   const USER_ORG_ID = 74;
 
