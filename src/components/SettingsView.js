@@ -226,7 +226,7 @@ const AgencySettings = () => {
   // --- Helper: หาชื่อ Label จาก ID (สำหรับแสดงผล View Mode) ---
   const getOrgTypeLabel = (id) => {
       // แปลง id เป็น number เพื่อเทียบกับ value ที่มักเป็น number
-      const found = orgTypeOptions.find(opt => opt.value === Number(id));
+      const found = orgTypeOptions.find(opt => opt.value === id);
       return found ? found.label : "-";
   };
 
