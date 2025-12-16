@@ -374,6 +374,7 @@ export default function OrganizationStatisticsView() {
   const [problemData, setProblemData] = useState([]);
 
   // *** ID องค์กรตามจริง ***
+  console.log("get id:",localStorage.getItem(lastSelectedOrg.id));
   const USER_ORG_ID = 74;
 
   useEffect(() => {
