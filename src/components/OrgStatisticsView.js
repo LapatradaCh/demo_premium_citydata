@@ -66,12 +66,7 @@ const WorkloadView = ({ data }) => {
                onClick={() => setSortBy('pending')}
                className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
              >งานค้าง</button>
-
-            //   <button 
-            //   onClick={() => setSortBy('pending')}
-            //   className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
-            // >งานค้าง (วิกฤต) </button>
-        
+        </div>
       </div>
 
       {/* KPI Section */}
