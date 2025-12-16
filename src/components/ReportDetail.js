@@ -276,7 +276,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 <p className={styles.descText}>{info.description}</p>
             </div>
 
-            {/* --- Info Boxes (New Grid Layout with Icons) --- */}
+            {/* --- Info Boxes (Premium Grid with Icons) --- */}
             <div className={styles.metaGrid}>
                 
                 {/* Box 1: Category */}
@@ -353,11 +353,30 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 </button>
             </div>
         </div>
+
+        {/* --- NEW AGENCY SECTION (Card List) --- */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
-            <div className={styles.sectionHeader}><IconBuilding /> หน่วยงานที่รับผิดชอบ</div>
-            <ul className={styles.agencyList}>
-                <li className={styles.agencyItem}>{info.agency}</li>
-            </ul>
+            <div className={styles.sectionHeader}>
+                <IconBuilding /> หน่วยงานที่รับผิดชอบ
+            </div>
+            
+            <div className={styles.agencyList}>
+                {(Array.isArray(info.agency) ? info.agency : [info.agency]).map((agencyName, index) => (
+                    <div key={index} className={styles.agencyItem}>
+                        <div className={styles.agencyIconBox}>
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <span className={styles.agencyName}>
+                            {agencyName || "ไม่ระบุหน่วยงาน"}
+                        </span>
+                        {index === 0 && (
+                            <span className={styles.agencyTag}>ผู้รับผิดชอบหลัก</span>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
       </div>
 
