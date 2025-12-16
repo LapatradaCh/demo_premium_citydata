@@ -3,361 +3,197 @@
 /* ========================================= */
 .container {
   width: 100%;
-  max-width: 1100px; /* ปรับความกว้างให้พอดีสายตา */
+  max-width: 800px; /* แก้: ลดความกว้างให้เหมือนหน้ากระดาษ */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   font-family: 'Sarabun', sans-serif;
   color: #334155;
   padding: 40px 24px;
-  
-  /* พื้นหลังสีเทาอ่อนมาก เพื่อให้ Card สีขาวลอยเด่น */
   background-color: #F8FAFC; 
   box-sizing: border-box;
   min-height: 100vh;
 }
 
-/* สไตล์ Card หลักแบบ Clean */
+/* Card Style: ให้ดู clean เหมือนกระดาษ */
 .card {
   background-color: #FFFFFF;
-  border-radius: 24px; /* มุมโค้งมน */
-  /* ลบเส้นขอบทึบ ใช้เงาฟุ้งๆ แทน */
-  border: 1px solid #F1F5F9; 
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-  padding: 32px;
-  
+  border-radius: 12px;
+  border: 1px solid #E2E8F0; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 24px;
   position: relative;
   overflow: hidden;
-  height: 100%; 
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  transition: all 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
-}
-
-/* Grid Layout (แบ่งครึ่งซ้ายขวา) */
+/* !!! แก้ไขจุดสำคัญ: เปลี่ยน Grid เป็น Flex Column !!! */
 .topSection, .middleSection {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: stretch;
+  display: flex;
+  flex-direction: column; /* บังคับเรียงลงมา */
+  gap: 20px;
+  width: 100%;
 }
 
 /* ========================================= */
 /* 2. TOP SECTION (INFO & IMAGE) */
 /* ========================================= */
-.infoCard { justify-content: space-between; gap: 20px; }
+/* ส่วนข้อมูลด้านบน */
+.infoCard { 
+  border-bottom: 1px solid #F1F5F9;
+  border-radius: 12px 12px 0 0; /* มนแค่ด้านบน */
+  margin-bottom: -21px; /* ดึงให้ติดกับรูปภาพด้านล่าง */
+  padding-bottom: 30px;
+  z-index: 2;
+}
 
 .label { 
-  font-size: 12px; 
-  color: #94A3B8; 
-  font-weight: 700; 
-  text-transform: uppercase; 
-  letter-spacing: 1px; 
-  margin-bottom: 8px; 
+  font-size: 13px; color: #64748B; font-weight: 600; margin-bottom: 4px; 
 }
 
 .title { 
-  font-size: 32px; 
-  font-weight: 800; 
-  color: #0F172A; 
-  margin: 0 0 12px 0; 
-  line-height: 1.2; 
-  letter-spacing: -0.5px;
+  font-size: 26px; font-weight: 700; color: #0F172A; margin: 0 0 8px 0; line-height: 1.3; 
 }
 
 .categoryText { 
-  font-size: 15px; 
-  color: #64748B; 
-  font-weight: 500; 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  margin-bottom: 16px;
+  font-size: 14px; color: #64748B; font-weight: 500; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
 }
 
-/* --- Status Badges (ป้ายสถานะแบบนุ่ม) --- */
+/* Badges */
 .statusBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 16px;
-  gap: 8px;
-  border-radius: 8px; /* สี่เหลี่ยมมน */
-  font-size: 13px;
-  font-weight: 700;
-  width: fit-content;
-  border: none !important; /* บังคับไม่ให้มีเส้นขอบ */
+  display: inline-flex; align-items: center; padding: 4px 12px; gap: 6px;
+  border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid transparent;
 }
-
-/* สีสถานะ (Tone Pastel) */
-.statusPending { background-color: #FEF2F2; color: #EF4444; }
-.statusCoordinating { background-color: #F3E8FF; color: #9333EA; }
-.statusProgress { background-color: #FEFCE8; color: #B45309; }
-.statusDone { background-color: #DCFCE7; color: #15803D; }
-.statusForward { background-color: #EFF6FF; color: #2563EB; }
-.statusInvite { background-color: #F0FDFA; color: #0D9488; }
-.statusReject { background-color: #F1F5F9; color: #475569; }
+.statusPending { background-color: #FEF2F2; color: #EF4444; border-color: #FECACA; }
+.statusCoordinating { background-color: #F3E8FF; color: #9333EA; border-color: #E9D5FF; }
+.statusProgress { background-color: #FEFCE8; color: #B45309; border-color: #FEF08A; }
+.statusDone { background-color: #DCFCE7; color: #15803D; border-color: #BBF7D0; }
+.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
+.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
+.statusReject { background-color: #F1F5F9; color: #475569; border-color: #CBD5E1; }
 .statusDefault { background-color: #F1F5F9; color: #64748B; }
 
-/* --- Action Buttons (ปุ่มเปลี่ยนประเภท/สถานะ) --- */
+/* Action Buttons */
 .actionRow {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f8fafc; padding-top: 15px;
 }
-
 .editButton {
-  /* ดีไซน์แบบ Flat Minimal */
-  background-color: #F8FAFC;
-  border: 1px solid transparent;
-  color: #475569;
-  
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  flex: 1;
+  background-color: #fff; border: 1px solid #CBD5E1; color: #475569;
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center;
 }
+.editButton:hover { background-color: #F8FAFC; color: #0F172A; border-color: #94A3B8; }
 
-.editButton:hover {
-  background-color: #E2E8F0; /* เข้มขึ้นเมื่อโฮเวอร์ */
-  color: #0F172A;
-  transform: translateY(-2px);
-}
-
-/* --- Image Card --- */
+/* Image Section - บังคับให้อยู่ใต้ Info */
 .imageCard {
-  background-color: #F1F5F9;
-  border-radius: 24px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  position: relative;
-  min-height: 300px;
+  background-color: #F8FAFC;
+  border-radius: 0 0 12px 12px; /* มนแค่ด้านล่าง */
+  border-top: none;
+  min-height: 250px;
   padding: 0;
+  width: 100%;
 }
-.imagePlaceholder { color: #94A3B8; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-.imageCard:hover .realImage { transform: scale(1.05); }
+.realImage { width: 100%; height: auto; max-height: 500px; object-fit: contain; background: #000; }
+.imagePlaceholder { color: #94A3B8; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px; }
 
 /* ========================================= */
-/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
+/* 3. MIDDLE SECTION */
 /* ========================================= */
+.locationCard, .agencyCard {
+  border-left: 4px solid #3B82F6; /* แถบสีด้านซ้ายให้ดูเป็น section */
+}
+
 .sectionHeader { 
-  font-size: 16px; 
-  font-weight: 700; 
-  color: #1E293B; 
-  margin-bottom: 16px; 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
+  font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 12px; 
+  display: flex; align-items: center; gap: 8px; 
 }
+.locationText { font-size: 14px; color: #334155; line-height: 1.6; }
 
-.locationText { font-size: 15px; color: #475569; line-height: 1.6; margin: 0; }
-
-.buttonGroup { display: flex; gap: 12px; margin-top: 20px; width: 100%; }
-
+.buttonGroup { display: flex; gap: 10px; margin-top: 15px; }
 .actionButton { 
-  flex: 1; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 8px; 
-  padding: 12px; 
-  border-radius: 10px; 
-  font-size: 13px; 
-  font-weight: 600; 
-  cursor: pointer; 
-  border: none; 
-  transition: all 0.2s ease; 
+  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #E2E8F0;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
+.internalMapBtn { background-color: #334155; color: #fff; border: none; }
+.googleMapBtn { background-color: #fff; color: #475569; }
 
-.internalMapBtn { background-color: #1E293B; color: #ffffff; }
-.internalMapBtn:hover { background-color: #0F172A; transform: translateY(-2px); }
-
-.googleMapBtn { background-color: #ffffff; color: #475569; border: 1px solid #E2E8F0; }
-.googleMapBtn:hover { background-color: #F8FAFC; border-color: #CBD5E1; }
-
-.agencyList { list-style: none; padding: 0; margin: 0; width: 100%; }
-.agencyItem { 
-  display: flex; 
-  align-items: center; 
-  color: #334155; 
-  font-size: 15px; 
-  background-color: #F8FAFC; 
-  padding: 16px; 
-  border-radius: 12px; 
-  font-weight: 500;
-}
+.agencyList { list-style: none; padding: 0; margin: 0; }
+.agencyItem { background: #F1F5F9; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 500; }
 
 /* ========================================= */
-/* 4. TIMELINE SECTION */
+/* 4. TIMELINE (Table Style) */
 /* ========================================= */
-.bottomSection { min-height: 200px; justify-content: flex-start; }
-.timelineContainer { margin-top: 16px; display: flex; flex-direction: column; padding-left: 8px; }
-.timelineRow { display: grid; grid-template-columns: 100px 50px 1fr; gap: 0px; position: relative; }
-
-.timeLeft { text-align: right; padding-right: 16px; padding-top: 4px; }
-.timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
-.timeRight { padding-left: 8px; padding-bottom: 40px; padding-top: 4px; }
-
-/* เส้น Timeline */
-.line { width: 2px; background-color: #E2E8F0; flex-grow: 1; margin-top: 4px; min-height: 40px; }
-.timelineRow:last-child .line { display: none; }
-
-/* วงกลม Icon */
-.iconCircle { 
-  width: 36px; height: 36px; 
-  border-radius: 50%; 
-  display: flex; align-items: center; justify-content: center; 
-  color: #fff; z-index: 2; 
-  box-shadow: 0 0 0 4px #FFFFFF; /* ขอบขาวรอบวงกลม */
+.bottomSection { 
+    border-top: 4px solid #10B981; /* แถบสีเขียว */
 }
 
-/* Text Styles */
-.statusTitle { font-size: 15px; font-weight: 700; margin-bottom: 4px; display: block; }
-.statusTime { font-size: 12px; color: #94A3B8; font-weight: 500; display: block; }
-.durationText { font-size: 15px; font-weight: 700; color: #1E293B; margin-bottom: 6px; display: block; }
-.detailBody { font-size: 14px; color: #64748B; line-height: 1.6; white-space: pre-line; }
+.timelineContainer { 
+    margin-top: 10px; display: flex; flex-direction: column; 
+}
 
-/* Timeline Colors (ใช้ร่วมกับ JS) */
-.bgRed { background: #EF4444; } .textRed { color: #EF4444; }
-.bgPurple { background: #A855F7; } .textPurple { color: #A855F7; }
-.bgYellow { background: #EAB308; } .textYellow { color: #EAB308; }
-.bgGreen { background: #22C55E; } .textGreen { color: #22C55E; }
-.bgBlue { background: #3B82F6; } .textBlue { color: #3B82F6; }
-.bgTeal { background: #14B8A6; } .textTeal { color: #14B8A6; }
-.bgDark { background: #475569; } .textDark { color: #475569; }
+/* Timeline แบบตาราง (เหมือนในรูปตัวอย่าง) */
+.timelineRow { 
+    display: grid; 
+    grid-template-columns: 130px 1fr; /* คอลัมน์ซ้าย: วันที่, คอลัมน์ขวา: รายละเอียด */
+    gap: 20px; 
+    padding: 16px 0;
+    border-bottom: 1px solid #F1F5F9;
+}
+.timelineRow:last-child { border-bottom: none; }
 
+/* ซ่อนกราฟิกเดิม */
+.timeCenter, .line, .iconCircle { display: none; }
+
+.timeLeft { 
+    text-align: right; display: flex; flex-direction: column; gap: 2px;
+}
+.timeRight { padding: 0; }
 .mobileHeader { display: none; }
 
+.statusTitle { font-size: 14px; font-weight: 700; }
+.statusTime { font-size: 12px; color: #64748B; }
+.durationText { font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 4px; }
+.detailBody { font-size: 14px; color: #475569; line-height: 1.5; }
+
+/* Color Helpers */
+.textRed { color: #EF4444; } .textPurple { color: #9333EA; } .textYellow { color: #B45309; }
+.textGreen { color: #15803D; } .textBlue { color: #2563EB; } .textDark { color: #475569; }
+
+
 /* ========================================= */
-/* 5. MODAL STYLES (UPDATED) */
+/* 5. MODAL & RESPONSIVE */
 /* ========================================= */
-.modalOverlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(15, 23, 42, 0.4); /* Dark Overlay */
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s ease-out;
-}
+.modalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; backdrop-filter: blur(2px); }
+.modalContent { background: #fff; width: 90%; max-width: 420px; border-radius: 16px; padding: 0; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+.modalHeader { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.modalTitle { font-weight: 700; font-size: 18px; margin:0; }
+.closeButton { background: none; border: none; cursor: pointer; font-size: 20px; color: #999; }
+.modalScrollableContent { padding: 20px; overflow-y: auto; }
 
-.modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 450px;
-  border-radius: 20px; 
-  padding: 0; /* Padding handle inside header/content */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  display: flex; flex-direction: column;
-  max-height: 85vh; 
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-.modalHeader { 
-  display: flex; justify-content: space-between; align-items: center; 
-  padding: 20px 24px;
-  border-bottom: 1px solid #F1F5F9;
-}
-.modalTitle { font-size: 18px; font-weight: 700; color: #0F172A; margin: 0; }
-
-.closeButton {
-  background: transparent; border: none; 
-  color: #94A3B8; cursor: pointer; 
-  padding: 4px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
-}
-.closeButton:hover { background-color: #F1F5F9; color: #EF4444; }
-
-/* Scrollable Content */
-.modalScrollableContent {
-  padding: 24px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-/* Forms */
-.formGroup { margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
-.formLabel { font-size: 14px; font-weight: 600; color: #334155; }
-.formSelect, .formTextarea { 
-  padding: 12px; border: 1px solid #E2E8F0; border-radius: 10px; 
-  font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; 
-  outline: none; transition: border-color 0.2s; 
-  background-color: #F8FAFC;
-}
-.formSelect:focus, .formTextarea:focus { border-color: #3B82F6; background-color: #fff; }
-.formTextarea { min-height: 100px; resize: vertical; }
-
-/* Type Selector Grid */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.typeItem { 
-  display: flex; flex-direction: column; align-items: center; gap: 8px; 
-  cursor: pointer; padding: 16px 8px; 
-  border-radius: 12px; border: 1px solid #E2E8F0; 
-  transition: all 0.2s; 
-}
-.typeItem:hover { background-color: #F8FAFC; border-color: #CBD5E1; }
-.typeItem.selected { background-color: #EFF6FF; border-color: #3B82F6; color: #1E40AF; }
-.typeCircle { width: 40px; height: 40px; background-color: #E2E8F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-/* Modal Footer Buttons */
-.modalActions { 
-  padding: 16px 24px; 
-  border-top: 1px solid #F1F5F9; 
-  display: flex; gap: 12px; background-color: #fff; 
-}
-.btnCancel { 
-  flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #E2E8F0; 
-  background-color: #fff; color: #64748B; font-weight: 600; cursor: pointer; 
-}
-.btnConfirm { 
-  flex: 1; padding: 12px; border-radius: 10px; border: none; 
-  background-color: #0F172A; color: #fff; font-weight: 600; cursor: pointer; 
-}
-.btnConfirm:hover { background-color: #000; }
-.btnCancel:hover { background-color: #F8FAFC; }
-
-/* Animations */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-/* Upload Styles */
-.uploadBox { 
-  border: 2px dashed #CBD5E1; border-radius: 10px; padding: 24px; 
-  display: flex; flex-direction: column; align-items: center; 
-  gap: 10px; cursor: pointer; background-color: #F8FAFC; 
-  color: #64748B; font-size: 13px; min-height: 120px; justify-content: center;
-}
-.uploadBox:hover { border-color: #94A3B8; background-color: #F1F5F9; }
+.formGroup { margin-bottom: 15px; }
+.formLabel { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
+.formSelect, .formTextarea { width: 100%; padding: 12px; border: 1px solid #E2E8F0; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; background: #F8FAFC; }
+.uploadBox { border: 2px dashed #CBD5E1; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; color: #64748B; font-size: 13px; background: #F8FAFC; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .previewWrapper { position: relative; width: 100%; display: flex; justify-content: center; }
-.imagePreview { max-height: 180px; border-radius: 8px; }
-.removePreviewBtn { 
-  position: absolute; top: -8px; right: -8px; 
-  width: 24px; height: 24px; background: #EF4444; color: #fff; 
-  border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
-}
+.imagePreview { max-height: 200px; border-radius: 8px; }
+.removePreviewBtn { position: absolute; top: -10px; right: -10px; background: #EF4444; color: white; border: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .topSection, .middleSection { grid-template-columns: 1fr; }
-  .imageCard { min-height: 200px; }
-  .buttonGroup { flex-direction: column; }
-  .timelineRow { grid-template-columns: 40px 1fr; }
-  .timeLeft { display: none; }
-  .mobileHeader { display: block; margin-bottom: 4px; }
+.modalActions { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; }
+.btnConfirm { flex: 1; background: #0F172A; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btnCancel { flex: 1; background: #fff; border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #64748B; }
+
+.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.typeItem { border: 1px solid #E2E8F0; padding: 15px 5px; border-radius: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.typeItem:hover { background: #F8FAFC; }
+.typeItem.selected { border-color: #3B82F6; background: #EFF6FF; color: #1D4ED8; }
+.typeLabel { font-size: 12px; font-weight: 600; }
+.typeCircle { width: 30px; height: 30px; background: #E2E8F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+
+@media (max-width: 600px) {
+  .timelineRow { grid-template-columns: 1fr; gap: 5px; }
+  .timeLeft { text-align: left; flex-direction: row; gap: 10px; margin-bottom: 5px; }
+  .statusTitle { font-size: 13px; }
 }
