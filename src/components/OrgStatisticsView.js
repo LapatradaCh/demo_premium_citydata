@@ -62,10 +62,12 @@ const WorkloadView = ({ data }) => {
                onClick={() => setSortBy('total')}
                className={`${styles.controlBtn} ${sortBy === 'total' ? styles.activeTotal : ''}`}
              >ทั้งหมด</button>
+             
+             {/* --- จุดที่แก้ไข: เปลี่ยนข้อความเป็น "งานค้าง (วิกฤต)" --- */}
              <button 
                onClick={() => setSortBy('pending')}
                className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
-             >งานค้าง</button>
+             >งานค้าง (วิกฤต)</button>
         </div>
       </div>
 
@@ -101,7 +103,6 @@ const WorkloadView = ({ data }) => {
                   {item.name}
                 </span>
                 <div style={{ fontSize: '14px' }}>
-                  {/* แก้ไข: เพิ่มจำนวนเคส และวงเล็บเปอร์เซ็นต์ตามที่ขอ */}
                   <span style={{ color: '#10B981', fontWeight: '700', marginRight: '8px' }}>
                     สำเร็จ {item.completed} ({itemSuccessRate.toFixed(0)}%)
                   </span>
@@ -135,7 +136,6 @@ const WorkloadView = ({ data }) => {
                        }}
                        title={`${LABELS[key]}: ${val}`}
                      >
-                       {/* แก้ไข: แสดง จำนวน (เปอร์เซ็นต์%) ในแท่งกราฟ */}
                        {width > 12 && (
                          <span style={{ whiteSpace: 'nowrap' }}>
                             {val} ({width.toFixed(0)}%)
@@ -166,7 +166,7 @@ const WorkloadView = ({ data }) => {
 // --- TAB 2: SATISFACTION (ความพึงพอใจ) ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
-  
+   
   if(data.length === 0) return <div className={styles.chartBox}><div style={{textAlign:'center', padding:'40px', color:'#999'}}>ไม่มีข้อมูล</div></div>;
 
   const bestOrg = sortedData[0];
@@ -374,8 +374,8 @@ export default function OrganizationStatisticsView() {
   const [problemData, setProblemData] = useState([]);
 
   // *** ID องค์กรตามจริง ***
-  const local= localStorage.getItem("lastSelectedOrg");
-  const org = JSON.parse(local);
+  const local = localStorage.getItem("lastSelectedOrg");
+  const org = local ? JSON.parse(local) : { id: 1 }; // ป้องกัน error กรณีไม่มีค่าใน localStorage
   const USER_ORG_ID = org.id;
 
   useEffect(() => {
@@ -414,7 +414,7 @@ export default function OrganizationStatisticsView() {
     };
 
     fetchStats();
-  }, []);
+  }, [USER_ORG_ID]);
 
   const renderContent = () => {
     if (loading) return <div className={styles.chartBox}><div style={{height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999'}}>กำลังโหลดข้อมูล...</div></div>;
