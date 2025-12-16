@@ -1,7 +1,7 @@
 /* --- css/ReportDetail.module.css --- */
 
 /* ========================================= */
-/* 1. CONTAINER & GLOBAL */
+/* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
   width: 100%;
@@ -20,7 +20,7 @@
 
 .card {
   background-color: #FFFFFF;
-  border-radius: 16px;
+  border-radius: 16px; /* มุมมนดูทันสมัย */
   border: 1px solid #F3F4F6;
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
@@ -37,7 +37,7 @@
   border-color: #E5E7EB;
 }
 
-/* Grid Layout */
+/* Grid Layout for Desktop */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -46,7 +46,7 @@
 }
 
 /* ========================================= */
-/* 2. TOP SECTION */
+/* 2. TOP SECTION (INFO) */
 /* ========================================= */
 .infoCard { justify-content: space-between; gap: 16px; }
 
@@ -58,8 +58,8 @@
   font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
 }
 
-/* --- ส่วนรายละเอียด (Description) ที่ปรับใหม่ --- */
-/* ปรับให้อ่านง่าย พื้นหลังเทาอ่อน มุมมน ไม่มีแถบดำ */
+/* --- ส่วนรายละเอียด (Description) ปรับใหม่ตามขอ --- */
+/* กล่องสีเทาอ่อน ไม่มีขีดดำ อ่านง่าย */
 .descriptionContainer {
   background-color: #F3F4F6;
   padding: 16px 20px;
@@ -81,26 +81,29 @@
   color: #1F2937;
   line-height: 1.6;
   margin: 0;
-  white-space: pre-line;
+  white-space: pre-line; /* เว้นวรรคตามที่พิมพ์มา */
 }
 
-/* --- Status Badges (สีสดใสแบบเดิม) --- */
+/* --- Status Badges (สีสดใส) --- */
 .statusBadge {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
-  border: 1px solid transparent; margin-bottom: 0;
+  border: 1px solid transparent;
+  /* จัดตำแหน่งให้สวยงาม */
+  margin-left: auto; 
 }
 
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
+/* กำหนดสีสถานะ */
+.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; } /* แดง */
+.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; } /* ม่วง */
+.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; } /* เหลือง */
+.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; } /* เขียว */
+.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; } /* ฟ้า */
+.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; } /* เทา */
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Meta Info Row */
+/* Meta Info Row (หมวดหมู่ / ดาว) */
 .metaRow {
   display: flex; gap: 24px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
 }
@@ -130,7 +133,7 @@
 .imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
 /* ========================================= */
-/* 3. MIDDLE SECTION */
+/* 3. MIDDLE SECTION (Location & Agency) */
 /* ========================================= */
 .sectionHeader { 
   font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
@@ -141,17 +144,19 @@
 .agencyItem { 
   background-color: #EFF6FF; color: #1E40AF; 
   padding: 12px; border-radius: 8px; font-weight: 500; font-size: 15px;
-  border-left: 4px solid #3B82F6;
 }
+
 .buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
 .actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
+
+/* ปุ่มแผนที่ */
 .internalMapBtn { background-color: #1F2937; color: #fff; border: 1px solid #1F2937; }
 .internalMapBtn:hover { background-color: #000; }
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 .googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
 /* ========================================= */
-/* 4. TIMELINE (COLORFUL) */
+/* 4. TIMELINE (COLORFUL LOGIC) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
@@ -172,7 +177,7 @@
   color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Timeline Colors */
+/* Timeline Colors (ใช้สีเดียวกับ Status) */
 .bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
 .bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
 .bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
