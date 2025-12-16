@@ -1,101 +1,136 @@
 /* --- css/ReportDetail.module.css --- */
 
 /* ========================================= */
-/* 1. CONTAINER & CARD STYLES */
+/* 1. CONTAINER & GLOBAL STYLES */
 /* ========================================= */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px; /* ลดความกว้างลงเล็กน้อยให้อ่านง่ายขึ้น */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px; /* เพิ่มระยะห่างระหว่าง Card */
   font-family: 'Sarabun', sans-serif;
-  color: #333;
-  padding: 24px;
-  
-  /* ✅ แก้ไข: เปลี่ยนพื้นหลัง Container เป็นสีขาว (จากเดิม #F9FAFB) */
-  background-color: #FFFFFF;
-  
+  color: #1f2937;
+  padding: 40px 24px;
+  background-color: #FAFAFA; /* พื้นหลังเทาจางๆ เพื่อให้ Card สีขาวเด่นขึ้น */
   box-sizing: border-box;
-  padding-bottom: 60px;
+  min-height: 100vh;
 }
 
 .card {
   background-color: #FFFFFF;
-  border-radius: 16px;
-  border: 1px solid #F3F4F6;
-  padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px; /* ลดความมนลงให้ดู Modern */
+  border: 1px solid #E5E7EB;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* เงาบางมากๆ */
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  height: 100%; 
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  border-color: #E5E7EB;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  border-color: #d1d5db;
 }
 
-/* Grid Layout (50:50 Split) */
+/* Grid Layout */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 32px;
   align-items: stretch;
 }
 
 /* ========================================= */
 /* 2. TOP SECTION (INFO & IMAGE) */
 /* ========================================= */
-.infoCard { justify-content: center; gap: 16px; }
-.label { font-size: 13px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0; }
-.title { font-size: 28px; font-weight: 800; color: #111827; margin: 0; line-height: 1.2; }
-.categoryText { font-size: 14px; color: #6B7280; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-.stars { color: #111827; font-size: 20px; letter-spacing: 4px; }
+.infoCard { justify-content: space-between; gap: 24px; }
 
-/* --- Status Badges (ป้ายสถานะ) --- */
-.statusBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 18px;
-  gap: 10px;
-  border-radius: 50px;
-  font-size: 14px;
-  font-weight: 700;
-  width: fit-content;
-  border: 1px solid transparent;
+.label { 
+  font-size: 12px; 
+  color: #6B7280; 
+  font-weight: 700; 
+  letter-spacing: 1px; 
+  text-transform: uppercase; 
+  margin: 0 0 8px 0; 
 }
 
-/* Status Colors */
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-.statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
-.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
+.title { 
+  font-size: 32px; 
+  font-weight: 800; 
+  color: #000000; 
+  margin: 0 0 16px 0; 
+  line-height: 1.3; 
+  letter-spacing: -0.5px;
+}
 
-/* --- Action Buttons --- */
-.actionRow {
+.descriptionBox {
+  font-size: 15px;
+  color: #4B5563;
+  line-height: 1.7;
+  background-color: #F9FAFB;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #000; /* ขีดดำเน้นข้อความ */
+  margin-bottom: 24px;
+}
+
+.metaRow {
   display: flex;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 24px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
-.editButton {
-  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB);
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* --- Status Badges (Monochrome Style) --- */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: 6px; /* เหลี่ยมขึ้น */
+  font-size: 14px;
+  font-weight: 700;
+  width: fit-content;
   border: 1px solid #E5E7EB;
-  color: #4B5563;
-  padding: 10px 16px;
-  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #111827;
+  letter-spacing: 0.5px;
+}
+
+/* ปรับสีสถานะเป็นโทน ขาว-ดำ-เทา */
+/* รอดำเนินการ: ขาวขอบดำ */
+.statusPending { background-color: #FFFFFF; color: #000000; border: 1px solid #000000; }
+/* กำลังดำเนินการ: เทาอ่อน */
+.statusProgress, .statusCoordinating { background-color: #F3F4F6; color: #1F2937; border-color: #D1D5DB; }
+/* เสร็จสิ้น: ดำตัวขาว */
+.statusDone { background-color: #000000; color: #FFFFFF; border-color: #000000; }
+/* อื่นๆ: เทาจาง */
+.statusDefault, .statusReject, .statusForward, .statusInvite { background-color: #FFFFFF; color: #4B5563; border: 1px solid #D1D5DB; }
+
+
+/* --- Action Buttons (Minimalist) --- */
+.actionRow {
+  display: flex;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.editButton {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  color: #374151;
+  padding: 12px 20px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -103,182 +138,205 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
+  transition: all 0.2s ease;
   flex: 1;
 }
 
 .editButton:hover {
-  background: linear-gradient(to bottom, #F3F4F6, #E5E7EB);
-  border-color: #9CA3AF;
-  color: #111827;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-color: #000000;
+  color: #000000;
+  background-color: #F9FAFB;
 }
 
-.editButton:active {
-  background: #E5E7EB;
-  transform: translateY(0);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-}
+.editButton svg { width: 18px; height: 18px; }
 
-.editButton svg {
-  width: 18px; height: 18px; stroke-width: 2;
-}
 
 /* --- Image Card --- */
 .imageCard {
-  /* ✅ แก้ไข: เปลี่ยนพื้นหลังกรอบรูปภาพเป็นสีขาว (จากเดิม #F9FAFB) */
-  background-color: #FFFFFF;
-  
-  border-radius: 16px;
-  overflow: hidden;
-  display: flex;
+  background-color: #F3F4F6; /* พื้นหลังเทาอ่อน */
+  border: none;
+  padding: 0;
+  min-height: 320px;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #E5E7EB;
   position: relative;
-  min-height: 250px;
-  padding: 0;
 }
-.imagePlaceholder { color: #9CA3AF; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-.imageCard:hover .realImage { transform: scale(1.05); }
+.realImage { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  filter: grayscale(20%); /* ลดสีภาพลงนิดหน่อยเพื่อให้เข้าธีม (ถ้าชอบภาพสดลบออกได้) */
+  transition: all 0.5s ease;
+}
+.imageCard:hover .realImage { filter: grayscale(0%); transform: scale(1.02); }
+.imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
 /* ========================================= */
 /* 3. MIDDLE SECTION (LOCATION & AGENCY) */
 /* ========================================= */
-/* Watermark Decoration */
-.locationCard::after, .agencyCard::after { content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0; }
-.locationCard::after { bottom: -20px; right: -20px; width: 120px; height: 120px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E"); }
-.agencyCard::after { top: 10px; right: 10px; width: 100px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); }
+.sectionHeader { 
+  font-size: 18px; 
+  font-weight: 800; 
+  color: #000000; 
+  margin-bottom: 16px; 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  border-bottom: 2px solid #F3F4F6;
+  padding-bottom: 12px;
+}
 
-.locationCard { justify-content: space-between; }
-.agencyCard { justify-content: flex-start; }
-.sectionHeader, .locationText, .buttonGroup, .agencyList { position: relative; z-index: 2; }
-.sectionHeader { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-.locationText { font-size: 15px; color: #4B5563; font-weight: 500; line-height: 1.6; margin: 0; flex-grow: 1; }
+.locationText { font-size: 16px; color: #374151; line-height: 1.6; }
+.agencyList { list-style: none; padding: 0; margin: 0; }
+.agencyItem { 
+  font-size: 16px; 
+  color: #111827; 
+  font-weight: 500;
+  padding: 16px; 
+  background-color: #F9FAFB; 
+  border-radius: 8px; 
+  border: 1px solid #E5E7EB;
+}
 
-.buttonGroup { display: flex; gap: 10px; margin-top: 16px; width: 100%; }
-.actionButton { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; }
-.internalMapBtn { background-color: #1F2937; color: #ffffff; border: 1px solid #1F2937; }
-.internalMapBtn:hover { background-color: #000000; }
-.googleMapBtn { background-color: #ffffff; color: #374151; border: 1px solid #E5E7EB; }
-.googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
+.buttonGroup { display: flex; gap: 12px; margin-top: 20px; }
+.actionButton { 
+  flex: 1; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px; 
+  padding: 12px; 
+  border-radius: 8px; 
+  font-size: 14px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  transition: all 0.2s;
+}
 
-.agencyList { list-style: none; padding: 0; margin: 0; width: 100%; }
-.agencyItem { display: flex; align-items: center; gap: 10px; color: #4B5563; font-size: 15px; background-color: rgba(255,255,255,0.8); padding: 12px; border-radius: 6px; border-left: 4px solid #E5E7EB; margin-bottom: 8px; }
+/* ปุ่มแผนที่: ดำ vs ขาว */
+.internalMapBtn { 
+  background-color: #000000; 
+  color: #FFFFFF; 
+  border: 1px solid #000000; 
+}
+.internalMapBtn:hover { background-color: #333333; }
+
+.googleMapBtn { 
+  background-color: #FFFFFF; 
+  color: #000000; 
+  border: 1px solid #D1D5DB; 
+}
+.googleMapBtn:hover { border-color: #000000; background-color: #FAFAFA; }
+
 
 /* ========================================= */
-/* 4. TIMELINE SECTION */
+/* 4. TIMELINE SECTION (CLEAN LINES) */
 /* ========================================= */
-.bottomSection { min-height: 200px; justify-content: flex-start; }
-.timelineContainer { margin-top: 16px; display: flex; flex-direction: column; }
-.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; gap: 0px; position: relative; }
-.timeLeft { text-align: right; padding-right: 12px; padding-top: 4px; }
-.statusTitle { font-size: 16px; font-weight: 700; margin-bottom: 4px; display: block; }
-.statusTime { font-size: 13px; color: #64748b; font-weight: 500; display: block; line-height: 1.4; }
+.bottomSection { min-height: 200px; }
+.timelineContainer { margin-top: 24px; padding-left: 10px; }
+.timelineRow { display: grid; grid-template-columns: 120px 50px 1fr; position: relative; }
+
+/* Time Left */
+.timeLeft { text-align: right; padding-right: 20px; padding-top: 0px; }
+.statusTitle { font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px; color: #000; }
+.statusTime { font-size: 13px; color: #9CA3AF; font-weight: 500; }
+
+/* Center Line & Icon */
 .timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
-.line { width: 2px; background-color: #e2e8f0; flex-grow: 1; margin-top: 4px; min-height: 40px; }
+.line { 
+  width: 1px; 
+  background-color: #E5E7EB; /* เส้นบางสีเทา */
+  flex-grow: 1; 
+  margin-top: 8px; 
+  min-height: 50px; 
+}
 .timelineRow:last-child .line { display: none; }
-.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; z-index: 2; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-.timeRight { padding-left: 12px; padding-bottom: 40px; padding-top: 4px; }
-.durationText { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px; display: block; }
-.detailTitle { font-size: 15px; color: #334155; margin-bottom: 8px; line-height: 1.6; }
-.detailBody { font-size: 14px; color: #64748b; line-height: 1.6; white-space: pre-line; }
 
-/* Timeline Colors */
-.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
-.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
-.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
-.bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
-.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
-.bgTeal { background: linear-gradient(135deg, #14b8a6, #0f766e); } .textTeal { color: #0f766e; }
-.bgDark { background: linear-gradient(135deg, #4b5563, #1f2937); } .textDark { color: #1f2937; }
+.iconCircle { 
+  width: 36px; height: 36px; 
+  border-radius: 50%; 
+  display: flex; align-items: center; justify-content: center; 
+  z-index: 2; 
+  background-color: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  color: #9CA3AF;
+  transition: all 0.3s;
+}
+
+/* Right Content */
+.timeRight { padding-left: 20px; padding-bottom: 48px; }
+.durationText { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+.detailBody { font-size: 14px; color: #6B7280; line-height: 1.6; }
+
+/* Timeline Colors Override -> Monochrome Logic */
+/* Active/Latest item styling */
+.timelineRow:first-child .iconCircle {
+  border-color: #000000;
+  color: #000000;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+}
+
+/* Helper classes map to grayscale now */
+.bgRed, .bgPurple, .bgYellow, .bgGreen, .bgBlue, .bgTeal, .bgDark { 
+  /* เราจะไม่ใช้สีพื้นหลังแล้ว แต่ใช้ Logic ใน CSS ด้านบนจัดการ */
+  background: #fff;
+}
+/* Text colors mapping to black/gray scales */
+.textRed, .textPurple, .textYellow, .textGreen, .textBlue, .textTeal, .textDark {
+  color: #000000 !important;
+}
 
 .mobileHeader { display: none; }
 
+
 /* ========================================= */
-/* 5. MODAL STYLES (POP-UP) */
+/* 5. MODAL STYLES */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  
-  /* Background Transparent */
-  background-color: transparent;
-  
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-  
-  /* Blur Effect */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  
-  animation: fadeIn 0.2s ease-out;
+  background-color: rgba(255,255,255, 0.8); /* พื้นหลังเบลอขาว */
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
 }
 
 .modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 420px;
-  border-radius: 16px; padding: 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  display: flex; flex-direction: column; gap: 20px;
-  position: relative; 
-  animation: slideUp 0.3s ease-out;
-  max-height: 90vh; overflow-y: auto;
+  background-color: #FFFFFF; width: 90%; max-width: 480px;
+  border-radius: 12px; padding: 32px;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  display: flex; flex-direction: column; gap: 24px;
 }
 
-.modalHeader { display: flex; justify-content: space-between; align-items: center; }
-.modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
-
-.closeButton {
-  background-color: #EF4444; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: all 0.2s ease; position: absolute; top: 16px; right: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.modalHeader { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F3F4F6; padding-bottom: 16px; margin-bottom: 8px;}
+.modalTitle { font-size: 22px; font-weight: 800; color: #000; margin: 0; }
+.closeButton { 
+    background: transparent; border: none; color: #9CA3AF; cursor: pointer; 
 }
-.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
-.closeButton svg { width: 64px; height: 64px; stroke-width: 3; }
+.closeButton:hover { color: #000; }
 
-/* Type Selector */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
-.typeItem { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; padding: 12px; border-radius: 12px; border: 1px solid transparent; transition: all 0.2s; }
-.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
-.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
-.typeCircle { width: 48px; height: 48px; background-color: #E5E7EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #6B7280; }
-.typeLabel { font-size: 13px; color: #374151; text-align: center; font-weight: 500; }
-
-/* Forms */
-.formGroup { display: flex; flex-direction: column; gap: 8px; }
-.formLabel { font-size: 14px; font-weight: 600; color: #374151; }
-.formInput, .formSelect, .formTextarea { padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
-.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
-.formTextarea { min-height: 80px; resize: vertical; }
-
-/* Upload Box & Preview */
-.uploadBox { 
-  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; position: relative; min-height: 120px;
+/* Input/Forms */
+.formLabel { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 8px; display: block;}
+.formSelect, .formTextarea { 
+    padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; width: 100%; outline: none; background: #fff; 
 }
-.uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
+.formSelect:focus, .formTextarea:focus { border-color: #000; }
 
-.previewWrapper { position: relative; width: 100%; display: flex; justify-content: center; }
-.imagePreview { width: auto; height: auto; max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 6px; border: 1px solid #E5E7EB; }
-.removePreviewBtn { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; background-color: #EF4444; color: white; border: 2px solid white; border-radius: 50%; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background-color 0.2s; }
-.removePreviewBtn:hover { background-color: #DC2626; }
+.btnConfirm {
+    background-color: #000000; color: #FFFFFF; padding: 14px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; width: 100%;
+}
+.btnConfirm:hover { background-color: #333; }
 
-/* Modal Buttons */
-.modalActions { display: flex; gap: 12px; margin-top: 10px; }
-.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #EF4444; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-.btnCancel:hover { background-color: #DC2626; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
-.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-.btnConfirm:hover { background-color: #059669; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.btnCancel {
+    background-color: #FFFFFF; color: #4B5563; padding: 14px; border-radius: 8px; font-weight: 600; border: 1px solid #D1D5DB; cursor: pointer; width: 100%;
+}
+.btnCancel:hover { background-color: #F3F4F6; color: #000; }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .topSection, .middleSection { grid-template-columns: 1fr; }
-  .imageCard { min-height: 200px; }
-  .buttonGroup { flex-direction: column; }
-  .timelineRow { grid-template-columns: 40px 1fr; }
+  .topSection, .middleSection { grid-template-columns: 1fr; gap: 24px; }
+  .imageCard { min-height: 240px; }
+  .timelineRow { grid-template-columns: 50px 1fr; }
   .timeLeft { display: none; }
-  .mobileHeader { display: block; margin-bottom: 8px; }
+  .mobileHeader { display: flex; flex-direction: column; margin-bottom: 6px; }
 }
