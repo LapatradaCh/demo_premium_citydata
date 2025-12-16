@@ -64,6 +64,13 @@ const ReportDetail = ({onGoToInternalMap }) => {
       try {
         setLoading(true);
         setError(null);
+        
+        // ถ้าไม่มี ID ให้ข้ามไป
+        if (!idToFetch) {
+             setLoading(false);
+             return;
+        }
+
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/crud_case_detail?id=${idToFetch}`;
         const response = await fetch(apiUrl);
 
@@ -72,8 +79,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
         }
 
         const result = await response.json();
-        const lat = parseFloat(result.info.latitude);
-        const lng = parseFloat(result.info.longitude);
+        const lat = result.info.latitude ? parseFloat(result.info.latitude) : null;
+        const lng = result.info.longitude ? parseFloat(result.info.longitude) : null;
 
         const mappedInfo = {
             id: result.info.case_code || result.info.issue_cases_id,
@@ -135,10 +142,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const handleUpdateStatus = async () => {
     if (!caseInfo) return;
     let finalImageUrl = null;
-    // Mock Image Upload logic (In real app, upload file and get URL here)
-    const file = fileInputRef.current?.files[0];
-    if (file) { console.log("Simulating upload for:", file.name); }
-
     const storedUserId = localStorage.getItem("user_id");
     const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
 
@@ -170,6 +173,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
     }
   };
 
+  // Fallback info
   const info = caseInfo || {
     id: "LOADING...", title: "กำลังโหลด...", category: "-", description: "-", rating: 0.0,
     status: "รอรับเรื่อง", locationDetail: "-", lat: null, lng: null, image: null, agency: "-" 
@@ -204,16 +208,23 @@ const ReportDetail = ({onGoToInternalMap }) => {
     if (!timelineData || timelineData.length === 0) return [];
     return timelineData.map(log => {
         const colorClass = getTimelineColor(log.status);
-        const dateObj = new Date(log.created_at);
-        const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-        const dateDisplay = isNaN(dateObj) ? '-' : `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${(dateObj.getFullYear() + 543).toString().slice(-2)}`;
-        const timeDisplay = isNaN(dateObj) ? '-' : `${dateObj.getHours()}:${(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes()} น.`;
+        
+        let dateDisplay = '-';
+        let timeDisplay = '-';
+        if(log.created_at) {
+            const dateObj = new Date(log.created_at);
+            if(!isNaN(dateObj)) {
+                const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                dateDisplay = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${(dateObj.getFullYear() + 543).toString().slice(-2)}`;
+                timeDisplay = `${dateObj.getHours()}:${(dateObj.getMinutes()<10?'0':'') + dateObj.getMinutes()} น.`;
+            }
+        }
 
         let IconComp = <IconClock />;
-        if(log.status.includes('เสร็จ')) IconComp = <IconCheck />;
-        else if(log.status.includes('ส่งต่อ')) IconComp = <IconArrowRight />;
-        else if(log.status.includes('ประสาน')) IconComp = <IconPhone />;
-        else if(log.status.includes('เชิญ')) IconComp = <IconUsers />;
+        if(log.status && log.status.includes('เสร็จ')) IconComp = <IconCheck />;
+        else if(log.status && log.status.includes('ส่งต่อ')) IconComp = <IconArrowRight />;
+        else if(log.status && log.status.includes('ประสาน')) IconComp = <IconPhone />;
+        else if(log.status && log.status.includes('เชิญ')) IconComp = <IconUsers />;
 
         return {
             ...log,
@@ -227,9 +238,15 @@ const ReportDetail = ({onGoToInternalMap }) => {
   }, [timelineData]);
 
   const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
+  
+  // FIX: แก้ไขฟังก์ชัน Google Maps ป้องกัน Syntax Error
   const handleGoogleMap = () => {
-    const query = info.lat && info.lng ? `${info.lat},${info.lng}` : encodeURIComponent(info.locationDetail || "แผนที่");
-    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+    const query = (info.lat && info.lng) 
+        ? `${info.lat},${info.lng}` 
+        : encodeURIComponent(info.locationDetail || "แผนที่");
+    
+    // ใช้ Backtick ` ` ครอบ String Template ให้ถูกต้อง
+    window.open(`https://www.google.com/maps/search/?api=1&query=$${query}`, '_blank');
   };
 
   const handleFileChange = (e) => {
@@ -259,7 +276,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
                </div>
             </div>
 
-            {/* ส่วนรายละเอียด (Description) ที่ปรับใหม่: กล่องเทา อ่านง่าย ไม่มีขีดข้าง */}
+            {/* ส่วนรายละเอียด (Description) ที่ปรับใหม่ */}
             <div className={styles.descriptionContainer}>
                 <span className={styles.descLabel}>รายละเอียด:</span>
                 <p className={styles.descText}>{info.description}</p>
@@ -317,6 +334,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
                    <IconInternalMap /> แผนที่ภายใน
                 </button>
+                {/* FIX: เรียกใช้ฟังก์ชันที่แก้แล้ว */}
                 <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
                    <IconGoogle /> Google Maps
                 </button>
@@ -330,7 +348,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
         </div>
       </div>
 
-      {/* Timeline Section (มีสี) */}
+      {/* Timeline Section */}
       <div className={`${styles.card} ${styles.bottomSection}`}>
         <div className={styles.sectionHeader}>ติดตามสถานะการดำเนินงาน</div>
         {timelineEvents.length === 0 ? (
@@ -344,7 +362,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
                             <span className={styles.statusTime}>{event.dateDisplay}<br/>{event.timeDisplay}</span>
                         </div>
                         <div className={styles.timeCenter}>
-                            {/* จุดสีตามสถานะ */}
                             <div className={`${styles.iconCircle} ${event.colorClass.bg}`}>
                                 {event.icon}
                             </div>
