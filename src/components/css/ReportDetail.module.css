@@ -5,7 +5,7 @@
 /* ========================================= */
 .container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -21,17 +21,20 @@
 .card {
   background-color: #FFFFFF;
   border-radius: 16px;
-  border: 1px solid #F3F4F6; /* เส้นขอบบางๆ */
+  border: 1px solid #F3F4F6;
   padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* เงาฟุ้งๆ ดูแพง */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
+  border-color: #E5E7EB;
 }
 
 /* Grid Layout */
@@ -45,7 +48,7 @@
 /* ========================================= */
 /* 2. TOP SECTION */
 /* ========================================= */
-.infoCard { justify-content: space-between; gap: 20px; }
+.infoCard { justify-content: space-between; gap: 16px; }
 
 .label { 
   font-size: 13px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0; 
@@ -56,9 +59,9 @@
 }
 
 /* --- ส่วนรายละเอียด (Description) ที่ปรับใหม่ --- */
-/* ไม่ใช้แถบดำแล้ว เปลี่ยนเป็นพื้นหลังเรียบๆ มุมมน */
+/* ปรับให้อ่านง่าย พื้นหลังเทาอ่อน มุมมน ไม่มีแถบดำ */
 .descriptionContainer {
-  background-color: #F3F4F6; /* สีเทาอ่อนมาก */
+  background-color: #F3F4F6;
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 20px;
@@ -69,27 +72,26 @@
   font-size: 14px;
   font-weight: 700;
   color: #4B5563;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   display: block;
 }
 
 .descText {
   font-size: 15px;
   color: #1F2937;
-  line-height: 1.6; /* เพิ่มระยะห่างบรรทัดให้อ่านง่าย */
+  line-height: 1.6;
   margin: 0;
-  white-space: pre-line; /* เว้นวรรคตามที่พิมพ์มา */
+  white-space: pre-line;
 }
 
-/* --- Status Badges (กลับมาใช้สีเดิม) --- */
+/* --- Status Badges (สีสดใสแบบเดิม) --- */
 .statusBadge {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
-  border: 1px solid transparent; margin-bottom: 16px;
+  border: 1px solid transparent; margin-bottom: 0;
 }
 
-/* สีสถานะ */
 .statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
 .statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
 .statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
@@ -98,7 +100,7 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Meta Info Row (หมวดหมู่/ดาว) */
+/* Meta Info Row */
 .metaRow {
   display: flex; gap: 24px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
 }
@@ -106,21 +108,22 @@
 .metaLabel { font-size: 12px; color: #9CA3AF; }
 .metaValue { font-size: 15px; font-weight: 600; color: #374151; }
 
-/* ปุ่ม Action */
+/* Action Buttons */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
 .editButton {
   background: #FFFFFF; border: 1px solid #E5E7EB; color: #4B5563;
   padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
   transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.editButton:hover { border-color: #9CA3AF; background-color: #F9FAFB; color: #111827; }
+.editButton:hover { border-color: #9CA3AF; background-color: #F9FAFB; color: #111827; transform: translateY(-1px); }
 
 /* Image Card */
 .imageCard {
   background-color: #F9FAFB; border: 2px dashed #E5E7EB;
   padding: 0; min-height: 300px; position: relative; overflow: hidden;
-  align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
 .realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 .imageCard:hover .realImage { transform: scale(1.05); }
@@ -133,28 +136,31 @@
   font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
   display: flex; align-items: center; gap: 8px; 
 }
-.locationText { font-size: 15px; color: #4B5563; line-height: 1.5; }
+.locationText { font-size: 15px; color: #4B5563; line-height: 1.5; margin: 0; }
 .agencyList { list-style: none; padding: 0; margin: 0; }
 .agencyItem { 
   background-color: #EFF6FF; color: #1E40AF; 
   padding: 12px; border-radius: 8px; font-weight: 500; font-size: 15px;
+  border-left: 4px solid #3B82F6;
 }
 .buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
 .actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
-.internalMapBtn { background-color: #1F2937; color: #fff; }
+.internalMapBtn { background-color: #1F2937; color: #fff; border: 1px solid #1F2937; }
+.internalMapBtn:hover { background-color: #000; }
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
+.googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
 /* ========================================= */
 /* 4. TIMELINE (COLORFUL) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
-.timelineRow { display: grid; grid-template-columns: 100px 50px 1fr; position: relative; }
+.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
 
 /* Time Left */
 .timeLeft { text-align: right; padding-right: 15px; padding-top: 2px; }
 .statusTitle { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
-.statusTime { font-size: 12px; color: #9CA3AF; }
+.statusTime { font-size: 12px; color: #9CA3AF; line-height: 1.4; }
 
 /* Center Line & Dot */
 .timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
@@ -166,37 +172,87 @@
   color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Timeline Colors (คืนค่าสี) */
-.bgRed { background: #EF4444; } .textRed { color: #B91C1C; }
-.bgPurple { background: #A855F7; } .textPurple { color: #7E22CE; }
-.bgYellow { background: #EAB308; } .textYellow { color: #A16207; }
-.bgGreen { background: #22C55E; } .textGreen { color: #15803D; }
-.bgBlue { background: #3B82F6; } .textBlue { color: #1D4ED8; }
-.bgDefault { background: #6B7280; } .textDefault { color: #374151; }
+/* Timeline Colors */
+.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
+.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
+.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
+.bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
+.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
+.bgDefault { background: linear-gradient(135deg, #6B7280, #374151); } .textDefault { color: #374151; }
 
 /* Right Content */
 .timeRight { padding-left: 15px; padding-bottom: 30px; }
-.durationText { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 4px; }
-.detailBody { font-size: 14px; color: #6B7280; }
+.durationText { font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 4px; }
+.detailBody { font-size: 14px; color: #6B7280; line-height: 1.5; }
 
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. MODAL */
+/* 5. MODALS */
 /* ========================================= */
-.modalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 999; }
-.modalContent { background: #fff; width: 90%; max-width: 450px; border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-.modalHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.modalTitle { margin: 0; font-size: 20px; font-weight: 700; }
-.closeButton { border: none; background: none; cursor: pointer; color: #9CA3AF; }
-.formLabel { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block; }
-.formSelect, .formTextarea { width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 8px; margin-bottom: 16px; font-family: inherit; }
-.btnConfirm { width: 100%; background: #10B981; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.btnCancel { width: 100%; background: #F3F4F6; color: #374151; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.modalOverlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+.modalContent {
+  background-color: #FFFFFF; width: 90%; max-width: 420px;
+  border-radius: 16px; padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex; flex-direction: column; gap: 20px;
+  max-height: 90vh; overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+}
+.modalHeader { display: flex; justify-content: space-between; align-items: center; }
+.modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
+.closeButton {
+  background: transparent; border: none; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; color: #9CA3AF;
+}
+.closeButton:hover { color: #EF4444; background-color: #FEF2F2; border-radius: 50%; }
+
+/* Form Elements */
+.formGroup { display: flex; flex-direction: column; gap: 8px; }
+.formLabel { font-size: 14px; font-weight: 600; color: #374151; }
+.formInput, .formSelect, .formTextarea {
+  padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px;
+  font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; outline: none;
+  box-sizing: border-box;
+}
+.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
+
+/* Upload Box */
+.uploadBox {
+  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; background-color: #F9FAFB; color: #6B7280; font-size: 13px;
+}
+.uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
+
+/* Modal Buttons */
+.modalActions { display: flex; gap: 12px; margin-top: 10px; }
+.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #F3F4F6; color: #374151; font-weight: 600; cursor: pointer; }
+.btnCancel:hover { background-color: #E5E7EB; }
+.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 600; cursor: pointer; }
+.btnConfirm:hover { background-color: #059669; }
+
+/* Type Selector */
+.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.typeItem {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+  padding: 12px; border-radius: 12px; border: 1px solid transparent;
+}
+.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
+.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 @media (max-width: 768px) {
   .topSection, .middleSection { grid-template-columns: 1fr; }
-  .timelineRow { grid-template-columns: 50px 1fr; }
+  .imageCard { min-height: 250px; }
+  .timelineRow { grid-template-columns: 40px 1fr; }
   .timeLeft { display: none; }
   .mobileHeader { display: block; margin-bottom: 4px; }
 }
