@@ -1,199 +1,284 @@
+/* --- css/ReportDetail.module.css --- */
+
 /* ========================================= */
-/* 1. CONTAINER & GLOBAL LAYOUT */
+/* 1. CONTAINER & CARD STYLES */
 /* ========================================= */
 .container {
   width: 100%;
-  max-width: 800px; /* แก้: ลดความกว้างให้เหมือนหน้ากระดาษ */
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   font-family: 'Sarabun', sans-serif;
-  color: #334155;
-  padding: 40px 24px;
-  background-color: #F8FAFC; 
+  color: #333;
+  padding: 24px;
+  
+  /* ✅ แก้ไข: เปลี่ยนพื้นหลัง Container เป็นสีขาว (จากเดิม #F9FAFB) */
+  background-color: #FFFFFF;
+  
   box-sizing: border-box;
-  min-height: 100vh;
+  padding-bottom: 60px;
 }
 
-/* Card Style: ให้ดู clean เหมือนกระดาษ */
 .card {
   background-color: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #E2E8F0; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  border: 1px solid #F3F4F6;
   padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  height: 100%; 
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-/* !!! แก้ไขจุดสำคัญ: เปลี่ยน Grid เป็น Flex Column !!! */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  border-color: #E5E7EB;
+}
+
+/* Grid Layout (50:50 Split) */
 .topSection, .middleSection {
-  display: flex;
-  flex-direction: column; /* บังคับเรียงลงมา */
-  gap: 20px;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
 }
 
 /* ========================================= */
 /* 2. TOP SECTION (INFO & IMAGE) */
 /* ========================================= */
-/* ส่วนข้อมูลด้านบน */
-.infoCard { 
-  border-bottom: 1px solid #F1F5F9;
-  border-radius: 12px 12px 0 0; /* มนแค่ด้านบน */
-  margin-bottom: -21px; /* ดึงให้ติดกับรูปภาพด้านล่าง */
-  padding-bottom: 30px;
-  z-index: 2;
-}
+.infoCard { justify-content: center; gap: 16px; }
+.label { font-size: 13px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0; }
+.title { font-size: 28px; font-weight: 800; color: #111827; margin: 0; line-height: 1.2; }
+.categoryText { font-size: 14px; color: #6B7280; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.stars { color: #111827; font-size: 20px; letter-spacing: 4px; }
 
-.label { 
-  font-size: 13px; color: #64748B; font-weight: 600; margin-bottom: 4px; 
-}
-
-.title { 
-  font-size: 26px; font-weight: 700; color: #0F172A; margin: 0 0 8px 0; line-height: 1.3; 
-}
-
-.categoryText { 
-  font-size: 14px; color: #64748B; font-weight: 500; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-}
-
-/* Badges */
+/* --- Status Badges (ป้ายสถานะ) --- */
 .statusBadge {
-  display: inline-flex; align-items: center; padding: 4px 12px; gap: 6px;
-  border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 18px;
+  gap: 10px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  width: fit-content;
+  border: 1px solid transparent;
 }
-.statusPending { background-color: #FEF2F2; color: #EF4444; border-color: #FECACA; }
-.statusCoordinating { background-color: #F3E8FF; color: #9333EA; border-color: #E9D5FF; }
-.statusProgress { background-color: #FEFCE8; color: #B45309; border-color: #FEF08A; }
-.statusDone { background-color: #DCFCE7; color: #15803D; border-color: #BBF7D0; }
+
+/* Status Colors */
+.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
+.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
+.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
 .statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
 .statusInvite { background-color: #F0FDFA; color: #0D9488; border-color: #99F6E4; }
-.statusReject { background-color: #F1F5F9; color: #475569; border-color: #CBD5E1; }
-.statusDefault { background-color: #F1F5F9; color: #64748B; }
+.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
+.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Action Buttons */
+/* --- Action Buttons --- */
 .actionRow {
-  display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #f8fafc; padding-top: 15px;
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
 }
-.editButton {
-  background-color: #fff; border: 1px solid #CBD5E1; color: #475569;
-  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center;
-}
-.editButton:hover { background-color: #F8FAFC; color: #0F172A; border-color: #94A3B8; }
 
-/* Image Section - บังคับให้อยู่ใต้ Info */
+.editButton {
+  background: linear-gradient(to bottom, #FFFFFF, #F9FAFB);
+  border: 1px solid #E5E7EB;
+  color: #4B5563;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  flex: 1;
+}
+
+.editButton:hover {
+  background: linear-gradient(to bottom, #F3F4F6, #E5E7EB);
+  border-color: #9CA3AF;
+  color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.editButton:active {
+  background: #E5E7EB;
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.editButton svg {
+  width: 18px; height: 18px; stroke-width: 2;
+}
+
+/* --- Image Card --- */
 .imageCard {
-  background-color: #F8FAFC;
-  border-radius: 0 0 12px 12px; /* มนแค่ด้านล่าง */
-  border-top: none;
+  /* ✅ แก้ไข: เปลี่ยนพื้นหลังกรอบรูปภาพเป็นสีขาว (จากเดิม #F9FAFB) */
+  background-color: #FFFFFF;
+  
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #E5E7EB;
+  position: relative;
   min-height: 250px;
   padding: 0;
-  width: 100%;
 }
-.realImage { width: 100%; height: auto; max-height: 500px; object-fit: contain; background: #000; }
-.imagePlaceholder { color: #94A3B8; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px; }
+.imagePlaceholder { color: #9CA3AF; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.imageCard:hover .realImage { transform: scale(1.05); }
 
 /* ========================================= */
-/* 3. MIDDLE SECTION */
+/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
 /* ========================================= */
-.locationCard, .agencyCard {
-  border-left: 4px solid #3B82F6; /* แถบสีด้านซ้ายให้ดูเป็น section */
-}
+/* Watermark Decoration */
+.locationCard::after, .agencyCard::after { content: ""; position: absolute; background-repeat: no-repeat; background-size: contain; opacity: 0.6; pointer-events: none; z-index: 0; }
+.locationCard::after { bottom: -20px; right: -20px; width: 120px; height: 120px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'/%3E%3C/svg%3E"); }
+.agencyCard::after { top: 10px; right: 10px; width: 100px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F3F4F6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'/%3E%3C/svg%3E"); }
 
-.sectionHeader { 
-  font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 12px; 
-  display: flex; align-items: center; gap: 8px; 
-}
-.locationText { font-size: 14px; color: #334155; line-height: 1.6; }
+.locationCard { justify-content: space-between; }
+.agencyCard { justify-content: flex-start; }
+.sectionHeader, .locationText, .buttonGroup, .agencyList { position: relative; z-index: 2; }
+.sectionHeader { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.locationText { font-size: 15px; color: #4B5563; font-weight: 500; line-height: 1.6; margin: 0; flex-grow: 1; }
 
-.buttonGroup { display: flex; gap: 10px; margin-top: 15px; }
-.actionButton { 
-  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #E2E8F0;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.internalMapBtn { background-color: #334155; color: #fff; border: none; }
-.googleMapBtn { background-color: #fff; color: #475569; }
+.buttonGroup { display: flex; gap: 10px; margin-top: 16px; width: 100%; }
+.actionButton { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; }
+.internalMapBtn { background-color: #1F2937; color: #ffffff; border: 1px solid #1F2937; }
+.internalMapBtn:hover { background-color: #000000; }
+.googleMapBtn { background-color: #ffffff; color: #374151; border: 1px solid #E5E7EB; }
+.googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
-.agencyList { list-style: none; padding: 0; margin: 0; }
-.agencyItem { background: #F1F5F9; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 500; }
+.agencyList { list-style: none; padding: 0; margin: 0; width: 100%; }
+.agencyItem { display: flex; align-items: center; gap: 10px; color: #4B5563; font-size: 15px; background-color: rgba(255,255,255,0.8); padding: 12px; border-radius: 6px; border-left: 4px solid #E5E7EB; margin-bottom: 8px; }
 
 /* ========================================= */
-/* 4. TIMELINE (Table Style) */
+/* 4. TIMELINE SECTION */
 /* ========================================= */
-.bottomSection { 
-    border-top: 4px solid #10B981; /* แถบสีเขียว */
-}
+.bottomSection { min-height: 200px; justify-content: flex-start; }
+.timelineContainer { margin-top: 16px; display: flex; flex-direction: column; }
+.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; gap: 0px; position: relative; }
+.timeLeft { text-align: right; padding-right: 12px; padding-top: 4px; }
+.statusTitle { font-size: 16px; font-weight: 700; margin-bottom: 4px; display: block; }
+.statusTime { font-size: 13px; color: #64748b; font-weight: 500; display: block; line-height: 1.4; }
+.timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
+.line { width: 2px; background-color: #e2e8f0; flex-grow: 1; margin-top: 4px; min-height: 40px; }
+.timelineRow:last-child .line { display: none; }
+.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; z-index: 2; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.timeRight { padding-left: 12px; padding-bottom: 40px; padding-top: 4px; }
+.durationText { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px; display: block; }
+.detailTitle { font-size: 15px; color: #334155; margin-bottom: 8px; line-height: 1.6; }
+.detailBody { font-size: 14px; color: #64748b; line-height: 1.6; white-space: pre-line; }
 
-.timelineContainer { 
-    margin-top: 10px; display: flex; flex-direction: column; 
-}
+/* Timeline Colors */
+.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
+.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
+.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
+.bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
+.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
+.bgTeal { background: linear-gradient(135deg, #14b8a6, #0f766e); } .textTeal { color: #0f766e; }
+.bgDark { background: linear-gradient(135deg, #4b5563, #1f2937); } .textDark { color: #1f2937; }
 
-/* Timeline แบบตาราง (เหมือนในรูปตัวอย่าง) */
-.timelineRow { 
-    display: grid; 
-    grid-template-columns: 130px 1fr; /* คอลัมน์ซ้าย: วันที่, คอลัมน์ขวา: รายละเอียด */
-    gap: 20px; 
-    padding: 16px 0;
-    border-bottom: 1px solid #F1F5F9;
-}
-.timelineRow:last-child { border-bottom: none; }
-
-/* ซ่อนกราฟิกเดิม */
-.timeCenter, .line, .iconCircle { display: none; }
-
-.timeLeft { 
-    text-align: right; display: flex; flex-direction: column; gap: 2px;
-}
-.timeRight { padding: 0; }
 .mobileHeader { display: none; }
 
-.statusTitle { font-size: 14px; font-weight: 700; }
-.statusTime { font-size: 12px; color: #64748B; }
-.durationText { font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 4px; }
-.detailBody { font-size: 14px; color: #475569; line-height: 1.5; }
-
-/* Color Helpers */
-.textRed { color: #EF4444; } .textPurple { color: #9333EA; } .textYellow { color: #B45309; }
-.textGreen { color: #15803D; } .textBlue { color: #2563EB; } .textDark { color: #475569; }
-
-
 /* ========================================= */
-/* 5. MODAL & RESPONSIVE */
+/* 5. MODAL STYLES (POP-UP) */
 /* ========================================= */
-.modalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; backdrop-filter: blur(2px); }
-.modalContent { background: #fff; width: 90%; max-width: 420px; border-radius: 16px; padding: 0; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
-.modalHeader { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-.modalTitle { font-weight: 700; font-size: 18px; margin:0; }
-.closeButton { background: none; border: none; cursor: pointer; font-size: 20px; color: #999; }
-.modalScrollableContent { padding: 20px; overflow-y: auto; }
+.modalOverlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  
+  /* Background Transparent */
+  background-color: transparent;
+  
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  
+  /* Blur Effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  animation: fadeIn 0.2s ease-out;
+}
 
-.formGroup { margin-bottom: 15px; }
-.formLabel { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
-.formSelect, .formTextarea { width: 100%; padding: 12px; border: 1px solid #E2E8F0; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; background: #F8FAFC; }
-.uploadBox { border: 2px dashed #CBD5E1; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; color: #64748B; font-size: 13px; background: #F8FAFC; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.modalContent {
+  background-color: #FFFFFF; width: 90%; max-width: 420px;
+  border-radius: 16px; padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex; flex-direction: column; gap: 20px;
+  position: relative; 
+  animation: slideUp 0.3s ease-out;
+  max-height: 90vh; overflow-y: auto;
+}
+
+.modalHeader { display: flex; justify-content: space-between; align-items: center; }
+.modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
+
+.closeButton {
+  background-color: #EF4444; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: all 0.2s ease; position: absolute; top: 16px; right: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
+.closeButton svg { width: 64px; height: 64px; stroke-width: 3; }
+
+/* Type Selector */
+.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+.typeItem { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; padding: 12px; border-radius: 12px; border: 1px solid transparent; transition: all 0.2s; }
+.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
+.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
+.typeCircle { width: 48px; height: 48px; background-color: #E5E7EB; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #6B7280; }
+.typeLabel { font-size: 13px; color: #374151; text-align: center; font-weight: 500; }
+
+/* Forms */
+.formGroup { display: flex; flex-direction: column; gap: 8px; }
+.formLabel { font-size: 14px; font-weight: 600; color: #374151; }
+.formInput, .formSelect, .formTextarea { padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.2s; }
+.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
+.formTextarea { min-height: 80px; resize: vertical; }
+
+/* Upload Box & Preview */
+.uploadBox { 
+  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; background-color: #F9FAFB; transition: all 0.2s; color: #6B7280; font-size: 13px; position: relative; min-height: 120px;
+}
+.uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
+
 .previewWrapper { position: relative; width: 100%; display: flex; justify-content: center; }
-.imagePreview { max-height: 200px; border-radius: 8px; }
-.removePreviewBtn { position: absolute; top: -10px; right: -10px; background: #EF4444; color: white; border: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+.imagePreview { width: auto; height: auto; max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 6px; border: 1px solid #E5E7EB; }
+.removePreviewBtn { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; background-color: #EF4444; color: white; border: 2px solid white; border-radius: 50%; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background-color 0.2s; }
+.removePreviewBtn:hover { background-color: #DC2626; }
 
-.modalActions { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; }
-.btnConfirm { flex: 1; background: #0F172A; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-.btnCancel { flex: 1; background: #fff; border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #64748B; }
+/* Modal Buttons */
+.modalActions { display: flex; gap: 12px; margin-top: 10px; }
+.btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #EF4444; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.btnCancel:hover { background-color: #DC2626; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
+.btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+.btnConfirm:hover { background-color: #059669; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
 
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.typeItem { border: 1px solid #E2E8F0; padding: 15px 5px; border-radius: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.typeItem:hover { background: #F8FAFC; }
-.typeItem.selected { border-color: #3B82F6; background: #EFF6FF; color: #1D4ED8; }
-.typeLabel { font-size: 12px; font-weight: 600; }
-.typeCircle { width: 30px; height: 30px; background: #E2E8F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-@media (max-width: 600px) {
-  .timelineRow { grid-template-columns: 1fr; gap: 5px; }
-  .timeLeft { text-align: left; flex-direction: row; gap: 10px; margin-bottom: 5px; }
-  .statusTitle { font-size: 13px; }
+/* Responsive */
+@media (max-width: 768px) {
+  .topSection, .middleSection { grid-template-columns: 1fr; }
+  .imageCard { min-height: 200px; }
+  .buttonGroup { flex-direction: column; }
+  .timelineRow { grid-template-columns: 40px 1fr; }
+  .timeLeft { display: none; }
+  .mobileHeader { display: block; margin-bottom: 8px; }
 }
