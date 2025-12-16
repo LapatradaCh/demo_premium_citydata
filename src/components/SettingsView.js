@@ -10,25 +10,10 @@ import {
 // --- Config & Constants ---
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
-// URL สำหรับดึงประเภทองค์กร (Master Data)
 const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
 
-// --- ปรับปรุง: ดึง ID จาก LocalStorage ---
-let ORGANIZATION_ID = null; // ค่า Default กรณีไม่พบข้อมูล
-try {
-  const storedOrgString = localStorage.getItem("lastSelectedOrg");
-  const storedOrg = JSON.parse(storedOrgString);
-  console.log("storage:", storedOrg);
-  if (storedOrgString) {
-    const storedOrg = JSON.parse(storedOrgString);
-    if (storedOrg && storedOrg.id) {
-      ORGANIZATION_ID = storedOrg.id;
-      console.log("Loaded Organization ID:", ORGANIZATION_ID);
-    }
-  }
-} catch (error) {
-  console.error("Error parsing lastSelectedOrg:", error);
-}
+// ❌ ลบส่วน Global Variable เดิมออก เพื่อป้องกันค่าค้าง
+// เราจะย้ายไปดึงใน Component แทนครับ
 
 // ------------------------------------------------------------------
 // --- Helper Components ---
@@ -47,7 +32,10 @@ const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-    
+  
+  // ✅ เพิ่ม State สำหรับเก็บ ID ของหน่วยงานปัจจุบัน
+  const [orgId, setOrgId] = useState(null);
+
   // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
 
@@ -55,7 +43,7 @@ const AgencySettings = () => {
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
 
-  // ✅ State สำหรับเก็บตัวเลือก Dropdown (Master Data)
+  // State สำหรับเก็บตัวเลือก Dropdown (Master Data)
   const [orgTypeOptions, setOrgTypeOptions] = useState([]);
 
   // Initial State
@@ -79,7 +67,6 @@ const AgencySettings = () => {
             const res = await fetch(API_ORG_TYPES_URL);
             if(res.ok) {
                 const data = await res.json();
-                // data format: [{ value: 1, label: 'เทศบาล' }, ...]
                 setOrgTypeOptions(data);
             }
         } catch (error) {
@@ -91,9 +78,36 @@ const AgencySettings = () => {
     const fetchOrgData = async () => {
       try {
         setIsLoading(true);
-        const url = `${API_BASE_URL}?id=${ORGANIZATION_ID}`;
+
+        // ✅ ย้ายการดึง LocalStorage มาไว้ตรงนี้ เพื่อให้ได้ข้อมูลล่าสุดเสมอ
+        let currentId = null;
+        try {
+          const storedOrgString = localStorage.getItem("lastSelectedOrg");
+          if (storedOrgString) {
+            const storedOrg = JSON.parse(storedOrgString);
+            if (storedOrg && storedOrg.id) {
+                currentId = storedOrg.id;
+            }
+          }
+        } catch (error) {
+          console.error("Error parsing lastSelectedOrg:", error);
+        }
+
+        // ถ้าหา ID ไม่เจอ ให้แจ้งเตือนและหยุดทำงาน
+        if (!currentId) {
+            alert("ไม่พบข้อมูลหน่วยงาน (กรุณาเลือกหน่วยงานใหม่)");
+            setIsLoading(false);
+            return;
+        }
+
+        // ✅ Set ID ลง State ไว้ใช้ตอนบันทึก
+        setOrgId(currentId);
+        console.log("Fetching Data for Org ID:", currentId);
+
+        // ใช้ currentId ที่เพิ่งดึงมา ยิง API
+        const url = `${API_BASE_URL}?id=${currentId}`;
         
-        // เรียกดึง Types ก่อน หรือทำคู่กันก็ได้ แต่แยกฟังก์ชันไว้แล้วเรียกตรงนี้
+        // เรียกดึง Types
         await fetchOrgTypes(); 
 
         const res = await fetch(url);
@@ -116,7 +130,7 @@ const AgencySettings = () => {
             adminCode: data.admin_code || "",
             userCode: data.organization_code || "",
             
-            // ✅ Map ID มาใส่ state (ถ้าไม่มีค่า ให้เป็นว่าง)
+            // Map ID มาใส่ state
             agencyType: data.org_type_id || "", 
             
             province: data.province || "",
@@ -145,14 +159,15 @@ const AgencySettings = () => {
     try {
         setIsSaving(true);
 
+        if (!orgId) {
+            throw new Error("ไม่พบ ID หน่วยงาน (กรุณารีเฟรชหน้าเว็บ)");
+        }
+
         // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
-            organization_id: ORGANIZATION_ID,
+            organization_id: orgId, // ✅ ใช้ ID จาก State ที่ดึงมาได้ถูกต้อง
             organization_name: formData.name,
-            
-            // ✅ ส่ง ID กลับไป (เช่น 1, 2)
             org_type_id: formData.agencyType, 
-            
             district: formData.district,
             sub_district: formData.subDistrict,
             province: formData.province,
@@ -211,7 +226,8 @@ const AgencySettings = () => {
 
   // --- Helper: หาชื่อ Label จาก ID (สำหรับแสดงผล View Mode) ---
   const getOrgTypeLabel = (id) => {
-      const found = orgTypeOptions.find(opt => opt.value === id);
+      // แปลง id เป็น number เพื่อเทียบกับ value ที่มักเป็น number
+      const found = orgTypeOptions.find(opt => opt.value === Number(id));
       return found ? found.label : "-";
   };
 
@@ -237,7 +253,7 @@ const AgencySettings = () => {
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name || "-"}</h2>
                         <div className={styles.agencyBadges}>
-                            {/* ✅ แสดงผลชื่อประเภทหน่วยงานจาก ID */}
+                            {/* แสดงผลชื่อประเภทหน่วยงานจาก ID */}
                             <span className={styles.agencyBadgeType}>
                                 <FaCity style={{fontSize:10}}/> {getOrgTypeLabel(formData.agencyType)}
                             </span>
@@ -304,7 +320,7 @@ const AgencySettings = () => {
             </div>
         </div>
         
-        {/* ✅ POPUP EDIT MODAL (ย้ายออกมาจาก Function ด้านใน เพื่อแก้ปัญหาพิมพ์แล้วหลุด) */}
+        {/* POPUP EDIT MODAL */}
         {isEditModalOpen && (
             <>
               <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
@@ -347,13 +363,12 @@ const AgencySettings = () => {
                             <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
                         </div>
                           
-                        {/* ✅ ส่วน Dropdown เลือกประเภทหน่วยงาน */}
+                        {/* Dropdown เลือกประเภทหน่วยงาน */}
                         <div className={styles.agencyFormGroup}>
                             <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
                             <select 
                                 className={styles.agencyInput} 
                                 value={formData.agencyType} 
-                                // แปลงเป็น Int เพราะ value ของ option เป็น number
                                 onChange={(e)=>handleChange('agencyType', e.target.value)}
                             >
                                 <option value="">-- กรุณาเลือก --</option>
@@ -406,7 +421,7 @@ const AgencySettings = () => {
                             </div>
                         </div>
 
-                     </div>
+                      </div>
                 </div>
 
                 <div className={styles.agencyModalFooter}>
