@@ -414,3 +414,22 @@
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; }
   .controlBtn { flex: 1; text-align: center; }
 }
+
+
+.activeCritical {
+  /* พื้นหลังสีแดง (ใช้ code สีเดียวกับตัวแปร COLORS.pending ในไฟล์ js ของคุณ) */
+  background-color: #FF4D4F !important; 
+  /* เส้นขอบสีแดง */
+  border-color: #FF4D4F !important;
+  /* ตัวอักษรสีขาว */
+  color: #ffffff !important;
+  /* (ตัวเลือกเสริม) ทำให้ตัวหนาขึ้น */
+  font-weight: 500;
+}
+
+/* (แถม) ส่วนของปุ่ม "ทั้งหมด" ถ้าอยากให้ Active แล้วเป็นสีฟ้า */
+.activeTotal {
+  border-color: #1890ff;
+  color: #1890ff;
+  background-color: #e6f7ff;
+}
