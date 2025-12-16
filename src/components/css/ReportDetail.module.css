@@ -58,12 +58,12 @@
   font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
 }
 
-/* Description Box */
+/* Description Box (Clean Style) */
 .descriptionContainer {
   background-color: #F3F4F6;
   padding: 16px 20px;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   border: 1px solid #E5E7EB;
 }
 
@@ -91,13 +91,55 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Meta Info */
-.metaRow {
-  display: flex; gap: 24px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
+/* --- NEW: Meta Info Grid (Info Boxes) --- */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
 }
-.metaItem { display: flex; flex-direction: column; gap: 4px; }
-.metaLabel { font-size: 12px; color: #9CA3AF; }
-.metaValue { font-size: 15px; font-weight: 600; color: #374151; }
+
+.metaBox {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.metaBox:hover {
+  border-color: #CBD5E1;
+  background-color: #F1F5F9;
+}
+
+.metaLabel {
+  font-size: 13px; color: #64748B; font-weight: 600; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.metaValue {
+  font-size: 16px; color: #0F172A; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Stars Rating Style */
+.starContainer {
+  display: flex; align-items: center; gap: 4px;
+  color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
+}
+
+.starFilled {
+  color: #F59E0B; position: absolute; top: 0; left: 0;
+  white-space: nowrap; overflow: hidden;
+}
+
+.ratingNumber {
+  background-color: #FEF3C7; color: #B45309; font-size: 12px;
+  padding: 2px 8px; border-radius: 20px; font-weight: 800;
+}
 
 /* Action Buttons */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
@@ -195,30 +237,18 @@
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
-/* --- ปุ่มปิด (Close Button) แก้ไขแล้ว (ใหญ่ขึ้น) --- */
+/* Close Button (Large) */
 .closeButton {
-  background-color: #EF4444;
-  color: #FFFFFF;
-  border: none;
-  width: 40px;  /* ขยายขนาดปุ่มเป็น 40px */
-  height: 40px; /* ขยายขนาดปุ่มเป็น 40px */
-  border-radius: 50%;
+  background-color: #EF4444; color: #FFFFFF; border: none;
+  width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  cursor: pointer; transition: all 0.2s ease;
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
-.closeButton:hover { 
-  background-color: #DC2626; 
-  transform: scale(1.1);
-}
-.closeButton svg { 
-  width: 24px;  /* ขยายขนาดไอคอนกากบาทเป็น 24px */
-  height: 24px; /* ขยายขนาดไอคอนกากบาทเป็น 24px */
-  stroke-width: 3px; 
-}
+.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
+.closeButton svg { width: 24px; height: 24px; stroke-width: 3px; }
 
-/* Form Elements */
+/* Forms */
 .formGroup { display: flex; flex-direction: column; gap: 8px; }
 .formLabel { font-size: 14px; font-weight: 600; color: #374151; }
 .formInput, .formSelect, .formTextarea {
@@ -257,6 +287,7 @@
 
 @media (max-width: 768px) {
   .topSection, .middleSection { grid-template-columns: 1fr; }
+  .metaGrid { grid-template-columns: 1fr; }
   .imageCard { min-height: 250px; }
   .timelineRow { grid-template-columns: 40px 1fr; }
   .timeLeft { display: none; }
