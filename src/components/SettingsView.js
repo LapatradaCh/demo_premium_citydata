@@ -65,6 +65,7 @@ const AgencySettings = () => {
             const res = await fetch(API_ORG_TYPES_URL);
             if(res.ok) {
                 const data = await res.json();
+                console.log("Master Data ประเภทองค์กร:", data); // <--- เช็คตรงนี้
                 setOrgTypeOptions(data);
             }
         } catch (error) {
