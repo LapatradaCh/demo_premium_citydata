@@ -447,7 +447,11 @@ const ReportDetail = ({onGoToInternalMap }) => {
             </div>
 
             <div className={styles.modalActions}>
-               {/* ปุ่มเปลี่ยน (สีเขียว) */}
+               {/* ปุ่มยกเลิก สีแดง */}
+               <button className={styles.btnCancel} onClick={() => setShowTypeModal(false)}>
+                 ยกเลิก
+               </button>
+               {/* ปุ่มเปลี่ยน สีเขียว */}
                <button className={styles.btnConfirm} onClick={handleUpdateCategory} disabled={isUpdating}>
                  {isUpdating ? 'กำลังบันทึก...' : 'เปลี่ยน'}
                </button>
@@ -504,7 +508,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 </div>
             </div>
             <div className={styles.modalActions}>
-               {/* ปุ่มยืนยัน (สีเขียว) */}
+               {/* ปุ่มยืนยัน สีเขียว ปุ่มเดียว (ลบปุ่มยกเลิกออกแล้ว) */}
                <button className={styles.btnConfirm} onClick={handleUpdateStatus} disabled={isUpdating}>
                  {isUpdating ? 'กำลังบันทึก...' : 'ยืนยัน'}
                </button>
