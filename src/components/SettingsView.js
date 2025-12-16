@@ -17,6 +17,8 @@ const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organi
 let ORGANIZATION_ID = null; // ค่า Default กรณีไม่พบข้อมูล
 try {
   const storedOrgString = localStorage.getItem("lastSelectedOrg");
+  const storedOrg = JSON.parse(storedOrgString);
+  console.log("storage:", storedOrg);
   if (storedOrgString) {
     const storedOrg = JSON.parse(storedOrgString);
     if (storedOrg && storedOrg.id) {
