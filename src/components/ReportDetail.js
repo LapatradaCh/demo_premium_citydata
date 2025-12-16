@@ -65,7 +65,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
         setLoading(true);
         setError(null);
         
-        // ถ้าไม่มี ID ให้ข้ามไป
         if (!idToFetch) {
              setLoading(false);
              return;
@@ -182,7 +181,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [statusValue, setStatusValue] = useState(info.status);
   useEffect(() => { if (showStatusModal) setStatusValue(info.status); }, [showStatusModal, info.status]);
 
-  // --- Helpers for Styles ---
   const getStatusClass = (status = "") => {
     if (!status) return styles.statusDefault;
     if (status.includes('รอ')) return styles.statusPending;
@@ -193,7 +191,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
     return styles.statusDefault;
   };
 
-  // Helper for Timeline Colors (Matching Status)
   const getTimelineColor = (status = "") => {
     if (!status) return { text: styles.textDefault, bg: styles.bgDefault };
     if (status.includes('รอ')) return { text: styles.textRed, bg: styles.bgRed };
@@ -239,14 +236,11 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
   const handleInternalMap = () => { if (onGoToInternalMap) onGoToInternalMap(); };
   
-  // FIX: แก้ไขฟังก์ชัน Google Maps ป้องกัน Syntax Error
   const handleGoogleMap = () => {
     const query = (info.lat && info.lng) 
         ? `${info.lat},${info.lng}` 
         : encodeURIComponent(info.locationDetail || "แผนที่");
-    
-    // ใช้ Backtick ` ` ครอบ String Template ให้ถูกต้อง
-    window.open(`https://www.google.com/maps/search/?api=1&query=$${query}`, '_blank');
+    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
   const handleFileChange = (e) => {
@@ -276,28 +270,43 @@ const ReportDetail = ({onGoToInternalMap }) => {
                </div>
             </div>
 
-            {/* ส่วนรายละเอียด (Description) ที่ปรับใหม่ */}
+            {/* ส่วนรายละเอียด (Description) */}
             <div className={styles.descriptionContainer}>
                 <span className={styles.descLabel}>รายละเอียด:</span>
                 <p className={styles.descText}>{info.description}</p>
             </div>
 
-            <div className={styles.metaRow}>
-                <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>หมวดหมู่</span>
-                    <span className={styles.metaValue}>{info.category}</span>
+            {/* --- Info Boxes (New Grid Layout) --- */}
+            <div className={styles.metaGrid}>
+                {/* Box 1: Category */}
+                <div className={styles.metaBox}>
+                    <span className={styles.metaLabel}>
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+                        หมวดหมู่ปัญหา
+                    </span>
+                    <span className={styles.metaValue}>
+                        {info.category}
+                    </span>
                 </div>
-                <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>ความพึงพอใจ</span>
-                    <div style={{display:'flex', alignItems:'center', gap:'6px'}}>
-                        <div style={{position: 'relative', display: 'inline-block', color: '#E5E7EB', fontSize: '18px'}}>
-                           ★★★★★
-                           <div style={{position:'absolute', top:0, left:0, overflow:'hidden', width:`${(info.rating/5)*100}%`, color:'#F59E0B'}}>★★★★★</div>
+
+                {/* Box 2: Rating */}
+                <div className={styles.metaBox}>
+                    <span className={styles.metaLabel}>
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        ความพึงพอใจ
+                    </span>
+                    <div className={styles.metaValue}>
+                        <div className={styles.starContainer}>
+                            ★★★★★
+                            <div className={styles.starFilled} style={{ width: `${(info.rating / 5) * 100}%` }}>
+                                ★★★★★
+                            </div>
                         </div>
-                        <span className={styles.metaValue}>{info.rating.toFixed(1)}</span>
+                        <span className={styles.ratingNumber}>{info.rating.toFixed(1)}</span>
                     </div>
                 </div>
             </div>
+
           </div>
           
           <div className={styles.actionRow}>
@@ -334,7 +343,6 @@ const ReportDetail = ({onGoToInternalMap }) => {
                 <button className={`${styles.actionButton} ${styles.internalMapBtn}`} onClick={handleInternalMap}>
                    <IconInternalMap /> แผนที่ภายใน
                 </button>
-                {/* FIX: เรียกใช้ฟังก์ชันที่แก้แล้ว */}
                 <button className={`${styles.actionButton} ${styles.googleMapBtn}`} onClick={handleGoogleMap}>
                    <IconGoogle /> Google Maps
                 </button>
