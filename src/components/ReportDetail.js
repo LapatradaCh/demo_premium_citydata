@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import styles from './css/ReportDetail.module.css';
+import styles from './css/ReportDetail.module.css'; // ตรวจสอบ Path ให้ถูก
 
-// --- Icons (ชุดเดิม) ---
+// --- Icons Components ---
 const IconMapPin = () => (<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconInternalMap = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>);
 const IconGoogle = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>);
@@ -21,9 +21,9 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconX = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
-const ReportDetail = ({onGoToInternalMap }) => {
+const ReportDetail = ({ onGoToInternalMap }) => {
   const reportId = localStorage.getItem("selectedCaseId");
-   
+  
   // Data States
   const [caseInfo, setCaseInfo] = useState(null);
   const [timelineData, setTimelineData] = useState([]);
@@ -42,7 +42,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [selectedIssueType, setSelectedIssueType] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [statusComment, setStatusComment] = useState(""); 
-   
+  
   // Fetch Issue Types
   useEffect(() => {
     const fetchIssueTypes = async () => {
@@ -61,7 +61,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
 
   // Fetch Case Detail
   useEffect(() => {
-    const idToFetch = reportId ;
+    const idToFetch = reportId;
     const fetchCaseDetail = async () => {
       try {
         setLoading(true);
@@ -152,7 +152,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const handleUpdateStatus = async () => {
     if (!caseInfo) return;
     let finalImageUrl = null;
-    const file = fileInputRef.current?.files[0];
+    // Note: Image upload logic handled separately or assumed pre-uploaded if needed in real implementation
+    // For this code, we just send status text
     const storedUserId = localStorage.getItem("user_id");
     const currentUserId = storedUserId ? parseInt(storedUserId) : 1;
 
@@ -161,9 +162,9 @@ const ReportDetail = ({onGoToInternalMap }) => {
         const payload = {
             action: 'update_status',            
             case_id: caseInfo.real_id,          
-            user_id: currentUserId,             
+            user_id: currentUserId,              
             new_status: statusValue,            
-            comment: statusComment,             
+            comment: statusComment,              
             image_url: finalImageUrl            
         };
 
