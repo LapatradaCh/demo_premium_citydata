@@ -39,7 +39,7 @@ const PROBLEM_COLORS = [
 
 // --- TAB 1: WORKLOAD (ปริมาณงาน) ---
 const WorkloadView = ({ data }) => {
-  const [sortBy, setSortBy] = useState('total');
+  const [sortBy, setSortBy] = useState('total'); // State สำหรับเช็คว่ากดปุ่มไหนอยู่
 
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => b[sortBy] - a[sortBy]);
@@ -94,10 +94,11 @@ const WorkloadView = ({ data }) => {
         {sortedData.map((item, index) => {
           const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
           
-          // --- ส่วนที่เพิ่มใหม่: คำนวณ % งานค้าง ---
+          // คำนวณ % งานค้าง
           const pendingRate = item.total > 0 ? (item.pending / item.total) * 100 : 0;
-          // ตั้งค่าเกณฑ์แจ้งเตือนที่ 40% (ปรับตัวเลขได้ตามต้องการ)
-          const isCriticalPending = pendingRate >= 40; 
+          
+          // เงื่อนไข: เกิน 40% และ ต้องอยู่ในโหมด "pending" (กดปุ่มงานค้าง) เท่านั้นถึงจะแสดง
+          const showCriticalAlert = pendingRate >= 40 && sortBy === 'pending'; 
 
           return (
             <div key={index} style={{ marginBottom: '24px' }}>
@@ -151,8 +152,8 @@ const WorkloadView = ({ data }) => {
                  })}
               </div>
 
-              {/* --- ส่วนที่เพิ่มใหม่: แสดงข้อความแจ้งเตือนสีแดง --- */}
-              {isCriticalPending && (
+              {/* --- แสดงข้อความเตือน เฉพาะเมื่อเงื่อนไข showCriticalAlert เป็นจริง --- */}
+              {showCriticalAlert && (
                 <div style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
