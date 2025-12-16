@@ -375,7 +375,8 @@ export default function OrganizationStatisticsView() {
 
   // *** ID องค์กรตามจริง ***
   const local= localStorage.getItem("lastSelectedOrg");
-  console.log("get id:", local);
+  const org = JSON.parse(local);
+  console.log("get id:", org.id);
   const USER_ORG_ID = 74;
 
   useEffect(() => {
