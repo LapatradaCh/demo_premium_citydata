@@ -13,10 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  
-  /* ✅ แก้ไข: เปลี่ยนจาก #F9FAFB (เทา) เป็น #FFFFFF (ขาว) */
-  background-color: #FFFFFF; 
-  
+  background-color: #FFFFFF; /* พื้นหลังสีขาว Clean */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -24,8 +21,7 @@
 .card {
   background-color: #FFFFFF;
   border-radius: 16px;
-  /* เพิ่มเส้นขอบให้ชัดขึ้นนิดนึง เพราะพื้นหลังเป็นสีขาวเหมือนกันแล้ว */
-  border: 1px solid #E5E7EB; 
+  border: 1px solid #E5E7EB;
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
@@ -64,11 +60,11 @@
 
 /* Description Box */
 .descriptionContainer {
-  background-color: #F3F4F6;
+  background-color: #F8FAFC;
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #E2E8F0;
 }
 
 .descLabel {
@@ -95,7 +91,7 @@
 .statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
 .statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
 
-/* Meta Info Boxes */
+/* --- Meta Info Boxes (Premium Grid) --- */
 .metaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -104,33 +100,49 @@
 }
 
 .metaBox {
-  background-color: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+  border: 1px solid #F1F5F9;
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .metaBox:hover {
-  border-color: #CBD5E1;
-  background-color: #F1F5F9;
+  border-color: #E2E8F0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
+.metaHeader {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+
+.iconWrapper {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconBlue { background-color: #EFF6FF; color: #3B82F6; }
+.iconYellow { background-color: #FFFBEB; color: #F59E0B; }
+
 .metaLabel {
-  font-size: 13px; color: #64748B; font-weight: 600; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #64748B; font-weight: 600;
 }
 
 .metaValue {
   font-size: 16px; color: #0F172A; font-weight: 700;
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 8px; padding-left: 4px;
 }
 
+/* Rating Stars */
 .starContainer {
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 2px;
   color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
 }
 
@@ -140,24 +152,39 @@
 }
 
 .ratingNumber {
-  background-color: #FEF3C7; color: #B45309; font-size: 12px;
-  padding: 2px 8px; border-radius: 20px; font-weight: 800;
+  background-color: #FFF7ED; color: #C2410C; font-size: 13px;
+  padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
 }
 
-/* Action Buttons */
+/* --- Action Buttons (Primary vs Secondary) --- */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
-.editButton {
-  background: #FFFFFF; border: 1px solid #E5E7EB; color: #4B5563;
-  padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+
+/* ปุ่มรอง (สีขาว) */
+.btnSecondary {
+  background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
+  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-  transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s;
 }
-.editButton:hover { border-color: #9CA3AF; background-color: #F9FAFB; color: #111827; transform: translateY(-1px); }
+.btnSecondary:hover { border-color: #CBD5E1; background-color: #F8FAFC; color: #1E293B; }
+
+/* ปุ่มหลัก (สีเข้ม) */
+.btnPrimary {
+  background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
+  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.btnPrimary:hover { 
+  background-color: #1E293B; 
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15);
+}
 
 /* Image Card */
 .imageCard {
-  background-color: #FFFFFF; /* แก้ไขให้ชัวร์ว่าเป็นขาว */
-  border: 2px dashed #E5E7EB;
+  background-color: #FFFFFF; border: 2px dashed #E5E7EB;
   padding: 0; min-height: 300px; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
@@ -241,6 +268,7 @@
 .modalHeader { display: flex; justify-content: space-between; align-items: center; }
 .modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
 
+/* ปุ่มปิด (สีแดง) */
 .closeButton {
   background-color: #EF4444; color: #FFFFFF; border: none;
   width: 40px; height: 40px; border-radius: 50%;
@@ -251,6 +279,7 @@
 .closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
 .closeButton svg { width: 24px; height: 24px; stroke-width: 3px; }
 
+/* Forms */
 .formGroup { display: flex; flex-direction: column; gap: 8px; }
 .formLabel { font-size: 14px; font-weight: 600; color: #374151; }
 .formInput, .formSelect, .formTextarea {
@@ -260,6 +289,7 @@
 }
 .formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 
+/* Upload Box */
 .uploadBox {
   border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -267,12 +297,14 @@
 }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
+/* Modal Buttons */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
 .btnCancel { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #F3F4F6; color: #374151; font-weight: 600; cursor: pointer; }
 .btnCancel:hover { background-color: #E5E7EB; }
 .btnConfirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 600; cursor: pointer; }
 .btnConfirm:hover { background-color: #059669; }
 
+/* Type Selector */
 .typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .typeItem {
   display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
