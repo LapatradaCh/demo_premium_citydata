@@ -13,7 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  background-color: #FFFFFF; /* พื้นหลังสีขาวล้วน */
+  background-color: #FFFFFF;
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -208,7 +208,7 @@
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 .googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
-/* --- NEW AGENCY LIST (Card Style) --- */
+/* --- AGENCY LIST (Card Style) --- */
 .agencyList {
   display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
 }
@@ -275,7 +275,7 @@
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. MODALS (STANDARD POPUP) - กลับมาใช้แบบเดิม */
+/* 5. MODALS & FORMS */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -326,12 +326,27 @@
 }
 .uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* Modal Buttons */
+/* --- Modal Buttons (Rounded) --- */
 .modalActions { display: flex; gap: 12px; margin-top: 10px; }
-.btnCancel { flex: 1; padding: 12px; border-radius: 50px; border: none; background-color: #EF4444; color: #FFFFFF; font-weight: 600; cursor: pointer; }
+
+/* ปุ่มยกเลิก */
+.btnCancel { 
+  flex: 1; 
+  padding: 12px; border-radius: 50px; border: none; 
+  background-color: #EF4444; color: #FFFFFF; 
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
 .btnCancel:hover { background-color: #DC2626; }
-.btnConfirm { flex: 1; padding: 12px; border-radius: 50px; border: none; background-color: #10B981; color: #FFFFFF; font-weight: 600; cursor: pointer; }
-.btnConfirm:hover { background-color: #059669; }
+
+/* ✅ ปุ่มยืนยัน (เปลี่ยนสีเป็น #28a745) */
+.btnConfirm { 
+  flex: 1; 
+  padding: 12px; border-radius: 50px; border: none; 
+  background-color: #28a745; /* สีเขียวใหม่ */
+  color: #FFFFFF; 
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btnConfirm:hover { background-color: #218838; /* สีเขียวเข้มขึ้น */ }
 
 /* Type Selector */
 .typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
