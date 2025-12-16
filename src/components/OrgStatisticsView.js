@@ -62,16 +62,15 @@ const WorkloadView = ({ data }) => {
                onClick={() => setSortBy('total')}
                className={`${styles.controlBtn} ${sortBy === 'total' ? styles.activeTotal : ''}`}
              >ทั้งหมด</button>
-             // <button 
-             //   onClick={() => setSortBy('pending')}
-             //   className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
-             // >งานค้าง</button>
+             <button 
+               onClick={() => setSortBy('pending')}
+               className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
+             >งานค้าง</button>
 
-              <button 
-              onClick={() => setSortBy('pending')}
-              className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
-            >งานค้าง (วิกฤต)  {/* แก้ข้อความตรงนี้ */}
-            </button>
+            //   <button 
+            //   onClick={() => setSortBy('pending')}
+            //   className={`${styles.controlBtn} ${sortBy === 'pending' ? styles.activeCritical : ''}`}
+            // >งานค้าง (วิกฤต) </button>
         </div>
       </div>
 
