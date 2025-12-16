@@ -14,10 +14,8 @@
   color: #374151;
   padding: 32px 24px;
   
-  /* พื้นหลังขาว + ลายจุดจางๆ เพิ่มความพรีเมียม */
+  /* ✅ แก้ไข: เอาลายจุดออก กลับมาเป็นขาวล้วน Clean ๆ */
   background-color: #FFFFFF;
-  background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
-  background-size: 20px 20px;
   
   box-sizing: border-box;
   min-height: 100vh;
