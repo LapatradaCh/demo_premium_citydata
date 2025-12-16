@@ -1,26 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
-/* =======================================================
-   1. THEME UTILITIES & COLORS (UPDATED PALETTE)
-   ======================================================= */
-/* Text Colors */
-.text-total        { color: #000000 !important; }
-.text-waiting      { color: #EF4444 !important; } /* Red */
-.text-coordinating { color: #8B5CF6 !important; } /* Violet */
-.text-action       { color: #F59E0B !important; } /* Amber */
-.text-finished     { color: #10B981 !important; } /* Emerald */
-.text-forward      { color: #3B82F6 !important; } /* Blue */
-.text-invite       { color: #06B6D4 !important; } /* Cyan */
-.text-reject       { color: #9CA3AF !important; } /* Gray */
 
-/* Background Colors (สำหรับใส่ใน statusCard) */
-.bg-total        { background-color: #000000 !important; color: #fff; }
-.bg-waiting      { background-color: #EF4444 !important; color: #fff; }
-.bg-coordinating { background-color: #8B5CF6 !important; color: #fff; }
-.bg-action       { background-color: #F59E0B !important; color: #fff; }
-.bg-finished     { background-color: #10B981 !important; color: #fff; }
-.bg-forward      { background-color: #3B82F6 !important; color: #fff; }
-.bg-invite       { background-color: #06B6D4 !important; color: #fff; }
-.bg-reject       { background-color: #9CA3AF !important; color: #fff; }
+/* =======================================================
+   1. THEME UTILITIES & COLORS
+   ======================================================= */
+.text-total        { color: #0f172a !important; }
+.text-waiting      { color: #ff4d4f !important; }
+.text-coordinating { color: #9c27b0 !important; }
+.text-action       { color: #FFAB00 !important; } 
+.text-finished     { color: #4caf50 !important; }
+.text-forward      { color: #2196f3 !important; }
+.text-invite       { color: #00bcd4 !important; }
+.text-reject       { color: #64748b !important; }
 
 .badge-status {
   padding: 4px 10px;
@@ -47,7 +37,7 @@ html, body {
 
 .container {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #ffffff; /* แก้ไข: เปลี่ยนจากสีเทาเป็นสีขาว */
   font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
@@ -129,8 +119,6 @@ html, body {
   overflow: hidden;
   color: #ffffff;
   box-sizing: border-box;
-  /* Default background if utility class not used */
-  background-color: #9CA3AF; 
 }
 
 .statusCard:hover {
@@ -140,15 +128,13 @@ html, body {
 }
 
 .totalCard {
-  background-color: #000000; /* สีดำล้วน ตาม Palette */
+  background-color: #0f172a; /* สีน้ำเงินเข้ม */
   padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%; 
   box-sizing: border-box;
-  border-radius: 24px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
 .cardHeader {
@@ -251,7 +237,7 @@ html, body {
 
 /* Filters */
 .filterContainer {
-  background-color: #ffffff;
+  background-color: #ffffff; /* แก้ไข: เปลี่ยนจากสีเทาเป็นสีขาว */
   padding: 4px;
   border-radius: 12px;
   display: flex;
@@ -277,9 +263,8 @@ html, body {
 
 .filterButtonActive {
   background-color: #ffffff;
-  color: #F59E0B; /* Amber */
+  color: #f59e0b;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  border-color: #F59E0B;
 }
 
 /* Legend & Tooltip */
@@ -287,8 +272,8 @@ html, body {
   display: flex;
   flex-direction: row;        
   justify-content: center;      
-  flex-wrap: wrap;              
-  gap: 8px;                     
+  flex-wrap: wrap;             
+  gap: 8px;                    
   margin-top: 20px;
   width: 100%;
 }
@@ -299,7 +284,7 @@ html, body {
   justify-content: center;
   gap: 6px;
   padding: 6px 14px;            
-  border-radius: 8px;           
+  border-radius: 8px;          
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   font-size: 12px;
@@ -308,7 +293,7 @@ html, body {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
-  width: auto;                  
+  width: auto;                 
 }
 
 .legendDot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -327,17 +312,17 @@ html, body {
 
 /* Satisfaction */
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.scoreBig { font-size: 56px; font-weight: 800; color: #F59E0B; line-height: 0.9; } /* Amber */
+.scoreBig { font-size: 56px; font-weight: 800; color: #FFAB00; line-height: 0.9; }
 .starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; width: 100%; }
 .starLabel { width: 28px; font-weight: 700; color: #334155; }
 .progressTrack { flex: 1; height: 12px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
-.progressBar { height: 100%; border-radius: 99px; background-color: #F59E0B; } /* Amber */
+.progressBar { height: 100%; border-radius: 99px; }
 .starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
 
 /* Top Header */
 .topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .topBadge {
-  background-color: #eff6ff; color: #3B82F6; padding: 4px 12px; /* Blue */
+  background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
   border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe;
   display: flex; align-items: center;
 }
