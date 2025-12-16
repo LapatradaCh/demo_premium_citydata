@@ -13,7 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  background-color: #FFFFFF; /* พื้นหลังสีขาวล้วน (Clean) */
+  background-color: #FFFFFF; /* พื้นหลังสีขาวล้วน */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -23,7 +23,6 @@
   border-radius: 16px;
   border: 1px solid #E5E7EB;
   padding: 24px;
-  /* เงา Soft Shadow */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -194,18 +193,13 @@
 .imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
 /* ========================================= */
-/* 3. MIDDLE & BOTTOM SECTIONS */
+/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
 /* ========================================= */
 .sectionHeader { 
   font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
   display: flex; align-items: center; gap: 8px; 
 }
 .locationText { font-size: 15px; color: #4B5563; line-height: 1.5; margin: 0; }
-.agencyList { list-style: none; padding: 0; margin: 0; }
-.agencyItem { 
-  background-color: #EFF6FF; color: #1E40AF; 
-  padding: 12px; border-radius: 8px; font-weight: 500; font-size: 15px;
-}
 
 .buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
 .actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
@@ -214,30 +208,74 @@
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 .googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
-/* Timeline */
+/* --- NEW AGENCY LIST (Card Style) --- */
+.agencyList {
+  display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
+}
+
+.agencyItem {
+  display: flex; align-items: center; gap: 16px;
+  background-color: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 12px;
+  padding: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; overflow: hidden;
+}
+
+.agencyItem:hover {
+  border-color: #CBD5E1; background-color: #F8FAFC;
+  transform: translateX(4px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.agencyItem::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px; background-color: #3B82F6; border-radius: 4px 0 0 4px;
+}
+
+.agencyIconBox {
+  width: 40px; height: 40px; border-radius: 10px;
+  background-color: #EFF6FF; color: #2563EB;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.agencyName {
+  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
+}
+
+.agencyTag {
+  font-size: 11px; color: #64748B; background-color: #F1F5F9;
+  padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
+}
+
+/* ========================================= */
+/* 4. TIMELINE */
+/* ========================================= */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
 .timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
+
 .timeLeft { text-align: right; padding-right: 15px; padding-top: 2px; }
 .statusTitle { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
 .statusTime { font-size: 12px; color: #9CA3AF; line-height: 1.4; }
+
 .timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
 .line { width: 2px; background-color: #E5E7EB; flex-grow: 1; margin-top: 4px; min-height: 40px; }
 .timelineRow:last-child .line { display: none; }
 .iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
 .bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
 .bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
 .bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
 .bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
 .bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
 .bgDefault { background: linear-gradient(135deg, #6B7280, #374151); } .textDefault { color: #374151; }
+
 .timeRight { padding-left: 15px; padding-bottom: 30px; }
 .durationText { font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 4px; }
 .detailBody { font-size: 14px; color: #6B7280; line-height: 1.5; }
+
 .mobileHeader { display: none; }
 
 /* ========================================= */
-/* 5. DRAWER / SIDE PANEL (NEW) */
+/* 5. DRAWERS (SIDE PANEL) */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
