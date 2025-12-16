@@ -413,13 +413,12 @@ const ReportDetail = ({onGoToInternalMap }) => {
         )}
       </div>
 
-      {/* ================= DRAWERS (Slide Panel) ================= */}
+      {/* ================= MODALS (POPUP STANDARD) ================= */}
 
-      {/* 1. Drawer เปลี่ยนประเภทปัญหา */}
+      {/* 1. Modal เปลี่ยนประเภทปัญหา */}
       {showTypeModal && (
         <div className={styles.modalOverlay} onClick={() => setShowTypeModal(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>เปลี่ยนประเภทปัญหา</h3>
               <button className={styles.closeButton} onClick={() => setShowTypeModal(false)}>
@@ -427,9 +426,9 @@ const ReportDetail = ({onGoToInternalMap }) => {
               </button>
             </div>
             
-            <div className={styles.modalBody}>
+            <div style={{overflowY:'auto'}}>
                 <div className={styles.typeGrid}>
-                  {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888', gridColumn:'span 2'}}>กำลังโหลด...</p>}
+                  {issueTypeList.length === 0 && <p style={{textAlign:'center', color:'#888', gridColumn:'span 3'}}>กำลังโหลด...</p>}
                   {issueTypeList.map((typeItem) => {
                     const isSelected = selectedIssueType 
                           ? selectedIssueType.issue_id === typeItem.issue_id 
@@ -448,71 +447,65 @@ const ReportDetail = ({onGoToInternalMap }) => {
             </div>
 
             <div className={styles.modalActions}>
-               <button className={styles.btnCancel} onClick={() => setShowTypeModal(false)}>ยกเลิก</button>
                <button className={styles.btnConfirm} onClick={handleUpdateCategory} disabled={isUpdating}>
-                 {isUpdating ? 'กำลังบันทึก...' : 'ยืนยันเปลี่ยน'}
+                 {isUpdating ? 'กำลังบันทึก...' : 'เปลี่ยน'}
                </button>
             </div>
-
           </div>
         </div>
       )}
 
-      {/* 2. Drawer ปรับสถานะ */}
+      {/* 2. Modal ปรับสถานะ */}
       {showStatusModal && (
         <div className={styles.modalOverlay} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>ปรับสถานะเรื่องแจ้ง</h3>
               <button className={styles.closeButton} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>
                 <IconClose />
               </button>
             </div>
+            <div style={{overflowY:'auto', display:'flex', flexDirection:'column', gap:'16px'}}>
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
+                   <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
+                      <option value="รอรับเรื่อง">รอรับเรื่อง</option>
+                      <option value="กำลังประสานงาน">กำลังประสานงาน</option>
+                      <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+                      <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                      <option value="ส่งต่อ">ส่งต่อ</option>
+                      <option value="เชิญร่วม">เชิญร่วม</option>
+                      <option value="ปฏิเสธ">ปฏิเสธ</option>
+                   </select>
+                </div>
+                
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>อธิบายเพิ่มเติม</label>
+                   <textarea className={styles.formTextarea} rows="3" placeholder="รายละเอียดการดำเนินงาน..." value={statusComment} onChange={(e) => setStatusComment(e.target.value)}></textarea>
+                </div>
 
-            <div className={styles.modalBody}>
-                <div style={{display:'flex', flexDirection:'column', gap:'20px'}}>
-                    <div className={styles.formGroup}>
-                       <label className={styles.formLabel}>สถานะเรื่องแจ้ง</label>
-                       <select className={styles.formSelect} value={statusValue} onChange={(e) => setStatusValue(e.target.value)}>
-                          <option value="รอรับเรื่อง">รอรับเรื่อง</option>
-                          <option value="กำลังประสานงาน">กำลังประสานงาน</option>
-                          <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
-                          <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-                          <option value="ส่งต่อ">ส่งต่อ</option>
-                          <option value="เชิญร่วม">เชิญร่วม</option>
-                          <option value="ปฏิเสธ">ปฏิเสธ</option>
-                       </select>
-                    </div>
-                    
-                    <div className={styles.formGroup}>
-                       <label className={styles.formLabel}>อธิบายเพิ่มเติม (ถ้ามี)</label>
-                       <textarea className={styles.formTextarea} rows="4" placeholder="รายละเอียดการดำเนินงาน..." value={statusComment} onChange={(e) => setStatusComment(e.target.value)}></textarea>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                       <label className={styles.formLabel}>รูปภาพดำเนินการ (ถ้ามี)</label>
-                       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
-                       <div className={styles.uploadBox} onClick={() => fileInputRef.current.click()}>
-                          {selectedImage ? (
-                            <div style={{position:'relative'}}>
-                              <img src={selectedImage} alt="Preview" style={{maxHeight:'200px', maxWidth:'100%', borderRadius:'8px'}} />
-                              <button onClick={handleRemoveImage} style={{position:'absolute', top:-12, right:-12, background:'red', color:'white', border:'none', borderRadius:'50%', width:28, height:28, cursor:'pointer', boxShadow:'0 2px 4px rgba(0,0,0,0.2)'}}>×</button>
-                            </div>
-                          ) : (
-                            <>
-                              <IconCamera /><span style={{marginTop:'8px'}}>คลิกเพื่อแนบรูปภาพ</span>
-                            </>
-                          )}
-                       </div>
-                    </div>
+                <div className={styles.formGroup}>
+                   <label className={styles.formLabel}>รูปภาพดำเนินการ</label>
+                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
+                   <div className={styles.uploadBox} onClick={() => fileInputRef.current.click()}>
+                      {selectedImage ? (
+                        <div style={{position:'relative'}}>
+                          <img src={selectedImage} alt="Preview" style={{maxHeight:'150px', maxWidth:'100%', borderRadius:'6px'}} />
+                          <button onClick={handleRemoveImage} style={{position:'absolute', top:-10, right:-10, background:'red', color:'white', border:'none', borderRadius:'50%', width:24, height:24, cursor:'pointer'}}>×</button>
+                        </div>
+                      ) : (
+                        <>
+                          <IconCamera />
+                          <span>แนบรูปภาพ</span>
+                        </>
+                      )}
+                   </div>
                 </div>
             </div>
-
             <div className={styles.modalActions}>
                <button className={styles.btnCancel} onClick={() => { setShowStatusModal(false); setSelectedImage(null); }}>ยกเลิก</button>
                <button className={styles.btnConfirm} onClick={handleUpdateStatus} disabled={isUpdating}>
-                 {isUpdating ? 'กำลังบันทึก...' : 'ยืนยันอัปเดต'}
+                 {isUpdating ? 'กำลังบันทึก...' : 'ยืนยัน'}
                </button>
             </div>
           </div>
