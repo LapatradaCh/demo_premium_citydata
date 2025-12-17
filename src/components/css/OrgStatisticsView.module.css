@@ -245,10 +245,12 @@
   background: #f8f8f8;
 }
 
+/* --- [UPDATED] ปุ่ม Active Total สีน้ำเงินเข้ม ตัวหนังสือขาว --- */
 .activeTotal {
-  background-color: #e6f7ff !important;
-  color: #1890ff !important;
-  border-color: #1890ff !important;
+  background-color: #1890ff !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700;
 }
 
 .activeCritical {
