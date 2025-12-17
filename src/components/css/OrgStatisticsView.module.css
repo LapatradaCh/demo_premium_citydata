@@ -9,16 +9,14 @@
   gap: 32px;
   width: 100%;
   
-  /* --- ตั้งค่าให้เต็มจอ --- */
-  max-width: 100%;
+  /* --- Desktop Config --- */
+  max-width: 100%;    /* ให้กว้างเต็มจอใน Desktop ด้วย */
   min-height: 100vh;
   margin: 0;
   padding: 24px;
-  /* -------------------- */
-
-  align-items: flex-start;
-  font-family: 'Sarabun', sans-serif;
   box-sizing: border-box;
+  font-family: 'Sarabun', sans-serif;
+  background-color: #f9fafb; /* พื้นหลังสีเทาอ่อนๆ เพื่อให้ Card เด่นใน Desktop */
 }
 
 /* =========================================
@@ -36,7 +34,6 @@
   top: 24px;
   z-index: 10;
   height: fit-content;
-  /* ถ้าต้องการให้ Sidebar สูงเต็มจอให้ใช้: height: calc(100vh - 48px); */
 }
 
 .orgStatsMenuTitle {
@@ -257,7 +254,7 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   9. RESPONSIVE (Mobile Edge-to-Edge Fix)
+   9. RESPONSIVE (Edge-to-Edge Logic)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -267,83 +264,98 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container: ปรับให้เต็มจอและเว้นที่ด้านล่างสำหรับเมนู */
+  /* 1. Container: Reset Layout for Mobile */
   .orgStatsContainer {
     flex-direction: column;
-    padding: 16px 0 120px 0; /* บน 16px, ซ้ายขวา 0, ล่าง 120px */
-    gap: 16px;
     width: 100%;
     max-width: 100vw;
+    margin: 0;
+    /* Remove Side Padding -> 0 */
+    padding: 0 0 120px 0; 
+    gap: 0; 
+    background-color: #ffffff; /* เปลี่ยนพื้นหลังเป็นขาวให้กลืนกัน */
     overflow-x: hidden;
   }
 
-  /* 2. ซ่อน Sidebar */
-  .orgStatsSidebarDesktop {
-    display: none;
-  }
+  /* 2. Hide Sidebar */
+  .orgStatsSidebarDesktop { display: none; }
 
-  /* 3. Dropdown เมนูบนมือถือ */
+  /* 3. Mobile Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 8px;
+    padding: 16px 20px; /* เว้นระยะเฉพาะ Dropdown นิดหน่อย */
+    background: #fff;
+    box-sizing: border-box;
     position: relative;
     z-index: 50;
-    padding: 0 16px; /* เว้นขอบเฉพาะเนื้อหา */
-    box-sizing: border-box;
+    /* เพิ่มเส้นคั่นล่างนิดหน่อย */
+    border-bottom: 1px solid #f1f1f1; 
   }
+  
+  /* ... (Internal Dropdown Styles) ... */
   .mobileDropdownLabel { font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; padding-left: 4px; }
   .mobileDropdownTrigger { width: 100%; height: 56px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; color: #111; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.2s; }
   .mobileDropdownTrigger.open { border-color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .triggerContent { display: flex; align-items: center; gap: 12px; }
-  .mobileDropdownList { position: absolute; top: 100%; left: 16px; right: 16px; margin-top: 8px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #f0f0f0; padding: 8px; display: flex; flex-direction: column; gap: 4px; animation: slideDown 0.2s ease-out; }
+  .mobileDropdownList { position: absolute; top: 100%; left: 20px; right: 20px; margin-top: 8px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #f0f0f0; padding: 8px; display: flex; flex-direction: column; gap: 4px; animation: slideDown 0.2s ease-out; }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   .mobileDropdownItem { width: 100%; padding: 12px 16px; border: none; background: transparent; display: flex; align-items: center; gap: 12px; font-size: 15px; color: #4b5563; font-weight: 500; border-radius: 10px; cursor: pointer; text-align: left; }
   .mobileDropdownItem:hover { background-color: #f9fafb; color: #000; }
   .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
   .activeCheck { margin-left: auto; color: #10B981; }
 
-  /* 4. ChartBox: ปรับให้เต็มจอแบบไม่มีขอบ */
+  /* 4. ChartBox: Transform from Card to Full Screen Section */
   .chartBox {
-    padding: 24px 16px; /* บนล่าง 24px, ซ้ายขวา 16px */
-    border-radius: 0;   /* ลบมุมโค้ง */
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid #f0f0f0; /* เหลือแค่เส้นคั่นล่าง */
-    box-shadow: none;   /* ลบเงาให้ดูเรียบเนียน */
+    width: 100%;
+    border-radius: 0;   /* ลบขอบมน */
+    box-shadow: none;   /* ลบเงา */
+    border: none;       /* ลบเส้นกรอบ */
+    margin: 0;
+    
+    /* Padding ภายในเนื้อหายังต้องมี */
+    padding: 24px 20px; 
+    
+    /* ใช้เส้นคั่นหนาๆ ด้านล่างแทนการ์ด (เหมือน Facebook Feed) */
+    border-bottom: 8px solid #f4f5f7; 
   }
 
-  /* 5. ปรับ Layout ภายใน */
-  .orgGraphDashboard { gap: 0; /* ลดช่องว่างระหว่างกล่อง */ }
-  
-  .kpiGrid { 
-    grid-template-columns: 1fr; 
+  /* ลบเส้นคั่น Title ภายในออก หรือปรับให้เล็กลง */
+  .chartBoxTitle {
+    margin-bottom: 20px;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  /* 5. KPI Grid */
+  .kpiGrid {
+    padding: 0 20px; /* เพิ่ม Padding เพราะ Container หลักไม่มีแล้ว */
     gap: 12px;
-    padding: 0 16px; /* ใส่ padding ให้ KPI เพราะอยู่นอก chartBox */
+    margin-bottom: 24px;
+    margin-top: 16px;
   }
   
-  /* Satisfaction & SLA Internal Fixes */
-  .satisfactionHighlightGrid { grid-template-columns: 1fr; padding: 0 16px; }
-  .reportCardList { padding: 0 16px; }
-  .reportCardHeader { flex-direction: column; gap: 12px; }
-  .reportCardScoreGroup { text-align: left; display: flex; align-items: center; gap: 12px; }
-  
+  /* 6. Layout Fixes */
+  .orgStatsContent { gap: 0; }
+  .orgGraphDashboard { gap: 0; }
+
+  /* Satisfaction & SLA */
+  .satisfactionHighlightGrid { padding: 0 20px; }
+  .reportCardList { padding: 0 20px; }
   .slaHeaderBox, .donutHeaderBox { 
+    margin: 0 20px 24px 20px; 
+    width: auto;
     flex-direction: column; 
     align-items: flex-start; 
     gap: 16px; 
-    margin-left: 16px; 
-    margin-right: 16px;
-    width: auto;
   }
-  .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
   
   .mockHBarItem { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .mockHBarLabel { width: 100%; }
   .mockHBarValue { align-self: flex-end; margin-top: -28px; z-index: 2; }
   
-  /* Header Controls (ปุ่มตัวกรอง) */
+  .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
   .chartBoxTitle { align-items: flex-start; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
   .controlBtn { flex: 1; text-align: center; }
