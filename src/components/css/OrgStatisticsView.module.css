@@ -570,7 +570,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (MOBILE FORCED FIX - FULL)
+   9. RESPONSIVE (FORCED MOBILE FIX - FULL)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -689,19 +689,26 @@
     }
   }
 
-  /* Dropdown Item: Fix Size */
+  /* Dropdown Item: Fix Size to be Equal */
   .mobileDropdownItem {
     width: 100% !important;
-    min-height: 48px !important; /* บังคับความสูงขั้นต่ำเท่ากัน */
+    /* Fix Height: บังคับความสูงเท่ากันเป๊ะ */
+    height: 50px !important;
+    min-height: 50px !important;
     padding: 0 16px !important;
+    
     border: none !important;
     background: transparent !important;
     display: flex;
     align-items: center;
+    /* ใช้ space-between เพื่อผลักไอคอนติ๊กถูกไปขวาสุดเสมอ */
+    justify-content: space-between !important;
+    
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    font-weight: 600 !important; /* หนาเท่ากันทั้งเลือกและไม่เลือก */
+    /* Font Weight เท่ากันทั้ง Active และ Inactive ป้องกันการกระตุก */
+    font-weight: 600 !important;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
@@ -714,15 +721,15 @@
     color: #000 !important;
   }
 
-  /* Active Item: เปลี่ยนแค่สี ไม่เปลี่ยนขนาด */
+  /* Active Item: เปลี่ยนแค่สี */
   .activeItem {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
-    /* font-weight ยังคงเป็น 600 เท่าเดิม ไม่เพิ่มเป็น 700 */
+    /* font-weight คงที่ที่ 600 */
   }
 
   .activeCheck {
-    margin-left: auto;
+    /* ไม่ต้องใช้ margin-left auto แล้วเพราะใช้ space-between */
     color: #10B981;
     font-size: 20px;
     display: flex;
