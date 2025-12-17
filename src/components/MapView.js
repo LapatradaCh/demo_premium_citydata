@@ -148,7 +148,7 @@ const MapView = ({ subTab }) => {
         let orgId = null;
         if (lastOrg) orgId = JSON.parse(lastOrg).id || JSON.parse(lastOrg).organization_id;
 
-        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId ? `${baseUrl}?organization_id=${orgId}` : baseUrl;
 
         const res = await fetch(url);
