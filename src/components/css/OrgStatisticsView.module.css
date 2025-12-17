@@ -18,9 +18,10 @@
 }
 
 /* =========================================
-   2. SIDEBAR (เมนูซ้าย - Desktop)
+   2. SIDEBAR (Desktop Only)
+   เปลี่ยนชื่อเป็น orgStatsSidebarDesktop เพื่อให้ชัดเจน
    ========================================= */
-.orgStatsSidebar {
+.orgStatsSidebarDesktop {
   flex-shrink: 0;
   width: 280px;
   background: #ffffff;
@@ -31,7 +32,7 @@
   position: sticky;
   top: 24px;
   z-index: 10;
-  transition: all 0.3s ease;
+  height: fit-content;
 }
 
 .orgStatsMenuTitle {
@@ -81,7 +82,6 @@
   align-items: center;
   color: #9CA3AF;
   flex-shrink: 0;
-  transition: color 0.2s;
 }
 
 .orgStatsMenuButton:hover {
@@ -98,7 +98,14 @@
 .orgStatsMenuButton.active svg { color: #ffffff; }
 
 /* =========================================
-   3. CONTENT AREA
+   3. MOBILE DROPDOWN (ปกติซ่อนใน Desktop)
+   ========================================= */
+.orgStatsMobileDropdown {
+  display: none;
+}
+
+/* =========================================
+   4. CONTENT AREA
    ========================================= */
 .orgStatsContent {
   flex-grow: 1;
@@ -150,7 +157,7 @@
 }
 
 /* =========================================
-   4. KPI CARDS & FILTER BUTTONS
+   5. KPI CARDS & FILTER BUTTONS
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -191,7 +198,7 @@
 .activeCritical { background-color: #FF4D4F !important; color: #ffffff !important; border-color: #FF4D4F !important; font-weight: 700; }
 
 /* =========================================
-   5. STACKED BAR CHART
+   6. STACKED BAR CHART
    ========================================= */
 .mockStackedBarChart { display: flex; flex-direction: column; gap: 24px; }
 .mockHBarItem { display: grid; grid-template-columns: 180px 1fr 50px; gap: 20px; align-items: center; }
@@ -203,7 +210,7 @@
 .legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
 /* =========================================
-   6. SATISFACTION (Tab 2)
+   7. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .highlightCard { padding: 16px; border-radius: 12px; display: flex; flex-direction: column; }
@@ -228,7 +235,7 @@
 .reportCardProgressBar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
 
 /* =========================================
-   7. SLA & DONUT (Tabs 3 & 4)
+   8. SLA & DONUT
    ========================================= */
 .slaHeaderBox, .donutHeaderBox { background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 16px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
 .slaHeaderBox { background-color: #eff6ff; border-color: #dbeafe; }
@@ -246,120 +253,154 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   8. MOBILE RESPONSIVE (ปรับปรุงใหม่)
+   9. RESPONSIVE (Mobile Dropdown)
    ========================================= */
 
-/* Tablet (1024px ลงมา) */
 @media screen and (max-width: 1024px) {
   .orgStatsContainer { gap: 20px; padding: 16px; }
-  .orgStatsSidebar { width: 220px; }
+  .orgStatsSidebarDesktop { width: 220px; }
   .kpiGrid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 }
 
-/* Mobile (768px ลงมา) - แก้ปัญหาปุ่มเบียด */
 @media screen and (max-width: 768px) {
-  /* 1. Layout หลัก: เรียงแนวตั้ง */
+  /* 1. Layout */
   .orgStatsContainer {
     flex-direction: column;
     padding: 16px;
-    gap: 24px;
+    gap: 16px;
   }
 
-  /* 2. Sidebar: เปลี่ยนสภาพเป็น Top Navigation Bar */
-  .orgStatsSidebar {
+  /* 2. ซ่อน Sidebar เดิม */
+  .orgStatsSidebarDesktop {
+    display: none;
+  }
+
+  /* 3. แสดง Mobile Dropdown */
+  .orgStatsMobileDropdown {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    position: static; /* เลิก Sticky */
-    padding: 0;
     margin-bottom: 8px;
+    position: relative;
+    z-index: 50;
+  }
+
+  .mobileDropdownLabel {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    font-weight: 600;
+    padding-left: 4px;
+  }
+
+  .mobileDropdownTrigger {
+    width: 100%;
+    height: 56px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #111;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    transition: all 0.2s;
+  }
+
+  .mobileDropdownTrigger.open {
+    border-color: #000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .triggerContent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* รายการ Dropdown */
+  .mobileDropdownList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 1px solid #f0f0f0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mobileDropdownItem {
+    width: 100%;
+    padding: 12px 16px;
     border: none;
     background: transparent;
-    box-shadow: none;
-    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #4b5563;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
   }
 
-  .orgStatsMenuTitle { display: none; } /* ซ่อนหัวข้อ */
-
-  /* 3. Navigation: ทำเป็น Horizontal Scroll */
-  .orgStatsMenuNav {
-    flex-direction: row;
-    overflow-x: auto; /* เลื่อนแนวนอนได้ */
-    gap: 10px;
-    padding-bottom: 8px;
-    /* ซ่อน Scrollbar */
-    -ms-overflow-style: none;  
-    scrollbar-width: none;  
-  }
-  .orgStatsMenuNav::-webkit-scrollbar { display: none; }
-
-  /* 4. ปุ่มเมนู: เปลี่ยนเป็นสไตล์ Chips (แคปซูล) */
-  .orgStatsMenuButton {
-    flex: 0 0 auto; /* ห้ามบีบปุ่ม! ให้ความกว้างตามตัวอักษร */
-    width: auto;
-    height: 40px;
-    padding: 0 16px;
-    border-radius: 50px; /* ขอบมนเป็นวงรี */
-    
-    /* สีตอนยังไม่เลือก (Inactive) */
-    background: #f3f4f6; 
-    border: 1px solid #eee;
-    color: #6b7280;
-    
-    font-size: 14px;
-    justify-content: center;
-    box-shadow: none;
+  .mobileDropdownItem:hover {
+    background-color: #f9fafb;
+    color: #000;
   }
 
-  .orgStatsMenuButton svg {
-    font-size: 18px;
-    width: 18px;
-    margin-right: 6px; /* ขยับไอคอนห่างจากตัวหนังสือ */
-    color: inherit;
+  .activeItem {
+    background-color: #f3f4f6 !important;
+    color: #000 !important;
+    font-weight: 700 !important;
   }
-
-  /* 5. ปุ่มเมนู: ตอนเลือก (Active) */
-  .orgStatsMenuButton.active {
-    background-color: #000000;
-    color: #ffffff;
-    border-color: #000000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transform: translateY(-1px);
-  }
-  .orgStatsMenuButton.active svg { color: #ffffff; }
-
-  /* --- จัดการส่วน Content อื่นๆ ในมือถือ --- */
-  .chartBox { padding: 20px; }
   
-  /* แก้กราฟแท่งแนวนอนให้ไม่เบียด */
+  .activeCheck {
+    margin-left: auto;
+    color: #10B981;
+  }
+
+  /* --- General Responsive Fixes --- */
+  .chartBox { padding: 20px; }
+  .orgGraphDashboard { gap: 16px; }
+
+  /* KPI & Chart fixes */
+  .kpiGrid { grid-template-columns: 1fr; }
+  
   .mockHBarItem {
     display: flex;
-    flex-direction: column; /* ชื่ออยู่บน กราฟอยู่ล่าง */
+    flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: 8px;
   }
-  .mockHBarLabel { width: 100%; font-size: 14px; }
-  .mockStackedHBar { width: 100%; height: 32px; }
-  .mockHBarValue {
-    font-size: 16px;
-    align-self: flex-end; /* ตัวเลขชิดขวา */
-    margin-top: -28px; /* ดึงขึ้นไปบรรทัดเดียวกับชื่อ */
-    z-index: 2;
-  }
-
-  /* KPI */
-  .kpiGrid { grid-template-columns: 1fr; } /* เรียงเดี่ยว */
-
-  /* Satisfaction */
+  .mockHBarLabel { width: 100%; }
+  .mockHBarValue { align-self: flex-end; margin-top: -28px; z-index: 2; }
+  
+  /* Satisfaction & SLA */
   .satisfactionHighlightGrid { grid-template-columns: 1fr; }
   .reportCardHeader { flex-direction: column; gap: 12px; }
   .reportCardScoreGroup { text-align: left; display: flex; align-items: center; gap: 12px; }
-
-  /* SLA & Donut Header */
   .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; gap: 16px; }
   .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
-  .donutWrapper { width: 220px; height: 220px; }
-
-  /* Filter Controls */
+  
+  /* Header Controls */
   .chartBoxTitle { align-items: flex-start; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
   .controlBtn { flex: 1; text-align: center; }
