@@ -10,7 +10,7 @@
   width: 100%;
   
   /* Desktop Config */
-  max-width: 100%;
+  max-width: 100%;    
   min-height: 100vh;
   margin: 0;
   padding: 24px;
@@ -255,6 +255,7 @@
 
 /* =========================================
    9. RESPONSIVE (MOBILE FORCED FIX)
+   รวมทุกการแก้ไข: เต็มจอ + SLA สวยงาม + ไม่ทับเส้น
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -264,7 +265,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container: บังคับเต็มจอ */
+  /* 1. Container: บังคับเต็มจอชิดขอบ */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -337,62 +338,78 @@
     gap: 16px; 
   }
   
-  /* --- [ส่วนสำคัญสุด] บังคับ Layout กราฟ SLA แบบ Flex-Wrap --- */
+  /* --- [ส่วนสำคัญสุด] ปรับจูนกราฟ SLA ให้เนี๊ยบ --- */
   
   .mockHorizontalBarChart {
     width: 100% !important;
-    margin-top: 40px !important; /* เว้นที่ให้ป้าย Target */
+    margin-top: 50px !important; /* เพิ่มพื้นที่ด้านบนสำหรับป้าย Target */
     display: flex !important;
     flex-direction: column !important;
-    gap: 24px !important;
+    gap: 16px !important; /* ลดช่องไฟลง */
+    position: relative !important;
+  }
+
+  /* เลื่อนเส้นประลงมาไม่ให้ผ่าตัวหนังสือ */
+  .slaLineContainer {
+    top: 28px !important; 
+    bottom: 0 !important;
+  }
+  
+  /* ปรับตำแหน่งป้าย Target */
+  .slaLabel {
+    top: -28px !important; 
+    left: -20px !important;
+    font-size: 11px !important;
+    padding: 2px 8px !important;
   }
 
   .mockHBarItem { 
-    /* ใช้ Flex แบบ Wrap: พอที่เต็มปุ๊บ บรรทัดต่อไปจะเด้งลงล่างเอง */
+    /* ใช้ Flex แบบ Wrap เพื่อความชัวร์ในการปัดบรรทัด */
     display: flex !important;
     flex-wrap: wrap !important; 
     justify-content: space-between !important; 
     align-items: flex-end !important;
     width: 100% !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 4px !important;
     
-    /* ล้างค่า Grid เดิมที่อาจค้าง */
     grid-template-columns: none !important; 
     grid-template-rows: none !important;
   }
   
-  /* 1. Label (Test1) -> อยู่ซ้าย */
+  /* 1. Label (Test1) -> สีเข้ม + อยู่ซ้าย */
   .mockHBarLabel { 
     width: auto !important; 
     flex: 1 !important;     
     font-size: 14px;
-    font-weight: 500;
-    color: #FF4D4F !important; 
+    font-weight: 600;
+    color: #333333 !important; /* สีเทาเข้มเพื่อให้อ่านง่าย */
     margin: 0 !important;
     order: 1 !important;    
     text-align: left !important;
+    line-height: 1;
   }
   
-  /* 2. Value (33.8 วัน) -> อยู่ขวา */
+  /* 2. Value (33.8 วัน) -> สีแดง + อยู่ขวา */
   .mockHBarValue { 
     width: auto !important;
     margin: 0 !important;
     text-align: right !important;
     font-size: 16px;
-    font-weight: 700;
-    color: #FF4D4F !important; 
-    position: static !important; /* ลบ absolute เดิมทิ้ง */
+    font-weight: 800;
+    color: #FF4D4F !important; /* สีแดง */
+    position: static !important;
     z-index: auto !important;
     order: 2 !important;   
     margin-top: 0 !important;
+    line-height: 1;
   }
 
-  /* 3. Bar (กราฟแดง) -> บังคับลงล่างด้วย width 100% */
+  /* 3. Bar (กราฟแดง) -> ลงล่าง */
   .mockHBar {
     width: 100% !important; 
-    height: 12px !important;
-    margin-top: 8px !important;
-    border-radius: 6px !important;
+    height: 10px !important; /* ลดความหนาลงนิดนึง */
+    margin-top: 6px !important;
+    border-radius: 5px !important;
     overflow: hidden;
     order: 3 !important;    
   }
