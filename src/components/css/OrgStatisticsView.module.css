@@ -9,8 +9,8 @@
   gap: 32px;
   width: 100%;
   
-  /* --- Desktop Config --- */
-  max-width: 100%;    
+  /* Desktop Config */
+  max-width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 24px;
@@ -99,7 +99,7 @@
 .orgStatsMenuButton.active svg { color: #ffffff; }
 
 /* =========================================
-   3. MOBILE DROPDOWN (ปกติซ่อนใน Desktop)
+   3. MOBILE DROPDOWN (Desktop: Hide)
    ========================================= */
 .orgStatsMobileDropdown {
   display: none;
@@ -254,7 +254,7 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   9. RESPONSIVE (Final Polish: SLA & Full Screen)
+   9. RESPONSIVE (MOBILE FORCED FIX)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -264,20 +264,21 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container: Reset Layout for Mobile (Edge-to-Edge) */
+  /* 1. Container: บังคับเต็มจอ */
   .orgStatsContainer {
+    display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 100vw;
-    margin: 0;
-    padding: 0 0 120px 0; /* Padding Bottom เผื่อเมนู */
-    gap: 0; 
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 0 120px 0 !important; /* เว้นที่ให้เมนูล่าง */
+    gap: 0 !important;
     background-color: #ffffff;
     overflow-x: hidden;
   }
 
-  /* 2. Hide Sidebar */
-  .orgStatsSidebarDesktop { display: none; }
+  /* 2. ซ่อน Sidebar */
+  .orgStatsSidebarDesktop { display: none !important; }
 
   /* 3. Mobile Dropdown */
   .orgStatsMobileDropdown {
@@ -303,15 +304,15 @@
   .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
   .activeCheck { margin-left: auto; color: #10B981; }
 
-  /* 4. ChartBox: เต็มจอและไม่มีขอบ */
+  /* 4. ChartBox: เต็มจอและลบสไตล์การ์ดออก */
   .chartBox {
-    width: 100%;
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-    margin: 0;
-    padding: 24px 20px;
-    border-bottom: 8px solid #f4f5f7; /* แถบคั่นระหว่างส่วน */
+    width: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 24px 20px !important;
+    border-bottom: 8px solid #f4f5f7 !important;
   }
 
   .chartBoxTitle {
@@ -321,21 +322,13 @@
     align-items: flex-start;
   }
 
-  /* 5. KPI Grid */
-  .kpiGrid {
-    padding: 0 20px;
-    gap: 12px;
-    margin-bottom: 24px;
-    margin-top: 16px;
-  }
-  
-  /* 6. Layout Fixes */
-  .orgStatsContent { gap: 0; }
-  .orgGraphDashboard { gap: 0; }
+  /* 5. ปรับ Layout อื่นๆ */
+  .kpiGrid { padding: 0 20px; gap: 12px; margin-bottom: 24px; margin-top: 16px; }
+  .orgStatsContent { gap: 0 !important; }
+  .orgGraphDashboard { gap: 0 !important; }
   .satisfactionHighlightGrid { padding: 0 20px; }
   .reportCardList { padding: 0 20px; }
   
-  /* SLA Header Box */
   .slaHeaderBox, .donutHeaderBox { 
     margin: 0 20px 24px 20px; 
     width: auto;
@@ -344,65 +337,66 @@
     gap: 16px; 
   }
   
-  /* --- แก้ไขกราฟ SLA ให้สวยงาม (NEW) --- */
+  /* --- [ส่วนสำคัญสุด] บังคับ Layout กราฟ SLA แบบ Flex-Wrap --- */
   
-  /* เพิ่มระยะด้านบนเพื่อให้ป้าย "Target" ไม่โดนตัด */
   .mockHorizontalBarChart {
-    width: 100%;
-    margin-top: 40px; 
-    gap: 20px;
+    width: 100% !important;
+    margin-top: 40px !important; /* เว้นที่ให้ป้าย Target */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
   }
 
   .mockHBarItem { 
-    display: grid;
-    width: 100%;
-    /* จัด 2 คอลัมน์: ซ้าย(Label) ขวา(Value) */
-    grid-template-columns: 1fr auto; 
-    /* จัด 2 แถว: บน(Text) ล่าง(Bar) */
-    grid-template-rows: auto auto; 
-    grid-template-areas: 
-      "label value"
-      "bar bar";
-    gap: 6px 0; /* ระยะห่างระหว่างตัวหนังสือกับแท่งกราฟ */
-    align-items: end;
+    /* ใช้ Flex แบบ Wrap: พอที่เต็มปุ๊บ บรรทัดต่อไปจะเด้งลงล่างเอง */
+    display: flex !important;
+    flex-wrap: wrap !important; 
+    justify-content: space-between !important; 
+    align-items: flex-end !important;
+    width: 100% !important;
+    margin-bottom: 8px !important;
+    
+    /* ล้างค่า Grid เดิมที่อาจค้าง */
+    grid-template-columns: none !important; 
+    grid-template-rows: none !important;
   }
   
-  /* 1. Label ซ้าย (สีแดงตามรูปตัวอย่าง) */
+  /* 1. Label (Test1) -> อยู่ซ้าย */
   .mockHBarLabel { 
-    grid-area: label;
-    width: 100%; 
+    width: auto !important; 
+    flex: 1 !important;     
     font-size: 14px;
     font-weight: 500;
-    color: #FF4D4F; /* สีแดงอ่อนสำหรับ Label */
-    margin: 0;
+    color: #FF4D4F !important; 
+    margin: 0 !important;
+    order: 1 !important;    
+    text-align: left !important;
   }
   
-  /* 2. Value ขวา (สีแดงเข้ม ตัวหนา) */
+  /* 2. Value (33.8 วัน) -> อยู่ขวา */
   .mockHBarValue { 
-    grid-area: value;
-    margin: 0;
-    text-align: right;
+    width: auto !important;
+    margin: 0 !important;
+    text-align: right !important;
     font-size: 16px;
     font-weight: 700;
-    color: #FF4D4F; /* สีแดงเข้ม */
-    z-index: 2; 
-    position: relative;
-    line-height: 1.2;
+    color: #FF4D4F !important; 
+    position: static !important; /* ลบ absolute เดิมทิ้ง */
+    z-index: auto !important;
+    order: 2 !important;   
+    margin-top: 0 !important;
   }
 
-  /* 3. Bar ล่างสุด (ขอบมน, ไม่หนาเกินไป) */
+  /* 3. Bar (กราฟแดง) -> บังคับลงล่างด้วย width 100% */
   .mockHBar {
-    grid-area: bar;
-    width: 100%; 
-    height: 12px; /* ความสูงกำลังดี ไม่หนาเป็นก้อน */
-    margin-top: 4px;
-    border-radius: 6px; /* ขอบมน */
+    width: 100% !important; 
+    height: 12px !important;
+    margin-top: 8px !important;
+    border-radius: 6px !important;
     overflow: hidden;
+    order: 3 !important;    
   }
   
-  .mockHBarFill {
-    border-radius: 6px; /* ขอบมนสำหรับสีด้านใน */
-  }
   /* ------------------------------------------- */
   
   .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
