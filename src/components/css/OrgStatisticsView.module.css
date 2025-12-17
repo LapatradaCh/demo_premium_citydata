@@ -608,7 +608,7 @@
   }
 
   /* =========================================================
-     2. MOBILE DROPDOWN (FIXED: Equal Size & No Jump)
+     2. MOBILE DROPDOWN (FIXED: Equal Size, Start Align)
      ========================================================= */
   .orgStatsMobileDropdown {
     display: flex;
@@ -689,11 +689,9 @@
     }
   }
 
-  /* Dropdown Item: Fix Size to be Equal */
+  /* Dropdown Item: Fix Alignment to Left */
   .mobileDropdownItem {
     width: 100% !important;
-    /* Fix Height: บังคับความสูงเท่ากันเป๊ะ */
-    height: 50px !important;
     min-height: 50px !important;
     padding: 0 16px !important;
     
@@ -701,14 +699,14 @@
     background: transparent !important;
     display: flex;
     align-items: center;
-    /* ใช้ space-between เพื่อผลักไอคอนติ๊กถูกไปขวาสุดเสมอ */
-    justify-content: space-between !important;
+    
+    /* !!! สำคัญ: บังคับเริ่มจากซ้าย !!! */
+    justify-content: flex-start !important; 
     
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    /* Font Weight เท่ากันทั้ง Active และ Inactive ป้องกันการกระตุก */
-    font-weight: 600 !important;
+    font-weight: 600 !important; /* หนาเท่ากันทั้งเลือกและไม่เลือก */
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
@@ -725,11 +723,11 @@
   .activeItem {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
-    /* font-weight คงที่ที่ 600 */
   }
 
+  /* ติ๊กถูก: ผลักไปขวาสุด */
   .activeCheck {
-    /* ไม่ต้องใช้ margin-left auto แล้วเพราะใช้ space-between */
+    margin-left: auto !important; /* ดันตัวเองไปขวาสุด */
     color: #10B981;
     font-size: 20px;
     display: flex;
