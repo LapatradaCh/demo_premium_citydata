@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL VERSION - FINAL FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIX: SLA LABEL) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -221,7 +221,6 @@
   margin-top: 4px;
 }
 
-/* Filter Buttons */
 .headerControls {
   margin-left: auto;
   display: flex;
@@ -250,7 +249,7 @@
   background-color: #1890ff !important;
   color: #ffffff !important;
   border: none !important;
-  font-weight: 700 !important;
+  font-weight: 700;
   box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
 }
 
