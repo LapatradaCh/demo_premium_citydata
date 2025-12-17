@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL BALANCED VERSION) --- */
+/* --- css/OrgStatisticsView.module.css (FULL MASTER VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -221,7 +221,6 @@
   margin-top: 4px;
 }
 
-/* Controls */
 .headerControls {
   margin-left: auto;
   display: flex;
@@ -250,7 +249,7 @@
   background-color: #1890ff !important;
   color: #ffffff !important;
   border: none !important;
-  font-weight: 700;
+  font-weight: 700 !important;
   box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
 }
 
@@ -488,25 +487,28 @@
   align-items: center;
 }
 
-/* --- [DESKTOP: DEFAULT LAYOUT] --- */
+/* --- [DESKTOP: SLA CHART LAYOUT] --- */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
-  margin-top: 40px; /* ระยะห่างใน Desktop */
+  /* Margin Top สำหรับ Desktop */
+  margin-top: 40px; 
+  overflow: visible !important;
 }
 
-/* Desktop Grid: ชื่อ | กราฟ | ค่า */
+/* CSS Grid สำหรับ Desktop: 3 ช่อง (ชื่อ | กราฟ | ค่า) */
 .mockHBarItem {
   display: grid;
-  grid-template-columns: 150px 1fr 100px; 
+  grid-template-columns: 150px 1fr 100px; /* ฟิกซ์ความกว้างชื่อและค่า */
   align-items: center;
   gap: 16px;
   width: 100%;
   margin-bottom: 8px;
 }
 
+/* ชื่อ Test1 (Desktop) */
 .mockHBarLabel {
   font-size: 14px;
   font-weight: 600;
@@ -519,6 +521,7 @@
   order: 0;
 }
 
+/* ค่า 33.8 วัน (Desktop) */
 .mockHBarValue {
   font-size: 16px;
   font-weight: 700;
@@ -528,6 +531,7 @@
   order: 0;
 }
 
+/* กราฟแท่ง (Desktop) */
 .mockHBar {
   height: 16px;
   background: #f1f3f5;
@@ -547,7 +551,7 @@
 /* เส้นประ Target (Desktop) */
 .slaLineContainer {
   position: absolute;
-  top: -15px;
+  top: -15px; /* ลากขึ้นไปหาป้าย */
   bottom: 0;
   border-left: 2px dashed #EF4444;
   z-index: 10;
@@ -568,6 +572,8 @@
   border-radius: 4px;
   font-weight: bold;
   white-space: nowrap;
+  display: flex;
+  justify-content: center;
 }
 
 .slaLabel::after {
@@ -631,7 +637,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (MOBILE FORCED FIX - BALANCED)
+   9. RESPONSIVE (MOBILE FORCED FIX)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -667,7 +673,7 @@
     display: none !important;
   }
 
-  /* 2. Mobile Menu (Fixed: Clean, Equal Size) */
+  /* 2. Mobile Menu (Fixed) */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -740,7 +746,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Dropdown Item */
   .mobileDropdownItem {
     width: 100% !important;
     min-height: 50px !important;
@@ -749,7 +754,7 @@
     background: transparent !important;
     display: flex;
     align-items: center;
-    justify-content: flex-start !important; /* จัดชิดซ้ายเสมอ */
+    justify-content: flex-start !important;
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
@@ -772,7 +777,7 @@
   }
 
   .activeCheck {
-    margin-left: auto !important; /* ดันติ๊กถูกไปขวาสุด */
+    margin-left: auto !important;
     color: #10B981;
     font-size: 20px;
     display: flex;
@@ -836,149 +841,76 @@
   .controlBtn { flex: 1; text-align: center; }
 
   /* ============================================================
-     5. FIX: SLA GRAPH (MOBILE OVERRIDE - BALANCED)
-     แก้ให้ป้ายไม่เบียด, กราฟห่างออกมา, และไม่ซ้อนทับ
+     5. FIX: SLA GRAPH (MOBILE OVERRIDE - CSS GRID)
+     **จุดสำคัญ**: ใช้ Grid เพื่อบังคับ layout ให้เรียงตัวใหม่
      ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
-    /* !! เพิ่มระยะห่างด้านบนให้กราฟไหลลงมา ไม่เบียดกล่องข้อความ !! */
-    margin-top: 60px !important; 
-    display: flex !important;
-    flex-direction: column !important;
+    margin-top: 60px !important; /* ดันลงมาห่างจากกล่องข้อความ */
     gap: 16px !important;
-    position: relative !important;
     overflow: visible !important;
   }
 
-  /* ป้าย Target (Fix: ห้ามบีบตัวหนังสือ) */
-  .slaLabel {
-    position: absolute !important;
-    top: -24px !important; /* ดึงลงมา */
-    left: 0 !important;
-    transform: translateX(-50%);
-    background: #EF4444 !important;
-    color: white !important;
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-    border-radius: 4px;
-    font-weight: bold;
-    
-    /* !! Key Fix !! */
-    width: max-content !important; 
-    min-width: 60px !important;
-    white-space: nowrap !important; /* ห้ามตัดคำเป็นแนวตั้ง */
-    
-    z-index: 100 !important;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .slaLabel::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #EF4444;
-  }
-
-  .slaLineContainer {
-    top: -10px !important;
-    bottom: 0 !important;
-    border-left: 2px dashed #EF4444;
-    opacity: 0.6;
-    z-index: 1;
-  }
-
-  /* รายการกราฟ (Mobile: Flex Wrap) */
+  /* เปลี่ยนโครงสร้าง Grid ในมือถือเป็น 2 แถว 2 คอลัมน์ */
   .mockHBarItem {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    grid-template-columns: none !important; /* ล้าง Grid */
-    justify-content: space-between !important;
-    align-items: flex-end !important;
+    display: grid !important;
     width: 100% !important;
-    margin-bottom: 12px !important; /* เพิ่มระยะห่างระหว่างรายการ */
-    position: relative;
-    z-index: 2;
+    /* แถว 1: ชื่อ(ซ้าย)  ค่า(ขวา) */
+    /* แถว 2: กราฟ(เต็ม) */
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 8px 0 !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
   }
 
-  /* ชื่อ Test1 */
+  /* ชื่อ Test1 -> แถวที่ 1, คอลัมน์ซ้าย */
   .mockHBarLabel {
-    width: auto !important;
-    flex: 1 !important;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333333 !important;
-    margin: 0 !important;
-    order: 1 !important;
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
     text-align: left !important;
+    font-size: 14px !important;
+    margin: 0 !important;
   }
 
-  /* ค่า 33.8 วัน */
+  /* ค่า 33.8 วัน -> แถวที่ 1, คอลัมน์ขวา */
   .mockHBarValue {
-    width: auto !important;
-    margin: 0 !important;
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 2 !important;
     text-align: right !important;
-    font-size: 16px;
-    font-weight: 800;
-    color: #FF4D4F !important;
-    position: static !important;
-    order: 2 !important;
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+
+  /* กราฟแท่ง -> แถวที่ 2, เต็มความกว้าง */
+  .mockHBar {
+    grid-column: 1 / 3 !important;
+    grid-row: 2 / 3 !important;
+    width: 100% !important;
+    height: 12px !important;
     margin-top: 0 !important;
   }
 
-  /* แท่งกราฟ (Mobile: ปัดลงล่าง) */
-  .mockHBar {
-    width: 100% !important;
-    height: 10px !important;
-    margin-top: 6px !important;
-    border-radius: 5px !important;
-    overflow: hidden;
-    order: 3 !important;
+  /* ปรับป้าย Target (ห้ามบีบ) */
+  .slaLabel {
+    top: -24px !important; 
+    width: max-content !important;
+    min-width: 60px !important;
+    white-space: nowrap !important;
+  }
+  
+  .slaLineContainer {
+    top: -10px !important;
+    bottom: 0 !important;
   }
 
   /* 6. FIX: REPORT CARD */
-  .reportCardHeader {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 16px !important;
-  }
-
+  .reportCardHeader { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
   .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
   .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
-  
-  .reportCardScoreGroup {
-    width: 100%;
-    text-align: left !important;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .reportCardScoreText {
-    font-size: 40px !important;
-    font-weight: 900 !important;
-    line-height: 1;
-  }
-
-  .reportCardScoreGroup::after {
-    content: '/ 5.00';
-    font-size: 14px;
-    color: #9CA3AF;
-    font-weight: 600;
-  }
-
-  .reportCardProgressBg {
-    margin-top: 8px !important;
-    height: 14px !important;
-    border-radius: 7px !important;
-  }
-  
-  .reportCardProgressBar {
-    border-radius: 7px !important;
-  }
+  .reportCardScoreGroup { width: 100%; text-align: left !important; display: flex; align-items: baseline; gap: 8px; }
+  .reportCardScoreText { font-size: 40px !important; font-weight: 900 !important; line-height: 1; }
+  .reportCardProgressBg { margin-top: 8px !important; height: 14px !important; border-radius: 7px !important; }
+  .reportCardProgressBar { border-radius: 7px !important; }
 }
