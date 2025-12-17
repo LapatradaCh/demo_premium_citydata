@@ -64,8 +64,9 @@ const ReportTable = ({ subTab, onRowClick }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // --- 1. เพิ่ม State สำหรับเก็บ Issue Types ---
+  // --- State สำหรับเก็บตัวเลือกใน Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([]); // ✅ เก็บสถานะที่ได้จาก API
 
   const isAllReports = subTab === "รายการแจ้งรวม";
   const mainFilters = isAllReports
@@ -81,7 +82,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // --- 2. เพิ่ม Logic ดึงข้อมูล Issue Types ---
+  // --- 1. Fetch Issue Types (ดึงประเภทปัญหา) ---
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -103,7 +104,51 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchIssueTypes();
   }, []);
 
-  // โหลดข้อมูล Reports
+  // --- 2. Fetch Statuses (ดึงสถานะจาก Backend ใหม่ของคุณ) ---
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      try {
+        // ดึง Organization ID จาก LocalStorage
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        let orgId = null;
+        if (lastOrg) {
+          const orgData = JSON.parse(lastOrg);
+          orgId = orgData.id || orgData.organization_id;
+        }
+
+        // สร้าง URL: ถ้ามี Org ID ให้ส่งไปด้วย
+        // *** ตรวจสอบ URL API ของคุณให้ถูกต้องนะครับ ***
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const url = orgId 
+          ? `${baseUrl}?organization_id=${orgId}` 
+          : baseUrl;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to fetch statuses");
+        
+        const data = await res.json();
+        
+        // ตรวจสอบ format ข้อมูลที่ API ส่งกลับมา
+        if (Array.isArray(data)) {
+          setStatusOptions(data);
+        } else if (data.data && Array.isArray(data.data)) {
+           setStatusOptions(data.data); 
+        } else {
+           setStatusOptions([]);
+        }
+
+      } catch (err) {
+        console.error("Error fetching statuses:", err);
+        // กรณี Error อาจจะ Set ค่า Default ว่างไว้ หรือ Hardcode กันเหนียว
+        setStatusOptions([]);
+      }
+    };
+
+    // เรียกใช้ฟังก์ชัน
+    fetchStatuses();
+  }, [subTab]); // เมื่อเปลี่ยน Tab หรือโหลดหน้าใหม่ให้ดึงสถานะด้วย
+
+  // --- 3. Fetch Reports (ดึงข้อมูลเคส) ---
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -124,10 +169,9 @@ const ReportTable = ({ subTab, onRowClick }) => {
         if (!res.ok) throw new Error("Fetch cases failed");
 
         const data = await res.json();
-        // รองรับกรณีที่ API อาจคืนค่ามาเป็น array หรือ object {data: []}
         const reportsData = Array.isArray(data) ? data : (data.data || []);
+        
         setReports(reportsData);
-
       } catch (err) {
         console.error("Error fetching data:", err);
         setReports([]);
@@ -158,7 +202,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
   return (
     <>
-      {/* ส่วน Search & Filter */}
       <div className={styles.searchTop}>
         <div className={styles.searchInputWrapper}>
           <input
@@ -177,7 +220,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
         </button>
       </div>
 
-      {/* Filter Modal */}
       {showFilters && (
         <>
            <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
@@ -194,11 +236,9 @@ const ReportTable = ({ subTab, onRowClick }) => {
                    <div className={styles.filterGroup} key={i}>
                      <label>{label}</label>
                      
-                     {/* --- 3. แก้ไขเงื่อนไขการแสดงผล Filter --- */}
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
                      ) : label === "ประเภท" ? (
-                        // ถ้าเป็น "ประเภท" ให้ Loop ข้อมูลจาก API
                         <select defaultValue="all">
                           <option value="all">ทั้งหมด</option>
                           {issueTypes.map((type, index) => (
@@ -210,11 +250,25 @@ const ReportTable = ({ subTab, onRowClick }) => {
                             </option>
                           ))}
                         </select>
-                     ) : (
-                        // ถ้าเป็นตัวกรองอื่นๆ (สถานะ, หน่วยงาน)
+                     ) : label === "สถานะ" ? (
+                        // ✅ แสดงผลสถานะจาก API (statusOptions)
                         <select defaultValue="all">
                           <option value="all">ทั้งหมด</option>
-                          {/* คุณสามารถเพิ่มตัวเลือกสำหรับสถานะได้ที่นี่ถ้าต้องการ */}
+                          {statusOptions.length > 0 ? (
+                            statusOptions.map((status, index) => (
+                              <option key={index} value={status}>
+                                {status}
+                              </option>
+                            ))
+                          ) : (
+                            // กรณีโหลดไม่เจอ หรือ API ส่งมาว่าง
+                            <option disabled>ไม่พบข้อมูลสถานะ</option>
+                          )}
+                        </select>
+                     ) : (
+                        // Filter อื่นๆ (เช่น หน่วยงาน)
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
                         </select>
                      )}
 
