@@ -10,13 +10,13 @@
   width: 100%;
   
   /* --- Desktop Config --- */
-  max-width: 100%;    /* ให้กว้างเต็มจอใน Desktop ด้วย */
+  max-width: 100%;    
   min-height: 100vh;
   margin: 0;
   padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  background-color: #f9fafb; /* พื้นหลังสีเทาอ่อนๆ เพื่อให้ Card เด่นใน Desktop */
+  background-color: #f9fafb;
 }
 
 /* =========================================
@@ -254,7 +254,7 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   9. RESPONSIVE (Edge-to-Edge Logic)
+   9. RESPONSIVE (Fixes: Full Screen & SLA Chart Visible)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -264,16 +264,15 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container: Reset Layout for Mobile */
+  /* 1. Container: Reset Layout for Mobile (Edge-to-Edge) */
   .orgStatsContainer {
     flex-direction: column;
     width: 100%;
     max-width: 100vw;
     margin: 0;
-    /* Remove Side Padding -> 0 */
-    padding: 0 0 120px 0; 
+    padding: 0 0 120px 0; /* Padding Bottom เผื่อเมนู */
     gap: 0; 
-    background-color: #ffffff; /* เปลี่ยนพื้นหลังเป็นขาวให้กลืนกัน */
+    background-color: #ffffff;
     overflow-x: hidden;
   }
 
@@ -285,16 +284,14 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 16px 20px; /* เว้นระยะเฉพาะ Dropdown นิดหน่อย */
+    padding: 16px 20px;
     background: #fff;
     box-sizing: border-box;
     position: relative;
     z-index: 50;
-    /* เพิ่มเส้นคั่นล่างนิดหน่อย */
     border-bottom: 1px solid #f1f1f1; 
   }
   
-  /* ... (Internal Dropdown Styles) ... */
   .mobileDropdownLabel { font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; padding-left: 4px; }
   .mobileDropdownTrigger { width: 100%; height: 56px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; color: #111; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.2s; }
   .mobileDropdownTrigger.open { border-color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -306,43 +303,38 @@
   .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
   .activeCheck { margin-left: auto; color: #10B981; }
 
-  /* 4. ChartBox: Transform from Card to Full Screen Section */
+  /* 4. ChartBox: เต็มจอและไม่มีขอบ */
   .chartBox {
     width: 100%;
-    border-radius: 0;   /* ลบขอบมน */
-    box-shadow: none;   /* ลบเงา */
-    border: none;       /* ลบเส้นกรอบ */
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
     margin: 0;
-    
-    /* Padding ภายในเนื้อหายังต้องมี */
-    padding: 24px 20px; 
-    
-    /* ใช้เส้นคั่นหนาๆ ด้านล่างแทนการ์ด (เหมือน Facebook Feed) */
-    border-bottom: 8px solid #f4f5f7; 
+    padding: 24px 20px;
+    border-bottom: 8px solid #f4f5f7; /* แถบคั่นระหว่างส่วน */
   }
 
-  /* ลบเส้นคั่น Title ภายในออก หรือปรับให้เล็กลง */
   .chartBoxTitle {
     margin-bottom: 20px;
     padding-bottom: 0;
     border-bottom: none;
+    align-items: flex-start;
   }
 
   /* 5. KPI Grid */
   .kpiGrid {
-    padding: 0 20px; /* เพิ่ม Padding เพราะ Container หลักไม่มีแล้ว */
+    padding: 0 20px;
     gap: 12px;
     margin-bottom: 24px;
     margin-top: 16px;
   }
   
-  /* 6. Layout Fixes */
+  /* 6. Layout Fixes & SLA Chart FIX */
   .orgStatsContent { gap: 0; }
   .orgGraphDashboard { gap: 0; }
-
-  /* Satisfaction & SLA */
   .satisfactionHighlightGrid { padding: 0 20px; }
   .reportCardList { padding: 0 20px; }
+  
   .slaHeaderBox, .donutHeaderBox { 
     margin: 0 20px 24px 20px; 
     width: auto;
@@ -351,12 +343,38 @@
     gap: 16px; 
   }
   
-  .mockHBarItem { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .mockHBarLabel { width: 100%; }
-  .mockHBarValue { align-self: flex-end; margin-top: -28px; z-index: 2; }
+  /* --- แก้ไขกราฟ SLA ไม่ขึ้น --- */
+  .mockHorizontalBarChart {
+    width: 100%; /* บังคับให้ Container เต็มความกว้าง */
+  }
+
+  .mockHBarItem { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px;
+    width: 100%; /* บังคับให้ Item เต็มความกว้าง */
+    position: relative;
+  }
+  
+  .mockHBar {
+    width: 100%; /* !!! สำคัญมาก: ต้องใส่เพื่อให้กราฟยืดเต็มจอ */
+  }
+
+  .mockHBarLabel { 
+    width: 100%; 
+    font-size: 14px;
+  }
+  
+  .mockHBarValue { 
+    align-self: flex-end; 
+    margin-top: -36px; /* ปรับตำแหน่งตัวเลข */
+    z-index: 2; 
+    position: relative;
+  }
+  /* ------------------------------- */
   
   .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
-  .chartBoxTitle { align-items: flex-start; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
   .controlBtn { flex: 1; text-align: center; }
 }
