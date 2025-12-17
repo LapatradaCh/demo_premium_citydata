@@ -118,7 +118,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
         // สร้าง URL: ถ้ามี Org ID ให้ส่งไปด้วย
         // *** ตรวจสอบ URL API ของคุณให้ถูกต้องนะครับ ***
-        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId 
           ? `${baseUrl}?organization_id=${orgId}` 
           : baseUrl;
