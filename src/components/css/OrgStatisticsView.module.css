@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css --- */
+/* --- css/OrgStatisticsView.module.css (FULL VERSION - FINAL FIX) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -250,7 +250,7 @@
   background-color: #1890ff !important;
   color: #ffffff !important;
   border: none !important;
-  font-weight: 700;
+  font-weight: 700 !important;
   box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
 }
 
@@ -488,29 +488,31 @@
   align-items: center;
 }
 
-/* --- [DESKTOP: SLA CHART FIX] ---
-   จัดให้เป็นบรรทัดเดียวกัน (Grid 3 ช่อง)
-   ชื่อ | กราฟ | ค่าตัวเลข
------------------------------------- */
+/* --- [DESKTOP DEFAULT] --- 
+   จัดให้เป็นบรรทัดเดียวกัน (Grid) 
+   ชื่อ | กราฟ | ค่า
+*/
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
-  margin-top: 40px; /* เว้นที่ให้ป้าย Target */
+  /* Margin Top สำหรับ Desktop */
+  margin-top: 40px; 
 }
 
-/* กล่องครอบแต่ละรายการใน Desktop */
+/* Grid Layout สำหรับ Desktop */
 .mockHBarItem {
   display: grid;
-  /* กำหนดขนาด: ชื่อ(120px) - กราฟ(ยืด) - ค่า(100px) */
-  grid-template-columns: 120px 1fr 100px; 
+  /* แบ่งคอลัมน์ชัดเจน: ชื่อ(150px) - กราฟ(ยืด) - ค่า(100px) */
+  grid-template-columns: 150px 1fr 100px; 
   align-items: center;
   gap: 16px;
+  width: 100%;
   margin-bottom: 8px;
 }
 
-/* ชื่อ Test1 ใน Desktop */
+/* ชื่อ Test1 (Desktop) */
 .mockHBarLabel {
   font-size: 14px;
   font-weight: 600;
@@ -519,23 +521,29 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
+  order: 0;
 }
 
-/* ค่า 33.8 วัน ใน Desktop */
+/* ค่า 33.8 วัน (Desktop) */
 .mockHBarValue {
   font-size: 16px;
   font-weight: 700;
   text-align: right;
   white-space: nowrap;
+  margin: 0;
+  order: 0;
 }
 
-/* กราฟแท่ง ใน Desktop */
+/* กราฟแท่ง (Desktop) */
 .mockHBar {
   height: 16px;
   background: #f1f3f5;
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
+  margin: 0;
+  order: 0;
 }
 
 .mockHBarFill {
@@ -547,7 +555,7 @@
 /* เส้นประ Target (Desktop) */
 .slaLineContainer {
   position: absolute;
-  top: -10px; /* ลากขึ้นไปหาป้าย */
+  top: -15px; /* ลากขึ้นไปหาป้าย */
   bottom: 0;
   border-left: 2px dashed #EF4444;
   z-index: 10;
@@ -570,7 +578,6 @@
   white-space: nowrap;
 }
 
-/* ติ่งลูกศร */
 .slaLabel::after {
   content: '';
   position: absolute;
@@ -668,7 +675,7 @@
     display: none !important;
   }
 
-  /* 2. Mobile Menu (Fixed: Clean, Left Align, Equal Size) */
+  /* 2. Mobile Menu (Fixed) */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -823,7 +830,7 @@
     text-align: left;
     width: 100%;
     border-top: 1px dashed #eee;
-    padding-top: 12px;
+    padding-top: 24px !important;
   }
 
   .headerControls {
@@ -836,12 +843,12 @@
   .controlBtn { flex: 1; text-align: center; }
 
   /* ============================================================
-     5. FIX: SLA GRAPH (MOBILE OVERRIDE)
-     มือถือ: ให้เรียงแนวตั้ง / ปัดบรรทัด
+     5. FIX: SLA GRAPH (MOBILE OVERRIDE - PUSH CONTENT DOWN)
      ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
+    /* ไม้ตาย: ดันกราฟลงมา 60px จากกล่องฟ้า */
     margin-top: 60px !important; 
     display: flex !important;
     flex-direction: column !important;
@@ -850,11 +857,11 @@
     overflow: visible !important;
   }
 
-  /* รายการกราฟ (ในมือถือ Override กลับเป็น Flex Wrap) */
+  /* รายการกราฟ (ในมือถือใช้ Flex Wrap) */
   .mockHBarItem {
     display: flex !important;
     flex-wrap: wrap !important;
-    grid-template-columns: none !important; /* ยกเลิก Grid ของ Desktop */
+    grid-template-columns: none !important; /* ล้าง Grid */
     justify-content: space-between !important;
     align-items: flex-end !important;
     width: 100% !important;
@@ -871,7 +878,7 @@
     font-weight: 600;
     color: #333333 !important;
     margin: 0 !important;
-    order: 1 !important; /* ชื่ออยู่ซ้ายบน */
+    order: 1 !important;
     text-align: left !important;
   }
 
@@ -884,23 +891,61 @@
     font-weight: 800;
     color: #FF4D4F !important;
     position: static !important;
-    order: 2 !important; /* ค่าอยู่ขวาบน */
+    order: 2 !important;
     margin-top: 0 !important;
   }
 
-  /* แท่งกราฟ */
+  /* แท่งกราฟ (ปัดลงล่าง) */
   .mockHBar {
     width: 100% !important;
     height: 10px !important;
     margin-top: 6px !important;
     border-radius: 5px !important;
     overflow: hidden;
-    order: 3 !important; /* กราฟลงมาบรรทัด 2 */
+    order: 3 !important;
   }
 
-  /* ============================================================
-     6. FIX: REPORT CARD
-     ============================================================ */
+  /* ปรับป้าย Target (ห้ามบีบ) */
+  .slaLabel {
+    position: absolute !important;
+    top: -24px !important;
+    left: 0 !important;
+    transform: translateX(-50%);
+    background: #EF4444 !important;
+    color: white !important;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px;
+    font-weight: bold;
+    /* แก้ปัญหาตัวหนังสือแนวตั้ง */
+    width: max-content !important; 
+    min-width: 60px !important;
+    white-space: nowrap !important;
+    z-index: 100 !important;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .slaLabel::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #EF4444;
+  }
+
+  .slaLineContainer {
+    top: -10px !important;
+    bottom: 0 !important;
+    border-left: 2px dashed #EF4444;
+    opacity: 0.6;
+    z-index: 1;
+  }
+
+  /* 6. FIX: REPORT CARD */
   .reportCardHeader {
     flex-direction: column !important;
     align-items: flex-start !important;
