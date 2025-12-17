@@ -570,7 +570,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (FORCED MOBILE FIX - FULL)
+   9. RESPONSIVE (MOBILE FORCED FIX - FULL)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -608,8 +608,7 @@
   }
 
   /* =========================================================
-     2. MOBILE DROPDOWN (FIXED MENU STYLE)
-     แก้เมนูให้ดู Clean, เท่ากัน, และไม่รก
+     2. MOBILE DROPDOWN (FIXED: Equal Size & No Jump)
      ========================================================= */
   .orgStatsMobileDropdown {
     display: flex;
@@ -637,7 +636,7 @@
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 0 20px;
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -660,7 +659,7 @@
     gap: 12px;
   }
 
-  /* Dropdown List: กล่องรวม (Unified Box) */
+  /* Dropdown List */
   .mobileDropdownList {
     position: absolute;
     top: 100%;
@@ -669,13 +668,12 @@
     margin-top: 8px;
     background: #ffffff;
     border-radius: 16px;
-    /* ใช้เงาแบบ Soft ให้ดูลอยมีมิติ แต่ไม่รก */
     box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08) !important;
     border: 1px solid #f0f0f0;
-    padding: 8px; /* Padding ของกล่อง */
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 4px; /* ช่องว่างระหว่างรายการ */
+    gap: 4px;
     z-index: 999;
     animation: slideDown 0.2s ease-out;
   }
@@ -691,23 +689,24 @@
     }
   }
 
-  /* Dropdown Item: รายการย่อย */
+  /* Dropdown Item: Fix Size */
   .mobileDropdownItem {
     width: 100% !important;
-    padding: 12px 16px !important;
+    min-height: 48px !important; /* บังคับความสูงขั้นต่ำเท่ากัน */
+    padding: 0 16px !important;
     border: none !important;
-    background: transparent !important; /* เอาพื้นหลังขาวออก */
+    background: transparent !important;
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    font-weight: 500;
+    font-weight: 600 !important; /* หนาเท่ากันทั้งเลือกและไม่เลือก */
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
-    box-shadow: none !important; /* ลบเงาปุ่มย่อยออก */
-    transition: background-color 0.2s;
+    box-shadow: none !important;
+    transition: background-color 0.2s, color 0.2s;
   }
 
   .mobileDropdownItem:hover {
@@ -715,19 +714,22 @@
     color: #000 !important;
   }
 
-  /* Active Item: รายการที่เลือก */
+  /* Active Item: เปลี่ยนแค่สี ไม่เปลี่ยนขนาด */
   .activeItem {
-    background-color: #ecfdf5 !important; /* สีเขียวอ่อน */
-    color: #059669 !important; /* สีเขียวเข้ม */
-    font-weight: 700 !important;
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    /* font-weight ยังคงเป็น 600 เท่าเดิม ไม่เพิ่มเป็น 700 */
   }
 
   .activeCheck {
     margin-left: auto;
     color: #10B981;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
   }
 
-  /* 3. ChartBox Reset (Important: Overflow Visible for Target Label) */
+  /* 3. ChartBox Reset */
   .chartBox {
     width: 100% !important;
     border-radius: 0 !important;
@@ -800,17 +802,17 @@
   }
 
   /* ============================================================
-     5. FIX: SLA GRAPH & "TARGET" LABEL (แก้ไขป้ายแนวตั้ง + ไม่ทับ)
+     5. FIX: SLA GRAPH & "TARGET" LABEL
      ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
-    margin-top: 60px !important; /* เพิ่มพื้นที่ด้านบนให้ป้าย Target */
+    margin-top: 60px !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
     position: relative !important;
-    overflow: visible !important; /* ห้ามตัดส่วนเกิน */
+    overflow: visible !important;
   }
 
   /* ปรับป้าย Target (แก้ไขปัญหาตัวหนังสือแนวตั้ง) */
@@ -818,24 +820,22 @@
     position: absolute !important;
     top: -35px !important;
     left: 0 !important;
-    transform: translateX(-50%); /* จัดกึ่งกลางเส้น */
+    transform: translateX(-50%);
     background: #EF4444 !important;
     color: white !important;
     font-size: 10px !important;
     padding: 4px 8px !important;
     border-radius: 4px;
     font-weight: bold;
-
-    /* !! คำสั่งสำคัญแก้ป้ายบีบ !! */
-    width: max-content !important; /* ขยายตามตัวหนังสือ */
-    min-width: 80px !important; /* กว้างขั้นต่ำ */
-    white-space: nowrap !important; /* ห้ามตัดคำ */
+    width: max-content !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
     z-index: 100 !important;
   }
 
   /* เส้นประ SLA */
   .slaLineContainer {
-    top: -10px !important; /* ลากยาวขึ้นไปหาป้าย */
+    top: -10px !important;
     bottom: 0 !important;
     border-left: 2px dashed #EF4444;
     opacity: 0.6;
@@ -845,7 +845,7 @@
   /* รายการกราฟ (ชื่อ - ค่า - แท่ง) */
   .mockHBarItem {
     display: flex !important;
-    flex-wrap: wrap !important; /* ให้ปัดบรรทัดได้ */
+    flex-wrap: wrap !important;
     justify-content: space-between !important;
     align-items: flex-end !important;
     width: 100% !important;
