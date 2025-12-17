@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ เพิ่ม useMemo
 import styles from "./css/ReportTable.module.css";
 import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
 import "cally";
@@ -61,12 +61,16 @@ const DateFilter = () => {
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
   const [loading, setLoading] = useState(true);
 
   // --- State สำหรับเก็บตัวเลือกใน Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
-  const [statusOptions, setStatusOptions] = useState([]); // ✅ เก็บสถานะที่ได้จาก API
+  const [statusOptions, setStatusOptions] = useState([]);
+
+  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const isAllReports = subTab === "รายการแจ้งรวม";
   const mainFilters = isAllReports
@@ -82,7 +86,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // --- 1. Fetch Issue Types (ดึงประเภทปัญหา) ---
+  // --- 1. Fetch Issue Types ---
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -104,11 +108,10 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchIssueTypes();
   }, []);
 
-  // --- 2. Fetch Statuses (ดึงสถานะจาก Backend ใหม่ของคุณ) ---
+  // --- 2. Fetch Statuses ---
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
-        // ดึง Organization ID จาก LocalStorage
         const lastOrg = localStorage.getItem("lastSelectedOrg");
         let orgId = null;
         if (lastOrg) {
@@ -116,8 +119,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
           orgId = orgData.id || orgData.organization_id;
         }
 
-        // สร้าง URL: ถ้ามี Org ID ให้ส่งไปด้วย
-        // *** ตรวจสอบ URL API ของคุณให้ถูกต้องนะครับ ***
+        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
         const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId 
           ? `${baseUrl}?organization_id=${orgId}` 
@@ -128,7 +130,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
         
         const data = await res.json();
         
-        // ตรวจสอบ format ข้อมูลที่ API ส่งกลับมา
         if (Array.isArray(data)) {
           setStatusOptions(data);
         } else if (data.data && Array.isArray(data.data)) {
@@ -139,16 +140,14 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
       } catch (err) {
         console.error("Error fetching statuses:", err);
-        // กรณี Error อาจจะ Set ค่า Default ว่างไว้ หรือ Hardcode กันเหนียว
         setStatusOptions([]);
       }
     };
 
-    // เรียกใช้ฟังก์ชัน
     fetchStatuses();
-  }, [subTab]); // เมื่อเปลี่ยน Tab หรือโหลดหน้าใหม่ให้ดึงสถานะด้วย
+  }, [subTab]);
 
-  // --- 3. Fetch Reports (ดึงข้อมูลเคส) ---
+  // --- 3. Fetch Reports ---
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -182,6 +181,22 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
     fetchCases();
   }, [subTab]);
+
+  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      
+      // กรองประเภท (เทียบกับชื่อ issue_type_name)
+      const reportTypeName = report.issue_type_name || ""; 
+      const matchType = selectedType === "all" || reportTypeName === selectedType;
+
+      // กรองสถานะ
+      const reportStatus = report.status || "";
+      const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
+
+      return matchType && matchStatus;
+    });
+  }, [reports, selectedType, selectedStatus]);
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
@@ -239,20 +254,28 @@ const ReportTable = ({ subTab, onRowClick }) => {
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
                      ) : label === "ประเภท" ? (
-                        <select defaultValue="all">
+                        // ✅ ผูก Value และ OnChange สำหรับประเภท
+                        <select 
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                        >
                           <option value="all">ทั้งหมด</option>
                           {issueTypes.map((type, index) => (
                             <option 
                               key={type.issue_type_id || type.id || index} 
-                              value={type.issue_type_id || type.id}
+                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
+                              value={type.issue_type_name || type.name}
                             >
                               {type.issue_type_name || type.name || "ระบุไม่ได้"}
                             </option>
                           ))}
                         </select>
                      ) : label === "สถานะ" ? (
-                        // ✅ แสดงผลสถานะจาก API (statusOptions)
-                        <select defaultValue="all">
+                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
+                        <select 
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                        >
                           <option value="all">ทั้งหมด</option>
                           {statusOptions.length > 0 ? (
                             statusOptions.map((status, index) => (
@@ -261,7 +284,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
                               </option>
                             ))
                           ) : (
-                            // กรณีโหลดไม่เจอ หรือ API ส่งมาว่าง
                             <option disabled>ไม่พบข้อมูลสถานะ</option>
                           )}
                         </select>
@@ -290,16 +312,19 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
       <div className={styles.reportSummary}>
         <strong>{summaryTitle}</strong>{" "}
-        ({loading ? "กำลังโหลด..." : `${reports.length} รายการ`})
+        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
+        ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
       </div>
 
       <div className={styles.reportTableContainer}>
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
-        ) : reports.length === 0 ? (
-          <p>ไม่มีข้อมูลเรื่องแจ้ง</p>
+        ) : filteredReports.length === 0 ? (
+          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
+          <p>ไม่พบข้อมูลตามเงื่อนไข</p>
         ) : (
-          reports.map((report) => {
+          // ✅ วนลูป filteredReports แทน reports
+          filteredReports.map((report) => {
             const isExpanded = expandedCardId === report.issue_cases_id;
             const responsibleUnits =
               report.organizations && report.organizations.length > 0
