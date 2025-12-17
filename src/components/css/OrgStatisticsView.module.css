@@ -254,7 +254,7 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   9. RESPONSIVE (Fixes: Full Screen & SLA Chart Visible)
+   9. RESPONSIVE (Fixes: Edge-to-Edge & SLA Grid)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -329,7 +329,7 @@
     margin-top: 16px;
   }
   
-  /* 6. Layout Fixes & SLA Chart FIX */
+  /* 6. Layout Fixes */
   .orgStatsContent { gap: 0; }
   .orgGraphDashboard { gap: 0; }
   .satisfactionHighlightGrid { padding: 0 20px; }
@@ -343,36 +343,54 @@
     gap: 16px; 
   }
   
-  /* --- แก้ไขกราฟ SLA ไม่ขึ้น --- */
+  /* --- แก้ไขกราฟ SLA ด้วย Grid Layout (สำคัญ) --- */
   .mockHorizontalBarChart {
-    width: 100%; /* บังคับให้ Container เต็มความกว้าง */
+    width: 100%;
+    gap: 16px;
   }
 
   .mockHBarItem { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: flex-start; 
-    gap: 8px;
-    width: 100%; /* บังคับให้ Item เต็มความกว้าง */
-    position: relative;
+    display: grid;
+    width: 100%;
+    /* จัด Layout: ซ้าย(Text) ขวา(Value) */
+    grid-template-columns: 1fr auto; 
+    /* จัด Row: บน(Labels) ล่าง(Bar) */
+    grid-template-rows: auto auto; 
+    grid-template-areas: 
+      "label value"
+      "bar bar";
+    gap: 4px 0;
+    align-items: end;
   }
   
-  .mockHBar {
-    width: 100%; /* !!! สำคัญมาก: ต้องใส่เพื่อให้กราฟยืดเต็มจอ */
-  }
-
+  /* 1. Label ซ้ายบน */
   .mockHBarLabel { 
+    grid-area: label;
     width: 100%; 
     font-size: 14px;
+    margin: 0;
   }
   
+  /* 2. Value ขวาบน */
   .mockHBarValue { 
-    align-self: flex-end; 
-    margin-top: -36px; /* ปรับตำแหน่งตัวเลข */
+    grid-area: value;
+    margin: 0;
+    text-align: right;
+    font-weight: 700;
     z-index: 2; 
     position: relative;
+    /* ลบ margin-top ติดลบออก */
+    margin-top: 0 !important; 
   }
-  /* ------------------------------- */
+
+  /* 3. Bar ล่างสุด ยาวเต็ม */
+  .mockHBar {
+    grid-area: bar;
+    width: 100%; 
+    height: 12px;
+    margin-top: 4px;
+  }
+  /* ------------------------------------------- */
   
   .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
