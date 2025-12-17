@@ -10,7 +10,7 @@
   width: 100%;
   
   /* Desktop Config */
-  max-width: 100%;    
+  max-width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 24px;
@@ -255,7 +255,6 @@
 
 /* =========================================
    9. RESPONSIVE (MOBILE FORCED FIX)
-   รวมทุกการแก้ไข: เต็มจอ + SLA สวยงาม + ไม่ทับเส้น
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -265,23 +264,23 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container: บังคับเต็มจอชิดขอบ */
+  /* 1. Container */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
     width: 100% !important;
     max-width: 100vw !important;
     margin: 0 !important;
-    padding: 0 0 120px 0 !important; /* เว้นที่ให้เมนูล่าง */
+    padding: 0 0 120px 0 !important;
     gap: 0 !important;
     background-color: #ffffff;
     overflow-x: hidden;
   }
 
-  /* 2. ซ่อน Sidebar */
+  /* 2. Hide Sidebar */
   .orgStatsSidebarDesktop { display: none !important; }
 
-  /* 3. Mobile Dropdown */
+  /* 3. Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -305,7 +304,7 @@
   .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
   .activeCheck { margin-left: auto; color: #10B981; }
 
-  /* 4. ChartBox: เต็มจอและลบสไตล์การ์ดออก */
+  /* 4. ChartBox */
   .chartBox {
     width: 100% !important;
     border-radius: 0 !important;
@@ -323,7 +322,7 @@
     align-items: flex-start;
   }
 
-  /* 5. ปรับ Layout อื่นๆ */
+  /* 5. General Layout */
   .kpiGrid { padding: 0 20px; gap: 12px; margin-bottom: 24px; margin-top: 16px; }
   .orgStatsContent { gap: 0 !important; }
   .orgGraphDashboard { gap: 0 !important; }
@@ -338,33 +337,42 @@
     gap: 16px; 
   }
   
-  /* --- [ส่วนสำคัญสุด] ปรับจูนกราฟ SLA ให้เนี๊ยบ --- */
+  /* --- [ส่วนแก้ไขกราฟ SLA] --- */
   
   .mockHorizontalBarChart {
     width: 100% !important;
-    margin-top: 50px !important; /* เพิ่มพื้นที่ด้านบนสำหรับป้าย Target */
+    margin-top: 50px !important; /* ดันลงมา เพื่อให้ป้าย Target ไม่ชนข้างบน */
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px !important; /* ลดช่องไฟลง */
+    gap: 16px !important; 
     position: relative !important;
   }
 
-  /* เลื่อนเส้นประลงมาไม่ให้ผ่าตัวหนังสือ */
-  .slaLineContainer {
-    top: 28px !important; 
-    bottom: 0 !important;
-  }
-  
-  /* ปรับตำแหน่งป้าย Target */
+  /* ปรับป้าย Target สีแดง */
   .slaLabel {
-    top: -28px !important; 
-    left: -20px !important;
-    font-size: 11px !important;
+    position: absolute;
+    top: -32px !important; /* ดันขึ้นไปเหนือเส้นประ */
+    left: -24px !important; /* จัดกึ่งกลางเส้น */
+    background: #EF4444 !important;
+    color: white !important;
+    font-size: 10px !important;
     padding: 2px 8px !important;
+    border-radius: 4px;
+    font-weight: bold;
+    white-space: nowrap !important; /* !!! สำคัญมาก: ห้ามตัดคำเป็นแนวตั้ง !!! */
+    z-index: 10;
   }
 
+  /* ปรับเส้นประ */
+  .slaLineContainer {
+    top: 28px !important; /* เริ่มต่ำลงมา ไม่ให้ผ่าตัวหนังสือชื่อเขต */
+    bottom: 0 !important;
+    border-left: 2px dashed #EF4444;
+    opacity: 0.6;
+  }
+  
+  /* รายการกราฟ */
   .mockHBarItem { 
-    /* ใช้ Flex แบบ Wrap เพื่อความชัวร์ในการปัดบรรทัด */
     display: flex !important;
     flex-wrap: wrap !important; 
     justify-content: space-between !important; 
@@ -376,38 +384,36 @@
     grid-template-rows: none !important;
   }
   
-  /* 1. Label (Test1) -> สีเข้ม + อยู่ซ้าย */
+  /* Label: Test1 (สีเข้ม) */
   .mockHBarLabel { 
     width: auto !important; 
     flex: 1 !important;     
     font-size: 14px;
     font-weight: 600;
-    color: #333333 !important; /* สีเทาเข้มเพื่อให้อ่านง่าย */
+    color: #333333 !important; /* สีเข้มอ่านง่าย */
     margin: 0 !important;
     order: 1 !important;    
     text-align: left !important;
-    line-height: 1;
   }
   
-  /* 2. Value (33.8 วัน) -> สีแดง + อยู่ขวา */
+  /* Value: 33.8 วัน (สีแดง) */
   .mockHBarValue { 
     width: auto !important;
     margin: 0 !important;
     text-align: right !important;
     font-size: 16px;
     font-weight: 800;
-    color: #FF4D4F !important; /* สีแดง */
+    color: #FF4D4F !important; /* สีแดงเด่น */
     position: static !important;
     z-index: auto !important;
     order: 2 !important;   
     margin-top: 0 !important;
-    line-height: 1;
   }
 
-  /* 3. Bar (กราฟแดง) -> ลงล่าง */
+  /* Bar: แท่งกราฟ */
   .mockHBar {
     width: 100% !important; 
-    height: 10px !important; /* ลดความหนาลงนิดนึง */
+    height: 10px !important;
     margin-top: 6px !important;
     border-radius: 5px !important;
     overflow: hidden;
