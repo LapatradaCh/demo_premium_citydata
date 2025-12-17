@@ -9,21 +9,20 @@
   gap: 32px;
   width: 100%;
   
-  /* --- แก้ไขเพื่อให้เต็มจอ --- */
-  max-width: 100%;    /* เดิม 1440px: ปลดล็อคความกว้าง */
-  min-height: 100vh;  /* เดิม 80vh: ให้สูงเต็มหน้าจอเสมอ */
-  margin: 0;          /* เดิม 0 auto: ให้ชิดขอบ */
-  /* ----------------------- */
-  
-  align-items: flex-start;
+  /* --- ตั้งค่าให้เต็มจอ --- */
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0;
   padding: 24px;
+  /* -------------------- */
+
+  align-items: flex-start;
   font-family: 'Sarabun', sans-serif;
   box-sizing: border-box;
 }
 
 /* =========================================
    2. SIDEBAR (Desktop Only)
-   เปลี่ยนชื่อเป็น orgStatsSidebarDesktop เพื่อให้ชัดเจน
    ========================================= */
 .orgStatsSidebarDesktop {
   flex-shrink: 0;
@@ -37,6 +36,7 @@
   top: 24px;
   z-index: 10;
   height: fit-content;
+  /* ถ้าต้องการให้ Sidebar สูงเต็มจอให้ใช้: height: calc(100vh - 48px); */
 }
 
 .orgStatsMenuTitle {
@@ -257,7 +257,7 @@
 .donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
 
 /* =========================================
-   9. RESPONSIVE (Mobile Dropdown)
+   9. RESPONSIVE (Mobile Edge-to-Edge Fix)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -267,19 +267,22 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Layout */
+  /* 1. Container: ปรับให้เต็มจอและเว้นที่ด้านล่างสำหรับเมนู */
   .orgStatsContainer {
     flex-direction: column;
-    padding: 16px;
+    padding: 16px 0 120px 0; /* บน 16px, ซ้ายขวา 0, ล่าง 120px */
     gap: 16px;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 
-  /* 2. ซ่อน Sidebar เดิม */
+  /* 2. ซ่อน Sidebar */
   .orgStatsSidebarDesktop {
     display: none;
   }
 
-  /* 3. แสดง Mobile Dropdown */
+  /* 3. Dropdown เมนูบนมือถือ */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -287,124 +290,60 @@
     margin-bottom: 8px;
     position: relative;
     z-index: 50;
+    padding: 0 16px; /* เว้นขอบเฉพาะเนื้อหา */
+    box-sizing: border-box;
+  }
+  .mobileDropdownLabel { font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; padding-left: 4px; }
+  .mobileDropdownTrigger { width: 100%; height: 56px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; color: #111; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.2s; }
+  .mobileDropdownTrigger.open { border-color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .triggerContent { display: flex; align-items: center; gap: 12px; }
+  .mobileDropdownList { position: absolute; top: 100%; left: 16px; right: 16px; margin-top: 8px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #f0f0f0; padding: 8px; display: flex; flex-direction: column; gap: 4px; animation: slideDown 0.2s ease-out; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .mobileDropdownItem { width: 100%; padding: 12px 16px; border: none; background: transparent; display: flex; align-items: center; gap: 12px; font-size: 15px; color: #4b5563; font-weight: 500; border-radius: 10px; cursor: pointer; text-align: left; }
+  .mobileDropdownItem:hover { background-color: #f9fafb; color: #000; }
+  .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
+  .activeCheck { margin-left: auto; color: #10B981; }
+
+  /* 4. ChartBox: ปรับให้เต็มจอแบบไม่มีขอบ */
+  .chartBox {
+    padding: 24px 16px; /* บนล่าง 24px, ซ้ายขวา 16px */
+    border-radius: 0;   /* ลบมุมโค้ง */
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0; /* เหลือแค่เส้นคั่นล่าง */
+    box-shadow: none;   /* ลบเงาให้ดูเรียบเนียน */
   }
 
-  .mobileDropdownLabel {
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 6px;
-    font-weight: 600;
-    padding-left: 4px;
-  }
-
-  .mobileDropdownTrigger {
-    width: 100%;
-    height: 56px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #111;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    transition: all 0.2s;
-  }
-
-  .mobileDropdownTrigger.open {
-    border-color: #000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-
-  .triggerContent {
-    display: flex;
-    align-items: center;
+  /* 5. ปรับ Layout ภายใน */
+  .orgGraphDashboard { gap: 0; /* ลดช่องว่างระหว่างกล่อง */ }
+  
+  .kpiGrid { 
+    grid-template-columns: 1fr; 
     gap: 12px;
-  }
-
-  /* รายการ Dropdown */
-  .mobileDropdownList {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 8px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    border: 1px solid #f0f0f0;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    animation: slideDown 0.2s ease-out;
-  }
-
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .mobileDropdownItem {
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 15px;
-    color: #4b5563;
-    font-weight: 500;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: left;
-  }
-
-  .mobileDropdownItem:hover {
-    background-color: #f9fafb;
-    color: #000;
-  }
-
-  .activeItem {
-    background-color: #f3f4f6 !important;
-    color: #000 !important;
-    font-weight: 700 !important;
+    padding: 0 16px; /* ใส่ padding ให้ KPI เพราะอยู่นอก chartBox */
   }
   
-  .activeCheck {
-    margin-left: auto;
-    color: #10B981;
-  }
-
-  /* --- General Responsive Fixes --- */
-  .chartBox { padding: 20px; }
-  .orgGraphDashboard { gap: 16px; }
-
-  /* KPI & Chart fixes */
-  .kpiGrid { grid-template-columns: 1fr; }
+  /* Satisfaction & SLA Internal Fixes */
+  .satisfactionHighlightGrid { grid-template-columns: 1fr; padding: 0 16px; }
+  .reportCardList { padding: 0 16px; }
+  .reportCardHeader { flex-direction: column; gap: 12px; }
+  .reportCardScoreGroup { text-align: left; display: flex; align-items: center; gap: 12px; }
   
-  .mockHBarItem {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  .slaHeaderBox, .donutHeaderBox { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 16px; 
+    margin-left: 16px; 
+    margin-right: 16px;
+    width: auto;
   }
+  .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
+  
+  .mockHBarItem { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .mockHBarLabel { width: 100%; }
   .mockHBarValue { align-self: flex-end; margin-top: -28px; z-index: 2; }
   
-  /* Satisfaction & SLA */
-  .satisfactionHighlightGrid { grid-template-columns: 1fr; }
-  .reportCardHeader { flex-direction: column; gap: 12px; }
-  .reportCardScoreGroup { text-align: left; display: flex; align-items: center; gap: 12px; }
-  .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
-  
-  /* Header Controls */
+  /* Header Controls (ปุ่มตัวกรอง) */
   .chartBoxTitle { align-items: flex-start; }
   .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
   .controlBtn { flex: 1; text-align: center; }
