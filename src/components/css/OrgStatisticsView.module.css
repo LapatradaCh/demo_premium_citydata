@@ -14,6 +14,7 @@
   padding: 24px;
   font-family: 'Sarabun', sans-serif;
   box-sizing: border-box;
+  margin: 0 auto; /* จัดกึ่งกลางหน้าจอ */
 }
 
 /* =========================================
@@ -29,6 +30,7 @@
   padding: 24px 16px;
   position: sticky;
   top: 24px;
+  z-index: 10;
 }
 
 .orgStatsMenuTitle {
@@ -51,7 +53,7 @@
 .orgStatsMenuButton {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* จัดชิดซ้ายเสมอ */
+  justify-content: flex-start;
   gap: 16px;
   width: 100%;
   padding: 0 20px;
@@ -70,21 +72,20 @@
   text-overflow: ellipsis;
 }
 
-/* ล็อคขนาดไอคอนและจัดกึ่งกลาง เพื่อให้ Text ด้านหลังตรงกัน */
 .orgStatsMenuButton svg {
   font-size: 20px;
   width: 24px; 
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #9CA3AF; /* สีเทาตามธีม */
+  color: #9CA3AF;
   flex-shrink: 0;
 }
 
 .orgStatsMenuButton:hover {
   background-color: #f8f9fa;
   color: #000;
-  transform: none; /* ปิดการขยับ */
+  transform: none;
 }
 
 .orgStatsMenuButton.active {
@@ -92,7 +93,7 @@
   color: #ffffff;
   font-weight: 700;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transform: none; /* ปิดการขยับ */
+  transform: none;
 }
 .orgStatsMenuButton.active svg { color: #ffffff; }
 
@@ -101,17 +102,19 @@
    ========================================= */
 .orgStatsContent {
   flex-grow: 1;
-  min-width: 0;
+  min-width: 0; /* ป้องกัน Flex item ล้น */
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
+
 .orgGraphDashboard {
   display: flex;
   flex-direction: column;
   gap: 24px;
   width: 100%;
 }
+
 .chartBox {
   background: #ffffff;
   border-radius: 24px;
@@ -120,7 +123,10 @@
   border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
+
 .chartBoxTitle {
   font-size: 20px;
   font-weight: 800;
@@ -131,8 +137,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* สำคัญสำหรับ Responsive */
 }
+
 .chartBoxTitle::before {
   content: '';
   display: block;
@@ -141,6 +148,7 @@
   background: #000;
   border-radius: 3px;
 }
+
 .chartNote {
   font-size: 13px;
   color: #9CA3AF;
@@ -169,28 +177,24 @@
   border: none;
 }
 
-/* 1. อัตราความสำเร็จ: Emerald (#10B981) ทึบ */
+/* KPI Colors */
 .kpiCardSuccess {
   background: #10B981 !important; 
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
-
-/* 2. เรื่องทั้งหมด: ดำทึบ */
 .kpiCardNormal {
   background: #000000 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-
-/* 3. งานค้าง (Critical): Red (#EF4444) ทึบ */
 .kpiCardCritical {
   background: #EF4444 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* บังคับ Text ขาวทุกจุดในการ์ด */
+/* Force White Text */
 .kpiCardSuccess .kpiHeader, .kpiCardSuccess .kpiValue, .kpiCardSuccess .kpiSubtext,
 .kpiCardNormal .kpiHeader, .kpiCardNormal .kpiValue, .kpiCardNormal .kpiSubtext,
 .kpiCardCritical .kpiHeader, .kpiCardCritical .kpiValue, .kpiCardCritical .kpiSubtext {
@@ -202,8 +206,9 @@
 .kpiValue { font-size: 32px; font-weight: 800; line-height: 1.2; }
 .kpiSubtext { font-size: 12px; margin-top: 4px; }
 
-/* --- ปุ่ม Filter (แก้ให้ทำงานถูกต้อง) --- */
+/* Filter Buttons */
 .headerControls { margin-left: auto; display: flex; gap: 8px; font-size: 13px; }
+
 .controlBtn { 
   padding: 6px 16px; 
   border-radius: 8px; 
@@ -217,14 +222,12 @@
 }
 .controlBtn:hover { background: #f8f8f8; }
 
-/* State Active: ทั้งหมด (สีฟ้าอ่อน) */
 .activeTotal { 
   background-color: #e6f7ff !important; 
   color: #1890ff !important; 
   border-color: #1890ff !important; 
 }
 
-/* State Active: งานค้าง (สีแดงเข้ม) */
 .activeCritical { 
   background-color: #FF4D4F !important; 
   color: #ffffff !important; 
@@ -233,10 +236,17 @@
 }
 
 /* =========================================
-   5. CHART & UTILITY COLORS (Palette)
+   5. CHART & UTILITY COLORS
    ========================================= */
 .mockStackedBarChart { display: flex; flex-direction: column; gap: 24px; }
-.mockHBarItem { display: grid; grid-template-columns: 180px 1fr 50px; gap: 20px; align-items: center; }
+
+.mockHBarItem { 
+  display: grid; 
+  grid-template-columns: 180px 1fr 50px; /* Default Desktop Grid */
+  gap: 20px; 
+  align-items: center; 
+}
+
 .mockHBarLabel { font-size: 15px; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .mockStackedHBar { 
@@ -249,10 +259,11 @@
   border: 2px solid #fff; 
   box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
 }
+
 .mockStackedBarSegment { height: 100%; position: relative; cursor: pointer; transition: width 0.5s ease; }
 .mockStackedBarSegment:hover { filter: brightness(1.1); z-index: 5; }
 
-/* --- รวมรหัสสีทั้งหมดที่นี่ --- */
+/* Palette */
 .fillGreen, .bg-emerald, .bg-success, .bar-green { background-color: #10B981 !important; }
 .fillRed, .bg-red, .bg-critical, .bar-red { background-color: #EF4444 !important; }
 .fillYellow, .bg-amber, .bar-yellow { background-color: #F59E0B !important; }
@@ -262,6 +273,7 @@
 .fillGray, .bg-gray { background-color: #9CA3AF !important; }
 
 .mockHBarValue { font-size: 18px; font-weight: 800; color: #000; text-align: right; }
+
 .mockStackedBarLegend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin-top: 24px; padding-top: 24px; border-top: 1px dashed #eee; }
 .mockStackedBarLegendItem { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #444; font-weight: 600; padding: 8px 16px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: transform 0.2s; }
 .mockStackedBarLegendItem:hover { transform: translateY(-2px); }
@@ -273,19 +285,9 @@
 .satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .highlightCard { padding: 16px; border-radius: 12px; border: none; display: flex; flex-direction: column; }
 
-.highlightCardGreen { 
-  background-color: #10B981 !important; 
-  color: #ffffff !important;
-}
-.highlightCardRed { 
-  background-color: #EF4444 !important; 
-  color: #ffffff !important;
-}
-
-.highlightCardGreen *, .highlightCardRed * {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
+.highlightCardGreen { background-color: #10B981 !important; color: #ffffff !important; }
+.highlightCardRed { background-color: #EF4444 !important; color: #ffffff !important; }
+.highlightCardGreen *, .highlightCardRed * { color: #ffffff !important; opacity: 1 !important; }
 
 .highlightTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .highlightName { font-size: 20px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -307,18 +309,10 @@
 .reportCardTitleGroup { display: flex; align-items: center; gap: 16px; }
 
 .reportCardRank { 
-  font-size: 18px; 
-  font-weight: 900; 
-  color: #fff; 
-  background: #333;
-  min-width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  margin-right: 8px;
+  font-size: 18px; font-weight: 900; color: #fff; background: #333;
+  min-width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); margin-right: 8px;
 }
 .reportCardRank.rank1 { background: #F59E0B !important; } 
 .reportCardRank.rank2 { background: #9CA3AF !important; } 
@@ -330,18 +324,8 @@
 .reportCardScoreStars { margin: 4px 0; }
 .reportCardScoreReviews { font-size: 12px; color: #9CA3AF; }
 
-.reportCardProgressBg { 
-  margin-top: 16px; 
-  height: 12px; 
-  background: #f1f3f5; 
-  border-radius: 6px; 
-  overflow: hidden; 
-}
-.reportCardProgressBar { 
-  height: 100%; 
-  border-radius: 6px; 
-  transition: width 0.5s ease; 
-}
+.reportCardProgressBg { margin-top: 16px; height: 12px; background: #f1f3f5; border-radius: 6px; overflow: hidden; }
+.reportCardProgressBar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
 
 /* =========================================
    7. SLA (Tab 3)
@@ -395,18 +379,143 @@
 .donutPercent { margin-left: 6px; color: #9CA3AF; font-size: 12px; }
 
 /* =========================================
-   9. MOBILE RESPONSIVE
+   9. MOBILE RESPONSIVE (FULL)
    ========================================= */
+
+/* Tablet & Small Desktop (1024px and below) */
+@media screen and (max-width: 1024px) {
+  .orgStatsContainer {
+    gap: 20px;
+    padding: 16px;
+  }
+  .orgStatsSidebar {
+    width: 240px; /* ย่อ Sidebar เล็กน้อย */
+  }
+  .kpiGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* Mobile (768px and below) */
 @media screen and (max-width: 768px) {
-  .orgStatsContainer { flex-direction: column; padding: 16px; }
-  .orgStatsSidebar { width: 100%; position: static; margin-bottom: 24px; padding: 16px; }
-  .orgStatsMenuNav { flex-direction: row; overflow-x: auto; gap: 12px; padding-bottom: 4px; }
-  .orgStatsMenuButton { flex: 0 0 auto; width: 120px; height: auto; flex-direction: column; justify-content: center; text-align: center; white-space: normal; padding: 16px 8px; border: 1px solid #eee; background: #fff; }
-  .orgStatsMenuButton svg { margin-bottom: 8px; width: auto; }
-  .mockHBarItem { grid-template-columns: 100px 1fr 40px; gap: 10px; }
+  /* Layout หลัก */
+  .orgStatsContainer {
+    flex-direction: column;
+    padding: 12px;
+    gap: 24px;
+    min-height: auto;
+  }
+
+  /* เมนู Sidebar แปลงเป็น Horizontal Scroll (Chips) */
+  .orgStatsSidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-bottom: 8px;
+    padding: 12px;
+    overflow-x: auto; /* เลื่อนแนวนอน */
+    white-space: nowrap;
+    border-bottom: 1px solid #f1f1f1;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 0;
+    
+    /* ซ่อน Scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .orgStatsSidebar::-webkit-scrollbar { display: none; }
+
+  .orgStatsMenuTitle { display: none; }
+
+  .orgStatsMenuNav {
+    flex-direction: row;
+    gap: 12px;
+    padding-bottom: 4px;
+  }
+
+  .orgStatsMenuButton {
+    /* ทรงแคปซูล */
+    width: auto;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .orgStatsMenuButton svg { margin: 0; font-size: 18px; width: 20px; }
+
+  .orgStatsMenuButton.active {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+  }
+
+  /* Content */
+  .chartBox { padding: 20px; }
+
+  /* กราฟแท่งแนวนอน (ปรับ Grid เป็น Flex Column) */
+  .mockHBarItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .mockHBarLabel { width: 100%; font-size: 14px; }
+  .mockStackedHBar { width: 100%; height: 32px; }
+  .mockHBarValue {
+    font-size: 16px;
+    align-self: flex-end;
+    margin-top: -30px; /* ดึงตัวเลขขึ้นไปด้านขวาบนของกราฟ */
+    margin-bottom: 6px;
+    z-index: 2;
+  }
+
+  /* Satisfaction Grid */
   .satisfactionHighlightGrid { grid-template-columns: 1fr; }
-  .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .slaAvgInfo, .donutTopTypeBox { text-align: left; }
-  .headerControls { margin-left: 0; width: 100%; margin-top: 12px; }
+
+  /* Headers */
+  .slaHeaderBox, .donutHeaderBox {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .slaAvgInfo, .donutTopTypeBox {
+    text-align: left;
+    width: 100%;
+    border-top: 1px dashed #eee;
+    padding-top: 12px;
+  }
+
+  /* Filter Buttons */
+  .chartBoxTitle { align-items: flex-start; }
+  .chartNote { margin-top: 0; text-align: left; }
+  .headerControls {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
   .controlBtn { flex: 1; text-align: center; }
+}
+
+/* Small Mobile (480px and below) */
+@media screen and (max-width: 480px) {
+  .kpiGrid { grid-template-columns: 1fr; }
+  .kpiValue { font-size: 28px; }
+  
+  .donutWrapper { width: 200px; height: 200px; }
+  .donutTotalValue { font-size: 28px; }
+  
+  .reportCardHeader { flex-direction: column; gap: 12px; }
+  .reportCardScoreGroup { text-align: left; display: flex; align-items: center; gap: 12px; }
+  
+  .mockStackedBarLegend { gap: 8px 12px; justify-content: flex-start; }
+  .mockStackedBarLegendItem { font-size: 12px; padding: 6px 12px; }
 }
