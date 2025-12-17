@@ -135,8 +135,9 @@ const MapView = ({ subTab }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // --- เพิ่ม State สำหรับเก็บ Issue Types ---
+  // --- State สำหรับเก็บ Issue Types และ Status Options ---
   const [issueTypes, setIssueTypes] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([]); // ✅ เพิ่ม State สำหรับสถานะ
 
   const mainFilters = ["ประเภท", "สถานะ"];
 
@@ -155,7 +156,6 @@ const MapView = ({ subTab }) => {
         if (!res.ok) throw new Error("Failed to fetch issue types");
         const data = await res.json();
         
-        // ตรวจสอบโครงสร้างข้อมูลที่ได้ว่าเป็น Array หรือ { data: Array }
         if (Array.isArray(data)) {
             setIssueTypes(data);
         } else if (data.data && Array.isArray(data.data)) {
@@ -173,7 +173,49 @@ const MapView = ({ subTab }) => {
     fetchIssueTypes();
   }, []);
 
-  // --- Logic ดึงข้อมูล (Pagination Loop) ---
+  // --- Logic ดึงข้อมูล Statuses (จาก API Backend ใหม่) ---
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      try {
+        // ดึง Organization ID จาก LocalStorage
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        let orgId = null;
+        if (lastOrg) {
+          const orgData = JSON.parse(lastOrg);
+          orgId = orgData.id || orgData.organization_id;
+        }
+
+        // สร้าง URL
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const url = orgId 
+          ? `${baseUrl}?organization_id=${orgId}` 
+          : baseUrl;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to fetch statuses");
+        
+        const data = await res.json();
+        
+        // ตรวจสอบ format ข้อมูล
+        if (Array.isArray(data)) {
+          setStatusOptions(data);
+        } else if (data.data && Array.isArray(data.data)) {
+           setStatusOptions(data.data); 
+        } else {
+           setStatusOptions([]);
+        }
+
+      } catch (err) {
+        console.error("Error fetching statuses:", err);
+        setStatusOptions([]);
+      }
+    };
+
+    fetchStatuses();
+  }, []);
+
+
+  // --- Logic ดึงข้อมูล Reports (Pagination Loop) ---
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
@@ -284,38 +326,42 @@ const MapView = ({ subTab }) => {
                 {mainFilters.map((label, i) => (
                   <div className={styles.filterGroup} key={i}>
                     <label>{label}</label>
-                    <select defaultValue="all">
-                      <option value="all">ทั้งหมด</option>
-                      
-                      {/* --- แก้ไข: วนลูปแสดงประเภทจาก API --- */}
-                      {label === "ประเภท" && (
-                        <>
-                          {issueTypes.map((type, index) => (
-                             // ตรวจสอบชื่อ key ที่ API ส่งกลับมา (เช่น id, issue_type_name)
-                             // หากชื่อฟิลด์เปลี่ยน สามารถแก้ไขตรง type.xxx ได้เลย
-                             <option 
-                               key={type.issue_type_id || type.id || index} 
-                               value={type.issue_type_id || type.id}
-                             >
-                               {type.issue_type_name || type.name || "ระบุไม่ได้"}
-                             </option>
-                          ))}
-                        </>
-                      )}
+                    
+                    {/* --- Filter: ประเภท --- */}
+                    {label === "ประเภท" && (
+                       <select defaultValue="all">
+                         <option value="all">ทั้งหมด</option>
+                         {issueTypes.map((type, index) => (
+                           <option 
+                             key={type.issue_type_id || type.id || index} 
+                             value={type.issue_type_id || type.id}
+                           >
+                             {type.issue_type_name || type.name || "ระบุไม่ได้"}
+                           </option>
+                         ))}
+                       </select>
+                    )}
 
-                      {label === "สถานะ" && (
-                        <>
-                          <option value="pending">รอรับเรื่อง</option>
-                          <option value="in_progress">ดำเนินการ</option>
-                          <option value="completed">เสร็จสิ้น</option>
-                          <option value="forwarded">ส่งต่อ</option>
-                          <option value="invited">เชิญร่วม</option>
-                          <option value="rejected">ปฏิเสธ</option>
-                        </>
-                      )}
-                    </select>
+                    {/* --- Filter: สถานะ (แก้ไขใหม่ให้ใช้ข้อมูลจาก API) --- */}
+                    {label === "สถานะ" && (
+                       <select defaultValue="all">
+                         <option value="all">ทั้งหมด</option>
+                         {statusOptions.length > 0 ? (
+                           statusOptions.map((status, index) => (
+                             <option key={index} value={status}>
+                               {status}
+                             </option>
+                           ))
+                         ) : (
+                           // Fallback กรณีไม่มีข้อมูล
+                           <option disabled>ไม่พบข้อมูลสถานะ</option>
+                         )}
+                       </select>
+                    )}
+                    
                   </div>
-                ))}               </div>
+                ))}               
+              </div>
               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
             </div>
           </div>
