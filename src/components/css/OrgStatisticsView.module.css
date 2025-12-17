@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL VERSION - GLOBAL FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIX: SLA LABEL) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -244,6 +244,7 @@
   background: #f8f8f8;
 }
 
+/* ปุ่ม Total สีน้ำเงินเข้ม */
 .activeTotal {
   background-color: #1890ff !important;
   color: #ffffff !important;
@@ -461,7 +462,6 @@
 
 /* =========================================
    8. SLA & DONUT (GLOBAL STYLES)
-   แก้ให้กราฟอยู่ห่างจากกล่องข้อความในทุกหน้าจอ
    ========================================= */
 .slaHeaderBox {
   background-color: #f0f9ff !important;
@@ -487,14 +487,14 @@
   align-items: center;
 }
 
-/* --- [แก้ไข] เพิ่ม Margin-Top ให้กราฟห่างจากกล่องข้อความ --- */
+/* กราฟในหน้าจอปกติ */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
-  overflow: visible !important;
-  margin-top: 50px !important; /* ดันลงมา 50px จากกล่องฟ้า */
+  /* เพิ่ม margin-top ทั่วไปไว้ก่อน */
+  margin-top: 40px; 
 }
 
 .mockHBar {
@@ -510,10 +510,9 @@
   transition: width 0.6s ease;
 }
 
-/* --- [แก้ไข] ปรับเส้นประ SLA ให้สอดคล้องกับป้าย --- */
 .slaLineContainer {
   position: absolute;
-  top: -15px !important; /* ลากเส้นขึ้นไปหาป้าย */
+  top: -15px !important;
   bottom: 0;
   border-left: 2px dashed #EF4444;
   z-index: 10;
@@ -521,32 +520,16 @@
   pointer-events: none;
 }
 
-/* --- [แก้ไข] ปรับป้าย Target ให้สวยงาม ไม่บีบ --- */
 .slaLabel {
   position: absolute;
-  top: -30px !important; /* วางเหนือเส้นกราฟ */
-  left: 0;
-  transform: translateX(-50%);
+  top: -25px;
+  left: -30px;
   background: #EF4444;
   color: white;
   font-size: 10px;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   font-weight: bold;
-  width: max-content; /* ห้ามบีบตัวหนังสือ */
-  white-space: nowrap;
-}
-
-/* เพิ่มติ่งลูกศรชี้ลง */
-.slaLabel::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #EF4444;
 }
 
 .donutContainer {
@@ -805,18 +788,61 @@
   .controlBtn { flex: 1; text-align: center; }
 
   /* ============================================================
-     5. FIX: SLA GRAPH (Mobile Specific)
+     5. FIX: SLA GRAPH & "TARGET" LABEL (MOBILE SPECIAL)
      ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
-    /* เพิ่ม Margin Top เยอะๆ ให้ห่างจากกล่องสีฟ้า */
+    /* !! ไม้ตาย: ดันกราฟลงมา 60px ให้ห่างจากข้อความ !! */
     margin-top: 60px !important; 
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
     position: relative !important;
     overflow: visible !important;
+  }
+
+  /* ปรับป้าย Target (แก้ไขปัญหาตัวหนังสือแนวตั้ง) */
+  .slaLabel {
+    position: absolute !important;
+    top: -24px !important; /* ดึงลงมาใกล้เส้น */
+    left: 0 !important;
+    transform: translateX(-50%);
+    background: #EF4444 !important;
+    color: white !important;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px;
+    font-weight: bold;
+    
+    /* !! สำคัญ: ห้ามบีบตัวหนังสือ !! */
+    width: max-content !important; 
+    min-width: 60px !important;
+    white-space: nowrap !important;
+    z-index: 100 !important;
+    
+    display: flex; justify-content: center;
+  }
+  
+  /* ติ่งลูกศร */
+  .slaLabel::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #EF4444;
+  }
+
+  /* เส้นประ SLA */
+  .slaLineContainer {
+    top: -10px !important;
+    bottom: 0 !important;
+    border-left: 2px dashed #EF4444;
+    opacity: 0.6;
+    z-index: 1;
   }
 
   /* รายการกราฟ */
