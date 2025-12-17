@@ -49,7 +49,6 @@ const DateFilter = () => {
             value={toYYYYMMDD(date)}
             className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
           >
-            {/* SVG Icons... */}
             <calendar-month></calendar-month>
           </calendar-date>
         </div>
@@ -59,12 +58,14 @@ const DateFilter = () => {
 };
 
 // ------------------------- Report Table
-// ✅ 1. รับ prop "onRowClick" เข้ามา
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // --- 1. เพิ่ม State สำหรับเก็บ Issue Types ---
+  const [issueTypes, setIssueTypes] = useState([]);
 
   const isAllReports = subTab === "รายการแจ้งรวม";
   const mainFilters = isAllReports
@@ -80,7 +81,29 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // โหลดข้อมูล
+  // --- 2. เพิ่ม Logic ดึงข้อมูล Issue Types ---
+  useEffect(() => {
+    const fetchIssueTypes = async () => {
+      try {
+        const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
+        if (!res.ok) throw new Error("Failed to fetch issue types");
+        const data = await res.json();
+        
+        if (Array.isArray(data)) {
+            setIssueTypes(data);
+        } else if (data.data && Array.isArray(data.data)) {
+            setIssueTypes(data.data);
+        } else {
+            setIssueTypes([]);
+        }
+      } catch (err) {
+        console.error("Error fetching issue types:", err);
+      }
+    };
+    fetchIssueTypes();
+  }, []);
+
+  // โหลดข้อมูล Reports
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -101,7 +124,10 @@ const ReportTable = ({ subTab, onRowClick }) => {
         if (!res.ok) throw new Error("Fetch cases failed");
 
         const data = await res.json();
-        setReports(data);
+        // รองรับกรณีที่ API อาจคืนค่ามาเป็น array หรือ object {data: []}
+        const reportsData = Array.isArray(data) ? data : (data.data || []);
+        setReports(reportsData);
+
       } catch (err) {
         console.error("Error fetching data:", err);
         setReports([]);
@@ -132,7 +158,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
   return (
     <>
-      {/* ส่วน Search & Filter คงเดิม */}
+      {/* ส่วน Search & Filter */}
       <div className={styles.searchTop}>
         <div className={styles.searchInputWrapper}>
           <input
@@ -151,42 +177,61 @@ const ReportTable = ({ subTab, onRowClick }) => {
         </button>
       </div>
 
-      {/* Filter Modal คงเดิม */}
+      {/* Filter Modal */}
       {showFilters && (
-        <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}>
-           {/* ... เนื้อหา Modal ... */}
-           {/* (ขอละไว้เพื่อความสั้น เพราะโค้ดเดิมถูกต้องแล้ว) */}
-        </div>
-      )}
-      {showFilters && (
-          // ... (ใส่โค้ด Modal เดิมของคุณตรงนี้) ...
+        <>
+           <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
            <div className={styles.filterModal}>
-           <div className={styles.filterModalHeader}>
-             <h3>{modalTitle}</h3>
-             <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}>
-               <FaTimes />
-             </button>
-           </div>
-           <div className={styles.filterModalContent}>
-             <div className={styles.reportFilters}>
-               {mainFilters.map((label, i) => (
-                 <div className={styles.filterGroup} key={i}>
-                   <label>{label}</label>
-                   {label === "ช่วงเวลา" ? <DateFilter /> : (
-                     <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
-                   )}
-                 </div>
-               ))}
-               {locationFilters.map((label, i) => (
-                 <div key={i} className={styles.filterGroup}>
-                   <label>{label}</label>
-                   <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
-                 </div>
-               ))}
+             <div className={styles.filterModalHeader}>
+               <h3>{modalTitle}</h3>
+               <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}>
+                 <FaTimes />
+               </button>
              </div>
-             <button className={styles.filterApplyButton}>ตกลง</button>
+             <div className={styles.filterModalContent}>
+               <div className={styles.reportFilters}>
+                 {mainFilters.map((label, i) => (
+                   <div className={styles.filterGroup} key={i}>
+                     <label>{label}</label>
+                     
+                     {/* --- 3. แก้ไขเงื่อนไขการแสดงผล Filter --- */}
+                     {label === "ช่วงเวลา" ? (
+                        <DateFilter />
+                     ) : label === "ประเภท" ? (
+                        // ถ้าเป็น "ประเภท" ให้ Loop ข้อมูลจาก API
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                          {issueTypes.map((type, index) => (
+                            <option 
+                              key={type.issue_type_id || type.id || index} 
+                              value={type.issue_type_id || type.id}
+                            >
+                              {type.issue_type_name || type.name || "ระบุไม่ได้"}
+                            </option>
+                          ))}
+                        </select>
+                     ) : (
+                        // ถ้าเป็นตัวกรองอื่นๆ (สถานะ, หน่วยงาน)
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                          {/* คุณสามารถเพิ่มตัวเลือกสำหรับสถานะได้ที่นี่ถ้าต้องการ */}
+                        </select>
+                     )}
+
+                   </div>
+                 ))}
+                 
+                 {locationFilters.map((label, i) => (
+                   <div key={i} className={styles.filterGroup}>
+                     <label>{label}</label>
+                     <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
+                   </div>
+                 ))}
+               </div>
+               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
+             </div>
            </div>
-         </div>
+        </>
       )}
 
       <div className={styles.reportSummary}>
@@ -211,9 +256,8 @@ const ReportTable = ({ subTab, onRowClick }) => {
               <div
                 key={report.issue_cases_id}
                 className={styles.reportTableRow}
-                // ✅ 2. เพิ่ม onClick ที่ Row เพื่อส่ง report กลับไปหน้า Home
                 onClick={() => onRowClick && onRowClick(report)}
-                style={{ cursor: "pointer" }} // เปลี่ยนเมาส์เป็นรูปมือ
+                style={{ cursor: "pointer" }} 
               >
                 <img
                   src={
@@ -262,7 +306,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
                 <button
                   className={styles.toggleDetailsButton}
-                  // ✅ 3. เพิ่ม e.stopPropagation() เพื่อไม่ให้กดปุ่มนี้แล้วเด้งไปหน้า Detail
                   onClick={(e) => {
                     e.stopPropagation(); 
                     handleToggleDetails(
