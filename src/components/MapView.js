@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react"; // ✅ เพิ่ม useMemo
 import styles from "./css/MapView.module.css";
 
 // 1. Import Components ของ Map
@@ -28,8 +28,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// --- Custom Icons: ประกาศสีต่างๆ ---
-// Helper function สร้าง Icon
+// --- Custom Icons ---
 const createIcon = (colorUrl) => new L.Icon({
   iconUrl: colorUrl,
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -39,7 +38,6 @@ const createIcon = (colorUrl) => new L.Icon({
   shadowSize: [41, 41]
 });
 
-// กำหนดตัวแปรสี
 const redIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png');
 const greenIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png');
 const orangeIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png');
@@ -47,21 +45,19 @@ const violetIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet
 const blueIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
 const greyIcon = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
 
-// ฟังก์ชันเลือกสีตามสถานะ: รอรับเรื่อง, ดำเนินการ, เสร็จสิ้น, ส่งต่อ, เชิญร่วม, ปฏิเสธ
 const getIconByStatus = (status) => {
   switch (status) {
     case "รอรับเรื่อง": return redIcon;
     case "ดำเนินการ": return orangeIcon;
-    case "กำลังดำเนินการ": return orangeIcon; // เผื่อไว้
+    case "กำลังดำเนินการ": return orangeIcon;
     case "เสร็จสิ้น": return greenIcon;
     case "ส่งต่อ": return blueIcon;
-    case "เชิญร่วม": return violetIcon; // ใช้สีม่วง
+    case "เชิญร่วม": return violetIcon;
     case "ปฏิเสธ": return greyIcon;
     default: return redIcon;
   }
 };
 
-// --- Custom Icon: Cluster สีส้ม ---
 const createCustomClusterIcon = (cluster) => {
   const count = cluster.getChildCount();
   return L.divIcon({
@@ -71,47 +67,27 @@ const createCustomClusterIcon = (cluster) => {
   });
 };
 
-// --- Component ใหม่: Heatmap Layer ---
 const HeatmapLayer = ({ data }) => {
   const map = useMap();
-
   useEffect(() => {
     if (!data || data.length === 0) return;
-
-    // กรองและแปลงเป็น format [lat, lng, intensity]
     const points = data
       .filter(p => !isNaN(parseFloat(p.latitude)) && !isNaN(parseFloat(p.longitude)))
       .map(p => [parseFloat(p.latitude), parseFloat(p.longitude), 0.8]); 
-
     const heat = L.heatLayer(points, {
-      radius: 25,
-      blur: 15,
-      maxZoom: 17,
-      minOpacity: 0.4,
-      gradient: {
-        0.4: 'blue',
-        0.6: 'cyan',
-        0.7: 'lime',
-        0.8: 'yellow',
-        1.0: 'red'
-      }
+      radius: 25, blur: 15, maxZoom: 17, minOpacity: 0.4,
+      gradient: { 0.4: 'blue', 0.6: 'cyan', 0.7: 'lime', 0.8: 'yellow', 1.0: 'red' }
     }).addTo(map);
-
-    return () => {
-      map.removeLayer(heat);
-    };
+    return () => { map.removeLayer(heat); };
   }, [data, map]);
-
   return null;
 };
 
-// Helper: ตัดคำ
 const truncateText = (text, maxLength) => {
   if (!text) return "";
   return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
 };
 
-// Component: Auto Zoom
 const FitBoundsToMarkers = ({ markers }) => {
   const map = useMap();
   useEffect(() => {
@@ -129,103 +105,69 @@ const FitBoundsToMarkers = ({ markers }) => {
 };
 
 const MapView = ({ subTab }) => {
-  const [mapMode, setMapMode] = useState("pins"); // 'pins' หรือ 'heatmap'
+  const [mapMode, setMapMode] = useState("pins");
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState([]); // ข้อมูลดิบทั้งหมด
   const [loading, setLoading] = useState(true);
   
-  // --- State สำหรับเก็บ Issue Types และ Status Options ---
+  // --- State สำหรับเก็บตัวเลือก Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
-  const [statusOptions, setStatusOptions] = useState([]); // ✅ เพิ่ม State สำหรับสถานะ
+  const [statusOptions, setStatusOptions] = useState([]);
+
+  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
+  const [selectedType, setSelectedType] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const mainFilters = ["ประเภท", "สถานะ"];
-
   const isPublic = subTab === "แผนที่สาธารณะ";
   const title = isPublic ? "แผนที่สาธารณะ" : "แผนที่ภายใน";
   const modalTitle = `ตัวกรอง (${title})`;
   const summaryTitle = `รายการแจ้ง (${title})`;
-
   const defaultCenter = [13.7563, 100.5018];
 
-  // --- Logic ดึงข้อมูล Issue Types ---
+  // 1. Fetch Issue Types
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
         const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
-        if (!res.ok) throw new Error("Failed to fetch issue types");
+        if (!res.ok) throw new Error("Failed");
         const data = await res.json();
-        
-        if (Array.isArray(data)) {
-            setIssueTypes(data);
-        } else if (data.data && Array.isArray(data.data)) {
-            setIssueTypes(data.data);
-        } else {
-            console.warn("API Issue Types format not recognized", data);
-            setIssueTypes([]);
-        }
-
-      } catch (err) {
-        console.error("Error fetching issue types:", err);
-      }
+        if (Array.isArray(data)) setIssueTypes(data);
+        else if (data.data && Array.isArray(data.data)) setIssueTypes(data.data);
+      } catch (err) { console.error(err); }
     };
-
     fetchIssueTypes();
   }, []);
 
-  // --- Logic ดึงข้อมูล Statuses (จาก API Backend ใหม่) ---
+  // 2. Fetch Statuses
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
-        // ดึง Organization ID จาก LocalStorage
         const lastOrg = localStorage.getItem("lastSelectedOrg");
         let orgId = null;
-        if (lastOrg) {
-          const orgData = JSON.parse(lastOrg);
-          orgId = orgData.id || orgData.organization_id;
-        }
+        if (lastOrg) orgId = JSON.parse(lastOrg).id || JSON.parse(lastOrg).organization_id;
 
-        // สร้าง URL
-        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
-        const url = orgId 
-          ? `${baseUrl}?organization_id=${orgId}` 
-          : baseUrl;
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const url = orgId ? `${baseUrl}?organization_id=${orgId}` : baseUrl;
 
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch statuses");
-        
+        if (!res.ok) throw new Error("Failed");
         const data = await res.json();
-        
-        // ตรวจสอบ format ข้อมูล
-        if (Array.isArray(data)) {
-          setStatusOptions(data);
-        } else if (data.data && Array.isArray(data.data)) {
-           setStatusOptions(data.data); 
-        } else {
-           setStatusOptions([]);
-        }
-
-      } catch (err) {
-        console.error("Error fetching statuses:", err);
-        setStatusOptions([]);
-      }
+        if (Array.isArray(data)) setStatusOptions(data);
+        else if (data.data && Array.isArray(data.data)) setStatusOptions(data.data);
+      } catch (err) { console.error(err); }
     };
-
     fetchStatuses();
   }, []);
 
-
-  // --- Logic ดึงข้อมูล Reports (Pagination Loop) ---
+  // 3. Fetch Reports (All Data)
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
         setLoading(true);
         const lastOrg = localStorage.getItem("lastSelectedOrg");
-        if (!lastOrg) {
-          setReports([]);
-          setLoading(false);
-          return;
-        }
+        if (!lastOrg) { setReports([]); setLoading(false); return; }
         
         const org = JSON.parse(lastOrg);
         const orgId = org.id || org.organization_id;
@@ -237,44 +179,44 @@ const MapView = ({ subTab }) => {
 
         while (hasMore) {
           const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}&limit=${limit}&page=${page}`;
-          
           const res = await fetch(apiUrl);
-          if (!res.ok) throw new Error(`Fetch failed at page ${page}`);
-          
+          if (!res.ok) throw new Error("Fetch failed");
           const data = await res.json();
-          
-          let currentBatch = [];
-          if (Array.isArray(data)) {
-            currentBatch = data;
-          } else if (data.data && Array.isArray(data.data)) {
-            currentBatch = data.data;
-          }
+          let currentBatch = (Array.isArray(data) ? data : data.data) || [];
 
-          if (currentBatch.length === 0) {
-            hasMore = false;
-          } else {
+          if (currentBatch.length === 0) hasMore = false;
+          else {
             allData = [...allData, ...currentBatch];
-            if (currentBatch.length < limit) {
-              hasMore = false;
-            } else {
-              page++;
-            }
+            if (currentBatch.length < limit) hasMore = false;
+            else page++;
           }
         }
-
-        console.log("จำนวนที่ดึงมาได้ทั้งหมด:", allData.length);
         setReports(allData);
-
       } catch (err) {
-        console.error("Error fetching cases:", err);
+        console.error(err);
         setReports([]); 
       } finally {
         setLoading(false);
       }
     };
-
     fetchAllCases();
   }, [subTab]);
+
+  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานทันทีเมื่อ State เปลี่ยน) ---
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      // กรองประเภท (Type)
+      // หมายเหตุ: เช็คทั้ง issue_type_id (int) และ string เผื่อ API ส่งมาไม่เหมือนกัน
+      const matchType = selectedType === "all" || 
+                        report.issue_type_id == selectedType; 
+
+      // กรองสถานะ (Status)
+      const matchStatus = selectedStatus === "all" || 
+                          report.status === selectedStatus;
+
+      return matchType && matchStatus;
+    });
+  }, [reports, selectedType, selectedStatus]);
 
   const handleToggleDetails = (id) => {
     setExpandedCardId((prevId) => (prevId === id ? null : id));
@@ -329,7 +271,10 @@ const MapView = ({ subTab }) => {
                     
                     {/* --- Filter: ประเภท --- */}
                     {label === "ประเภท" && (
-                       <select defaultValue="all">
+                       <select 
+                          value={selectedType} // ✅ Bind State
+                          onChange={(e) => setSelectedType(e.target.value)} // ✅ Update State
+                       >
                          <option value="all">ทั้งหมด</option>
                          {issueTypes.map((type, index) => (
                            <option 
@@ -342,9 +287,12 @@ const MapView = ({ subTab }) => {
                        </select>
                     )}
 
-                    {/* --- Filter: สถานะ (แก้ไขใหม่ให้ใช้ข้อมูลจาก API) --- */}
+                    {/* --- Filter: สถานะ --- */}
                     {label === "สถานะ" && (
-                       <select defaultValue="all">
+                       <select 
+                          value={selectedStatus} // ✅ Bind State
+                          onChange={(e) => setSelectedStatus(e.target.value)} // ✅ Update State
+                       >
                          <option value="all">ทั้งหมด</option>
                          {statusOptions.length > 0 ? (
                            statusOptions.map((status, index) => (
@@ -353,7 +301,6 @@ const MapView = ({ subTab }) => {
                              </option>
                            ))
                          ) : (
-                           // Fallback กรณีไม่มีข้อมูล
                            <option disabled>ไม่พบข้อมูลสถานะ</option>
                          )}
                        </select>
@@ -368,13 +315,14 @@ const MapView = ({ subTab }) => {
         </>
       )}
 
+      {/* --- ใช้ filteredReports แทน reports ในส่วนแสดงผล --- */}
       <div className={styles.sidebarReportListContainer}>
         <div className={styles.reportSummary}>
-          <strong>{summaryTitle}</strong> ({loading ? "โหลด..." : `${reports.length} รายการ`})
+          <strong>{summaryTitle}</strong> ({loading ? "โหลด..." : `${filteredReports.length} รายการ`})
         </div>
         <div className={styles.reportTableContainer}>
-          {loading ? <p>กำลังโหลดข้อมูล...</p> : reports.length === 0 ? <p>ไม่มีข้อมูลเรื่องแจ้ง</p> : (
-            reports.map((report) => (
+          {loading ? <p>กำลังโหลดข้อมูล...</p> : filteredReports.length === 0 ? <p>ไม่พบข้อมูลตามเงื่อนไข</p> : (
+            filteredReports.map((report) => (
               <div key={report.issue_cases_id} className={styles.reportTableRow}>
                 <img src={report.cover_image_url || "https://via.placeholder.com/50"} className={styles.reportImage} alt="" />
                 <div className={styles.reportHeader}>
@@ -415,21 +363,21 @@ const MapView = ({ subTab }) => {
                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
 
-             {/* Auto Zoom */}
-             {reports.length > 0 && <FitBoundsToMarkers markers={reports} />}
+             {/* Auto Zoom: ใช้ filteredReports */}
+             {filteredReports.length > 0 && <FitBoundsToMarkers markers={filteredReports} />}
 
-             {/* Heatmap Mode */}
+             {/* Heatmap Mode: ใช้ filteredReports */}
              {mapMode === "heatmap" && (
-                <HeatmapLayer data={reports} />
+                <HeatmapLayer data={filteredReports} />
              )}
 
-             {/* Pins Mode */}
+             {/* Pins Mode: ใช้ filteredReports */}
              {mapMode === "pins" && (
                 <MarkerClusterGroup 
                    chunkedLoading
                    iconCreateFunction={createCustomClusterIcon}
                 >
-                  {reports.map((report) => {
+                  {filteredReports.map((report) => {
                     const lat = parseFloat(report.latitude);
                     const lng = parseFloat(report.longitude);
                     if (isNaN(lat) || isNaN(lng)) return null;
@@ -438,7 +386,7 @@ const MapView = ({ subTab }) => {
                       <Marker 
                         key={report.issue_cases_id} 
                         position={[lat, lng]} 
-                        icon={getIconByStatus(report.status)} // เรียกใช้ฟังก์ชันเลือกสี
+                        icon={getIconByStatus(report.status)}
                       >
                         <Popup>
                           <div className={styles.popupContent}>
@@ -454,10 +402,11 @@ const MapView = ({ subTab }) => {
              )}
            </MapContainer>
         )}
-
-        {/* Legend: คำอธิบายสีหมุด (แสดงเฉพาะโหมด Pins) */}
+        
+        {/* Legend */}
         {!loading && mapMode === "pins" && (
             <div className={styles.mapLegend}>
+                {/* ... (Legend Items คงเดิม) ... */}
                 <div className={styles.legendItem}>
                     <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" alt="red"/>
                     <span>รอรับเรื่อง</span>
