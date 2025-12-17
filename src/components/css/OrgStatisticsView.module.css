@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css --- */
+/* --- css/OrgStatisticsView.module.css (FULL VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -245,7 +245,7 @@
   background: #f8f8f8;
 }
 
-/* --- [UPDATED] ปุ่ม "รวม" (Total) สีน้ำเงินเข้ม --- */
+/* --- [ปุ่ม Total สีน้ำเงินเข้ม] --- */
 .activeTotal {
   background-color: #1890ff !important;
   color: #ffffff !important;
@@ -464,11 +464,11 @@
 /* =========================================
    8. SLA & DONUT (UPDATED INFO BOX)
    ========================================= */
-/* กล่อง SLA Info - เพิ่มความเด่นด้วยขอบซ้ายและเงา */
+/* กล่อง SLA Info เด่นขึ้น */
 .slaHeaderBox {
-  background-color: #f0f9ff !important; /* พื้นหลังฟ้าอ่อน */
+  background-color: #f0f9ff !important;
   border: 1px solid #bae6fd !important;
-  border-left: 6px solid #1890ff !important; /* แถบสีน้ำเงินเข้มด้านซ้าย */
+  border-left: 6px solid #1890ff !important;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
@@ -581,7 +581,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (FORCED MOBILE FIX - FULL)
+   9. RESPONSIVE (MOBILE FORCED FIX - FULL)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -600,7 +600,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Layout Reset (Full Screen Edge-to-Edge) */
+  /* 1. Layout Reset */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -700,7 +700,7 @@
     }
   }
 
-  /* Dropdown Item: Fix Alignment to Left */
+  /* Dropdown Item */
   .mobileDropdownItem {
     width: 100% !important;
     min-height: 50px !important;
@@ -711,13 +711,13 @@
     display: flex;
     align-items: center;
     
-    /* บังคับเริ่มจากซ้ายเสมอ */
+    /* บังคับเริ่มจากซ้าย */
     justify-content: flex-start !important; 
     
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    font-weight: 600 !important; /* หนาเท่ากันทั้งเลือกและไม่เลือก */
+    font-weight: 600 !important;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
@@ -730,7 +730,7 @@
     color: #000 !important;
   }
 
-  /* Active Item: เปลี่ยนแค่สี */
+  /* Active Item */
   .activeItem {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
@@ -831,7 +831,7 @@
     overflow: visible !important;
   }
 
-  /* ปรับป้าย Target (แก้ไขปัญหาตัวหนังสือแนวตั้ง) */
+  /* ปรับป้าย Target */
   .slaLabel {
     position: absolute !important;
     top: -35px !important;
@@ -906,7 +906,7 @@
   }
 
   /* ============================================================
-     6. FIX: REPORT CARD (แยกคะแนนลงมาบรรทัดใหม่)
+     6. FIX: REPORT CARD
      ============================================================ */
   .reportCardHeader {
     flex-direction: column !important;
