@@ -209,7 +209,6 @@ const SatisfactionView = ({ data }) => {
                   </div>
                   <div className={styles.reportCardScoreGroup}>
                      <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
-                     {/* Mobile ซ่อนดาวได้ถ้าต้องการ หรือคงไว้ก็ได้ */}
                      <div className={styles.reportCardScoreStars} style={{ display: 'none' }}> 
                         {[...Array(5)].map((_, i) => (
                            <Star key={i} size={14} fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} stroke="none" style={{marginRight:2}} />
@@ -240,21 +239,8 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       <div className={styles.slaHeaderBox}>
-          <div className={styles.slaTargetInfo}>
-             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
-             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
-          </div>
-          <div className={styles.slaAvgInfo}>
-             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
-             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
-                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
-             </div>
-          </div>
-       </div>
-
+       {/* --- [แก้ไข] ย้ายกราฟขึ้นมาไว้ก่อน --- */}
        <div className={styles.mockHorizontalBarChart}>
-          {/* เส้นประ Target (CSS จัดการตำแหน่งให้เอง) */}
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
@@ -279,6 +265,20 @@ const EfficiencyView = ({ data }) => {
                </div>
              );
           })}
+       </div>
+
+       {/* --- [แก้ไข] ย้ายกล่องข้อความลงมาไว้ทีหลัง และปรับ Margin --- */}
+       <div className={styles.slaHeaderBox} style={{ marginTop: '24px', marginBottom: '0' }}>
+          <div className={styles.slaTargetInfo}>
+             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
+             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
+          </div>
+          <div className={styles.slaAvgInfo}>
+             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
+             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
+                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
+             </div>
+          </div>
        </div>
     </div>
   );
