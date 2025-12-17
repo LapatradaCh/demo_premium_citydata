@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ Path CSS ให้ถูกต้อง
+import styles from './css/OrgStatisticsView.module.css'; 
 import { 
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers, 
@@ -12,12 +12,12 @@ import {
 const TARGET_SLA_DAYS = 3.0; 
 
 const COLORS = {
-  pending: "#FF4D4F",    // แดง
-  inProgress: "#FFC107", // เหลือง
-  completed: "#4CAF50",  // เขียว
-  forwarded: "#2196F3",  // ฟ้า
-  invited: "#00BCD4",    // ฟ้าอมเขียว
-  rejected: "#6C757D"    // เทา
+  pending: "#FF4D4F",    
+  inProgress: "#FFC107", 
+  completed: "#4CAF50",  
+  forwarded: "#2196F3",  
+  invited: "#00BCD4",    
+  rejected: "#6C757D"    
 };
 
 const LABELS = {
@@ -38,7 +38,7 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD (จำนวนเรื่องแจ้ง) ---
+// --- TAB 1: WORKLOAD ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -167,7 +167,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION (ความพึงพอใจ) ---
+// --- TAB 2: SATISFACTION ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -239,7 +239,21 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       {/* --- [แก้ไข] ย้ายกราฟขึ้นมาไว้ก่อน --- */}
+       {/* 1. Header Info (Text Box) */}
+       <div className={styles.slaHeaderBox}>
+          <div className={styles.slaTargetInfo}>
+             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
+             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
+          </div>
+          <div className={styles.slaAvgInfo}>
+             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
+             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
+                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
+             </div>
+          </div>
+       </div>
+
+       {/* 2. Graph Chart (Moved to Bottom) */}
        <div className={styles.mockHorizontalBarChart}>
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
@@ -249,7 +263,7 @@ const EfficiencyView = ({ data }) => {
              const isOver = item.avgTime > TARGET_SLA_DAYS;
              return (
                <div key={index} className={styles.mockHBarItem}>
-                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#FF4D4F' : '#333' }}>{item.name}</span>
+                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#333' : '#333' }}>{item.name}</span>
                   <div className={styles.mockHBar}>
                      <div 
                         className={styles.mockHBarFill} 
@@ -265,20 +279,6 @@ const EfficiencyView = ({ data }) => {
                </div>
              );
           })}
-       </div>
-
-       {/* --- [แก้ไข] ย้ายกล่องข้อความลงมาไว้ทีหลัง และปรับ Margin --- */}
-       <div className={styles.slaHeaderBox} style={{ marginTop: '24px', marginBottom: '0' }}>
-          <div className={styles.slaTargetInfo}>
-             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
-             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
-          </div>
-          <div className={styles.slaAvgInfo}>
-             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
-             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
-                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
-             </div>
-          </div>
        </div>
     </div>
   );
@@ -380,7 +380,6 @@ export default function OrganizationStatisticsView() {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        // Fetch Data from Real API
         const [orgRes, probRes] = await Promise.all([
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-stats?org_id=${USER_ORG_ID}`),
           fetch(`https://premium-citydata-api-ab.vercel.app/api/stats/org-count-issue-type?org_id=${USER_ORG_ID}`)
@@ -433,13 +432,12 @@ export default function OrganizationStatisticsView() {
     { id: 'problemType', label: 'ประเภทปัญหา', icon: <Layers size={18} /> },
   ];
 
-  // หาเมนูที่เลือกอยู่ปัจจุบัน
   const activeMenuLabel = menuItems.find(item => item.id === activeTab);
 
   return (
     <div className={styles.orgStatsContainer}>
       
-      {/* 1. Sidebar สำหรับ Desktop */}
+      {/* Sidebar Desktop */}
       <div className={styles.orgStatsSidebarDesktop}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
         <nav className={styles.orgStatsMenuNav}>
@@ -456,7 +454,7 @@ export default function OrganizationStatisticsView() {
         </nav>
       </div>
 
-      {/* 2. Dropdown สำหรับ Mobile */}
+      {/* Mobile Dropdown */}
       <div className={styles.orgStatsMobileDropdown}>
         <div className={styles.mobileDropdownLabel}>เลือกหัวข้อสถิติ</div>
         <button 
@@ -479,14 +477,12 @@ export default function OrganizationStatisticsView() {
                         setActiveTab(item.id);
                         setIsMobileMenuOpen(false);
                     }}
-                    // ใช้ activeItem class เพื่อเปลี่ยนสีเมื่อถูกเลือก
                     className={`${styles.mobileDropdownItem} ${activeTab === item.id ? styles.activeItem : ''}`}
                 >
                     <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
                         {item.icon}
                         <span>{item.label}</span>
                     </div>
-                    {/* ไอคอนติ๊กถูก ใช้ activeCheck class เพื่อชิดขวา */}
                     {activeTab === item.id && <CheckCircle size={18} className={styles.activeCheck} />}
                 </button>
                 ))}
