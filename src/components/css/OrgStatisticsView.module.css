@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL VERSION) --- */
+/* --- css/OrgStatisticsView.module.css --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -195,7 +195,6 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* Force White Text inside cards */
 .kpiCardSuccess *,
 .kpiCardNormal *,
 .kpiCardCritical * {
@@ -221,7 +220,6 @@
   margin-top: 4px;
 }
 
-/* Filter Buttons */
 .headerControls {
   margin-left: auto;
   display: flex;
@@ -245,7 +243,7 @@
   background: #f8f8f8;
 }
 
-/* --- [ปุ่ม Total สีน้ำเงินเข้ม] --- */
+/* ปุ่ม Total สีน้ำเงินเข้ม ตัวหนังสือขาว */
 .activeTotal {
   background-color: #1890ff !important;
   color: #ffffff !important;
@@ -462,9 +460,8 @@
 }
 
 /* =========================================
-   8. SLA & DONUT (UPDATED INFO BOX)
+   8. SLA & DONUT (INFO BOX UPDATED)
    ========================================= */
-/* กล่อง SLA Info เด่นขึ้น */
 .slaHeaderBox {
   background-color: #f0f9ff !important;
   border: 1px solid #bae6fd !important;
@@ -581,7 +578,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (MOBILE FORCED FIX - FULL)
+   9. RESPONSIVE (MOBILE FORCED FIX - FINAL)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -613,14 +610,11 @@
     overflow-x: hidden;
   }
 
-  /* Hide Sidebar */
   .orgStatsSidebarDesktop {
     display: none !important;
   }
 
-  /* =========================================================
-     2. MOBILE DROPDOWN (FIXED: Equal Size, Start Align)
-     ========================================================= */
+  /* 2. Mobile Menu (Fixed: Clean, Left Align, Equal Size) */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -690,34 +684,26 @@
   }
 
   @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* Dropdown Item */
   .mobileDropdownItem {
     width: 100% !important;
-    min-height: 50px !important;
+    min-height: 50px !important; /* ฟิกซ์ความสูง */
     padding: 0 16px !important;
     
     border: none !important;
     background: transparent !important;
     display: flex;
     align-items: center;
-    
-    /* บังคับเริ่มจากซ้าย */
-    justify-content: flex-start !important; 
+    justify-content: flex-start !important; /* ชิดซ้ายเสมอ */
     
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    font-weight: 600 !important;
+    font-weight: 600 !important; /* หนาเท่าเดิมตลอด */
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
@@ -730,15 +716,13 @@
     color: #000 !important;
   }
 
-  /* Active Item */
   .activeItem {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
   }
 
-  /* ติ๊กถูก: ดันไปขวาสุด */
   .activeCheck {
-    margin-left: auto !important;
+    margin-left: auto !important; /* ดันไปขวาสุด */
     color: #10B981;
     font-size: 20px;
     display: flex;
@@ -772,24 +756,12 @@
     margin-top: 16px;
   }
 
-  .orgStatsContent {
-    gap: 0 !important;
-  }
+  .orgStatsContent { gap: 0 !important; }
+  .orgGraphDashboard { gap: 0 !important; }
+  .satisfactionHighlightGrid { padding: 0 20px; }
+  .reportCardList { padding: 0 20px; }
 
-  .orgGraphDashboard {
-    gap: 0 !important;
-  }
-
-  .satisfactionHighlightGrid {
-    padding: 0 20px;
-  }
-
-  .reportCardList {
-    padding: 0 20px;
-  }
-
-  .slaHeaderBox,
-  .donutHeaderBox {
+  .slaHeaderBox, .donutHeaderBox {
     margin: 0 20px 24px 20px;
     width: auto;
     flex-direction: column;
@@ -797,8 +769,7 @@
     gap: 16px;
   }
 
-  .slaAvgInfo,
-  .donutTopTypeBox {
+  .slaAvgInfo, .donutTopTypeBox {
     text-align: left;
     width: 100%;
     border-top: 1px dashed #eee;
@@ -812,18 +783,15 @@
     flex-wrap: wrap;
   }
 
-  .controlBtn {
-    flex: 1;
-    text-align: center;
-  }
+  .controlBtn { flex: 1; text-align: center; }
 
   /* ============================================================
-     5. FIX: SLA GRAPH & "TARGET" LABEL
+     5. FIX: SLA GRAPH & "TARGET" LABEL (แบบแนวนอน + ไม่ทับ)
      ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
-    margin-top: 60px !important;
+    margin-top: 40px !important; /* ลดระยะลงเล็กน้อยเพราะป้ายอยู่ต่ำ */
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
@@ -834,19 +802,35 @@
   /* ปรับป้าย Target */
   .slaLabel {
     position: absolute !important;
-    top: -35px !important;
+    top: -24px !important; /* ดึงลงมาใกล้กราฟ */
     left: 0 !important;
     transform: translateX(-50%);
     background: #EF4444 !important;
     color: white !important;
     font-size: 10px !important;
-    padding: 4px 8px !important;
+    padding: 2px 8px !important;
     border-radius: 4px;
     font-weight: bold;
     width: max-content !important;
-    min-width: 80px !important;
+    min-width: 60px !important;
     white-space: nowrap !important;
     z-index: 100 !important;
+    
+    /* ลูกศรชี้ลง */
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* ติ่งลูกศร */
+  .slaLabel::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #EF4444;
   }
 
   /* เส้นประ SLA */
@@ -914,16 +898,8 @@
     gap: 16px !important;
   }
 
-  .reportCardTitleGroup {
-    width: 100%;
-    margin-bottom: 4px;
-  }
-  
-  .reportCardName {
-    font-size: 16px !important;
-    white-space: normal !important;
-    line-height: 1.4;
-  }
+  .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
+  .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
   
   .reportCardScoreGroup {
     width: 100%;
