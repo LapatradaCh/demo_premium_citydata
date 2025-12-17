@@ -245,13 +245,13 @@
   background: #f8f8f8;
 }
 
-/* ปุ่ม Total สีน้ำเงินเข้ม */
+/* --- [UPDATED] ปุ่ม "รวม" (Total) สีน้ำเงินเข้ม --- */
 .activeTotal {
   background-color: #1890ff !important;
   color: #ffffff !important;
   border: none !important;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
 }
 
 .activeCritical {
@@ -462,12 +462,13 @@
 }
 
 /* =========================================
-   8. SLA & DONUT
+   8. SLA & DONUT (UPDATED INFO BOX)
    ========================================= */
+/* กล่อง SLA Info - เพิ่มความเด่นด้วยขอบซ้ายและเงา */
 .slaHeaderBox {
-  background-color: #f0f9ff !important;
+  background-color: #f0f9ff !important; /* พื้นหลังฟ้าอ่อน */
   border: 1px solid #bae6fd !important;
-  border-left: 6px solid #1890ff !important;
+  border-left: 6px solid #1890ff !important; /* แถบสีน้ำเงินเข้มด้านซ้าย */
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
@@ -699,7 +700,7 @@
     }
   }
 
-  /* Dropdown Item */
+  /* Dropdown Item: Fix Alignment to Left */
   .mobileDropdownItem {
     width: 100% !important;
     min-height: 50px !important;
@@ -716,7 +717,7 @@
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
-    font-weight: 600 !important;
+    font-weight: 600 !important; /* หนาเท่ากันทั้งเลือกและไม่เลือก */
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
@@ -729,7 +730,7 @@
     color: #000 !important;
   }
 
-  /* Active Item */
+  /* Active Item: เปลี่ยนแค่สี */
   .activeItem {
     background-color: #ecfdf5 !important;
     color: #059669 !important;
@@ -830,7 +831,7 @@
     overflow: visible !important;
   }
 
-  /* ปรับป้าย Target */
+  /* ปรับป้าย Target (แก้ไขปัญหาตัวหนังสือแนวตั้ง) */
   .slaLabel {
     position: absolute !important;
     top: -35px !important;
