@@ -134,6 +134,10 @@ const MapView = ({ subTab }) => {
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // --- เพิ่ม State สำหรับเก็บ Issue Types ---
+  const [issueTypes, setIssueTypes] = useState([]);
+
   const mainFilters = ["ประเภท", "สถานะ"];
 
   const isPublic = subTab === "แผนที่สาธารณะ";
@@ -142,6 +146,32 @@ const MapView = ({ subTab }) => {
   const summaryTitle = `รายการแจ้ง (${title})`;
 
   const defaultCenter = [13.7563, 100.5018];
+
+  // --- Logic ดึงข้อมูล Issue Types ---
+  useEffect(() => {
+    const fetchIssueTypes = async () => {
+      try {
+        const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
+        if (!res.ok) throw new Error("Failed to fetch issue types");
+        const data = await res.json();
+        
+        // ตรวจสอบโครงสร้างข้อมูลที่ได้ว่าเป็น Array หรือ { data: Array }
+        if (Array.isArray(data)) {
+            setIssueTypes(data);
+        } else if (data.data && Array.isArray(data.data)) {
+            setIssueTypes(data.data);
+        } else {
+            console.warn("API Issue Types format not recognized", data);
+            setIssueTypes([]);
+        }
+
+      } catch (err) {
+        console.error("Error fetching issue types:", err);
+      }
+    };
+
+    fetchIssueTypes();
+  }, []);
 
   // --- Logic ดึงข้อมูล (Pagination Loop) ---
   useEffect(() => {
@@ -256,12 +286,23 @@ const MapView = ({ subTab }) => {
                     <label>{label}</label>
                     <select defaultValue="all">
                       <option value="all">ทั้งหมด</option>
+                      
+                      {/* --- แก้ไข: วนลูปแสดงประเภทจาก API --- */}
                       {label === "ประเภท" && (
                         <>
-                          <option value="t1">ไฟฟ้า/ประปา</option>
-                          <option value="t2">ถนน/ทางเท้า</option>
+                          {issueTypes.map((type, index) => (
+                             // ตรวจสอบชื่อ key ที่ API ส่งกลับมา (เช่น id, issue_type_name)
+                             // หากชื่อฟิลด์เปลี่ยน สามารถแก้ไขตรง type.xxx ได้เลย
+                             <option 
+                               key={type.issue_type_id || type.id || index} 
+                               value={type.issue_type_id || type.id}
+                             >
+                               {type.issue_type_name || type.name || "ระบุไม่ได้"}
+                             </option>
+                          ))}
                         </>
                       )}
+
                       {label === "สถานะ" && (
                         <>
                           <option value="pending">รอรับเรื่อง</option>
@@ -274,7 +315,7 @@ const MapView = ({ subTab }) => {
                       )}
                     </select>
                   </div>
-                ))}              </div>
+                ))}               </div>
               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
             </div>
           </div>
