@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styles from './css/OrgStatisticsView.module.css'; 
+import styles from './css/OrgStatisticsView.module.css'; // ตรวจสอบ Path CSS ให้ถูกต้อง
 import { 
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers, 
-  ChevronDown, ChevronUp // เพิ่มไอคอนลูกศรสำหรับ Dropdown
+  ChevronDown, ChevronUp 
 } from 'lucide-react';
 
 // ==========================================
@@ -38,7 +38,7 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD ---
+// --- TAB 1: WORKLOAD (จำนวนเรื่องแจ้ง) ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -167,7 +167,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION ---
+// --- TAB 2: SATISFACTION (ความพึงพอใจ) ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -209,12 +209,12 @@ const SatisfactionView = ({ data }) => {
                   </div>
                   <div className={styles.reportCardScoreGroup}>
                      <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
-                     <div className={styles.reportCardScoreStars}>
+                     {/* Mobile ซ่อนดาวได้ถ้าต้องการ หรือคงไว้ก็ได้ */}
+                     <div className={styles.reportCardScoreStars} style={{ display: 'none' }}> 
                         {[...Array(5)].map((_, i) => (
                            <Star key={i} size={14} fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} stroke="none" style={{marginRight:2}} />
                         ))}
                      </div>
-                     <div className={styles.reportCardScoreReviews}>({item.reviews} รีวิว)</div>
                   </div>
                </div>
                <div className={styles.reportCardProgressBg}>
@@ -242,18 +242,19 @@ const EfficiencyView = ({ data }) => {
        
        <div className={styles.slaHeaderBox}>
           <div className={styles.slaTargetInfo}>
-             <div className={styles.slaTargetTitle}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
-             <div className={styles.slaTargetSub}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
+             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
+             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
           </div>
           <div className={styles.slaAvgInfo}>
-             <span className={styles.slaAvgLabel}>เวลาเฉลี่ยรวมทุกเขต</span>
-             <div className={styles.slaAvgValue}>
-                {overallAvg.toFixed(1)} <span className={styles.slaUnit}>วัน</span>
+             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
+             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
+                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
              </div>
           </div>
        </div>
 
-       <div className={styles.mockHorizontalBarChart} style={{ marginTop:'20px' }}>
+       <div className={styles.mockHorizontalBarChart}>
+          {/* เส้นประ Target (CSS จัดการตำแหน่งให้เอง) */}
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
@@ -262,7 +263,7 @@ const EfficiencyView = ({ data }) => {
              const isOver = item.avgTime > TARGET_SLA_DAYS;
              return (
                <div key={index} className={styles.mockHBarItem}>
-                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#FF4D4F' : '#444' }}>{item.name}</span>
+                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#FF4D4F' : '#333' }}>{item.name}</span>
                   <div className={styles.mockHBar}>
                      <div 
                         className={styles.mockHBarFill} 
@@ -305,14 +306,14 @@ const ProblemTypeView = ({ data }) => {
        
        <div className={styles.donutHeaderBox}>
           <div className={styles.donutTotalBlock}>
-             <span className={styles.donutTotalTitle}>เรื่องร้องเรียนทั้งหมด</span>
-             <div className={styles.donutTotalNum}>
-                {total.toLocaleString()} <span className={styles.donutTotalUnit}>เรื่อง</span>
+             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เรื่องร้องเรียนทั้งหมด</span>
+             <div style={{fontSize:'20px', fontWeight:'800'}}>
+                {total.toLocaleString()} <span style={{fontSize:'12px', fontWeight:'500'}}>เรื่อง</span>
              </div>
           </div>
           <div className={styles.donutTopTypeBox}>
-             <div className={styles.donutTopLabel}>ประเภทที่พบมากที่สุด</div>
-             <div className={styles.donutTopBadge}>
+             <div style={{fontSize:'13px', color:'#666', marginBottom:'4px'}}>ประเภทที่พบมากที่สุด</div>
+             <div style={{display:'flex', alignItems:'center', gap:'6px', fontWeight:'700', fontSize:'14px'}}>
                 <span style={{width:8, height:8, borderRadius:'50%', background:'#2563eb'}}></span>
                 {topType.name} ({topTypePercent.toFixed(0)}%)
              </div>
@@ -334,21 +335,21 @@ const ProblemTypeView = ({ data }) => {
                 <circle cx="0" cy="0" r="0.65" fill="#fff" />
              </svg>
              <div className={styles.donutCenterText}>
-                <span className={styles.donutTotalValue}>{data.length}</span>
-                <span className={styles.donutLabel}>ประเภท</span>
+                <span style={{fontSize:'24px', fontWeight:'800'}}>{data.length}</span>
+                <span style={{fontSize:'12px', color:'#666'}}>ประเภท</span>
              </div>
           </div>
 
           <div className={styles.donutLegendGrid}>
              {donutData.map((item) => (
                 <div key={item.id} className={styles.donutLegendItem}>
-                   <div className={styles.donutLegendInfo}>
+                   <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
                       <span className={styles.donutColorDot} style={{ background: item.color }}></span>
-                      <span className={styles.donutName}>{item.name}</span>
+                      <span style={{fontSize:'14px', fontWeight:'500'}}>{item.name}</span>
                    </div>
-                   <div className={styles.donutValues}>
-                      <span className={styles.donutCount}>{item.count}</span>
-                      <span className={styles.donutPercent}>({(item.percent * 100).toFixed(0)}%)</span>
+                   <div style={{textAlign:'right'}}>
+                      <span style={{fontWeight:'700', marginRight:'4px'}}>{item.count}</span>
+                      <span style={{fontSize:'12px', color:'#666'}}>({(item.percent * 100).toFixed(0)}%)</span>
                    </div>
                 </div>
              ))}
@@ -365,7 +366,7 @@ const ProblemTypeView = ({ data }) => {
 export default function OrganizationStatisticsView() {
   const [activeTab, setActiveTab] = useState('workload');
   const [loading, setLoading] = useState(true);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State สำหรับ Dropdown มือถือ
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const [orgData, setOrgData] = useState([]);
   const [problemData, setProblemData] = useState([]);
@@ -432,13 +433,13 @@ export default function OrganizationStatisticsView() {
     { id: 'problemType', label: 'ประเภทปัญหา', icon: <Layers size={18} /> },
   ];
 
-  // หาเมนูที่เลือกอยู่ปัจจุบัน เพื่อเอามาโชว์บนปุ่ม Dropdown
+  // หาเมนูที่เลือกอยู่ปัจจุบัน
   const activeMenuLabel = menuItems.find(item => item.id === activeTab);
 
   return (
     <div className={styles.orgStatsContainer}>
       
-      {/* 1. Sidebar สำหรับ Desktop (ซ่อนในมือถือ) */}
+      {/* 1. Sidebar สำหรับ Desktop */}
       <div className={styles.orgStatsSidebarDesktop}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
         <nav className={styles.orgStatsMenuNav}>
@@ -455,7 +456,7 @@ export default function OrganizationStatisticsView() {
         </nav>
       </div>
 
-      {/* 2. Dropdown สำหรับ Mobile (ซ่อนใน Desktop) */}
+      {/* 2. Dropdown สำหรับ Mobile */}
       <div className={styles.orgStatsMobileDropdown}>
         <div className={styles.mobileDropdownLabel}>เลือกหัวข้อสถิติ</div>
         <button 
@@ -478,11 +479,15 @@ export default function OrganizationStatisticsView() {
                         setActiveTab(item.id);
                         setIsMobileMenuOpen(false);
                     }}
+                    // ใช้ activeItem class เพื่อเปลี่ยนสีเมื่อถูกเลือก
                     className={`${styles.mobileDropdownItem} ${activeTab === item.id ? styles.activeItem : ''}`}
                 >
-                    {item.icon}
-                    <span>{item.label}</span>
-                    {activeTab === item.id && <CheckCircle size={16} className={styles.activeCheck} />}
+                    <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                        {item.icon}
+                        <span>{item.label}</span>
+                    </div>
+                    {/* ไอคอนติ๊กถูก ใช้ activeCheck class เพื่อชิดขวา */}
+                    {activeTab === item.id && <CheckCircle size={18} className={styles.activeCheck} />}
                 </button>
                 ))}
             </div>
