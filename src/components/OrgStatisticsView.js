@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import styles from './css/OrgStatisticsView.module.css'; 
 import { 
   BarChart2, Star, Clock, AlertCircle, 
-  CheckCircle, PieChart, Layers 
+  CheckCircle, PieChart, Layers, 
+  ChevronDown, ChevronUp // เพิ่มไอคอนลูกศรสำหรับ Dropdown
 } from 'lucide-react';
 
 // ==========================================
@@ -37,9 +38,9 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD (ปริมาณงาน) ---
+// --- TAB 1: WORKLOAD ---
 const WorkloadView = ({ data }) => {
-  const [sortBy, setSortBy] = useState('total'); // State สำหรับเช็คว่ากดปุ่มไหนอยู่
+  const [sortBy, setSortBy] = useState('total'); 
 
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => b[sortBy] - a[sortBy]);
@@ -70,7 +71,6 @@ const WorkloadView = ({ data }) => {
         </div>
       </div>
 
-      {/* KPI Section */}
       <div className={styles.kpiGrid}>
         <div className={`${styles.kpiCard} ${styles.kpiCardSuccess}`}>
             <div className={styles.kpiHeader}><CheckCircle size={16} /> อัตราความสำเร็จ</div>
@@ -89,21 +89,14 @@ const WorkloadView = ({ data }) => {
         </div>
       </div>
 
-      {/* Stacked Bar Chart */}
       <div className={styles.mockStackedBarChart}>
         {sortedData.map((item, index) => {
           const itemSuccessRate = item.total > 0 ? (item.completed / item.total) * 100 : 0;
-          
-          // คำนวณ % งานค้าง
           const pendingRate = item.total > 0 ? (item.pending / item.total) * 100 : 0;
-          
-          // เงื่อนไข: เกิน 40% และ ต้องอยู่ในโหมด "pending" (กดปุ่มงานค้าง) เท่านั้นถึงจะแสดง
           const showCriticalAlert = pendingRate >= 40 && sortBy === 'pending'; 
 
           return (
             <div key={index} style={{ marginBottom: '24px' }}>
-              
-              {/* Header: ชื่อเขต | สถิติ */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
                 <span style={{ fontSize: '16px', fontWeight: '700', color: '#333' }}>
                   {item.name}
@@ -118,7 +111,6 @@ const WorkloadView = ({ data }) => {
                 </div>
               </div>
 
-              {/* Bar Graph */}
               <div className={styles.mockStackedHBar}>
                  {Object.keys(COLORS).map(key => {
                    const val = item[key] || 0;
@@ -152,27 +144,16 @@ const WorkloadView = ({ data }) => {
                  })}
               </div>
 
-              {/* --- แสดงข้อความเตือน เฉพาะเมื่อเงื่อนไข showCriticalAlert เป็นจริง --- */}
               {showCriticalAlert && (
-                <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '6px', 
-                    marginTop: '8px', 
-                    color: '#EF4444', 
-                    fontSize: '13px', 
-                    fontWeight: '600' 
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', color: '#EF4444', fontSize: '13px', fontWeight: '600' }}>
                     <AlertCircle size={14} />
                     <span>งานค้างสูงผิดปกติ ({pendingRate.toFixed(0)}%)</span>
                 </div>
               )}
-
             </div>
           );
         })}
 
-        {/* Legend */}
         <div className={styles.mockStackedBarLegend}>
            {Object.keys(COLORS).map(key => (
              <div key={key} className={styles.mockStackedBarLegendItem}>
@@ -186,7 +167,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION (ความพึงพอใจ) ---
+// --- TAB 2: SATISFACTION ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -199,7 +180,6 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
-       {/* Highlight Cards */}
        <div className={styles.satisfactionHighlightGrid}>
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
              <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
@@ -219,7 +199,6 @@ const SatisfactionView = ({ data }) => {
           </div>
        </div>
 
-       {/* Ranking List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
@@ -238,7 +217,6 @@ const SatisfactionView = ({ data }) => {
                      <div className={styles.reportCardScoreReviews}>({item.reviews} รีวิว)</div>
                   </div>
                </div>
-               {/* Progress Bar */}
                <div className={styles.reportCardProgressBg}>
                   <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
@@ -262,7 +240,6 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       {/* SLA Header Box */}
        <div className={styles.slaHeaderBox}>
           <div className={styles.slaTargetInfo}>
              <div className={styles.slaTargetTitle}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
@@ -276,14 +253,11 @@ const EfficiencyView = ({ data }) => {
           </div>
        </div>
 
-       {/* Graph Container */}
        <div className={styles.mockHorizontalBarChart} style={{ marginTop:'20px' }}>
-          {/* เส้นประ SLA */}
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
 
-          {/* Bars */}
           {sortedData.map((item, index) => {
              const isOver = item.avgTime > TARGET_SLA_DAYS;
              return (
@@ -329,7 +303,6 @@ const ProblemTypeView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>สัดส่วนประเภทปัญหาในพื้นที่</h4>
        
-       {/* Header Summary */}
        <div className={styles.donutHeaderBox}>
           <div className={styles.donutTotalBlock}>
              <span className={styles.donutTotalTitle}>เรื่องร้องเรียนทั้งหมด</span>
@@ -346,7 +319,6 @@ const ProblemTypeView = ({ data }) => {
           </div>
        </div>
 
-       {/* Donut Chart & Legend */}
        <div className={styles.donutContainer}>
           <div className={styles.donutWrapper}>
              <svg viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
@@ -393,12 +365,14 @@ const ProblemTypeView = ({ data }) => {
 export default function OrganizationStatisticsView() {
   const [activeTab, setActiveTab] = useState('workload');
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State สำหรับ Dropdown มือถือ
+  
   const [orgData, setOrgData] = useState([]);
   const [problemData, setProblemData] = useState([]);
 
   // *** ID องค์กรตามจริง ***
   const local = localStorage.getItem("lastSelectedOrg");
-  const org = local ? JSON.parse(local) : { id: 1 }; // ป้องกัน error กรณีไม่มีค่าใน localStorage
+  const org = local ? JSON.parse(local) : { id: 1 }; 
   const USER_ORG_ID = org.id;
 
   useEffect(() => {
@@ -458,10 +432,14 @@ export default function OrganizationStatisticsView() {
     { id: 'problemType', label: 'ประเภทปัญหา', icon: <Layers size={18} /> },
   ];
 
+  // หาเมนูที่เลือกอยู่ปัจจุบัน เพื่อเอามาโชว์บนปุ่ม Dropdown
+  const activeMenuLabel = menuItems.find(item => item.id === activeTab);
+
   return (
     <div className={styles.orgStatsContainer}>
-      {/* Sidebar */}
-      <div className={styles.orgStatsSidebar}>
+      
+      {/* 1. Sidebar สำหรับ Desktop (ซ่อนในมือถือ) */}
+      <div className={styles.orgStatsSidebarDesktop}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
         <nav className={styles.orgStatsMenuNav}>
           {menuItems.map((item) => (
@@ -475,6 +453,40 @@ export default function OrganizationStatisticsView() {
             </button>
           ))}
         </nav>
+      </div>
+
+      {/* 2. Dropdown สำหรับ Mobile (ซ่อนใน Desktop) */}
+      <div className={styles.orgStatsMobileDropdown}>
+        <div className={styles.mobileDropdownLabel}>เลือกหัวข้อสถิติ</div>
+        <button 
+            className={`${styles.mobileDropdownTrigger} ${isMobileMenuOpen ? styles.open : ''}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+            <div className={styles.triggerContent}>
+                {activeMenuLabel?.icon}
+                <span>{activeMenuLabel?.label}</span>
+            </div>
+            {isMobileMenuOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </button>
+
+        {isMobileMenuOpen && (
+            <div className={styles.mobileDropdownList}>
+                {menuItems.map((item) => (
+                <button 
+                    key={item.id}
+                    onClick={() => {
+                        setActiveTab(item.id);
+                        setIsMobileMenuOpen(false);
+                    }}
+                    className={`${styles.mobileDropdownItem} ${activeTab === item.id ? styles.activeItem : ''}`}
+                >
+                    {item.icon}
+                    <span>{item.label}</span>
+                    {activeTab === item.id && <CheckCircle size={16} className={styles.activeCheck} />}
+                </button>
+                ))}
+            </div>
+        )}
       </div>
 
       {/* Main Content */}
