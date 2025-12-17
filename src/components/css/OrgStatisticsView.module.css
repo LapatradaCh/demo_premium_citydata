@@ -8,8 +8,6 @@
   flex-direction: row;
   gap: 32px;
   width: 100%;
-  
-  /* Desktop Config */
   max-width: 100%;
   min-height: 100vh;
   margin: 0;
@@ -94,9 +92,12 @@
   background-color: #111111;
   color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
-.orgStatsMenuButton.active svg { color: #ffffff; }
+
+.orgStatsMenuButton.active svg {
+  color: #ffffff;
+}
 
 /* =========================================
    3. MOBILE DROPDOWN (Desktop: Hide)
@@ -176,95 +177,419 @@
   border: none;
 }
 
-.kpiCardSuccess { background: #10B981 !important; color: #fff !important; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-.kpiCardNormal { background: #000000 !important; color: #fff !important; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.kpiCardCritical { background: #EF4444 !important; color: #fff !important; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+.kpiCardSuccess {
+  background: #10B981 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.kpiCardNormal {
+  background: #000000 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.kpiCardCritical {
+  background: #EF4444 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
 
 /* Force White Text inside cards */
-.kpiCardSuccess *, .kpiCardNormal *, .kpiCardCritical * { color: #ffffff !important; }
+.kpiCardSuccess *,
+.kpiCardNormal *,
+.kpiCardCritical * {
+  color: #ffffff !important;
+}
 
-.kpiHeader { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 8px; }
-.kpiValue { font-size: 32px; font-weight: 800; line-height: 1.2; }
-.kpiSubtext { font-size: 12px; margin-top: 4px; }
+.kpiHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.kpiValue {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.kpiSubtext {
+  font-size: 12px;
+  margin-top: 4px;
+}
 
 /* Filter Buttons */
-.headerControls { margin-left: auto; display: flex; gap: 8px; font-size: 13px; }
-.controlBtn { 
-  padding: 6px 16px; border-radius: 8px; border: 1px solid #eee; 
-  cursor: pointer; background: #fff; color: #666; font-weight: 600; 
-  transition: all 0.2s; white-space: nowrap;
+.headerControls {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
 }
-.controlBtn:hover { background: #f8f8f8; }
-.activeTotal { background-color: #e6f7ff !important; color: #1890ff !important; border-color: #1890ff !important; }
-.activeCritical { background-color: #FF4D4F !important; color: #ffffff !important; border-color: #FF4D4F !important; font-weight: 700; }
+
+.controlBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background: #fff;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.controlBtn:hover {
+  background: #f8f8f8;
+}
+
+.activeTotal {
+  background-color: #e6f7ff !important;
+  color: #1890ff !important;
+  border-color: #1890ff !important;
+}
+
+.activeCritical {
+  background-color: #FF4D4F !important;
+  color: #ffffff !important;
+  border-color: #FF4D4F !important;
+  font-weight: 700;
+}
 
 /* =========================================
    6. STACKED BAR CHART
    ========================================= */
-.mockStackedBarChart { display: flex; flex-direction: column; gap: 24px; }
-.mockHBarItem { display: grid; grid-template-columns: 180px 1fr 50px; gap: 20px; align-items: center; }
-.mockStackedHBar { height: 36px; background: #f1f3f5; border-radius: 12px; overflow: hidden; display: flex; width: 100%; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-.mockStackedBarSegment { height: 100%; position: relative; cursor: pointer; transition: width 0.5s ease; }
-.mockStackedBarSegment:hover { filter: brightness(1.1); z-index: 5; }
-.mockStackedBarLegend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin-top: 24px; padding-top: 24px; border-top: 1px dashed #eee; }
-.mockStackedBarLegendItem { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #444; font-weight: 600; padding: 8px 16px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.mockStackedBarChart {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mockHBarItem {
+  display: grid;
+  grid-template-columns: 180px 1fr 50px;
+  gap: 20px;
+  align-items: center;
+}
+
+.mockStackedHBar {
+  height: 36px;
+  background: #f1f3f5;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.mockStackedBarSegment {
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  transition: width 0.5s ease;
+}
+
+.mockStackedBarSegment:hover {
+  filter: brightness(1.1);
+  z-index: 5;
+}
+
+.mockStackedBarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 24px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px dashed #eee;
+}
+
+.mockStackedBarLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
 
 /* =========================================
    7. SATISFACTION (Tab 2)
    ========================================= */
-.satisfactionHighlightGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.highlightCard { padding: 16px; border-radius: 12px; display: flex; flex-direction: column; }
-.highlightCardGreen { background-color: #10B981; color: #fff; }
-.highlightCardRed { background-color: #EF4444; color: #fff; }
-.highlightCardGreen *, .highlightCardRed * { color: #fff !important; }
+.satisfactionHighlightGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
 
-.highlightTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-.highlightName { font-size: 20px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.highlightScore { font-size: 36px; font-weight: 800; line-height: 1; }
-.highlightScoreMax { font-size: 14px; font-weight: 500; }
+.highlightCard {
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
 
-.reportCardList { display: flex; flex-direction: column; gap: 16px; }
-.reportCardItem { background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-.reportCardHeader { display: flex; justify-content: space-between; align-items: flex-start; }
-.reportCardTitleGroup { display: flex; align-items: center; gap: 16px; }
-.reportCardRank { font-size: 18px; font-weight: 900; color: #fff; background: #333; min-width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); margin-right: 8px; }
-.reportCardName { font-size: 18px; font-weight: 700; color: #333; }
-.reportCardScoreGroup { text-align: right; }
-.reportCardScoreText { font-size: 32px; font-weight: 800; color: #F59E0B; line-height: 1; }
-.reportCardProgressBg { margin-top: 16px; height: 12px; background: #f1f3f5; border-radius: 6px; overflow: hidden; }
-.reportCardProgressBar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+.highlightCardGreen {
+  background-color: #10B981;
+  color: #fff;
+}
+
+.highlightCardRed {
+  background-color: #EF4444;
+  color: #fff;
+}
+
+.highlightCardGreen *,
+.highlightCardRed * {
+  color: #fff !important;
+}
+
+.highlightTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.highlightName {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highlightScore {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.highlightScoreMax {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reportCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reportCardItem {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.reportCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.reportCardTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reportCardRank {
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  background: #333;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  margin-right: 8px;
+}
+
+.reportCardName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.reportCardScoreGroup {
+  text-align: right;
+}
+
+.reportCardScoreText {
+  font-size: 32px;
+  font-weight: 800;
+  color: #F59E0B;
+  line-height: 1;
+}
+
+.reportCardProgressBg {
+  margin-top: 16px;
+  height: 12px;
+  background: #f1f3f5;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.reportCardProgressBar {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
 
 /* =========================================
    8. SLA & DONUT
    ========================================= */
-.slaHeaderBox, .donutHeaderBox { background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 16px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
-.slaHeaderBox { background-color: #eff6ff; border-color: #dbeafe; }
-.mockHorizontalBarChart { display: flex; flex-direction: column; gap: 20px; position: relative; }
-.mockHBar { height: 16px; background: #f1f3f5; border-radius: 8px; overflow: hidden; }
-.mockHBarFill { height: 100%; border-radius: 8px; transition: width 0.6s ease; }
-.slaLineContainer { position: absolute; top: 0; bottom: 0; border-left: 2px dashed #EF4444; z-index: 10; opacity: 0.5; pointer-events: none; }
-.slaLabel { position: absolute; top: -25px; left: -30px; background: #EF4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+.slaHeaderBox,
+.donutHeaderBox {
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.donutContainer { display: flex; flex-direction: column; align-items: center; gap: 32px; }
-.donutWrapper { width: 260px; height: 260px; position: relative; }
-.donutCenterText { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-.donutLegendGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; width: 100%; }
-.donutLegendItem { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f8f9fa; border-radius: 12px; border: 1px solid transparent; }
-.donutColorDot { width: 12px; height: 12px; border-radius: 50%; }
+.slaHeaderBox {
+  background-color: #eff6ff;
+  border-color: #dbeafe;
+}
+
+.mockHorizontalBarChart {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.mockHBar {
+  height: 16px;
+  background: #f1f3f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mockHBarFill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+
+.slaLineContainer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px dashed #EF4444;
+  z-index: 10;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.slaLabel {
+  position: absolute;
+  top: -25px;
+  left: -30px;
+  background: #EF4444;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.donutContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.donutWrapper {
+  width: 260px;
+  height: 260px;
+  position: relative;
+}
+
+.donutCenterText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutLegendGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.donutLegendItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+
+.donutColorDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
 
 /* =========================================
-   9. RESPONSIVE (MOBILE FORCED FIX)
+   9. RESPONSIVE (FORCED MOBILE FIX - FULL & EXPANDED)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
-  .orgStatsContainer { gap: 20px; padding: 16px; }
-  .orgStatsSidebarDesktop { width: 220px; }
-  .kpiGrid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .orgStatsContainer {
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .orgStatsSidebarDesktop {
+    width: 220px;
+  }
+
+  .kpiGrid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Container */
+  /* 1. Layout Reset (Full Screen Edge-to-Edge) */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -277,10 +602,12 @@
     overflow-x: hidden;
   }
 
-  /* 2. Hide Sidebar */
-  .orgStatsSidebarDesktop { display: none !important; }
+  /* Hide Sidebar */
+  .orgStatsSidebarDesktop {
+    display: none !important;
+  }
 
-  /* 3. Dropdown */
+  /* 2. Mobile Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -290,21 +617,107 @@
     box-sizing: border-box;
     position: relative;
     z-index: 50;
-    border-bottom: 1px solid #f1f1f1; 
+    border-bottom: 1px solid #f1f1f1;
   }
-  
-  .mobileDropdownLabel { font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; padding-left: 4px; }
-  .mobileDropdownTrigger { width: 100%; height: 56px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; color: #111; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: all 0.2s; }
-  .mobileDropdownTrigger.open { border-color: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .triggerContent { display: flex; align-items: center; gap: 12px; }
-  .mobileDropdownList { position: absolute; top: 100%; left: 20px; right: 20px; margin-top: 8px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #f0f0f0; padding: 8px; display: flex; flex-direction: column; gap: 4px; animation: slideDown 0.2s ease-out; }
-  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-  .mobileDropdownItem { width: 100%; padding: 12px 16px; border: none; background: transparent; display: flex; align-items: center; gap: 12px; font-size: 15px; color: #4b5563; font-weight: 500; border-radius: 10px; cursor: pointer; text-align: left; }
-  .mobileDropdownItem:hover { background-color: #f9fafb; color: #000; }
-  .activeItem { background-color: #f3f4f6 !important; color: #000 !important; font-weight: 700 !important; }
-  .activeCheck { margin-left: auto; color: #10B981; }
 
-  /* 4. ChartBox */
+  .mobileDropdownLabel {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    font-weight: 600;
+    padding-left: 4px;
+  }
+
+  .mobileDropdownTrigger {
+    width: 100%;
+    height: 56px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #111;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s;
+  }
+
+  .mobileDropdownTrigger.open {
+    border-color: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .triggerContent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mobileDropdownList {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    right: 20px;
+    margin-top: 8px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #f0f0f0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobileDropdownItem {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #4b5563;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .mobileDropdownItem:hover {
+    background-color: #f9fafb;
+    color: #000;
+  }
+
+  .activeItem {
+    background-color: #f3f4f6 !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+  }
+
+  .activeCheck {
+    margin-left: auto;
+    color: #10B981;
+  }
+
+  /* 3. ChartBox Reset (สำคัญ: overflow visible เพื่อให้ป้ายไม่โดนตัด) */
   .chartBox {
     width: 100% !important;
     border-radius: 0 !important;
@@ -313,6 +726,7 @@
     margin: 0 !important;
     padding: 24px 20px !important;
     border-bottom: 8px solid #f4f5f7 !important;
+    overflow: visible !important;
   }
 
   .chartBoxTitle {
@@ -322,107 +736,146 @@
     align-items: flex-start;
   }
 
-  /* 5. General Layout */
-  .kpiGrid { padding: 0 20px; gap: 12px; margin-bottom: 24px; margin-top: 16px; }
-  .orgStatsContent { gap: 0 !important; }
-  .orgGraphDashboard { gap: 0 !important; }
-  .satisfactionHighlightGrid { padding: 0 20px; }
-  .reportCardList { padding: 0 20px; }
-  
-  .slaHeaderBox, .donutHeaderBox { 
-    margin: 0 20px 24px 20px; 
-    width: auto;
-    flex-direction: column; 
-    align-items: flex-start; 
-    gap: 16px; 
-  }
-  
-  /* --- [ส่วนแก้ไขกราฟ SLA] --- */
-  
-  .mockHorizontalBarChart {
-    width: 100% !important;
-    margin-top: 50px !important; /* ดันลงมา เพื่อให้ป้าย Target ไม่ชนข้างบน */
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important; 
-    position: relative !important;
+  /* 4. Fix Layout Spacing */
+  .kpiGrid {
+    padding: 0 20px;
+    gap: 12px;
+    margin-bottom: 24px;
+    margin-top: 16px;
   }
 
-  /* ปรับป้าย Target สีแดง */
+  .orgStatsContent {
+    gap: 0 !important;
+  }
+
+  .orgGraphDashboard {
+    gap: 0 !important;
+  }
+
+  .satisfactionHighlightGrid {
+    padding: 0 20px;
+  }
+
+  .reportCardList {
+    padding: 0 20px;
+  }
+
+  .slaHeaderBox,
+  .donutHeaderBox {
+    margin: 0 20px 24px 20px;
+    width: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .slaAvgInfo,
+  .donutTopTypeBox {
+    text-align: left;
+    width: 100%;
+    border-top: 1px dashed #eee;
+    padding-top: 12px;
+  }
+
+  .headerControls {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .controlBtn {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* ============================================================
+     5. FIX: SLA GRAPH & "TARGET" LABEL (แก้ไขป้ายแนวตั้งแบบเด็ดขาด)
+     ============================================================ */
+
+  .mockHorizontalBarChart {
+    width: 100% !important;
+    margin-top: 60px !important; /* เพิ่มที่ด้านบนให้ป้าย Target */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    position: relative !important;
+    overflow: visible !important; /* ห้ามตัดส่วนเกินทิ้ง */
+  }
+
+  /* ปรับป้าย Target ให้กว้างตามตัวหนังสือ (แก้ปัญหาตัวหนังสือแนวตั้ง) */
   .slaLabel {
-    position: absolute;
-    top: -32px !important; /* ดันขึ้นไปเหนือเส้นประ */
-    left: -24px !important; /* จัดกึ่งกลางเส้น */
+    position: absolute !important;
+    top: -35px !important;
+    left: 0 !important; /* เริ่มต้นที่เส้นประ */
+    transform: translateX(-50%); /* จัดกึ่งกลางเส้น */
     background: #EF4444 !important;
     color: white !important;
     font-size: 10px !important;
-    padding: 2px 8px !important;
+    padding: 4px 8px !important;
     border-radius: 4px;
     font-weight: bold;
-    white-space: nowrap !important; /* !!! สำคัญมาก: ห้ามตัดคำเป็นแนวตั้ง !!! */
-    z-index: 10;
+
+    /* !! ไม้ตายแก้ป้ายบีบ !! */
+    width: max-content !important; /* ขยายความกว้างตามตัวหนังสือ */
+    min-width: 80px !important; /* บังคับกว้างขั้นต่ำ */
+    white-space: nowrap !important; /* ห้ามตัดคำ ห้ามขึ้นบรรทัดใหม่ */
+    z-index: 100 !important;
   }
 
-  /* ปรับเส้นประ */
+  /* เส้นประ SLA */
   .slaLineContainer {
-    top: 28px !important; /* เริ่มต่ำลงมา ไม่ให้ผ่าตัวหนังสือชื่อเขต */
+    top: -10px !important; /* ลากยาวขึ้นไปหาป้าย */
     bottom: 0 !important;
     border-left: 2px dashed #EF4444;
     opacity: 0.6;
+    z-index: 1;
   }
-  
-  /* รายการกราฟ */
-  .mockHBarItem { 
+
+  /* รายการกราฟ (ชื่อ - ค่า - แท่ง) */
+  .mockHBarItem {
     display: flex !important;
-    flex-wrap: wrap !important; 
-    justify-content: space-between !important; 
+    flex-wrap: wrap !important; /* ให้ปัดบรรทัดได้ */
+    justify-content: space-between !important;
     align-items: flex-end !important;
     width: 100% !important;
-    margin-bottom: 4px !important;
-    
-    grid-template-columns: none !important; 
-    grid-template-rows: none !important;
+    margin-bottom: 8px !important;
+    position: relative;
+    z-index: 2;
   }
-  
-  /* Label: Test1 (สีเข้ม) */
-  .mockHBarLabel { 
-    width: auto !important; 
-    flex: 1 !important;     
+
+  /* ชื่อ Test1 */
+  .mockHBarLabel {
+    width: auto !important;
+    flex: 1 !important;
     font-size: 14px;
     font-weight: 600;
-    color: #333333 !important; /* สีเข้มอ่านง่าย */
+    color: #333333 !important;
     margin: 0 !important;
-    order: 1 !important;    
+    order: 1 !important;
     text-align: left !important;
   }
-  
-  /* Value: 33.8 วัน (สีแดง) */
-  .mockHBarValue { 
+
+  /* ค่า 33.8 วัน */
+  .mockHBarValue {
     width: auto !important;
     margin: 0 !important;
     text-align: right !important;
     font-size: 16px;
     font-weight: 800;
-    color: #FF4D4F !important; /* สีแดงเด่น */
+    color: #FF4D4F !important;
     position: static !important;
-    z-index: auto !important;
-    order: 2 !important;   
+    order: 2 !important;
     margin-top: 0 !important;
   }
 
-  /* Bar: แท่งกราฟ */
+  /* แท่งกราฟ */
   .mockHBar {
-    width: 100% !important; 
+    width: 100% !important;
     height: 10px !important;
     margin-top: 6px !important;
     border-radius: 5px !important;
     overflow: hidden;
-    order: 3 !important;    
+    order: 3 !important;
   }
-  
-  /* ------------------------------------------- */
-  
-  .slaAvgInfo, .donutTopTypeBox { text-align: left; width: 100%; border-top: 1px dashed #eee; padding-top: 12px; }
-  .headerControls { margin-left: 0; width: 100%; margin-top: 12px; flex-wrap: wrap; }
-  .controlBtn { flex: 1; text-align: center; }
 }
