@@ -318,46 +318,49 @@
   border-color: #e0e0e0;
 }
 
-/* ส่วนหัว: รูป ID และ รายละเอียด - ปรับปรุงตามรูป */
+/* --- แก้ไข: ส่วนหัวให้รหัสและชื่ออยู่หลังรูปภาพ --- */
 .cardHeaderSection {
   display: flex;
-  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้งร่วมกับรูปภาพ */
+  flex-direction: row; /* จัดวางรูปและข้อมูลแบบแนวนอน */
+  align-items: center; /* จัดให้กึ่งกลางแนวตั้ง */
   gap: 16px;
   width: 100%;
 }
 
 .reportImage {
-  width: 65px;         /* ปรับขนาดให้ใกล้เคียงรูปตัวอย่าง */
-  height: 65px;
+  width: 75px;         
+  height: 75px;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  flex-shrink: 0;      /* ป้องกันรูปโดนบีบ */
+  flex-shrink: 0;      /* ป้องกันรูปถูกบีบ */
 }
 
 .headerInfo {
   flex-grow: 1;
   display: flex;
-  flex-direction: column;
-  gap: 4px;           /* ระยะห่างระหว่าง ID กับ ข้อความรายละเอียด */
+  flex-direction: column; /* จัดให้ ID อยู่บน รายละเอียดอยู่ล่าง */
+  justify-content: center;
+  gap: 2px;
 }
 
 .reportHeader {
   font-weight: 800;
-  font-size: 19px;
+  font-size: 20px;
   color: #111;
   letter-spacing: -0.5px;
-  margin: 0;           /* ลบ margin default */
+  margin: 0;
 }
 
 .reportDetailText {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  color: #444;
-  margin: 0;           /* ลบ margin default */
+  color: #333;
+  margin: 0;
 }
 
-/* ส่วนเนื้อหาภายใน */
+/* ---------------------------------- */
+
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
@@ -415,14 +418,12 @@
   padding-left: 0;
 }
 
-/* การจัดการสถานะ */
 .reportStatusGroup {
   position: absolute;
   top: 24px;
   right: 24px;
 }
 
-/* === (SHARED) Status Tag === */
 .statusTag {
   padding: 6px 16px;
   border-radius: 12px;
