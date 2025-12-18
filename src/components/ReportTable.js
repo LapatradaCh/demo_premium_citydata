@@ -181,7 +181,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchCases();
   }, [subTab]);
 
-  // --- ✅ 4. Logic การกรองข้อมูล ---
+  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       const reportTypeName = report.issue_type_name || ""; 
@@ -295,87 +295,62 @@ const ReportTable = ({ subTab, onRowClick }) => {
         ) : filteredReports.length === 0 ? (
           <p>ไม่พบข้อมูลตามเงื่อนไข</p>
         ) : (
-          <div className={styles.cardGridWrapper} style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-            {filteredReports.map((report) => {
-              const isExpanded = expandedCardId === report.issue_cases_id;
-              const responsibleUnits =
-                report.organizations && report.organizations.length > 0
-                  ? report.organizations.map((org) => org.responsible_unit).join(", ")
-                  : "-";
+          filteredReports.map((report) => {
+            const isExpanded = expandedCardId === report.issue_cases_id;
+            const responsibleUnits =
+              report.organizations && report.organizations.length > 0
+                ? report.organizations.map((org) => org.responsible_unit).join(", ")
+                : "-";
 
-              return (
-                <div
-                  key={report.issue_cases_id}
-                  className={styles.reportTableRow}
-                  onClick={() => onRowClick && onRowClick(report)}
-                  style={{ 
-                    cursor: "pointer",
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '16px',
-                    borderRadius: '16px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                    backgroundColor: '#fff',
-                    width: '320px',
-                    minHeight: '200px',
-                    position: 'relative'
-                  }} 
-                >
-                  {/* Top Section: Image, ID, Status */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', gap: '12px' }}>
-                      <img
-                        src={report.cover_image_url || "https://via.placeholder.com/120x80?text=No+Image"}
-                        alt="Report"
-                        style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover' }}
-                      />
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>#{report.case_code}</span>
-                        <p style={{ color: '#666', fontSize: '0.9rem', marginTop: '4px' }}>
-                          {truncateText(report.title || "-", 35)}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <span className={`${styles.statusTag} ${getStatusClass(report.status)}`} style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
-                      {report.status}
-                    </span>
-                  </div>
-
-                  {/* Expansion Details */}
-                  {isExpanded && (
-                    <div style={{ fontSize: '0.85rem', color: '#555', borderTop: '1px solid #eee', paddingTop: '10px', marginBottom: '10px' }}>
-                      <div><strong>ประเภท:</strong> {report.issue_type_name}</div>
-                      <div style={{ marginTop: '4px' }}><strong>รายละเอียด:</strong> {report.description || "-"}</div>
-                      <div style={{ marginTop: '4px' }}><strong>หน่วยงาน:</strong> {responsibleUnits}</div>
-                    </div>
-                  )}
-
-                  {/* Bottom Button */}
-                  <button
-                    className={styles.toggleDetailsButton}
-                    style={{
-                      width: '100%',
-                      padding: '10px',
-                      marginTop: 'auto',
-                      borderRadius: '12px',
-                      border: '1px solid #f0f0f0',
-                      backgroundColor: '#fff',
-                      color: '#007bff',
-                      fontWeight: '500',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      handleToggleDetails(isExpanded ? null : report.issue_cases_id);
-                    }}
-                  >
-                    {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-                  </button>
+            return (
+              <div
+                key={report.issue_cases_id}
+                className={styles.reportTableRow}
+                onClick={() => onRowClick && onRowClick(report)}
+                style={{ cursor: "pointer" }} 
+              >
+                <img
+                  src={report.cover_image_url || "https://via.placeholder.com/120x80?text=No+Image"}
+                  alt="Report"
+                  className={styles.reportImage}
+                />
+                <div className={styles.reportHeader}>
+                  <span className={styles.reportIdText}>#{report.case_code}</span>
+                  <p className={styles.reportDetailText}>
+                    {truncateText(report.title || "-", 40)}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
+                <div className={styles.reportStatusGroup}>
+                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
+                    {report.status}
+                  </span>
+                </div>
+
+                {isExpanded && (
+                  <div className={styles.expandableArea}>
+                    <div className={styles.mainDetails}>
+                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
+                      <span>รายละเอียด: {report.description || "-"}</span>
+                      <span>วันที่แจ้ง: {new Date(report.created_at).toLocaleString("th-TH")}</span>
+                    </div>
+                    <div className={styles.locationDetails}>
+                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  className={styles.toggleDetailsButton}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    handleToggleDetails(isExpanded ? null : report.issue_cases_id);
+                  }}
+                >
+                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+                </button>
+              </div>
+            );
+          })
         )}
       </div>
     </>
