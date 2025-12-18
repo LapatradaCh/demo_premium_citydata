@@ -1,4 +1,5 @@
 /* --- 2. css/ReportTable.module.css --- */
+/* (สำหรับ ReportTable.js) */
 
 /* === (SHARED) Calendar === */
 .calendarPopup {
@@ -299,6 +300,7 @@
   margin: 0 auto;
 }
 
+/* ปรับปรุงโครงสร้างการ์ดเพื่อให้เนื้อหาอยู่บรรทัดเดียวกันตามรูปภาพ */
 .reportTableRow {
   display: flex;
   flex-direction: column;
@@ -309,7 +311,8 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
-  gap: 16px;
+  gap: 12px;
+  height: 100%; /* ให้การ์ดสูงเท่ากันทั้งหมด */
 }
 
 .reportTableRow:hover {
@@ -321,113 +324,107 @@
 /* ส่วนหัว: รูป ID และ สถานะ */
 .cardHeaderSection {
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* รูปและ ID อยู่บรรทัดเดียวกัน */
   gap: 16px;
   width: 100%;
 }
 
 .reportImage {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  flex-shrink: 0;
 }
 
 .headerInfo {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  overflow: hidden; /* ป้องกันเนื้อหายื่นออกนอกการ์ด */
 }
 
 .reportHeader {
   font-weight: 800;
-  font-size: 19px;
+  font-size: 17px;
   color: #111;
   letter-spacing: -0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ตัดคำ ID หากยาวเกินไป */
 }
 
 .reportDetailText {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* หัวข้อเรื่องยาวให้ตัดบรรทัดเดียว */
 }
 
-/* ส่วนเนื้อหาภายใน (เมื่อกดอ่านเพิ่มเติม) - ปรับเป็น 2 คอลัมน์ให้อ่านง่ายขึ้น */
+/* ปรับปรุงส่วนเนื้อหาภายใน (เมื่อกดอ่านเพิ่มเติม หรือแสดงใน Popup) */
 .mainDetails {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* แบ่งเป็น 2 คอลัมน์ ซ้าย-ขวา */
-  gap: 12px 20px;
-  padding: 8px 0;
+  grid-template-columns: 100px 1fr;
+  gap: 8px 0;
+  padding: 4px 0;
 }
 
-.mainDetails > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.mainDetails > span {
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-/* สไตล์สำหรับหัวข้อ (Label) */
 .mainDetails strong {
-  color: #999; /* สีจางลงเพื่อเน้นข้อมูล */
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: #888;
+  font-weight: 500;
 }
 
-/* สไตล์สำหรับข้อมูล (Value) */
 .mainDetails .detailValue {
   color: #333;
   font-weight: 600;
-  font-size: 14px;
-  padding-left: 0; /* ปรับการเว้นวรรคให้ตรงกับ Grid */
+  padding-left: 8px;
 }
 
-/* ส่วนที่แยกเป็นกล่องพิกัดและหน่วยงาน (จัดเป็น 2 คอลัมน์ตามรูป) */
 .locationDetails {
   background: #f8f9fa;
   padding: 16px;
   border-radius: 16px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* แบ่งเป็น 2 คอลัมน์ ซ้าย-ขวา */
-  gap: 12px 20px;
+  grid-template-columns: 100px 1fr;
+  gap: 10px 0;
   border: 1px solid #f1f1f1;
 }
 
-.locationDetails > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .locationDetails strong {
-  color: #999;
-  font-weight: 600;
-  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 .locationDetails .detailValue {
   color: #444;
   font-weight: 600;
   font-size: 13px;
-  padding-left: 0;
+  padding-left: 8px;
 }
 
-/* การจัดการสถานะ (Status) */
+/* สถานะBadge มุมขวาบน */
 .reportStatusGroup {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 16px;
+  right: 16px;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 11px;
   font-weight: 800;
   color: #fff;
   text-transform: uppercase;
@@ -435,29 +432,28 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* สีตามรูป Dashboard ที่ส่งมา */
-.statusTag.pending { background-color: #ff4d4f; }
+.statusTag.pending { background-color: #ff5252; }
 .statusTag.coordinating { background-color: #7c4dff; }
 .statusTag.in_progress { background-color: #ffc107; color: #000; }
-.statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
+.statusTag.completed { background-color: #4caf50; }
+.statusTag.forwarded { background-color: #2196f3; }
+.statusTag.invited { background-color: #00bcd4; }
+.statusTag.rejected { background-color: #607d8b; }
 
-/* ปุ่มซ่อน/แสดงรายละเอียด */
+/* ปุ่มซ่อน/แสดงรายละเอียด - ลบเส้นใต้ออกตามสั่ง */
 .toggleDetailsButton {
   background: #ffffff;
   border: 2px solid #f0f0f0;
   width: 100%;
-  padding: 12px;
-  border-radius: 16px;
+  padding: 10px;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 700;
   font-size: 14px;
   color: #007bff;
   transition: all 0.2s ease;
-  text-decoration: none;
-  margin-top: 8px;
+  text-decoration: none; /* ลบเส้นใต้ */
+  margin-top: auto; /* ดันปุ่มไปล่างสุดเสมอ */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -466,7 +462,33 @@
 .toggleDetailsButton:hover {
   background: #f0f7ff;
   border-color: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+  text-decoration: none;
+}
+
+/* === (NEW) Detail Popup Style - เพิ่มเติมเพื่อรองรับการเด้ง Popup === */
+.detailModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailModalContent {
+  background: #fff;
+  width: 90%;
+  max-width: 480px;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* ============================================ */
@@ -479,7 +501,7 @@
   }
 
   .reportHeader {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .reportStatusGroup {
@@ -489,15 +511,14 @@
     align-self: flex-end;
   }
 
-  /* ปรับกลับเป็นคอลัมน์เดียวในมือถือเพื่อไม่ให้เบียดกันเกินไป */
   .mainDetails, .locationDetails {
     grid-template-columns: 1fr; 
-    gap: 12px;
+    gap: 2px;
   }
 
   .mainDetails .detailValue, .locationDetails .detailValue {
     padding-left: 0;
-    margin-bottom: 0;
+    margin-bottom: 8px;
   }
 
   .reportTableRow > *:last-child {
