@@ -301,18 +301,18 @@
 
 .reportTableRow {
   display: grid;
-  grid-template-columns: 70px 1fr auto;
+  grid-template-columns: 75px 1fr auto;
   grid-template-areas:
     "image header status"
     "image details details"
-    "image location location"
-    "image toggle toggle";
+    "location location location"
+    "toggle toggle toggle";
   align-items: start;
-  gap: 6px 12px;
-  padding: 20px;
-  font-size: 13px;
+  gap: 8px 14px;
+  padding: 22px;
+  font-size: 14px;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 20px;
   border: 1px solid #f0f0f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -327,50 +327,65 @@
 
 .reportImage {
   grid-area: image;
-  width: 70px;
-  height: 70px;
+  width: 75px;
+  height: 75px;
   object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .reportHeader {
   grid-area: header;
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 800;
+  font-size: 18px;
   color: #111;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .reportDetailText {
   white-space: normal;
   word-break: break-word;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
   color: #333;
-  padding-top: 4px;
+  margin-bottom: 8px;
 }
 
+/* จัดรูปแบบข้อมูลให้อ่านง่ายขึ้น */
 .mainDetails {
   grid-area: details;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 4px 10px;
-  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mainDetails span {
+  display: block;
+  line-height: 1.5;
   color: #666;
+  font-size: 13px;
+}
+
+/* เน้นสีหัวข้อรายละเอียด */
+.mainDetails strong {
+  color: #444;
+  font-weight: 600;
+  margin-right: 4px;
 }
 
 .locationDetails {
   grid-area: location;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  font-size: 12px;
-  color: #777;
-  border-top: 1px dashed #eee;
-  margin-top: 8px;
-  padding-top: 8px;
+  font-size: 13px;
+  color: #555;
+  background: #f8f9fa; /* พื้นหลังจางๆ เพื่อแยกส่วนพิกัด */
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid #f0f0f0;
 }
 
 .reportStatusGroup {
@@ -384,8 +399,8 @@
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 4px 12px;
-  border-radius: 8px;
+  padding: 5px 14px;
+  border-radius: 10px;
   font-size: 11px;
   font-weight: 700;
   color: #fff;
@@ -393,7 +408,7 @@
   text-align: center;
   white-space: nowrap;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
@@ -424,22 +439,25 @@
 
 .toggleDetailsButton {
   grid-area: toggle;
-  background: none;
-  border: none;
+  background: #fff;
+  border: 1px solid #e0e0e0;
   width: 100%;
-  text-align: right;
+  text-align: center; /* จัดกึ่งกลางให้ดูเป็นปุ่ม */
+  padding: 10px;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   color: #007bff;
   transition: all 0.2s ease;
-  margin-top: 4px;
-  text-decoration: none; /* เอาขีดเส้นใต้ออก */
+  margin-top: 16px;
+  text-decoration: none;
 }
 
 .toggleDetailsButton:hover {
-  color: #0056b3;
-  text-decoration: none; /* ไม่เอาขีดเส้นใต้ตอน Hover */
+  background: #f0f7ff;
+  border-color: #007bff;
+  text-decoration: none;
 }
 
 /* ============================================ */
@@ -471,52 +489,42 @@
   }
 
   .reportTableRow {
-    grid-template-columns: 70px 1fr; 
+    grid-template-columns: 75px 1fr; 
     grid-template-areas:
       "image header"
-      "image details"
-      "image location"
-      "status status"
+      "image status"
+      "details details"
+      "location location"
       "toggle toggle";
-    gap: 8px 10px;
+    gap: 10px;
+    padding: 16px;
   }
 
   .reportStatusGroup {
     flex-direction: row; 
-    flex-wrap: wrap; 
     justify-content: flex-start;
-    align-items: center;
-    padding-top: 10px;
-    border-top: 1px dashed #eee; 
-    margin-top: 8px;
+    padding-top: 0;
+    border-top: none; 
+    margin-top: 0;
   }
 
-  .mainDetails {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  /* ส่วนแก้ไขพิเศษสำหรับปุ่มในโหมดมือถือ */
+  /* ปุ่มอ่านเพิ่มเติมในมือถือ */
   .reportTableRow > *:last-child {
     all: unset;
     grid-area: toggle;
     display: block; 
     width: 100%;
     box-sizing: border-box; 
-    text-align: right;
+    text-align: center;
     cursor: pointer;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     color: #007bff;
-    transition: all 0.2s ease;
-    margin: 10px 0 0 0;
-    padding: 10px 0 0 0;
-    border-top: 1px dashed #eee;
-    text-decoration: none; /* เอาขีดเส้นใต้ออก */
-  }
-
-  .reportTableRow > *:last-child:hover {
-    text-decoration: none; /* ไม่เอาขีดเส้นใต้ตอน Hover ในมือถือ */
-    color: #0056b3;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    padding: 12px;
+    border-radius: 14px;
+    margin-top: 12px;
+    text-decoration: none;
   }
 }
