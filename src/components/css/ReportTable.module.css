@@ -318,13 +318,14 @@
   border-color: #e0e0e0;
 }
 
-/* --- แก้ไข: ส่วนหัวให้รหัสและชื่ออยู่หลังรูปภาพ --- */
+/* แก้ไข: ส่วนหัวเพื่อจัดวางข้อมูลขนานกับรูปและป้องกันการทับกัน */
 .cardHeaderSection {
   display: flex;
-  flex-direction: row; /* จัดวางรูปและข้อมูลแบบแนวนอน */
-  align-items: center; /* จัดให้กึ่งกลางแนวตั้ง */
+  flex-direction: row; 
+  align-items: center; 
   gap: 16px;
   width: 100%;
+  position: relative;
 }
 
 .reportImage {
@@ -333,23 +334,28 @@
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  flex-shrink: 0;      /* ป้องกันรูปถูกบีบ */
+  flex-shrink: 0; 
 }
 
 .headerInfo {
   flex-grow: 1;
   display: flex;
-  flex-direction: column; /* จัดให้ ID อยู่บน รายละเอียดอยู่ล่าง */
+  flex-direction: column;
   justify-content: center;
   gap: 2px;
+  min-width: 0; 
+  padding-right: 90px; /* เพิ่มระยะห่างทางขวาเพื่อหลบ Status Tag */
 }
 
 .reportHeader {
   font-weight: 800;
-  font-size: 20px;
+  font-size: 19px;
   color: #111;
   letter-spacing: -0.5px;
   margin: 0;
+  white-space: nowrap;      
+  overflow: hidden;         
+  text-overflow: ellipsis;  
 }
 
 .reportDetailText {
@@ -357,10 +363,68 @@
   font-weight: 600;
   color: #333;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ---------------------------------- */
+/* แก้ไข: การจัดลำดับ Status ให้คงที่มุมขวาบน */
+.reportStatusGroup {
+  position: absolute; 
+  top: 0;             
+  right: 0;           
+  z-index: 5;
+}
 
+/* === (SHARED) Status Tag === */
+.statusTag {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.statusTag.pending { background-color: #ff4d4f; }
+.statusTag.coordinating { background-color: #7c4dff; }
+.statusTag.in_progress { background-color: #ffc107; color: #000; }
+.statusTag.completed { background-color: #52c41a; }
+.statusTag.forwarded { background-color: #1890ff; }
+.statusTag.invited { background-color: #13c2c2; }
+.statusTag.rejected { background-color: #707b7c; }
+
+/* ปุ่มอ่านเพิ่มเติมปรับให้เป็นปุ่มสีน้ำเงินตามรูปใหม่ */
+.toggleDetailsButton {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  width: 100%;
+  padding: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  color: #007bff;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.toggleDetailsButton:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+/* รายละเอียดภายในเมื่อขยาย */
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
@@ -379,14 +443,12 @@
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .mainDetails .detailValue {
   color: #333;
   font-weight: 600;
   font-size: 14px;
-  padding-left: 0;
 }
 
 .locationDetails {
@@ -399,78 +461,14 @@
   border: 1px solid #f1f1f1;
 }
 
-.locationDetails > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.locationDetails strong {
-  color: #999;
-  font-weight: 600;
-  font-size: 11px;
-}
-
-.locationDetails .detailValue {
-  color: #444;
-  font-weight: 600;
-  font-size: 13px;
-  padding-left: 0;
-}
-
-.reportStatusGroup {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
-
-.statusTag {
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 800;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.statusTag.pending { background-color: #ff4d4f; }
-.statusTag.coordinating { background-color: #7c4dff; }
-.statusTag.in_progress { background-color: #ffc107; color: #000; }
-.statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
-
-.toggleDetailsButton {
-  background: #ffffff;
-  border: 2px solid #f0f0f0;
-  width: 100%;
-  padding: 12px;
-  border-radius: 16px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
-  color: #007bff;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggleDetailsButton:hover {
-  background: #f0f7ff;
-  border-color: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
-}
-
 /* ============================================ */
 /* --- Media Queries --- */
 /* ============================================ */
 @media screen and (max-width: 768px) {
+  .headerInfo {
+    padding-right: 70px; /* ลดระยะทางขวาลงเล็กน้อยในมือถือ */
+  }
+  
   .reportTableRow {
     padding: 20px;
     gap: 12px;
@@ -480,39 +478,15 @@
     font-size: 17px;
   }
 
+  /* ปิดกั้นการทับซ้อนในมือถือโดยให้ Status อยู่แถวใหม่ด้านบน */
   .reportStatusGroup {
     position: static;
-    margin-bottom: 4px;
-    order: -1; 
+    margin-bottom: 8px;
     align-self: flex-end;
   }
 
   .mainDetails, .locationDetails {
     grid-template-columns: 1fr; 
     gap: 12px;
-  }
-
-  .mainDetails .detailValue, .locationDetails .detailValue {
-    padding-left: 0;
-    margin-bottom: 0;
-  }
-
-  .reportTableRow > *:last-child {
-    all: unset;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box; 
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 14px;
-    color: #007bff;
-    background: #f8f9fa;
-    border: 1px solid #eee;
-    padding: 14px;
-    border-radius: 16px;
-    margin-top: 8px;
-    text-decoration: none;
   }
 }
