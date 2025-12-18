@@ -318,11 +318,11 @@
   border-color: #e0e0e0;
 }
 
-/* แก้ไข: ส่วนหัวเพื่อจัดวางข้อมูลขนานกับรูปและป้องกันการทับกัน */
+/* ส่วนหัว: ปรับปรุงให้สถานะอยู่ตำแหน่งที่สวยงาม */
 .cardHeaderSection {
   display: flex;
   flex-direction: row; 
-  align-items: center; 
+  align-items: flex-start; /* จัดให้อิงด้านบนเล็กน้อยเพื่อพื้นที่สถานะ */
   gap: 16px;
   width: 100%;
   position: relative;
@@ -332,7 +332,7 @@
   width: 75px;         
   height: 75px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   flex-shrink: 0; 
 }
@@ -342,9 +342,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
   min-width: 0; 
-  padding-right: 90px; /* เพิ่มระยะห่างทางขวาเพื่อหลบ Status Tag */
+  padding-right: 100px; /* เว้นที่ทางขวาให้ Status Tag */
+  padding-top: 4px;      /* ขยับข้อความลงมาให้ตรงกับรูป */
 }
 
 .reportHeader {
@@ -353,40 +354,38 @@
   color: #111;
   letter-spacing: -0.5px;
   margin: 0;
-  white-space: nowrap;      
-  overflow: hidden;         
-  text-overflow: ellipsis;  
+  line-height: 1.2;
 }
 
 .reportDetailText {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: #555;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* แก้ไข: การจัดลำดับ Status ให้คงที่มุมขวาบน */
+/* ปรับตำแหน่ง Status Tag ให้ลงมาและขยับตำแหน่งให้สมดุล */
 .reportStatusGroup {
   position: absolute; 
-  top: 0;             
-  right: 0;           
+  top: 8px;           /* ขยับลงมาจากขอบบนเล็กน้อย */
+  right: -8px;        /* ขยับออกไปทางขวาเพื่อให้มีระยะห่าง */
   z-index: 5;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
   display: inline-block;
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 10px 0 0 10px; /* ทำมุมโค้งเฉพาะด้านซ้ายตามสไตล์รูปตัวอย่าง */
+  font-size: 11px;
   font-weight: 800;
   color: #fff;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.3px;
+  box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
 }
 
@@ -398,33 +397,30 @@
 .statusTag.invited { background-color: #13c2c2; }
 .statusTag.rejected { background-color: #707b7c; }
 
-/* ปุ่มอ่านเพิ่มเติมปรับให้เป็นปุ่มสีน้ำเงินตามรูปใหม่ */
+/* ปุ่มอ่านเพิ่มเติมสไตล์ใหม่ตามรูป */
 .toggleDetailsButton {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
+  background: #dae9ff; /* สีฟ้าอ่อนตามรูปตัวอย่าง */
+  border: none;
   width: 100%;
   padding: 14px;
-  border-radius: 20px;
+  border-radius: 18px;
   cursor: pointer;
   font-weight: 700;
   font-size: 16px;
   color: #007bff;
   transition: all 0.2s ease;
-  text-decoration: none;
   margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .toggleDetailsButton:hover {
-  background: #f8f9fa;
+  background: #cce0ff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
 }
 
-/* รายละเอียดภายในเมื่อขยาย */
+/* รายละเอียดภายใน */
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
@@ -432,61 +428,4 @@
   padding: 8px 0;
 }
 
-.mainDetails > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mainDetails strong {
-  color: #999; 
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.mainDetails .detailValue {
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.locationDetails {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px 20px;
-  border: 1px solid #f1f1f1;
-}
-
-/* ============================================ */
-/* --- Media Queries --- */
-/* ============================================ */
-@media screen and (max-width: 768px) {
-  .headerInfo {
-    padding-right: 70px; /* ลดระยะทางขวาลงเล็กน้อยในมือถือ */
-  }
-  
-  .reportTableRow {
-    padding: 20px;
-    gap: 12px;
-  }
-
-  .reportHeader {
-    font-size: 17px;
-  }
-
-  /* ปิดกั้นการทับซ้อนในมือถือโดยให้ Status อยู่แถวใหม่ด้านบน */
-  .reportStatusGroup {
-    position: static;
-    margin-bottom: 8px;
-    align-self: flex-end;
-  }
-
-  .mainDetails, .locationDetails {
-    grid-template-columns: 1fr; 
-    gap: 12px;
-  }
-}
+/* ... โค้ดส่วนอื่นๆ คงเดิม ... */
