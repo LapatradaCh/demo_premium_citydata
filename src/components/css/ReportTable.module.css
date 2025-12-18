@@ -300,231 +300,210 @@
 }
 
 .reportTableRow {
-  display: grid;
-  grid-template-columns: 75px 1fr auto;
-  grid-template-areas:
-    "image header status"
-    "image details details"
-    "location location location"
-    "toggle toggle toggle";
-  align-items: start;
-  gap: 8px 14px;
-  padding: 22px;
-  font-size: 14px;
+  display: flex;
+  flex-direction: column; /* ปรับโครงสร้างหลักเป็น Column เพื่อจัดกลุ่มเนื้อหา */
+  padding: 24px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 24px;
   border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  gap: 16px;
 }
 
 .reportTableRow:hover {
-  background: #ffffff;
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   border-color: #e0e0e0;
 }
 
+/* ส่วนหัว: รูป ID และ สถานะ */
+.cardHeaderSection {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
 .reportImage {
-  grid-area: image;
-  width: 75px;
-  height: 75px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.headerInfo {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .reportHeader {
-  grid-area: header;
   font-weight: 800;
-  font-size: 18px;
+  font-size: 19px;
   color: #111;
-  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 .reportDetailText {
-  white-space: normal;
-  word-break: break-word;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 8px;
+  margin-top: 2px;
 }
 
-/* จัดรูปแบบข้อมูลให้อ่านง่ายขึ้น */
+/* ส่วนเนื้อหาภายใน (เมื่อกดอ่านเพิ่มเติม) */
 .mainDetails {
-  grid-area: details;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 4px;
+  display: grid;
+  grid-template-columns: 100px 1fr; /* จัด Label ให้ตรงกัน */
+  gap: 8px 0;
+  padding: 4px 0;
 }
 
-.mainDetails span {
-  display: block;
-  line-height: 1.5;
-  color: #666;
+.mainDetails > span {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* สไตล์สำหรับหัวข้อ (Label) */
+.mainDetails strong {
+  color: #888;
+  font-weight: 500;
+}
+
+/* สไตล์สำหรับข้อมูล (Value) */
+.mainDetails .detailValue {
+  color: #333;
+  font-weight: 600;
+  padding-left: 8px;
+}
+
+/* ส่วนที่แยกเป็นกล่องพิกัดและหน่วยงาน (เหมือนในรูป) */
+.locationDetails {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px 0;
+  border: 1px solid #f1f1f1;
+}
+
+.locationDetails strong {
+  color: #888;
+  font-weight: 500;
   font-size: 13px;
 }
 
-/* เน้นสีหัวข้อรายละเอียด */
-.mainDetails strong {
+.locationDetails .detailValue {
   color: #444;
   font-weight: 600;
-  margin-right: 4px;
-}
-
-.locationDetails {
-  grid-area: location;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
   font-size: 13px;
-  color: #555;
-  background: #f8f9fa; /* พื้นหลังจางๆ เพื่อแยกส่วนพิกัด */
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 12px;
-  border: 1px solid #f0f0f0;
+  padding-left: 8px;
 }
 
+/* การจัดการสถานะ (Status) */
 .reportStatusGroup {
-  grid-area: status;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 8px;
+  position: absolute;
+  top: 24px;
+  right: 24px;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 5px 14px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
   color: #fff;
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.statusTag.pending { background-color: #ff4d4f; }
-.statusTag.coordinating { background-color: #8338ec; }
+.statusTag.pending { background-color: #ff5252; }
+.statusTag.coordinating { background-color: #7c4dff; }
 .statusTag.in_progress { background-color: #ffc107; color: #000; }
-.statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
+.statusTag.completed { background-color: #4caf50; }
+.statusTag.forwarded { background-color: #2196f3; }
+.statusTag.invited { background-color: #00bcd4; }
+.statusTag.rejected { background-color: #607d8b; }
 
-/* --- Report Table Specific --- */
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 16px;
-  color: #000;
-}
-
-.ratingStar {
-  color: #e0e0e0;
-}
-
-.ratingStar.active {
-  color: #ffc107;
-}
-
+/* ปุ่มซ่อน/แสดงรายละเอียด */
 .toggleDetailsButton {
-  grid-area: toggle;
-  background: #fff;
-  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  border: 2px solid #f0f0f0;
   width: 100%;
-  text-align: center; /* จัดกึ่งกลางให้ดูเป็นปุ่ม */
-  padding: 10px;
-  border-radius: 14px;
+  padding: 12px;
+  border-radius: 16px;
   cursor: pointer;
   font-weight: 700;
   font-size: 14px;
   color: #007bff;
   transition: all 0.2s ease;
-  margin-top: 16px;
   text-decoration: none;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toggleDetailsButton:hover {
   background: #f0f7ff;
   border-color: #007bff;
-  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
 }
 
 /* ============================================ */
-/* --- Media Queries (Tablet & Phone) --- */
+/* --- Media Queries --- */
 /* ============================================ */
 @media screen and (max-width: 768px) {
-  .searchTop {
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-    max-width: 100%; 
-    margin: 0 auto 16px auto;
-  }
-  .filterToggleButton {
-    max-width: 100%;
-  }
-
-  .reportSummary {
-    margin-top: 16px;
-    max-width: 100%; 
-    margin-left: initial;
-    margin-right: initial;
-  }
-
-  .reportTableContainer {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    max-width: 100%; 
-  }
-
   .reportTableRow {
-    grid-template-columns: 75px 1fr; 
-    grid-template-areas:
-      "image header"
-      "image status"
-      "details details"
-      "location location"
-      "toggle toggle";
-    gap: 10px;
-    padding: 16px;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .reportHeader {
+    font-size: 17px;
   }
 
   .reportStatusGroup {
-    flex-direction: row; 
-    justify-content: flex-start;
-    padding-top: 0;
-    border-top: none; 
-    margin-top: 0;
+    position: static;
+    margin-bottom: 4px;
+    order: -1; /* เอาสถานะขึ้นไปบนสุดในมือถือ */
+    align-self: flex-end;
   }
 
-  /* ปุ่มอ่านเพิ่มเติมในมือถือ */
+  .mainDetails, .locationDetails {
+    grid-template-columns: 1fr; /* ในมือถือให้ซ้อนกัน */
+    gap: 2px;
+  }
+
+  .mainDetails .detailValue, .locationDetails .detailValue {
+    padding-left: 0;
+    margin-bottom: 8px;
+  }
+
+  /* สำหรับมือถือส่วนปุ่มกดยังคงสวยงาม */
   .reportTableRow > *:last-child {
     all: unset;
-    grid-area: toggle;
-    display: block; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     box-sizing: border-box; 
-    text-align: center;
     cursor: pointer;
     font-weight: 700;
     font-size: 14px;
     color: #007bff;
     background: #f8f9fa;
     border: 1px solid #eee;
-    padding: 12px;
-    border-radius: 14px;
-    margin-top: 12px;
+    padding: 14px;
+    border-radius: 16px;
+    margin-top: 8px;
     text-decoration: none;
   }
 }
