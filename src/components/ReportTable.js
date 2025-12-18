@@ -119,7 +119,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
           orgId = orgData.id || orgData.organization_id;
         }
 
-        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
         const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId 
           ? `${baseUrl}?organization_id=${orgId}` 
@@ -254,7 +253,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
                      ) : label === "ประเภท" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับประเภท
                         <select 
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value)}
@@ -263,7 +261,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
                           {issueTypes.map((type, index) => (
                             <option 
                               key={type.issue_type_id || type.id || index} 
-                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
                               value={type.issue_type_name || type.name}
                             >
                               {type.issue_type_name || type.name || "ระบุไม่ได้"}
@@ -271,7 +268,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
                           ))}
                         </select>
                      ) : label === "สถานะ" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
                         <select 
                             value={selectedStatus}
                             onChange={(e) => setSelectedStatus(e.target.value)}
@@ -288,7 +284,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
                           )}
                         </select>
                      ) : (
-                        // Filter อื่นๆ (เช่น หน่วยงาน)
                         <select defaultValue="all">
                           <option value="all">ทั้งหมด</option>
                         </select>
@@ -312,7 +307,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
       <div className={styles.reportSummary}>
         <strong>{summaryTitle}</strong>{" "}
-        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
         ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
       </div>
 
@@ -320,10 +314,8 @@ const ReportTable = ({ subTab, onRowClick }) => {
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
         ) : filteredReports.length === 0 ? (
-          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
           <p>ไม่พบข้อมูลตามเงื่อนไข</p>
         ) : (
-          // ✅ วนลูป filteredReports แทน reports
           filteredReports.map((report) => {
             const isExpanded = expandedCardId === report.issue_cases_id;
             const responsibleUnits =
@@ -338,22 +330,27 @@ const ReportTable = ({ subTab, onRowClick }) => {
                 onClick={() => onRowClick && onRowClick(report)}
                 style={{ cursor: "pointer" }} 
               >
-                <img
-                  src={
-                    report.cover_image_url ||
-                    "https://via.placeholder.com/120x80?text=No+Image"
-                  }
-                  alt="Report"
-                  className={styles.reportImage}
-                />
-                <div className={styles.reportHeader}>
-                  <span className={styles.reportIdText}>
-                    #{report.case_code}
-                  </span>
-                  <p className={styles.reportDetailText}>
-                    {truncateText(report.title || "-", 40)}
-                  </p>
+                {/* ✅ แก้ไขจุดนี้: นำรูปและข้อความรหัสมาไว้ใน Wrapper เดียวกันเพื่อให้ CSS จัดเรียงแนวนอน */}
+                <div className={styles.cardHeaderSection}>
+                  <img
+                    src={
+                      report.cover_image_url ||
+                      "https://via.placeholder.com/120x80?text=No+Image"
+                    }
+                    alt="Report"
+                    className={styles.reportImage}
+                  />
+                  <div className={styles.headerInfo}>
+                    <h3 className={styles.reportHeader}>
+                      #{report.case_code}
+                    </h3>
+                    <p className={styles.reportDetailText}>
+                      {truncateText(report.title || "-", 40)}
+                    </p>
+                  </div>
                 </div>
+
+                {/* ส่วนสถานะที่ลอยอยู่มุมขวา (ตาม CSS position absolute) */}
                 <div className={styles.reportStatusGroup}>
                   <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
                     {report.status}
@@ -363,22 +360,28 @@ const ReportTable = ({ subTab, onRowClick }) => {
                 {isExpanded && (
                   <>
                     <div className={styles.mainDetails}>
-                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
-                      <span>รายละเอียด: {report.description || "-"}</span>
-                      <span>
-                        วันที่แจ้ง:{" "}
-                        {new Date(report.created_at).toLocaleString("th-TH")}
-                      </span>
-                      <span>
-                        อัปเดตล่าสุด:{" "}
-                        {new Date(report.updated_at).toLocaleString("th-TH")}
-                      </span>
+                      <div>
+                        <strong>ประเภทปัญหา</strong>
+                        <span className={styles.detailValue}>{report.issue_type_name}</span>
+                      </div>
+                      <div>
+                        <strong>วันที่แจ้ง</strong>
+                        <span className={styles.detailValue}>{new Date(report.created_at).toLocaleString("th-TH")}</span>
+                      </div>
+                      <div style={{ gridColumn: "span 2" }}>
+                        <strong>รายละเอียด</strong>
+                        <span className={styles.detailValue}>{report.description || "-"}</span>
+                      </div>
                     </div>
                     <div className={styles.locationDetails}>
-                      <span>
-                        พิกัด: {report.latitude}, {report.longitude}
-                      </span>
-                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
+                      <div>
+                        <strong>พิกัด</strong>
+                        <span className={styles.detailValue}>{report.latitude}, {report.longitude}</span>
+                      </div>
+                      <div>
+                        <strong>หน่วยงานรับผิดชอบ</strong>
+                        <span className={styles.detailValue}>{responsibleUnits}</span>
+                      </div>
                     </div>
                   </>
                 )}
