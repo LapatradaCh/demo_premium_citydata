@@ -1,406 +1,292 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ เพิ่ม useMemo
-import styles from "./css/ReportTable.module.css";
-import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
-import "cally";
+/* === (SHARED) Calendar === */
+.calendarPopup {
+  position: absolute;
+  top: 120%;
+  z-index: 100;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  min-width: 280px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
 
-// ------------------------- Helper
-const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
+/* --- Report Table Specific --- */
+.searchTop {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  max-width: 1100px; 
+  margin: 0 auto 24px auto; 
+}
 
-const truncateText = (text, maxLength) => {
-  if (!text) return "";
-  if (text.length <= maxLength) {
-    return text;
-  }
-  return text.substring(0, maxLength) + "...";
-};
+.searchInputWrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+}
 
-// ------------------------- Date Filter
-const DateFilter = () => {
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const calendarRef = useRef(null);
-  const formatDate = (d) =>
-    d ? d.toLocaleDateString("th-TH") : "กดเพื่อเลือกช่วงเวลา";
+.searchInput {
+  width: 100%;
+  padding: 12px 18px 12px 52px;
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #000;
+}
 
-  useEffect(() => {
-    const node = calendarRef.current;
-    if (node && show) {
-      const handleChange = (e) => {
-        setDate(new Date(e.target.value));
-        setShow(false);
-      };
-      node.addEventListener("change", handleChange);
-      return () => node.removeEventListener("change", handleChange);
-    }
-  }, [show]);
+.searchInput:focus {
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
 
-  return (
-    <div style={{ position: "relative" }}>
-      <button
-        className={styles.timeRangeButton}
-        onClick={() => setShow(!show)}
-      >
-        {formatDate(date)}
-      </button>
-      {show && (
-        <div className={styles.calendarPopup}>
-          <calendar-date
-            ref={calendarRef}
-            value={toYYYYMMDD(date)}
-            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
-          >
-            <calendar-month></calendar-month>
-          </calendar-date>
-        </div>
-      )}
-    </div>
-  );
-};
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #555;
+}
 
-// ------------------------- Report Table
-const ReportTable = ({ subTab, onRowClick }) => {
-  const [showFilters, setShowFilters] = useState(false);
-  const [expandedCardId, setExpandedCardId] = useState(null);
-  const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
-  const [loading, setLoading] = useState(true);
+.filterToggleButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
 
-  // --- State สำหรับเก็บตัวเลือกใน Filter ---
-  const [issueTypes, setIssueTypes] = useState([]);
-  const [statusOptions, setStatusOptions] = useState([]);
+/* === (SHARED) Modal === */
+.filterModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  backdrop-filter: blur(4px);
+}
 
-  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
-  const [selectedType, setSelectedType] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("all");
+.filterModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
 
-  const isAllReports = subTab === "รายการแจ้งรวม";
-  const mainFilters = isAllReports
-    ? ["ประเภท", "ช่วงเวลา"]
-    : ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
-  const locationFilters = isAllReports
-    ? []
-    : ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
-  const modalTitle = isAllReports
-    ? "ตัวกรอง (รายการแจ้งรวม)"
-    : "ตัวกรอง (เฉพาะหน่วยงาน)";
-  const summaryTitle = isAllReports
-    ? "รายการแจ้งรวม"
-    : "รายการแจ้งเฉพาะหน่วยงาน";
+.filterModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
 
-  // --- 1. Fetch Issue Types ---
-  useEffect(() => {
-    const fetchIssueTypes = async () => {
-      try {
-        const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
-        if (!res.ok) throw new Error("Failed to fetch issue types");
-        const data = await res.json();
-        
-        if (Array.isArray(data)) {
-            setIssueTypes(data);
-        } else if (data.data && Array.isArray(data.data)) {
-            setIssueTypes(data.data);
-        } else {
-            setIssueTypes([]);
-        }
-      } catch (err) {
-        console.error("Error fetching issue types:", err);
-      }
-    };
-    fetchIssueTypes();
-  }, []);
+.filterModalClose {
+  background: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+}
 
-  // --- 2. Fetch Statuses ---
-  useEffect(() => {
-    const fetchStatuses = async () => {
-      try {
-        const lastOrg = localStorage.getItem("lastSelectedOrg");
-        let orgId = null;
-        if (lastOrg) {
-          const orgData = JSON.parse(lastOrg);
-          orgId = orgData.id || orgData.organization_id;
-        }
+.filterModalContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+}
 
-        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
-        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
-        const url = orgId 
-          ? `${baseUrl}?organization_id=${orgId}` 
-          : baseUrl;
+.reportFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch statuses");
-        
-        const data = await res.json();
-        
-        if (Array.isArray(data)) {
-          setStatusOptions(data);
-        } else if (data.data && Array.isArray(data.data)) {
-           setStatusOptions(data.data); 
-        } else {
-           setStatusOptions([]);
-        }
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-      } catch (err) {
-        console.error("Error fetching statuses:", err);
-        setStatusOptions([]);
-      }
-    };
+.filterGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
 
-    fetchStatuses();
-  }, [subTab]);
+.filterGroup select, .timeRangeButton {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+}
 
-  // --- 3. Fetch Reports ---
-  useEffect(() => {
-    const fetchCases = async () => {
-      try {
-        setLoading(true);
-        const lastOrg = localStorage.getItem("lastSelectedOrg");
-        if (!lastOrg) {
-          setReports([]);
-          setLoading(false);
-          return;
-        }
+.filterApplyButton {
+  padding: 12px 20px;
+  background-color: #057a55;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: center;
+  min-width: 150px;
+}
 
-        const org = JSON.parse(lastOrg);
-        const orgId = org.id || org.organization_id;
+/* === Report Table Specific (แก้ไขเพื่อป้องกันการยืดตามกัน) === */
+.reportSummary {
+  font-weight: 600;
+  margin: 28px auto 16px auto;
+  color: #333;
+  width: 100%;
+  max-width: 1100px;
+}
 
-        const res = await fetch(
-          `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
-        );
-        if (!res.ok) throw new Error("Fetch cases failed");
+.reportTableContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  /* ✅ บรรทัดนี้สำคัญที่สุด: ป้องกัน Card ในแถวเดียวกันยืดตามกัน */
+  align-items: start; 
+}
 
-        const data = await res.json();
-        const reportsData = Array.isArray(data) ? data : (data.data || []);
-        
-        setReports(reportsData);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setReports([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+.reportTableRow {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  grid-template-areas:
+    "image header status"
+    "image details details"
+    "location location location"
+    "toggle toggle toggle";
+  align-items: start;
+  gap: 8px 10px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  height: fit-content;
+}
 
-    fetchCases();
-  }, [subTab]);
+.reportTableRow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
 
-  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
-  const filteredReports = useMemo(() => {
-    return reports.filter((report) => {
-      
-      // กรองประเภท (เทียบกับชื่อ issue_type_name)
-      const reportTypeName = report.issue_type_name || ""; 
-      const matchType = selectedType === "all" || reportTypeName === selectedType;
+.reportImage {
+  grid-area: image;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+}
 
-      // กรองสถานะ
-      const reportStatus = report.status || "";
-      const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
+.reportHeader {
+  grid-area: header;
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+}
 
-      return matchType && matchStatus;
-    });
-  }, [reports, selectedType, selectedStatus]);
+.mainDetails {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
 
-  const handleToggleDetails = (id) => {
-    setExpandedCardId((prevId) => (prevId === id ? null : id));
-  };
+/* ส่วนแสดงรายละเอียดเมื่อขยาย */
+.expandedSection {
+  grid-column: 1 / -1;
+  border-top: 1px dashed #ddd;
+  margin-top: 10px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "รอรับเรื่อง": return styles.pending;
-      case "กำลังประสานงาน": return styles.coordinating;
-      case "กำลังดำเนินการ": return styles.in_progress;
-      case "เสร็จสิ้น": return styles.completed;
-      case "ส่งต่อ": return styles.forwarded;
-      case "เชิญร่วม": return styles.invited;
-      case "ปฏิเสธ": return styles.rejected;
-      default: return styles.other;
-    }
-  };
+.locationDetails {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #777;
+}
 
-  return (
-    <>
-      <div className={styles.searchTop}>
-        <div className={styles.searchInputWrapper}>
-          <input
-            type="text"
-            placeholder="ใส่คำที่ต้องการค้นหา"
-            className={styles.searchInput}
-          />
-          <FaSearch className={styles.searchIcon} />
-        </div>
-        <button
-          className={styles.filterToggleButton}
-          onClick={() => setShowFilters(true)}
-        >
-          <FaFilter />
-          <span>ตัวกรอง</span>
-        </button>
-      </div>
+/* Status Tags (Modern Style) */
+.statusTag {
+  grid-area: status;
+  padding: 4px 10px;
+  border-radius: 22px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+}
+.statusTag.pending { background: #dc3545; }
+.statusTag.in_progress { background: #ffc107; color: #333; }
+.statusTag.completed { background: #057a55; }
+.statusTag.coordinating { background: #9b59b6; }
 
-      {showFilters && (
-        <>
-           <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
-           <div className={styles.filterModal}>
-             <div className={styles.filterModalHeader}>
-               <h3>{modalTitle}</h3>
-               <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}>
-                 <FaTimes />
-               </button>
-             </div>
-             <div className={styles.filterModalContent}>
-               <div className={styles.reportFilters}>
-                 {mainFilters.map((label, i) => (
-                   <div className={styles.filterGroup} key={i}>
-                     <label>{label}</label>
-                     
-                     {label === "ช่วงเวลา" ? (
-                        <DateFilter />
-                     ) : label === "ประเภท" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับประเภท
-                        <select 
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                        >
-                          <option value="all">ทั้งหมด</option>
-                          {issueTypes.map((type, index) => (
-                            <option 
-                              key={type.issue_type_id || type.id || index} 
-                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
-                              value={type.issue_type_name || type.name}
-                            >
-                              {type.issue_type_name || type.name || "ระบุไม่ได้"}
-                            </option>
-                          ))}
-                        </select>
-                     ) : label === "สถานะ" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
-                        <select 
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
-                        >
-                          <option value="all">ทั้งหมด</option>
-                          {statusOptions.length > 0 ? (
-                            statusOptions.map((status, index) => (
-                              <option key={index} value={status}>
-                                {status}
-                              </option>
-                            ))
-                          ) : (
-                            <option disabled>ไม่พบข้อมูลสถานะ</option>
-                          )}
-                        </select>
-                     ) : (
-                        // Filter อื่นๆ (เช่น หน่วยงาน)
-                        <select defaultValue="all">
-                          <option value="all">ทั้งหมด</option>
-                        </select>
-                     )}
+.toggleDetailsButton {
+  grid-area: toggle;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  padding-top: 10px;
+  margin-top: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #007bff;
+  border-top: 1px solid #f0f0f0;
+}
 
-                   </div>
-                 ))}
-                 
-                 {locationFilters.map((label, i) => (
-                   <div key={i} className={styles.filterGroup}>
-                     <label>{label}</label>
-                     <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
-                   </div>
-                 ))}
-               </div>
-               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
-             </div>
-           </div>
-        </>
-      )}
-
-      <div className={styles.reportSummary}>
-        <strong>{summaryTitle}</strong>{" "}
-        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
-        ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
-      </div>
-
-      <div className={styles.reportTableContainer}>
-        {loading ? (
-          <p>กำลังโหลดข้อมูล...</p>
-        ) : filteredReports.length === 0 ? (
-          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
-          <p>ไม่พบข้อมูลตามเงื่อนไข</p>
-        ) : (
-          // ✅ วนลูป filteredReports แทน reports
-          filteredReports.map((report) => {
-            const isExpanded = expandedCardId === report.issue_cases_id;
-            const responsibleUnits =
-              report.organizations && report.organizations.length > 0
-                ? report.organizations.map((org) => org.responsible_unit).join(", ")
-                : "-";
-
-            return (
-              <div
-                key={report.issue_cases_id}
-                className={styles.reportTableRow}
-                onClick={() => onRowClick && onRowClick(report)}
-                style={{ cursor: "pointer" }} 
-              >
-                <img
-                  src={
-                    report.cover_image_url ||
-                    "https://via.placeholder.com/120x80?text=No+Image"
-                  }
-                  alt="Report"
-                  className={styles.reportImage}
-                />
-                <div className={styles.reportHeader}>
-                  <span className={styles.reportIdText}>
-                    #{report.case_code}
-                  </span>
-                  <p className={styles.reportDetailText}>
-                    {truncateText(report.title || "-", 40)}
-                  </p>
-                </div>
-                <div className={styles.reportStatusGroup}>
-                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
-                    {report.status}
-                  </span>
-                </div>
-
-                {isExpanded && (
-                  <>
-                    <div className={styles.mainDetails}>
-                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
-                      <span>รายละเอียด: {report.description || "-"}</span>
-                      <span>
-                        วันที่แจ้ง:{" "}
-                        {new Date(report.created_at).toLocaleString("th-TH")}
-                      </span>
-                      <span>
-                        อัปเดตล่าสุด:{" "}
-                        {new Date(report.updated_at).toLocaleString("th-TH")}
-                      </span>
-                    </div>
-                    <div className={styles.locationDetails}>
-                      <span>
-                        พิกัด: {report.latitude}, {report.longitude}
-                      </span>
-                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
-                    </div>
-                  </>
-                )}
-
-                <button
-                  className={styles.toggleDetailsButton}
-                  onClick={(e) => {
-                    e.stopPropagation(); 
-                    handleToggleDetails(
-                      isExpanded ? null : report.issue_cases_id
-                    );
-                  }}
-                >
-                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-                </button>
-              </div>
-            );
-          })
-        )}
-      </div>
-    </>
-  );
-};
-
-export default ReportTable;
+@media screen and (max-width: 768px) {
+  .reportTableContainer { grid-template-columns: 1fr; }
+}
