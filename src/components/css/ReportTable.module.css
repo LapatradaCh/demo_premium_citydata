@@ -1,84 +1,104 @@
+/* --- 2. css/ReportTable.module.css --- */
+/* (สำหรับ ReportTable.js) */
+
 /* === (SHARED) Calendar === */
 .calendarPopup {
   position: absolute;
   top: 120%;
   z-index: 100;
-  background-color: #ffffff;
+  background: #ffffff;
   border-radius: 18px;
-  padding: 20px;
+  padding: 18px;
   min-width: 280px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f5f9;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Search & Filter (ล็อคสัดส่วนตามรูปที่ 1) --- */
+/* --- Report Table Specific --- */
 .searchTop {
   display: flex;
   flex-direction: row;
-  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
-  gap: 12px;
+  align-items: stretch;
+  gap: 16px;
+  position: relative;
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto 32px auto;
+  /* max-width: 700px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
+  margin-bottom: 24px;
 }
 
 .searchInputWrapper {
-  flex: 1; /* ช่องค้นหาต้องขยายพื้นที่ส่วนใหญ่เสมอ */
+  flex-grow: 1;
   position: relative;
   display: flex;
 }
 
 .searchInput {
   width: 100%;
-  padding: 12px 20px 12px 52px;
-  border-radius: 12px; /* มนพอประมาณแบบ Modern */
-  border: 1px solid #e2e8f0;
-  font-size: 15px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s ease;
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 12px 18px 12px 52px;
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #000;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .searchIcon {
   position: absolute;
-  left: 18px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
-  color: #94a3b8;
+  color: #555;
+  cursor: pointer;
 }
 
 .filterToggleButton {
-  flex-shrink: 0; /* ล็อคไม่ให้ปุ่มขยายตัวจนแย่งพื้นที่ */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0 20px;
-  height: 45px; /* ล็อคความสูงให้พอดีกับช่องค้นหา */
-  min-width: 100px; /* กำหนดขนาดขั้นต่ำที่เหมาะสม */
+  padding: 10px 16px;
   font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  background-color: #1e293b;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
   border: none;
-  border-radius: 12px;
+  border-radius: 24px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .filterToggleButton:hover {
-  background-color: #000;
-  transform: translateY(-1px);
+  background-color: #333;
+  transform: translateY(-2px);
 }
 
-/* === Modal & ปุ่มกากบาทสีแดงไอคอนขาว === */
+.filterToggleButton svg {
+  font-size: 16px;
+}
+
+.filterToggleButton span {
+  display: inline;
+}
+
+/* === (SHARED) Modal === */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
@@ -97,164 +117,413 @@
   transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 16px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-/* ปุ่มกากบาทแดง ไอคอนขาว (ตามสั่ง) */
+.filterModalHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .filterModalClose {
-  background-color: #dc3545;
+  background: #dc3545;
   border: none;
   border-radius: 50%;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #ffffff;
+  color: #fff;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.filterModalClose:hover {
+  color: #fff;
 }
 
 .filterModalClose svg {
-  width: 18px;
-  height: 18px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
   fill: #ffffff;
+  z-index: 2;
 }
 
 .filterModalContent {
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-height: 70vh;
 }
 
-/* --- รายการการ์ด (จัดให้สวยแบบรูปที่ 1 แต่คมชัดขึ้น) --- */
-.reportSummary {
+.reportFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+/* === (SHARED) Filter Group === */
+.filterGroup {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
+}
+
+.filterGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
+}
+
+.filterGroup select,
+.timeRangeButton {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+}
+
+.filterGroup select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+.filterGroup select:hover,
+.timeRangeButton:hover {
+  background-color: #f4f4f4;
+  border-color: #000;
+}
+
+.filterGroup select:focus,
+.timeRangeButton:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.filterApplyButton {
+  padding: 12px 20px;
+  font-size: 15px;
   font-weight: 700;
-  font-size: 18px;
-  margin: 32px auto 20px auto;
-  max-width: 1100px;
-  color: #1e293b;
+  color: #fff;
+  background-color: #057a55;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: center;
+  min-width: 150px;
+  text-align: center;
+}
+
+.filterApplyButton:hover {
+  background-color: #046c4e;
+}
+
+.filterApplyButton:active {
+  background-color: #02573d;
+  transform: scale(0.98);
+}
+
+/* --- Report Table Specific --- */
+.reportSummary {
+  font-weight: 600;
+  margin-top: 28px;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: left;
+  padding-left: 4px;
+  width: 100%;
+  /* max-width: 1200px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
 }
 
 .reportTableContainer {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  max-width: 1100px;
-  margin: 0 auto;
+  gap: 18px;
+  /* max-width: 1200px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
 }
 
 .reportTableRow {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
+  grid-template-columns: 70px 1fr auto;
   grid-template-areas:
     "image header status"
     "image details details"
     "image location location"
-    "toggle toggle toggle";
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
+    "image toggle toggle";
+  align-items: start;
+  gap: 4px 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reportTableRow:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  background: #f8f8f8;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
 
 .reportImage {
   grid-area: image;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 17px;
-  color: #0f172a;
+  font-size: 16px;
+  color: #000;
 }
 
 .reportDetailText {
-  font-size: 14px;
-  color: #475569;
-  margin-top: 4px;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  padding-top: 2px;
+}
+
+.mainDetails {
+  grid-area: details;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 4px 10px;
+  font-size: 12px;
+  color: #666;
 }
 
 .locationDetails {
   grid-area: location;
-  border-top: 1px solid #f1f5f9;
-  margin-top: 12px;
-  padding-top: 12px;
-  color: #94a3b8;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
+  color: #777;
+  border-top: 1px dashed #ddd;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .reportStatusGroup {
   grid-area: status;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-end;
+  gap: 8px;
 }
 
-/* === Status Tag === */
+/* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 4px 12px;
-  border-radius: 8px;
+  padding: 4px 10px;
+  border-radius: 22px;
   font-size: 12px;
-  font-weight: 700;
-  color: #ffffff;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
 }
-.statusTag.pending { background: #ef4444; }
-.statusTag.in_progress { background: #f59e0b; }
-.statusTag.completed { background: #10b981; }
+.statusTag.pending {
+  background: #dc3545;
+}
+.statusTag.coordinating {
+  background-color: #9b59b6;
+  color: white;
+}
+.statusTag.in_progress {
+  background: #ffc107;
+  color: #333;
+}
+.statusTag.completed {
+  background: #057a55;
+}
+.statusTag.forwarded {
+  background-color: #007bff;
+  color: white;
+}
+.statusTag.invited {
+  background-color: #20c997;
+  color: white;
+}
+.statusTag.rejected {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* --- Report Table Specific --- */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  color: #000;
+}
+
+.ratingStar {
+  color: #ccc;
+}
+
+.ratingStar.active {
+  color: #ffc107;
+}
 
 .toggleDetailsButton {
   grid-area: toggle;
-  margin-top: 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  color: #3b82f6;
-  font-weight: 700;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: right;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #007bff;
+  transition: all 0.2s ease;
+  /* (ย้าย margin/padding/border ไปที่ *:last-child) */
 }
 
 .toggleDetailsButton:hover {
-  background: #3b82f6;
-  color: #fff;
+  color: #0056b3;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
 }
 
-/* === Media Queries === */
+/* --- Media Queries --- */
 @media screen and (max-width: 768px) {
-  .searchTop { flex-direction: column; padding: 0 16px; }
-  .filterToggleButton { width: 100%; height: 48px; }
-  .reportTableContainer { grid-template-columns: 1fr; padding: 0 16px; }
+  .searchTop {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .filterToggleButton {
+    max-width: 100%;
+  }
+
+  .reportSummary {
+    margin-top: 16px;
+  }
+
+  .reportTableContainer {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* --- START: ส่วนที่เพิ่มเข้ามาแก้ Overflow --- */
+
+  /* 1. เปลี่ยน Layout ของการ์ดในมือถือ */
   .reportTableRow {
-    grid-template-columns: 75px 1fr;
+    grid-template-columns: 70px 1fr; /* เหลือ 2 คอลัมน์ (รูป + เนื้อหา) */
     grid-template-areas:
       "image header"
-      "image status"
-      "details details"
-      "location location"
+      "image details"
+      "image location"
+      "status status" /* ย้าย status มาแถวล่าง (เต็มความกว้าง) */
       "toggle toggle";
+    gap: 6px 10px; /* ลดช่องว่างลงเล็กน้อย */
   }
+
+  /* 2. จัดการ Status ที่ย้ายมาแถวล่าง */
+  .reportStatusGroup {
+    flex-direction: row; /* เรียงแนวนอน */
+    flex-wrap: wrap; /* แต่ให้ "ตัดคำ" ขึ้นบรรทัดใหม่ได้ถ้าไม่พอ */
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 8px;
+    border-top: 1px dashed #ddd; /* กั้นส่วน */
+    margin-top: 4px;
+  }
+
+  /* 3. บังคับให้รายละเอียด (เช่น ผู้แจ้ง, ประเภท) ซ้อนกันแนวตั้ง */
+  .mainDetails {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  /* --- END: ส่วนที่เพิ่มเข้ามาแก้ Overflow --- */
+
+  /* --- (*** START: แก้ไขขั้นสูงสุด ***) --- */
+  /*
+   * นี่คือ "ไม้ตาย" แก้ปัญหาปุ่มเม็ดสีขาวล้น
+   * เราจะ "ล้าง" สไตล์ของปุ่มนั้นทิ้ง (all: unset)
+   * แล้ว "สร้าง" สไตล์ของ .toggleDetailsButton ขึ้นมาใหม่ทับทันที
+   */
+  .reportTableRow > *:last-child {
+    all: unset; /* <-- ล้างสไตล์ "เม็ดสีขาว" ที่มาจากไฟล์อื่นทิ้ง! */
+
+    /* -- สร้างสไตล์ .toggleDetailsButton ขึ้นมาใหม่ -- */
+    grid-area: toggle;
+    display: block; /* (จำเป็นสำหรับ Grid Area) */
+    width: 100%;
+    box-sizing: border-box; /* (จำเป็นสำหรับ Layout) */
+    text-align: right;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: #007bff;
+    transition: all 0.2s ease;
+
+    /* -- สร้าง Layout (เส้นประ) ขึ้นมาใหม่ -- */
+    margin: 8px 0 0 0;
+    padding: 8px 0;
+    border-top: 1px dashed #ddd;
+  }
+
+  .reportTableRow > *:last-child:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+  /* --- (*** END: แก้ไขขั้นสูงสุด ***) --- */
 }
