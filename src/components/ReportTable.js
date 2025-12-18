@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ เพิ่ม useMemo
 import styles from "./css/ReportTable.module.css";
 import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
 import "cally";
@@ -8,14 +8,19 @@ const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
 
 const truncateText = (text, maxLength) => {
   if (!text) return "";
-  return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength) + "...";
 };
 
-// ------------------------- Date Filter Component
+// ------------------------- Date Filter
 const DateFilter = () => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const calendarRef = useRef(null);
+  const formatDate = (d) =>
+    d ? d.toLocaleDateString("th-TH") : "กดเพื่อเลือกช่วงเวลา";
 
   useEffect(() => {
     const node = calendarRef.current;
@@ -31,12 +36,19 @@ const DateFilter = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      <button className={styles.timeRangeButton} onClick={() => setShow(!show)}>
-        {date.toLocaleDateString("th-TH")}
+      <button
+        className={styles.timeRangeButton}
+        onClick={() => setShow(!show)}
+      >
+        {formatDate(date)}
       </button>
       {show && (
         <div className={styles.calendarPopup}>
-          <calendar-date ref={calendarRef} value={toYYYYMMDD(date)}>
+          <calendar-date
+            ref={calendarRef}
+            value={toYYYYMMDD(date)}
+            className="cally bg-base-100 border border-base-300 shadow-lg rounded-box"
+          >
             <calendar-month></calendar-month>
           </calendar-date>
         </div>
@@ -45,76 +57,161 @@ const DateFilter = () => {
   );
 };
 
-// ------------------------- Main Component
+// ------------------------- Report Table
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
   const [loading, setLoading] = useState(true);
+
+  // --- State สำหรับเก็บตัวเลือกใน Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
+
+  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
   const isAllReports = subTab === "รายการแจ้งรวม";
-  const mainFilters = isAllReports ? ["ประเภท", "ช่วงเวลา"] : ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
-  const locationFilters = isAllReports ? [] : ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
+  const mainFilters = isAllReports
+    ? ["ประเภท", "ช่วงเวลา"]
+    : ["ประเภท", "สถานะ", "หน่วยงาน", "ช่วงเวลา"];
+  const locationFilters = isAllReports
+    ? []
+    : ["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"];
+  const modalTitle = isAllReports
+    ? "ตัวกรอง (รายการแจ้งรวม)"
+    : "ตัวกรอง (เฉพาะหน่วยงาน)";
+  const summaryTitle = isAllReports
+    ? "รายการแจ้งรวม"
+    : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // 1. Fetch Issue Types
+  // --- 1. Fetch Issue Types ---
   useEffect(() => {
-    fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types")
-      .then(res => res.json())
-      .then(data => setIssueTypes(Array.isArray(data) ? data : (data.data || [])))
-      .catch(err => console.error(err));
+    const fetchIssueTypes = async () => {
+      try {
+        const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
+        if (!res.ok) throw new Error("Failed to fetch issue types");
+        const data = await res.json();
+        
+        if (Array.isArray(data)) {
+            setIssueTypes(data);
+        } else if (data.data && Array.isArray(data.data)) {
+            setIssueTypes(data.data);
+        } else {
+            setIssueTypes([]);
+        }
+      } catch (err) {
+        console.error("Error fetching issue types:", err);
+      }
+    };
+    fetchIssueTypes();
   }, []);
 
-  // 2. Fetch Statuses
+  // --- 2. Fetch Statuses ---
   useEffect(() => {
-    fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_status")
-      .then(res => res.json())
-      .then(data => setStatusOptions(Array.isArray(data) ? data : (data.data || [])))
-      .catch(err => console.error(err));
-  }, []);
+    const fetchStatuses = async () => {
+      try {
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        let orgId = null;
+        if (lastOrg) {
+          const orgData = JSON.parse(lastOrg);
+          orgId = orgData.id || orgData.organization_id;
+        }
 
-  // 3. Fetch Reports
+        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
+        const url = orgId 
+          ? `${baseUrl}?organization_id=${orgId}` 
+          : baseUrl;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to fetch statuses");
+        
+        const data = await res.json();
+        
+        if (Array.isArray(data)) {
+          setStatusOptions(data);
+        } else if (data.data && Array.isArray(data.data)) {
+           setStatusOptions(data.data); 
+        } else {
+           setStatusOptions([]);
+        }
+
+      } catch (err) {
+        console.error("Error fetching statuses:", err);
+        setStatusOptions([]);
+      }
+    };
+
+    fetchStatuses();
+  }, [subTab]);
+
+  // --- 3. Fetch Reports ---
   useEffect(() => {
     const fetchCases = async () => {
-      setLoading(true);
-      const lastOrg = localStorage.getItem("lastSelectedOrg");
-      if (!lastOrg) { setReports([]); setLoading(false); return; }
-      
-      const org = JSON.parse(lastOrg);
-      const orgId = org.id || org.organization_id;
-      
       try {
-        const res = await fetch(`https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`);
+        setLoading(true);
+        const lastOrg = localStorage.getItem("lastSelectedOrg");
+        if (!lastOrg) {
+          setReports([]);
+          setLoading(false);
+          return;
+        }
+
+        const org = JSON.parse(lastOrg);
+        const orgId = org.id || org.organization_id;
+
+        const res = await fetch(
+          `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
+        );
+        if (!res.ok) throw new Error("Fetch cases failed");
+
         const data = await res.json();
-        setReports(Array.isArray(data) ? data : (data.data || []));
+        const reportsData = Array.isArray(data) ? data : (data.data || []);
+        
+        setReports(reportsData);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching data:", err);
+        setReports([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchCases();
   }, [subTab]);
 
-  // 4. Filtering Logic
+  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
-      const matchType = selectedType === "all" || report.issue_type_name === selectedType;
-      const matchStatus = selectedStatus === "all" || report.status === selectedStatus;
+      
+      // กรองประเภท (เทียบกับชื่อ issue_type_name)
+      const reportTypeName = report.issue_type_name || ""; 
+      const matchType = selectedType === "all" || reportTypeName === selectedType;
+
+      // กรองสถานะ
+      const reportStatus = report.status || "";
+      const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
+
       return matchType && matchStatus;
     });
   }, [reports, selectedType, selectedStatus]);
 
+  const handleToggleDetails = (id) => {
+    setExpandedCardId((prevId) => (prevId === id ? null : id));
+  };
+
   const getStatusClass = (status) => {
     switch (status) {
       case "รอรับเรื่อง": return styles.pending;
+      case "กำลังประสานงาน": return styles.coordinating;
       case "กำลังดำเนินการ": return styles.in_progress;
       case "เสร็จสิ้น": return styles.completed;
-      case "กำลังประสานงาน": return styles.coordinating;
-      default: return "";
+      case "ส่งต่อ": return styles.forwarded;
+      case "เชิญร่วม": return styles.invited;
+      case "ปฏิเสธ": return styles.rejected;
+      default: return styles.other;
     }
   };
 
@@ -122,97 +219,185 @@ const ReportTable = ({ subTab, onRowClick }) => {
     <>
       <div className={styles.searchTop}>
         <div className={styles.searchInputWrapper}>
-          <input type="text" placeholder="ใส่คำที่ต้องการค้นหา" className={styles.searchInput} />
+          <input
+            type="text"
+            placeholder="ใส่คำที่ต้องการค้นหา"
+            className={styles.searchInput}
+          />
           <FaSearch className={styles.searchIcon} />
         </div>
-        <button className={styles.filterToggleButton} onClick={() => setShowFilters(true)}>
-          <FaFilter /> <span>ตัวกรอง</span>
+        <button
+          className={styles.filterToggleButton}
+          onClick={() => setShowFilters(true)}
+        >
+          <FaFilter />
+          <span>ตัวกรอง</span>
         </button>
       </div>
 
       {showFilters && (
         <>
-          <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)} />
-          <div className={styles.filterModal}>
-            <div className={styles.filterModalHeader}>
-              <h3>{isAllReports ? "ตัวกรอง (แจ้งรวม)" : "ตัวกรอง (หน่วยงาน)"}</h3>
-              <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}><FaTimes /></button>
-            </div>
-            <div className={styles.filterModalContent}>
-              <div className={styles.reportFilters}>
-                {mainFilters.map((label, i) => (
-                  <div className={styles.filterGroup} key={i}>
-                    <label>{label}</label>
-                    {label === "ช่วงเวลา" ? <DateFilter /> : (
-                      <select 
-                        value={label === "ประเภท" ? selectedType : selectedStatus}
-                        onChange={(e) => label === "ประเภท" ? setSelectedType(e.target.value) : setSelectedStatus(e.target.value)}
-                      >
-                        <option value="all">ทั้งหมด</option>
-                        {label === "ประเภท" 
-                          ? issueTypes.map((t, idx) => <option key={idx} value={t.issue_type_name}>{t.issue_type_name}</option>)
-                          : statusOptions.map((s, idx) => <option key={idx} value={s}>{s}</option>)
-                        }
-                      </select>
-                    )}
-                  </div>
-                ))}
-                {locationFilters.map((label, i) => (
-                  <div key={i} className={styles.filterGroup}>
-                    <label>{label}</label>
-                    <select><option value="all">ทั้งหมด</option></select>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
-            </div>
-          </div>
+           <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
+           <div className={styles.filterModal}>
+             <div className={styles.filterModalHeader}>
+               <h3>{modalTitle}</h3>
+               <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}>
+                 <FaTimes />
+               </button>
+             </div>
+             <div className={styles.filterModalContent}>
+               <div className={styles.reportFilters}>
+                 {mainFilters.map((label, i) => (
+                   <div className={styles.filterGroup} key={i}>
+                     <label>{label}</label>
+                     
+                     {label === "ช่วงเวลา" ? (
+                        <DateFilter />
+                     ) : label === "ประเภท" ? (
+                        // ✅ ผูก Value และ OnChange สำหรับประเภท
+                        <select 
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                        >
+                          <option value="all">ทั้งหมด</option>
+                          {issueTypes.map((type, index) => (
+                            <option 
+                              key={type.issue_type_id || type.id || index} 
+                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
+                              value={type.issue_type_name || type.name}
+                            >
+                              {type.issue_type_name || type.name || "ระบุไม่ได้"}
+                            </option>
+                          ))}
+                        </select>
+                     ) : label === "สถานะ" ? (
+                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
+                        <select 
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                        >
+                          <option value="all">ทั้งหมด</option>
+                          {statusOptions.length > 0 ? (
+                            statusOptions.map((status, index) => (
+                              <option key={index} value={status}>
+                                {status}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled>ไม่พบข้อมูลสถานะ</option>
+                          )}
+                        </select>
+                     ) : (
+                        // Filter อื่นๆ (เช่น หน่วยงาน)
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                        </select>
+                     )}
+
+                   </div>
+                 ))}
+                 
+                 {locationFilters.map((label, i) => (
+                   <div key={i} className={styles.filterGroup}>
+                     <label>{label}</label>
+                     <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
+                   </div>
+                 ))}
+               </div>
+               <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
+             </div>
+           </div>
         </>
       )}
 
       <div className={styles.reportSummary}>
-        <strong>{isAllReports ? "รายการแจ้งรวม" : "รายการแจ้งเฉพาะหน่วยงาน"}</strong> ({loading ? "โหลด..." : `${filteredReports.length} รายการ`})
+        <strong>{summaryTitle}</strong>{" "}
+        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
+        ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
       </div>
 
       <div className={styles.reportTableContainer}>
-        {!loading && filteredReports.map((report) => {
-          const isExpanded = expandedCardId === report.issue_cases_id;
-          return (
-            <div key={report.issue_cases_id} className={styles.reportTableRow} onClick={() => onRowClick?.(report)}>
-              <img src={report.cover_image_url || "https://via.placeholder.com/80"} className={styles.reportImage} alt="case" />
-              <div className={styles.reportHeader}>
-                <span>#{report.case_code}</span>
-                <p className={styles.reportDetailText}>{truncateText(report.title || "-", 40)}</p>
-              </div>
-              <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
+        {loading ? (
+          <p>กำลังโหลดข้อมูล...</p>
+        ) : filteredReports.length === 0 ? (
+          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
+          <p>ไม่พบข้อมูลตามเงื่อนไข</p>
+        ) : (
+          // ✅ วนลูป filteredReports แทน reports
+          filteredReports.map((report) => {
+            const isExpanded = expandedCardId === report.issue_cases_id;
+            const responsibleUnits =
+              report.organizations && report.organizations.length > 0
+                ? report.organizations.map((org) => org.responsible_unit).join(", ")
+                : "-";
 
-              {/* ส่วนที่ยืดออกมา */}
-              {isExpanded && (
-                <div className={styles.expandedSection}>
-                  <div className={styles.mainDetails}>
-                    <span><strong>ประเภท:</strong> {report.issue_type_name}</span>
-                    <span><strong>รายละเอียด:</strong> {report.description || "-"}</span>
-                    <span><strong>แจ้งเมื่อ:</strong> {new Date(report.created_at).toLocaleString("th-TH")}</span>
-                  </div>
-                  <div className={styles.locationDetails}>
-                    📍 {report.latitude}, {report.longitude} <br/>
-                    🏢 {report.organizations?.map(o => o.responsible_unit).join(", ") || "-"}
-                  </div>
-                </div>
-              )}
-
-              <button 
-                className={styles.toggleDetailsButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setExpandedCardId(isExpanded ? null : report.issue_cases_id);
-                }}
+            return (
+              <div
+                key={report.issue_cases_id}
+                className={styles.reportTableRow}
+                onClick={() => onRowClick && onRowClick(report)}
+                style={{ cursor: "pointer" }} 
               >
-                {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-              </button>
-            </div>
-          );
-        })}
+                <img
+                  src={
+                    report.cover_image_url ||
+                    "https://via.placeholder.com/120x80?text=No+Image"
+                  }
+                  alt="Report"
+                  className={styles.reportImage}
+                />
+                <div className={styles.reportHeader}>
+                  <span className={styles.reportIdText}>
+                    #{report.case_code}
+                  </span>
+                  <p className={styles.reportDetailText}>
+                    {truncateText(report.title || "-", 40)}
+                  </p>
+                </div>
+                <div className={styles.reportStatusGroup}>
+                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
+                    {report.status}
+                  </span>
+                </div>
+
+                {isExpanded && (
+                  <>
+                    <div className={styles.mainDetails}>
+                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
+                      <span>รายละเอียด: {report.description || "-"}</span>
+                      <span>
+                        วันที่แจ้ง:{" "}
+                        {new Date(report.created_at).toLocaleString("th-TH")}
+                      </span>
+                      <span>
+                        อัปเดตล่าสุด:{" "}
+                        {new Date(report.updated_at).toLocaleString("th-TH")}
+                      </span>
+                    </div>
+                    <div className={styles.locationDetails}>
+                      <span>
+                        พิกัด: {report.latitude}, {report.longitude}
+                      </span>
+                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
+                    </div>
+                  </>
+                )}
+
+                <button
+                  className={styles.toggleDetailsButton}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    handleToggleDetails(
+                      isExpanded ? null : report.issue_cases_id
+                    );
+                  }}
+                >
+                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+                </button>
+              </div>
+            );
+          })
+        )}
       </div>
     </>
   );
