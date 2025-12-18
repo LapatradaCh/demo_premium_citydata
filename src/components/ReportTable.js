@@ -119,7 +119,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
           orgId = orgData.id || orgData.organization_id;
         }
 
-        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
         const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId 
           ? `${baseUrl}?organization_id=${orgId}` 
@@ -182,18 +181,13 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchCases();
   }, [subTab]);
 
-  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
+  // --- ✅ 4. Logic การกรองข้อมูล ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
-      
-      // กรองประเภท (เทียบกับชื่อ issue_type_name)
       const reportTypeName = report.issue_type_name || ""; 
       const matchType = selectedType === "all" || reportTypeName === selectedType;
-
-      // กรองสถานะ
       const reportStatus = report.status || "";
       const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
-
       return matchType && matchStatus;
     });
   }, [reports, selectedType, selectedStatus]);
@@ -250,53 +244,33 @@ const ReportTable = ({ subTab, onRowClick }) => {
                  {mainFilters.map((label, i) => (
                    <div className={styles.filterGroup} key={i}>
                      <label>{label}</label>
-                     
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
                      ) : label === "ประเภท" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับประเภท
-                        <select 
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                        >
+                        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
                           <option value="all">ทั้งหมด</option>
                           {issueTypes.map((type, index) => (
-                            <option 
-                              key={type.issue_type_id || type.id || index} 
-                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
-                              value={type.issue_type_name || type.name}
-                            >
+                            <option key={type.issue_type_id || type.id || index} value={type.issue_type_name || type.name}>
                               {type.issue_type_name || type.name || "ระบุไม่ได้"}
                             </option>
                           ))}
                         </select>
                      ) : label === "สถานะ" ? (
-                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
-                        <select 
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
-                        >
+                        <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
                           <option value="all">ทั้งหมด</option>
                           {statusOptions.length > 0 ? (
                             statusOptions.map((status, index) => (
-                              <option key={index} value={status}>
-                                {status}
-                              </option>
+                              <option key={index} value={status}>{status}</option>
                             ))
                           ) : (
                             <option disabled>ไม่พบข้อมูลสถานะ</option>
                           )}
                         </select>
                      ) : (
-                        // Filter อื่นๆ (เช่น หน่วยงาน)
-                        <select defaultValue="all">
-                          <option value="all">ทั้งหมด</option>
-                        </select>
+                        <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
                      )}
-
                    </div>
                  ))}
-                 
                  {locationFilters.map((label, i) => (
                    <div key={i} className={styles.filterGroup}>
                      <label>{label}</label>
@@ -312,7 +286,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
 
       <div className={styles.reportSummary}>
         <strong>{summaryTitle}</strong>{" "}
-        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
         ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
       </div>
 
@@ -320,83 +293,89 @@ const ReportTable = ({ subTab, onRowClick }) => {
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
         ) : filteredReports.length === 0 ? (
-          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
           <p>ไม่พบข้อมูลตามเงื่อนไข</p>
         ) : (
-          // ✅ วนลูป filteredReports แทน reports
-          filteredReports.map((report) => {
-            const isExpanded = expandedCardId === report.issue_cases_id;
-            const responsibleUnits =
-              report.organizations && report.organizations.length > 0
-                ? report.organizations.map((org) => org.responsible_unit).join(", ")
-                : "-";
+          <div className={styles.cardGridWrapper} style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+            {filteredReports.map((report) => {
+              const isExpanded = expandedCardId === report.issue_cases_id;
+              const responsibleUnits =
+                report.organizations && report.organizations.length > 0
+                  ? report.organizations.map((org) => org.responsible_unit).join(", ")
+                  : "-";
 
-            return (
-              <div
-                key={report.issue_cases_id}
-                className={styles.reportTableRow}
-                onClick={() => onRowClick && onRowClick(report)}
-                style={{ cursor: "pointer" }} 
-              >
-                <img
-                  src={
-                    report.cover_image_url ||
-                    "https://via.placeholder.com/120x80?text=No+Image"
-                  }
-                  alt="Report"
-                  className={styles.reportImage}
-                />
-                <div className={styles.reportHeader}>
-                  <span className={styles.reportIdText}>
-                    #{report.case_code}
-                  </span>
-                  <p className={styles.reportDetailText}>
-                    {truncateText(report.title || "-", 40)}
-                  </p>
-                </div>
-                <div className={styles.reportStatusGroup}>
-                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
-                    {report.status}
-                  </span>
-                </div>
-
-                {isExpanded && (
-                  <>
-                    <div className={styles.mainDetails}>
-                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
-                      <span>รายละเอียด: {report.description || "-"}</span>
-                      <span>
-                        วันที่แจ้ง:{" "}
-                        {new Date(report.created_at).toLocaleString("th-TH")}
-                      </span>
-                      <span>
-                        อัปเดตล่าสุด:{" "}
-                        {new Date(report.updated_at).toLocaleString("th-TH")}
-                      </span>
-                    </div>
-                    <div className={styles.locationDetails}>
-                      <span>
-                        พิกัด: {report.latitude}, {report.longitude}
-                      </span>
-                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
-                    </div>
-                  </>
-                )}
-
-                <button
-                  className={styles.toggleDetailsButton}
-                  onClick={(e) => {
-                    e.stopPropagation(); 
-                    handleToggleDetails(
-                      isExpanded ? null : report.issue_cases_id
-                    );
-                  }}
+              return (
+                <div
+                  key={report.issue_cases_id}
+                  className={styles.reportTableRow}
+                  onClick={() => onRowClick && onRowClick(report)}
+                  style={{ 
+                    cursor: "pointer",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '16px',
+                    borderRadius: '16px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                    backgroundColor: '#fff',
+                    width: '320px',
+                    minHeight: '200px',
+                    position: 'relative'
+                  }} 
                 >
-                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
-                </button>
-              </div>
-            );
-          })
+                  {/* Top Section: Image, ID, Status */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <img
+                        src={report.cover_image_url || "https://via.placeholder.com/120x80?text=No+Image"}
+                        alt="Report"
+                        style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover' }}
+                      />
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>#{report.case_code}</span>
+                        <p style={{ color: '#666', fontSize: '0.9rem', marginTop: '4px' }}>
+                          {truncateText(report.title || "-", 35)}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <span className={`${styles.statusTag} ${getStatusClass(report.status)}`} style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                      {report.status}
+                    </span>
+                  </div>
+
+                  {/* Expansion Details */}
+                  {isExpanded && (
+                    <div style={{ fontSize: '0.85rem', color: '#555', borderTop: '1px solid #eee', paddingTop: '10px', marginBottom: '10px' }}>
+                      <div><strong>ประเภท:</strong> {report.issue_type_name}</div>
+                      <div style={{ marginTop: '4px' }}><strong>รายละเอียด:</strong> {report.description || "-"}</div>
+                      <div style={{ marginTop: '4px' }}><strong>หน่วยงาน:</strong> {responsibleUnits}</div>
+                    </div>
+                  )}
+
+                  {/* Bottom Button */}
+                  <button
+                    className={styles.toggleDetailsButton}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      marginTop: 'auto',
+                      borderRadius: '12px',
+                      border: '1px solid #f0f0f0',
+                      backgroundColor: '#fff',
+                      color: '#007bff',
+                      fontWeight: '500',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      handleToggleDetails(isExpanded ? null : report.issue_cases_id);
+                    }}
+                  >
+                    {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </>
