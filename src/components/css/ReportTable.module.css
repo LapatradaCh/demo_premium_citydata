@@ -21,7 +21,6 @@
   gap: 16px;
   position: relative;
   width: 100%;
-  /* max-width: 700px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
   margin-bottom: 24px;
 }
 
@@ -277,15 +276,15 @@
   width: 100%;
 }
 
-/* --- ✅ ปรับ Container เป็น Grid เพื่อจัด Card 3 คอลัมน์ --- */
+/* --- ✅ Web Portal Grid Layout --- */
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
 }
 
-/* --- ✅ ปรับ Row ให้เป็น Card ตามรูปภาพ --- */
+/* --- ✅ Web Card Design --- */
 .reportTableRow {
   display: grid;
   grid-template-columns: 80px 1fr auto;
@@ -293,67 +292,55 @@
     "image header status"
     "toggle toggle toggle";
   align-items: start;
-  gap: 8px 12px;
-  padding: 20px;
+  gap: 12px;
+  padding: 24px;
   background: #ffffff;
-  border-radius: 20px; /* ขอบมนมากตามรูป */
-  border: 1px solid #f0f2f5;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px; /* ขอบมนแบบเว็บไซต์พอดีคำ */
+  border: 1px solid #edf2f7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 180px;
 }
 
 .reportTableRow:hover {
-  background: #ffffff;
-  transform: translateY(-5px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #cbd5e0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
 }
 
 .reportImage {
   grid-area: image;
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
 }
 
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 18px;
-  color: #000;
+  font-size: 17px;
+  color: #2d3748;
 }
 
 .reportDetailText {
   white-space: normal;
   word-break: break-word;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 400;
-  color: #555;
+  color: #4a5568;
   padding-top: 4px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-.mainDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #666;
+.mainDetails, .locationDetails {
   grid-column: span 3;
-  border-top: 1px dashed #eee;
-  margin-top: 10px;
-  padding-top: 10px;
-}
-
-.locationDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #777;
-  grid-column: span 3;
-  margin-bottom: 10px;
+  font-size: 12.5px;
+  color: #718096;
+  border-top: 1px dashed #e2e8f0;
+  margin-top: 12px;
+  padding-top: 12px;
 }
 
 .reportStatusGroup {
@@ -364,104 +351,49 @@
   align-items: flex-end;
 }
 
-/* === (SHARED) Status Tag === */
+/* === Status Tag (Web Style) === */
 .statusTag {
-  padding: 4px 14px;
-  border-radius: 22px;
-  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px; /* ขอบเหลี่ยมมนแบบเว็บ UI */
+  font-size: 11.5px;
   font-weight: 700;
-  color: #fff;
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.statusTag.pending {
-  background: #dc3545;
-}
-.statusTag.coordinating {
-  background-color: #9b59b6;
-  color: white;
-}
-.statusTag.in_progress {
-  background: #ffc107;
-  color: #333;
-}
-.statusTag.completed {
-  background: #057a55;
-}
-.statusTag.forwarded {
-  background-color: #007bff;
-  color: white;
-}
-.statusTag.invited {
-  background-color: #20c997;
-  color: white;
-}
-.statusTag.rejected {
-  background-color: #6c757d;
-  color: white;
-}
+.statusTag.pending { background: #fee2e2; color: #991b1b; }
+.statusTag.coordinating { background: #f3e8ff; color: #6b21a8; }
+.statusTag.in_progress { background: #fef3c7; color: #92400e; }
+.statusTag.completed { background: #dcfce7; color: #166534; }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 16px;
-  color: #000;
-}
-
-.ratingStar {
-  color: #ccc;
-}
-
-.ratingStar.active {
-  color: #ffc107;
-}
-
-/* --- ✅ ปรับปุ่มอ่านเพิ่มเติมเป็นสีขาว ตัดขอบดำหนาและเงาให้เด่น --- */
+/* === ✅ ปุ่มอ่านเพิ่มเติม สีขาวสะดุดตาแบบ Dashboard === */
 .toggleDetailsButton {
   grid-area: toggle;
-  background-color: #ffffff; /* สีขาว */
-  color: #000000;            /* ตัวหนังสือสีดำ */
-  border: 1.5px solid #000000; /* ขอบเส้นสีดำชัดเจน */
+  background-color: #ffffff;
+  color: #1a202c;
+  border: 1.5px solid #e2e8f0;
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 16px;
+  transition: all 0.2s;
   text-align: center;
-  margin-top: 10px;
-  transition: all 0.2s ease;
-  /* ใส่เงาแข็ง (Shadow) เพื่อให้ปุ่มดูมีมิติลอยจากพื้นการ์ดขาว */
-  box-shadow: 0 4px 0px rgba(0, 0, 0, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .toggleDetailsButton:hover {
-  background-color: #000000; /* สลับสีเป็นดำ */
-  color: #ffffff;            /* ตัวหนังสือขาว */
-  transform: translateY(2px); /* เอฟเฟกต์กดปุ่ม */
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 1);
-  text-decoration: none;
+  background-color: #f7fafc;
+  border-color: #1a202c;
+  color: #000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 768px) {
-  .searchTop {
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .filterToggleButton {
-    max-width: 100%;
-  }
-
-  .reportSummary {
-    margin-top: 16px;
-  }
-
   .reportTableContainer {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
 }
