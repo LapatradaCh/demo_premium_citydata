@@ -277,7 +277,7 @@
   width: 100%;
 }
 
-/* ✅ แก้ไขจุดที่ 1: เปลี่ยน Container เป็น Grid เพื่อจัด Card */
+/* --- ✅ แก้ไขเฉพาะคุณสมบัติภายในให้เป็น Card Layout ตามรูป --- */
 .reportTableContainer {
   width: 100%;
   display: grid;
@@ -285,10 +285,9 @@
   gap: 20px;
 }
 
-/* ✅ แก้ไขจุดที่ 2: ปรับแต่ง Row ให้เป็นรูปทรง Card ตามรูปภาพ */
 .reportTableRow {
   display: grid;
-  grid-template-columns: 75px 1fr auto;
+  grid-template-columns: 80px 1fr auto;
   grid-template-areas:
     "image header status"
     "toggle toggle toggle";
@@ -296,17 +295,16 @@
   gap: 8px 12px;
   padding: 20px;
   background: #ffffff;
-  border-radius: 20px; /* ขอบมนมากตามรูป */
-  border: 1px solid #eef0f2;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  border: 1px solid #f0f2f5;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 180px;
 }
 
 .reportTableRow:hover {
   background: #ffffff;
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
 }
 
 .reportImage {
@@ -320,7 +318,7 @@
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 17px;
+  font-size: 18px;
   color: #000;
 }
 
@@ -334,11 +332,10 @@
   line-height: 1.4;
 }
 
-/* ✅ ส่วน Details เมื่อขยาย */
 .mainDetails {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   font-size: 12px;
   color: #666;
   grid-column: span 3;
@@ -367,10 +364,10 @@
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 22px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
   display: inline-block;
   text-align: center;
@@ -419,22 +416,21 @@
   color: #ffc107;
 }
 
-/* ✅ แก้ไขจุดที่ 3: ปรับปุ่มอ่านเพิ่มเติมให้เป็นปุ่มกว้างด้านล่าง */
 .toggleDetailsButton {
   grid-area: toggle;
   background: #ffffff;
   border: 1px solid #f0f2f5;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   color: #007bff;
   transition: all 0.2s ease;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  margin-top: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  margin-top: 10px;
 }
 
 .toggleDetailsButton:hover {
@@ -443,7 +439,7 @@
   border-color: #007bff;
 }
 
-/* --- Media Queries (คงเดิม) --- */
+/* --- Media Queries --- */
 @media screen and (max-width: 768px) {
   .searchTop {
     flex-direction: column;
