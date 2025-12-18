@@ -10,15 +10,15 @@
   border-radius: 18px;
   padding: 18px;
   min-width: 280px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1); /* นุ่มนวลขึ้น */
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
   flex-direction: row;
-  align-items: center; /* เปลี่ยนเป็น center ให้ดูสมดุล */
-  gap: 16px;
+  align-items: center; /* ปรับให้กึ่งกลางแนวตั้งเพื่อให้ดูสมดุล */
+  gap: 12px;
   position: relative;
   width: 100%;
   margin-bottom: 24px;
@@ -34,12 +34,12 @@
   width: 100%;
   flex-grow: 1;
   box-sizing: border-box;
-  padding: 14px 18px 14px 52px; /* เพิ่ม padding เล็กน้อย */
-  border-radius: 16px; /* ปรับจาก 28px เป็น 16px ให้ดูโมเดิร์นขึ้น */
-  border: 1px solid #e0e0e0;
+  padding: 12px 18px 12px 52px;
+  border-radius: 16px; /* ปรับจาก 28px ให้มีความโค้งมนที่ดูทันสมัยขึ้น (Modern Round) */
+  border: 1px solid #e8e8e8; /* สีเส้นขอบอ่อนลง */
   font-size: 14px;
-  background-color: #fcfcfc; /* เปลี่ยนเป็นสีขาวนวล */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background-color: #f9f9f9; /* ใส่สีพื้นหลังอ่อนๆ เพื่อให้ตัดกับพื้นผิวหน้าจอ */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.25s ease;
   color: #000;
 }
@@ -48,7 +48,7 @@
   outline: none;
   border-color: #000;
   background-color: #fff;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .searchIcon {
@@ -57,7 +57,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
-  color: #888;
+  color: #999;
   cursor: pointer;
 }
 
@@ -67,34 +67,29 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 12px 24px;
+  height: 46px; /* ล็อกความสูงให้พอดีกับ search input */
   font-size: 14px;
   font-weight: 600;
   color: #fff;
   background-color: #000;
   border: none;
-  border-radius: 16px; /* ล้อไปกับ search input */
+  border-radius: 14px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease;
   white-space: nowrap;
   min-width: fit-content;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .filterToggleButton:hover {
   background-color: #333;
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .filterToggleButton svg {
   font-size: 16px;
-}
-
-.filterToggleButton span {
-  display: inline;
 }
 
 /* === (SHARED) Modal === */
@@ -104,9 +99,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1999;
-  backdrop-filter: blur(8px); /* เพิ่มเบลอให้ดูพรีเมียม */
+  backdrop-filter: blur(8px); /* เบลอพื้นหลังให้ดูพรีเมียมขึ้น */
 }
 
 .filterModal {
@@ -119,7 +114,7 @@
   border-radius: 24px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
 }
@@ -136,10 +131,11 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
+  color: #1a1a1a;
 }
 
 .filterModalClose {
-  background: #dc3545;
+  background: #ff4d4f;
   border: none;
   border-radius: 50%;
   width: 28px;
@@ -149,24 +145,19 @@
   justify-content: center;
   cursor: pointer;
   color: #fff;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
   position: relative;
 }
 
 .filterModalClose:hover {
-  opacity: 0.8;
+  transform: rotate(90deg);
+  background: #ff7875;
 }
 
 .filterModalClose svg {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  fill: #ffffff;
-  z-index: 2;
+  width: 14px;
+  height: 14px;
+  fill: #fff;
 }
 
 .filterModalContent {
@@ -187,20 +178,17 @@
 
 /* === (SHARED) Filter Group === */
 .filterGroup {
-  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-width: 0;
+  gap: 8px;
   position: relative;
 }
 
 .filterGroup label {
   font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  padding-left: 4px;
-  margin-bottom: 2px;
+  font-weight: 700;
+  color: #444;
+  padding-left: 2px;
 }
 
 .filterGroup select,
@@ -208,36 +196,17 @@
   width: 100%;
   font-size: 14px;
   border-radius: 12px;
-  border: 1px solid #d0d0d0;
+  border: 1px solid #d9d9d9;
   padding: 12px 14px;
   background-color: #fff;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s ease;
-  color: #111;
-}
-
-.filterGroup select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 20px;
-}
-
-.filterGroup select:hover,
-.timeRangeButton:hover {
-  background-color: #f8f8f8;
-  border-color: #999;
+  transition: all 0.2s;
 }
 
 .filterGroup select:focus,
 .timeRangeButton:focus {
   border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
   outline: none;
 }
 
@@ -251,18 +220,13 @@
   border-radius: 14px;
   cursor: pointer;
   transition: all 0.25s ease;
-  align-self: center;
-  min-width: 100%; /* ให้เต็มความกว้างใน Modal */
   text-align: center;
+  margin-top: 10px;
 }
 
 .filterApplyButton:hover {
   background-color: #046c4e;
-}
-
-.filterApplyButton:active {
-  background-color: #02573d;
-  transform: scale(0.98);
+  transform: translateY(-1px);
 }
 
 /* --- Report Table Specific --- */
@@ -270,154 +234,128 @@
   font-weight: 700;
   font-size: 16px;
   margin-top: 28px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   color: #1a1a1a;
-  text-align: left;
   padding-left: 4px;
-  width: 100%;
 }
 
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* กว้างขึ้นเล็กน้อยเพื่อให้ไม่อึดอัด */
   gap: 20px;
 }
 
 .reportTableRow {
   display: grid;
-  grid-template-columns: 80px 1fr auto; /* เพิ่มพื้นที่รูปจาก 70px เป็น 80px */
+  grid-template-columns: 80px 1fr auto; /* เพิ่มพื้นที่รูปจาก 70 เป็น 80 */
   grid-template-areas:
     "image header status"
     "image details details"
     "image location location"
-    "image toggle toggle";
+    "toggle toggle toggle"; /* ปรับ toggle ให้เต็มความกว้าง */
   align-items: start;
-  gap: 8px 12px;
-  padding: 18px;
-  font-size: 13px;
+  gap: 10px 14px;
+  padding: 20px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 20px; /* มนมากขึ้น */
   border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .reportTableRow:hover {
-  background: #fff;
   transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-  border-color: #e0e0e0;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  border-color: #e2e2e2;
 }
 
 .reportImage {
   grid-area: image;
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 12px;
+  background: #f0f0f0;
 }
 
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 16px;
-  color: #000;
+  font-size: 17px;
+  color: #1a1a1a;
   line-height: 1.2;
 }
 
 .reportDetailText {
-  white-space: normal;
-  word-break: break-word;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px;
   color: #444;
-  padding-top: 2px;
+  margin-top: 2px;
+  line-height: 1.4;
 }
 
 .mainDetails {
   grid-area: details;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
-  font-size: 12px;
+  font-size: 13px;
   color: #666;
 }
 
 .locationDetails {
   grid-area: location;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   font-size: 12px;
   color: #888;
   border-top: 1px solid #f5f5f5;
-  margin-top: 6px;
-  padding-top: 8px;
+  margin-top: 8px;
+  padding-top: 10px;
 }
 
 .reportStatusGroup {
   grid-area: status;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: flex-end;
-  gap: 8px;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
   padding: 4px 12px;
-  border-radius: 10px; /* มนแบบพอดีดูแพงขึ้น */
+  border-radius: 8px; /* ทรงเหลี่ยมมนดูทันสมัยกว่าวงรี */
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
+  text-transform: uppercase;
   letter-spacing: 0.02em;
 }
-.statusTag.pending { background: #dc3545; }
-.statusTag.coordinating { background-color: #9b59b6; }
-.statusTag.in_progress { background: #ffc107; color: #333; }
-.statusTag.completed { background: #057a55; }
-.statusTag.forwarded { background-color: #007bff; }
-.statusTag.invited { background-color: #20c997; }
-.statusTag.rejected { background-color: #6c757d; }
-
-/* --- Report Table Specific --- */
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 16px;
-  color: #000;
-}
-
-.ratingStar { color: #ccc; }
-.ratingStar.active { color: #ffc107; }
+.statusTag.pending { background: #ff4d4f; }
+.statusTag.coordinating { background: #9b59b6; }
+.statusTag.in_progress { background: #faad14; color: #fff; }
+.statusTag.completed { background: #52c41a; }
 
 .toggleDetailsButton {
   grid-area: toggle;
-  background: #f8f9fa; /* เพิ่มพื้นหลังสีเทาอ่อนเพื่อให้ดูเป็นปุ่มตามรูป */
+  background: #f5f7f9; /* ใส่สีพื้นหลังปุ่มเพื่อให้ดูเหมือนการ์ดในรูปต้นฉบับ */
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
+  padding: 10px;
+  margin-top: 8px;
   text-align: center;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 13px;
   color: #007bff;
   transition: all 0.2s ease;
 }
 
 .toggleDetailsButton:hover {
-  background: #eef2f7;
+  background: #ebf3ff;
   color: #0056b3;
-  text-decoration: none;
 }
 
 /* --- Media Queries --- */
@@ -425,20 +363,15 @@
   .searchTop {
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 16px;
   }
   .filterToggleButton {
-    max-width: 100%;
     width: 100%;
-  }
-
-  .reportSummary {
-    margin-top: 16px;
+    max-width: none;
   }
 
   .reportTableContainer {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
 
   .reportTableRow {
@@ -446,29 +379,26 @@
     grid-template-areas:
       "image header"
       "image details"
-      "image location"
       "status status"
+      "location location"
       "toggle toggle";
-    gap: 6px 10px;
     padding: 16px;
+  }
+
+  .reportImage {
+    width: 70px;
+    height: 70px;
   }
 
   .reportStatusGroup {
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: flex-start;
-    align-items: flex-start;
-    padding-top: 12px;
+    padding-top: 10px;
     border-top: 1px solid #f0f0f0;
     margin-top: 8px;
   }
 
-  .mainDetails {
-    grid-template-columns: 1fr;
-    gap: 4px;
-  }
-
-  /* --- ไม้ตายสำหรับแก้ปุ่มเม็ดสีขาวล้น (ครบถ้วนตามเดิม) --- */
+  /* ไม้ตายล้างสไตล์ขาวล้น */
   .reportTableRow > *:last-child {
     all: unset;
     grid-area: toggle;
@@ -476,19 +406,12 @@
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
+    background: #f5f7f9;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+    font-weight: 700;
     font-size: 13px;
     color: #007bff;
-    transition: all 0.2s ease;
-    margin-top: 8px;
-  }
-
-  .reportTableRow > *:last-child:hover {
-    background: #eef2f7;
-    color: #0056b3;
   }
 }
