@@ -382,7 +382,7 @@
   gap: 8px;
 }
 
-/* === (SHARED) Status Tag - สีตามรูปภาพที่คุณส่งมา === */
+/* === (SHARED) Status Tag === */
 .statusTag {
   padding: 4px 12px;
   border-radius: 8px;
@@ -397,41 +397,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-/* รอรับเรื่อง - สีแดง */
-.statusTag.pending {
-  background-color: #ff4d4f; 
-}
-
-/* ประสานงาน - สีม่วง */
-.statusTag.coordinating {
-  background-color: #8338ec;
-}
-
-/* ดำเนินการ - สีเหลืองส้ม */
-.statusTag.in_progress {
-  background-color: #ffc107;
-  color: #000;
-}
-
-/* เสร็จสิ้น - สีเขียว */
-.statusTag.completed {
-  background-color: #52c41a;
-}
-
-/* ส่งต่อ - สีฟ้า */
-.statusTag.forwarded {
-  background-color: #1890ff;
-}
-
-/* เชิญร่วม - สีน้ำเงินไซแอน */
-.statusTag.invited {
-  background-color: #13c2c2;
-}
-
-/* ปฏิเสธ - สีเทาเข้ม */
-.statusTag.rejected {
-  background-color: #707b7c;
-}
+.statusTag.pending { background-color: #ff4d4f; }
+.statusTag.coordinating { background-color: #8338ec; }
+.statusTag.in_progress { background-color: #ffc107; color: #000; }
+.statusTag.completed { background-color: #52c41a; }
+.statusTag.forwarded { background-color: #1890ff; }
+.statusTag.invited { background-color: #13c2c2; }
+.statusTag.rejected { background-color: #707b7c; }
 
 /* --- Report Table Specific --- */
 .rating {
@@ -462,11 +434,12 @@
   color: #007bff;
   transition: all 0.2s ease;
   margin-top: 4px;
+  text-decoration: none; /* เอาขีดเส้นใต้ออก */
 }
 
 .toggleDetailsButton:hover {
   color: #0056b3;
-  text-decoration: underline;
+  text-decoration: none; /* ไม่เอาขีดเส้นใต้ตอน Hover */
 }
 
 /* ============================================ */
@@ -497,7 +470,6 @@
     max-width: 100%; 
   }
 
-  /* แก้ Overflow Mobile */
   .reportTableRow {
     grid-template-columns: 70px 1fr; 
     grid-template-areas:
@@ -524,6 +496,7 @@
     gap: 6px;
   }
 
+  /* ส่วนแก้ไขพิเศษสำหรับปุ่มในโหมดมือถือ */
   .reportTableRow > *:last-child {
     all: unset;
     grid-area: toggle;
@@ -539,5 +512,11 @@
     margin: 10px 0 0 0;
     padding: 10px 0 0 0;
     border-top: 1px dashed #eee;
+    text-decoration: none; /* เอาขีดเส้นใต้ออก */
+  }
+
+  .reportTableRow > *:last-child:hover {
+    text-decoration: none; /* ไม่เอาขีดเส้นใต้ตอน Hover ในมือถือ */
+    color: #0056b3;
   }
 }
