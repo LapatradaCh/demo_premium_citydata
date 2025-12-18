@@ -17,10 +17,11 @@
 .searchTop {
   display: flex;
   flex-direction: row;
-  align-items: center; /* ปรับให้กึ่งกลางแนวตั้งเพื่อให้ดูสมดุล */
-  gap: 12px;
+  align-items: stretch;
+  gap: 16px;
   position: relative;
   width: 100%;
+  /* max-width: 700px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
   margin-bottom: 24px;
 }
 
@@ -35,11 +36,11 @@
   flex-grow: 1;
   box-sizing: border-box;
   padding: 12px 18px 12px 52px;
-  border-radius: 16px; /* ปรับจาก 28px ให้มีความโค้งมนที่ดูทันสมัยขึ้น (Modern Round) */
-  border: 1px solid #e8e8e8; /* สีเส้นขอบอ่อนลง */
+  border-radius: 28px;
+  border: 1px solid #e0e0e0;
   font-size: 14px;
-  background-color: #f9f9f9; /* ใส่สีพื้นหลังอ่อนๆ เพื่อให้ตัดกับพื้นผิวหน้าจอ */
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   transition: all 0.25s ease;
   color: #000;
 }
@@ -47,8 +48,8 @@
 .searchInput:focus {
   outline: none;
   border-color: #000;
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .searchIcon {
@@ -57,7 +58,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
-  color: #999;
+  color: #555;
   cursor: pointer;
 }
 
@@ -67,29 +68,34 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 24px;
-  height: 46px; /* ล็อกความสูงให้พอดีกับ search input */
+  padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
   color: #fff;
   background-color: #000;
   border: none;
-  border-radius: 14px;
+  border-radius: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   white-space: nowrap;
   min-width: fit-content;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .filterToggleButton:hover {
   background-color: #333;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .filterToggleButton svg {
   font-size: 16px;
+}
+
+.filterToggleButton span {
+  display: inline;
 }
 
 /* === (SHARED) Modal === */
@@ -99,9 +105,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1999;
-  backdrop-filter: blur(8px); /* เบลอพื้นหลังให้ดูพรีเมียมขึ้น */
+  backdrop-filter: blur(4px);
 }
 
 .filterModal {
@@ -111,10 +117,10 @@
   transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 16px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
 }
@@ -123,7 +129,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: 12px 18px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -131,11 +137,10 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
 }
 
 .filterModalClose {
-  background: #ff4d4f;
+  background: #dc3545;
   border: none;
   border-radius: 50%;
   width: 28px;
@@ -145,19 +150,24 @@
   justify-content: center;
   cursor: pointer;
   color: #fff;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   position: relative;
 }
 
 .filterModalClose:hover {
-  transform: rotate(90deg);
-  background: #ff7875;
+  color: #fff;
 }
 
 .filterModalClose svg {
-  width: 14px;
-  height: 14px;
-  fill: #fff;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+  z-index: 2;
 }
 
 .filterModalContent {
@@ -178,17 +188,20 @@
 
 /* === (SHARED) Filter Group === */
 .filterGroup {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
   position: relative;
 }
 
 .filterGroup label {
   font-size: 13px;
-  font-weight: 700;
-  color: #444;
-  padding-left: 2px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
 }
 
 .filterGroup select,
@@ -196,166 +209,233 @@
   width: 100%;
   font-size: 14px;
   border-radius: 12px;
-  border: 1px solid #d9d9d9;
-  padding: 12px 14px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
   background-color: #fff;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+}
+
+.filterGroup select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+.filterGroup select:hover,
+.timeRangeButton:hover {
+  background-color: #f4f4f4;
+  border-color: #000;
 }
 
 .filterGroup select:focus,
 .timeRangeButton:focus {
   border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
   outline: none;
 }
 
 .filterApplyButton {
-  padding: 14px 20px;
+  padding: 12px 20px;
   font-size: 15px;
   font-weight: 700;
   color: #fff;
   background-color: #057a55;
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.25s ease;
+  align-self: center;
+  min-width: 150px;
   text-align: center;
-  margin-top: 10px;
 }
 
 .filterApplyButton:hover {
   background-color: #046c4e;
-  transform: translateY(-1px);
+}
+
+.filterApplyButton:active {
+  background-color: #02573d;
+  transform: scale(0.98);
 }
 
 /* --- Report Table Specific --- */
 .reportSummary {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 600;
   margin-top: 28px;
-  margin-bottom: 20px;
-  color: #1a1a1a;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: left;
   padding-left: 4px;
+  width: 100%;
 }
 
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* กว้างขึ้นเล็กน้อยเพื่อให้ไม่อึดอัด */
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
 .reportTableRow {
   display: grid;
-  grid-template-columns: 80px 1fr auto; /* เพิ่มพื้นที่รูปจาก 70 เป็น 80 */
+  grid-template-columns: 70px 1fr auto;
   grid-template-areas:
     "image header status"
     "image details details"
     "image location location"
-    "toggle toggle toggle"; /* ปรับ toggle ให้เต็มความกว้าง */
+    "image toggle toggle";
   align-items: start;
-  gap: 10px 14px;
-  padding: 20px;
+  gap: 4px 10px;
+  padding: 14px 18px;
+  font-size: 13px;
   background: #ffffff;
-  border-radius: 20px; /* มนมากขึ้น */
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 14px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reportTableRow:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-  border-color: #e2e2e2;
+  background: #f8f8f8;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
 }
 
 .reportImage {
   grid-area: image;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 12px;
-  background: #f0f0f0;
+  border-radius: 10px;
 }
 
 .reportHeader {
   grid-area: header;
   font-weight: 700;
-  font-size: 17px;
-  color: #1a1a1a;
-  line-height: 1.2;
+  font-size: 16px;
+  color: #000;
 }
 
 .reportDetailText {
-  font-size: 14px;
-  color: #444;
-  margin-top: 2px;
-  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  padding-top: 2px;
 }
 
 .mainDetails {
   grid-area: details;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 4px 10px;
+  font-size: 12px;
   color: #666;
 }
 
 .locationDetails {
   grid-area: location;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #888;
-  border-top: 1px solid #f5f5f5;
-  margin-top: 8px;
-  padding-top: 10px;
+  color: #777;
+  border-top: 1px dashed #ddd;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .reportStatusGroup {
   grid-area: status;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-end;
+  gap: 8px;
 }
 
 /* === (SHARED) Status Tag === */
 .statusTag {
-  padding: 4px 12px;
-  border-radius: 8px; /* ทรงเหลี่ยมมนดูทันสมัยกว่าวงรี */
-  font-size: 11px;
-  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 600;
   color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
 }
-.statusTag.pending { background: #ff4d4f; }
-.statusTag.coordinating { background: #9b59b6; }
-.statusTag.in_progress { background: #faad14; color: #fff; }
-.statusTag.completed { background: #52c41a; }
+.statusTag.pending {
+  background: #dc3545;
+}
+.statusTag.coordinating {
+  background-color: #9b59b6;
+  color: white;
+}
+.statusTag.in_progress {
+  background: #ffc107;
+  color: #333;
+}
+.statusTag.completed {
+  background: #057a55;
+}
+.statusTag.forwarded {
+  background-color: #007bff;
+  color: white;
+}
+.statusTag.invited {
+  background-color: #20c997;
+  color: white;
+}
+.statusTag.rejected {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* --- Report Table Specific --- */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 16px;
+  color: #000;
+}
+
+.ratingStar {
+  color: #ccc;
+}
+
+.ratingStar.active {
+  color: #ffc107;
+}
 
 .toggleDetailsButton {
   grid-area: toggle;
-  background: #f5f7f9; /* ใส่สีพื้นหลังปุ่มเพื่อให้ดูเหมือนการ์ดในรูปต้นฉบับ */
+  background: none;
   border: none;
-  border-radius: 12px;
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  text-align: center;
+  text-align: right;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13px;
   color: #007bff;
   transition: all 0.2s ease;
 }
 
 .toggleDetailsButton:hover {
-  background: #ebf3ff;
   color: #0056b3;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
 }
 
 /* --- Media Queries --- */
@@ -363,15 +443,19 @@
   .searchTop {
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 16px;
   }
   .filterToggleButton {
-    width: 100%;
-    max-width: none;
+    max-width: 100%;
+  }
+
+  .reportSummary {
+    margin-top: 16px;
   }
 
   .reportTableContainer {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   .reportTableRow {
@@ -379,39 +463,47 @@
     grid-template-areas:
       "image header"
       "image details"
+      "image location"
       "status status"
-      "location location"
       "toggle toggle";
-    padding: 16px;
-  }
-
-  .reportImage {
-    width: 70px;
-    height: 70px;
+    gap: 6px 10px;
   }
 
   .reportStatusGroup {
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-start;
-    padding-top: 10px;
-    border-top: 1px solid #f0f0f0;
-    margin-top: 8px;
+    align-items: flex-start;
+    padding-top: 8px;
+    border-top: 1px dashed #ddd;
+    margin-top: 4px;
   }
 
-  /* ไม้ตายล้างสไตล์ขาวล้น */
+  .mainDetails {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   .reportTableRow > *:last-child {
     all: unset;
     grid-area: toggle;
     display: block;
     width: 100%;
     box-sizing: border-box;
-    text-align: center;
-    background: #f5f7f9;
-    padding: 12px;
-    border-radius: 12px;
-    margin-top: 12px;
-    font-weight: 700;
+    text-align: right;
+    cursor: pointer;
+    font-weight: 600;
     font-size: 13px;
     color: #007bff;
+    transition: all 0.2s ease;
+    margin: 8px 0 0 0;
+    padding: 8px 0;
+    border-top: 1px dashed #ddd;
+  }
+
+  .reportTableRow > *:last-child:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
   }
 }
