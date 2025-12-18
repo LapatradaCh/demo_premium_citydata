@@ -21,6 +21,7 @@
   gap: 16px;
   position: relative;
   width: 100%;
+  /* max-width: 700px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
   margin-bottom: 24px;
 }
 
@@ -48,6 +49,7 @@
   outline: none;
   border-color: #000;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
 }
 
 .searchIcon {
@@ -275,147 +277,116 @@
   width: 100%;
 }
 
-/* --- ✅ ปรับ Container เป็น Grid สำหรับเว็บพอร์ทัล --- */
+/* --- ✅ Minimalist Web Container --- */
 .reportTableContainer {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  gap: 32px;
 }
 
-/* --- ✅ ปรับดีไซน์ Card ให้สะอาดตาและดูทันสมัยขึ้น --- */
+/* --- ✅ Minimalist Card Design (Clean & Web) --- */
 .reportTableRow {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
+  grid-template-columns: 75px 1fr auto;
   grid-template-areas:
     "image header status"
     "toggle toggle toggle";
   align-items: start;
-  gap: 12px 16px;
+  gap: 12px;
   padding: 24px;
   background: #ffffff;
-  border-radius: 16px; /* ขอบมนกำลังดีสำหรับเว็บ Dashboard */
-  border: 1px solid #f1f3f5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px; /* ขอบมนที่ดูเป็นระเบียบ */
+  border: 1px solid #f8f9fa; /* เส้นขอบบางมาก */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03); /* เงาที่นุ่มนวลที่สุด */
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   min-height: 180px;
 }
 
 .reportTableRow:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: #e2e8f0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 .reportImage {
   grid-area: image;
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid #f8f9fa;
+  border-radius: 8px;
 }
 
 .reportHeader {
   grid-area: header;
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 16px;
   color: #1a202c;
 }
 
 .reportDetailText {
   white-space: normal;
   word-break: break-word;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 400;
-  color: #4a5568;
+  color: #718096;
   padding-top: 4px;
   line-height: 1.5;
 }
 
 .mainDetails, .locationDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 12.5px;
-  color: #718096;
   grid-column: span 3;
-  border-top: 1px dashed #edf2f7;
+  font-size: 12px;
+  color: #a0aec0;
+  border-top: 1px solid #f7fafc;
   margin-top: 12px;
   padding-top: 12px;
 }
 
 .reportStatusGroup {
   grid-area: status;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
 }
 
-/* === Status Tag (Web Style: พื้นสีพาสเทล ตัวหนังสือเข้ม) === */
+/* === Status Tag (Minimal Web Style) === */
 .statusTag {
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 700;
-  display: inline-block;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.statusTag.pending { background: #fee2e2; color: #991b1b; }
-.statusTag.coordinating { background: #f3e8ff; color: #6b21a8; }
-.statusTag.in_progress { background: #fef3c7; color: #92400e; }
-.statusTag.completed { background: #dcfce7; color: #166534; }
-.statusTag.forwarded { background: #dbeafe; color: #1e40af; }
+.statusTag.pending { background: #fff5f5; color: #c53030; }
+.statusTag.in_progress { background: #fffaf0; color: #9c4221; }
+.statusTag.completed { background: #f0fff4; color: #276749; }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 16px;
-  color: #000;
-}
-
-/* --- ✅ ปุ่มอ่านเพิ่มเติม สีขาวขอบชัดและเงา ไม่กลืนพื้นการ์ดแน่นอน --- */
+/* === ✅ ปุ่มอ่านเพิ่มเติม สีขาวที่ไม่กลืนพื้นหลัง (Minimal Ghost) === */
 .toggleDetailsButton {
   grid-area: toggle;
   background-color: #ffffff;
-  color: #1a202c;
-  border: 1.5px solid #cbd5e0; /* ขอบสีเทาเข้มกว่าการ์ด */
+  color: #4a5568;
+  border: 1px solid #e2e8f0; /* เส้นขอบที่เห็นชัดพอดี */
   width: 100%;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* เงาใต้ปุ่มเพื่อความลอย */
+  font-weight: 600;
+  font-size: 13px;
   margin-top: 16px;
+  transition: all 0.2s;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* เงาจางๆ ให้ปุ่มดูมีมิติ */
 }
 
 .toggleDetailsButton:hover {
-  background-color: #f8fafc;
-  border-color: #1a202c;
-  color: #000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+  color: #1a202c;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 768px) {
-  .searchTop {
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .filterToggleButton {
-    max-width: 100%;
-  }
-
-  .reportSummary {
-    margin-top: 16px;
-  }
-
   .reportTableContainer {
     grid-template-columns: 1fr;
     gap: 16px;
