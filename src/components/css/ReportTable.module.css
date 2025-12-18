@@ -1,4 +1,4 @@
-/* --- 2. css/ReportTable.module.css --- */
+/* --- ReportTable.module.css --- */
 
 /* === (SHARED) Calendar === */
 .calendarPopup {
@@ -14,7 +14,7 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* --- Report Table Specific --- */
+/* --- Report Table Layout --- */
 .searchTop {
   display: flex;
   flex-direction: row;
@@ -97,15 +97,7 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-.filterToggleButton svg {
-  font-size: 16px;
-}
-
-.filterToggleButton span {
-  display: inline;
-}
-
-/* === (SHARED) Modal === */
+/* === (SHARED) Modal & Filters === */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
@@ -167,18 +159,6 @@
   transform: rotate(90deg);
 }
 
-.filterModalClose svg {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 14px;
-  height: 14px;
-  fill: #ffffff;
-  z-index: 2;
-}
-
 .filterModalContent {
   padding: 24px;
   display: flex;
@@ -195,7 +175,6 @@
   max-height: 50vh;
 }
 
-/* === (SHARED) Filter Group === */
 .filterGroup {
   flex: 1 1 auto;
   display: flex;
@@ -228,26 +207,11 @@
 
 .filterGroup select {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 40px;
   background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 20px;
-}
-
-.filterGroup select:hover,
-.timeRangeButton:hover {
-  background-color: #fff;
-  border-color: #000;
-}
-
-.filterGroup select:focus,
-.timeRangeButton:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-  outline: none;
+  padding-right: 40px;
 }
 
 .filterApplyButton {
@@ -266,17 +230,7 @@
   box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2);
 }
 
-.filterApplyButton:hover {
-  background-color: #046c4e;
-  transform: translateY(-1px);
-}
-
-.filterApplyButton:active {
-  background-color: #02573d;
-  transform: scale(0.98);
-}
-
-/* --- Report Table Specific --- */
+/* --- Report Table Grid & Cards --- */
 .reportSummary {
   font-weight: 700;
   margin-top: 28px;
@@ -293,7 +247,7 @@
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 24px; 
   max-width: 1100px; 
   margin: 0 auto;
@@ -304,36 +258,34 @@
   flex-direction: column;
   padding: 24px;
   background: #ffffff;
-  border-radius: 24px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border-radius: 32px; /* เพิ่มความโค้งมนตามรูป */
+  border: 1px solid #f2f2f2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
   gap: 16px;
 }
 
 .reportTableRow:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  border-color: #e0e0e0;
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-/* ส่วนหัว: ปรับปรุงให้สถานะอยู่ตำแหน่งที่สวยงาม */
+/* --- แก้ไขใหม่: จัดระเบียบส่วนหัวรูปและข้อความ --- */
 .cardHeaderSection {
   display: flex;
   flex-direction: row; 
-  align-items: flex-start; /* จัดให้อิงด้านบนเล็กน้อยเพื่อพื้นที่สถานะ */
-  gap: 16px;
+  align-items: flex-start;
+  gap: 18px;
   width: 100%;
-  position: relative;
 }
 
 .reportImage {
-  width: 75px;         
-  height: 75px;
+  width: 85px;         
+  height: 85px;
   object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-radius: 22px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   flex-shrink: 0; 
 }
 
@@ -341,91 +293,129 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 4px;
   min-width: 0; 
-  padding-right: 100px; /* เว้นที่ทางขวาให้ Status Tag */
-  padding-top: 4px;      /* ขยับข้อความลงมาให้ตรงกับรูป */
+  padding-top: 6px;
+  padding-right: 90px; /* เว้นระยะไม่ให้ข้อความทับสถานะ */
 }
 
 .reportHeader {
   font-weight: 800;
-  font-size: 19px;
-  color: #111;
+  font-size: 20px;
+  color: #1a1a1a;
   letter-spacing: -0.5px;
   margin: 0;
   line-height: 1.2;
 }
 
 .reportDetailText {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  color: #555;
+  color: #666;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* ปรับตำแหน่ง Status Tag ให้ลงมาและขยับตำแหน่งให้สมดุล */
+/* --- จัดการตำแหน่งป้ายสถานะ (Status) --- */
 .reportStatusGroup {
   position: absolute; 
-  top: 8px;           /* ขยับลงมาจากขอบบนเล็กน้อย */
-  right: -8px;        /* ขยับออกไปทางขวาเพื่อให้มีระยะห่าง */
+  top: 24px;           
+  right: 0;           
   z-index: 5;
 }
 
-/* === (SHARED) Status Tag === */
 .statusTag {
   display: inline-block;
-  padding: 6px 14px;
-  border-radius: 10px 0 0 10px; /* ทำมุมโค้งเฉพาะด้านซ้ายตามสไตล์รูปตัวอย่าง */
+  padding: 7px 16px;
+  border-radius: 14px 0 0 14px; /* มุมโค้งด้านซ้ายตามรูป */
   font-size: 11px;
   font-weight: 800;
   color: #fff;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
 }
 
-.statusTag.pending { background-color: #ff4d4f; }
+.statusTag.pending { background-color: #ff5252; }
 .statusTag.coordinating { background-color: #7c4dff; }
-.statusTag.in_progress { background-color: #ffc107; color: #000; }
-.statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
+.statusTag.in_progress { background-color: #ffb300; color: #000; }
+.statusTag.completed { background-color: #4caf50; }
+.statusTag.forwarded { background-color: #2196f3; }
+.statusTag.invited { background-color: #00bcd4; }
+.statusTag.rejected { background-color: #757575; }
 
-/* ปุ่มอ่านเพิ่มเติมสไตล์ใหม่ตามรูป */
+/* --- ปุ่มอ่านเพิ่มเติม (สีฟ้าอ่อนตามรูป) --- */
 .toggleDetailsButton {
-  background: #dae9ff; /* สีฟ้าอ่อนตามรูปตัวอย่าง */
+  background: #edf5ff; 
   border: none;
   width: 100%;
-  padding: 14px;
-  border-radius: 18px;
+  padding: 15px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 700;
   font-size: 16px;
   color: #007bff;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .toggleDetailsButton:hover {
-  background: #cce0ff;
-  transform: translateY(-1px);
+  background: #e1eeff;
+  transform: scale(1.01);
 }
 
-/* รายละเอียดภายใน */
+/* --- รายละเอียดภายใน (Expanded) --- */
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 12px 20px;
-  padding: 8px 0;
+  padding: 12px 4px;
+  border-top: 1px dashed #eee;
 }
 
-/* ... โค้ดส่วนอื่นๆ คงเดิม ... */
+.mainDetails > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mainDetails strong {
+  color: #aaa; 
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.mainDetails .detailValue {
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.locationDetails {
+  background: #f9fbff;
+  padding: 16px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 12px 20px;
+  border: 1px solid #f0f4ff;
+}
+
+/* --- Media Queries --- */
+@media screen and (max-width: 768px) {
+  .headerInfo {
+    padding-right: 75px;
+  }
+  
+  .reportTableRow {
+    padding: 20px;
+  }
+
+  .mainDetails, .locationDetails {
+    grid-template-columns: 1fr; 
+  }
+}
