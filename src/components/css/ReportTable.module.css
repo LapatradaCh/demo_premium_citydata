@@ -21,6 +21,7 @@
   gap: 16px;
   position: relative;
   width: 100%;
+  /* max-width: 700px;  <-- นี่คือส่วนที่เอาออก (Fluid Layout) */
   margin-bottom: 24px;
 }
 
@@ -276,6 +277,7 @@
   width: 100%;
 }
 
+/* --- ✅ ปรับ Container เป็น Grid เพื่อจัด Card 3 คอลัมน์ --- */
 .reportTableContainer {
   width: 100%;
   display: grid;
@@ -283,6 +285,7 @@
   gap: 20px;
 }
 
+/* --- ✅ ปรับ Row ให้เป็น Card ตามรูปภาพ --- */
 .reportTableRow {
   display: grid;
   grid-template-columns: 80px 1fr auto;
@@ -293,7 +296,7 @@
   gap: 8px 12px;
   padding: 20px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 20px; /* ขอบมนมากตามรูป */
   border: 1px solid #f0f2f5;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -415,33 +418,34 @@
   color: #ffc107;
 }
 
-/* --- ✅ ปุ่มอ่านเพิ่มเติมสีน้ำเงินAction ตัดด้วยตัวหนังสือสีขาว --- */
+/* --- ✅ ปรับปุ่มอ่านเพิ่มเติมเป็นสีขาว ตัดขอบดำหนาและเงาให้เด่น --- */
 .toggleDetailsButton {
   grid-area: toggle;
-  background-color: #007bff; /* สีน้ำเงิน Blue */
-  color: #ffffff;            /* ตัวหนังสือสีขาว */
-  border: none;
+  background-color: #ffffff; /* สีขาว */
+  color: #000000;            /* ตัวหนังสือสีดำ */
+  border: 1.5px solid #000000; /* ขอบเส้นสีดำชัดเจน */
   width: 100%;
   padding: 12px;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 700;
   font-size: 14px;
-  transition: all 0.2s ease;
-  margin-top: 10px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.15); /* เพิ่มเงาสีน้ำเงินจางๆ */
+  margin-top: 10px;
+  transition: all 0.2s ease;
+  /* ใส่เงาแข็ง (Shadow) เพื่อให้ปุ่มดูมีมิติลอยจากพื้นการ์ดขาว */
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 1);
 }
 
 .toggleDetailsButton:hover {
-  background-color: #0056b3; /* น้ำเงินเข้มขึ้นตอน Hover */
-  color: #ffffff;
+  background-color: #000000; /* สลับสีเป็นดำ */
+  color: #ffffff;            /* ตัวหนังสือขาว */
+  transform: translateY(2px); /* เอฟเฟกต์กดปุ่ม */
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 1);
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.25);
 }
 
-/* --- Media Queries (คงเดิม) --- */
+/* --- Media Queries --- */
 @media screen and (max-width: 768px) {
   .searchTop {
     flex-direction: column;
