@@ -3,24 +3,21 @@
 /* === (SHARED) Calendar === */
 .calendarPopup {
   position: absolute;
+  top: 110%;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 18px;
   
-  /* ✅ (Update) สั่งให้เด้งลงล่าง + ชิดซ้าย + เว้นระยะนิดเดียว */
-  top: 100%;
-  bottom: auto;
-  left: 0;
-  transform: none;
-  margin-top: 4px;
+  /* ✅ จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
+  left: 50%;
+  transform: translateX(-50%);
   
-  z-index: 2000; /* ลอยเหนือทุกอย่าง */
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  
-  /* ขนาดและความสวยงาม */
-  width: max-content;
-  min-width: 300px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e0e0e0;
+  width: max-content; /* กว้างเท่าเนื้อหาปฏิทิน */
+  min-width: 300px;   /* ขนาดขั้นต่ำ */
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* --- Report Table Specific --- */
@@ -115,7 +112,7 @@
   background: #ffffff;
   border-radius: 28px;
   
-  /* ปรับความกว้างให้รองรับ Grid 2 คอลัมน์ */
+  /* ✅ (Desktop) กว้างขึ้นเพื่อให้ใส่ 2 คอลัมน์ได้สวย */
   width: 90%;
   max-width: 550px; 
   
@@ -126,7 +123,7 @@
   border: none; 
 }
 
-/* ลด padding Header */
+/* ลด padding เพื่อลดความสูงส่วนหัว */
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
@@ -141,7 +138,7 @@
   font-weight: 700;
 }
 
-/* ปุ่มปิด Header (ใหญ่ขึ้น) */
+/* ✅ ปุ่มปิด Header (ใหญ่ขึ้น) */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
@@ -155,7 +152,7 @@
   transition: all 0.2s ease;
 }
 
-/* ไอคอนกากบาท (ใหญ่ขึ้น) */
+/* ✅ ไอคอนกากบาท (ใหญ่ขึ้น) */
 .filterModalClose svg {
   font-size: 18px !important; 
   fill: #ffffff !important;
@@ -169,11 +166,11 @@
   max-height: 70vh;
 }
 
-/* ✅ (Update) Container สำหรับ Grid Layout */
+/* ✅ (UPDATE) จัด Layout แบบ Grid/Flex */
 .reportFilters {
   display: flex;
   flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
-  gap: 12px;       /* ระยะห่างระหว่างกล่อง */
+  gap: 16px;       /* ระยะห่างระหว่างกล่อง */
   overflow-y: auto;
   max-height: 50vh;
   padding: 4px;    /* กันเงาแหว่ง */
@@ -181,11 +178,12 @@
 
 /* === Filter Group === */
 .filterGroup {
+  /* Default ให้ยืดหยุ่น */
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
-  min-width: 140px; /* กันบีบจนเล็กเกินไป */
+  min-width: 140px; /* กันเล็กเกินไป */
 }
 
 .filterGroup label {
@@ -204,7 +202,7 @@
   background-color: #fafafa;
 }
 
-/* ✅ (Update) ปุ่มสีเขียว จัดกึ่งกลาง */
+/* ✅ (UPDATE) ปุ่มสีเขียว จัดกึ่งกลาง */
 .filterApplyButton {
   align-self: center;
   width: auto;
@@ -548,15 +546,5 @@
   /* Mobile: Modal เล็กลง */
   .filterModal {
     max-width: 360px;
-  }
-  
-  /* Mobile: ปฏิทินเด้งกลางจอ */
-  .calendarPopup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: 0;
-    width: auto;
   }
 }
