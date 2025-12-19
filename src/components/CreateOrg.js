@@ -172,12 +172,26 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3 (New): OrgLevelSetupForm (กำหนดระดับหน่วยงาน)
+ * Component 3 (Updated): OrgLevelSetupForm (กำหนดระดับหน่วยงาน)
  * =================================================================
  */
 const OrgLevelSetupForm = ({ onSave, orgId }) => {
-  const [selectedLevel, setSelectedLevel] = useState('province'); // default: province
+  const [selectedLevel, setSelectedLevel] = useState('province'); // default
+  const [selectedProvince, setSelectedProvince] = useState(''); // สำหรับเก็บจังหวัดที่เลือก
+  const [provinceList, setProvinceList] = useState([]); // รายชื่อจังหวัด
   const [isSaving, setIsSaving] = useState(false);
+
+  // จำลองการดึงข้อมูลจังหวัด (คุณสามารถเปลี่ยน URL เป็น API จริงได้)
+  useEffect(() => {
+    // ตัวอย่าง Mock Data
+    const mockProvinces = [
+      "กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "ขอนแก่น", "ชลบุรี", "เชียงใหม่", "นครราชสีมา", "นนทบุรี", "ปทุมธานี", "ภูเก็ต"
+    ];
+    setProvinceList(mockProvinces);
+    
+    // ถ้ามี API ให้ใช้แบบนี้:
+    // fetch(`${API_BASE_URL}/provinces`).then(res => res.json()).then(data => setProvinceList(data));
+  }, []);
 
   const levels = [
     { 
@@ -200,30 +214,35 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
   const handleLevelSubmit = async (e) => {
     e.preventDefault();
     if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
+
+    // Validation: ถ้าเป็นระดับอำเภอ ต้องเลือกจังหวัดก่อน
+    if (selectedLevel === 'district' && !selectedProvince) {
+        return alert("กรุณาเลือกจังหวัดที่รับผิดชอบ");
+    }
+
     setIsSaving(true);
     
     try {
-      // ตัวอย่างการส่ง API (ปรับ endpoint ตามจริงหากมี)
       await fetch(`${API_BASE_URL}/organizations`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             organization_id: orgId, 
-            management_level: selectedLevel 
+            management_level: selectedLevel,
+            province_scope: selectedProvince // ส่งจังหวัดที่เลือกไปด้วย
         }),
       });
       alert("บันทึกระดับหน่วยงานสำเร็จ!");
       onSave();
     } catch (err) {
       console.error(err);
-      // ในกรณีที่ยังไม่มี API จริง ให้ถือว่าสำเร็จไปก่อนเพื่อให้ Flow ทำงานต่อได้
       onSave(); 
     } finally {
       setIsSaving(false);
     }
   };
 
-  // Styles สำหรับ Card ที่เลือกและไม่เลือก
+  // Styles
   const cardStyle = {
     flex: 1,
     border: '1px solid #e0e0e0',
@@ -241,30 +260,63 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
 
   const activeCardStyle = {
     ...cardStyle,
-    border: '2px solid #2563eb', // สีน้ำเงินตามรูป
+    border: '2px solid #2563eb',
     backgroundColor: '#eff6ff',
     color: '#2563eb',
     fontWeight: '600'
   };
+
+  // เช็คเงื่อนไขความพร้อมของปุ่มบันทึก
+  const isButtonDisabled = isSaving || (selectedLevel === 'district' && !selectedProvince);
 
   return (
     <form onSubmit={handleLevelSubmit}>
       <div style={{ marginBottom: '1.5rem' }}>
         <p className={styles.label} style={{marginBottom: '10px'}}>เลือกระดับที่ต้องการบริหารจัดการ</p>
         
-        {/* Card Grid Container */}
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        {/* Card Grid */}
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
           {levels.map((lvl) => (
             <div
               key={lvl.id}
               style={selectedLevel === lvl.id ? activeCardStyle : cardStyle}
-              onClick={() => setSelectedLevel(lvl.id)}
+              onClick={() => {
+                  setSelectedLevel(lvl.id);
+                  if(lvl.id === 'province') setSelectedProvince(''); // Reset ถ้าเปลี่ยนเป็นจังหวัด
+              }}
             >
               <div>{lvl.icon}</div>
               <span>{lvl.label}</span>
             </div>
           ))}
         </div>
+
+        {/* UI ตามรูปภาพ: ส่วนเลือกจังหวัด (แสดงเมื่อเลือก District หรือ Sub-district) */}
+        {selectedLevel === 'district' && (
+            <div style={{
+                backgroundColor: '#f8f9fa',
+                padding: '1.5rem',
+                borderRadius: '8px',
+                border: '1px solid #eee'
+            }}>
+                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
+                    จังหวัดที่รับผิดชอบ <span style={{color: 'red'}}>*</span>
+                </label>
+                <div className={styles.inputIconWrapper} style={{backgroundColor: '#fff'}}>
+                    <select 
+                        value={selectedProvince}
+                        onChange={(e) => setSelectedProvince(e.target.value)}
+                        className={`${styles.select}`}
+                        style={{width: '100%', padding: '0.6rem', borderRadius: '4px', border: '1px solid #ccc'}}
+                    >
+                        <option value="">-- โปรดเลือกจังหวัด --</option>
+                        {provinceList.map((prov, index) => (
+                            <option key={index} value={prov}>{prov}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+        )}
       </div>
 
       <div style={{ 
@@ -279,17 +331,24 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
         <div style={{ color: '#666', fontSize: '0.9rem' }}>
           สถานะการเลือก: 
           <span style={{ color: '#2563eb', fontWeight: '600', marginLeft: '5px' }}>
-            {selectedLevel === 'province' && 'ทุกอำเภอในจังหวัด'}
-            {selectedLevel === 'district' && 'เฉพาะเขต/อำเภอที่เลือก'}
-            {selectedLevel === 'sub_district' && 'เฉพาะแขวง/ตำบลที่เลือก'}
+            {(selectedLevel === 'district' && !selectedProvince) 
+                ? 'รอการเลือกข้อมูล' // ตามรูป
+                : (selectedLevel === 'province' ? 'ทุกอำเภอในจังหวัด' : selectedProvince || 'กำลังดำเนินการ')
+            }
           </span>
         </div>
 
         <button 
           type="submit" 
           className={`${styles.button} ${styles.btnSuccess}`}
-          disabled={isSaving}
-          style={{ width: 'auto', minWidth: '150px', margin: 0 }}
+          disabled={isButtonDisabled} // Disabled ถ้ายังไม่เลือกจังหวัด
+          style={{ 
+              width: 'auto', 
+              minWidth: '150px', 
+              margin: 0,
+              opacity: isButtonDisabled ? 0.6 : 1, // ทำให้ดูจางลงถ้ากดไม่ได้
+              cursor: isButtonDisabled ? 'not-allowed' : 'pointer'
+          }}
         >
           {isSaving ? 'กำลังบันทึก...' : 'บันทึกและไปต่อ'}
         </button>
