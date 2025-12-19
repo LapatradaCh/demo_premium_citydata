@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL VERSION WITH TEXT WRAP FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FULL VERSION - VERTICAL KPI LAYOUT) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -152,61 +152,57 @@
 }
 
 /* =========================================
-   5. KPI CARDS (UPDATED: TEXT WRAPPING FIX)
+   5. KPI CARDS (RE-DESIGN: VERTICAL STACK)
    ========================================= */
 .kpiGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 20px; /* เพิ่มระยะห่างระหว่างการ์ด */
   margin-bottom: 24px;
   width: 100%;
 }
 
 .kpiCard {
-  display: grid;
-  /* Columns: ซ้าย (ข้อความ) ยืดเต็มที่ | ขวา (ตัวเลข) ขนาดตามเนื้อหา */
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto;
-  grid-template-areas: 
-    "header value"
-    "subtext value";
+  /* Layout: จัดเรียงแนวตั้ง (บนลงล่าง) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
+  align-items: flex-start; /* จัดทุกอย่างชิดซ้าย */
   
-  align-items: center; 
-  align-content: center;
+  gap: 6px; /* ระยะห่างระหว่างบรรทัด */
   
-  /* เพิ่ม gap แนวนอนเพื่อให้ตัวเลขไม่ชิดข้อความเกินไป */
-  gap: 4px 16px; 
-  
-  padding: 16px 20px; 
-  border-radius: 16px;
+  padding: 24px 28px; /* เพิ่ม Padding ให้ดูโปร่งขึ้นเหมือนในรูป */
+  border-radius: 20px; /* มุมโค้งมนขึ้น */
   border: none;
-  min-height: 110px; 
-  height: auto; /* อนุญาตให้ Card สูงขึ้นตามเนื้อหา */
+  min-height: 120px;
+  height: auto;
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
 }
 
 .kpiCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
+/* --- สี Background --- */
 .kpiCardSuccess {
   background: #10B981 !important;
   color: #fff !important;
-  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
 }
 
 .kpiCardNormal {
-  background: #111827 !important;
+  background: #111827 !important; /* ปรับสีดำให้ดูนุ่มขึ้นเล็กน้อย */
   color: #fff !important;
-  box-shadow: 0 5px 15px rgba(17, 24, 39, 0.2);
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.25);
 }
 
 .kpiCardCritical {
   background: #EF4444 !important;
   color: #fff !important;
-  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
 }
 
 .kpiCardSuccess *,
@@ -215,67 +211,59 @@
   color: #ffffff !important;
 }
 
-/* 1. Header (บนซ้าย) */
+/* 1. Header (ชื่อหัวข้อ) */
 .kpiHeader {
-  grid-area: header;
-  font-size: 13px;
+  width: 100%;
+  font-size: 14px;
   font-weight: 700;
   margin: 0;
   
-  /* --- แก้ไข: อนุญาตให้ตัดบรรทัด --- */
-  white-space: normal !important; 
-  word-break: break-word;         
-  line-height: 1.4;               
-  /* ------------------------------- */
-
-  width: 100%;     
-  min-width: 0;    
-  
   display: flex;
-  align-items: center; /* หรือ flex-start หากต้องการให้ icon อยู่บนสุดเมื่อมีหลายบรรทัด */
-  align-self: end;     
-}
-
-.kpiHeader svg {
-  min-width: 16px;
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-  flex-shrink: 0; 
-}
-
-/* 2. Subtext (ล่างซ้าย) */
-.kpiSubtext {
-  grid-area: subtext;
-  font-size: 11px;
-  opacity: 0.9;
-  font-weight: 500;
-  margin: 0;
+  align-items: center; /* จัดไอคอนให้อยู่กึ่งกลางบรรทัดเดียวกับข้อความ */
   
-  /* --- แก้ไข: อนุญาตให้ตัดบรรทัด --- */
+  /* รองรับข้อความยาว */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
-  /* ------------------------------- */
-
-  width: 100%;     
-  min-width: 0;    
-  
-  align-self: start; 
 }
 
-/* 3. Value (ขวา) */
+.kpiHeader svg {
+  min-width: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+/* 2. Value (ตัวเลข) */
 .kpiValue {
-  grid-area: value;
-  font-size: 32px; 
+  width: 100%;
+  text-align: left; /* ชิดซ้าย */
+  
+  font-size: 38px; /* ปรับขนาดตัวเลขให้ใหญ่ชัดเจน */
   font-weight: 800;
-  line-height: 1;
-  text-align: right;
-  min-width: fit-content; 
-  margin-left: 0; 
+  line-height: 1.2;
+  
+  margin: 6px 0; /* เว้นระยะบนล่างให้ตัวเลขเด่น */
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+}
+
+/* 3. Subtext (คำอธิบายล่างสุด) */
+.kpiSubtext {
+  width: 100%;
+  text-align: left; /* ชิดซ้าย */
+  
+  font-size: 12px;
+  opacity: 0.85;
+  font-weight: 500;
+  margin: 0;
+  
+  /* รองรับข้อความยาว */
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 /* =========================================
@@ -801,14 +789,14 @@
   /* Mobile: 1 Column */
   .kpiGrid {
     grid-template-columns: repeat(1, 1fr) !important;
-    gap: 12px;
+    gap: 16px;
   }
   .kpiCard {
-    min-height: 80px;
-    padding: 16px;
+    min-height: 100px;
+    padding: 20px;
   }
   .kpiValue {
-    font-size: 28px;
+    font-size: 32px;
   }
   
   .orgStatsContent { gap: 0; }
