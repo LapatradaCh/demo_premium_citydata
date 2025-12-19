@@ -10,12 +10,10 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ Desktop Default: ให้กว้างเต็มเท่ากับปุ่มวันที่ */
+  /* ✅ (Desktop) กำหนดความกว้างให้พอดีกับตัวปฏิทิน ไม่ยืดตามปุ่มจนเละ */
   left: 0;
-  width: 100%;
-  min-width: 280px;      /* กันไม่ให้เล็กเกินไป */
-  box-sizing: border-box; /* สำคัญ: รวม padding ในความกว้าง */
-  
+  width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
+  min-width: 300px;   /* กันไม่ให้เล็กเกินไป */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -111,8 +109,11 @@
   z-index: 2000;
   background: #ffffff;
   border-radius: 28px;
+  
+  /* ✅ (Desktop) ปรับให้กว้างขึ้น ดูสมดุลกับจอคอม */
   width: 90%;
-  max-width: 360px;
+  max-width: 550px; /* เพิ่มจาก 360px เป็น 550px หรือ 600px */
+  
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -524,11 +525,16 @@
   .reportTableRow { padding: 20px; gap: 12px; }
   .infoRow { grid-template-columns: 1fr; }
 
-  /* ✅ Mobile Only: ปรับปฏิทินให้อยู่ตรงกลางจอเมื่อเป็นมือถือ */
+  /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
+  .filterModal {
+    max-width: 360px; /* ลดขนาดกลับมาเท่าเดิมสำหรับมือถือ */
+  }
+
+  /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
   .calendarPopup {
     left: 50%;
     transform: translateX(-50%);
-    width: auto;      /* ปล่อยอิสระ */
-    min-width: 300px; /* ขนาดขั้นต่ำให้อ่านง่าย */
+    width: auto;      
+    min-width: 300px;
   }
 }
