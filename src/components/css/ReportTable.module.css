@@ -197,16 +197,36 @@
   background-color: #fafafa;
 }
 
+/* ค้นหาคลาส .filterApplyButton แล้วแก้โค้ดข้างในใหม่ตามนี้ครับ */
+
 .filterApplyButton {
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 700;
+  /* --- จัดกึ่งกลาง --- */
+  align-self: center;  /* สั่งให้ตัวเองอยู่ตรงกลาง (เพราะพ่อเป็น Flex Column) */
+  width: auto;         /* เลิกใช้ความกว้างเต็ม 100% */
+  min-width: 180px;    /* กำหนดความกว้างขั้นต่ำให้ปุ่มดูสวย ไม่สั้นเกินไป */
+  
+  /* --- สีและรูปร่าง --- */
+  background-color: #28a745; /* ✅ สีเขียวตามที่ขอ */
   color: #fff;
-  background-color: #000;
+  padding: 12px 32px;
+  border-radius: 28px; /* ปรับให้มนขึ้นเหมือนแคปซูล */
   border: none;
-  border-radius: 16px;
+  
+  /* --- การจัดวาง --- */
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  margin-top: 10px;
+  
+  /* (Optional) เพิ่มเงาสีเขียวจางๆ ให้ดูมีมิติ */
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  transition: all 0.2s ease;
+}
+
+.filterApplyButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  background-color: #218838; /* เขียวเข้มขึ้นนิดหน่อยตอน Hover */
 }
 
 /* --- Report Table Grid --- */
