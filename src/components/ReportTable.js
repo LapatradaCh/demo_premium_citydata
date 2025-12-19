@@ -61,6 +61,7 @@ const DateFilter = () => {
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null); 
+  const [expandedCardId, setExpandedCardId] = useState(null); 
   const [reports, setReports] = useState([]); 
   const [loading, setLoading] = useState(true);
 
@@ -165,6 +166,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchCases();
   }, [subTab]);
 
+  // --- 4. Logic กรองข้อมูล ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       const reportTypeName = report.issue_type_name || ""; 
@@ -290,63 +292,59 @@ const ReportTable = ({ subTab, onRowClick }) => {
         ))}
       </div>
 
-      {/* ✅ ปรับปรุง Modal รายละเอียดให้อ่านง่าย: Label บน Value ล่าง พร้อมแยกโซนพิกัด */}
+      {/* ✅ ปรับปรุง Modal รายละเอียด: จัด Layout ให้อ่านง่ายที่สุด และลบปุ่มปิดด้านล่าง */}
       {selectedReport && (
         <>
           <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
-          <div className={styles.filterModal} style={{ maxWidth: '440px' }}>
+          <div className={styles.filterModal} style={{ maxWidth: '450px' }}>
             <div className={styles.filterModalHeader}>
               <h3>รายละเอียดเรื่องแจ้ง</h3>
               <button className={styles.filterModalClose} onClick={() => setSelectedReport(null)}>
                 <FaTimes />
               </button>
             </div>
-            <div className={styles.filterModalContent} style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '35px' }}>
+            <div className={styles.filterModalContent} style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '32px' }}>
               
-              <div className={styles.detailHeaderSection}>
-                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailCoverImage} />
-                <div className={styles.detailHeaderInfo}>
-                  <h3 className={styles.detailCaseId}>#{selectedReport.case_code}</h3>
-                  <p className={styles.detailTitleText}>{selectedReport.title}</p>
+              <div className={styles.detailHeaderBlock}>
+                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailImage} />
+                <div className={styles.detailTitleInfo}>
+                  <h3 className={styles.detailCaseCode}>#{selectedReport.case_code}</h3>
+                  <p className={styles.detailMainTitle}>{selectedReport.title}</p>
                 </div>
               </div>
 
-              <div className={styles.detailContentBody}>
-                <div className={styles.detailRow}>
-                  <div className={styles.detailCol}>
+              <div className={styles.detailGridInfo}>
+                <div className={styles.infoRow}>
+                  <div className={styles.infoCol}>
                     <label>ประเภทปัญหา</label>
-                    <span className={styles.detailValueBold}>{selectedReport.issue_type_name || "-"}</span>
+                    <span className={styles.infoValueText}>{selectedReport.issue_type_name || "-"}</span>
                   </div>
-                  <div className={styles.detailCol}>
+                  <div className={styles.infoCol}>
                     <label>วันที่แจ้ง</label>
-                    <span className={styles.detailValueBold}>
+                    <span className={styles.infoValueText}>
                       {selectedReport.created_at ? new Date(selectedReport.created_at).toLocaleString("th-TH") : "-"}
                     </span>
                   </div>
                 </div>
 
-                <div className={styles.detailColFull}>
+                <div className={styles.infoColFull}>
                   <label>รายละเอียด</label>
-                  <div className={styles.detailDescriptionBox}>
-                    {selectedReport.description || "-"}
-                  </div>
+                  <p className={styles.infoDescriptionBox}>{selectedReport.description || "-"}</p>
                 </div>
               </div>
 
-              <div className={styles.detailLocationBox}>
-                <div className={styles.detailCol}>
+              <div className={styles.detailLocationBlock}>
+                <div className={styles.infoCol}>
                   <label>พิกัด</label>
-                  <span className={styles.detailValueBold}>{selectedReport.latitude}, {selectedReport.longitude}</span>
+                  <span className={styles.infoValueText}>{selectedReport.latitude}, {selectedReport.longitude}</span>
                 </div>
-                <div className={styles.detailCol}>
+                <div className={styles.infoCol}>
                   <label>หน่วยงานรับผิดชอบ</label>
-                  <span className={styles.detailValueBold}>
+                  <span className={styles.infoValueText}>
                     {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
                   </span>
                 </div>
               </div>
-              
-              {/* ปุ่ม "ปิดหน้าต่าง" ด้านล่างถูกลบออกแล้ว */}
             </div>
           </div>
         </>
