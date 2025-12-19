@@ -4,15 +4,27 @@
 .calendarPopup {
   position: absolute;
   
-  /* ✅ ใส่ของใหม่: สั่งให้เด้งขึ้นบน */
-  bottom: 110%; /* ดันขึ้นไปอยู่เหนือปุ่ม 110% */
-  top: auto;    /* ยกเลิกค่า top */
+  /* ✅ 1. สั่งให้เด้งขึ้นบน (เหมือนเดิม) แต่ใช้ gap แบบ pixel เพื่อความแม่นยำ */
+  bottom: calc(100% + 8px); /* เว้นระยะจากช่อง 8px */
+  top: auto;
+  
+  /* ✅ 2. เปลี่ยนจากตรงกลาง เป็น "ชิดซ้าย" (สำหรับ Desktop) */
+  left: 0;
+  transform: none; /* ยกเลิกการจัดกึ่งกลาง */
+  
+  /* ✅ 3. ปรับเงาให้ชัดขึ้น กันดูจม */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* เงาเข้มขึ้น */
+  border: 1px solid #e0e0e0; /* เพิ่มขอบให้ชัด */
+  
   z-index: 100;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.98);
-  transform-origin: bottom center;
-}
+  background: rgba(255, 255, 255, 1); /* พื้นหลังทึบ 100% */
+  backdrop-filter: blur(0px); /* ไม่ต้องเบลอแล้วเพราะทึบ */
+  border-radius: 16px;
+  padding: 16px;
+  
+  width: max-content;
+  min-width: 300px;
+}}
 
 /* --- Report Table Specific --- */
 .searchTop {
