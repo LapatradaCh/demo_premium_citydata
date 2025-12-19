@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL COMPLETE VERSION) --- */
+/* --- css/OrgStatisticsView.module.css (FIXED TEXT WRAP) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -26,7 +26,7 @@
   width: 280px;
   background: #ffffff;
   border-radius: 24px;
-  border: 1px solid #E5E7EB; /* เพิ่มขอบบางๆ */
+  border: 1px solid #E5E7EB;
   padding: 32px 20px;
   position: sticky;
   top: 32px;
@@ -134,9 +134,9 @@
 .chartBox {
   background: #ffffff;
   border-radius: 24px;
-  padding: 0; /* พื้นขาวไม่ต้องมี Padding เยอะ */
-  box-shadow: none; /* ลบเงา */
-  border: none; /* ลบขอบ */
+  padding: 0;
+  box-shadow: none;
+  border: none;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -164,12 +164,11 @@
 }
 
 /* =========================================
-   5. KPI CARDS (FIXED: 3 COLUMNS)
+   5. KPI CARDS (3 Columns)
    ========================================= */
 .kpiGrid {
   display: grid;
-  /* ✅ บังคับ 3 คอลัมน์ เพื่อให้อยู่บรรทัดเดียวบน Desktop */
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์ แถวเดียว */
   gap: 24px;
   margin-bottom: 32px;
   width: 100%;
@@ -192,21 +191,18 @@
   transform: translateY(-4px);
 }
 
-/* Success Card */
 .kpiCardSuccess {
   background: #10B981 !important;
   color: #fff !important;
   box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15);
 }
 
-/* Normal Card (Black) */
 .kpiCardNormal {
   background: #111827 !important;
   color: #fff !important;
   box-shadow: 0 10px 20px rgba(17, 24, 39, 0.15);
 }
 
-/* Critical Card (Red) */
 .kpiCardCritical {
   background: #EF4444 !important;
   color: #fff !important;
@@ -242,12 +238,13 @@
   opacity: 0.9;
 }
 
-/* Filter Controls */
+/* --- [BUTTON FIX HERE] --- */
 .headerControls {
   margin-left: auto;
   display: flex;
   gap: 12px;
   font-size: 14px;
+  align-items: center;
 }
 
 .controlBtn {
@@ -259,6 +256,12 @@
   color: #6B7280;
   font-weight: 600;
   transition: all 0.2s;
+  
+  /* ✅ เพิ่มคำสั่งนี้: ห้ามตัดบรรทัดเด็ดขาด */
+  white-space: nowrap; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .controlBtn:hover {
@@ -363,7 +366,6 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Pattern พื้นหลัง */
 .highlightCard::after {
   content: '';
   position: absolute;
@@ -523,7 +525,6 @@
   align-items: center;
 }
 
-/* Desktop Horizontal Bars */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
@@ -674,14 +675,12 @@
     width: 240px;
   }
 
-  /* Tablet: ปรับเป็น 2 คอลัมน์ถ้าจอแคบลง */
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
 @media screen and (max-width: 768px) {
-  /* Layout Reset */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -698,7 +697,6 @@
     display: none !important;
   }
 
-  /* Mobile Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -764,7 +762,7 @@
     color: #10B981;
   }
 
-  /* Chart & Grid Mobile */
+  /* Fix Grid & Chart Box */
   .chartBox {
     padding: 24px 20px !important;
     border-radius: 0 !important;
@@ -775,7 +773,7 @@
     padding: 0 20px;
     gap: 16px;
     margin-top: 20px;
-    grid-template-columns: repeat(1, 1fr) !important; /* มือถือ: 1 แถว */
+    grid-template-columns: repeat(1, 1fr) !important;
   }
 
   .kpiCard {
@@ -809,7 +807,7 @@
 
   .controlBtn { flex: 1; text-align: center; }
 
-  /* SLA Graph Mobile */
+  /* SLA Chart Mobile */
   .mockHorizontalBarChart {
     width: 100% !important;
     margin-top: 60px !important;
@@ -846,7 +844,6 @@
     min-width: 64px !important;
   }
 
-  /* Report Card Fixes */
   .reportCardHeader {
     flex-direction: column !important;
     align-items: flex-start !important;
