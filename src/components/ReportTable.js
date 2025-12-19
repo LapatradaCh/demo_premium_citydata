@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"; 
+import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ เพิ่ม useMemo
 import styles from "./css/ReportTable.module.css";
-import { FaSearch, FaFilter, FaTimes, FaMapMarkedAlt, FaBuilding } from "react-icons/fa";
+import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
 import "cally";
 
 // ------------------------- Helper
@@ -35,7 +35,7 @@ const DateFilter = () => {
   }, [show]);
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
+    <div style={{ position: "relative" }}>
       <button
         className={styles.timeRangeButton}
         onClick={() => setShow(!show)}
@@ -60,14 +60,15 @@ const DateFilter = () => {
 // ------------------------- Report Table
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null); 
-  const [expandedCardId, setExpandedCardId] = useState(null); 
-  const [reports, setReports] = useState([]); 
+  const [expandedCardId, setExpandedCardId] = useState(null);
+  const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
   const [loading, setLoading] = useState(true);
 
+  // --- State สำหรับเก็บตัวเลือกใน Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
 
+  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
@@ -85,12 +86,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // ✅ Helper: กำหนดว่า Filter ตัวไหนควรกว้างเต็มจอ (100%)
-  // ถ้าไม่ใช่พวกนี้ จะกว้างแค่ครึ่งจอ (50%)
-  const isFullWidth = (label) => {
-    return ["หน่วยงาน", "ช่วงเวลา", "ตำบล/แขวง"].includes(label);
-  };
-
   // --- 1. Fetch Issue Types ---
   useEffect(() => {
     const fetchIssueTypes = async () => {
@@ -98,12 +93,13 @@ const ReportTable = ({ subTab, onRowClick }) => {
         const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
         if (!res.ok) throw new Error("Failed to fetch issue types");
         const data = await res.json();
+        
         if (Array.isArray(data)) {
-          setIssueTypes(data);
+            setIssueTypes(data);
         } else if (data.data && Array.isArray(data.data)) {
-          setIssueTypes(data.data);
+            setIssueTypes(data.data);
         } else {
-          setIssueTypes([]);
+            setIssueTypes([]);
         }
       } catch (err) {
         console.error("Error fetching issue types:", err);
@@ -122,11 +118,18 @@ const ReportTable = ({ subTab, onRowClick }) => {
           const orgData = JSON.parse(lastOrg);
           orgId = orgData.id || orgData.organization_id;
         }
+
+        // ✅ แก้ URL ให้เป็น get_issue_statuses (ตาม Backend ที่เราสร้าง)
         const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
-        const url = orgId ? `${baseUrl}?organization_id=${orgId}` : baseUrl;
+        const url = orgId 
+          ? `${baseUrl}?organization_id=${orgId}` 
+          : baseUrl;
+
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch statuses");
+        
         const data = await res.json();
+        
         if (Array.isArray(data)) {
           setStatusOptions(data);
         } else if (data.data && Array.isArray(data.data)) {
@@ -134,11 +137,13 @@ const ReportTable = ({ subTab, onRowClick }) => {
         } else {
            setStatusOptions([]);
         }
+
       } catch (err) {
         console.error("Error fetching statuses:", err);
         setStatusOptions([]);
       }
     };
+
     fetchStatuses();
   }, [subTab]);
 
@@ -153,14 +158,18 @@ const ReportTable = ({ subTab, onRowClick }) => {
           setLoading(false);
           return;
         }
+
         const org = JSON.parse(lastOrg);
         const orgId = org.id || org.organization_id;
+
         const res = await fetch(
           `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
         );
         if (!res.ok) throw new Error("Fetch cases failed");
+
         const data = await res.json();
         const reportsData = Array.isArray(data) ? data : (data.data || []);
+        
         setReports(reportsData);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -169,19 +178,29 @@ const ReportTable = ({ subTab, onRowClick }) => {
         setLoading(false);
       }
     };
+
     fetchCases();
   }, [subTab]);
 
-  // --- 4. Logic กรองข้อมูล ---
+  // --- ✅ 4. Logic การกรองข้อมูล (ทำงานเหมือน MapView) ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
+      
+      // กรองประเภท (เทียบกับชื่อ issue_type_name)
       const reportTypeName = report.issue_type_name || ""; 
       const matchType = selectedType === "all" || reportTypeName === selectedType;
+
+      // กรองสถานะ
       const reportStatus = report.status || "";
       const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
+
       return matchType && matchStatus;
     });
   }, [reports, selectedType, selectedStatus]);
+
+  const handleToggleDetails = (id) => {
+    setExpandedCardId((prevId) => (prevId === id ? null : id));
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -226,58 +245,65 @@ const ReportTable = ({ subTab, onRowClick }) => {
                  <FaTimes />
                </button>
              </div>
-             
              <div className={styles.filterModalContent}>
                <div className={styles.reportFilters}>
-                 {/* Main Filters */}
                  {mainFilters.map((label, i) => (
-                   <div 
-                      className={styles.filterGroup} 
-                      key={i}
-                      // ✅ ปรับ Flex Basis: เต็มจอ หรือ ครึ่งจอ ตามชื่อ Label
-                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
-                   >
+                   <div className={styles.filterGroup} key={i}>
                      <label>{label}</label>
+                     
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
                      ) : label === "ประเภท" ? (
-                        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                        // ✅ ผูก Value และ OnChange สำหรับประเภท
+                        <select 
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                        >
                           <option value="all">ทั้งหมด</option>
                           {issueTypes.map((type, index) => (
-                            <option key={index} value={type.issue_type_name || type.name}>
-                              {type.issue_type_name || type.name}
+                            <option 
+                              key={type.issue_type_id || type.id || index} 
+                              // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูล
+                              value={type.issue_type_name || type.name}
+                            >
+                              {type.issue_type_name || type.name || "ระบุไม่ได้"}
                             </option>
                           ))}
                         </select>
                      ) : label === "สถานะ" ? (
-                        <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
+                        // ✅ ผูก Value และ OnChange สำหรับสถานะ
+                        <select 
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                        >
                           <option value="all">ทั้งหมด</option>
-                          {statusOptions.map((status, index) => (
-                            <option key={index} value={status}>{status}</option>
-                          ))}
+                          {statusOptions.length > 0 ? (
+                            statusOptions.map((status, index) => (
+                              <option key={index} value={status}>
+                                {status}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled>ไม่พบข้อมูลสถานะ</option>
+                          )}
                         </select>
                      ) : (
+                        // Filter อื่นๆ (เช่น หน่วยงาน)
                         <select defaultValue="all">
                           <option value="all">ทั้งหมด</option>
                         </select>
                      )}
+
                    </div>
                  ))}
                  
-                 {/* Location Filters */}
                  {locationFilters.map((label, i) => (
-                   <div 
-                      key={i} 
-                      className={styles.filterGroup}
-                      // ✅ ปรับ Flex Basis: จังหวัด/อำเภอ ครึ่งจอ, ตำบล เต็มจอ
-                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
-                   >
+                   <div key={i} className={styles.filterGroup}>
                      <label>{label}</label>
                      <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
                    </div>
                  ))}
                </div>
-               
                <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
              </div>
            </div>
@@ -285,113 +311,94 @@ const ReportTable = ({ subTab, onRowClick }) => {
       )}
 
       <div className={styles.reportSummary}>
-        <strong>{summaryTitle}</strong> ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
+        <strong>{summaryTitle}</strong>{" "}
+        {/* ✅ แสดงจำนวนที่กรองแล้ว */}
+        ({loading ? "กำลังโหลด..." : `${filteredReports.length} รายการ`})
       </div>
 
       <div className={styles.reportTableContainer}>
         {loading ? (
           <p>กำลังโหลดข้อมูล...</p>
-        ) : filteredReports.map((report) => (
-          <div key={report.issue_cases_id} className={styles.reportTableRow} onClick={() => onRowClick && onRowClick(report)}>
-            <div className={styles.cardHeaderSection}>
-              <img src={report.cover_image_url || "https://via.placeholder.com/70"} alt="Report" className={styles.reportImage} />
-              <div className={styles.headerInfo}>
-                <h3 className={styles.reportHeader}>#{report.case_code}</h3>
-                <p className={styles.reportDetailText}>{truncateText(report.title || "-", 40)}</p>
-              </div>
-            </div>
-            <div className={styles.reportStatusGroup}>
-              <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
-            </div>
-            <button 
-              className={styles.toggleDetailsButton} 
-              onClick={(e) => { e.stopPropagation(); setSelectedReport(report); }} 
-            >
-              อ่านเพิ่มเติม
-            </button>
-          </div>
-        ))}
-      </div>
+        ) : filteredReports.length === 0 ? (
+          // ✅ แจ้งเตือนเมื่อไม่พบข้อมูล
+          <p>ไม่พบข้อมูลตามเงื่อนไข</p>
+        ) : (
+          // ✅ วนลูป filteredReports แทน reports
+          filteredReports.map((report) => {
+            const isExpanded = expandedCardId === report.issue_cases_id;
+            const responsibleUnits =
+              report.organizations && report.organizations.length > 0
+                ? report.organizations.map((org) => org.responsible_unit).join(", ")
+                : "-";
 
-      {selectedReport && (
-        <>
-          <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
-          <div className={styles.filterModal} style={{ maxWidth: '450px' }}>
-            <div className={styles.filterModalHeader}>
-              <h3>รายละเอียดเรื่องแจ้ง</h3>
-              <button className={styles.filterModalClose} onClick={() => setSelectedReport(null)}>
-                <FaTimes />
-              </button>
-            </div>
-            <div className={styles.filterModalContent} style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '32px' }}>
-              
-              <div className={styles.detailHeaderBlock}>
-                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailImage} alt="Case Cover" />
-                <div className={styles.detailTitleInfo}>
-                  <h3 className={styles.detailCaseCode}>#{selectedReport.case_code}</h3>
-                  <p className={styles.detailMainTitle}>{selectedReport.title}</p>
+            return (
+              <div
+                key={report.issue_cases_id}
+                className={styles.reportTableRow}
+                onClick={() => onRowClick && onRowClick(report)}
+                style={{ cursor: "pointer" }} 
+              >
+                <img
+                  src={
+                    report.cover_image_url ||
+                    "https://via.placeholder.com/120x80?text=No+Image"
+                  }
+                  alt="Report"
+                  className={styles.reportImage}
+                />
+                <div className={styles.reportHeader}>
+                  <span className={styles.reportIdText}>
+                    #{report.case_code}
+                  </span>
+                  <p className={styles.reportDetailText}>
+                    {truncateText(report.title || "-", 40)}
+                  </p>
                 </div>
-              </div>
-
-              <div className={styles.detailGridInfo}>
-                <div className={styles.infoRow}>
-                  <div className={styles.infoCol}>
-                    <label>ประเภทปัญหา</label>
-                    <span className={styles.infoValueText}>{selectedReport.issue_type_name || "-"}</span>
-                  </div>
-                  <div className={styles.infoCol}>
-                    <label>วันที่แจ้ง</label>
-                    <span className={styles.infoValueText}>
-                      {selectedReport.created_at ? new Date(selectedReport.created_at).toLocaleString("th-TH") : "-"}
-                    </span>
-                  </div>
+                <div className={styles.reportStatusGroup}>
+                  <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>
+                    {report.status}
+                  </span>
                 </div>
 
-                <div className={styles.infoColFull}>
-                  <label>รายละเอียด</label>
-                  <p className={styles.infoDescriptionBox}>{selectedReport.description || "-"}</p>
-                </div>
-              </div>
+                {isExpanded && (
+                  <>
+                    <div className={styles.mainDetails}>
+                      <span>ประเภทปัญหา: {report.issue_type_name}</span>
+                      <span>รายละเอียด: {report.description || "-"}</span>
+                      <span>
+                        วันที่แจ้ง:{" "}
+                        {new Date(report.created_at).toLocaleString("th-TH")}
+                      </span>
+                      <span>
+                        อัปเดตล่าสุด:{" "}
+                        {new Date(report.updated_at).toLocaleString("th-TH")}
+                      </span>
+                    </div>
+                    <div className={styles.locationDetails}>
+                      <span>
+                        พิกัด: {report.latitude}, {report.longitude}
+                      </span>
+                      <span>หน่วยงานรับผิดชอบ: {responsibleUnits}</span>
+                    </div>
+                  </>
+                )}
 
-              <div className={styles.detailLocationBlock}>
-                
-                {/* 1. การ์ดพิกัด (Map Card) */}
-                <a 
-                  href={`https://www.google.com/maps/search/?api=1&query=${selectedReport.latitude},${selectedReport.longitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.mapLocationCard}
+                <button
+                  className={styles.toggleDetailsButton}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    handleToggleDetails(
+                      isExpanded ? null : report.issue_cases_id
+                    );
+                  }}
                 >
-                  <div className={styles.mapIconBox}>
-                    <FaMapMarkedAlt />
-                  </div>
-                  <div className={styles.mapInfoText}>
-                    <label>พิกัดจุดเกิดเหตุ</label>
-                    <span className={styles.coordsText}>
-                      {selectedReport.latitude}, {selectedReport.longitude}
-                    </span>
-                    <span className={styles.clickToView}>กดเพื่อดูบน Google Maps ↗</span>
-                  </div>
-                </a>
-
-                {/* 2. การ์ดหน่วยงาน (Org Card) */}
-                <div className={styles.orgInfoCard}>
-                  <div className={styles.orgIconBox}>
-                    <FaBuilding />
-                  </div>
-                  <div className={styles.orgInfoText}>
-                    <label>หน่วยงานรับผิดชอบ</label>
-                    <span className={styles.infoValueText}>
-                      {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
-                    </span>
-                  </div>
-                </div>
-
+                  {isExpanded ? "ซ่อนรายละเอียด" : "อ่านเพิ่มเติม"}
+                </button>
               </div>
-            </div>
-          </div>
-        </>
-      )}
+            );
+          })
+        )}
+      </div>
     </>
   );
 };
