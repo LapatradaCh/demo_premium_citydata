@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIXED: SINGLE LINE TEXT) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIXED: SINGLE LINE & NO WRAP) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -152,7 +152,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS (FIXED: SINGLE LINE HEADER/SUBTEXT)
+   5. KPI CARDS (FIXED: SINGLE LINE)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -163,17 +163,17 @@
 }
 
 .kpiCard {
-  /* Grid 2 คอลัมน์: ซ้าย (ข้อความ) | ขวา (ตัวเลข) */
+  /* จัด Grid 2 คอลัมน์ (ซ้ายยืด-ขวาฟิก) และ 2 แถว */
   display: grid;
   grid-template-columns: 1fr auto; 
-  /* Grid 2 แถว: บน (Header) | ล่าง (Subtext) */
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto; /* แถวบน Header, แถวล่าง Subtext */
   grid-template-areas: 
     "header value"
     "subtext value";
   
-  align-items: center; 
-  gap: 4px 16px; /* ระยะห่างระหว่างบรรทัด และ ระหว่างข้อความกับตัวเลข */
+  align-items: center;
+  /* ลด gap ระหว่าง Text กับ Value ลงหน่อยเพื่อให้มีพื้นที่มากขึ้น */
+  gap: 2px 12px; 
   
   padding: 24px;
   border-radius: 20px;
@@ -188,7 +188,6 @@
   transform: translateY(-2px);
 }
 
-/* Theme Colors */
 .kpiCardSuccess {
   background: #10B981 !important;
   color: #fff !important;
@@ -213,48 +212,50 @@
   color: #ffffff !important;
 }
 
-/* 1. Header (บนซ้าย): บังคับบรรทัดเดียว */
+/* --- [FIXED SECTION] --- */
+
+/* 1. Header: บังคับบรรทัดเดียว */
 .kpiHeader {
   grid-area: header;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 15px;
   font-weight: 700;
   opacity: 1;
   margin: 0;
-  
   /* ✅ บังคับห้ามตัดบรรทัด */
   white-space: nowrap; 
-  overflow: hidden;
-  text-overflow: ellipsis; 
-  align-self: end; /* ชิดล่างของแถวตัวเอง */
+  overflow: visible; /* ให้เห็นข้อความเต็มๆ ถ้าพื้นที่พอ */
+  min-width: 0; /* แก้บั๊ก Grid */
+  align-self: end;
+  padding-bottom: 2px; /* เว้นระยะห่างจาก subtext นิดหน่อย */
 }
 
-/* 2. Subtext (ล่างซ้าย): บังคับบรรทัดเดียว */
+/* 2. Subtext: บังคับบรรทัดเดียว */
 .kpiSubtext {
   grid-area: subtext;
   font-size: 12px;
   opacity: 0.9;
   font-weight: 500;
   margin: 0;
-  
   /* ✅ บังคับห้ามตัดบรรทัด */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  align-self: start; /* ชิดบนของแถวตัวเอง */
+  overflow: visible;
+  min-width: 0; /* แก้บั๊ก Grid */
+  align-self: start;
 }
 
-/* 3. Value (ขวา): ตัวเลข */
+/* 3. Value: ตัวเลขอยู่ขวา */
 .kpiValue {
   grid-area: value;
-  /* ✅ ปรับขนาดให้พอดี (ไม่ใหญ่จนดันข้อความเบี้ยว) */
-  font-size: 40px; 
+  /* ✅ ลดขนาดลงเพื่อให้ Text ฝั่งซ้ายมีที่หายใจ */
+  font-size: 38px; 
   font-weight: 800;
   line-height: 1;
   text-align: right;
   opacity: 1;
+  padding-left: 8px; /* ดันห่างจาก Text */
 }
 
 /* =========================================
@@ -383,9 +384,8 @@
 .highlightCard {
   padding: 24px 32px;
   border-radius: 24px;
-  /* Grid Layout แบบเดียวกับ KPI เพื่อความสวยงาม */
   display: grid;
-  grid-template-columns: 1fr auto; 
+  grid-template-columns: minmax(0, 1fr) auto; 
   grid-template-areas: 
     "title score"
     "name score";
@@ -771,7 +771,7 @@
     border-bottom: 8px solid #F3F4F6;
   }
   
-  /* Mobile: กลับเป็น Flex หรือ Grid 1 Column */
+  /* Mobile: ยังคง layout เดิมแต่ลดขนาด */
   .kpiGrid {
     grid-template-columns: repeat(1, 1fr) !important;
     gap: 12px;
