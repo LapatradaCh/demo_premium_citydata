@@ -85,19 +85,10 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // ✅ Helper: คำนวณความกว้างของแต่ละตัวกรอง (Grid System)
-  const getColumnWidth = (label) => {
-    // 1. เต็มจอ (100%)
-    if (["หน่วยงาน", "ช่วงเวลา"].includes(label)) {
-      return "100%";
-    }
-    // 2. เรียง 3 ช่อง (33%) -> จังหวัด, อำเภอ, ตำบล
-    if (["จังหวัด", "อำเภอ/เขต", "ตำบล/แขวง"].includes(label)) {
-      // ลบ 11px เผื่อระยะ gap (gap ประมาณ 16px หาร 3 ช่อง)
-      return "calc(33.33% - 11px)"; 
-    }
-    // 3. เรียง 2 ช่อง (50%) -> ประเภท, สถานะ และอื่นๆ
-    return "calc(50% - 8px)";
+  // ✅ Helper: กำหนดว่า Filter ตัวไหนควรกว้างเต็มจอ (100%)
+  // ถ้าไม่ใช่พวกนี้ จะกว้างแค่ครึ่งจอ (50%)
+  const isFullWidth = (label) => {
+    return ["หน่วยงาน", "ช่วงเวลา", "ตำบล/แขวง"].includes(label);
   };
 
   // --- 1. Fetch Issue Types ---
@@ -243,8 +234,8 @@ const ReportTable = ({ subTab, onRowClick }) => {
                    <div 
                       className={styles.filterGroup} 
                       key={i}
-                      // ✅ ปรับความกว้างตาม Logic ใหม่ (Grid)
-                      style={{ flex: `1 1 ${getColumnWidth(label)}` }}
+                      // ✅ ปรับ Flex Basis: เต็มจอ หรือ ครึ่งจอ ตามชื่อ Label
+                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
                    >
                      <label>{label}</label>
                      {label === "ช่วงเวลา" ? (
@@ -278,8 +269,8 @@ const ReportTable = ({ subTab, onRowClick }) => {
                    <div 
                       key={i} 
                       className={styles.filterGroup}
-                      // ✅ ปรับความกว้างตาม Logic ใหม่ (Grid)
-                      style={{ flex: `1 1 ${getColumnWidth(label)}` }}
+                      // ✅ ปรับ Flex Basis: จังหวัด/อำเภอ ครึ่งจอ, ตำบล เต็มจอ
+                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
                    >
                      <label>{label}</label>
                      <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
