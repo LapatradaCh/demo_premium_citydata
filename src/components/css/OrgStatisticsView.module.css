@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL: WHITE BACKGROUND) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL COMPLETED VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -15,7 +15,7 @@
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
   
-  /* ✅ แก้ไข: เปลี่ยนพื้นหลังเป็นสีขาวล้วน */
+  /* ✅ พื้นหลังสีขาวล้วน */
   background-color: #ffffff; 
   color: #1F2937;
 }
@@ -28,11 +28,8 @@
   width: 280px;
   background: #ffffff;
   border-radius: 20px;
-  
-  /* ปรับ Shadow และ Border ให้อ่อนลงเพื่อให้เข้ากับพื้นหลังสีขาว */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); 
   border: 1px solid #f3f4f6;
-  
   padding: 24px 16px;
   position: sticky;
   top: 24px;
@@ -134,11 +131,8 @@
   background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  
-  /* ปรับ Shadow/Border ให้เบาบางลง */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
   border: 1px solid #f3f4f6;
-  
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -168,7 +162,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS & FILTER BUTTONS
+   5. KPI CARDS (Vertical Left Layout)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -181,7 +175,7 @@
   padding: 24px;
   border-radius: 16px;
   
-  /* แนวตั้งชิดซ้าย */
+  /* ✅ จัดเรียงแนวตั้ง ชิดซ้าย */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -226,6 +220,7 @@
   font-size: 14px;
   font-weight: 700;
   margin: 0;
+  /* ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
@@ -241,7 +236,7 @@
 
 .kpiValue {
   width: 100%;
-  text-align: left;
+  text-align: left; /* ชิดซ้าย */
   font-size: 36px;
   font-weight: 800;
   line-height: 1.2;
@@ -250,16 +245,20 @@
 
 .kpiSubtext {
   width: 100%;
-  text-align: left;
+  text-align: left; /* ชิดซ้าย */
   font-size: 12px;
   opacity: 0.85;
   font-weight: 500;
   margin: 0;
+  /* ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
 }
 
+/* =========================================
+   6. FILTER BUTTONS
+   ========================================= */
 .headerControls {
   margin-left: auto;
   display: flex;
@@ -299,7 +298,7 @@
 }
 
 /* =========================================
-   6. STACKED BAR CHART
+   7. STACKED BAR CHART
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -368,7 +367,7 @@
 }
 
 /* =========================================
-   7. SATISFACTION (Tab 2)
+   8. SATISFACTION (Tab 2) - SCORE ON RIGHT
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -378,10 +377,19 @@
 }
 
 .highlightCard {
-  padding: 16px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
+  padding: 20px 24px;
+  border-radius: 16px;
+  
+  /* ✅ ใช้ Grid เพื่อแยกซ้าย-ขวา โดยไม่ต้องแก้ HTML */
+  display: grid;
+  grid-template-columns: 1fr auto; /* ซ้ายยืดได้เต็มที่, ขวาขนาดเท่าเนื้อหา */
+  grid-template-rows: auto auto;   /* แถว 1 ชื่อเรื่อง, แถว 2 ชื่อคน */
+  grid-template-areas: 
+    "title score"
+    "name score";
+  
+  align-items: center;
+  gap: 4px 20px; /* ระยะห่างระหว่างข้อความกับตัวเลข */
 }
 
 .highlightCardGreen {
@@ -400,32 +408,47 @@
 }
 
 .highlightTitle {
-  font-size: 12px;
+  grid-area: title;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin: 0;
+  opacity: 0.9;
+  align-self: end; /* ดันลงล่างของช่อง */
 }
 
 .highlightName {
-  font-size: 20px;
+  grid-area: name;
+  font-size: 22px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  align-self: start; /* ดันขึ้นบนของช่อง */
 }
 
 .highlightScore {
-  font-size: 36px;
+  grid-area: score;
+  /* จัดให้อยู่ขวา และกึ่งกลางแนวตั้ง */
+  justify-self: end;
+  align-self: center;
+  
+  font-size: 42px;
   font-weight: 800;
   line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
 .highlightScoreMax {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.8;
 }
 
+/* --- Report Card List --- */
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -499,7 +522,7 @@
 }
 
 /* =========================================
-   8. SLA & DONUT (GLOBAL STYLES)
+   9. SLA & DONUT (GLOBAL STYLES)
    ========================================= */
 .slaHeaderBox {
   background-color: #f0f9ff !important;
@@ -515,7 +538,7 @@
 }
 
 .donutHeaderBox {
-  background-color: #ffffff; /* ปรับเป็นขาว */
+  background-color: #ffffff;
   border: 1px solid #f3f4f6;
   border-radius: 16px;
   padding: 20px;
@@ -525,7 +548,7 @@
   align-items: center;
 }
 
-/* --- [DESKTOP: DEFAULT LAYOUT] --- */
+/* --- [DESKTOP: SLA Graph] --- */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
@@ -615,6 +638,7 @@
   border-top: 4px solid #EF4444;
 }
 
+/* --- [Donut Chart] --- */
 .donutContainer {
   display: flex;
   flex-direction: column;
@@ -665,7 +689,7 @@
 }
 
 /* =========================================
-   9. RESPONSIVE (MOBILE FORCED FIX)
+   10. RESPONSIVE (MOBILE FORCED FIX)
    ========================================= */
 @media screen and (max-width: 1024px) {
   .orgStatsContainer {
@@ -690,7 +714,7 @@
     margin: 0 !important;
     padding: 0 0 120px 0 !important;
     gap: 0 !important;
-    background-color: #ffffff; /* ขาวล้วน */
+    background-color: #ffffff; /* White bg */
     overflow-x: hidden;
   }
 
