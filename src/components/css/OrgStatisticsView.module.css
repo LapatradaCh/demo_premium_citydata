@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL COMPLETED VERSION) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL VERSION - NO SPACES) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -14,9 +14,7 @@
   padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  
-  /* ✅ พื้นหลังสีขาวล้วน */
-  background-color: #ffffff; 
+  background-color: #ffffff;
   color: #1F2937;
 }
 
@@ -28,7 +26,7 @@
   width: 280px;
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   border: 1px solid #f3f4f6;
   padding: 24px 16px;
   position: sticky;
@@ -174,13 +172,10 @@
 .kpiCard {
   padding: 24px;
   border-radius: 16px;
-  
-  /* ✅ จัดเรียงแนวตั้ง ชิดซ้าย */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  
   border: none;
   min-height: 120px;
   gap: 8px;
@@ -220,7 +215,6 @@
   font-size: 14px;
   font-weight: 700;
   margin: 0;
-  /* ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
@@ -236,7 +230,7 @@
 
 .kpiValue {
   width: 100%;
-  text-align: left; /* ชิดซ้าย */
+  text-align: left;
   font-size: 36px;
   font-weight: 800;
   line-height: 1.2;
@@ -245,12 +239,11 @@
 
 .kpiSubtext {
   width: 100%;
-  text-align: left; /* ชิดซ้าย */
+  text-align: left;
   font-size: 12px;
   opacity: 0.85;
   font-weight: 500;
   margin: 0;
-  /* ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
@@ -379,17 +372,14 @@
 .highlightCard {
   padding: 20px 24px;
   border-radius: 16px;
-  
-  /* ✅ ใช้ Grid เพื่อแยกซ้าย-ขวา โดยไม่ต้องแก้ HTML */
   display: grid;
-  grid-template-columns: 1fr auto; /* ซ้ายยืดได้เต็มที่, ขวาขนาดเท่าเนื้อหา */
-  grid-template-rows: auto auto;   /* แถว 1 ชื่อเรื่อง, แถว 2 ชื่อคน */
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
   grid-template-areas: 
     "title score"
     "name score";
-  
   align-items: center;
-  gap: 4px 20px; /* ระยะห่างระหว่างข้อความกับตัวเลข */
+  gap: 4px 20px;
 }
 
 .highlightCardGreen {
@@ -414,7 +404,7 @@
   text-transform: uppercase;
   margin: 0;
   opacity: 0.9;
-  align-self: end; /* ดันลงล่างของช่อง */
+  align-self: end;
 }
 
 .highlightName {
@@ -425,15 +415,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  align-self: start; /* ดันขึ้นบนของช่อง */
+  align-self: start;
 }
 
 .highlightScore {
   grid-area: score;
-  /* จัดให้อยู่ขวา และกึ่งกลางแนวตั้ง */
   justify-self: end;
   align-self: center;
-  
   font-size: 42px;
   font-weight: 800;
   line-height: 1;
@@ -448,7 +436,6 @@
   opacity: 0.8;
 }
 
-/* --- Report Card List --- */
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -548,7 +535,6 @@
   align-items: center;
 }
 
-/* --- [DESKTOP: SLA Graph] --- */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
@@ -638,7 +624,6 @@
   border-top: 4px solid #EF4444;
 }
 
-/* --- [Donut Chart] --- */
 .donutContainer {
   display: flex;
   flex-direction: column;
@@ -705,7 +690,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Layout Reset */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -714,7 +698,7 @@
     margin: 0 !important;
     padding: 0 0 120px 0 !important;
     gap: 0 !important;
-    background-color: #ffffff; /* White bg */
+    background-color: #ffffff;
     overflow-x: hidden;
   }
 
@@ -722,7 +706,6 @@
     display: none !important;
   }
 
-  /* 2. Mobile Menu (Fixed) */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -833,7 +816,6 @@
     align-items: center;
   }
 
-  /* 3. ChartBox Reset */
   .chartBox {
     width: 100% !important;
     border-radius: 0 !important;
@@ -852,7 +834,6 @@
     align-items: flex-start;
   }
 
-  /* 4. Fix Layout Spacing */
   .kpiGrid {
     padding: 0 20px;
     gap: 12px;
@@ -894,7 +875,6 @@
 
   .controlBtn { flex: 1; text-align: center; }
 
-  /* 5. FIX: SLA GRAPH */
   .mockHorizontalBarChart {
     width: 100% !important;
     margin-top: 60px !important; 
@@ -987,7 +967,6 @@
     z-index: 1;
   }
 
-  /* 6. FIX: REPORT CARD */
   .reportCardHeader {
     flex-direction: column !important;
     align-items: flex-start !important;
