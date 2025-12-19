@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIX: NO OVERLAP GUARANTEED) --- */
+/* --- css/OrgStatisticsView.module.css (FULL VERSION WITH FIX) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -152,7 +152,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS (FIXED OVERLAP ISSUE)
+   5. KPI CARDS (FIXED: NO OVERLAP)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -163,22 +163,24 @@
 }
 
 .kpiCard {
-  /* ✅ ใช้ minmax(0, 1fr) เพื่อให้คอลัมน์ซ้ายยอมหดตัว ไม่ดันไปทับคอลัมน์ขวา */
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto; 
+  /* ✅ ปรับ Columns: ซ้ายยืดหดได้ (1fr) | ขวาขนาดตามเนื้อหา (auto) */
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto auto;
   grid-template-areas: 
     "header value"
     "subtext value";
   
-  align-items: center;
-  /* ✅ เพิ่ม gap แนวนอนให้ห่างกันชัดเจน */
-  gap: 4px 20px; 
+  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  align-content: center;
   
-  padding: 20px 24px;
+  /* ✅ ลด gap แนวนอนลงเพื่อให้มีพื้นที่เหลือให้ข้อความมากขึ้น */
+  gap: 2px 12px; 
+  
+  padding: 16px 20px; 
   border-radius: 16px;
   border: none;
-  min-height: 120px; 
+  min-height: 110px; 
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -217,25 +219,26 @@
   grid-area: header;
   font-size: 13px;
   font-weight: 700;
-  opacity: 1;
   margin: 0;
   
-  /* ✅ บังคับตัดคำ (...) ถ้าพื้นที่ไม่พอ */
+  /* ✅ บังคับตัดคำ (...) */
   white-space: nowrap !important; 
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;     /* สำคัญ: บังคับให้เต็มพื้นที่ column ตัวเองเท่านั้น */
+  min-width: 0;    /* สำคัญ: ช่วยให้ Grid ยอมหด item นี้เมื่อพื้นที่ไม่พอ */
   
   display: flex;
   align-items: center;
-  align-self: end;
-  padding-bottom: 2px;
+  align-self: end; /* วางชิดด้านล่างของ row บน */
 }
 
 .kpiHeader svg {
-  min-width: 16px; /* บังคับขนาดไอคอนไม่ให้บี้ */
+  min-width: 16px;
   width: 16px;
   height: 16px;
   margin-right: 6px;
+  flex-shrink: 0; /* ห้ามไอคอนหด */
 }
 
 /* 2. Subtext (ล่างซ้าย) */
@@ -246,24 +249,28 @@
   font-weight: 500;
   margin: 0;
   
-  /* ✅ บังคับตัดคำ (...) ถ้าพื้นที่ไม่พอ */
+  /* ✅ บังคับตัดคำ (...) */
   white-space: nowrap !important;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;     
+  min-width: 0;    
   
-  align-self: start;
+  align-self: start; /* วางชิดด้านบนของ row ล่าง */
 }
 
 /* 3. Value (ขวา) */
 .kpiValue {
   grid-area: value;
-  font-size: 36px; /* ปรับขนาดให้พอดี ไม่ใหญ่คับกล่อง */
+  font-size: 32px; /* ✅ ลดขนาดลงเล็กน้อยจาก 36px เพื่อลดโอกาสทับ */
   font-weight: 800;
   line-height: 1;
   text-align: right;
-  opacity: 1;
   min-width: fit-content; /* ห้ามตัวเลขหด */
-  margin-left: 8px;
+  margin-left: 0; 
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 /* =========================================
