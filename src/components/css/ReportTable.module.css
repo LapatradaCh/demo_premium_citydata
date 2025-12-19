@@ -4,24 +4,24 @@
 .calendarPopup {
   position: absolute;
   
-  /* ✅ 1. สั่งให้เด้งขึ้นบน (เหมือนเดิม) แต่ใช้ gap แบบ pixel เพื่อความแม่นยำ */
-  bottom: calc(100% + 8px); /* เว้นระยะจากช่อง 8px */
+  /* ✅ แก้ไข 1: เปลี่ยนจาก calc(100% + 8px) เป็น 100% เฉยๆ (ให้ขอบชนขอบ) */
+  bottom: 100%; 
+  
+  /* ✅ แก้ไข 2: ใช้ margin ดันขึ้นแค่นิดเดียว (4px) พอให้ดูไม่ทับเส้น */
+  margin-bottom: 4px; 
+  
   top: auto;
-  
-  /* ✅ 2. เปลี่ยนจากตรงกลาง เป็น "ชิดซ้าย" (สำหรับ Desktop) */
   left: 0;
-  transform: none; /* ยกเลิกการจัดกึ่งกลาง */
+  transform: none;
   
-  /* ✅ 3. ปรับเงาให้ชัดขึ้น กันดูจม */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* เงาเข้มขึ้น */
-  border: 1px solid #e0e0e0; /* เพิ่มขอบให้ชัด */
+  /* ปรับเงาให้นุ่มลงนิดนึงจะได้ดูไม่ลอยโดด */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15); 
+  border: 1px solid #d9d9d9;
   
   z-index: 100;
-  background: rgba(255, 255, 255, 1); /* พื้นหลังทึบ 100% */
-  backdrop-filter: blur(0px); /* ไม่ต้องเบลอแล้วเพราะทึบ */
+  background: #ffffff;
   border-radius: 16px;
   padding: 16px;
-  
   width: max-content;
   min-width: 300px;
 }
