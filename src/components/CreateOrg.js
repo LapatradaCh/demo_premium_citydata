@@ -172,26 +172,52 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3 (Updated): OrgLevelSetupForm (กำหนดระดับหน่วยงาน)
+ * Component 3 (Updated): OrgLevelSetupForm
+ * รองรับทั้ง "ระดับเขต/อำเภอ" และ "ระดับแขวง/ตำบล"
  * =================================================================
  */
 const OrgLevelSetupForm = ({ onSave, orgId }) => {
   const [selectedLevel, setSelectedLevel] = useState('province'); // default
-  const [selectedProvince, setSelectedProvince] = useState(''); // สำหรับเก็บจังหวัดที่เลือก
-  const [provinceList, setProvinceList] = useState([]); // รายชื่อจังหวัด
+  
+  // State สำหรับ Dropdown
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  
+  // Lists
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]); // รายชื่ออำเภอตามจังหวัดที่เลือก
+  
   const [isSaving, setIsSaving] = useState(false);
 
-  // จำลองการดึงข้อมูลจังหวัด (คุณสามารถเปลี่ยน URL เป็น API จริงได้)
+  // 1. โหลดรายชื่อจังหวัดเมื่อ Component เริ่มทำงาน
   useEffect(() => {
-    // ตัวอย่าง Mock Data
+    // Mock Provinces
     const mockProvinces = [
       "กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "ขอนแก่น", "ชลบุรี", "เชียงใหม่", "นครราชสีมา", "นนทบุรี", "ปทุมธานี", "ภูเก็ต"
     ];
     setProvinceList(mockProvinces);
-    
-    // ถ้ามี API ให้ใช้แบบนี้:
-    // fetch(`${API_BASE_URL}/provinces`).then(res => res.json()).then(data => setProvinceList(data));
+    // TODO: fetch(`${API_BASE_URL}/provinces`)...
   }, []);
+
+  // 2. เมื่อเลือกจังหวัด -> โหลดรายชื่ออำเภอ
+  useEffect(() => {
+    if (selectedProvince) {
+      // Mock Districts (ในโค้ดจริงต้องเรียก API โดยส่ง Province ID ไป)
+      // ตัวอย่างข้อมูลจำลองเพื่อให้เห็นภาพ
+      let districts = [];
+      if (selectedProvince === "กรุงเทพมหานคร") {
+          districts = ["เขตพระนคร", "เขตดุสิต", "เขตหนองจอก", "เขตบางรัก", "เขตปทุมวัน"];
+      } else {
+          districts = ["อำเภอเมือง", "อำเภอ A", "อำเภอ B", "อำเภอ C"];
+      }
+      setDistrictList(districts);
+    } else {
+      setDistrictList([]);
+    }
+    // Reset district เมื่อเปลี่ยนจังหวัด
+    setSelectedDistrict(''); 
+  }, [selectedProvince]);
+
 
   const levels = [
     { 
@@ -215,9 +241,12 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
     e.preventDefault();
     if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
 
-    // Validation: ถ้าเป็นระดับอำเภอ ต้องเลือกจังหวัดก่อน
+    // Validation Check
     if (selectedLevel === 'district' && !selectedProvince) {
         return alert("กรุณาเลือกจังหวัดที่รับผิดชอบ");
+    }
+    if (selectedLevel === 'sub_district' && (!selectedProvince || !selectedDistrict)) {
+        return alert("กรุณาเลือกจังหวัดและเขต/อำเภอให้ครบถ้วน");
     }
 
     setIsSaving(true);
@@ -229,17 +258,41 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
         body: JSON.stringify({ 
             organization_id: orgId, 
             management_level: selectedLevel,
-            province_scope: selectedProvince // ส่งจังหวัดที่เลือกไปด้วย
+            province_scope: selectedProvince,
+            district_scope: selectedDistrict // ส่งอำเภอไปด้วยถ้ามี
         }),
       });
       alert("บันทึกระดับหน่วยงานสำเร็จ!");
       onSave();
     } catch (err) {
       console.error(err);
-      onSave(); 
+      onSave(); // ให้ผ่านไปก่อนกรณี Demo
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Logic ตรวจสอบว่าปุ่มกดได้ไหม
+  const isButtonDisabled = (() => {
+      if (isSaving) return true;
+      if (selectedLevel === 'district' && !selectedProvince) return true;
+      if (selectedLevel === 'sub_district' && (!selectedProvince || !selectedDistrict)) return true;
+      return false;
+  })();
+
+  // Logic ข้อความสถานะ
+  const getStatusText = () => {
+    if (selectedLevel === 'province') return 'ทุกอำเภอในจังหวัด';
+    
+    // กรณีระดับอำเภอ หรือ ตำบล
+    if (!selectedProvince) return 'รอการเลือกข้อมูล';
+    
+    if (selectedLevel === 'sub_district') {
+        if (!selectedDistrict) return 'รอการเลือกข้อมูล';
+        return `${selectedProvince} > ${selectedDistrict}`;
+    }
+
+    return selectedProvince; // กรณี district และเลือกจังหวัดแล้ว
   };
 
   // Styles
@@ -266,9 +319,6 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
     fontWeight: '600'
   };
 
-  // เช็คเงื่อนไขความพร้อมของปุ่มบันทึก
-  const isButtonDisabled = isSaving || (selectedLevel === 'district' && !selectedProvince);
-
   return (
     <form onSubmit={handleLevelSubmit}>
       <div style={{ marginBottom: '1.5rem' }}>
@@ -282,7 +332,11 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
               style={selectedLevel === lvl.id ? activeCardStyle : cardStyle}
               onClick={() => {
                   setSelectedLevel(lvl.id);
-                  if(lvl.id === 'province') setSelectedProvince(''); // Reset ถ้าเปลี่ยนเป็นจังหวัด
+                  // Reset ค่าเมื่อเปลี่ยนระดับ เพื่อความปลอดภัย
+                  if (lvl.id === 'province') {
+                      setSelectedProvince('');
+                      setSelectedDistrict('');
+                  }
               }}
             >
               <div>{lvl.icon}</div>
@@ -291,34 +345,78 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
           ))}
         </div>
 
-        {/* UI ตามรูปภาพ: ส่วนเลือกจังหวัด (แสดงเมื่อเลือก District หรือ Sub-district) */}
-        {selectedLevel === 'district' && (
+        {/* SECTION: DROPDOWNS (แสดงเมื่อไม่ใช่ระดับ Province) */}
+        {selectedLevel !== 'province' && (
             <div style={{
                 backgroundColor: '#f8f9fa',
                 padding: '1.5rem',
                 borderRadius: '8px',
                 border: '1px solid #eee'
             }}>
-                <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
-                    จังหวัดที่รับผิดชอบ <span style={{color: 'red'}}>*</span>
-                </label>
-                <div className={styles.inputIconWrapper} style={{backgroundColor: '#fff'}}>
-                    <select 
-                        value={selectedProvince}
-                        onChange={(e) => setSelectedProvince(e.target.value)}
-                        className={`${styles.select}`}
-                        style={{width: '100%', padding: '0.6rem', borderRadius: '4px', border: '1px solid #ccc'}}
-                    >
-                        <option value="">-- โปรดเลือกจังหวัด --</option>
-                        {provinceList.map((prov, index) => (
-                            <option key={index} value={prov}>{prov}</option>
-                        ))}
-                    </select>
+                <div style={{ 
+                    display: 'grid', 
+                    // ถ้าเลือก sub_district ให้แสดง 2 คอลัมน์ ถ้า district แสดง 1 คอลัมน์
+                    gridTemplateColumns: selectedLevel === 'sub_district' ? '1fr 1fr' : '1fr', 
+                    gap: '1rem' 
+                }}>
+                    
+                    {/* Dropdown 1: จังหวัด */}
+                    <div>
+                        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
+                            จังหวัดที่รับผิดชอบ <span style={{color: 'red'}}>*</span>
+                        </label>
+                        <div className={styles.inputIconWrapper} style={{backgroundColor: '#fff'}}>
+                            <select 
+                                value={selectedProvince}
+                                onChange={(e) => setSelectedProvince(e.target.value)}
+                                className={`${styles.select}`}
+                                style={{width: '100%', padding: '0.6rem', borderRadius: '4px', border: '1px solid #ccc'}}
+                            >
+                                <option value="">-- โปรดเลือกจังหวัด --</option>
+                                {provinceList.map((prov, index) => (
+                                    <option key={index} value={prov}>{prov}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Dropdown 2: อำเภอ (แสดงเฉพาะ sub_district) */}
+                    {selectedLevel === 'sub_district' && (
+                        <div>
+                            <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
+                                เขต / อำเภอ <span style={{color: 'red'}}>*</span>
+                            </label>
+                            <div className={styles.inputIconWrapper} style={{backgroundColor: selectedProvince ? '#fff' : '#f0f0f0'}}>
+                                <select 
+                                    value={selectedDistrict}
+                                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                                    className={`${styles.select}`}
+                                    style={{
+                                        width: '100%', 
+                                        padding: '0.6rem', 
+                                        borderRadius: '4px', 
+                                        border: '1px solid #ccc',
+                                        color: !selectedProvince ? '#999' : '#000',
+                                        cursor: !selectedProvince ? 'not-allowed' : 'pointer'
+                                    }}
+                                    disabled={!selectedProvince}
+                                >
+                                    <option value="">
+                                        {selectedProvince ? '-- โปรดเลือกอำเภอ --' : 'กรุณาเลือกจังหวัดก่อน'}
+                                    </option>
+                                    {districtList.map((dist, index) => (
+                                        <option key={index} value={dist}>{dist}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         )}
       </div>
 
+      {/* FOOTER ACTION */}
       <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -331,22 +429,19 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
         <div style={{ color: '#666', fontSize: '0.9rem' }}>
           สถานะการเลือก: 
           <span style={{ color: '#2563eb', fontWeight: '600', marginLeft: '5px' }}>
-            {(selectedLevel === 'district' && !selectedProvince) 
-                ? 'รอการเลือกข้อมูล' // ตามรูป
-                : (selectedLevel === 'province' ? 'ทุกอำเภอในจังหวัด' : selectedProvince || 'กำลังดำเนินการ')
-            }
+            {getStatusText()}
           </span>
         </div>
 
         <button 
           type="submit" 
           className={`${styles.button} ${styles.btnSuccess}`}
-          disabled={isButtonDisabled} // Disabled ถ้ายังไม่เลือกจังหวัด
+          disabled={isButtonDisabled}
           style={{ 
               width: 'auto', 
               minWidth: '150px', 
               margin: 0,
-              opacity: isButtonDisabled ? 0.6 : 1, // ทำให้ดูจางลงถ้ากดไม่ได้
+              opacity: isButtonDisabled ? 0.6 : 1,
               cursor: isButtonDisabled ? 'not-allowed' : 'pointer'
           }}
         >
