@@ -1,8 +1,6 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIX: NO OVERLAP GUARANTEED) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIXED: FLEX + WRAPPER) --- */
 
-/* =========================================
-   1. GLOBAL & LAYOUT
-   ========================================= */
+/* 1. Global */
 .orgStatsContainer {
   display: flex;
   flex-direction: row;
@@ -18,9 +16,7 @@
   color: #1F2937;
 }
 
-/* =========================================
-   2. SIDEBAR (Desktop)
-   ========================================= */
+/* 2. Sidebar */
 .orgStatsSidebarDesktop {
   flex-shrink: 0;
   width: 240px;
@@ -102,9 +98,7 @@
 
 .orgStatsMobileDropdown { display: none; }
 
-/* =========================================
-   4. CONTENT AREA
-   ========================================= */
+/* 3. Content */
 .orgStatsContent {
   flex-grow: 1;
   min-width: 0;
@@ -152,33 +146,26 @@
 }
 
 /* =========================================
-   5. KPI CARDS (FIXED OVERLAP ISSUE)
+   5. KPI CARDS (THE FIX: FLEX + WRAPPER)
    ========================================= */
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์เสมอ */
   gap: 16px;
   margin-bottom: 24px;
   width: 100%;
 }
 
 .kpiCard {
-  /* ✅ ใช้ minmax(0, 1fr) เพื่อให้คอลัมน์ซ้ายยอมหดตัว ไม่ดันไปทับคอลัมน์ขวา */
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto; 
-  grid-template-rows: auto auto;
-  grid-template-areas: 
-    "header value"
-    "subtext value";
-  
+  /* ใช้ Flex จัดซ้าย-ขวา แทน Grid */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  /* ✅ เพิ่ม gap แนวนอนให้ห่างกันชัดเจน */
-  gap: 4px 20px; 
   
   padding: 20px 24px;
   border-radius: 16px;
   border: none;
-  min-height: 120px; 
+  min-height: 120px;
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -188,203 +175,74 @@
   transform: translateY(-2px);
 }
 
+/* ✅ กล่องหุ้มข้อความฝั่งซ้าย (สำคัญมาก) */
+.kpiContentLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1; /* ยืดได้ */
+  min-width: 0; /* ยอมหดได้ถ้าพื้นที่ไม่พอ */
+  margin-right: 12px; /* ดันตัวเลขทางขวาออกไป */
+}
+
+/* Header */
+.kpiHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 1;
+  margin-bottom: 4px;
+  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpiHeader svg {
+  min-width: 16px;
+}
+
+/* Subtext */
+.kpiSubtext {
+  font-size: 11px;
+  opacity: 0.9;
+  font-weight: 500;
+  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ✅ ตัวเลขฝั่งขวา */
+.kpiValue {
+  font-size: 40px; /* ขนาดใหญ่ */
+  font-weight: 800;
+  line-height: 1;
+  text-align: right;
+  flex-shrink: 0; /* ห้ามหดตัว */
+}
+
+/* Colors */
 .kpiCardSuccess {
   background: #10B981 !important;
   color: #fff !important;
   box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
 }
-
 .kpiCardNormal {
   background: #111827 !important;
   color: #fff !important;
   box-shadow: 0 5px 15px rgba(17, 24, 39, 0.2);
 }
-
 .kpiCardCritical {
   background: #EF4444 !important;
   color: #fff !important;
   box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
 }
-
-.kpiCardSuccess *,
-.kpiCardNormal *,
-.kpiCardCritical * {
+.kpiCardSuccess *, .kpiCardNormal *, .kpiCardCritical * {
   color: #ffffff !important;
 }
 
-/* 1. Header (บนซ้าย) */
-.kpiHeader {
-  grid-area: header;
-  font-size: 13px;
-  font-weight: 700;
-  opacity: 1;
-  margin: 0;
-  
-  /* ✅ บังคับตัดคำ (...) ถ้าพื้นที่ไม่พอ */
-  white-space: nowrap !important; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  
-  display: flex;
-  align-items: center;
-  align-self: end;
-  padding-bottom: 2px;
-}
-
-.kpiHeader svg {
-  min-width: 16px; /* บังคับขนาดไอคอนไม่ให้บี้ */
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-}
-
-/* 2. Subtext (ล่างซ้าย) */
-.kpiSubtext {
-  grid-area: subtext;
-  font-size: 11px;
-  opacity: 0.9;
-  font-weight: 500;
-  margin: 0;
-  
-  /* ✅ บังคับตัดคำ (...) ถ้าพื้นที่ไม่พอ */
-  white-space: nowrap !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  
-  align-self: start;
-}
-
-/* 3. Value (ขวา) */
-.kpiValue {
-  grid-area: value;
-  font-size: 36px; /* ปรับขนาดให้พอดี ไม่ใหญ่คับกล่อง */
-  font-weight: 800;
-  line-height: 1;
-  text-align: right;
-  opacity: 1;
-  min-width: fit-content; /* ห้ามตัวเลขหด */
-  margin-left: 8px;
-}
-
-/* =========================================
-   BUTTONS
-   ========================================= */
-.headerControls {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-  font-size: 13px;
-  align-items: center;
-}
-
-.controlBtn {
-  padding: 6px 16px;
-  border-radius: 50px;
-  border: 1px solid #E5E7EB;
-  cursor: pointer;
-  background: #ffffff;
-  color: #6B7280;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-}
-
-.controlBtn:hover {
-  background: #F9FAFB;
-  border-color: #D1D5DB;
-  color: #111827;
-}
-
-.activeTotal {
-  background-color: #2563EB !important;
-  color: #ffffff !important;
-  border: 1px solid #2563EB !important;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-}
-
-.activeCritical {
-  background-color: #EF4444 !important;
-  color: #ffffff !important;
-  border: 1px solid #EF4444 !important;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
-}
-
-/* =========================================
-   6. STACKED BAR CHART
-   ========================================= */
-.mockStackedBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.mockHBarItem {
-  display: grid;
-  grid-template-columns: 160px 1fr 50px;
-  gap: 16px;
-  align-items: center;
-  font-size: 13px;
-}
-
-.mockStackedHBar {
-  height: 32px;
-  background: #F3F4F6;
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex;
-  width: 100%;
-}
-
-.mockStackedBarSegment {
-  height: 100%;
-  position: relative;
-  cursor: pointer;
-  transition: width 0.5s ease;
-  font-size: 10px;
-}
-
-.mockStackedBarSegment:hover {
-  filter: brightness(1.1);
-  z-index: 5;
-}
-
-.mockStackedBarLegend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px dashed #E5E7EB;
-}
-
-.mockStackedBarLegendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #4B5563;
-  font-weight: 600;
-  padding: 4px 10px;
-  background: #F9FAFB;
-  border-radius: 16px;
-}
-
-.legendDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-/* =========================================
-   7. SATISFACTION (Tab 2)
-   ========================================= */
+/* --- SATISFACTION CARDS (Tab 2) ใช้ Logic เดียวกัน --- */
 .satisfactionHighlightGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -393,442 +251,108 @@
 }
 
 .highlightCard {
-  padding: 20px 24px;
-  border-radius: 20px;
-  display: grid;
-  /* ใช้ minmax(0, 1fr) แก้ทับกัน */
-  grid-template-columns: minmax(0, 1fr) auto; 
-  grid-template-rows: auto auto;
-  grid-template-areas: 
-    "title score"
-    "name score";
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px 16px;
   
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  min-height: 100px;
+  padding: 24px 32px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  min-height: 130px;
   overflow: hidden;
 }
 
-.highlightCardGreen {
-  background: #10B981;
-  color: #fff;
-}
-
-.highlightCardRed {
-  background: #EF4444;
-  color: #fff;
-}
+.highlightCardGreen { background: #10B981; color: #fff; }
+.highlightCardRed { background: #EF4444; color: #fff; }
 
 .highlightTitle {
-  grid-area: title;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   opacity: 0.9;
-  color: #fff;
-  white-space: nowrap !important;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  align-self: end;
 }
 
 .highlightName {
-  grid-area: name;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0;
-  white-space: nowrap !important;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #fff;
-  align-self: start;
 }
 
 .highlightScore {
-  grid-area: score;
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 800;
   line-height: 1;
-  color: #fff;
   text-align: right;
-  opacity: 1;
-  min-width: fit-content;
+  flex-shrink: 0;
 }
 
 .highlightScoreMax {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
   opacity: 0.7;
 }
 
-.reportCardList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+/* Other Components (Buttons, Charts, etc.) */
+.headerControls { margin-left: auto; display: flex; gap: 8px; font-size: 13px; }
+.controlBtn { padding: 6px 16px; border-radius: 50px; border: 1px solid #E5E7EB; background: #fff; color: #6B7280; font-weight: 600; font-size: 12px; cursor: pointer; }
+.activeTotal { background-color: #2563EB !important; color: #fff !important; border-color: #2563EB !important; }
+.activeCritical { background-color: #EF4444 !important; color: #fff !important; border-color: #EF4444 !important; }
 
-.reportCardItem {
-  background: #fff;
-  border: 1px solid #F3F4F6;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-}
+.reportCardList { display: flex; flex-direction: column; gap: 16px; }
+.reportCardItem { background: #fff; border: 1px solid #F3F4F6; border-radius: 16px; padding: 16px; }
+.reportCardHeader { display: flex; justify-content: space-between; align-items: center; }
+.reportCardTitleGroup { display: flex; align-items: center; gap: 12px; }
+.reportCardRank { font-size: 16px; font-weight: 800; color: #F59E0B; background: #1F2937; min-width: 36px; height: 36px; border-radius: 10px; display: flex; justify-content: center; align-items: center; }
+.reportCardName { font-size: 16px; font-weight: 700; color: #111827; }
+.reportCardScoreText { font-size: 24px; font-weight: 800; color: #F59E0B; }
+.reportCardProgressBg { margin-top: 16px; height: 8px; background: #F3F4F6; border-radius: 999px; overflow: hidden; }
+.reportCardProgressBar { height: 100%; border-radius: 999px; transition: width 0.8s; background: #F59E0B; }
 
-.reportCardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.slaHeaderBox { background: #F0F9FF; border: 1px solid #BAE6FD; border-left: 4px solid #0EA5E9; border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; }
+.donutHeaderBox { background: #fff; border: 1px solid #F3F4F6; border-radius: 16px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; }
 
-.reportCardTitleGroup {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.mockHorizontalBarChart { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+.mockHBarItem { display: grid; grid-template-columns: 140px 1fr 80px; align-items: center; gap: 16px; margin-bottom: 10px; }
+.mockHBarLabel { font-size: 13px; font-weight: 600; color: #333; text-align: left; }
+.mockHBarValue { font-size: 13px; font-weight: 700; text-align: right; }
+.mockHBar { height: 8px; background: #F3F4F6; border-radius: 6px; overflow: visible; position: relative; width: 100%; }
+.mockHBarFill { height: 100%; border-radius: 6px; transition: width 0.5s; background: #EF4444; }
+.slaLineContainer { position: absolute; top: -10px; bottom: 0; border-left: 2px dashed #EF4444; z-index: 10; opacity: 0.5; }
+.slaLabel { position: absolute; top: -24px; left: 0; transform: translateX(-50%); background: #EF4444; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
 
-.reportCardRank {
-  font-size: 16px;
-  font-weight: 800;
-  color: #F59E0B; 
-  background: #1F2937; 
-  min-width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+.donutContainer { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.donutWrapper { width: 220px; height: 220px; position: relative; }
+.donutCenterText { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.donutLegendGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; width: 100%; }
+.donutLegendItem { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; border: 1px solid #F3F4F6; border-radius: 12px; font-size: 13px; }
+.donutColorDot { width: 12px; height: 12px; border-radius: 4px; }
 
-.reportCardName {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111827;
-}
-
-.reportCardScoreGroup {
-  text-align: right;
-}
-
-.reportCardScoreText {
-  font-size: 24px;
-  font-weight: 800;
-  color: #F59E0B;
-  line-height: 1;
-}
-
-.reportCardProgressBg {
-  margin-top: 16px;
-  height: 8px;
-  background: #F3F4F6;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.reportCardProgressBar {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.8s ease-out;
-  background: #F59E0B;
-}
-
-/* =========================================
-   8. SLA & DONUT
-   ========================================= */
-.slaHeaderBox {
-  background-color: #F0F9FF !important;
-  border: 1px solid #BAE6FD !important;
-  border-left: 4px solid #0EA5E9 !important;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.donutHeaderBox {
-  background-color: #ffffff;
-  border: 1px solid #F3F4F6;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mockHorizontalBarChart {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  margin-top: 24px;
-  font-size: 13px;
-}
-
-.mockHBarItem {
-  display: grid;
-  grid-template-columns: 140px 1fr 80px;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.mockHBarLabel {
-  font-size: 13px;
-  font-weight: 600;
-  color: #374151;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mockHBarValue {
-  font-size: 13px;
-  font-weight: 700;
-  text-align: right;
-  white-space: nowrap;
-  color: #111827;
-}
-
-.mockHBar {
-  height: 8px;
-  background: #F3F4F6;
-  border-radius: 6px;
-  overflow: visible;
-  width: 100%;
-  position: relative;
-}
-
-.mockHBarFill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.5s ease;
-  background: #EF4444;
-}
-
-.slaLineContainer {
-  position: absolute;
-  top: -10px;
-  bottom: 0;
-  border-left: 2px dashed #EF4444;
-  z-index: 10;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.slaLabel {
-  position: absolute;
-  top: -24px;
-  left: 0;
-  transform: translateX(-50%);
-  background: #EF4444;
-  color: white;
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.slaLabel::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #EF4444;
-}
-
-.donutContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
-.donutWrapper {
-  width: 220px;
-  height: 220px;
-  position: relative;
-}
-
-.donutCenterText {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.donutLegendGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-.donutLegendItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #F3F4F6;
-  font-size: 13px;
-}
-
-.donutColorDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
-}
-
-/* =========================================
-   9. RESPONSIVE
-   ========================================= */
+/* Responsive */
 @media screen and (max-width: 1024px) {
-  .orgStatsContainer {
-    gap: 20px;
-    padding: 20px;
-  }
-  .orgStatsSidebarDesktop {
-    width: 200px;
-  }
-  .kpiGrid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+  .orgStatsContainer { gap: 20px; padding: 20px; }
+  .orgStatsSidebarDesktop { width: 200px; }
+  .kpiGrid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media screen and (max-width: 768px) {
-  .orgStatsContainer {
-    display: flex;
-    flex-direction: column;
-    padding: 0 0 80px 0;
-    gap: 0;
-    background-color: #ffffff;
-    overflow-x: hidden;
-  }
-  .orgStatsSidebarDesktop {
-    display: none;
-  }
-  .orgStatsMobileDropdown {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 12px 16px;
-    background: #fff;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 50;
-    border-bottom: 1px solid #F3F4F6;
-  }
-  .mobileDropdownTrigger {
-    width: 100%;
-    height: 44px;
-    background: #ffffff;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
-    padding: 0 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #1F2937;
-    font-weight: 700;
-    font-size: 14px;
-  }
-  .mobileDropdownList {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 16px;
-    right: 16px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.15);
-    border: 1px solid #F3F4F6;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 999;
-  }
-  .mobileDropdownItem {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
-    text-align: left;
-    background: transparent;
-    border: none;
-    font-size: 14px;
-    color: #4B5563;
-  }
-  .mobileDropdownItem:hover, .activeItem {
-    background-color: #F0FDF4;
-    color: #10B981;
-  }
-  .chartBox {
-    padding: 16px;
-    border: none;
-    border-bottom: 8px solid #F3F4F6;
-    border-radius: 0;
-  }
+  .orgStatsContainer { flex-direction: column; padding: 0 0 80px 0; gap: 0; }
+  .orgStatsSidebarDesktop { display: none; }
+  .orgStatsMobileDropdown { display: flex; flex-direction: column; width: 100%; padding: 12px 16px; background: #fff; border-bottom: 1px solid #F3F4F6; }
+  .mobileDropdownTrigger { width: 100%; height: 44px; background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 0 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; }
+  .mobileDropdownList { position: absolute; top: calc(100% + 10px); left: 16px; right: 16px; background: #fff; border-radius: 16px; box-shadow: 0 20px 40px -4px rgba(0,0,0,0.15); padding: 8px; display: flex; flex-direction: column; gap: 4px; z-index: 999; }
+  .mobileDropdownItem { width: 100%; padding: 10px 12px; text-align: left; background: transparent; border: none; font-size: 14px; }
+  .chartBox { padding: 16px; border: none; border-bottom: 8px solid #F3F4F6; border-radius: 0; }
   
-  /* Mobile: 1 Column */
-  .kpiGrid {
-    grid-template-columns: repeat(1, 1fr) !important;
-    gap: 12px;
-  }
-  .kpiCard {
-    min-height: 80px;
-    padding: 16px;
-  }
-  .kpiValue {
-    font-size: 28px;
-  }
+  /* Mobile: ยังคงเรียง 1 คอลัมน์ */
+  .kpiGrid { grid-template-columns: repeat(1, 1fr) !important; gap: 12px; }
+  .kpiCard { min-height: 80px; padding: 16px; }
+  .kpiValue { font-size: 28px; }
   
-  .orgStatsContent { gap: 0; }
-  .orgGraphDashboard { gap: 0; }
-  .satisfactionHighlightGrid { padding: 0 16px; gap: 12px; grid-template-columns: 1fr; }
-  .reportCardList { padding: 0 16px; gap: 12px; }
-  .slaHeaderBox, .donutHeaderBox {
-    margin: 0 16px 16px 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 16px;
-  }
-  .headerControls {
-    margin-left: 0;
-    width: 100%;
-    margin-top: 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .controlBtn { flex: 1; text-align: center; padding: 6px 12px; font-size: 12px; }
-  .reportCardHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .reportCardScoreGroup {
-    width: 100%;
-    text-align: left;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-  .reportCardScoreText { font-size: 28px; }
+  .satisfactionHighlightGrid { grid-template-columns: 1fr; }
+  .slaHeaderBox, .donutHeaderBox { flex-direction: column; align-items: flex-start; }
 }
