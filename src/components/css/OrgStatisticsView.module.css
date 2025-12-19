@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL SMALLER & ONE ROW FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL INCREASED HEIGHT) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -23,7 +23,7 @@
    ========================================= */
 .orgStatsSidebarDesktop {
   flex-shrink: 0;
-  width: 240px; /* ลดความกว้าง Sidebar ลงนิดหน่อย */
+  width: 240px;
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
@@ -36,7 +36,7 @@
 }
 
 .orgStatsMenuTitle {
-  font-size: 11px; /* เล็กลง */
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
@@ -59,8 +59,8 @@
   gap: 10px;
   width: 100%;
   padding: 0 12px;
-  height: 40px; /* เตี้ยลง */
-  font-size: 13px; /* เล็กลง */
+  height: 40px;
+  font-size: 13px;
   font-weight: 500;
   color: #4B5563;
   background: transparent;
@@ -75,7 +75,7 @@
 }
 
 .orgStatsMenuButton svg {
-  font-size: 18px; /* ไอคอนเล็กลง */
+  font-size: 18px;
   width: 18px;
   display: flex;
   justify-content: center;
@@ -110,7 +110,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* ลดช่องว่างรวม */
+  gap: 24px;
 }
 
 .orgGraphDashboard {
@@ -123,7 +123,7 @@
 .chartBox {
   background: #ffffff;
   border-radius: 20px;
-  padding: 24px; /* ลด padding */
+  padding: 24px;
   border: 1px solid #F3F4F6;
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@
 }
 
 .chartBoxTitle {
-  font-size: 18px; /* เล็กลง */
+  font-size: 18px;
   font-weight: 700;
   color: #111827;
   margin: 0 0 20px 0;
@@ -152,13 +152,13 @@
 }
 
 /* =========================================
-   5. KPI CARDS (SMALLER & FORCED ONE ROW)
+   5. KPI CARDS (INCREASED HEIGHT)
    ========================================= */
 .kpiGrid {
   display: grid;
-  /* ✅ บังคับ 3 คอลัมน์ใน 1 บรรทัดเสมอ (ยกเว้นมือถือ) */
+  /* บังคับ 3 คอลัมน์ใน 1 บรรทัดเสมอ (ยกเว้นมือถือ) */
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 16px; /* ลดระยะห่างระหว่างการ์ด */
+  gap: 16px;
   margin-bottom: 24px;
   width: 100%;
 }
@@ -172,14 +172,13 @@
     "subtext value";
   
   align-items: center;
-  /* ✅ ลด gap ภายใน */
   gap: 2px 12px; 
   
-  /* ✅ ลด Padding และความสูง */
   padding: 16px 20px;
   border-radius: 16px;
   border: none;
-  min-height: 90px; /* เตี้ยลง */
+  /* ✅ เพิ่มความสูงของกล่องที่นี่ครับ */
+  min-height: 120px; 
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -213,11 +212,11 @@
   color: #ffffff !important;
 }
 
-/* 1. Header (บนซ้าย) - เล็กลง */
+/* 1. Header (บนซ้าย) */
 .kpiHeader {
   grid-area: header;
   display: block;
-  font-size: 13px; /* ✅ เล็กลง */
+  font-size: 13px;
   font-weight: 700;
   opacity: 1;
   margin: 0;
@@ -228,19 +227,18 @@
   padding-bottom: 2px;
 }
 
-/* ซ่อนไอคอนใน Header เพื่อประหยัดที่ หรือปรับให้เล็ก */
 .kpiHeader svg {
   display: inline-block;
   vertical-align: text-bottom;
   margin-right: 4px;
-  width: 16px; /* เล็กลง */
+  width: 16px;
   height: 16px;
 }
 
-/* 2. Subtext (ล่างซ้าย) - เล็กลง */
+/* 2. Subtext (ล่างซ้าย) */
 .kpiSubtext {
   grid-area: subtext;
-  font-size: 11px; /* ✅ เล็กลงมาก */
+  font-size: 11px;
   opacity: 0.9;
   font-weight: 500;
   margin: 0;
@@ -250,10 +248,10 @@
   align-self: start;
 }
 
-/* 3. Value (ขวา) - ตัวเลขเล็กลง */
+/* 3. Value (ขวา) */
 .kpiValue {
   grid-area: value;
-  font-size: 32px; /* ✅ เล็กลงอย่างชัดเจน (จาก 42px) */
+  font-size: 32px;
   font-weight: 800;
   line-height: 1;
   text-align: right;
@@ -263,7 +261,7 @@
 }
 
 /* =========================================
-   BUTTONS (Smaller)
+   BUTTONS
    ========================================= */
 .headerControls {
   margin-left: auto;
@@ -274,7 +272,7 @@
 }
 
 .controlBtn {
-  padding: 6px 16px; /* เล็กลง */
+  padding: 6px 16px;
   border-radius: 50px;
   border: 1px solid #E5E7EB;
   cursor: pointer;
@@ -320,14 +318,14 @@
 
 .mockHBarItem {
   display: grid;
-  grid-template-columns: 160px 1fr 50px; /* ปรับขนาด */
+  grid-template-columns: 160px 1fr 50px;
   gap: 16px;
   align-items: center;
   font-size: 13px;
 }
 
 .mockStackedHBar {
-  height: 32px; /* เตี้ยลง */
+  height: 32px;
   background: #F3F4F6;
   border-radius: 10px;
   overflow: hidden;
@@ -340,7 +338,7 @@
   position: relative;
   cursor: pointer;
   transition: width 0.5s ease;
-  font-size: 10px; /* font ในบาร์เล็กลง */
+  font-size: 10px;
 }
 
 .mockStackedBarSegment:hover {
@@ -379,7 +377,7 @@
 }
 
 /* =========================================
-   7. SATISFACTION (Tab 2 - Smaller)
+   7. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -389,7 +387,7 @@
 }
 
 .highlightCard {
-  padding: 20px 24px; /* เล็กลง */
+  padding: 20px 24px;
   border-radius: 20px;
   display: grid;
   grid-template-columns: 1fr auto; 
@@ -417,7 +415,7 @@
 
 .highlightTitle {
   grid-area: title;
-  font-size: 12px; /* เล็กลง */
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -431,7 +429,7 @@
 
 .highlightName {
   grid-area: name;
-  font-size: 18px; /* เล็กลง */
+  font-size: 18px;
   font-weight: 700;
   margin: 0;
   white-space: nowrap !important;
@@ -443,7 +441,7 @@
 
 .highlightScore {
   grid-area: score;
-  font-size: 42px; /* เล็กลง */
+  font-size: 42px;
   font-weight: 800;
   line-height: 1;
   color: #fff;
