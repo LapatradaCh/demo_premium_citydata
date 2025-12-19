@@ -4,28 +4,28 @@
 .calendarPopup {
   position: absolute;
   
-  /* ✅ แก้ไข 1: เปลี่ยนจาก calc(100% + 8px) เป็น 100% เฉยๆ (ให้ขอบชนขอบ) */
-  bottom: 100%; 
+  /* ✅ สั่งให้เริ่มจากขอบล่างของปุ่ม (เด้งลงล่าง) */
+  top: 100%;
+  bottom: auto; /* ยกเลิกคำสั่งเด้งขึ้น */
   
-  /* ✅ แก้ไข 2: ใช้ margin ดันขึ้นแค่นิดเดียว (4px) พอให้ดูไม่ทับเส้น */
-  margin-bottom: 4px; 
+  /* ✅ เว้นระยะห่างจากปุ่มนิดเดียว (4px) */
+  margin-top: 4px;
+  margin-bottom: 0;
   
-  top: auto;
+  /* ✅ ชิดซ้าย */
   left: 0;
   transform: none;
   
-  /* ปรับเงาให้นุ่มลงนิดนึงจะได้ดูไม่ลอยโดด */
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15); 
-  border: 1px solid #d9d9d9;
-  
-  z-index: 100;
+  /* สไตล์ตกแต่ง */
+  z-index: 2000; /* ใส่เลขเยอะๆ ให้ลอยทับทุกอย่าง */
   background: #ffffff;
   border-radius: 16px;
   padding: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
   width: max-content;
   min-width: 300px;
 }
-
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
