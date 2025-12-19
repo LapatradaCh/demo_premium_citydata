@@ -85,6 +85,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
+  // --- 1. Fetch Issue Types ---
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
@@ -105,6 +106,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchIssueTypes();
   }, []);
 
+  // --- 2. Fetch Statuses ---
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
@@ -134,6 +136,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchStatuses();
   }, [subTab]);
 
+  // --- 3. Fetch Reports ---
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -163,6 +166,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchCases();
   }, [subTab]);
 
+  // --- 4. Logic กรองข้อมูล ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       const reportTypeName = report.issue_type_name || ""; 
@@ -288,56 +292,59 @@ const ReportTable = ({ subTab, onRowClick }) => {
         ))}
       </div>
 
-      {/* ✅ ปรับปรุง Modal รายละเอียด: ลบปุ่มปิดด้านล่าง + จัดเนื้อหาใหม่ */}
+      {/* ✅ ปรับปรุง Modal รายละเอียด: จัด Layout ให้อ่านง่ายที่สุด และลบปุ่มปิดด้านล่าง */}
       {selectedReport && (
         <>
           <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
-          <div className={styles.filterModal} style={{ maxWidth: '420px' }}>
+          <div className={styles.filterModal} style={{ maxWidth: '450px' }}>
             <div className={styles.filterModalHeader}>
               <h3>รายละเอียดเรื่องแจ้ง</h3>
               <button className={styles.filterModalClose} onClick={() => setSelectedReport(null)}>
                 <FaTimes />
               </button>
             </div>
-            <div className={styles.filterModalContent} style={{ maxHeight: '78vh', overflowY: 'auto', paddingBottom: '30px' }}>
+            <div className={styles.filterModalContent} style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '32px' }}>
               
-              <div className={styles.cardHeaderSection} style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
-                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.reportImage} style={{ width: '90px', height: '90px', borderRadius: '18px' }} />
-                <div className={styles.headerInfo}>
-                  <h3 className={styles.reportHeader} style={{ fontSize: '18px' }}>#{selectedReport.case_code}</h3>
-                  <p className={styles.reportDetailText} style={{ whiteSpace: 'normal', color: '#333' }}>{selectedReport.title}</p>
+              <div className={styles.detailHeaderBlock}>
+                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailImage} />
+                <div className={styles.detailTitleInfo}>
+                  <h3 className={styles.detailCaseCode}>#{selectedReport.case_code}</h3>
+                  <p className={styles.detailMainTitle}>{selectedReport.title}</p>
                 </div>
               </div>
 
-              <div className={styles.mainDetails} style={{ borderTop: '1px solid #f0f0f0', paddingTop: '16px' }}>
-                <div className={styles.detailGroup}>
-                  <strong>ประเภทปัญหา</strong>
-                  <span className={styles.detailValue}>{selectedReport.issue_type_name}</span>
+              <div className={styles.detailGridInfo}>
+                <div className={styles.infoRow}>
+                  <div className={styles.infoCol}>
+                    <label>ประเภทปัญหา</label>
+                    <span className={styles.infoValueText}>{selectedReport.issue_type_name || "-"}</span>
+                  </div>
+                  <div className={styles.infoCol}>
+                    <label>วันที่แจ้ง</label>
+                    <span className={styles.infoValueText}>
+                      {selectedReport.created_at ? new Date(selectedReport.created_at).toLocaleString("th-TH") : "-"}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.detailGroup}>
-                  <strong>วันที่แจ้ง</strong>
-                  <span className={styles.detailValue}>{new Date(selectedReport.created_at).toLocaleString("th-TH")}</span>
-                </div>
-                <div className={styles.detailGroup} style={{ gridColumn: "span 2" }}>
-                  <strong>รายละเอียด</strong>
-                  <p className={styles.detailValue} style={{ fontWeight: '500', lineHeight: '1.4' }}>{selectedReport.description || "-"}</p>
+
+                <div className={styles.infoColFull}>
+                  <label>รายละเอียด</label>
+                  <p className={styles.infoDescriptionBox}>{selectedReport.description || "-"}</p>
                 </div>
               </div>
 
-              <div className={styles.locationDetails} style={{ marginTop: '12px' }}>
-                <div className={styles.detailGroup}>
-                  <strong>พิกัด</strong>
-                  <span className={styles.detailValue}>{selectedReport.latitude}, {selectedReport.longitude}</span>
+              <div className={styles.detailLocationBlock}>
+                <div className={styles.infoCol}>
+                  <label>พิกัด</label>
+                  <span className={styles.infoValueText}>{selectedReport.latitude}, {selectedReport.longitude}</span>
                 </div>
-                <div className={styles.detailGroup}>
-                  <strong>หน่วยงานรับผิดชอบ</strong>
-                  <span className={styles.detailValue}>
+                <div className={styles.infoCol}>
+                  <label>หน่วยงานรับผิดชอบ</label>
+                  <span className={styles.infoValueText}>
                     {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
                   </span>
                 </div>
               </div>
-
-              {/* ลบปุ่มปิดหน้าต่างด้านล่างออกเรียบร้อยแล้ว */}
             </div>
           </div>
         </>
