@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL COMPACT & PREMIUM VERSION) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL HORIZONTAL LAYOUT) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -14,19 +14,18 @@
   padding: 32px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  background-color: #ffffff; /* ✅ พื้นหลังขาว */
+  background-color: #ffffff; /* พื้นหลังขาว */
   color: #1F2937;
 }
 
 /* =========================================
-   2. SIDEBAR (Desktop Only - RESIZED)
+   2. SIDEBAR (Desktop Only - Compact)
    ========================================= */
 .orgStatsSidebarDesktop {
   flex-shrink: 0;
-  width: 260px; /* ✅ ลดความกว้างให้กระชับ */
+  width: 260px; /* ขนาดกระชับ */
   background: #ffffff;
   border-radius: 20px;
-  /* เงานุ่มๆ ให้ดูลอยตัว */
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
   border: 1px solid #F3F4F6;
   padding: 24px 16px;
@@ -60,8 +59,8 @@
   gap: 12px;
   width: 100%;
   padding: 0 16px;
-  height: 44px; /* ✅ ปรับความสูงปุ่มให้เล็กลง (เดิม 52px) */
-  font-size: 14px; /* ✅ ปรับขนาดตัวหนังสือให้เล็กลง (เดิม 16px) */
+  height: 44px; /* ความสูงปุ่มกะทัดรัด */
+  font-size: 14px;
   font-weight: 500;
   color: #4B5563;
   background: transparent;
@@ -70,13 +69,13 @@
   cursor: pointer;
   text-align: left;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap; /* ห้ามตัดบรรทัด */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .orgStatsMenuButton svg {
-  font-size: 20px; /* ลดขนาดไอคอน */
+  font-size: 20px;
   width: 20px;
   display: flex;
   justify-content: center;
@@ -97,7 +96,7 @@
 }
 
 .orgStatsMenuButton.active {
-  background: linear-gradient(145deg, #1F2937, #111827); /* Gradient ดำ-กรมท่า */
+  background: linear-gradient(145deg, #1F2937, #111827);
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 6px 16px -4px rgba(31, 41, 55, 0.3);
@@ -137,7 +136,6 @@
   background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  /* เงาบางเบา */
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
   border: 1px solid #F9FAFB;
   display: flex;
@@ -172,38 +170,44 @@
 }
 
 /* =========================================
-   5. KPI CARDS (RESIZED & 3 COLUMNS)
+   5. KPI CARDS (HORIZONTAL: Text Left | Number Right)
    ========================================= */
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ✅ บังคับ 3 คอลัมน์ */
+  grid-template-columns: repeat(3, 1fr); /* 3 คอลัมน์ */
   gap: 20px;
   margin-bottom: 32px;
   width: 100%;
 }
 
 .kpiCard {
-  padding: 20px; /* ✅ ลด Padding */
+  padding: 24px 28px; /* ปรับ Padding ให้สมดุล */
   border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* ✅ ใช้ Grid จัด Layout แนวนอน */
+  display: grid;
+  grid-template-columns: 1fr auto; /* ซ้าย(ข้อความ) | ขวา(ตัวเลข) */
+  grid-template-areas: 
+    "header value"
+    "subtext value";
+  align-items: center;
+  gap: 4px 0; /* ระยะห่างแนวตั้งระหว่าง header กับ subtext */
+  
   border: none;
-  min-height: 110px; /* ✅ ลดความสูง (Compact) */
+  min-height: 100px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Pattern วงกลมจางๆ */
+/* Pattern วงกลมจางๆ (ขยับหลบตัวเลข) */
 .kpiCard::after {
     content: '';
     position: absolute;
-    top: -20px;
+    top: -40px;
     right: -20px;
-    width: 90px;
-    height: 90px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -213,7 +217,7 @@
   box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Colors with Gradients */
+/* Colors */
 .kpiCardSuccess {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
   color: #fff !important;
@@ -240,27 +244,34 @@
 }
 
 .kpiHeader {
+  grid-area: header; /* พื้นที่ซ้ายบน */
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px; /* ✅ ลดขนาดหัวข้อ */
+  font-size: 14px;
   font-weight: 600;
   opacity: 0.95;
-  margin-bottom: 6px;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .kpiValue {
-  font-size: 36px; /* ✅ ลดขนาดตัวเลข */
+  grid-area: value; /* พื้นที่ขวา (ตัวเลขใหญ่) */
+  font-size: 40px; /* ขนาดตัวเลข */
   font-weight: 800;
   letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin-bottom: 2px;
+  line-height: 1;
+  text-align: right;
+  margin: 0 0 0 16px; /* เว้นระยะจากข้อความซ้าย */
 }
 
 .kpiSubtext {
+  grid-area: subtext; /* พื้นที่ซ้ายล่าง */
   font-size: 12px;
   opacity: 0.85;
   font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
 }
 
 /* Filter Controls */
@@ -281,7 +292,7 @@
   color: #4B5563;
   font-weight: 600;
   transition: all 0.2s ease;
-  white-space: nowrap; /* ✅ ห้ามตัดบรรทัด */
+  white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,7 +390,7 @@
 }
 
 /* =========================================
-   7. SATISFACTION (Tab 2 - RESIZED)
+   7. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -389,7 +400,7 @@
 }
 
 .highlightCard {
-  padding: 24px; /* ✅ ลดขนาด */
+  padding: 24px;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
@@ -434,7 +445,7 @@
 }
 
 .highlightName {
-  font-size: 20px; /* ✅ ลดขนาดชื่อ */
+  font-size: 20px;
   font-weight: 700;
   margin-bottom: 8px;
   white-space: nowrap;
@@ -443,7 +454,7 @@
 }
 
 .highlightScore {
-  font-size: 44px; /* ✅ ลดขนาดคะแนน */
+  font-size: 44px;
   font-weight: 800;
   line-height: 1;
 }
@@ -714,6 +725,7 @@
     width: 220px;
   }
 
+  /* Tablet: 2 คอลัมน์ */
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
@@ -814,16 +826,17 @@
     padding: 0 20px;
     gap: 12px;
     margin-top: 20px;
+    /* Mobile: 1 คอลัมน์ แต่ยังคง layout Text Left | Number Right */
     grid-template-columns: repeat(1, 1fr) !important;
   }
 
   .kpiCard {
-    min-height: 100px;
+    min-height: 90px;
     padding: 20px;
   }
 
   .kpiValue {
-    font-size: 32px;
+    font-size: 34px;
   }
 
   .orgStatsContent { gap: 0 !important; }
