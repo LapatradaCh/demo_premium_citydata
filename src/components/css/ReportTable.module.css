@@ -104,7 +104,7 @@
   transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
-  border-radius: 28px;
+  border-radius: 32px;
   width: 90%;
   max-width: 360px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
@@ -118,7 +118,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: 24px;
   border-bottom: 1px solid #f8f8f8;
 }
 
@@ -147,59 +147,90 @@
 }
 
 .filterModalContent {
-  padding: 20px 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* === ✅ NEW READABILITY CLASSES === */
+
+.detailHeaderSection {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.detailCoverImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.detailHeaderInfo { flex: 1; }
+.detailCaseId { margin: 0; font-size: 20px; font-weight: 800; color: #111; }
+.detailTitleText { margin: 4px 0 0 0; font-size: 16px; font-weight: 700; color: #444; line-height: 1.4; }
+
+.detailContentBody {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 70vh;
 }
 
-.reportFilters {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  max-height: 50vh;
+.detailRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* === Filter Group === */
-.filterGroup {
-  flex: 1 1 auto;
+.detailCol, .detailColFull {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  position: relative;
 }
 
-.filterGroup label {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #555;
+.detailCol label, .detailColFull label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.filterGroup select,
-.timeRangeButton {
-  width: 100%;
-  font-size: 13.5px;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  padding: 10px 14px;
-  background-color: #fafafa;
-}
-
-.filterApplyButton {
-  padding: 12px;
+.detailValueBold {
   font-size: 15px;
   font-weight: 700;
-  color: #fff;
-  background-color: #000;
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
+  color: #222;
+}
+
+.detailDescriptionBox {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #444;
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #f0f0f0;
+  min-height: 40px;
+  font-weight: 600;
+}
+
+.detailLocationBox {
+  background: #f4f5f7;
+  padding: 20px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-top: 10px;
 }
 
-/* --- Report Table Grid --- */
+/* === Report Table Grid === */
 .reportSummary {
   font-weight: 700;
   margin-top: 28px;
@@ -248,63 +279,22 @@
   height: 70px;
   object-fit: cover;
   border-radius: 16px;
-  flex-shrink: 0; 
 }
 
-.headerInfo {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0; 
-}
-
-.reportHeader {
-  font-weight: 800;
-  font-size: 16.5px;
-  color: #111;
-  margin: 0;
-  white-space: nowrap;      
-  overflow: hidden;          
-  text-overflow: ellipsis;  
-}
-
-.reportDetailText {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: #666;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* --- Status Tag --- */
-.reportStatusGroup {
-  position: absolute; 
-  top: 18px;           
-  right: 0;           
-  z-index: 5;
-}
+.headerInfo { flex: 1; }
+.reportHeader { font-weight: 800; font-size: 16.5px; margin: 0; }
+.reportDetailText { font-size: 14.5px; font-weight: 600; color: #666; margin: 0; }
 
 .statusTag {
-  display: inline-block;
+  position: absolute; top: 18px; right: 0;
   padding: 5px 12px;
   border-radius: 12px 0 0 12px;
-  font-size: 10px;
-  font-weight: 800;
-  color: #fff;
+  font-size: 10px; font-weight: 800; color: #fff;
   text-transform: uppercase;
-  box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .statusTag.pending { background-color: #ff4d4f; }
-.statusTag.coordinating { background-color: #7c4dff; }
-.statusTag.in_progress { background-color: #ffc107; color: #000; }
 .statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
 
 .toggleDetailsButton {
   background: #edf5ff; 
@@ -314,67 +304,12 @@
   border-radius: 18px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 14.5px;
   color: #007bff;
-  margin-top: auto; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* === ✅ เพิ่มคลาสสำหรับจัด Layout ใหม่ใน Modal รายละเอียด === */
-
-.detailHeaderBlock {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.detailImage {
-  width: 100px; height: 100px;
-  border-radius: 20px;
-  object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.detailTitleInfo { flex: 1; }
-.detailCaseCode { margin: 0; font-size: 20px; font-weight: 800; color: #1a1a1a; }
-.detailMainTitle { margin: 4px 0 0 0; font-size: 16px; font-weight: 700; color: #444; line-height: 1.4; }
-
-.detailGridInfo {
-  border-top: 1px solid #f0f0f0;
-  padding-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.infoRow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-.infoCol, .infoColFull { display: flex; flex-direction: column; gap: 4px; }
-
-.infoCol label, .infoColFull label {
-  font-size: 12px; font-weight: 700; color: #999;
-  text-transform: uppercase; letter-spacing: 0.5px;
-}
-
-.infoValueText { font-size: 15px; font-weight: 700; color: #222; }
-
-.infoDescriptionBox {
-  font-size: 14.5px; line-height: 1.6; color: #444;
-  background: #fafafa; padding: 12px; border-radius: 14px;
-  border: 1px solid #f0f0f0; margin: 0; font-weight: 500;
-}
-
-.detailLocationBlock {
-  background: #f4f5f7; padding: 20px; border-radius: 20px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  margin-top: 12px;
 }
 
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
-  .reportTableRow { padding: 20px; gap: 12px; }
-  .infoRow, .detailLocationBlock { grid-template-columns: 1fr; }
+  .detailRow, .detailLocationBox {
+    grid-template-columns: 1fr;
+  }
 }
