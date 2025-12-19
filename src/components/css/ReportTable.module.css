@@ -212,7 +212,7 @@
 .reportTableContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* บังคับให้ขนาดคอลัมน์เท่ากัน */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px; 
   max-width: 1100px; 
   margin: 0 auto;
@@ -229,7 +229,7 @@
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
   gap: 16px;
-  justify-content: space-between; /* จัดเนื้อหาให้กระจายตัวเพื่อดันปุ่มลงล่าง */
+  justify-content: space-between;
 }
 
 /* ส่วนหัว: รูป ID และ รายละเอียด */
@@ -258,7 +258,7 @@
   justify-content: center;
   gap: 4px;
   min-width: 0; 
-  padding-right: 95px; /* เว้นที่ให้ Status Tag ไม่ทับข้อความ */
+  padding-right: 95px; 
 }
 
 .reportHeader {
@@ -278,15 +278,15 @@
   color: #555;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* จำกัดบรรทัดหัวข้อ */
+  -webkit-line-clamp: 2; 
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* --- การจัดการสถานะ (Status Tag) --- */
+/* --- แก้ไขตำแหน่งสถานะ (Status Tag) เลื่อนลงล่างอีกนิด --- */
 .reportStatusGroup {
   position: absolute; 
-  top: 0;             
+  top: 15px;           /* ปรับจาก 0 เป็น 15px เพื่อให้เลื่อนลงมา */
   right: 0;           
   z-index: 5;
 }
@@ -294,7 +294,7 @@
 .statusTag {
   display: inline-block;
   padding: 6px 16px;
-  border-radius: 12px 0 0 12px; /* โค้งเฉพาะด้านซ้าย */
+  border-radius: 12px 0 0 12px; 
   font-size: 11px;
   font-weight: 800;
   color: #fff;
@@ -312,11 +312,11 @@
 .statusTag.invited { background-color: #13c2c2; }
 .statusTag.rejected { background-color: #707b7c; }
 
-/* --- ปุ่มอ่านเพิ่มเติม (ปรับให้ยาวเท่ากันทุกใบ) --- */
+/* --- ปุ่มอ่านเพิ่มเติม --- */
 .toggleDetailsButton {
-  background: #edf5ff; /* สีฟ้าอ่อนตามรูปแบบ */
+  background: #edf5ff; 
   border: none;
-  width: 100% !important; /* บังคับความยาวเต็มการ์ด */
+  width: 100% !important; 
   padding: 14px 0;
   border-radius: 20px;
   cursor: pointer;
@@ -324,7 +324,7 @@
   font-size: 16px;
   color: #007bff;
   transition: all 0.2s ease;
-  margin-top: auto; /* ดันปุ่มลงด้านล่างสุดเสมอ */
+  margin-top: auto; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +335,7 @@
   transform: scale(1.01);
 }
 
-/* ส่วนรายละเอียดขยาย (Expanded Content) */
+/* ส่วนรายละเอียดขยาย */
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
