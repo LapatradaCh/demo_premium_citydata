@@ -10,12 +10,11 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
+  /* ✅ (Desktop) กำหนดความกว้างให้พอดีกับตัวปฏิทิน ไม่ยืดตามปุ่มจนเละ */
   left: 50%;
   transform: translateX(-50%);
-  
-  width: max-content; /* กว้างเท่าเนื้อหาปฏิทิน */
-  min-width: 300px;   /* ขนาดขั้นต่ำ */
+  width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
+  min-width: 300px;   /* กันไม่ให้เล็กเกินไป */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -112,9 +111,9 @@
   background: #ffffff;
   border-radius: 28px;
   
-  /* ✅ (Desktop) กว้างขึ้นเพื่อให้ใส่ 2 คอลัมน์ได้สวย */
+  /* ✅ (Desktop) ปรับให้กว้างขึ้น ดูสมดุลกับจอคอม */
   width: 90%;
-  max-width: 550px; 
+  max-width: 550px; /* เพิ่มจาก 360px เป็น 550px หรือ 600px */
   
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -138,13 +137,13 @@
   font-weight: 700;
 }
 
-/* ✅ ปุ่มปิด Header (ใหญ่ขึ้น) */
+/* ปุ่มปิด Header */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 32px;  
-  height: 32px; 
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,9 +151,8 @@
   transition: all 0.2s ease;
 }
 
-/* ✅ ไอคอนกากบาท (ใหญ่ขึ้น) */
 .filterModalClose svg {
-  font-size: 18px !important; 
+  font-size: 16px !important;
   fill: #ffffff !important;
 }
 
@@ -166,24 +164,21 @@
   max-height: 70vh;
 }
 
-/* ✅ (UPDATE) จัด Layout แบบ Grid/Flex */
 .reportFilters {
   display: flex;
-  flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
-  gap: 16px;       /* ระยะห่างระหว่างกล่อง */
+  flex-direction: column;
+  gap: 12px;
   overflow-y: auto;
   max-height: 50vh;
-  padding: 4px;    /* กันเงาแหว่ง */
 }
 
 /* === Filter Group === */
 .filterGroup {
-  /* Default ให้ยืดหยุ่น */
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
-  min-width: 140px; /* กันเล็กเกินไป */
 }
 
 .filterGroup label {
@@ -202,28 +197,16 @@
   background-color: #fafafa;
 }
 
-/* ✅ (UPDATE) ปุ่มสีเขียว จัดกึ่งกลาง */
 .filterApplyButton {
-  align-self: center;
-  width: auto;
-  min-width: 180px;
-  background-color: #28a745; /* สีเขียว */
-  color: #fff;
-  padding: 12px 32px;
-  border-radius: 28px;
-  border: none;
-  margin-top: 16px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 15px;
   font-weight: 700;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-  transition: all 0.2s ease;
-}
-
-.filterApplyButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  background-color: #218838;
+  margin-top: 10px;
 }
 
 /* --- Report Table Grid --- */
@@ -543,8 +526,16 @@
   .reportTableRow { padding: 20px; gap: 12px; }
   .infoRow { grid-template-columns: 1fr; }
 
-  /* Mobile: Modal เล็กลง */
+  /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
   .filterModal {
-    max-width: 360px;
+    max-width: 360px; /* ลดขนาดกลับมาเท่าเดิมสำหรับมือถือ */
+  }
+
+  /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
+  .calendarPopup {
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;      
+    min-width: 300px;
   }
 }
