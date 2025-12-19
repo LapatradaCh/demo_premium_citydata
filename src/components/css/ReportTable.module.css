@@ -162,19 +162,19 @@
   max-height: 50vh;
 }
 
-/* === Filter Group & Detail Group === */
-.filterGroup, .detailGroup {
+/* === Filter Group === */
+.filterGroup {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
 }
 
-.filterGroup label, .detailGroup strong {
-  font-size: 12px;
+.filterGroup label {
+  font-size: 12.5px;
   font-weight: 600;
-  color: #888;
-  text-transform: uppercase;
+  color: #555;
 }
 
 .filterGroup select,
@@ -231,6 +231,7 @@
   gap: 16px;
   justify-content: space-between;
   min-height: 190px;
+  cursor: pointer;
 }
 
 .cardHeaderSection {
@@ -321,38 +322,59 @@
   justify-content: center;
 }
 
-/* === Expanded / Modal View Details === */
-.mainDetails {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px 20px;
-  padding: 16px 0;
+/* === ✅ เพิ่มคลาสสำหรับจัด Layout ใหม่ใน Modal รายละเอียด === */
+
+.detailHeaderBlock {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 8px;
 }
 
-.detailValue {
-  color: #333;
-  font-weight: 700;
-  font-size: 14px;
+.detailImage {
+  width: 100px; height: 100px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.locationDetails {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px 20px;
-  border: 1px solid #f1f1f1;
+.detailTitleInfo { flex: 1; }
+.detailCaseCode { margin: 0; font-size: 20px; font-weight: 800; color: #1a1a1a; }
+.detailMainTitle { margin: 4px 0 0 0; font-size: 16px; font-weight: 700; color: #444; line-height: 1.4; }
+
+.detailGridInfo {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.infoRow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.infoCol, .infoColFull { display: flex; flex-direction: column; gap: 4px; }
+
+.infoCol label, .infoColFull label {
+  font-size: 12px; font-weight: 700; color: #999;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.infoValueText { font-size: 15px; font-weight: 700; color: #222; }
+
+.infoDescriptionBox {
+  font-size: 14.5px; line-height: 1.6; color: #444;
+  background: #fafafa; padding: 12px; border-radius: 14px;
+  border: 1px solid #f0f0f0; margin: 0; font-weight: 500;
+}
+
+.detailLocationBlock {
+  background: #f4f5f7; padding: 20px; border-radius: 20px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin-top: 12px;
 }
 
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
-  .reportTableRow {
-    padding: 20px;
-    gap: 12px;
-  }
-  .mainDetails, .locationDetails {
-    grid-template-columns: 1fr; 
-    gap: 12px;
-  }
+  .reportTableRow { padding: 20px; gap: 12px; }
+  .infoRow, .detailLocationBlock { grid-template-columns: 1fr; }
 }
