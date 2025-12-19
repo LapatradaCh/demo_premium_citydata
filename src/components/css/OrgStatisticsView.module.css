@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (MODERNIZED & ENHANCED) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL POLISHED VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -6,16 +6,15 @@
 .orgStatsContainer {
   display: flex;
   flex-direction: row;
-  gap: 40px; /* เพิ่ม Gap */
+  gap: 32px;
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
   margin: 0;
-  padding: 32px; /* เพิ่ม Padding */
+  padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  background-color: #F3F4F6; /* เปลี่ยนเป็นสีเทาอ่อน */
-  color: #1F2937; /* สีเทาเข้ม */
+  background-color: #f9fafb;
 }
 
 /* =========================================
@@ -25,25 +24,25 @@
   flex-shrink: 0;
   width: 280px;
   background: #ffffff;
-  border-radius: 24px; /* โค้งมนขึ้น */
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); /* เงาที่นุ่มนวลขึ้น */
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 32px 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f1f1;
+  padding: 24px 16px;
   position: sticky;
-  top: 32px;
+  top: 24px;
   z-index: 10;
   height: fit-content;
 }
 
 .orgStatsMenuTitle {
-  font-size: 13px; /* ปรับขนาด */
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 1.2px; /* เพิ่มระยะห่างตัวอักษร */
-  font-weight: 700;
-  color: #9CA3AF; /* สีเทาอ่อนลง */
+  letter-spacing: 0.5px;
+  font-weight: 800;
+  color: #000000;
   margin: 0 0 16px 0;
   padding: 0 12px 12px 12px;
-  border-bottom: 1px solid #E5E7EB; /* เส้นบางลง */
+  border-bottom: 2px solid #f0f0f0;
 }
 
 .orgStatsMenuNav {
@@ -59,48 +58,41 @@
   gap: 16px;
   width: 100%;
   padding: 0 20px;
-  height: 52px; /* ปรับความสูง */
-  font-size: 16px; /* ปรับขนาด */
-  font-weight: 500;
-  color: #4B5563;
+  height: 56px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #666;
   background: transparent;
   border: none;
-  border-radius: 14px; /* โค้งมนขึ้น */
+  border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .orgStatsMenuButton svg {
-  font-size: 22px; /* ปรับขนาด */
+  font-size: 20px;
   width: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #9CA3AF;
   flex-shrink: 0;
-  transition: color 0.2s;
 }
 
 .orgStatsMenuButton:hover {
-  background-color: #F9FAFB;
-  color: #111827;
-  transform: translateX(4px); /* ขยับเมื่อ Hover */
-}
-
-.orgStatsMenuButton:hover svg {
-  color: #4B5563;
+  background-color: #f8f9fa;
+  color: #000;
 }
 
 .orgStatsMenuButton.active {
-  background: linear-gradient(135deg, #1F2937 0%, #111827 100%); /* Gradient */
+  background-color: #111111;
   color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* เงา */
-  transform: translateX(0);
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .orgStatsMenuButton.active svg {
@@ -128,36 +120,33 @@
 .orgGraphDashboard {
   display: flex;
   flex-direction: column;
-  gap: 32px; /* เพิ่ม Gap */
+  gap: 24px;
   width: 100%;
 }
 
 .chartBox {
   background: #ffffff;
-  border-radius: 24px; /* โค้งมนขึ้น */
+  border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* เงาที่นุ่มนวล */
-  border: 1px solid #E5E7EB; /* เส้นบางลง */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  transition: box-shadow 0.3s ease;
-}
-
-.chartBox:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
 }
 
 .chartBoxTitle {
   font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 800;
+  color: #1a1a1a;
   margin: 0 0 24px 0;
-  padding-bottom: 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f8f8f8;
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .chartBoxTitle::before {
@@ -165,8 +154,8 @@
   display: block;
   width: 6px;
   height: 24px;
-  background: #3B82F6; /* สีฟ้า */
-  border-radius: 10px; /* โค้งมน */
+  background: #000;
+  border-radius: 3px;
 }
 
 /* =========================================
@@ -174,47 +163,38 @@
    ========================================= */
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* ปรับ minmax */
-  gap: 24px; /* เพิ่ม Gap */
+  /* Desktop: Auto fit */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
   margin-bottom: 32px;
 }
 
 .kpiCard {
-  padding: 24px;
-  border-radius: 24px; /* โค้งมนขึ้น */
+  padding: 20px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border: none;
-  min-height: 140px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 120px; /* เพิ่มความสูงขั้นต่ำให้เท่ากัน */
 }
 
-.kpiCard:hover {
-  transform: translateY(-4px);
-}
-
-/* Success Card */
 .kpiCardSuccess {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important; /* Gradient */
+  background: #10B981 !important;
   color: #fff !important;
-  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* Normal Card */
 .kpiCardNormal {
-  background: linear-gradient(135deg, #374151 0%, #1F2937 100%) !important; /* Gradient */
+  background: #000000 !important;
   color: #fff !important;
-  box-shadow: 0 10px 20px rgba(31, 41, 55, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Critical Card */
 .kpiCardCritical {
-  background: linear-gradient(135deg, #F87171 0%, #EF4444 100%) !important; /* Gradient */
+  background: #EF4444 !important;
   color: #fff !important;
-  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .kpiCardSuccess *,
@@ -227,62 +207,58 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  opacity: 0.9;
-  margin-bottom: 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 .kpiValue {
-  font-size: 40px; /* ปรับขนาด */
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  line-height: 1.1;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .kpiSubtext {
-  font-size: 14px;
-  margin-top: 6px;
-  opacity: 0.8;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .headerControls {
   margin-left: auto;
   display: flex;
-  gap: 12px; /* เพิ่ม Gap */
-  font-size: 14px;
+  gap: 8px;
+  font-size: 13px;
 }
 
 .controlBtn {
-  padding: 8px 20px; /* ปรับ Padding */
-  border-radius: 10px;
-  border: 1px solid #E5E7EB;
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
   cursor: pointer;
   background: #fff;
-  color: #6B7280;
+  color: #666;
   font-weight: 600;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .controlBtn:hover {
-  background: #F9FAFB;
-  border-color: #D1D5DB;
-  color: #374151;
+  background: #f8f8f8;
 }
 
+/* ปุ่ม Total สีน้ำเงินเข้ม */
 .activeTotal {
-  background-color: #2563EB !important; /* สีน้ำเงินเข้ม */
+  background-color: #1890ff !important;
   color: #ffffff !important;
-  border: 1px solid #2563EB !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+  border: none !important;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
 }
 
 .activeCritical {
-  background-color: #EF4444 !important;
+  background-color: #FF4D4F !important;
   color: #ffffff !important;
-  border: 1px solid #EF4444 !important;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+  border-color: #FF4D4F !important;
+  font-weight: 700;
 }
 
 /* =========================================
@@ -296,31 +272,31 @@
 
 .mockHBarItem {
   display: grid;
-  grid-template-columns: 180px 1fr 60px;
-  gap: 24px; /* เพิ่ม Gap */
+  grid-template-columns: 180px 1fr 50px;
+  gap: 20px;
   align-items: center;
 }
 
 .mockStackedHBar {
-  height: 40px; /* ปรับความสูง */
-  background: #F3F4F6;
+  height: 36px;
+  background: #f1f3f5;
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   width: 100%;
-  border: 4px solid #fff; /* เพิ่มขอบขาว */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .mockStackedBarSegment {
   height: 100%;
   position: relative;
   cursor: pointer;
-  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy Effect */
+  transition: width 0.5s ease;
 }
 
 .mockStackedBarSegment:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.1);
   z-index: 5;
 }
 
@@ -328,23 +304,22 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px; /* เพิ่ม Gap */
+  gap: 12px 24px;
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px dashed #E5E7EB;
+  border-top: 1px dashed #eee;
 }
 
 .mockStackedBarLegendItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 14px;
-  color: #4B5563;
+  color: #444;
   font-weight: 600;
   padding: 8px 16px;
-  border-radius: 20px;
-  background: #F9FAFB;
-  border: 1px solid #F3F4F6;
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 
 .legendDot {
@@ -361,39 +336,24 @@
 .satisfactionHighlightGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px; /* เพิ่ม Gap */
-  margin-bottom: 32px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .highlightCard {
-  padding: 24px;
-  border-radius: 24px; /* โค้งมนขึ้น */
+  padding: 16px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-}
-
-/* เพิ่ม Pattern พื้นหลัง */
-.highlightCard::after {
-  content: '';
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50%;
 }
 
 .highlightCardGreen {
-  background: linear-gradient(135deg, #34D399 0%, #059669 100%); /* Gradient */
+  background-color: #10B981;
   color: #fff;
 }
 
 .highlightCardRed {
-  background: linear-gradient(135deg, #FB7185 0%, #E11D48 100%); /* Gradient */
+  background-color: #EF4444;
   color: #fff;
 }
 
@@ -403,58 +363,50 @@
 }
 
 .highlightTitle {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 12px;
-  opacity: 0.9;
-  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .highlightName {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .highlightScore {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: 800;
   line-height: 1;
 }
 
 .highlightScoreMax {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .reportCardList {
   display: flex;
   flex-direction: column;
-  gap: 24px; /* เพิ่ม Gap */
+  gap: 16px;
 }
 
 .reportCardItem {
   background: #fff;
-  border: 1px solid #E5E7EB; /* เส้นบางลง */
-  border-radius: 24px; /* โค้งมนขึ้น */
-  padding: 32px; /* เพิ่ม Padding */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.reportCardItem:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .reportCardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .reportCardTitleGroup {
@@ -464,24 +416,24 @@
 }
 
 .reportCardRank {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 900;
   color: #fff;
-  background: #1F2937;
-  min-width: 48px;
-  height: 48px;
+  background: #333;
+  min-width: 44px;
+  height: 44px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  margin-right: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  margin-right: 8px;
 }
 
 .reportCardName {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
 }
 
 .reportCardScoreGroup {
@@ -489,49 +441,48 @@
 }
 
 .reportCardScoreText {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 800;
   color: #F59E0B;
   line-height: 1;
 }
 
 .reportCardProgressBg {
-  margin-top: 24px;
+  margin-top: 16px;
   height: 12px;
-  background: #F3F4F6;
-  border-radius: 999px; /* Pill Shape */
+  background: #f1f3f5;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .reportCardProgressBar {
   height: 100%;
-  border-radius: 999px;
-  transition: width 0.8s ease-out;
-  background: linear-gradient(90deg, #FCD34D 0%, #F59E0B 100%);
+  border-radius: 6px;
+  transition: width 0.5s ease;
 }
 
 /* =========================================
    8. SLA & DONUT (GLOBAL STYLES)
    ========================================= */
 .slaHeaderBox {
-  background-color: #F0F9FF !important;
-  border: 1px solid #BAE6FD !important;
-  border-left: 6px solid #0EA5E9 !important; /* สีฟ้า */
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 32px;
+  background-color: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  border-left: 6px solid #1890ff !important;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15) !important;
 }
 
 .donutHeaderBox {
-  background-color: #F9FAFB;
-  border: 1px solid #F3F4F6;
-  border-radius: 24px; /* โค้งมนขึ้น */
-  padding: 32px; /* เพิ่ม Padding */
-  margin-bottom: 32px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -541,26 +492,26 @@
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
-  gap: 24px; /* เพิ่ม Gap */
+  gap: 20px;
   position: relative;
-  margin-top: 40px;
+  margin-top: 40px; 
 }
 
-/* Desktop Grid */
+/* Desktop Grid: ชื่อ | กราฟ | ค่า */
 .mockHBarItem {
   display: grid;
-  grid-template-columns: 160px 1fr 100px;
+  grid-template-columns: 150px 1fr 100px; 
   align-items: center;
-  gap: 24px; /* เพิ่ม Gap */
+  gap: 16px;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 /* Desktop Styles */
 .mockHBarLabel {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #333;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -574,26 +525,24 @@
   font-weight: 700;
   text-align: right;
   white-space: nowrap;
-  color: #111827;
   margin: 0;
   order: 0;
 }
 
 .mockHBar {
-  height: 12px;
-  background: #F3F4F6;
-  border-radius: 6px;
-  overflow: visible;
+  height: 16px;
+  background: #f1f3f5;
+  border-radius: 8px;
+  overflow: hidden;
   width: 100%;
   margin: 0;
   order: 0;
-  position: relative;
 }
 
 .mockHBarFill {
   height: 100%;
-  border-radius: 6px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  transition: width 0.6s ease;
 }
 
 /* Desktop Line & Label */
@@ -609,17 +558,16 @@
 
 .slaLabel {
   position: absolute;
-  top: -32px; /* ปรับตำแหน่ง */
+  top: -30px;
   left: 0;
   transform: translateX(-50%);
   background: #EF4444;
   color: white;
-  font-size: 12px; /* ปรับขนาด */
-  padding: 4px 10px;
-  border-radius: 6px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
   font-weight: bold;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
 }
 
 .slaLabel::after {
@@ -637,12 +585,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px; /* เพิ่ม Gap */
+  gap: 32px;
 }
 
 .donutWrapper {
-  width: 300px; /* ปรับขนาด */
-  height: 300px;
+  width: 260px;
+  height: 260px;
   position: relative;
 }
 
@@ -661,8 +609,8 @@
 
 .donutLegendGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px; /* เพิ่ม Gap */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
   width: 100%;
 }
 
@@ -670,17 +618,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
-  background: #fff;
-  border-radius: 14px;
-  border: 1px solid #F3F4F6;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid transparent;
 }
 
 .donutColorDot {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px; /* สี่เหลี่ยมมุมมน */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
 /* =========================================
@@ -689,12 +636,12 @@
 
 @media screen and (max-width: 1024px) {
   .orgStatsContainer {
-    gap: 24px;
-    padding: 20px;
+    gap: 20px;
+    padding: 16px;
   }
 
   .orgStatsSidebarDesktop {
-    width: 240px;
+    width: 220px;
   }
 
   /* Tablet KPI: 2 Columns */
@@ -713,7 +660,7 @@
     margin: 0 !important;
     padding: 0 0 120px 0 !important;
     gap: 0 !important;
-    background-color: #ffffff; /* Mobile สีขาว */
+    background-color: #ffffff;
     overflow-x: hidden;
   }
 
@@ -731,29 +678,28 @@
     box-sizing: border-box;
     position: relative;
     z-index: 50;
-    border-bottom: 1px solid #F3F4F6;
-    box-shadow: 0 4px 20px -10px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #f1f1f1;
   }
 
   .mobileDropdownLabel {
-    font-size: 13px;
-    color: #6B7280;
-    margin-bottom: 8px;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
     font-weight: 600;
     padding-left: 4px;
   }
 
   .mobileDropdownTrigger {
     width: 100%;
-    height: 52px;
+    height: 56px;
     background: #ffffff;
-    border: 1px solid #E5E7EB;
-    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
     padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #1F2937;
+    color: #1f2937;
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
@@ -762,8 +708,8 @@
   }
 
   .mobileDropdownTrigger.open {
-    border-color: #1F2937;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .triggerContent {
@@ -774,14 +720,14 @@
 
   .mobileDropdownList {
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     left: 20px;
     right: 20px;
-    margin-top: 0;
+    margin-top: 8px;
     background: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.15);
-    border: 1px solid #F3F4F6;
+    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #f0f0f0;
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -803,12 +749,12 @@
     background: transparent !important;
     display: flex;
     align-items: center;
-    justify-content: flex-start !important;
+    justify-content: flex-start !important; /* จัดซ้าย */
     gap: 12px;
-    font-size: 16px;
-    color: #4B5563;
+    font-size: 15px;
+    color: #4b5563;
     font-weight: 600 !important;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     text-align: left;
     box-shadow: none !important;
@@ -816,19 +762,19 @@
   }
 
   .mobileDropdownItem:hover {
-    background-color: #F9FAFB !important;
-    color: #111827 !important;
+    background-color: #f9fafb !important;
+    color: #000 !important;
   }
 
   .activeItem {
-    background-color: #F0FDF4 !important; /* Green Tint */
-    color: #10B981 !important;
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
   }
 
   .activeCheck {
-    margin-left: auto !important;
+    margin-left: auto !important; /* ดันขวาสุด */
     color: #10B981;
-    font-size: 22px;
+    font-size: 20px;
     display: flex;
     align-items: center;
   }
@@ -841,12 +787,12 @@
     border: none !important;
     margin: 0 !important;
     padding: 24px 20px !important;
-    border-bottom: 8px solid #F3F4F6 !important;
+    border-bottom: 8px solid #f4f5f7 !important;
     overflow: visible !important;
   }
 
   .chartBoxTitle {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding-bottom: 0;
     border-bottom: none;
     align-items: flex-start;
@@ -855,61 +801,58 @@
   /* 4. Fix Layout Spacing */
   .kpiGrid {
     padding: 0 20px;
-    gap: 16px;
+    gap: 12px;
     margin-bottom: 24px;
-    margin-top: 20px;
+    margin-top: 16px;
+    /* FIX: บังคับ 2 คอลัมน์ในมือถือ */
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
+  /* FIX: การ์ดใบสุดท้ายในแถวคี่ ให้ขยายเต็ม */
   .kpiCard:last-child:nth-child(odd) {
     grid-column: span 2;
   }
 
-  .kpiValue {
-    font-size: 32px;
-  }
-
   .orgStatsContent { gap: 0 !important; }
   .orgGraphDashboard { gap: 0 !important; }
-  .satisfactionHighlightGrid { padding: 0 20px; gap: 16px; }
-  .reportCardList { padding: 0 20px; gap: 16px; }
+  .satisfactionHighlightGrid { padding: 0 20px; }
+  .reportCardList { padding: 0 20px; }
 
   .slaHeaderBox, .donutHeaderBox {
     margin: 0 20px 24px 20px;
     width: auto;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
-    padding: 24px;
+    gap: 16px;
   }
 
   .slaAvgInfo, .donutTopTypeBox {
     text-align: left;
     width: 100%;
-    border-top: 1px dashed #E5E7EB;
+    border-top: 1px dashed #eee;
     padding-top: 24px !important;
   }
 
   .headerControls {
     margin-left: 0;
     width: 100%;
-    margin-top: 16px;
+    margin-top: 12px;
     flex-wrap: wrap;
-    gap: 10px;
   }
 
   .controlBtn { flex: 1; text-align: center; }
 
   /* ============================================================
-       5. FIX: SLA GRAPH (MOBILE OVERRIDE - PUSH CONTENT DOWN)
-       ============================================================ */
+     5. FIX: SLA GRAPH (MOBILE OVERRIDE - PUSH CONTENT DOWN)
+     ============================================================ */
 
   .mockHorizontalBarChart {
     width: 100% !important;
-    margin-top: 60px !important;
+    /* ดันลงมา 60px */
+    margin-top: 60px !important; 
     display: flex !important;
     flex-direction: column !important;
-    gap: 20px !important;
+    gap: 16px !important;
     position: relative !important;
     overflow: visible !important;
   }
@@ -919,27 +862,27 @@
     display: grid !important;
     grid-template-columns: 1fr auto !important; /* ชื่อ | ค่า */
     grid-template-rows: auto auto !important;   /* แถว 1 | แถว 2 */
-    gap: 12px 0 !important;
+    gap: 8px 0 !important;
     align-items: center !important;
     width: 100% !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 12px !important;
     position: relative;
     z-index: 2;
   }
 
-  /* ชื่อ */
+  /* ชื่อ Test1 */
   .mockHBarLabel {
     grid-column: 1 / 2 !important;
     grid-row: 1 / 2 !important;
     width: auto !important;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    color: #374151 !important;
+    color: #333333 !important;
     margin: 0 !important;
     text-align: left !important;
   }
 
-  /* ค่า */
+  /* ค่า 33.8 วัน */
   .mockHBarValue {
     grid-column: 2 / 3 !important;
     grid-row: 1 / 2 !important;
@@ -948,39 +891,39 @@
     text-align: right !important;
     font-size: 16px;
     font-weight: 800;
-    color: #EF4444 !important;
+    color: #FF4D4F !important;
   }
 
   /* แท่งกราฟ */
   .mockHBar {
-    grid-column: 1 / 3 !important;
-    grid-row: 2 / 3 !important;
+    grid-column: 1 / 3 !important; /* เต็มความกว้าง */
+    grid-row: 2 / 3 !important;    /* ลงมาแถว 2 */
     width: 100% !important;
-    height: 12px !important;
+    height: 10px !important;
     margin-top: 0 !important;
-    border-radius: 6px !important;
+    border-radius: 5px !important;
     overflow: hidden;
   }
 
-  /* ปรับป้าย Target */
+  /* ปรับป้าย Target (ห้ามบีบ) */
   .slaLabel {
     position: absolute !important;
-    top: -28px !important;
+    top: -24px !important;
     left: 0 !important;
     transform: translateX(-50%);
     background: #EF4444 !important;
     color: white !important;
-    font-size: 11px !important;
-    padding: 4px 10px !important;
-    border-radius: 6px;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px;
     font-weight: bold;
-    width: max-content !important;
-    min-width: 64px !important;
+    /* FIX WIDTH */
+    width: max-content !important; 
+    min-width: 60px !important;
     white-space: nowrap !important;
     z-index: 100 !important;
     display: flex;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
   }
   
   .slaLabel::after {
@@ -998,7 +941,7 @@
     top: -10px !important;
     bottom: 0 !important;
     border-left: 2px dashed #EF4444;
-    opacity: 0.5;
+    opacity: 0.6;
     z-index: 1;
   }
 
@@ -1009,32 +952,32 @@
     gap: 16px !important;
   }
 
-  .reportCardTitleGroup { width: 100%; margin-bottom: 8px; }
-  .reportCardName { font-size: 18px !important; white-space: normal !important; line-height: 1.4; }
+  .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
+  .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
   
   .reportCardScoreGroup {
     width: 100%;
     text-align: left !important;
     display: flex;
     align-items: baseline;
-    gap: 10px;
+    gap: 8px;
   }
 
   .reportCardScoreText {
-    font-size: 42px !important;
+    font-size: 40px !important;
     font-weight: 900 !important;
     line-height: 1;
   }
 
   .reportCardScoreGroup::after {
     content: '/ 5.00';
-    font-size: 16px;
+    font-size: 14px;
     color: #9CA3AF;
     font-weight: 600;
   }
 
   .reportCardProgressBg {
-    margin-top: 12px !important;
+    margin-top: 8px !important;
     height: 14px !important;
     border-radius: 7px !important;
   }
