@@ -60,16 +60,14 @@ const DateFilter = () => {
 // ------------------------- Report Table
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null); // ✅ เก็บข้อมูลเรื่องที่เลือกเพื่อเปิด Popup
-  const [expandedCardId, setExpandedCardId] = useState(null); // เก็บไว้เพื่อไม่ให้ Code ส่วนอื่นรวน
-  const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
+  const [selectedReport, setSelectedReport] = useState(null); 
+  const [expandedCardId, setExpandedCardId] = useState(null); 
+  const [reports, setReports] = useState([]); 
   const [loading, setLoading] = useState(true);
 
-  // --- State สำหรับเก็บตัวเลือกใน Filter ---
   const [issueTypes, setIssueTypes] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
 
-  // --- State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
@@ -87,20 +85,18 @@ const ReportTable = ({ subTab, onRowClick }) => {
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
 
-  // --- 1. Fetch Issue Types ---
   useEffect(() => {
     const fetchIssueTypes = async () => {
       try {
         const res = await fetch("https://premium-citydata-api-ab.vercel.app/api/get_issue_types");
         if (!res.ok) throw new Error("Failed to fetch issue types");
         const data = await res.json();
-        
         if (Array.isArray(data)) {
-            setIssueTypes(data);
+          setIssueTypes(data);
         } else if (data.data && Array.isArray(data.data)) {
-            setIssueTypes(data.data);
+          setIssueTypes(data.data);
         } else {
-            setIssueTypes([]);
+          setIssueTypes([]);
         }
       } catch (err) {
         console.error("Error fetching issue types:", err);
@@ -109,7 +105,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchIssueTypes();
   }, []);
 
-  // --- 2. Fetch Statuses ---
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
@@ -119,17 +114,11 @@ const ReportTable = ({ subTab, onRowClick }) => {
           const orgData = JSON.parse(lastOrg);
           orgId = orgData.id || orgData.organization_id;
         }
-
         const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
-        const url = orgId 
-          ? `${baseUrl}?organization_id=${orgId}` 
-          : baseUrl;
-
+        const url = orgId ? `${baseUrl}?organization_id=${orgId}` : baseUrl;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch statuses");
-        
         const data = await res.json();
-        
         if (Array.isArray(data)) {
           setStatusOptions(data);
         } else if (data.data && Array.isArray(data.data)) {
@@ -137,17 +126,14 @@ const ReportTable = ({ subTab, onRowClick }) => {
         } else {
            setStatusOptions([]);
         }
-
       } catch (err) {
         console.error("Error fetching statuses:", err);
         setStatusOptions([]);
       }
     };
-
     fetchStatuses();
   }, [subTab]);
 
-  // --- 3. Fetch Reports ---
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -158,18 +144,14 @@ const ReportTable = ({ subTab, onRowClick }) => {
           setLoading(false);
           return;
         }
-
         const org = JSON.parse(lastOrg);
         const orgId = org.id || org.organization_id;
-
         const res = await fetch(
           `https://premium-citydata-api-ab.vercel.app/api/cases/issue_cases?organization_id=${orgId}`
         );
         if (!res.ok) throw new Error("Fetch cases failed");
-
         const data = await res.json();
         const reportsData = Array.isArray(data) ? data : (data.data || []);
-        
         setReports(reportsData);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -178,11 +160,9 @@ const ReportTable = ({ subTab, onRowClick }) => {
         setLoading(false);
       }
     };
-
     fetchCases();
   }, [subTab]);
 
-  // --- 4. Logic การกรองข้อมูล ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       const reportTypeName = report.issue_type_name || ""; 
@@ -300,7 +280,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
             </div>
             <button 
               className={styles.toggleDetailsButton} 
-              onClick={(e) => { e.stopPropagation(); setSelectedReport(report); }} // ✅ เปลี่ยนเป็นเปิด Popup
+              onClick={(e) => { e.stopPropagation(); setSelectedReport(report); }} 
             >
               อ่านเพิ่มเติม
             </button>
@@ -308,39 +288,56 @@ const ReportTable = ({ subTab, onRowClick }) => {
         ))}
       </div>
 
-      {/* ✅ Popup สำหรับแสดงรายละเอียดเรื่องแจ้งรายตัว (Modal Detail) */}
+      {/* ✅ ปรับปรุง Modal รายละเอียด: ลบปุ่มปิดด้านล่าง + จัดเนื้อหาใหม่ */}
       {selectedReport && (
         <>
           <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
-          <div className={styles.filterModal}>
+          <div className={styles.filterModal} style={{ maxWidth: '420px' }}>
             <div className={styles.filterModalHeader}>
               <h3>รายละเอียดเรื่องแจ้ง</h3>
               <button className={styles.filterModalClose} onClick={() => setSelectedReport(null)}>
                 <FaTimes />
               </button>
             </div>
-            <div className={styles.filterModalContent} style={{ maxHeight: '75vh', overflowY: 'auto' }}>
-              <div className={styles.cardHeaderSection} style={{ marginBottom: '20px' }}>
-                <img src={selectedReport.cover_image_url} className={styles.reportImage} style={{ width: '90px', height: '90px' }} />
+            <div className={styles.filterModalContent} style={{ maxHeight: '78vh', overflowY: 'auto', paddingBottom: '30px' }}>
+              
+              <div className={styles.cardHeaderSection} style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
+                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.reportImage} style={{ width: '90px', height: '90px', borderRadius: '18px' }} />
                 <div className={styles.headerInfo}>
-                  <h3 className={styles.reportHeader}>#{selectedReport.case_code}</h3>
-                  <p className={styles.reportDetailText}>{selectedReport.title}</p>
+                  <h3 className={styles.reportHeader} style={{ fontSize: '18px' }}>#{selectedReport.case_code}</h3>
+                  <p className={styles.reportDetailText} style={{ whiteSpace: 'normal', color: '#333' }}>{selectedReport.title}</p>
                 </div>
               </div>
-              <div className={styles.mainDetails}>
-                <div><strong>ประเภทปัญหา</strong><span className={styles.detailValue}>{selectedReport.issue_type_name}</span></div>
-                <div><strong>วันที่แจ้ง</strong><span className={styles.detailValue}>{new Date(selectedReport.created_at).toLocaleString("th-TH")}</span></div>
-                <div style={{ gridColumn: "span 2" }}><strong>รายละเอียด</strong><span className={styles.detailValue}>{selectedReport.description || "-"}</span></div>
+
+              <div className={styles.mainDetails} style={{ borderTop: '1px solid #f0f0f0', paddingTop: '16px' }}>
+                <div className={styles.detailGroup}>
+                  <strong>ประเภทปัญหา</strong>
+                  <span className={styles.detailValue}>{selectedReport.issue_type_name}</span>
+                </div>
+                <div className={styles.detailGroup}>
+                  <strong>วันที่แจ้ง</strong>
+                  <span className={styles.detailValue}>{new Date(selectedReport.created_at).toLocaleString("th-TH")}</span>
+                </div>
+                <div className={styles.detailGroup} style={{ gridColumn: "span 2" }}>
+                  <strong>รายละเอียด</strong>
+                  <p className={styles.detailValue} style={{ fontWeight: '500', lineHeight: '1.4' }}>{selectedReport.description || "-"}</p>
+                </div>
               </div>
-              <div className={styles.locationDetails}>
-                <div><strong>พิกัด</strong><span className={styles.detailValue}>{selectedReport.latitude}, {selectedReport.longitude}</span></div>
-                <div><strong>หน่วยงานรับผิดชอบ</strong><span className={styles.detailValue}>
-                  {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
-                </span></div>
+
+              <div className={styles.locationDetails} style={{ marginTop: '12px' }}>
+                <div className={styles.detailGroup}>
+                  <strong>พิกัด</strong>
+                  <span className={styles.detailValue}>{selectedReport.latitude}, {selectedReport.longitude}</span>
+                </div>
+                <div className={styles.detailGroup}>
+                  <strong>หน่วยงานรับผิดชอบ</strong>
+                  <span className={styles.detailValue}>
+                    {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
+                  </span>
+                </div>
               </div>
-              <button className={styles.filterApplyButton} onClick={() => setSelectedReport(null)} style={{ marginTop: '20px' }}>
-                ปิดหน้าต่าง
-              </button>
+
+              {/* ลบปุ่มปิดหน้าต่างด้านล่างออกเรียบร้อยแล้ว */}
             </div>
           </div>
         </>
