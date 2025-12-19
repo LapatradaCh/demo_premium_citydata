@@ -134,8 +134,8 @@
   background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 36px; 
-  height: 36px; 
+  width: 28px;  /* ลดจาก 36px */
+  height: 28px; /* ลดจาก 36px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -401,6 +401,81 @@
   gap: 24px;
   margin-top: 20px;
   align-items: start;
+}
+
+/* === ✅ (NEW) Map Location Button Style === */
+.mapLocationCard {
+  background: #eef4ff; /* สีฟ้าจางๆ ให้ความรู้สึกเหมือนน้ำ/แผนที่ */
+  border: 1px solid #d0e2ff;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none; /* ลบเส้นใต้ link */
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapLocationCard:hover {
+  background: #fff;
+  border-color: #1890ff;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ไอคอนแผนที่ด้านซ้าย */
+.mapIconBox {
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #1890ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.mapInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mapInfoText label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.coordsText {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
+  font-family: monospace; /* ให้ตัวเลขพิกัดดูเป็นระเบียบ */
+}
+
+.clickToView {
+  font-size: 11px;
+  color: #1890ff;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ปรับแต่งช่องหน่วยงานให้ดูเข้าชุดกัน */
+.orgInfoCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 0;
 }
 
 /* === Media Queries === */
