@@ -126,8 +126,8 @@
   background: #ff4d4f;
   border: none;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;  
+  width: 56px;
+  height: 56px;  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,7 +135,7 @@
   transition: all 0.2s ease;
 }
 .filterModalClose svg {
-  font-size: 16px !important; /* ลดจาก 20px เหลือ 16px */
+  font-size: 16px !important; 
   fill: #ffffff !important;
 }
 .filterModalHeader h3 {
