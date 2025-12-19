@@ -11,7 +11,8 @@
   padding: 18px;
   
   /* ✅ (Desktop) กำหนดความกว้างให้พอดีกับตัวปฏิทิน ไม่ยืดตามปุ่มจนเละ */
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
   min-width: 300px;   /* กันไม่ให้เล็กเกินไป */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
