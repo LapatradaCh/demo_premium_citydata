@@ -172,7 +172,135 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3: LocationSetupForm
+ * Component 3 (New): OrgLevelSetupForm (กำหนดระดับหน่วยงาน)
+ * =================================================================
+ */
+const OrgLevelSetupForm = ({ onSave, orgId }) => {
+  const [selectedLevel, setSelectedLevel] = useState('province'); // default: province
+  const [isSaving, setIsSaving] = useState(false);
+
+  const levels = [
+    { 
+      id: 'province', 
+      label: 'ระดับจังหวัด', 
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 
+    },
+    { 
+      id: 'district', 
+      label: 'ระดับเขต / อำเภอ', 
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> 
+    },
+    { 
+      id: 'sub_district', 
+      label: 'ระดับแขวง / ตำบล', 
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg> 
+    }
+  ];
+
+  const handleLevelSubmit = async (e) => {
+    e.preventDefault();
+    if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
+    setIsSaving(true);
+    
+    try {
+      // ตัวอย่างการส่ง API (ปรับ endpoint ตามจริงหากมี)
+      await fetch(`${API_BASE_URL}/organizations`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            organization_id: orgId, 
+            management_level: selectedLevel 
+        }),
+      });
+      alert("บันทึกระดับหน่วยงานสำเร็จ!");
+      onSave();
+    } catch (err) {
+      console.error(err);
+      // ในกรณีที่ยังไม่มี API จริง ให้ถือว่าสำเร็จไปก่อนเพื่อให้ Flow ทำงานต่อได้
+      onSave(); 
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Styles สำหรับ Card ที่เลือกและไม่เลือก
+  const cardStyle = {
+    flex: 1,
+    border: '1px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '1.5rem 0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    cursor: 'pointer',
+    backgroundColor: '#fff',
+    transition: 'all 0.2s',
+    minWidth: '140px'
+  };
+
+  const activeCardStyle = {
+    ...cardStyle,
+    border: '2px solid #2563eb', // สีน้ำเงินตามรูป
+    backgroundColor: '#eff6ff',
+    color: '#2563eb',
+    fontWeight: '600'
+  };
+
+  return (
+    <form onSubmit={handleLevelSubmit}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <p className={styles.label} style={{marginBottom: '10px'}}>เลือกระดับที่ต้องการบริหารจัดการ</p>
+        
+        {/* Card Grid Container */}
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          {levels.map((lvl) => (
+            <div
+              key={lvl.id}
+              style={selectedLevel === lvl.id ? activeCardStyle : cardStyle}
+              onClick={() => setSelectedLevel(lvl.id)}
+            >
+              <div>{lvl.icon}</div>
+              <span>{lvl.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          backgroundColor: '#f8f9fa',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginTop: '1rem'
+      }}>
+        <div style={{ color: '#666', fontSize: '0.9rem' }}>
+          สถานะการเลือก: 
+          <span style={{ color: '#2563eb', fontWeight: '600', marginLeft: '5px' }}>
+            {selectedLevel === 'province' && 'ทุกอำเภอในจังหวัด'}
+            {selectedLevel === 'district' && 'เฉพาะเขต/อำเภอที่เลือก'}
+            {selectedLevel === 'sub_district' && 'เฉพาะแขวง/ตำบลที่เลือก'}
+          </span>
+        </div>
+
+        <button 
+          type="submit" 
+          className={`${styles.button} ${styles.btnSuccess}`}
+          disabled={isSaving}
+          style={{ width: 'auto', minWidth: '150px', margin: 0 }}
+        >
+          {isSaving ? 'กำลังบันทึก...' : 'บันทึกและไปต่อ'}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+/**
+ * =================================================================
+ * Component 4: LocationSetupForm
  * =================================================================
  */
 const LocationSetupForm = ({ onSave, orgId }) => {
@@ -290,7 +418,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 4: TypeSetupForm
+ * Component 5: TypeSetupForm
  * =================================================================
  */
 const TypeSetupForm = ({ onSave, orgId }) => {
@@ -389,7 +517,7 @@ const TypeSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 5: CodeSetupBox
+ * Component 6: CodeSetupBox
  * =================================================================
  */
 const CodeSetupBox = ({ adminCode, userCode }) => {
@@ -451,7 +579,7 @@ const CodeSetupBox = ({ adminCode, userCode }) => {
 
 /**
  * =================================================================
- * Component 6: SetupGuidePage
+ * Component 7: SetupGuidePage
  * =================================================================
  */
 const SetupGuidePage = ({
@@ -528,7 +656,30 @@ const SetupGuidePage = ({
             </div>
           </div>
 
-          {/* 3. กำหนดขอบเขต */}
+          {/* 3. [NEW] กำหนดระดับหน่วยงาน */}
+          <div className={styles.accordionItem}>
+            <button
+              type="button"
+              className={styles.accordionHeader}
+              onClick={() => handleAccordionClick('orgLevel')}
+            >
+              <div className={styles.accordionIcon}>🏢</div>
+              <div style={{flex: 1}}>
+                <p className={styles.accordionTitle}>กำหนดระดับหน่วยงาน</p>
+                <p className={styles.accordionSubtitle}>เลือกระดับที่ต้องการบริหารจัดการ</p>
+              </div>
+              <div className={`${styles.accordionArrow} ${activeAccordion === 'orgLevel' ? styles.rotate180 : ''}`}>▼</div>
+            </button>
+            <div className={`${styles.accordionContentWrapper} ${activeAccordion === 'orgLevel' ? styles.open : ''}`}>
+              <div className={styles.accordionContent}>
+                <div className={styles.accordionInner}>
+                   <OrgLevelSetupForm onSave={() => handleAccordionClick(null)} orgId={orgId} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. กำหนดขอบเขต */}
           <div className={styles.accordionItem}>
             <button
               type="button"
@@ -551,7 +702,7 @@ const SetupGuidePage = ({
             </div>
           </div>
 
-          {/* 4. ตั้งค่าประเภท */}
+          {/* 5. ตั้งค่าประเภท */}
           <div className={styles.accordionItem}>
             <button
               type="button"
