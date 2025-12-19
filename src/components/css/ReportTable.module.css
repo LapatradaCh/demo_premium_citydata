@@ -114,12 +114,12 @@
   border: none; 
 }
 
-/* ✅ (UPDATE) ลด padding เพื่อลดความสูงส่วนหัว */
+/* ลด padding เพื่อลดความสูงส่วนหัว */
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 20px; /* ลดจาก 20px */
+  padding: 8px 20px;
   border-bottom: 1px solid #f8f8f8;
 }
 
@@ -129,13 +129,13 @@
   font-weight: 700;
 }
 
-/* ✅ (UPDATE) ลดขนาดปุ่มปิดเพื่อให้ Header เพรียวลง */
+/* ปุ่มปิด Header */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 28px;  /* ลดจาก 36px */
-  height: 28px; /* ลดจาก 36px */
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,9 +143,8 @@
   transition: all 0.2s ease;
 }
 
-/* ✅ (UPDATE) ลดขนาดไอคอนกากบาท */
 .filterModalClose svg {
-  font-size: 16px !important; /* ลดจาก 20px */
+  font-size: 16px !important;
   fill: #ffffff !important;
 }
 
@@ -325,7 +324,7 @@
   justify-content: center;
 }
 
-/* === MODAL รายละเอียด (ปรับปรุงใหม่เพื่อความสวยงามและอ่านง่าย) === */
+/* === MODAL รายละเอียด (ปรับปรุงใหม่) === */
 
 .detailHeaderBlock {
   display: flex;
@@ -357,66 +356,70 @@
 
 .infoCol, .infoColFull { display: flex; flex-direction: column; gap: 4px; }
 
-/* ✅ (UPDATE) ปรับแต่ง Label หัวข้อ */
+/* ปรับแต่ง Label หัวข้อ */
 .infoCol label, .infoColFull label {
   font-size: 12px;
   font-weight: 600;       
-  color: #85929e;         /* สีเทาอ่านง่าย */
+  color: #85929e;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 6px;
   display: block;
 }
 
-/* ✅ (UPDATE) ปรับแต่ง Value เนื้อหา */
+/* ปรับแต่ง Value เนื้อหา */
 .infoValueText {
-  font-size: 16px;        /* ใหญ่ขึ้น */
+  font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;         /* ดำเข้ม */
+  color: #1a1a1a;
   line-height: 1.5;
 }
 
-/* ✅ (UPDATE) ปรับกล่องรายละเอียดให้ดูดีมีสไตล์ */
+/* ปรับกล่องรายละเอียด */
 .infoDescriptionBox {
   font-size: 15px;
   line-height: 1.6;
   color: #333;
-  background: #ffffff;    /* พื้นขาว */
+  background: #ffffff;
   padding: 16px 20px;
   border-radius: 4px 12px 12px 4px;
   border: 1px solid #eaeaea;
-  border-left: 4px solid #000; /* ขอบซ้ายเน้น */
+  border-left: 4px solid #000;
   margin: 8px 0;
   font-weight: 500;
 }
 
-/* ✅ (UPDATE) ปรับส่วนล่าง (พิกัด/หน่วยงาน) */
+/* ✅ (UPDATE) ปรับส่วนล่างให้เป็น 1 คอลัมน์ แก้ปัญหาทับกัน */
 .detailLocationBlock {
   background: #f8f9fa;
   padding: 16px 20px;
   border-radius: 16px;
   border: 1px solid #e9ecef;
+  
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr; /* เปลี่ยนเป็น 1 แถวเต็ม */
+  gap: 16px;
+  
   margin-top: 20px;
   align-items: start;
 }
 
-/* === ✅ (NEW) Map Location Button Style === */
+/* === Map Location Button Style === */
 .mapLocationCard {
-  background: #eef4ff; /* สีฟ้าจางๆ ให้ความรู้สึกเหมือนน้ำ/แผนที่ */
+  background: #eef4ff;
   border: 1px solid #d0e2ff;
   border-radius: 16px;
   padding: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
-  text-decoration: none; /* ลบเส้นใต้ link */
+  text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  width: 100%; /* ให้เต็มความกว้าง */
+  box-sizing: border-box;
 }
 
 .mapLocationCard:hover {
@@ -426,7 +429,6 @@
   transform: translateY(-2px);
 }
 
-/* ไอคอนแผนที่ด้านซ้าย */
 .mapIconBox {
   width: 48px;
   height: 48px;
@@ -445,6 +447,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0; /* ป้องกัน flex child ล้น */
 }
 
 .mapInfoText label {
@@ -455,11 +458,14 @@
   cursor: pointer;
 }
 
+/* ✅ (UPDATE) เพิ่ม word-break ป้องกันตัวเลขล้น */
 .coordsText {
   font-size: 15px;
   font-weight: 800;
   color: #1a1a1a;
-  font-family: monospace; /* ให้ตัวเลขพิกัดดูเป็นระเบียบ */
+  font-family: monospace;
+  word-break: break-all; /* ตัดคำถ้าเลขยาวเกิน */
+  line-height: 1.4;
 }
 
 .clickToView {
@@ -469,17 +475,18 @@
   margin-top: 2px;
 }
 
-/* ปรับแต่งช่องหน่วยงานให้ดูเข้าชุดกัน */
+/* ปรับแต่งช่องหน่วยงาน */
 .orgInfoCard {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  padding: 8px 0;
+  padding: 0;
+  margin-left: 4px;
 }
 
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
   .reportTableRow { padding: 20px; gap: 12px; }
-  .infoRow, .detailLocationBlock { grid-template-columns: 1fr; }
+  .infoRow { grid-template-columns: 1fr; }
 }
