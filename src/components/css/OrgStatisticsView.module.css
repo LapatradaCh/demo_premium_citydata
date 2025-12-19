@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL POLISHED + VERTICAL KPI FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL: WHITE BACKGROUND) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -14,7 +14,10 @@
   padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  background-color: #f9fafb;
+  
+  /* ✅ แก้ไข: เปลี่ยนพื้นหลังเป็นสีขาวล้วน */
+  background-color: #ffffff; 
+  color: #1F2937;
 }
 
 /* =========================================
@@ -25,8 +28,11 @@
   width: 280px;
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f1f1f1;
+  
+  /* ปรับ Shadow และ Border ให้อ่อนลงเพื่อให้เข้ากับพื้นหลังสีขาว */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); 
+  border: 1px solid #f3f4f6;
+  
   padding: 24px 16px;
   position: sticky;
   top: 24px;
@@ -42,7 +48,7 @@
   color: #000000;
   margin: 0 0 16px 0;
   padding: 0 12px 12px 12px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #f3f4f6;
 }
 
 .orgStatsMenuNav {
@@ -128,8 +134,11 @@
   background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f0f0f0;
+  
+  /* ปรับ Shadow/Border ให้เบาบางลง */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
+  
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -159,28 +168,28 @@
 }
 
 /* =========================================
-   5. KPI CARDS & FILTER BUTTONS (UPDATED)
+   5. KPI CARDS & FILTER BUTTONS
    ========================================= */
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* บังคับ 3 คอลัมน์ในจอใหญ่ */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
 
 .kpiCard {
-  padding: 24px; /* เพิ่ม Padding ให้ดูโปร่ง */
+  padding: 24px;
   border-radius: 16px;
   
-  /* ✅ จัดเรียงแนวตั้งชิดซ้าย */
+  /* แนวตั้งชิดซ้าย */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; /* สำคัญ: ชิดซ้าย */
+  align-items: flex-start;
   
   border: none;
   min-height: 120px;
-  gap: 8px; /* ระยะห่างระหว่างบรรทัด */
+  gap: 8px;
   position: relative;
   overflow: hidden;
 }
@@ -209,7 +218,6 @@
   color: #ffffff !important;
 }
 
-/* Header: ชื่อหัวข้อ */
 .kpiHeader {
   width: 100%;
   display: flex;
@@ -218,8 +226,6 @@
   font-size: 14px;
   font-weight: 700;
   margin: 0;
-  
-  /* ✅ แก้ไข: ให้ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
@@ -233,26 +239,22 @@
   opacity: 0.9;
 }
 
-/* Value: ตัวเลข */
 .kpiValue {
   width: 100%;
-  text-align: left; /* ชิดซ้าย */
+  text-align: left;
   font-size: 36px;
   font-weight: 800;
   line-height: 1.2;
   margin: 4px 0;
 }
 
-/* Subtext: คำอธิบาย */
 .kpiSubtext {
   width: 100%;
-  text-align: left; /* ชิดซ้าย */
+  text-align: left;
   font-size: 12px;
   opacity: 0.85;
   font-weight: 500;
   margin: 0;
-  
-  /* ✅ แก้ไข: ให้ตัดคำได้ */
   white-space: normal !important;
   word-break: break-word;
   line-height: 1.4;
@@ -513,7 +515,7 @@
 }
 
 .donutHeaderBox {
-  background-color: #f9fafb;
+  background-color: #ffffff; /* ปรับเป็นขาว */
   border: 1px solid #f3f4f6;
   border-radius: 16px;
   padding: 20px;
@@ -665,18 +667,14 @@
 /* =========================================
    9. RESPONSIVE (MOBILE FORCED FIX)
    ========================================= */
-
 @media screen and (max-width: 1024px) {
   .orgStatsContainer {
     gap: 20px;
     padding: 16px;
   }
-
   .orgStatsSidebarDesktop {
     width: 220px;
   }
-
-  /* Tablet KPI: 2 Columns */
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -692,7 +690,7 @@
     margin: 0 !important;
     padding: 0 0 120px 0 !important;
     gap: 0 !important;
-    background-color: #ffffff;
+    background-color: #ffffff; /* ขาวล้วน */
     overflow-x: hidden;
   }
 
@@ -710,7 +708,7 @@
     box-sizing: border-box;
     position: relative;
     z-index: 50;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid #f3f4f6;
   }
 
   .mobileDropdownLabel {
@@ -781,7 +779,7 @@
     background: transparent !important;
     display: flex;
     align-items: center;
-    justify-content: flex-start !important; /* จัดซ้าย */
+    justify-content: flex-start !important;
     gap: 12px;
     font-size: 15px;
     color: #4b5563;
@@ -804,7 +802,7 @@
   }
 
   .activeCheck {
-    margin-left: auto !important; /* ดันขวาสุด */
+    margin-left: auto !important;
     color: #10B981;
     font-size: 20px;
     display: flex;
@@ -836,11 +834,9 @@
     gap: 12px;
     margin-bottom: 24px;
     margin-top: 16px;
-    /* FIX: บังคับ 2 คอลัมน์ในมือถือ */
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
-  /* FIX: การ์ดใบสุดท้ายในแถวคี่ ให้ขยายเต็ม */
   .kpiCard:last-child:nth-child(odd) {
     grid-column: span 2;
   }
@@ -874,13 +870,9 @@
 
   .controlBtn { flex: 1; text-align: center; }
 
-  /* ============================================================
-     5. FIX: SLA GRAPH (MOBILE OVERRIDE - PUSH CONTENT DOWN)
-     ============================================================ */
-
+  /* 5. FIX: SLA GRAPH */
   .mockHorizontalBarChart {
     width: 100% !important;
-    /* ดันลงมา 60px */
     margin-top: 60px !important; 
     display: flex !important;
     flex-direction: column !important;
@@ -889,11 +881,10 @@
     overflow: visible !important;
   }
 
-  /* รายการกราฟ (Mobile: Grid 2 แถว) */
   .mockHBarItem {
     display: grid !important;
-    grid-template-columns: 1fr auto !important; /* ชื่อ | ค่า */
-    grid-template-rows: auto auto !important;   /* แถว 1 | แถว 2 */
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
     gap: 8px 0 !important;
     align-items: center !important;
     width: 100% !important;
@@ -902,7 +893,6 @@
     z-index: 2;
   }
 
-  /* ชื่อ Test1 */
   .mockHBarLabel {
     grid-column: 1 / 2 !important;
     grid-row: 1 / 2 !important;
@@ -914,7 +904,6 @@
     text-align: left !important;
   }
 
-  /* ค่า 33.8 วัน */
   .mockHBarValue {
     grid-column: 2 / 3 !important;
     grid-row: 1 / 2 !important;
@@ -926,10 +915,9 @@
     color: #FF4D4F !important;
   }
 
-  /* แท่งกราฟ */
   .mockHBar {
-    grid-column: 1 / 3 !important; /* เต็มความกว้าง */
-    grid-row: 2 / 3 !important;    /* ลงมาแถว 2 */
+    grid-column: 1 / 3 !important;
+    grid-row: 2 / 3 !important;
     width: 100% !important;
     height: 10px !important;
     margin-top: 0 !important;
@@ -937,7 +925,6 @@
     overflow: hidden;
   }
 
-  /* ปรับป้าย Target (ห้ามบีบ) */
   .slaLabel {
     position: absolute !important;
     top: -24px !important;
@@ -949,7 +936,6 @@
     padding: 2px 8px !important;
     border-radius: 4px;
     font-weight: bold;
-    /* FIX WIDTH */
     width: max-content !important; 
     min-width: 60px !important;
     white-space: nowrap !important;
