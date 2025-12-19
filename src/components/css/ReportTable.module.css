@@ -3,21 +3,15 @@
 /* === (SHARED) Calendar === */
 .calendarPopup {
   position: absolute;
-  top: 110%;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
-  padding: 18px;
   
-  /* ✅ จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
+  /* ✅ ใส่ของใหม่: สั่งให้เด้งขึ้นบน */
+  bottom: 110%; /* ดันขึ้นไปอยู่เหนือปุ่ม 110% */
+  top: auto;    /* ยกเลิกค่า top */
+  z-index: 100;
   left: 50%;
   transform: translateX(-50%);
-  
-  width: max-content; /* กว้างเท่าเนื้อหาปฏิทิน */
-  min-width: 300px;   /* ขนาดขั้นต่ำ */
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.98);
+  transform-origin: bottom center;
 }
 
 /* --- Report Table Specific --- */
