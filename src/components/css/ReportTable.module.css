@@ -114,34 +114,39 @@
   border: none; 
 }
 
+/* ✅ (UPDATE) ลด padding เพื่อลดความสูงส่วนหัว */
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* ลด padding ลงเหลือแค่ 8px (บนล่าง) */
-  padding: 8px 20px; 
+  padding: 8px 20px; /* ลดจาก 20px */
   border-bottom: 1px solid #f8f8f8;
 }
+
+.filterModalHeader h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* ✅ (UPDATE) ลดขนาดปุ่มปิดเพื่อให้ Header เพรียวลง */
 .filterModalClose {
-  background: #ff4d4f;
+  background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 42px;
-  height: 42px;  
+  width: 36px; 
+  height: 36px; 
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
+/* ✅ (UPDATE) ลดขนาดไอคอนกากบาท */
 .filterModalClose svg {
-  font-size: 16px !important; 
+  font-size: 16px !important; /* ลดจาก 20px */
   fill: #ffffff !important;
-}
-.filterModalHeader h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
 }
 
 .filterModalContent {
@@ -242,7 +247,7 @@
 }
 
 .reportImage {
-  width: 70px;         
+  width: 70px;          
   height: 70px;
   object-fit: cover;
   border-radius: 16px;
@@ -262,8 +267,8 @@
   font-size: 16.5px;
   color: #111;
   margin: 0;
-  white-space: nowrap;      
-  overflow: hidden;          
+  white-space: nowrap;       
+  overflow: hidden;           
   text-overflow: ellipsis;  
 }
 
@@ -280,8 +285,8 @@
 /* --- Status Tag --- */
 .reportStatusGroup {
   position: absolute; 
-  top: 18px;           
-  right: 0;           
+  top: 18px;            
+  right: 0;            
   z-index: 5;
 }
 
@@ -320,7 +325,7 @@
   justify-content: center;
 }
 
-/* === ✅ เพิ่มคลาสสำหรับจัด Layout ใหม่ใน Modal รายละเอียด === */
+/* === MODAL รายละเอียด (ปรับปรุงใหม่เพื่อความสวยงามและอ่านง่าย) === */
 
 .detailHeaderBlock {
   display: flex;
@@ -352,23 +357,50 @@
 
 .infoCol, .infoColFull { display: flex; flex-direction: column; gap: 4px; }
 
+/* ✅ (UPDATE) ปรับแต่ง Label หัวข้อ */
 .infoCol label, .infoColFull label {
-  font-size: 12px; font-weight: 700; color: #999;
-  text-transform: uppercase; letter-spacing: 0.5px;
+  font-size: 12px;
+  font-weight: 600;       
+  color: #85929e;         /* สีเทาอ่านง่าย */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: block;
 }
 
-.infoValueText { font-size: 15px; font-weight: 700; color: #222; }
+/* ✅ (UPDATE) ปรับแต่ง Value เนื้อหา */
+.infoValueText {
+  font-size: 16px;        /* ใหญ่ขึ้น */
+  font-weight: 700;
+  color: #1a1a1a;         /* ดำเข้ม */
+  line-height: 1.5;
+}
 
+/* ✅ (UPDATE) ปรับกล่องรายละเอียดให้ดูดีมีสไตล์ */
 .infoDescriptionBox {
-  font-size: 14.5px; line-height: 1.6; color: #444;
-  background: #fafafa; padding: 12px; border-radius: 14px;
-  border: 1px solid #f0f0f0; margin: 0; font-weight: 500;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  background: #ffffff;    /* พื้นขาว */
+  padding: 16px 20px;
+  border-radius: 4px 12px 12px 4px;
+  border: 1px solid #eaeaea;
+  border-left: 4px solid #000; /* ขอบซ้ายเน้น */
+  margin: 8px 0;
+  font-weight: 500;
 }
 
+/* ✅ (UPDATE) ปรับส่วนล่าง (พิกัด/หน่วยงาน) */
 .detailLocationBlock {
-  background: #f4f5f7; padding: 20px; border-radius: 20px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  margin-top: 12px;
+  background: #f8f9fa;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+  align-items: start;
 }
 
 /* === Media Queries === */
