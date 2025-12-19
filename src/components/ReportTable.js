@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"; 
 import styles from "./css/ReportTable.module.css";
-// ✅ (UPDATE) เพิ่ม FaBuilding เข้ามาสำหรับไอคอนหน่วยงาน
 import { FaSearch, FaFilter, FaTimes, FaMapMarkedAlt, FaBuilding } from "react-icons/fa";
 import "cally";
 
@@ -36,7 +35,7 @@ const DateFilter = () => {
   }, [show]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <button
         className={styles.timeRangeButton}
         onClick={() => setShow(!show)}
@@ -85,6 +84,12 @@ const ReportTable = ({ subTab, onRowClick }) => {
   const summaryTitle = isAllReports
     ? "รายการแจ้งรวม"
     : "รายการแจ้งเฉพาะหน่วยงาน";
+
+  // ✅ Helper: กำหนดว่า Filter ตัวไหนควรกว้างเต็มจอ (100%)
+  // ถ้าไม่ใช่พวกนี้ จะกว้างแค่ครึ่งจอ (50%)
+  const isFullWidth = (label) => {
+    return ["หน่วยงาน", "ช่วงเวลา", "ตำบล/แขวง"].includes(label);
+  };
 
   // --- 1. Fetch Issue Types ---
   useEffect(() => {
@@ -221,10 +226,17 @@ const ReportTable = ({ subTab, onRowClick }) => {
                  <FaTimes />
                </button>
              </div>
+             
              <div className={styles.filterModalContent}>
                <div className={styles.reportFilters}>
+                 {/* Main Filters */}
                  {mainFilters.map((label, i) => (
-                   <div className={styles.filterGroup} key={i}>
+                   <div 
+                      className={styles.filterGroup} 
+                      key={i}
+                      // ✅ ปรับ Flex Basis: เต็มจอ หรือ ครึ่งจอ ตามชื่อ Label
+                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
+                   >
                      <label>{label}</label>
                      {label === "ช่วงเวลา" ? (
                         <DateFilter />
@@ -251,13 +263,21 @@ const ReportTable = ({ subTab, onRowClick }) => {
                      )}
                    </div>
                  ))}
+                 
+                 {/* Location Filters */}
                  {locationFilters.map((label, i) => (
-                   <div key={i} className={styles.filterGroup}>
+                   <div 
+                      key={i} 
+                      className={styles.filterGroup}
+                      // ✅ ปรับ Flex Basis: จังหวัด/อำเภอ ครึ่งจอ, ตำบล เต็มจอ
+                      style={{ flex: isFullWidth(label) ? "1 1 100%" : "1 1 calc(50% - 8px)" }}
+                   >
                      <label>{label}</label>
                      <select defaultValue="all"><option value="all">ทั้งหมด</option></select>
                    </div>
                  ))}
                </div>
+               
                <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
              </div>
            </div>
@@ -354,7 +374,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
                   </div>
                 </a>
 
-                {/* ✅ (UPDATE) 2. การ์ดหน่วยงาน (Org Card) ปรับดีไซน์ใหม่ให้เป็นการ์ด */}
+                {/* 2. การ์ดหน่วยงาน (Org Card) */}
                 <div className={styles.orgInfoCard}>
                   <div className={styles.orgIconBox}>
                     <FaBuilding />
