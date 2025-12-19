@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"; 
 import styles from "./css/ReportTable.module.css";
-// ✅ เพิ่ม FaMapMarkedAlt เข้ามา
-import { FaSearch, FaFilter, FaTimes, FaMapMarkedAlt } from "react-icons/fa";
+// ✅ (UPDATE) เพิ่ม FaBuilding เข้ามาสำหรับไอคอนหน่วยงาน
+import { FaSearch, FaFilter, FaTimes, FaMapMarkedAlt, FaBuilding } from "react-icons/fa";
 import "cally";
 
 // ------------------------- Helper
@@ -333,10 +333,9 @@ const ReportTable = ({ subTab, onRowClick }) => {
                 </div>
               </div>
 
-              {/* ✅ ส่วนที่ปรับแก้: แผนที่กดได้ */}
               <div className={styles.detailLocationBlock}>
                 
-                {/* 1. การ์ดพิกัด (ลิงก์ไป Google Maps) */}
+                {/* 1. การ์ดพิกัด (Map Card) */}
                 <a 
                   href={`https://www.google.com/maps/search/?api=1&query=${selectedReport.latitude},${selectedReport.longitude}`}
                   target="_blank"
@@ -355,12 +354,17 @@ const ReportTable = ({ subTab, onRowClick }) => {
                   </div>
                 </a>
 
-                {/* 2. ข้อมูลหน่วยงาน */}
+                {/* ✅ (UPDATE) 2. การ์ดหน่วยงาน (Org Card) ปรับดีไซน์ใหม่ให้เป็นการ์ด */}
                 <div className={styles.orgInfoCard}>
-                  <label>หน่วยงานรับผิดชอบ</label>
-                  <span className={styles.infoValueText}>
-                    {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
-                  </span>
+                  <div className={styles.orgIconBox}>
+                    <FaBuilding />
+                  </div>
+                  <div className={styles.orgInfoText}>
+                    <label>หน่วยงานรับผิดชอบ</label>
+                    <span className={styles.infoValueText}>
+                      {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
+                    </span>
+                  </div>
                 </div>
 
               </div>
