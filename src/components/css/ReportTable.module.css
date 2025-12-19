@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px; /* ปรับช่องว่างให้ดูพอดี */
+  gap: 12px;
   position: relative;
   width: 100%;
   max-width: 1100px; 
@@ -44,7 +44,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: #000;
-  height: 42px; /* กำหนดความสูงให้แน่นอนเพื่อให้ปุ่มอ้างอิงได้ */
+  height: 42px;
 }
 
 .searchInput:focus {
@@ -65,33 +65,27 @@
   transition: color 0.3s ease;
 }
 
-/* ✅ ปรับปรุงปุ่มตัวกรองให้ขนาดพอดี */
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0 24px; /* ปรับ Padding ให้สมดุล */
+  padding: 0 24px;
   font-size: 13.5px;
   font-weight: 600;
   color: #fff;
   background-color: #000;
   border: none;
-  border-radius: 28px; /* ปรับความโค้งให้เท่ากับช่องค้นหา */
+  border-radius: 28px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  height: 42px; /* ให้สูงเท่ากับ searchInput */
-  width: auto; /* ให้กว้างตามเนื้อหา (ข้อความ "ตัวกรอง") */
+  height: 42px;
+  width: auto;
 }
 
-.filterToggleButton:hover {
-  background-color: #333;
-  transform: translateY(-1px);
-}
-
-/* === MODAL (ลบขอบสีเทาออกทั้งหมด) === */
+/* === MODAL === */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
@@ -134,7 +128,6 @@
   font-weight: 700;
 }
 
-/* ✅ กากบาทสีขาว บนพื้นหลังสีแดง */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
@@ -169,19 +162,19 @@
   max-height: 50vh;
 }
 
-/* === Filter Group === */
-.filterGroup {
-  flex: 1 1 auto;
+/* === Filter Group & Detail Group === */
+.filterGroup, .detailGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
 }
 
-.filterGroup label {
-  font-size: 12.5px;
+.filterGroup label, .detailGroup strong {
+  font-size: 12px;
   font-weight: 600;
-  color: #555;
+  color: #888;
+  text-transform: uppercase;
 }
 
 .filterGroup select,
@@ -247,7 +240,6 @@
   gap: 14px;
   width: 100%;
   position: relative;
-  padding-right: 10px;
 }
 
 .reportImage {
@@ -264,7 +256,6 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0; 
-  padding-right: 85px; 
 }
 
 .reportHeader {
@@ -287,7 +278,7 @@
   text-overflow: ellipsis;
 }
 
-/* --- สถานะ (Status Tag) จัดระดับลงมา --- */
+/* --- Status Tag --- */
 .reportStatusGroup {
   position: absolute; 
   top: 18px;           
@@ -314,7 +305,6 @@
 .statusTag.invited { background-color: #13c2c2; }
 .statusTag.rejected { background-color: #707b7c; }
 
-/* --- ปุ่มอ่านเพิ่มเติม (Full Width) --- */
 .toggleDetailsButton {
   background: #edf5ff; 
   border: none;
@@ -331,26 +321,17 @@
   justify-content: center;
 }
 
-/* Expanded View / Popup Details */
+/* === Expanded / Modal View Details === */
 .mainDetails {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 12px 20px;
   padding: 16px 0;
-  border-top: 1px solid #f5f5f5;
-  margin-top: 8px;
 }
 
-.mainDetails strong {
-  color: #999; 
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.mainDetails .detailValue {
+.detailValue {
   color: #333;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
 }
 
@@ -364,26 +345,11 @@
   border: 1px solid #f1f1f1;
 }
 
-.locationDetails strong {
-  color: #999;
-  font-weight: 600;
-  font-size: 11px;
-}
-
-.locationDetails .detailValue {
-  color: #444;
-  font-weight: 600;
-  font-size: 13px;
-}
-
-/* === Media Queries (ห้ามลบ) === */
+/* === Media Queries === */
 @media screen and (max-width: 768px) {
   .reportTableRow {
     padding: 20px;
     gap: 12px;
-  }
-  .headerInfo {
-    padding-right: 80px;
   }
   .mainDetails, .locationDetails {
     grid-template-columns: 1fr; 
