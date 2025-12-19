@@ -4,28 +4,25 @@
 .calendarPopup {
   position: absolute;
   
-  /* ✅ สั่งให้เริ่มจากขอบล่างของปุ่ม (เด้งลงล่าง) */
+  /* ✅ (Update) สั่งให้เด้งลงล่าง + ชิดซ้าย + เว้นระยะนิดเดียว */
   top: 100%;
-  bottom: auto; /* ยกเลิกคำสั่งเด้งขึ้น */
-  
-  /* ✅ เว้นระยะห่างจากปุ่มนิดเดียว (4px) */
-  margin-top: 4px;
-  margin-bottom: 0;
-  
-  /* ✅ ชิดซ้าย */
+  bottom: auto;
   left: 0;
   transform: none;
+  margin-top: 4px;
   
-  /* สไตล์ตกแต่ง */
-  z-index: 2000; /* ใส่เลขเยอะๆ ให้ลอยทับทุกอย่าง */
+  z-index: 2000; /* ลอยเหนือทุกอย่าง */
   background: #ffffff;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e0e0e0;
+  
+  /* ขนาดและความสวยงาม */
   width: max-content;
   min-width: 300px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
 }
+
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
@@ -118,7 +115,7 @@
   background: #ffffff;
   border-radius: 28px;
   
-  /* ✅ (Desktop) กว้างขึ้นเพื่อให้ใส่ 2 คอลัมน์ได้สวย */
+  /* ปรับความกว้างให้รองรับ Grid 2 คอลัมน์ */
   width: 90%;
   max-width: 550px; 
   
@@ -129,7 +126,7 @@
   border: none; 
 }
 
-/* ลด padding เพื่อลดความสูงส่วนหัว */
+/* ลด padding Header */
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
@@ -144,7 +141,7 @@
   font-weight: 700;
 }
 
-/* ✅ ปุ่มปิด Header (ใหญ่ขึ้น) */
+/* ปุ่มปิด Header (ใหญ่ขึ้น) */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
@@ -158,7 +155,7 @@
   transition: all 0.2s ease;
 }
 
-/* ✅ ไอคอนกากบาท (ใหญ่ขึ้น) */
+/* ไอคอนกากบาท (ใหญ่ขึ้น) */
 .filterModalClose svg {
   font-size: 18px !important; 
   fill: #ffffff !important;
@@ -172,11 +169,11 @@
   max-height: 70vh;
 }
 
-/* ✅ (UPDATE) จัด Layout แบบ Grid/Flex */
+/* ✅ (Update) Container สำหรับ Grid Layout */
 .reportFilters {
   display: flex;
   flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
-  gap: 16px;       /* ระยะห่างระหว่างกล่อง */
+  gap: 12px;       /* ระยะห่างระหว่างกล่อง */
   overflow-y: auto;
   max-height: 50vh;
   padding: 4px;    /* กันเงาแหว่ง */
@@ -184,12 +181,11 @@
 
 /* === Filter Group === */
 .filterGroup {
-  /* Default ให้ยืดหยุ่น */
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
-  min-width: 140px; /* กันเล็กเกินไป */
+  min-width: 140px; /* กันบีบจนเล็กเกินไป */
 }
 
 .filterGroup label {
@@ -208,7 +204,7 @@
   background-color: #fafafa;
 }
 
-/* ✅ (UPDATE) ปุ่มสีเขียว จัดกึ่งกลาง */
+/* ✅ (Update) ปุ่มสีเขียว จัดกึ่งกลาง */
 .filterApplyButton {
   align-self: center;
   width: auto;
@@ -552,5 +548,15 @@
   /* Mobile: Modal เล็กลง */
   .filterModal {
     max-width: 360px;
+  }
+  
+  /* Mobile: ปฏิทินเด้งกลางจอ */
+  .calendarPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0;
+    width: auto;
   }
 }
