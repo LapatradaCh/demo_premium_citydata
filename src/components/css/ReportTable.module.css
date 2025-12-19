@@ -64,10 +64,6 @@
   transition: color 0.3s ease;
 }
 
-.searchInput:focus + .searchIcon {
-  color: #000;
-}
-
 .filterToggleButton {
   flex-shrink: 0;
   display: flex;
@@ -85,13 +81,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   white-space: nowrap;
-  min-width: fit-content;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* === (SHARED) Modal === */
+/* === (SHARED) Modal - ปรับปรุงใหม่ === */
 .filterModalBackdrop {
   position: fixed;
   top: 0;
@@ -110,110 +102,104 @@
   transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 28px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border: none; /* เอาขอบสีเทาออกตามต้องการ */
 }
 
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 24px;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .filterModalHeader h3 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 800;
 }
 
+/* ปรับไอคอนกากบาทให้ใหญ่ขึ้น */
 .filterModalClose {
-  background: #ff4d4f;
+  background: #f0f0f0;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff;
+  color: #333;
   transition: all 0.2s ease;
-  position: relative;
 }
 
-/* === (SHARED) Filter Group === */
-.filterGroup {
-  flex: 1 1 auto;
+.filterModalClose:hover {
+  background: #e0e0e0;
+  transform: scale(1.1);
+}
+
+.filterModalClose svg {
+  font-size: 20px; /* เพิ่มขนาดไอคอนกากบาท */
+}
+
+.filterModalContent {
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  position: relative;
+  gap: 20px;
+}
+
+/* === (SHARED) Filter Group - เอาเส้นขอบเทาออก === */
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .filterGroup label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #555;
-  padding-left: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
 }
 
 .filterGroup select,
 .timeRangeButton {
   width: 100%;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  padding: 10px 14px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-  transition: all 0.25s ease;
+  font-size: 15px;
+  border-radius: 14px;
+  border: 1px solid #eee; /* เส้นขอบบางๆ ไม่เน้นสีเทาเข้ม */
+  padding: 12px 16px;
+  background-color: #f8f9fa;
   color: #111;
+  appearance: none;
 }
 
 .filterApplyButton {
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 700;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 800;
   color: #fff;
-  background-color: #057a55;
+  background-color: #000;
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   cursor: pointer;
-  transition: all 0.25s ease;
-  align-self: center;
-  min-width: 100%;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(5, 122, 85, 0.2);
+  margin-top: 10px;
 }
 
 /* --- Report Table Grid --- */
-.reportSummary {
-  font-weight: 700;
-  margin-top: 28px;
-  margin-bottom: 16px;
-  color: #1a1a1a;
-  text-align: left;
-  padding-left: 4px;
-  width: 100%;
-  max-width: 1100px; 
-  margin-left: auto; 
-  margin-right: auto; 
-}
-
 .reportTableContainer {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px; 
+  gap: 28px; 
   max-width: 1100px; 
   margin: 0 auto;
 }
@@ -224,30 +210,28 @@
   padding: 24px;
   background: #ffffff;
   border-radius: 32px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid #f5f5f5;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   position: relative;
-  gap: 16px;
+  gap: 20px;
   justify-content: space-between;
 }
 
-/* ส่วนหัว: รูป ID และ รายละเอียด */
+/* ส่วนหัว: จัดระเบียบไม่ให้ชนขอบ */
 .cardHeaderSection {
   display: flex;
   flex-direction: row; 
   align-items: center; 
   gap: 16px;
   width: 100%;
-  position: relative;
+  padding-right: 10px;
 }
 
 .reportImage {
   width: 80px;         
   height: 80px;
   object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border-radius: 20px;
   flex-shrink: 0; 
 }
 
@@ -255,76 +239,63 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 4px;
   min-width: 0; 
-  padding-right: 95px; 
+  padding-right: 85px; /* กันที่ให้ Status Tag */
 }
 
 .reportHeader {
   font-weight: 800;
   font-size: 19px;
   color: #111;
-  letter-spacing: -0.5px;
   margin: 0;
-  white-space: nowrap;      
-  overflow: hidden;         
-  text-overflow: ellipsis;  
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .reportDetailText {
   font-size: 15px;
   font-weight: 600;
-  color: #555;
+  color: #666;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; 
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* --- แก้ไขตำแหน่งสถานะ (Status Tag) เลื่อนลงล่างอีกนิด --- */
+/* --- สถานะ (Status Tag) ปรับให้ไม่ล้นและสมดุล --- */
 .reportStatusGroup {
   position: absolute; 
-  top: 15px;           /* ปรับจาก 0 เป็น 15px เพื่อให้เลื่อนลงมา */
+  top: 18px;           
   right: 0;           
   z-index: 5;
 }
 
 .statusTag {
   display: inline-block;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 12px 0 0 12px; 
   font-size: 11px;
   font-weight: 800;
   color: #fff;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
 }
 
+/* สีสถานะ */
 .statusTag.pending { background-color: #ff4d4f; }
-.statusTag.coordinating { background-color: #7c4dff; }
-.statusTag.in_progress { background-color: #ffc107; color: #000; }
 .statusTag.completed { background-color: #52c41a; }
-.statusTag.forwarded { background-color: #1890ff; }
-.statusTag.invited { background-color: #13c2c2; }
-.statusTag.rejected { background-color: #707b7c; }
+.statusTag.in_progress { background-color: #ffc107; color: #000; }
 
 /* --- ปุ่มอ่านเพิ่มเติม --- */
 .toggleDetailsButton {
   background: #edf5ff; 
   border: none;
-  width: 100% !important; 
-  padding: 14px 0;
+  width: 100%;
+  padding: 16px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 700;
   font-size: 16px;
   color: #007bff;
-  transition: all 0.2s ease;
-  margin-top: auto; 
+  transition: 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -332,53 +303,10 @@
 
 .toggleDetailsButton:hover {
   background: #e1eeff;
-  transform: scale(1.01);
 }
 
-/* ส่วนรายละเอียดขยาย */
-.mainDetails {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px 20px;
-  padding: 16px 0;
-  border-top: 1px solid #f5f5f5;
-  margin-top: 8px;
-}
-
-.mainDetails strong {
-  color: #999; 
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.mainDetails .detailValue {
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.locationDetails {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 16px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px 20px;
-  border: 1px solid #f1f1f1;
-}
-
-/* --- Media Queries --- */
+/* Media Queries */
 @media screen and (max-width: 768px) {
-  .reportTableRow {
-    padding: 20px;
-  }
-  
-  .headerInfo {
-    padding-right: 80px;
-  }
-
-  .mainDetails, .locationDetails {
-    grid-template-columns: 1fr; 
-  }
+  .headerInfo { padding-right: 75px; }
+  .reportTableRow { padding: 20px; }
 }
