@@ -4,18 +4,18 @@
 .calendarPopup {
   position: absolute;
   top: 110%;
-  
-  /* ✅ เพิ่ม 2 บรรทัดนี้เพื่อจัดกึ่งกลาง */
-  left: 50%;
-  transform: translateX(-50%);
-  /* --------------------------- */
-  
   z-index: 100;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   border-radius: 18px;
   padding: 18px;
-  min-width: 280px;
+  
+  /* ✅ Desktop Default: ให้กว้างเต็มเท่ากับปุ่มวันที่ */
+  left: 0;
+  width: 100%;
+  min-width: 280px;      /* กันไม่ให้เล็กเกินไป */
+  box-sizing: border-box; /* สำคัญ: รวม padding ในความกว้าง */
+  
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -140,8 +140,8 @@
   background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -395,10 +395,10 @@
   font-weight: 500;
 }
 
-/* ✅ (UPDATE) พื้นที่แสดงแผนที่และหน่วยงาน (แนวตั้ง 1 Column) */
+/* พื้นที่แสดงแผนที่และหน่วยงาน (แนวตั้ง 1 Column) */
 .detailLocationBlock {
   background: #f8f9fa;
-  padding: 16px;        /* Padding พอดีๆ */
+  padding: 16px;
   border-radius: 16px;
   border: 1px solid #e9ecef;
   
@@ -480,7 +480,7 @@
   margin-top: 2px;
 }
 
-/* === ✅ (NEW) Org Card Style === */
+/* === Org Card Style === */
 .orgInfoCard {
   background: #ffffff;
   border: 1px solid #eaeaea;
@@ -519,16 +519,16 @@
   text-transform: uppercase;
 }
 
-/* ใช้สไตล์เดิมของ Value แต่ปรับ Line-height */
-.infoValueText {
-  font-size: 15px;
-  font-weight: 700;
-  color: #333;
-  line-height: 1.4;
-}
-
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
   .reportTableRow { padding: 20px; gap: 12px; }
   .infoRow { grid-template-columns: 1fr; }
+
+  /* ✅ Mobile Only: ปรับปฏิทินให้อยู่ตรงกลางจอเมื่อเป็นมือถือ */
+  .calendarPopup {
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;      /* ปล่อยอิสระ */
+    min-width: 300px; /* ขนาดขั้นต่ำให้อ่านง่าย */
+  }
 }
