@@ -10,14 +10,16 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ (Desktop) กำหนดความกว้างให้พอดีกับตัวปฏิทิน ไม่ยืดตามปุ่มจนเละ */
-  left: 0;
+  /* ✅ แก้ไขตรงนี้: จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* คงค่าเดิมไว้ */
   width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
-  min-width: 300px;   /* กันไม่ให้เล็กเกินไป */
+  min-width: 300px;   /* ขนาดขั้นต่ำ */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
-
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
