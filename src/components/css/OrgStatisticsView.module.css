@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULL VERSION WITH FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FULL VERSION WITH TEXT WRAP FIX) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -152,7 +152,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS (FIXED: NO OVERLAP)
+   5. KPI CARDS (UPDATED: TEXT WRAPPING FIX)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -164,23 +164,24 @@
 
 .kpiCard {
   display: grid;
-  /* ✅ ปรับ Columns: ซ้ายยืดหดได้ (1fr) | ขวาขนาดตามเนื้อหา (auto) */
+  /* Columns: ซ้าย (ข้อความ) ยืดเต็มที่ | ขวา (ตัวเลข) ขนาดตามเนื้อหา */
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto auto;
   grid-template-areas: 
     "header value"
     "subtext value";
   
-  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  align-items: center; 
   align-content: center;
   
-  /* ✅ ลด gap แนวนอนลงเพื่อให้มีพื้นที่เหลือให้ข้อความมากขึ้น */
-  gap: 2px 12px; 
+  /* เพิ่ม gap แนวนอนเพื่อให้ตัวเลขไม่ชิดข้อความเกินไป */
+  gap: 4px 16px; 
   
   padding: 16px 20px; 
   border-radius: 16px;
   border: none;
   min-height: 110px; 
+  height: auto; /* อนุญาตให้ Card สูงขึ้นตามเนื้อหา */
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -221,16 +222,18 @@
   font-weight: 700;
   margin: 0;
   
-  /* ✅ บังคับตัดคำ (...) */
-  white-space: nowrap !important; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;     /* สำคัญ: บังคับให้เต็มพื้นที่ column ตัวเองเท่านั้น */
-  min-width: 0;    /* สำคัญ: ช่วยให้ Grid ยอมหด item นี้เมื่อพื้นที่ไม่พอ */
+  /* --- แก้ไข: อนุญาตให้ตัดบรรทัด --- */
+  white-space: normal !important; 
+  word-break: break-word;         
+  line-height: 1.4;               
+  /* ------------------------------- */
+
+  width: 100%;     
+  min-width: 0;    
   
   display: flex;
-  align-items: center;
-  align-self: end; /* วางชิดด้านล่างของ row บน */
+  align-items: center; /* หรือ flex-start หากต้องการให้ icon อยู่บนสุดเมื่อมีหลายบรรทัด */
+  align-self: end;     
 }
 
 .kpiHeader svg {
@@ -238,7 +241,7 @@
   width: 16px;
   height: 16px;
   margin-right: 6px;
-  flex-shrink: 0; /* ห้ามไอคอนหด */
+  flex-shrink: 0; 
 }
 
 /* 2. Subtext (ล่างซ้าย) */
@@ -249,24 +252,26 @@
   font-weight: 500;
   margin: 0;
   
-  /* ✅ บังคับตัดคำ (...) */
-  white-space: nowrap !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* --- แก้ไข: อนุญาตให้ตัดบรรทัด --- */
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.4;
+  /* ------------------------------- */
+
   width: 100%;     
   min-width: 0;    
   
-  align-self: start; /* วางชิดด้านบนของ row ล่าง */
+  align-self: start; 
 }
 
 /* 3. Value (ขวา) */
 .kpiValue {
   grid-area: value;
-  font-size: 32px; /* ✅ ลดขนาดลงเล็กน้อยจาก 36px เพื่อลดโอกาสทับ */
+  font-size: 32px; 
   font-weight: 800;
   line-height: 1;
   text-align: right;
-  min-width: fit-content; /* ห้ามตัวเลขหด */
+  min-width: fit-content; 
   margin-left: 0; 
   display: flex;
   align-items: center;
@@ -403,7 +408,6 @@
   padding: 20px 24px;
   border-radius: 20px;
   display: grid;
-  /* ใช้ minmax(0, 1fr) แก้ทับกัน */
   grid-template-columns: minmax(0, 1fr) auto; 
   grid-template-rows: auto auto;
   grid-template-areas: 
