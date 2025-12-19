@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"; // ✅ เพิ่ม useMemo
+import React, { useState, useEffect, useRef, useMemo } from "react"; 
 import styles from "./css/ReportTable.module.css";
 import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
 import "cally";
@@ -60,7 +60,8 @@ const DateFilter = () => {
 // ------------------------- Report Table
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null); // ✅ เพิ่มสำหรับ Popup รายตัว
+  const [selectedReport, setSelectedReport] = useState(null); // ✅ เก็บข้อมูลเรื่องที่เลือกเพื่อเปิด Popup
+  const [expandedCardId, setExpandedCardId] = useState(null); // เก็บไว้เพื่อไม่ให้ Code ส่วนอื่นรวน
   const [reports, setReports] = useState([]); // ข้อมูลดิบ (ทั้งหมด)
   const [loading, setLoading] = useState(true);
 
@@ -68,7 +69,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
   const [issueTypes, setIssueTypes] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
 
-  // --- ✅ State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
+  // --- State สำหรับเก็บ "ค่าที่ถูกเลือก" (Selected Value) ---
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
@@ -181,7 +182,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
     fetchCases();
   }, [subTab]);
 
-  // --- ✅ 4. Logic การกรองข้อมูล ---
+  // --- 4. Logic การกรองข้อมูล ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       const reportTypeName = report.issue_type_name || ""; 
@@ -245,8 +246,8 @@ const ReportTable = ({ subTab, onRowClick }) => {
                      ) : label === "ประเภท" ? (
                         <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
                           <option value="all">ทั้งหมด</option>
-                          {issueTypes.map((type, idx) => (
-                            <option key={idx} value={type.issue_type_name || type.name}>
+                          {issueTypes.map((type, index) => (
+                            <option key={index} value={type.issue_type_name || type.name}>
                               {type.issue_type_name || type.name}
                             </option>
                           ))}
@@ -254,9 +255,15 @@ const ReportTable = ({ subTab, onRowClick }) => {
                      ) : label === "สถานะ" ? (
                         <select value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
                           <option value="all">ทั้งหมด</option>
-                          {statusOptions.map((status, idx) => <option key={idx} value={status}>{status}</option>)}
+                          {statusOptions.map((status, index) => (
+                            <option key={index} value={status}>{status}</option>
+                          ))}
                         </select>
-                     ) : <select defaultValue="all"><option value="all">ทั้งหมด</option></select>}
+                     ) : (
+                        <select defaultValue="all">
+                          <option value="all">ทั้งหมด</option>
+                        </select>
+                     )}
                    </div>
                  ))}
                  {locationFilters.map((label, i) => (
@@ -291,14 +298,17 @@ const ReportTable = ({ subTab, onRowClick }) => {
             <div className={styles.reportStatusGroup}>
               <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
             </div>
-            <button className={styles.toggleDetailsButton} onClick={(e) => { e.stopPropagation(); setSelectedReport(report); }}>
+            <button 
+              className={styles.toggleDetailsButton} 
+              onClick={(e) => { e.stopPropagation(); setSelectedReport(report); }} // ✅ เปลี่ยนเป็นเปิด Popup
+            >
               อ่านเพิ่มเติม
             </button>
           </div>
         ))}
       </div>
 
-      {/* ✅ Popup สำหรับแสดงรายละเอียดรายตัว */}
+      {/* ✅ Popup สำหรับแสดงรายละเอียดเรื่องแจ้งรายตัว (Modal Detail) */}
       {selectedReport && (
         <>
           <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
