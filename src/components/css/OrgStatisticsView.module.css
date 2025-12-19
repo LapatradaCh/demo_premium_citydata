@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIXED: BIGGER CARDS & NO OVERLAP) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIX: NO WRAP & NO OVERLAP) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -152,35 +152,33 @@
 }
 
 /* =========================================
-   5. KPI CARDS (BIGGER & NO OVERLAP)
+   5. KPI CARDS (THE FIX)
    ========================================= */
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px; /* เพิ่มระยะห่างระหว่างการ์ด */
+  /* ใช้ minmax เพื่อให้การ์ดขยายได้ถ้าจอใหญ่ แต่ไม่เล็กกว่า 260px */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  gap: 24px;
   margin-bottom: 32px;
   width: 100%;
 }
 
 .kpiCard {
-  /* จัด Grid 2 คอลัมน์: ซ้าย (ข้อความ) | ขวา (ตัวเลข) */
+  /* ใช้ Grid แบบกำหนด Area ชัดเจน เพื่อล็อกตำแหน่ง */
   display: grid;
-  grid-template-columns: 1fr auto; 
-  /* Grid 2 แถว */
-  grid-template-rows: auto auto;
+  grid-template-columns: 1fr auto; /* ซ้ายยืดได้เต็มที่ | ขวาเอาเท่าขนาดตัวเลข */
+  grid-template-rows: auto auto;   /* แถวบน Header | แถวล่าง Subtext */
   grid-template-areas: 
     "header value"
     "subtext value";
   
-  align-items: center;
-  /* เพิ่ม gap ระหว่างข้อความกับตัวเลข เพื่อไม่ให้ชนกัน */
-  gap: 8px 24px; 
+  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+  gap: 4px 20px;       /* ระยะห่างแนวนอน 20px (ห่างพอสมควร) */
   
-  /* ✅ เพิ่ม Padding และความสูง */
-  padding: 28px 32px; 
-  border-radius: 24px;
+  padding: 24px 28px;
+  border-radius: 20px;
   border: none;
-  min-height: 140px; /* ✅ ขยายความสูงกล่อง */
+  min-height: 120px; /* ความสูงกำลังดี */
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -214,41 +212,64 @@
   color: #ffffff !important;
 }
 
-/* 1. Header */
+/* --- [FIXED TEXT HANDLING] --- */
+
+/* 1. Header: บรรทัดบนซ้าย */
 .kpiHeader {
   grid-area: header;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px; /* เพิ่มขนาดตัวอักษรนิดหน่อย */
+  display: block; /* เปลี่ยนเป็น Block เพื่อการจัดการ text ที่ดีกว่า */
+  font-size: 16px;
   font-weight: 700;
   opacity: 1;
   margin: 0;
-  white-space: nowrap; 
+  
+  /* ✅ บังคับบรรทัดเดียว + ห้ามตัดคำ + ตัดจบด้วย ... ถ้าล้นจริงๆ */
+  white-space: nowrap !important; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* จัดตำแหน่ง */
   align-self: end;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
-/* 2. Subtext */
+/* ซ่อนไอคอนใน Header ชั่วคราวถ้ามันกินที่ (หรือปรับให้เล็กลง) */
+.kpiHeader svg {
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 6px;
+  width: 18px;
+  height: 18px;
+}
+
+/* 2. Subtext: บรรทัดล่างซ้าย */
 .kpiSubtext {
   grid-area: subtext;
   font-size: 13px;
   opacity: 0.9;
   font-weight: 500;
   margin: 0;
-  white-space: nowrap;
+  
+  /* ✅ บังคับบรรทัดเดียว + ห้ามตัดคำ */
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
   align-self: start;
 }
 
-/* 3. Value */
+/* 3. Value: ขวา (ตัวเลข) */
 .kpiValue {
   grid-area: value;
-  font-size: 48px; /* ตัวใหญ่ชัดเจน */
+  font-size: 42px; /* ขนาดกำลังดี ไม่ใหญ่จนเบียด */
   font-weight: 800;
   line-height: 1;
   text-align: right;
   opacity: 1;
-  padding-left: 16px; /* ดันห่างจาก Text */
+  
+  /* ✅ ป้องกันตัวเลขหดตัว */
+  min-width: fit-content; 
+  margin-left: 10px;
 }
 
 /* =========================================
@@ -257,13 +278,13 @@
 .headerControls {
   margin-left: auto;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   font-size: 14px;
   align-items: center;
 }
 
 .controlBtn {
-  padding: 8px 24px;
+  padding: 8px 20px;
   border-radius: 50px;
   border: 1px solid #E5E7EB;
   cursor: pointer;
@@ -365,7 +386,7 @@
 }
 
 /* =========================================
-   7. SATISFACTION (Tab 2)
+   7. SATISFACTION (Tab 2 - SAME FIX)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -375,24 +396,21 @@
 }
 
 .highlightCard {
-  padding: 28px 32px;
+  padding: 24px 32px;
   border-radius: 24px;
+  /* Grid Layout เดียวกับ KPI */
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto; 
+  grid-template-columns: 1fr auto; 
+  grid-template-rows: auto auto;
   grid-template-areas: 
     "title score"
     "name score";
   align-items: center;
-  gap: 4px 24px;
+  gap: 4px 20px;
   
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  min-height: 140px; /* ขยายความสูง */
-  transition: transform 0.2s ease;
+  min-height: 130px;
   overflow: hidden;
-}
-
-.highlightCard:hover {
-  transform: translateY(-2px);
 }
 
 .highlightCardGreen {
@@ -410,31 +428,36 @@
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   opacity: 0.9;
   color: #fff;
-  white-space: nowrap;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: end;
 }
 
 .highlightName {
   grid-area: name;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   margin: 0;
-  white-space: nowrap;
+  white-space: nowrap !important;
   overflow: hidden;
   text-overflow: ellipsis;
   color: #fff;
+  align-self: start;
 }
 
 .highlightScore {
   grid-area: score;
-  font-size: 56px;
+  font-size: 52px;
   font-weight: 800;
   line-height: 1;
   color: #fff;
   text-align: right;
   opacity: 1;
+  min-width: fit-content;
 }
 
 .highlightScoreMax {
@@ -687,9 +710,8 @@
   .orgStatsSidebarDesktop {
     width: 220px;
   }
-  /* Tablet: 2 Columns */
   .kpiGrid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -767,12 +789,12 @@
   
   /* Mobile: 1 Column */
   .kpiGrid {
-    grid-template-columns: repeat(1, 1fr) !important;
+    grid-template-columns: repeat(1, 1fr);
     gap: 16px;
   }
   .kpiCard {
-    min-height: 120px;
-    padding: 24px;
+    min-height: 100px;
+    padding: 20px;
   }
   .kpiValue {
     font-size: 36px;
