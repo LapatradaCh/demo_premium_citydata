@@ -12,7 +12,7 @@ import {
 const TARGET_SLA_DAYS = 3.0; 
 
 const COLORS = {
-  pending: "#FF4D4F",    
+  pending: "#FF4D4F",     
   inProgress: "#FFC107", 
   completed: "#4CAF50",  
   forwarded: "#2196F3",  
@@ -38,7 +38,7 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD ---
+// --- TAB 1: WORKLOAD (ปรับ KPI เป็นแนวนอน) ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -72,18 +72,19 @@ const WorkloadView = ({ data }) => {
       </div>
 
       <div className={styles.kpiGrid}>
+        {/* ✅ ปรับโครงสร้างให้เข้ากับ CSS Grid แนวนอน */}
         <div className={`${styles.kpiCard} ${styles.kpiCardSuccess}`}>
-            <div className={styles.kpiHeader}><CheckCircle size={16} /> อัตราความสำเร็จ</div>
+            <div className={styles.kpiHeader}><CheckCircle size={18} /> อัตราความสำเร็จ</div>
             <div className={styles.kpiValue}>{globalStats.successRate.toFixed(1)}%</div>
             <div className={styles.kpiSubtext}>จากเรื่องร้องเรียนทั้งหมด</div>
         </div>
         <div className={`${styles.kpiCard} ${styles.kpiCardNormal}`}>
-            <div className={styles.kpiHeader}><PieChart size={16} /> เรื่องทั้งหมด</div>
+            <div className={styles.kpiHeader}><PieChart size={18} /> เรื่องทั้งหมด</div>
             <div className={styles.kpiValue}>{globalStats.total.toLocaleString()}</div>
             <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
         <div className={`${styles.kpiCard} ${styles.kpiCardCritical}`}>
-            <div className={styles.kpiHeader}><AlertCircle size={16} /> งานค้าง (Critical)</div>
+            <div className={styles.kpiHeader}><AlertCircle size={18} /> งานค้าง (Critical)</div>
             <div className={styles.kpiValue}>{globalStats.pending.toLocaleString()}</div>
             <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
@@ -167,7 +168,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION ---
+// --- TAB 2: SATISFACTION (ปรับให้ตรงกับดีไซน์รูปที่ 2, 6, 7) ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -180,7 +181,9 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
+       {/* Highlight Cards Grid */}
        <div className={styles.satisfactionHighlightGrid}>
+          {/* Best Org (Green) */}
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
              <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
              <div className={styles.highlightName}>{bestOrg?.name || '-'}</div>
@@ -189,6 +192,7 @@ const SatisfactionView = ({ data }) => {
                 <span className={styles.highlightScoreMax}>/ 5.0</span>
              </div>
           </div>
+          {/* Worst Org (Red) */}
           <div className={`${styles.highlightCard} ${styles.highlightCardRed}`}>
              <div className={styles.highlightTitle}>ต้องปรับปรุง</div>
              <div className={styles.highlightName}>{worstOrg?.name || '-'}</div>
@@ -199,27 +203,36 @@ const SatisfactionView = ({ data }) => {
           </div>
        </div>
 
+       {/* Ranking List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
                <div className={styles.reportCardHeader}>
                   <div className={styles.reportCardTitleGroup}>
-                     <span className={styles.reportCardRank} style={{ color: index < 3 ? '#FFC107' : '#999' }}>#{index + 1}</span>
-                     <div><div className={styles.reportCardName}>{item.name}</div></div>
+                     {/* ✅ Badge อันดับสีดำ ตัวหนังสือเหลือง */}
+                     <div className={styles.reportCardRank} style={{ 
+                         background: '#1F2937', 
+                         color: '#F59E0B',
+                         boxShadow: '0 4px 10px rgba(0,0,0,0.15)' 
+                     }}>
+                        #{index + 1}
+                     </div>
+                     <div className={styles.reportCardName}>{item.name}</div>
                   </div>
+                  
+                  {/* ✅ คะแนนสีเหลือง ขวาสุด */}
                   <div className={styles.reportCardScoreGroup}>
-                     <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
-                     <div className={styles.reportCardScoreStars} style={{ display: 'none' }}> 
-                        {[...Array(5)].map((_, i) => (
-                           <Star key={i} size={14} fill={i < Math.round(item.satisfaction) ? "#FFC107" : "#E0E0E0"} stroke="none" style={{marginRight:2}} />
-                        ))}
+                     <div className={styles.reportCardScoreText} style={{ color: '#F59E0B' }}>
+                        {item.satisfaction.toFixed(2)}
                      </div>
                   </div>
                </div>
+
+               {/* Progress Bar */}
                <div className={styles.reportCardProgressBg}>
                   <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
-                      background: item.satisfaction >= 4 ? '#4CAF50' : item.satisfaction >= 3 ? '#FFC107' : '#FF4D4F' 
+                      background: '#10B981' // สีเขียวตามรูป
                   }}></div>
                </div>
             </div>
@@ -239,7 +252,6 @@ const EfficiencyView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
        
-       {/* 1. Header Info (Text Box) */}
        <div className={styles.slaHeaderBox}>
           <div className={styles.slaTargetInfo}>
              <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
@@ -253,7 +265,6 @@ const EfficiencyView = ({ data }) => {
           </div>
        </div>
 
-       {/* 2. Graph Chart (Moved to Bottom) */}
        <div className={styles.mockHorizontalBarChart}>
           <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
@@ -263,17 +274,17 @@ const EfficiencyView = ({ data }) => {
              const isOver = item.avgTime > TARGET_SLA_DAYS;
              return (
                <div key={index} className={styles.mockHBarItem}>
-                  <span className={styles.mockHBarLabel} style={{ color: isOver ? '#333' : '#333' }}>{item.name}</span>
+                  <span className={styles.mockHBarLabel} style={{ color: '#333' }}>{item.name}</span>
                   <div className={styles.mockHBar}>
                      <div 
                         className={styles.mockHBarFill} 
                         style={{ 
                            width: `${(item.avgTime / maxVal) * 100}%`,
-                           background: isOver ? '#FF4D4F' : '#4CAF50'
+                           background: isOver ? '#FF4D4F' : '#10B981' // แดงถ้าเกิน, เขียวถ้าผ่าน
                         }}
                      ></div>
                   </div>
-                  <span className={styles.mockHBarValue} style={{ color: isOver ? '#FF4D4F' : '#000' }}>
+                  <span className={styles.mockHBarValue} style={{ color: isOver ? '#FF4D4F' : '#1F2937' }}>
                      {item.avgTime.toFixed(1)} วัน
                   </span>
                </div>
@@ -367,7 +378,7 @@ export default function OrganizationStatisticsView() {
   const [activeTab, setActiveTab] = useState('workload');
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+   
   const [orgData, setOrgData] = useState([]);
   const [problemData, setProblemData] = useState([]);
 
@@ -436,7 +447,7 @@ export default function OrganizationStatisticsView() {
 
   return (
     <div className={styles.orgStatsContainer}>
-      
+       
       {/* Sidebar Desktop */}
       <div className={styles.orgStatsSidebarDesktop}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
