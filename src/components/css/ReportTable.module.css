@@ -10,11 +10,12 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ (Desktop) กำหนดความกว้างให้พอดีกับตัวปฏิทิน ไม่ยืดตามปุ่มจนเละ */
+  /* ✅ จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
   left: 50%;
   transform: translateX(-50%);
-  width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
-  min-width: 300px;   /* กันไม่ให้เล็กเกินไป */
+  
+  width: max-content; /* กว้างเท่าเนื้อหาปฏิทิน */
+  min-width: 300px;   /* ขนาดขั้นต่ำ */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -111,9 +112,9 @@
   background: #ffffff;
   border-radius: 28px;
   
-  /* ✅ (Desktop) ปรับให้กว้างขึ้น ดูสมดุลกับจอคอม */
+  /* ✅ (Desktop) กว้างขึ้นเพื่อให้ใส่ 2 คอลัมน์ได้สวย */
   width: 90%;
-  max-width: 550px; /* เพิ่มจาก 360px เป็น 550px หรือ 600px */
+  max-width: 550px; 
   
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -137,13 +138,13 @@
   font-weight: 700;
 }
 
-/* ปุ่มปิด Header */
+/* ✅ ปุ่มปิด Header (ใหญ่ขึ้น) */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 32px;  
+  height: 32px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,8 +152,9 @@
   transition: all 0.2s ease;
 }
 
+/* ✅ ไอคอนกากบาท (ใหญ่ขึ้น) */
 .filterModalClose svg {
-  font-size: 16px !important;
+  font-size: 18px !important; 
   fill: #ffffff !important;
 }
 
@@ -164,21 +166,24 @@
   max-height: 70vh;
 }
 
+/* ✅ (UPDATE) จัด Layout แบบ Grid/Flex */
 .reportFilters {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-wrap: wrap; /* ให้ตกบรรทัดได้ */
+  gap: 16px;       /* ระยะห่างระหว่างกล่อง */
   overflow-y: auto;
   max-height: 50vh;
+  padding: 4px;    /* กันเงาแหว่ง */
 }
 
 /* === Filter Group === */
 .filterGroup {
-  flex: 1 1 auto;
+  /* Default ให้ยืดหยุ่น */
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
+  min-width: 140px; /* กันเล็กเกินไป */
 }
 
 .filterGroup label {
@@ -197,28 +202,20 @@
   background-color: #fafafa;
 }
 
-/* ค้นหาคลาส .filterApplyButton แล้วแก้โค้ดข้างในใหม่ตามนี้ครับ */
-
+/* ✅ (UPDATE) ปุ่มสีเขียว จัดกึ่งกลาง */
 .filterApplyButton {
-  /* --- จัดกึ่งกลาง --- */
-  align-self: center;  /* สั่งให้ตัวเองอยู่ตรงกลาง (เพราะพ่อเป็น Flex Column) */
-  width: auto;         /* เลิกใช้ความกว้างเต็ม 100% */
-  min-width: 180px;    /* กำหนดความกว้างขั้นต่ำให้ปุ่มดูสวย ไม่สั้นเกินไป */
-  
-  /* --- สีและรูปร่าง --- */
-  background-color: #28a745; /* ✅ สีเขียวตามที่ขอ */
+  align-self: center;
+  width: auto;
+  min-width: 180px;
+  background-color: #28a745; /* สีเขียว */
   color: #fff;
   padding: 12px 32px;
-  border-radius: 28px; /* ปรับให้มนขึ้นเหมือนแคปซูล */
+  border-radius: 28px;
   border: none;
-  
-  /* --- การจัดวาง --- */
   margin-top: 16px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  
-  /* (Optional) เพิ่มเงาสีเขียวจางๆ ให้ดูมีมิติ */
   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
   transition: all 0.2s ease;
 }
@@ -226,7 +223,7 @@
 .filterApplyButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  background-color: #218838; /* เขียวเข้มขึ้นนิดหน่อยตอน Hover */
+  background-color: #218838;
 }
 
 /* --- Report Table Grid --- */
@@ -546,16 +543,8 @@
   .reportTableRow { padding: 20px; gap: 12px; }
   .infoRow { grid-template-columns: 1fr; }
 
-  /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
+  /* Mobile: Modal เล็กลง */
   .filterModal {
-    max-width: 360px; /* ลดขนาดกลับมาเท่าเดิมสำหรับมือถือ */
-  }
-
-  /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
-  .calendarPopup {
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;      
-    min-width: 300px;
+    max-width: 360px;
   }
 }
