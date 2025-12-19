@@ -38,7 +38,7 @@ const PROBLEM_COLORS = [
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD ---
+// --- TAB 1: WORKLOAD (ปรับ KPI เป็นแนวนอน) ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -71,30 +71,22 @@ const WorkloadView = ({ data }) => {
         </div>
       </div>
 
-      {/* ✅ แก้ไขโครงสร้าง HTML ใหม่: มี div ครอบข้อความซ้าย */}
       <div className={styles.kpiGrid}>
+        {/* ✅ ปรับโครงสร้างให้เข้ากับ CSS Grid แนวนอน */}
         <div className={`${styles.kpiCard} ${styles.kpiCardSuccess}`}>
-            <div className={styles.kpiContentLeft}>
-                <div className={styles.kpiHeader}><CheckCircle size={18} /> อัตราความสำเร็จ</div>
-                <div className={styles.kpiSubtext}>จากเรื่องร้องเรียนทั้งหมด</div>
-            </div>
+            <div className={styles.kpiHeader}><CheckCircle size={18} /> อัตราความสำเร็จ</div>
             <div className={styles.kpiValue}>{globalStats.successRate.toFixed(1)}%</div>
+            <div className={styles.kpiSubtext}>จากเรื่องร้องเรียนทั้งหมด</div>
         </div>
-        
         <div className={`${styles.kpiCard} ${styles.kpiCardNormal}`}>
-            <div className={styles.kpiContentLeft}>
-                <div className={styles.kpiHeader}><PieChart size={18} /> เรื่องทั้งหมด</div>
-                <div className={styles.kpiSubtext}>เรื่อง</div>
-            </div>
+            <div className={styles.kpiHeader}><PieChart size={18} /> เรื่องทั้งหมด</div>
             <div className={styles.kpiValue}>{globalStats.total.toLocaleString()}</div>
+            <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
-        
         <div className={`${styles.kpiCard} ${styles.kpiCardCritical}`}>
-            <div className={styles.kpiContentLeft}>
-                <div className={styles.kpiHeader}><AlertCircle size={18} /> งานค้าง (Critical)</div>
-                <div className={styles.kpiSubtext}>เรื่อง</div>
-            </div>
+            <div className={styles.kpiHeader}><AlertCircle size={18} /> งานค้าง (Critical)</div>
             <div className={styles.kpiValue}>{globalStats.pending.toLocaleString()}</div>
+            <div className={styles.kpiSubtext}>เรื่อง</div>
         </div>
       </div>
 
@@ -176,7 +168,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION ---
+// --- TAB 2: SATISFACTION (ปรับให้ตรงกับดีไซน์รูปที่ 2, 6, 7) ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -189,24 +181,21 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
+       {/* Highlight Cards Grid */}
        <div className={styles.satisfactionHighlightGrid}>
-          {/* ✅ แก้ไขโครงสร้าง HTML ใหม่: มี div ครอบข้อความซ้าย */}
+          {/* Best Org (Green) */}
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
-             <div className={styles.kpiContentLeft}>
-                 <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
-                 <div className={styles.highlightName}>{bestOrg?.name || '-'}</div>
-             </div>
+             <div className={styles.highlightTitle}>คะแนนสูงสุด</div>
+             <div className={styles.highlightName}>{bestOrg?.name || '-'}</div>
              <div className={styles.highlightScore}>
                 {bestOrg?.satisfaction.toFixed(1) || '0.0'} 
                 <span className={styles.highlightScoreMax}>/ 5.0</span>
              </div>
           </div>
-
+          {/* Worst Org (Red) */}
           <div className={`${styles.highlightCard} ${styles.highlightCardRed}`}>
-             <div className={styles.kpiContentLeft}>
-                 <div className={styles.highlightTitle}>ต้องปรับปรุง</div>
-                 <div className={styles.highlightName}>{worstOrg?.name || '-'}</div>
-             </div>
+             <div className={styles.highlightTitle}>ต้องปรับปรุง</div>
+             <div className={styles.highlightName}>{worstOrg?.name || '-'}</div>
              <div className={styles.highlightScore}>
                 {worstOrg?.satisfaction.toFixed(1) || '0.0'}
                 <span className={styles.highlightScoreMax}>/ 5.0</span>
@@ -214,22 +203,36 @@ const SatisfactionView = ({ data }) => {
           </div>
        </div>
 
+       {/* Ranking List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
                <div className={styles.reportCardHeader}>
                   <div className={styles.reportCardTitleGroup}>
-                     <span className={styles.reportCardRank}>#{index + 1}</span>
+                     {/* ✅ Badge อันดับสีดำ ตัวหนังสือเหลือง */}
+                     <div className={styles.reportCardRank} style={{ 
+                         background: '#1F2937', 
+                         color: '#F59E0B',
+                         boxShadow: '0 4px 10px rgba(0,0,0,0.15)' 
+                     }}>
+                        #{index + 1}
+                     </div>
                      <div className={styles.reportCardName}>{item.name}</div>
                   </div>
+                  
+                  {/* ✅ คะแนนสีเหลือง ขวาสุด */}
                   <div className={styles.reportCardScoreGroup}>
-                     <div className={styles.reportCardScoreText}>{item.satisfaction.toFixed(2)}</div>
+                     <div className={styles.reportCardScoreText} style={{ color: '#F59E0B' }}>
+                        {item.satisfaction.toFixed(2)}
+                     </div>
                   </div>
                </div>
+
+               {/* Progress Bar */}
                <div className={styles.reportCardProgressBg}>
                   <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
-                      background: '#F59E0B'
+                      background: '#10B981' // สีเขียวตามรูป
                   }}></div>
                </div>
             </div>
@@ -263,7 +266,7 @@ const EfficiencyView = ({ data }) => {
        </div>
 
        <div className={styles.mockHorizontalBarChart}>
-          <div className={styles.slaLineContainer} style={{ left: `calc(140px + 16px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 20)}% - 40px)` }}>
+          <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
              <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
           </div>
 
@@ -277,7 +280,7 @@ const EfficiencyView = ({ data }) => {
                         className={styles.mockHBarFill} 
                         style={{ 
                            width: `${(item.avgTime / maxVal) * 100}%`,
-                           background: isOver ? '#FF4D4F' : '#10B981' 
+                           background: isOver ? '#FF4D4F' : '#10B981' // แดงถ้าเกิน, เขียวถ้าผ่าน
                         }}
                      ></div>
                   </div>
@@ -368,7 +371,7 @@ const ProblemTypeView = ({ data }) => {
 };
 
 // ==========================================
-// 3. MAIN COMPONENT
+// 3. MAIN COMPONENT (CONNECTED)
 // ==========================================
 
 export default function OrganizationStatisticsView() {
@@ -379,7 +382,7 @@ export default function OrganizationStatisticsView() {
   const [orgData, setOrgData] = useState([]);
   const [problemData, setProblemData] = useState([]);
 
-  // Mock ID
+  // *** ID องค์กรตามจริง ***
   const local = localStorage.getItem("lastSelectedOrg");
   const org = local ? JSON.parse(local) : { id: 1 }; 
   const USER_ORG_ID = org.id;
@@ -444,6 +447,8 @@ export default function OrganizationStatisticsView() {
 
   return (
     <div className={styles.orgStatsContainer}>
+       
+      {/* Sidebar Desktop */}
       <div className={styles.orgStatsSidebarDesktop}>
         <h3 className={styles.orgStatsMenuTitle}>สถิติองค์กร</h3>
         <nav className={styles.orgStatsMenuNav}>
@@ -460,6 +465,7 @@ export default function OrganizationStatisticsView() {
         </nav>
       </div>
 
+      {/* Mobile Dropdown */}
       <div className={styles.orgStatsMobileDropdown}>
         <div className={styles.mobileDropdownLabel}>เลือกหัวข้อสถิติ</div>
         <button 
@@ -495,6 +501,7 @@ export default function OrganizationStatisticsView() {
         )}
       </div>
 
+      {/* Main Content */}
       <div className={styles.orgStatsContent}>
         <div className={styles.orgGraphDashboard}>
            {renderContent()}
