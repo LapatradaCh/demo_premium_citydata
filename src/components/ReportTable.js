@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"; 
 import styles from "./css/ReportTable.module.css";
-import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
+// ✅ เพิ่ม FaMapMarkedAlt เข้ามา
+import { FaSearch, FaFilter, FaTimes, FaMapMarkedAlt } from "react-icons/fa";
 import "cally";
 
 // ------------------------- Helper
@@ -292,7 +293,6 @@ const ReportTable = ({ subTab, onRowClick }) => {
         ))}
       </div>
 
-      {/* ✅ ปรับปรุง Modal รายละเอียด: จัด Layout ให้อ่านง่ายที่สุด และลบปุ่มปิดด้านล่าง */}
       {selectedReport && (
         <>
           <div className={styles.filterModalBackdrop} onClick={() => setSelectedReport(null)}></div>
@@ -306,7 +306,7 @@ const ReportTable = ({ subTab, onRowClick }) => {
             <div className={styles.filterModalContent} style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '32px' }}>
               
               <div className={styles.detailHeaderBlock}>
-                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailImage} />
+                <img src={selectedReport.cover_image_url || "https://via.placeholder.com/100"} className={styles.detailImage} alt="Case Cover" />
                 <div className={styles.detailTitleInfo}>
                   <h3 className={styles.detailCaseCode}>#{selectedReport.case_code}</h3>
                   <p className={styles.detailMainTitle}>{selectedReport.title}</p>
@@ -333,17 +333,36 @@ const ReportTable = ({ subTab, onRowClick }) => {
                 </div>
               </div>
 
+              {/* ✅ ส่วนที่ปรับแก้: แผนที่กดได้ */}
               <div className={styles.detailLocationBlock}>
-                <div className={styles.infoCol}>
-                  <label>พิกัด</label>
-                  <span className={styles.infoValueText}>{selectedReport.latitude}, {selectedReport.longitude}</span>
-                </div>
-                <div className={styles.infoCol}>
+                
+                {/* 1. การ์ดพิกัด (ลิงก์ไป Google Maps) */}
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${selectedReport.latitude},${selectedReport.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mapLocationCard}
+                >
+                  <div className={styles.mapIconBox}>
+                    <FaMapMarkedAlt />
+                  </div>
+                  <div className={styles.mapInfoText}>
+                    <label>พิกัดจุดเกิดเหตุ</label>
+                    <span className={styles.coordsText}>
+                      {selectedReport.latitude}, {selectedReport.longitude}
+                    </span>
+                    <span className={styles.clickToView}>กดเพื่อดูบน Google Maps ↗</span>
+                  </div>
+                </a>
+
+                {/* 2. ข้อมูลหน่วยงาน */}
+                <div className={styles.orgInfoCard}>
                   <label>หน่วยงานรับผิดชอบ</label>
                   <span className={styles.infoValueText}>
                     {selectedReport.organizations?.map(org => org.responsible_unit).join(", ") || "-"}
                   </span>
                 </div>
+
               </div>
             </div>
           </div>
