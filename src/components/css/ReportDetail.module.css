@@ -4,10 +4,8 @@
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
-  /* ✅ แก้ไข: ใช้ max-width เพื่อให้ยืดหยุ่นในจอเล็ก แต่ไม่เกิน 1200px ในจอใหญ่ */
-  width: 1200px !important;      /* กว้าง 1200px เสมอ */
-  min-width: 1200px !important;  /* ห้ามหดต่ำกว่า 1200px */
-  
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -39,7 +37,7 @@
   border-color: #CBD5E1;
 }
 
-/* Grid Layout (ค่าเริ่มต้นสำหรับ Desktop) */
+/* Grid Layout */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -362,25 +360,11 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-/* ========================================= */
-/* 6. RESPONSIVE / MEDIA QUERIES */
-/* ส่วนนี้จะทำให้ CSS "แตกแถว" ลงมาเมื่อจอเล็ก */
-/* ========================================= */
-
-/* สำหรับ Tablet หรือหน้าจอเล็กกว่า 1024px */
-@media (max-width: 1024px) {
-  .container {
-    padding: 24px 16px;
-  }
-
-  .topSection, .middleSection {
-    /* เปลี่ยนจาก Grid 2 คอลัมน์ (ซ้าย-ขวา) เป็น 1 คอลัมน์ (บน-ล่าง) */
-    grid-template-columns: 1fr;
-  }
-  
-  .imageCard {
-    min-height: 250px;
-  }
+@media (max-width: 768px) {
+  .topSection, .middleSection { grid-template-columns: 1fr; }
+  .metaGrid { grid-template-columns: 1fr; }
+  .imageCard { min-height: 250px; }
+  .timelineRow { grid-template-columns: 40px 1fr; }
+  .timeLeft { display: none; }
+  .mobileHeader { display: block; margin-bottom: 4px; }
 }
-
-
