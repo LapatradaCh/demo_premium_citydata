@@ -1,6 +1,7 @@
-/* --- css/OrgStatisticsView.module.css (FINAL VERSION - NO SPACES) --- */
+/* --- css/OrgStatisticsView.module.css (FIXED MOBILE RESPONSE) --- */
+
 /* =========================================
-   1. GLOBAL & LAYOUT
+   1. GLOBAL & LAYOUT (เหมือนเดิม)
    ========================================= */
 .orgStatsContainer {
   display: flex;
@@ -371,8 +372,9 @@
 .highlightCard {
   padding: 20px 24px;
   border-radius: 16px;
+  /* Grid ซ้าย-ขวา */
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto; 
   grid-template-rows: auto auto;
   grid-template-areas: 
     "title score"
@@ -435,6 +437,7 @@
   opacity: 0.8;
 }
 
+/* --- Report Card List --- */
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -508,7 +511,7 @@
 }
 
 /* =========================================
-   9. SLA & DONUT (GLOBAL STYLES)
+   9. SLA & DONUT
    ========================================= */
 .slaHeaderBox {
   background-color: #f0f9ff !important;
@@ -689,6 +692,7 @@
 }
 
 @media screen and (max-width: 768px) {
+  /* 1. Layout Reset */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -705,6 +709,7 @@
     display: none !important;
   }
 
+  /* 2. Mobile Menu */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -833,6 +838,7 @@
     align-items: flex-start;
   }
 
+  /* --- FIX 1: KPI Grid on Mobile --- */
   .kpiGrid {
     padding: 0 20px;
     gap: 12px;
@@ -845,9 +851,27 @@
     grid-column: span 2;
   }
 
+  /* --- FIX 2: Satisfaction Grid (Green/Red Cards) --- */
+  /* บังคับให้เรียงลงเป็น 1 คอลัมน์ ไม่บีบกัน */
+  .satisfactionHighlightGrid { 
+    padding: 0 20px;
+    grid-template-columns: 1fr !important; /* Force 1 Column */
+  }
+
+  /* --- FIX 3: Satisfaction Card Layout --- */
+  /* ขยายตัวเลขให้เต็มพื้นที่ ไม่ต้องเบียด */
+  .highlightCard {
+    grid-template-columns: 1fr auto !important; /* ยังคงซ้ายขวา แต่พื้นที่กว้างขึ้นเพราะ 1 col */
+    gap: 8px;
+  }
+  
+  /* ลดขนาด Font ตัวเลขบนมือถือเล็กน้อยถ้าจำเป็น */
+  .highlightScore {
+    font-size: 36px; 
+  }
+
   .orgStatsContent { gap: 0 !important; }
   .orgGraphDashboard { gap: 0 !important; }
-  .satisfactionHighlightGrid { padding: 0 20px; }
   .reportCardList { padding: 0 20px; }
 
   .slaHeaderBox, .donutHeaderBox {
