@@ -4,8 +4,10 @@
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
-  width: 100%;
-  max-width: 1200px;
+  /* แก้ไข: บังคับความกว้างตายตัวเพื่อให้ไม่ Responsive */
+  width: 1200px;
+  min-width: 1200px;
+  
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -360,11 +362,6 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-@media (max-width: 768px) {
-  .topSection, .middleSection { grid-template-columns: 1fr; }
-  .metaGrid { grid-template-columns: 1fr; }
-  .imageCard { min-height: 250px; }
-  .timelineRow { grid-template-columns: 40px 1fr; }
-  .timeLeft { display: none; }
-  .mobileHeader { display: block; margin-bottom: 4px; }
-}
+/* REMOVED: Media Query for mobile devices 
+   (ลบส่วน @media (max-width: 768px) ออก เพื่อให้หน้าเว็บคงรูปแบบ desktop เสมอ) 
+*/
