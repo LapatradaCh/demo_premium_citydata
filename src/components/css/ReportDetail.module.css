@@ -383,43 +383,4 @@
   }
 }
 
-/* สำหรับ Mobile หรือหน้าจอเล็กกว่า 768px */
-@media (max-width: 768px) {
-  .title {
-    font-size: 24px;
-    word-wrap: break-word;
-  }
 
-  .statusBadge {
-    margin-left: 0;
-    margin-top: 8px;
-  }
-
-  /* รายละเอียด Meta Info ให้เรียงลงมา */
-  .metaGrid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  /* ปุ่ม Action ให้เรียงลงมาเป็นแนวตั้ง */
-  .actionRow {
-    flex-direction: column;
-  }
-
-  .btnSecondary, .btnPrimary {
-    width: 100%;
-  }
-
-  /* ปรับ Timeline ให้พื้นที่ด้านซ้ายเล็กลง เพื่อให้เนื้อหาไม่อึดอัด */
-  .timelineRow {
-    grid-template-columns: 80px 30px 1fr;
-  }
-  
-  .timeLeft {
-    padding-right: 8px;
-  }
-  
-  .statusTitle {
-    font-size: 13px;
-  }
-}
