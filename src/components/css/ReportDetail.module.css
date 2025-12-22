@@ -5,8 +5,8 @@
 /* ========================================= */
 .container {
   /* ✅ แก้ไข: ใช้ max-width เพื่อให้ยืดหยุ่นในจอเล็ก แต่ไม่เกิน 1200px ในจอใหญ่ */
-  width: 100%;
-  max-width: 1200px;
+  width: 1200px !important;      /* กว้าง 1200px เสมอ */
+  min-width: 1200px !important;  /* ห้ามหดต่ำกว่า 1200px */
   
   margin: 0 auto;
   display: flex;
