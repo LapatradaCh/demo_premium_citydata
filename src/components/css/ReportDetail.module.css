@@ -4,9 +4,9 @@
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
-  /* แก้ไข: บังคับความกว้างตายตัวเพื่อให้ไม่ Responsive */
-  width: 1200px;
-  min-width: 1200px;
+  /* ✅ แก้ไข: เปลี่ยนจาก Fixed Width เป็น Max-Width เพื่อให้ยืดหยุ่น */
+  width: 100%;
+  max-width: 1200px;
   
   margin: 0 auto;
   display: flex;
@@ -39,7 +39,7 @@
   border-color: #CBD5E1;
 }
 
-/* Grid Layout */
+/* Grid Layout (ค่าเริ่มต้นสำหรับ Desktop) */
 .topSection, .middleSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -362,6 +362,58 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-/* REMOVED: Media Query for mobile devices 
-   (ลบส่วน @media (max-width: 768px) ออก เพื่อให้หน้าเว็บคงรูปแบบ desktop เสมอ) 
-*/
+/* ========================================= */
+/* 6. RESPONSIVE / MEDIA QUERIES (เพิ่มใหม่) */
+/* ========================================= */
+
+/* สำหรับ Tablet หรือหน้าจอเล็กกว่า 1024px */
+@media (max-width: 1024px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .topSection, .middleSection {
+    /* เปลี่ยนจากซ้าย-ขวา เป็นเรียงลงมาแนวตั้ง */
+    grid-template-columns: 1fr;
+  }
+}
+
+/* สำหรับ Mobile หรือหน้าจอเล็กกว่า 768px */
+@media (max-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .statusBadge {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  /* รายละเอียด Meta Info ให้เรียงลงมา */
+  .metaGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* ปุ่ม Action ให้เรียงลงมา */
+  .actionRow {
+    flex-direction: column;
+  }
+
+  .btnSecondary, .btnPrimary {
+    width: 100%;
+  }
+
+  /* Timeline */
+  .timelineRow {
+    grid-template-columns: 80px 30px 1fr; /* ปรับขนาดคอลัมน์เวลาให้เล็กลง */
+  }
+  
+  .timeLeft {
+    padding-right: 8px;
+  }
+  
+  .statusTitle {
+    font-size: 13px;
+  }
+}
