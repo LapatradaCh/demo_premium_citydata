@@ -4,7 +4,7 @@
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
-  /* ✅ แก้ไข: เปลี่ยนจาก Fixed Width เป็น Max-Width เพื่อให้ยืดหยุ่น */
+  /* ✅ แก้ไข: ใช้ max-width เพื่อให้ยืดหยุ่นในจอเล็ก แต่ไม่เกิน 1200px ในจอใหญ่ */
   width: 100%;
   max-width: 1200px;
   
@@ -363,7 +363,8 @@
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 /* ========================================= */
-/* 6. RESPONSIVE / MEDIA QUERIES (เพิ่มใหม่) */
+/* 6. RESPONSIVE / MEDIA QUERIES */
+/* ส่วนนี้จะทำให้ CSS "แตกแถว" ลงมาเมื่อจอเล็ก */
 /* ========================================= */
 
 /* สำหรับ Tablet หรือหน้าจอเล็กกว่า 1024px */
@@ -373,8 +374,12 @@
   }
 
   .topSection, .middleSection {
-    /* เปลี่ยนจากซ้าย-ขวา เป็นเรียงลงมาแนวตั้ง */
+    /* เปลี่ยนจาก Grid 2 คอลัมน์ (ซ้าย-ขวา) เป็น 1 คอลัมน์ (บน-ล่าง) */
     grid-template-columns: 1fr;
+  }
+  
+  .imageCard {
+    min-height: 250px;
   }
 }
 
@@ -382,6 +387,7 @@
 @media (max-width: 768px) {
   .title {
     font-size: 24px;
+    word-wrap: break-word;
   }
 
   .statusBadge {
@@ -395,7 +401,7 @@
     gap: 12px;
   }
 
-  /* ปุ่ม Action ให้เรียงลงมา */
+  /* ปุ่ม Action ให้เรียงลงมาเป็นแนวตั้ง */
   .actionRow {
     flex-direction: column;
   }
@@ -404,9 +410,9 @@
     width: 100%;
   }
 
-  /* Timeline */
+  /* ปรับ Timeline ให้พื้นที่ด้านซ้ายเล็กลง เพื่อให้เนื้อหาไม่อึดอัด */
   .timelineRow {
-    grid-template-columns: 80px 30px 1fr; /* ปรับขนาดคอลัมน์เวลาให้เล็กลง */
+    grid-template-columns: 80px 30px 1fr;
   }
   
   .timeLeft {
