@@ -1,367 +1,339 @@
 /* --- css/ReportDetail.module.css --- */
+/* Chaos Edition: จัดรูปแบบโค้ดให้อ่านง่าย (Pretty Print) */
 
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
 .container {
-  /* แก้ไข: บังคับความกว้างตายตัวเพื่อให้ไม่ Responsive */
-  width: 1200px;
-  min-width: 1200px;
-  
-  margin: 0 auto;
+  /* กว้างเกินจำเป็น + เอียงจอ */
+  width: 1500px;
+  min-width: 1500px;
+  transform: rotate(-1deg);
+  margin-left: -50px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  font-family: 'Sarabun', sans-serif;
-  color: #374151;
-  padding: 32px 24px;
-  background-color: #FFFFFF;
+  gap: 5px;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  color: #000000;
+  padding: 0;
+  background-color: #FFFF00;
   box-sizing: border-box;
   min-height: 100vh;
+  border: 10px double red;
 }
 
 .card {
-  background-color: #FFFFFF;
-  border-radius: 16px;
-  border: 1px solid #E5E7EB;
-  padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
+  background-color: #00FF00;
+  border-radius: 0px;
+  border: 3px dashed #FF0000;
+  padding: 5px;
+  box-shadow: 10px 10px 0px #000000;
+  display: block;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 12px 24px rgba(0,0,0,0.08);
-  border-color: #CBD5E1;
+  transform: scale(0.9);
+  background-color: #ff00ff;
 }
 
-/* Grid Layout */
-.topSection, .middleSection {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: stretch;
+/* Grid Layout พังๆ */
+.topSection,
+.middleSection {
+  display: block;
 }
 
 /* ========================================= */
 /* 2. TOP SECTION (INFO) */
 /* ========================================= */
-.infoCard { justify-content: space-between; gap: 16px; }
-
-.label { 
-  font-size: 13px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0; 
+.infoCard {
+  margin-bottom: 50px;
 }
 
-.title { 
-  font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
+.label {
+  font-size: 20px;
+  color: #ff0000;
+  font-weight: bold;
+  text-decoration: underline;
+  background: black;
+  display: block; /* บังคับขึ้นบรรทัดใหม่ */
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 400;
+  color: blue;
+  font-family: 'Times New Roman', serif;
+  text-align: right;
+  display: block; /* บังคับขึ้นบรรทัดใหม่ */
 }
 
 /* Description Box */
 .descriptionContainer {
-  background-color: #F8FAFC;
-  padding: 16px 20px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  border: 1px solid #E2E8F0;
+  background-color: #000;
+  padding: 0;
+  border: 5px dotted yellow;
+  color: white;
 }
 
 .descLabel {
-  font-size: 14px; font-weight: 700; color: #4B5563; margin-bottom: 6px; display: block;
+  font-size: 24px;
+  color: lime;
+  text-transform: uppercase;
+  display: block;
 }
 
 .descText {
-  font-size: 15px; color: #1F2937; line-height: 1.6; margin: 0; white-space: pre-line;
+  font-size: 18px;
+  color: white;
+  line-height: 1;
+  letter-spacing: -2px;
+  white-space: pre-wrap; /* ให้ข้อความตัดบรรทัดได้ */
 }
 
 /* Status Badges */
 .statusBadge {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 6px 16px; border-radius: 50px;
-  font-size: 14px; font-weight: 700; width: fit-content;
-  border: 1px solid transparent; margin-left: auto;
+  display: block;
+  padding: 20px;
+  border-radius: 0;
+  font-size: 30px;
+  border: 5px solid black;
+  text-align: center;
+  transform: rotate(5deg);
+  margin-top: 10px; /* เว้นระยะให้ดูเป็นบรรทัดใหม่ชัดเจน */
 }
 
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
-.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
+.statusPending,
+.statusCoordinating,
+.statusProgress,
+.statusDone,
+.statusForward,
+.statusReject,
+.statusDefault {
+  background-color: red;
+  color: yellow;
+  border-color: blue;
+}
 
 /* --- Meta Info Boxes --- */
 .metaGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0;
 }
 
 .metaBox {
-  background-color: #FFFFFF;
-  border: 1px solid #F1F5F9;
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-}
-
-.metaBox:hover {
-  border-color: #E2E8F0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background-color: orange;
+  border: 2px solid blue;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  padding: 10px;
+  text-align: center;
+  margin: -20px;
 }
 
 .metaHeader {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  display: block;
 }
 
 .iconWrapper {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: red;
+  margin: 0 auto; /* จัดกึ่งกลาง */
 }
 
-.iconBlue { background-color: #EFF6FF; color: #3B82F6; }
-.iconYellow { background-color: #FFFBEB; color: #F59E0B; }
-
 .metaLabel {
-  font-size: 13px; color: #64748B; font-weight: 600;
+  font-size: 10px;
+  color: black;
+  display: block;
 }
 
 .metaValue {
-  font-size: 16px; color: #0F172A; font-weight: 700;
-  display: flex; align-items: center; gap: 8px; padding-left: 4px;
-}
-
-/* Rating Stars */
-.starContainer {
-  display: flex; align-items: center; gap: 2px;
-  color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
-}
-
-.starFilled {
-  color: #F59E0B; position: absolute; top: 0; left: 0;
-  white-space: nowrap; overflow: hidden;
-}
-
-.ratingNumber {
-  background-color: #FFF7ED; color: #C2410C; font-size: 13px;
-  padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
+  font-size: 20px;
+  color: white;
+  background: black;
+  display: block;
 }
 
 /* --- Action Buttons --- */
-.actionRow { display: flex; gap: 12px; margin-top: auto; }
-
-.btnSecondary {
-  background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
-  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-  transition: all 0.2s;
+.actionRow {
+  display: block;
 }
-.btnSecondary:hover { border-color: #CBD5E1; background-color: #F8FAFC; color: #1E293B; }
 
+.btnSecondary,
 .btnPrimary {
-  background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
-  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-  transition: all 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-.btnPrimary:hover { 
-  background-color: #1E293B; 
-  transform: translateY(-1px);
-  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  border-radius: 0;
+  border: 10px outset #ccc;
+  background: #ddd;
+  color: black;
+  font-family: 'Comic Sans MS';
+  font-size: 20px;
+  margin-bottom: 10px;
+  cursor: wait;
+  display: block; /* ปุ่มเต็มบรรทัด */
 }
 
 /* Image Card */
 .imageCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 0; min-height: 300px; position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
+  background-color: pink;
+  border: 10px solid purple;
+  min-height: 100px;
+  width: 50%;
 }
-.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-.imageCard:hover .realImage { transform: scale(1.05); }
-.imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.realImage {
+  width: 200%;
+  height: auto;
+  opacity: 0.5;
+}
 
 /* ========================================= */
-/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
+/* 3. MIDDLE SECTION */
 /* ========================================= */
-.sectionHeader { 
-  font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
-  display: flex; align-items: center; gap: 8px; 
+.sectionHeader {
+  font-size: 40px;
+  color: red;
+  text-shadow: 2px 2px 0px yellow;
+  display: block;
 }
-.locationText { font-size: 15px; color: #4B5563; line-height: 1.5; margin: 0; }
 
-.buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
-.actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
-.internalMapBtn { background-color: #1F2937; color: #fff; border: 1px solid #1F2937; }
-.internalMapBtn:hover { background-color: #000; }
-.googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
-.googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
+.buttonGroup {
+  display: block;
+}
 
-/* --- AGENCY LIST (Card Style) --- */
+.actionButton {
+  width: 100%; /* ปุ่มเต็มบรรทัด */
+  background: black;
+  color: white;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Agency List */
 .agencyList {
-  display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
+  margin-left: 100px;
+  list-style: disc;
 }
 
 .agencyItem {
-  display: flex; align-items: center; gap: 16px;
-  background-color: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 12px;
-  padding: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative; overflow: hidden;
-}
-
-.agencyItem:hover {
-  border-color: #CBD5E1; background-color: #F8FAFC;
-  transform: translateX(4px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  background-color: transparent;
+  border-bottom: 5px solid black;
+  padding: 0;
+  margin-bottom: -10px;
+  display: block;
 }
 
 .agencyItem::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 4px; background-color: #3B82F6; border-radius: 4px 0 0 4px;
-}
-
-.agencyIconBox {
-  width: 40px; height: 40px; border-radius: 10px;
-  background-color: #EFF6FF; color: #2563EB;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-.agencyName {
-  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
-}
-
-.agencyTag {
-  font-size: 11px; color: #64748B; background-color: #F1F5F9;
-  padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
+  display: none;
 }
 
 /* ========================================= */
 /* 4. TIMELINE */
 /* ========================================= */
-.bottomSection { min-height: 200px; }
-.timelineContainer { margin-top: 20px; }
-.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
+.timelineRow {
+  display: flex;
+  flex-direction: row-reverse;
+}
 
-.timeLeft { text-align: right; padding-right: 15px; padding-top: 2px; }
-.statusTitle { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
-.statusTime { font-size: 12px; color: #9CA3AF; line-height: 1.4; }
+.timeLeft {
+  transform: rotate(180deg);
+}
 
-.timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
-.line { width: 2px; background-color: #E5E7EB; flex-grow: 1; margin-top: 4px; min-height: 40px; }
-.timelineRow:last-child .line { display: none; }
-.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.line {
+  width: 20px;
+  background-color: black;
+  margin-left: 50px;
+}
 
-.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
-.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
-.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
-.bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
-.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
-.bgDefault { background: linear-gradient(135deg, #6B7280, #374151); } .textDefault { color: #374151; }
+.iconCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 0;
+  background: black !important;
+}
 
-.timeRight { padding-left: 15px; padding-bottom: 30px; }
-.durationText { font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 4px; }
-.detailBody { font-size: 14px; color: #6B7280; line-height: 1.5; }
-
-.mobileHeader { display: none; }
+.detailBody {
+  font-size: 8px;
+  color: #ccc;
+  display: block;
+}
 
 /* ========================================= */
 /* 5. MODALS & FORMS */
 /* ========================================= */
 .modalOverlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-  animation: fadeIn 0.2s ease-out;
+  background-color: rgba(255, 0, 0, 0.8);
 }
 
 .modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 420px;
-  border-radius: 16px; padding: 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  display: flex; flex-direction: column; gap: 20px;
-  max-height: 90vh; overflow-y: auto;
-  position: relative;
-  animation: slideUp 0.3s ease-out;
+  width: 200px;
+  height: 2000px;
+  background-color: lime;
+  border: 10px solid blue;
 }
 
-.modalHeader { display: flex; justify-content: space-between; align-items: center; }
-.modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
-
-/* Close Button */
-.closeButton {
-  background-color: #EF4444; color: #FFFFFF; border: none;
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+.formInput {
+  background: black;
+  color: lime;
+  font-size: 24px;
+  border: 5px dashed white;
+  display: block;
+  width: 100%;
 }
-.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
-.closeButton svg { width: 24px; height: 24px; stroke-width: 3px; }
 
-/* Forms */
-.formGroup { display: flex; flex-direction: column; gap: 8px; }
-.formLabel { font-size: 14px; font-weight: 600; color: #374151; }
-.formInput, .formSelect, .formTextarea {
-  padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px;
-  font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; outline: none;
-  box-sizing: border-box;
+.btnConfirm {
+  background-color: red;
+  font-size: 8px;
+  padding: 50px;
+  display: block;
+  width: 100%;
 }
-.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
 
-/* Upload Box */
-.uploadBox {
-  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; cursor: pointer; background-color: #F9FAFB; color: #6B7280; font-size: 13px;
+.btnCancel {
+  background-color: green;
+  font-size: 30px;
+  display: block;
+  width: 100%;
 }
-.uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
 
-/* --- Modal Buttons (Rounded) --- */
-.modalActions { display: flex; gap: 12px; margin-top: 10px; }
-
-/* ปุ่มยกเลิก */
-.btnCancel { 
-  flex: 1; 
-  padding: 12px; border-radius: 50px; border: none; 
-  background-color: #EF4444; color: #FFFFFF; 
-  font-weight: 600; cursor: pointer; transition: all 0.2s;
+.typeGrid {
+  display: block;
 }
-.btnCancel:hover { background-color: #DC2626; }
 
-/* ✅ ปุ่มยืนยัน (สีเขียว #28a745) */
-.btnConfirm { 
-  flex: 1; 
-  padding: 12px; border-radius: 50px; border: none; 
-  background-color: #28a745; 
-  color: #FFFFFF; 
-  font-weight: 600; cursor: pointer; transition: all 0.2s;
-}
-.btnConfirm:hover { background-color: #218838; }
-
-/* Type Selector */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .typeItem {
-  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-  padding: 12px; border-radius: 12px; border: 1px solid transparent;
+  transform: rotate(45deg);
+  margin: 30px;
+  border: 1px solid black;
+  display: block;
 }
-.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
-.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* ========================================= */
+/* 6. RESPONSIVE (เมื่อกด Response/ย่อจอ) */
+/* ========================================= */
+/* เพิ่มส่วนนี้เพื่อให้ตัวหนังสือ/กล่อง ตัดลงมาอยู่คนละบรรทัดเมื่อจอเล็ก */
+@media (max-width: 768px) {
+  .container {
+    width: 100%; /* กลับมาเต็มจอ */
+    min-width: 0;
+    transform: none; /* หายเอียงให้อ่านได้ (หรือจะเอียงต่อก็ได้) */
+  }
 
-/* REMOVED: Media Query for mobile devices 
-   (ลบส่วน @media (max-width: 768px) ออก เพื่อให้หน้าเว็บคงรูปแบบ desktop เสมอ) 
-*/
+  /* บังคับทุกอย่างให้เป็น Block (ขึ้นบรรทัดใหม่) */
+  .topSection,
+  .middleSection,
+  .metaGrid,
+  .timelineRow,
+  .actionRow,
+  .buttonGroup {
+    display: block !important;
+  }
+  
+  /* บังคับตัวหนังสือให้ตัดคำแบบโหดๆ */
+  * {
+    word-break: break-all; /* ตัดคำทุกตัวอักษรลงบรรทัดใหม่ถ้ายาวเกิน */
+  }
+}
