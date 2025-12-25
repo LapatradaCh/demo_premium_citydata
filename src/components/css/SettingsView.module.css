@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Final Attempt: Minimal Padding Fix)
+   Signin.module.css (Final: Custom Dropdown Fix)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -41,7 +41,8 @@
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
-    overflow: visible; /* ปล่อยให้เมนูเด้งออกได้โดยไม่โดนตัด */
+    /* overflow: visible; ต้องเปิดไว้เพื่อให้ Dropdown เด้งข้ามกล่องได้ */
+    overflow: visible; 
 }
 
 .settingsTitle { 
@@ -80,24 +81,125 @@
 }
 
 /* ========================================= */
-/* === 3. INPUTS & DROPDOWNS (MINIMALIST) === */
+/* === [NEW] CUSTOM DROPDOWN STYLES === */
 /* ========================================= */
-.settingsSection select,
-.filterGroup select {
+.customDropdownContainer {
+    position: relative;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* ตัวกล่องที่แสดงผล (Trigger) */
+.customDropdownTrigger {
+    width: 100%;
+    height: 48px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 50px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    color: #333;
+}
+
+.customDropdownTrigger:hover {
+    border-color: var(--color-primary);
+}
+
+/* รายการเมนูที่เลื่อนลงมา */
+.customDropdownList {
+    position: absolute;
+    top: 55px; /* เว้นระยะจากตัวกล่อง */
+    left: 0;
+    width: 100%; /* บังคับให้กว้างเท่ากับตัวแม่ 100% เป๊ะๆ ไม่ล้นแน่นอน */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    z-index: 999; /* ลอยอยู่เหนือทุกอย่าง */
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.customDropdownOption {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background 0.1s;
+    border-bottom: 1px solid #f9f9f9;
+    
+    /* ตัดคำถ้ายาวเกินไป */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.customDropdownOption:last-child {
+    border-bottom: none;
+}
+
+.customDropdownOption:hover {
+    background-color: #e8f5e9; /* สีเขียวอ่อนๆ */
+    color: var(--color-primary);
+}
+
+.customDropdownOption.selected {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.chevronIcon {
+    color: #555;
+    font-size: 14px;
+    transition: transform 0.3s;
+}
+
+.chevronRotate {
+    transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================= */
+/* === 3. INPUTS (อื่นๆ ที่ไม่ใช่ Dropdown) === */
+/* ========================================= */
+.searchInput, .agencyInput, .agencyInputCode {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 50px;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+}
+.agencyInputCode {
+    font-family: monospace;
+    background: #f8f9fa;
+    letter-spacing: 1px;
+}
+.searchInput:focus, .agencyInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+}
+
+/* เก็บ style ของ select เดิมไว้เผื่อใช้ในส่วนอื่น แต่ส่วนหลักเราใช้ CustomDropdown แล้ว */
+.settingsSection select, .filterGroup select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     display: block;
-    
-    /* บังคับความกว้างให้พอดีกรอบ 100% */
     width: 100%;
-    
     height: 48px; 
-    
-    /* [จุดสำคัญ] ลด Padding ขวาลงสุดๆ เพื่อลดความบานของเมนู */
-    /* เดิม 40px -> ปรับเหลือ 24px พอให้วางไอคอนได้ */
-    padding: 10px 24px 10px 16px; 
-    
+    padding: 10px 40px 10px 20px; 
     margin-top: 8px; 
     margin-bottom: 12px;
     background-color: #ffffff;
@@ -107,50 +209,13 @@
     color: #333;
     font-family: inherit;
     cursor: pointer;
-    
-    /* จัดการข้อความยาว */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    /* ขยับไอคอนลูกศรให้ชิดขวามากขึ้น เพื่อประหยัดพื้นที่ */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 8px center; 
-    background-size: 14px;
-}
-
-/* Reset option styling เพื่อไม่ให้ Browser คำนวณเพี้ยน */
-.settingsSection select option,
-.filterGroup select option {
-    background-color: #ffffff;
-    color: #333333;
-    padding: 2px 5px; /* ลด padding ในตัวเลือก */
-}
-
-.settingsSection select:hover,
-.filterGroup select:hover {
-    border-color: var(--color-primary); 
-}
-
-.settingsSection select:focus,
-.filterGroup select:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
-}
-
-.searchInput { 
-    width: 100%; 
-    padding: 12px 20px; 
-    border-radius: 50px; 
-    border: 1px solid #ccc; 
-    font-size: 14px; 
-    background-color: #fff; 
-    outline: none;
-}
-.searchInput:focus {
-    border-color: var(--color-primary);
+    background-position: right 18px center;
+    background-size: 16px;
 }
 
 /* ========================================= */
@@ -216,7 +281,6 @@
     flex-direction: column; 
     gap: 16px; 
 }
-
 .qrForm .filterApplyButton {
     width: 100%;              
     margin-top: 10px;
@@ -471,35 +535,6 @@
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
 .agencyLabel { font-size: 13px; font-weight: 600; color: #444; }
 
-.agencyInput { 
-    width: 100%; 
-    padding: 12px 20px; 
-    border: 1px solid #d1d5db; 
-    border-radius: 50px; 
-    font-size: 14px; 
-    background: #fff; 
-    transition: border 0.2s; 
-}
-.agencyInput:focus { 
-    outline: none; 
-    border-color: var(--color-primary); 
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
-}
-
-.agencyInputCode { 
-    width: 100%; 
-    padding: 12px 20px; 
-    border: 1px solid #d1d5db; 
-    border-radius: 50px; 
-    font-size: 15px; 
-    font-family: monospace; 
-    background: #f8f9fa; 
-    color: #333; 
-    font-weight: 600; 
-    letter-spacing: 1px; 
-    text-align: left; 
-}
-
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
@@ -545,12 +580,14 @@
     transform: translateY(-1px); 
 }
 
+/* Modal Filter เล็กๆ */
 .filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
 .filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 24px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
 .filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
 .filterModalClose { background: var(--color-danger); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
 .filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
+/* Toggle Switch */
 .mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
 .mockToggle input { opacity: 0; width: 0; height: 0; }
 .mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
@@ -598,7 +635,7 @@
         height: 48px !important;
         margin-top: 12px !important; 
         margin-bottom: 12px !important;
-        background-position: right 8px center !important; /* ปรับใน Mobile ด้วย */
+        background-position: right 12px center !important;
         font-size: 16px !important; 
     }
     .agencyViewContainer, .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { grid-template-columns: 1fr !important; }
