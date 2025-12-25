@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   SettingsView.module.css (Final Full Version - Responsive Fixed)
+   SettingsView.module.css (Final Full Version - Custom Dropdown)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -7,21 +7,18 @@
 /* ========================================= */
 * { 
     box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; /* ปิดสีไฮไลท์เวลาแตะบนมือถือ */
+    -webkit-tap-highlight-color: transparent; 
 }
 
 :root { 
-    /* Palette สีหลัก */
-    --color-primary: #28a745;   /* สีเขียว */
-    --color-danger: #dc3545;    /* สีแดง */
-    --color-warning: #f59e0b;   /* สีส้มเหลือง */
+    --color-primary: #28a745;   
+    --color-danger: #dc3545;    
+    --color-warning: #f59e0b;   
     
-    /* Text & Border */
     --color-text-main: #333333;
     --color-text-sub: #555555;
     --color-border: #e0e0e0;
     
-    /* Backgrounds */
     --bg-page: #fafafa;
     --bg-card: #ffffff;
 }
@@ -36,7 +33,7 @@
     flex-direction: column; 
     gap: 24px; 
     margin: 0 auto; 
-    padding: 0 10px; /* กันชนขอบจอซ้ายขวา */
+    padding: 0 10px; 
     font-family: 'Kanit', sans-serif; 
 }
 
@@ -47,10 +44,9 @@
     border-radius: 24px; 
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
-    
-    /* สำคัญ: ให้ visible เพื่อไม่ให้เงาหรือ Dropdown ถูกตัด */
-    overflow: visible; 
+    overflow: visible; /* สำคัญ: เพื่อให้ Dropdown เด้งออกมาได้ */
     position: relative;
+    height: auto;
 }
 
 .settingsTitle { 
@@ -89,68 +85,123 @@
 }
 
 /* ========================================= */
-/* === 3. INPUTS & DROPDOWNS (PILL SHAPE) === */
+/* === 3. CUSTOM DROPDOWN STYLE (NEW FIX) === */
 /* ========================================= */
-/* จัดการ Select ให้แสดงผลสวยและไม่เพี้ยน */
-.settingsSection select,
-.filterGroup select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    display: block;
-    width: 100%; /* ยืดเต็ม Parent */
-    height: 48px; 
-    padding: 10px 40px 10px 20px; /* เว้นขวาเยอะหน่อยกันทับลูกศร */
-    margin-top: 8px; 
+.customSelectWrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 8px;
     margin-bottom: 12px;
+}
+
+.customSelectTrigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding: 10px 20px;
     background-color: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 50px; 
-    font-size: 16px; /* ใช้ 16px เพื่อกัน iPhone ซูมเอง */
+    border-radius: 50px;
+    font-size: 16px; /* 16px ป้องกัน Zoom บน iOS */
     color: #333;
-    font-family: inherit;
     cursor: pointer;
     transition: all 0.2s ease;
-    
-    /* ไอคอนลูกศร Custom */
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 18px center;
-    background-size: 16px;
-    
-    /* แก้ Bug Text ล้นในปุ่ม */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    user-select: none;
 }
 
-.settingsSection select:hover,
-.filterGroup select:hover {
-    border-color: var(--color-primary); 
-}
-
-.settingsSection select:focus,
-.filterGroup select:focus {
-    outline: none;
+.customSelectTrigger:hover {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
 
-.searchInput { 
+.customSelectArrow {
+    font-size: 14px;
+    color: #555;
+    transition: transform 0.2s;
+}
+
+.customSelectArrow.open {
+    transform: rotate(180deg);
+}
+
+/* กล่องตัวเลือกที่เด้งออกมา */
+.customSelectOptions {
+    position: absolute;
+    top: 55px; /* เว้นระยะจากปุ่มนิดหน่อย */
+    left: 0;
+    width: 100%; /* กว้างเท่ากับปุ่มแม่ 100% เสมอ */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 1000; /* อยู่บนสุด */
+    overflow: hidden;
+    animation: fadeInDropdown 0.2s ease-in-out;
+}
+
+.customOption {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f9f9f9;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    transition: background 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.customOption:last-child {
+    border-bottom: none;
+}
+
+.customOption:hover {
+    background-color: #f0f9f0;
+    color: var(--color-primary);
+}
+
+.customOption.selected {
+    background-color: #e8f5e9;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================= */
+/* === 4. INPUTS & SEARCH === */
+/* ========================================= */
+/* เก็บ Style เดิมไว้สำหรับ Input ทั่วไป */
+.agencyInput, .searchInput { 
     width: 100%; 
     padding: 12px 20px; 
     border-radius: 50px; 
-    border: 1px solid #ccc; 
-    font-size: 16px; /* กัน Zoom */
+    border: 1px solid #d1d5db; 
+    font-size: 16px; 
     background-color: #fff; 
     outline: none;
+    transition: border 0.2s;
 }
-.searchInput:focus {
+.agencyInput:focus, .searchInput:focus {
     border-color: var(--color-primary);
 }
 
+/* Select แบบเดิม (เผื่อใช้ในจุดอื่นที่ไม่ซีเรียส) */
+.filterGroup select {
+    /* Style เดิม... */
+    width: 100%; height: 48px; padding: 10px 40px 10px 20px;
+    border-radius: 50px; border: 1px solid #d1d5db;
+    -webkit-appearance: none; appearance: none;
+    background: #fff url("data:image/svg+xml;...") no-repeat right 18px center;
+    background-size: 16px;
+}
+
 /* ========================================= */
-/* === 4. FILTER / HEADER / QR FORM === */
+/* === 5. FILTER / HEADER / QR FORM === */
 /* ========================================= */
 .settingsHeaderDropdown { 
     width: 100%; 
@@ -186,9 +237,7 @@
     white-space: nowrap;
     transition: background-color 0.2s;
 }
-.filterApplyButton:hover { 
-    background-color: #218838; 
-}
+.filterApplyButton:hover { background-color: #218838; }
 
 .qrCodePlaceholder { 
     width: 100%; 
@@ -206,265 +255,72 @@
 }
 .mockQrIcon { font-size: 80px; color: #e0e0e0; }
 
-.qrForm { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 16px; 
-}
-
-/* ปุ่มสร้าง QR Code ขยายเต็ม 100% */
-.qrForm .filterApplyButton {
-    width: 100%;
-    margin-top: 10px;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.25);
-}
+.qrForm { display: flex; flex-direction: column; gap: 16px; }
+.qrForm .filterApplyButton { width: 100%; margin-top: 10px; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.25); }
 
 /* ========================================= */
-/* === 5. AGENCY CARD STYLES === */
+/* === 6. AGENCY CARD STYLES === */
 /* ========================================= */
-.agencyViewContainer { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px; 
-    animation: fadeInAgency 0.3s; 
-}
-
+.agencyViewContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInAgency 0.3s; }
 .agencyProfileCard { 
-    background: #fff; 
-    border: 1px solid var(--color-border); 
-    border-radius: 24px; 
-    padding: 24px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
-    max-width: 100%; 
-    overflow: visible; 
+    background: #fff; border: 1px solid var(--color-border); 
+    border-radius: 24px; padding: 24px; display: flex; flex-direction: column; 
+    gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 100%; overflow: visible; 
 }
-
-.agencyProfileHeader { 
-    display: flex; 
-    gap: 20px; 
-    align-items: flex-start; 
-    width: 100%; 
-}
-
+.agencyProfileHeader { display: flex; gap: 20px; align-items: flex-start; width: 100%; }
 .agencyLogoCircle { 
-    width: 80px; 
-    height: 80px; 
-    flex-shrink: 0; 
-    background: #f0f0f0; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 30px; 
-    color: #bbb; 
-    border: 3px solid #fff; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+    width: 80px; height: 80px; flex-shrink: 0; background: #f0f0f0; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+    font-size: 30px; color: #bbb; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
     overflow: hidden; 
 }
-
-.agencyOrgName { 
-    margin: 0 0 8px 0; 
-    font-size: 22px; 
-    color: #333; 
-    line-height: 1.4; 
-    word-break: break-word; 
-}
-
-.agencyBadges { 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-    flex-wrap: wrap; 
-}
-
-.agencyBadgeType { 
-    background: #f1f3f5; 
-    color: #495057; 
-    padding: 4px 12px; 
-    border-radius: 50px; 
-    font-size: 13px; 
-    font-weight: 600; 
-    display: flex; 
-    align-items: center; 
-    gap: 5px; 
-}
-
+.agencyOrgName { margin: 0 0 8px 0; font-size: 22px; color: #333; line-height: 1.4; word-break: break-word; }
+.agencyBadges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.agencyBadgeType { background: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
 .agencyBtnEditWarning { 
-    padding: 10px 24px; 
-    border-radius: 50px; 
-    border: none; 
-    background: var(--color-warning); 
-    color: #fff; 
-    cursor: pointer; 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-    justify-content: center; 
-    font-weight: 700; 
-    transition: all 0.2s; 
-    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); 
-    font-size: 14px; 
-    width: 100%; 
-    white-space: nowrap; 
+    padding: 10px 24px; border-radius: 50px; border: none; background: var(--color-warning); 
+    color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; justify-content: center; 
+    font-weight: 700; transition: all 0.2s; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); font-size: 14px; width: 100%; white-space: nowrap; 
 }
-.agencyBtnEditWarning:hover { 
-    background: #d97706; 
-    transform: translateY(-1px); 
-}
-
-@media (min-width: 600px) { 
-    .agencyBtnEditWarning { width: fit-content; align-self: flex-end; } 
-}
-
-.agencyInfoGrid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px; 
-}
-
-.agencyInfoBox { 
-    background: #fff; 
-    border: 1px solid #e0e0e0; 
-    border-radius: 24px; 
-    padding: 20px; 
-    overflow: hidden; 
-}
-
-.agencyBoxHeader { 
-    font-weight: 700; 
-    color: #333; 
-    margin-bottom: 15px; 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-    font-size: 15px; 
-}
-.agencyDataRow { 
-    display: flex; 
-    justify-content: space-between; 
-    font-size: 14px; 
-    margin-bottom: 8px; 
-    border-bottom: 1px dashed #eee; 
-    padding-bottom: 6px; 
-}
-
+.agencyBtnEditWarning:hover { background: #d97706; transform: translateY(-1px); }
+@media (min-width: 600px) { .agencyBtnEditWarning { width: fit-content; align-self: flex-end; } }
+.agencyInfoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.agencyInfoBox { background: #fff; border: 1px solid #e0e0e0; border-radius: 24px; padding: 20px; overflow: hidden; }
+.agencyBoxHeader { font-weight: 700; color: #333; margin-bottom: 15px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
+.agencyDataRow { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 6px; }
 .codeRevealGroup { display: flex; align-items: center; gap: 10px; }
-.iconBtnEye, .iconBtnCopy { 
-    background: none; border: none; color: #6c757d; cursor: pointer; 
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 16px; padding: 8px; border-radius: 50%; transition: all 0.2s; 
-}
+.iconBtnEye, .iconBtnCopy { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; padding: 8px; border-radius: 50%; transition: all 0.2s; }
 .iconBtnEye:hover { color: #0d6efd; background-color: #f0f8ff; }
 .iconBtnCopy:hover { color: var(--color-primary); background-color: #e8f5e9; }
-
-.agencyCodeFont { 
-    font-family: monospace; 
-    font-size: 15px; 
-    letter-spacing: 1px; 
-    color: #333; 
-    text-align: left; 
-}
+.agencyCodeFont { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #333; text-align: left; }
 
 /* ========================================= */
-/* === 6. MODAL & FORM STYLES === */
+/* === 7. MODAL & FORM STYLES === */
 /* ========================================= */
-.agencyModalBackdrop { 
-    position: fixed; top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.6); 
-    z-index: 3000; 
-    backdrop-filter: blur(3px); 
-}
-
-.agencyModalContainer { 
-    position: fixed; top: 50%; left: 50%; 
-    transform: translate(-50%, -50%); 
-    background: #fff; 
-    width: 90%; 
-    max-width: 550px; 
-    max-height: 90vh; 
-    border-radius: 24px; 
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25); 
-    z-index: 3001; 
-    display: flex; flex-direction: column; 
-}
-
-.agencyModalHeader { 
-    padding: 16px 24px; 
-    border-bottom: 1px solid #eee; 
-    display: flex; justify-content: space-between; align-items: center; 
-    background: #fff; border-radius: 24px 24px 0 0; 
-}
-
+.agencyModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
+.agencyModalContainer { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 90%; max-width: 550px; max-height: 90vh; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); z-index: 3001; display: flex; flex-direction: column; }
+.agencyModalHeader { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 24px 24px 0 0; }
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
-.agencyBtnCloseRed { 
-    background: var(--color-danger); border: none; font-size: 22px; color: white; 
-    cursor: pointer; width: 40px; height: 40px; border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; 
-    transition: background-color 0.2s; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); 
-}
+.agencyBtnCloseRed { background: var(--color-danger); border: none; font-size: 22px; color: white; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4); }
 .agencyBtnCloseRed:hover { background: #bb2d3b; }
-
 .agencyModalBody { padding: 24px; overflow-y: auto; flex: 1; }
-.agencyImageSection { 
-    display: flex; flex-direction: column; align-items: center; gap: 10px; 
-    padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; 
-}
-.agencyImageCircle { 
-    width: 90px; height: 90px; background: #f8f9fa; border-radius: 50%; 
-    position: relative; display: flex; align-items: center; justify-content: center; 
-    border: 2px dashed #ccc; transition: all 0.2s; cursor: pointer; 
-}
+.agencyImageSection { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px dashed #e0e0e0; margin-bottom: 20px; }
+.agencyImageCircle { width: 90px; height: 90px; background: #f8f9fa; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; border: 2px dashed #ccc; transition: all 0.2s; cursor: pointer; }
 .uploadedLogo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.agencyEditOverlay { 
-    position: absolute; bottom: -5px; right: -5px; background: var(--color-warning); 
-    color: #fff; width: 28px; height: 28px; border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; border: 2px solid #fff; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15); z-index: 10; 
-}
+.agencyEditOverlay { position: absolute; bottom: -5px; right: -5px; background: var(--color-warning); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.15); z-index: 10; }
 .agencyHint { font-size: 12px; color: #999; }
 .agencyFormContainer { display: flex; flex-direction: column; gap: 14px; }
-.agencySectionTitle { 
-    font-size: 14px; font-weight: 700; color: var(--color-primary); 
-    margin: 5px 0 0 0; display: flex; align-items: center; gap: 6px; 
-    text-transform: uppercase; 
-}
-
+.agencySectionTitle { font-size: 14px; font-weight: 700; color: var(--color-primary); margin: 5px 0 0 0; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
 .agencyLabel { font-size: 13px; font-weight: 600; color: #444; }
-
-.agencyInput { 
-    width: 100%; padding: 12px 20px; border: 1px solid #d1d5db; 
-    border-radius: 50px; font-size: 16px; background: #fff; transition: border 0.2s; 
-}
-.agencyInput:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); }
-.agencyInputCode { 
-    width: 100%; padding: 12px 20px; border: 1px solid #d1d5db; 
-    border-radius: 50px; font-size: 16px; font-family: monospace; 
-    background: #f8f9fa; color: #333; font-weight: 600; text-align: left; 
-}
-
+.agencyInputCode { width: 100%; padding: 12px 20px; border: 1px solid #d1d5db; border-radius: 50px; font-size: 16px; font-family: monospace; background: #f8f9fa; color: #333; font-weight: 600; text-align: left; }
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
 .req { color: var(--color-danger); }
-
-.agencyModalFooter { 
-    padding: 16px 24px; border-top: 1px solid #eee; display: flex; 
-    justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 24px 24px; 
-}
-.agencyBtnCancel { 
-    padding: 10px 24px; border-radius: 50px; border: none; 
-    background: var(--color-danger); color: #fff; cursor: pointer; font-weight: 600; 
-}
-.agencyBtnSave { 
-    padding: 10px 24px; border-radius: 50px; border: none; 
-    background: var(--color-primary); color: #fff; cursor: pointer; font-weight: 600; 
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); 
-}
+.agencyModalFooter { padding: 16px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px; background: #fff; border-radius: 0 0 24px 24px; }
+.agencyBtnCancel { padding: 10px 24px; border-radius: 50px; border: none; background: var(--color-danger); color: #fff; cursor: pointer; font-weight: 600; }
+.agencyBtnSave { padding: 10px 24px; border-radius: 50px; border: none; background: var(--color-primary); color: #fff; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); }
 
 /* Toggle Switch */
 .mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
@@ -477,83 +333,20 @@
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
 /* ========================================= */
-/* === 7. MOBILE RESPONSIVE FIXES (STRICT) === */
+/* === 8. MOBILE RESPONSIVE FIXES === */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* ปรับ Container นอกสุด */
-    .settingsContainer {
-        padding: 16px !important;
-        margin: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+    .settingsContainer { padding: 16px !important; margin: 0 !important; width: 100% !important; }
+    .settingsSection { padding: 20px 16px !important; width: 100% !important; border-radius: 16px !important; overflow: visible !important; }
+    .settingsHeaderDropdown { flex-direction: column !important; align-items: stretch !important; padding: 20px 16px !important; gap: 16px !important; }
+    .filterGroup { width: 100% !important; min-width: 0 !important; display: block !important; }
+    .filterApplyButton { width: 100% !important; margin-top: 4px; }
     
-    /* ปรับ Card */
-    .settingsSection {
-        padding: 20px 16px !important;
-        width: 100% !important;
-        border-radius: 16px !important;
-        overflow: visible !important; /* ปล่อยให้ Dropdown ทะลุได้ */
-        height: auto !important;
-    }
-
-    /* ปรับ Header Dropdown ให้เรียงแนวตั้ง */
-    .settingsHeaderDropdown {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        padding: 20px 16px !important;
-        gap: 16px !important;
-    }
-
-    .filterGroup {
-        width: 100% !important;
-        min-width: 0 !important;
-        display: block !important;
-    }
+    /* บังคับ input ให้เต็มจอ */
+    .agencyInput, .agencyInputCode { font-size: 16px !important; width: 100% !important; height: 48px !important; box-sizing: border-box !important; }
     
-    /* ปรับปุ่ม Filter */
-    .filterApplyButton {
-        width: 100% !important;
-        margin-top: 4px;
-    }
-
-    /* ปรับ Input/Select ให้เต็มจอและตัวหนังสือใหญ่ขึ้นกัน Zoom */
-    .settingsSection select,
-    .filterGroup select,
-    .searchInput,
-    .agencyInput,
-    .agencyInputCode {
-        font-size: 16px !important; /* บังคับ 16px เพื่อกัน Zoom */
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        box-sizing: border-box !important;
-        height: 48px !important;
-    }
-
-    /* ปรับ Layout ข้อมูลภายใน Card */
-    .agencyProfileHeader {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-    }
-    .agencyInfoGrid, .agencyRow2, .agencyAddressGrid {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px !important;
-    }
-    
-    /* ปรับปุ่มแก้ไขให้อยู่ตรงกลาง */
-    .agencyBtnEditWarning {
-        width: 100% !important;
-        justify-content: center !important;
-        margin-top: 10px;
-    }
-    
-    /* Modal ให้เต็มจอ */
-    .agencyModalContainer {
-        width: 95% !important;
-        max-height: 90vh !important;
-        top: 50% !important;
-    }
+    .agencyProfileHeader { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+    .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { display: flex !important; flex-direction: column !important; gap: 16px !important; }
+    .agencyBtnEditWarning { width: 100% !important; justify-content: center !important; margin-top: 10px; }
+    .agencyModalContainer { width: 95% !important; max-height: 90vh !important; top: 50% !important; }
 }
