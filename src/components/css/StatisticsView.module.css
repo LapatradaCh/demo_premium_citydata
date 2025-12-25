@@ -350,12 +350,11 @@ html, body {
 }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES
+   6. RESPONSIVE MEDIA QUERIES (MOBILE DESIGN FIX)
    ======================================================= */
 
 /* Desktop กลาง-ใหญ่ */
 @media (min-width: 992px) {
-    /* [แก้ไข] ใช้ min-height แทน height fix */
     .chartWrapper { height: auto; min-height: 350px; }
     .largeHeight { height: 500px; min-height: 500px; }
 }
@@ -368,15 +367,48 @@ html, body {
   /* Layout หลัก: ยุบ Total Card เป็นแถวบน */
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* ปรับ Total Card แนวนอน */
+  /* --- [แก้] ปรับ Total Card แนวนอนให้สวยขึ้น --- */
   .totalCard { 
-      height: auto; min-height: 120px; 
-      flex-direction: row; align-items: center; justify-content: space-between;
-      padding: 20px;
+      height: auto; 
+      min-height: 100px; /* ลดความสูงลงหน่อย */
+      flex-direction: row; /* เรียงแนวนอน ซ้าย-ขวา */
+      align-items: center; 
+      justify-content: space-between;
+      padding: 20px 24px;
+      gap: 16px;
   }
-  .totalCard .cardCount { margin: 0; text-align: right; font-size: 48px; }
+  
+  /* [แก้] ลบ Margin ของ Header ทิ้ง เพื่อให้มันอยู่กลางแนวตั้ง */
+  .totalCard .cardHeader {
+      margin-bottom: 0;
+      flex-direction: column; /* ให้ชื่อกับ 100% เรียงลงมา */
+      align-items: flex-start;
+      gap: 4px; /* ระยะห่างระหว่าง ชื่อ กับ 100% */
+      justify-content: center;
+  }
 
-  /* สำคัญ: บังคับให้การ์ดสถานะเป็น 2 คอลัมน์บนมือถือ */
+  /* [แก้] บังคับลดขนาดฟอนต์หัวข้อของการ์ด Total ให้เล็กลง */
+  .totalCard .cardTitle { 
+      font-size: 16px !important; /* บังคับทับค่า desktop (24px) */
+      margin-bottom: 0;
+  }
+
+  /* ปรับตัวเลขให้นิ่ง */
+  .totalCard .cardCount { 
+      margin: 0; 
+      text-align: right; 
+      font-size: 48px; 
+      line-height: 1;
+  }
+
+  /* Badge 100% */
+  .totalCard .badge-status {
+      font-size: 10px;
+      padding: 2px 8px;
+  }
+  /* ---------------------------------------------------- */
+
+  /* ✅ สำคัญ: บังคับให้การ์ดสถานะเป็น 2 คอลัมน์บนมือถือ */
   .rightGrid {
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 12px !important;
@@ -386,13 +418,15 @@ html, body {
       padding: 16px; 
       min-height: 100px; 
   }
+  
+  /* Override ให้ Card Title ทั่วไปเล็กลง */
   .cardTitle { font-size: 12px; white-space: normal; }
   .cardCount { font-size: 28px; }
 
   /* กราฟเรียง 1 คอลัมน์ */
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  /* [เพิ่ม] ปรับลด Padding ของการ์ดกราฟในมือถือ */
+  /* [เพิ่ม] ลด Padding ของการ์ดกราฟในมือถือ */
   .sectionCard {
       padding: 12px !important;
   }
