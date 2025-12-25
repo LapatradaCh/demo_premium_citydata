@@ -139,7 +139,8 @@ const StatisticsView = ({ organizationId }) => {
                grouped[name][status] += count; grouped[name].total += count;
             });
           }
-          setStaffData(Object.values(grouped).sort((a, b) => b.total - a.total).slice(0, 10));
+          // Sort by total activity
+          setStaffData(Object.values(grouped).sort((a, b) => b.total - a.total));
         }
 
         // 7. Efficiency
@@ -347,7 +348,7 @@ const StatisticsView = ({ organizationId }) => {
         </section>
 
         <div className={styles.responsiveGrid2}>
-           
+            
           {/* --- Efficiency Graph --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
@@ -370,7 +371,6 @@ const StatisticsView = ({ organizationId }) => {
                       reversed={true} 
                     />
                     <Tooltip cursor={{fill: 'transparent'}} />
-                    {/* ✅ เพิ่ม iconType="circle" */}
                     <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
                     <Bar {...commonProps} dataKey="stage1" stackId="a" fill={STATUS_COLORS['รอรับเรื่อง']} name="รอรับเรื่อง" barSize={12} radius={[4, 0, 0, 4]} />
                     <Bar {...commonProps} dataKey="stage2" stackId="a" fill={STATUS_COLORS['กำลังดำเนินการ']} name="ประสานงาน" barSize={12} />
@@ -408,7 +408,6 @@ const StatisticsView = ({ organizationId }) => {
                         reversed={true}
                       />
                       <Tooltip />
-                      {/* ✅ เพิ่ม iconType="circle" */}
                       <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
                       <Bar {...commonProps} dataKey="count" name="จำนวน" barSize={12} fill={STATUS_COLORS['ส่งต่อ']} />
                       <Bar {...commonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={12} fill={STATUS_COLORS['กำลังดำเนินการ']} />
@@ -447,30 +446,33 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
+            {/* --- แก้ไข: ประสิทธิภาพเจ้าหน้าที่ (Dynamic Height & Text) --- */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 className={styles.sectionTitle}><Users size={18} /> ประสิทธิภาพเจ้าหน้าที่</h3>
                     <div className={styles.topBadge}>ทั้งหมด: {totalStaffCount} คน</div>
                 </div>
                 
-                <div className={`${styles.chartWrapper} ${styles.largeHeight}`}>
+                <div className={styles.chartWrapper}>
                     {staffData.length > 0 ? (
-                      <ChartWrapper height={400}>
+                      /* คำนวณความสูงตามจำนวนคน ขั้นต่ำ 400px */
+                      <ChartWrapper height={Math.max(400, staffData.length * 60)}>
                         <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                           <XAxis type="number" hide />
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={isMobile ? 90 : 120}
+                            /* เพิ่มความกว้างให้ชื่อ */
+                            width={isMobile ? 120 : 160}
                             axisLine={false} 
                             tickLine={false} 
-                            tickFormatter={(val) => truncateText(val, 12)}
+                            /* เพิ่มลิมิตตัวอักษรเป็น 20 */
+                            tickFormatter={(val) => truncateText(val, 20)}
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
                           />
                           <Tooltip cursor={{fill: 'transparent'}} />
-                          {/* ✅ เพิ่ม iconType="circle" */}
                           <Legend verticalAlign="bottom" height={48} iconType="circle" wrapperStyle={internalLegendStyle} />
                           {Object.keys(STATUS_COLORS).filter(k => !['NULL', 'ทั้งหมด', 'กำลังประสาน', 'ดำเนินการ'].includes(k)).map((status) => (
                             <Bar {...commonProps} key={status} dataKey={status} stackId="staff" fill={STATUS_COLORS[status]} barSize={16} name={status} />
