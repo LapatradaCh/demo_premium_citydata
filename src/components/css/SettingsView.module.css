@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Final Full Version - Fixed Responsive)
+   Signin.module.css (Final Full Version - 100% Width QR Button)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -201,7 +201,7 @@
     gap: 16px; 
 }
 
-/* ปุ่มสร้าง QR Code ขยายเต็ม 100% ให้เท่ากับ Input ด้านบน */
+/* [NEW] ปุ่มสร้าง QR Code ขยายเต็ม 100% ให้เท่ากับ Input ด้านบน */
 .qrForm .filterApplyButton {
     width: 100%;              /* เต็มความกว้าง */
     margin-top: 10px;
@@ -346,6 +346,7 @@
 .iconBtnCopy { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; padding: 8px; border-radius: 50%; transition: all 0.2s; margin-left: 8px; }
 .iconBtnCopy:hover { color: var(--color-primary); background-color: #e8f5e9; }
 
+/* [FIX] ปรับการแสดงผล Code ให้ชิดซ้าย */
 .agencyCodeFont { 
     font-family: monospace; 
     font-size: 15px; 
@@ -391,6 +392,7 @@
 
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
+/* ปุ่มปิดสีแดง (ไม่หมุน) */
 .agencyBtnCloseRed { 
     background: var(--color-danger); 
     border: none; 
@@ -471,6 +473,7 @@
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
 
+/* [FIX] ช่องกรอก Code ชิดซ้าย */
 .agencyInputCode { 
     width: 100%; 
     padding: 12px 20px; 
@@ -500,6 +503,7 @@
     border-radius: 0 0 24px 24px; 
 }
 
+/* ปุ่ม Cancel สีแดง + มน */
 .agencyBtnCancel { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -513,6 +517,7 @@
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
+/* ปุ่ม Save สีเขียว + มน */
 .agencyBtnSave { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -550,86 +555,44 @@
 @keyframes fadeInAgency { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
 /* ========================================= */
-/* === 7. MOBILE RESPONSIVE FIXES (UPDATED) === */
+/* === 7. MOBILE RESPONSIVE FIXES === */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* ปรับ Container หลักให้มีระยะห่างจากขอบจอเล็กน้อย */
-    .settingsContainer {
+    .settingsContainer, .settingsSection {
         width: 100% !important;
-        margin: 0 auto !important;
-        padding: 10px 10px !important; /* เพิ่มช่องว่างด้านนอกซ้ายขวา */
-        box-sizing: border-box !important;
-    }
-
-    /* ปรับกล่อง Card */
-    .settingsSection {
-        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
         padding: 20px 16px !important; 
         box-sizing: border-box !important;
-        /* ลบ overflow-x: hidden ออก เพื่อไม่ให้กินขอบเงา (Shadow) เวลา Focus */
-        overflow: visible !important; 
-        height: auto !important;
+        overflow-x: hidden !important; 
     }
-
-    /* ปรับส่วน Header/Filter ให้เรียงแนวตั้ง */
     .settingsHeaderDropdown {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
-        padding: 20px 16px !important;
+        padding: 16px !important;
         height: auto !important;
-        gap: 16px !important; /* เพิ่มระยะห่างระหว่าง Input */
     }
-
-    /* บังคับให้ Group เต็มความกว้าง */
     .filterGroup, .agencyFormGroup {
         width: 100% !important;
-        margin-bottom: 0 !important; /* ใช้ gap ของ parent แทน */
+        min-width: 0 !important; 
+        margin-bottom: 12px;
         display: block !important;
     }
-
-    /* *** สำคัญ: แก้ไข Input/Select บนมือถือ *** */
-    .settingsSection select, 
-    .filterGroup select, 
-    .searchInput, 
-    .agencyInput,
-    .agencyInputCode {
+    .settingsSection select, .filterGroup select, .searchInput, .agencyInput {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         box-sizing: border-box !important;
-        
-        /* เพิ่มเป็น 16px เพื่อป้องกัน iPhone ซูมหน้าจออัตโนมัติ */
-        font-size: 16px !important; 
-        
+    }
+    .settingsSection select {
+        display: block !important;
         height: 48px !important;
-        margin-top: 5px !important;
-        margin-bottom: 5px !important;
-        background-position: right 16px center !important; /* ขยับลูกศรให้สมดุล */
+        margin-top: 12px !important; 
+        margin-bottom: 12px !important;
+        background-position: right 12px center !important;
+        font-size: 16px !important; 
     }
-
-    /* ปรับ Layout ภายใน Card ข้อมูลหน่วยงาน */
-    .agencyViewContainer, 
-    .agencyInfoGrid, 
-    .agencyRow2, 
-    .agencyAddressGrid,
-    .agencyProfileHeader { 
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px !important;
-    }
-    
-    .agencyProfileHeader {
-        align-items: center !important;
-        text-align: center !important;
-    }
-
-    .agencyBtnEditWarning {
-        width: 100% !important;
-        justify-content: center !important;
-    }
-
-    .agencyModalContainer { 
-        width: 95% !important; 
-        max-height: 90vh !important; 
-    }
+    .agencyViewContainer, .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { grid-template-columns: 1fr !important; }
+    .agencyModalContainer { width: 95% !important; max-height: 95vh !important; }
 }
