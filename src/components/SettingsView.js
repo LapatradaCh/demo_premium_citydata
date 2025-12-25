@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import styles from "./css/SettingsView.module.css"; 
+import styles from "./css/SettingsView.module.css"; // ตรวจสอบว่า path นี้ตรงกับไฟล์ CSS ของคุณ
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
@@ -11,7 +11,6 @@ import {
 // ------------------------------------------------------------------
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
 const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
-
 
 // ------------------------------------------------------------------
 // --- Helper Components ---
@@ -30,7 +29,7 @@ const AgencySettings = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
+   
   // ✅ เพิ่ม State สำหรับเก็บ ID ของหน่วยงานปัจจุบัน
   const [orgId, setOrgId] = useState(null);
 
