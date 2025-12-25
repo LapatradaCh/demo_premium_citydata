@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import styles from "./css/SettingsView.module.css"; // ตรวจสอบว่า path นี้ตรงกับไฟล์ CSS ของคุณ
+import styles from "./css/Signin.module.css"; // ตรวจสอบ path ไฟล์ css
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
   FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
-  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy, FaSpinner
+  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy, FaSpinner, FaChevronDown
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
@@ -23,6 +23,59 @@ const MockToggle = () => (
 );
 
 // ==================================================================================
+// [NEW] Custom Dropdown Component (แก้ปัญหาเมนูล้นจอ)
+// ==================================================================================
+const CustomDropdown = ({ options, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // หา label ของค่าที่เลือกอยู่ปัจจุบัน
+  const selectedLabel = options.find(opt => opt.id === value)?.label || "กรุณาเลือก";
+
+  // ปิด Dropdown เมื่อคลิกที่อื่น
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className={styles.customDropdownContainer} ref={dropdownRef}>
+      {/* Trigger: กล่องที่แสดงผลปกติ */}
+      <div 
+        className={styles.customDropdownTrigger} 
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>{selectedLabel}</span>
+        <FaChevronDown className={`${styles.chevronIcon} ${isOpen ? styles.chevronRotate : ''}`} />
+      </div>
+
+      {/* List: รายการเมนู (แสดงเฉพาะตอน isOpen) */}
+      {isOpen && (
+        <div className={styles.customDropdownList}>
+          {options.map((opt) => (
+            <div
+              key={opt.id}
+              className={`${styles.customDropdownOption} ${value === opt.id ? styles.selected : ''}`}
+              onClick={() => {
+                onChange(opt.id);
+                setIsOpen(false);
+              }}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==================================================================================
 // 1. ส่วน "ข้อมูลหน่วยงาน" (CONNECTED TO REAL API)
 // ==================================================================================
 const AgencySettings = () => {
@@ -30,41 +83,29 @@ const AgencySettings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
    
-  // ✅ เพิ่ม State สำหรับเก็บ ID ของหน่วยงานปัจจุบัน
   const [orgId, setOrgId] = useState(null);
-
-  // State สำหรับซ่อน/แสดงรหัส
   const [showCodes, setShowCodes] = useState({ admin: false, user: false });
-
-  // State สำหรับเก็บรูปภาพ
   const [logoPreview, setLogoPreview] = useState(null); 
   const fileInputRef = useRef(null); 
-
-  // State สำหรับเก็บตัวเลือก Dropdown (Master Data)
   const [orgTypeOptions, setOrgTypeOptions] = useState([]);
 
-  // Initial State
   const [formData, setFormData] = useState({
     name: "",
     adminCode: "",
     userCode: "",
-    agencyType: "", // เก็บเป็น ID (Integer)
+    agencyType: "",
     province: "",
     district: "",
     subDistrict: "",
     phone: "",
   });
 
-  // --- 1. FETCH DATA (GET) ---
   useEffect(() => {
-    
-    // 1.1 ฟังก์ชันดึง Master Data (ประเภทองค์กร)
     const fetchOrgTypes = async () => {
         try {
             const res = await fetch(API_ORG_TYPES_URL);
             if(res.ok) {
                 const data = await res.json();
-                console.log("Master Data ประเภทองค์กร:", data); // <--- เช็คตรงนี้
                 setOrgTypeOptions(data);
             }
         } catch (error) {
@@ -72,12 +113,9 @@ const AgencySettings = () => {
         }
     };
 
-    // 1.2 ฟังก์ชันดึงข้อมูลหน่วยงาน
     const fetchOrgData = async () => {
       try {
         setIsLoading(true);
-
-        // ✅ ย้ายการดึง LocalStorage มาไว้ตรงนี้ เพื่อให้ได้ข้อมูลล่าสุดเสมอ
         let currentId = null;
         try {
           const storedOrgString = localStorage.getItem("lastSelectedOrg");
@@ -91,29 +129,20 @@ const AgencySettings = () => {
           console.error("Error parsing lastSelectedOrg:", error);
         }
 
-        // ถ้าหา ID ไม่เจอ ให้แจ้งเตือนและหยุดทำงาน
         if (!currentId) {
-            alert("ไม่พบข้อมูลหน่วยงาน (กรุณาเลือกหน่วยงานใหม่)");
+            // alert("ไม่พบข้อมูลหน่วยงาน (กรุณาเลือกหน่วยงานใหม่)");
             setIsLoading(false);
             return;
         }
 
-        // ✅ Set ID ลง State ไว้ใช้ตอนบันทึก
         setOrgId(currentId);
-        console.log("Fetching Data for Org ID:", currentId);
-
-        // ใช้ currentId ที่เพิ่งดึงมา ยิง API
         const url = `${API_BASE_URL}?id=${currentId}`;
-        
-        // เรียกดึง Types
         await fetchOrgTypes(); 
 
         const res = await fetch(url);
         const textResponse = await res.text();
 
-        if (!res.ok) {
-          throw new Error(`API Error (${res.status}): ${textResponse}`);
-        }
+        if (!res.ok) throw new Error(`API Error (${res.status}): ${textResponse}`);
 
         let data;
         try {
@@ -122,15 +151,11 @@ const AgencySettings = () => {
           throw new Error("Server returned invalid JSON");
         }
 
-        // Map ข้อมูลจาก DB (snake_case) -> Frontend (camelCase)
         setFormData({
             name: data.organization_name || "",
             adminCode: data.admin_code || "",
             userCode: data.organization_code || "",
-            
-            // Map ID มาใส่ state
             agencyType: data.org_type_id || "", 
-            
             province: data.province || "",
             district: data.district || "",
             subDistrict: data.sub_district || "",
@@ -143,7 +168,7 @@ const AgencySettings = () => {
 
       } catch (error) {
         console.error("Fetch error:", error);
-        alert(`โหลดข้อมูลไม่สำเร็จ: ${error.message}`);
+        // alert(`โหลดข้อมูลไม่สำเร็จ: ${error.message}`);
       } finally {
         setIsLoading(false);
       }
@@ -152,18 +177,13 @@ const AgencySettings = () => {
     fetchOrgData();
   }, []);
 
-  // --- 2. UPDATE DATA (PUT) ---
   const handleSaveData = async () => {
     try {
         setIsSaving(true);
+        if (!orgId) throw new Error("ไม่พบ ID หน่วยงาน");
 
-        if (!orgId) {
-            throw new Error("ไม่พบ ID หน่วยงาน (กรุณารีเฟรชหน้าเว็บ)");
-        }
-
-        // Prepare Payload (Map กลับเป็น snake_case)
         const payload = {
-            organization_id: orgId, // ✅ ใช้ ID จาก State ที่ดึงมาได้ถูกต้อง
+            organization_id: orgId,
             organization_name: formData.name,
             org_type_id: formData.agencyType, 
             district: formData.district,
@@ -179,10 +199,7 @@ const AgencySettings = () => {
         });
 
         const textResponse = await res.text();
-
-        if (!res.ok) {
-            throw new Error(`Update failed: ${textResponse}`);
-        }
+        if (!res.ok) throw new Error(`Update failed: ${textResponse}`);
 
         const updatedData = JSON.parse(textResponse);
         alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
@@ -222,14 +239,11 @@ const AgencySettings = () => {
     }
   };
 
-  // --- Helper: หาชื่อ Label จาก ID (สำหรับแสดงผล View Mode) ---
   const getOrgTypeLabel = (id) => {
-      // แปลง id เป็น number เพื่อเทียบกับ value ที่มักเป็น number
       const found = orgTypeOptions.find(opt => opt.value === id);
       return found ? found.label : "-";
   };
 
-  // --- Loading State ---
   if (isLoading) {
     return (
         <div style={{ padding: "50px", textAlign: "center", color: "#666" }}>
@@ -239,7 +253,6 @@ const AgencySettings = () => {
     );
   }
 
-  // --- VIEW MODE ---
   return (
     <>
         <div className={styles.agencyViewContainer}>
@@ -251,7 +264,6 @@ const AgencySettings = () => {
                     <div>
                         <h2 className={styles.agencyOrgName}>{formData.name || "-"}</h2>
                         <div className={styles.agencyBadges}>
-                            {/* แสดงผลชื่อประเภทหน่วยงานจาก ID */}
                             <span className={styles.agencyBadgeType}>
                                 <FaCity style={{fontSize:10}}/> {getOrgTypeLabel(formData.agencyType)}
                             </span>
@@ -265,11 +277,9 @@ const AgencySettings = () => {
             </div>
 
             <div className={styles.agencyInfoGrid}>
-                {/* Info Box 1: Codes */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaUnlockAlt style={{color:'#0d6efd'}}/> รหัสเข้าร่วมองค์กร</div>
                       
-                    {/* Admin Code */}
                     <div className={styles.agencyDataRow}>
                         <span>Admin:</span> 
                         <div className={styles.codeRevealGroup}>
@@ -285,7 +295,6 @@ const AgencySettings = () => {
                         </div>
                     </div>
 
-                    {/* User Code */}
                     <div className={styles.agencyDataRow}>
                         <span>User:</span> 
                         <div className={styles.codeRevealGroup}>
@@ -302,7 +311,6 @@ const AgencySettings = () => {
                     </div>
                 </div>
 
-                {/* Info Box 2: Address */}
                 <div className={styles.agencyInfoBox}>
                     <div className={styles.agencyBoxHeader}><FaMapMarkedAlt style={{color:'#198754'}}/> พื้นที่รับผิดชอบ</div>
                       
@@ -318,7 +326,6 @@ const AgencySettings = () => {
             </div>
         </div>
         
-        {/* POPUP EDIT MODAL */}
         {isEditModalOpen && (
             <>
               <div className={styles.agencyModalBackdrop} onClick={() => !isSaving && setIsEditModalOpen(false)} />
@@ -331,7 +338,6 @@ const AgencySettings = () => {
                 </div>
                   
                 <div className={styles.agencyModalBody}>
-                      {/* ส่วนอัปโหลดรูปภาพ */}
                       <div className={styles.agencyImageSection}>
                         <input 
                             type="file" 
@@ -351,17 +357,14 @@ const AgencySettings = () => {
                         <span className={styles.agencyHint}>แตะเพื่อเปลี่ยนโลโก้</span>
                       </div>
 
-                      {/* ฟอร์มข้อมูล */}
                       <div className={styles.agencyFormContainer}>
                           
-                        {/* Group 1: ข้อมูลทั่วไป */}
                         <div className={styles.agencySectionTitle}>ข้อมูลทั่วไป</div>
                         <div className={styles.agencyFormGroup}>
                             <label className={styles.agencyLabel}>ชื่อหน่วยงาน</label>
                             <input className={styles.agencyInput} value={formData.name} onChange={(e)=>handleChange('name', e.target.value)} />
                         </div>
                           
-                        {/* Dropdown เลือกประเภทหน่วยงาน */}
                         <div className={styles.agencyFormGroup}>
                             <label className={styles.agencyLabel}>ประเภทหน่วยงาน <span className={styles.req}>*</span></label>
                             <select 
@@ -378,7 +381,6 @@ const AgencySettings = () => {
                             </select>
                         </div>
 
-                        {/* Group 2: รหัส (Read Only) */}
                         <div className={styles.agencyDivider}></div>
                         <div className={styles.agencySectionTitle}><FaUnlockAlt/> รหัสเข้าร่วม (แก้ไขไม่ได้)</div>
                         <div className={styles.agencyRow2}>
@@ -392,7 +394,6 @@ const AgencySettings = () => {
                               </div>
                         </div>
 
-                        {/* Group 3: ที่อยู่ */}
                         <div className={styles.agencyDivider}></div>
                         <div className={styles.agencySectionTitle}><FaMapMarkedAlt/> ที่อยู่และติดต่อ</div>
                           
@@ -498,7 +499,9 @@ const QRCreateSettingsContent = () => (
   </div>
 );
 
+// ==================================================================================
 // Main View
+// ==================================================================================
 const SettingsView = () => {
   const settingsOptions = [
     { id: "ข้อมูลหน่วยงาน", label: "ข้อมูลหน่วยงาน" },
@@ -526,9 +529,14 @@ const SettingsView = () => {
           <label style={{paddingLeft:4, marginBottom:8, display:'flex', alignItems:'center', gap:8, fontWeight:700, fontSize:15}}>
             <FaCog /> เมนูตั้งค่าระบบ
           </label>
-          <select value={activeSetting} onChange={(e) => setActiveSetting(e.target.value)}>
-            {settingsOptions.map((opt) => (<option key={opt.id} value={opt.id}>{opt.label}</option>))}
-          </select>
+          
+          {/* [CUSTOM DROPDOWN] ใช้ตัวนี้แทน Select ธรรมดา */}
+          <CustomDropdown 
+            options={settingsOptions} 
+            value={activeSetting} 
+            onChange={setActiveSetting} 
+          />
+          
         </div>
       </div>
       <div className={styles.settingsContentArea}>
