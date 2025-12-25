@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Fixed: Tighter Dropdown Padding)
+   Signin.module.css (Final Attempt: Minimal Padding Fix)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -41,8 +41,7 @@
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
-    /* เอา overflow: hidden ออก เพื่อป้องกันการตัดขอบเงาในบางมุมมอง */
-    overflow: visible; 
+    overflow: visible; /* ปล่อยให้เมนูเด้งออกได้โดยไม่โดนตัด */
 }
 
 .settingsTitle { 
@@ -81,7 +80,7 @@
 }
 
 /* ========================================= */
-/* === 3. INPUTS & DROPDOWNS (PILL SHAPE) === */
+/* === 3. INPUTS & DROPDOWNS (MINIMALIST) === */
 /* ========================================= */
 .settingsSection select,
 .filterGroup select {
@@ -90,13 +89,14 @@
     appearance: none;
     display: block;
     
+    /* บังคับความกว้างให้พอดีกรอบ 100% */
     width: 100%;
-    max-width: 100%; 
-    min-width: 0;
     
     height: 48px; 
-    /* [ปรับแก้] ลด Padding ขวาลงเล็กน้อย เพื่อไม่ให้ Dropdown บานออกมากเกินไป */
-    padding: 10px 35px 10px 15px; 
+    
+    /* [จุดสำคัญ] ลด Padding ขวาลงสุดๆ เพื่อลดความบานของเมนู */
+    /* เดิม 40px -> ปรับเหลือ 24px พอให้วางไอคอนได้ */
+    padding: 10px 24px 10px 16px; 
     
     margin-top: 8px; 
     margin-bottom: 12px;
@@ -107,25 +107,25 @@
     color: #333;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s ease;
-
-    /* ใส่ ellipsis เพื่อตัดคำในสถานะปกติ */
+    
+    /* จัดการข้อความยาว */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
+    /* ขยับไอคอนลูกศรให้ชิดขวามากขึ้น เพื่อประหยัดพื้นที่ */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 14px center; /* ปรับตำแหน่งลูกศรให้เข้ามาชิดขึ้น */
-    background-size: 16px;
+    background-position: right 8px center; 
+    background-size: 14px;
 }
 
-/* [เพิ่มใหม่] พยายาม Reset Padding ของตัวเลือกด้านใน (Support บาง Browser) */
+/* Reset option styling เพื่อไม่ให้ Browser คำนวณเพี้ยน */
 .settingsSection select option,
 .filterGroup select option {
-    padding: 4px 10px;
     background-color: #ffffff;
     color: #333333;
+    padding: 2px 5px; /* ลด padding ในตัวเลือก */
 }
 
 .settingsSection select:hover,
@@ -598,7 +598,7 @@
         height: 48px !important;
         margin-top: 12px !important; 
         margin-bottom: 12px !important;
-        background-position: right 12px center !important;
+        background-position: right 8px center !important; /* ปรับใน Mobile ด้วย */
         font-size: 16px !important; 
     }
     .agencyViewContainer, .agencyInfoGrid, .agencyRow2, .agencyAddressGrid { grid-template-columns: 1fr !important; }
