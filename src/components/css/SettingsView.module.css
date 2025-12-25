@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Final Full Version - 100% Width QR Button)
+   Signin.module.css (Fixed: Tighter Dropdown Padding)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -10,17 +10,12 @@
 }
 
 :root { 
-    /* Palette สีหลัก */
-    --color-primary: #28a745;   /* สีเขียว (Solid Green) */
-    --color-danger: #dc3545;    /* สีแดง (Solid Red) */
-    --color-warning: #f59e0b;   /* สีส้มเหลือง (ปุ่มแก้ไข) */
-    
-    /* Text & Border */
+    --color-primary: #28a745;
+    --color-danger: #dc3545;
+    --color-warning: #f59e0b;
     --color-text-main: #333333;
     --color-text-sub: #555555;
     --color-border: #e0e0e0;
-    
-    /* Backgrounds */
     --bg-page: #fafafa;
     --bg-card: #ffffff;
 }
@@ -35,17 +30,19 @@
     flex-direction: column; 
     gap: 24px; 
     margin: 0 auto; 
-    font-family: 'Kanit', sans-serif; /* แนะนำฟอนต์ Kanit หรือตามธีมเว็บ */
+    font-family: 'Kanit', sans-serif;
 }
 
 .settingsSection { 
     width: 100%; 
     background: var(--bg-card); 
     border: 1px solid var(--color-border); 
-    border-radius: 24px; /* ความโค้งกล่องหลัก */
+    border-radius: 24px; 
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
+    /* เอา overflow: hidden ออก เพื่อป้องกันการตัดขอบเงาในบางมุมมอง */
+    overflow: visible; 
 }
 
 .settingsTitle { 
@@ -92,23 +89,43 @@
     -moz-appearance: none;
     appearance: none;
     display: block;
+    
     width: 100%;
+    max-width: 100%; 
+    min-width: 0;
+    
     height: 48px; 
-    padding: 10px 40px 10px 20px; 
+    /* [ปรับแก้] ลด Padding ขวาลงเล็กน้อย เพื่อไม่ให้ Dropdown บานออกมากเกินไป */
+    padding: 10px 35px 10px 15px; 
+    
     margin-top: 8px; 
     margin-bottom: 12px;
     background-color: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; 
     font-size: 15px;
     color: #333;
     font-family: inherit;
     cursor: pointer;
     transition: all 0.2s ease;
+
+    /* ใส่ ellipsis เพื่อตัดคำในสถานะปกติ */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 18px center;
+    background-position: right 14px center; /* ปรับตำแหน่งลูกศรให้เข้ามาชิดขึ้น */
     background-size: 16px;
+}
+
+/* [เพิ่มใหม่] พยายาม Reset Padding ของตัวเลือกด้านใน (Support บาง Browser) */
+.settingsSection select option,
+.filterGroup select option {
+    padding: 4px 10px;
+    background-color: #ffffff;
+    color: #333333;
 }
 
 .settingsSection select:hover,
@@ -126,7 +143,7 @@
 .searchInput { 
     width: 100%; 
     padding: 12px 20px; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; 
     border: 1px solid #ccc; 
     font-size: 14px; 
     background-color: #fff; 
@@ -158,9 +175,9 @@
     flex-direction: column; 
     gap: 6px; 
     min-width: 150px; 
+    max-width: 100%;
 }
 
-/* ปุ่ม Filter ทั่วไป */
 .filterApplyButton { 
     padding: 12px 24px; 
     font-size: 15px; 
@@ -168,7 +185,7 @@
     color: #fff; 
     background-color: var(--color-primary); 
     border: none; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; 
     cursor: pointer; 
     text-align: center; 
     white-space: nowrap;
@@ -178,7 +195,6 @@
     background-color: #218838; 
 }
 
-/* --- QR Code Section --- */
 .qrCodePlaceholder { 
     width: 100%; 
     min-height: 250px; 
@@ -201,9 +217,8 @@
     gap: 16px; 
 }
 
-/* [NEW] ปุ่มสร้าง QR Code ขยายเต็ม 100% ให้เท่ากับ Input ด้านบน */
 .qrForm .filterApplyButton {
-    width: 100%;              /* เต็มความกว้าง */
+    width: 100%;              
     margin-top: 10px;
     box-shadow: 0 4px 10px rgba(40, 167, 69, 0.25);
 }
@@ -346,7 +361,6 @@
 .iconBtnCopy { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; padding: 8px; border-radius: 50%; transition: all 0.2s; margin-left: 8px; }
 .iconBtnCopy:hover { color: var(--color-primary); background-color: #e8f5e9; }
 
-/* [FIX] ปรับการแสดงผล Code ให้ชิดซ้าย */
 .agencyCodeFont { 
     font-family: monospace; 
     font-size: 15px; 
@@ -392,7 +406,6 @@
 
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-/* ปุ่มปิดสีแดง (ไม่หมุน) */
 .agencyBtnCloseRed { 
     background: var(--color-danger); 
     border: none; 
@@ -462,7 +475,7 @@
     width: 100%; 
     padding: 12px 20px; 
     border: 1px solid #d1d5db; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; 
     font-size: 14px; 
     background: #fff; 
     transition: border 0.2s; 
@@ -473,7 +486,6 @@
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
 
-/* [FIX] ช่องกรอก Code ชิดซ้าย */
 .agencyInputCode { 
     width: 100%; 
     padding: 12px 20px; 
@@ -503,7 +515,6 @@
     border-radius: 0 0 24px 24px; 
 }
 
-/* ปุ่ม Cancel สีแดง + มน */
 .agencyBtnCancel { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -517,7 +528,6 @@
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
-/* ปุ่ม Save สีเขียว + มน */
 .agencyBtnSave { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -535,14 +545,12 @@
     transform: translateY(-1px); 
 }
 
-/* Modal Filter เล็กๆ */
 .filterModalBackdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1999; backdrop-filter: blur(4px); }
 .filterModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: #ffffff; border-radius: 24px; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; }
 .filterModalHeader { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; }
 .filterModalClose { background: var(--color-danger); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
 .filterModalContent { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
-/* Toggle Switch */
 .mockToggle { position: relative; display: inline-block; width: 50px; height: 28px; }
 .mockToggle input { opacity: 0; width: 0; height: 0; }
 .mockSlider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 28px; }
