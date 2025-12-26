@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* =======================================================
-   1. THEME UTILITIES & COLORS
+   1. THEME UTILITIES & COLORS (คงเดิมไว้)
    ======================================================= */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
@@ -13,17 +13,18 @@
 .text-reject       { color: #64748b !important; }
 
 .badge-status {
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
   font-size: 11px;
   font-weight: 700;
   width: fit-content;
   display: inline-block;
   line-height: 1.4;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
   color: #ffffff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  letter-spacing: 0.5px;
 }
 
 /* =======================================================
@@ -33,12 +34,13 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    /* เปลี่ยนพื้นหลังเป็นสีเทาอ่อนมาก เพื่อให้ Card สีขาวเด้งขึ้นมา */
+    background-color: #f8fafc; 
+    font-family: 'Prompt', sans-serif !important;
 }
 
 .container {
   min-height: 100vh;
-  background-color: #ffffff; 
-  font-family: 'Prompt', sans-serif !important;
   padding-bottom: 80px;
   width: 100% !important;
   box-sizing: border-box;
@@ -54,7 +56,7 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* เงาบางลง */
   width: 100% !important;
   box-sizing: border-box;
 }
@@ -75,20 +77,21 @@ html, body {
 
 /* Main Content */
 .main {
-  padding: 24px 32px;
+  padding: 32px; /* เพิ่ม padding รอบนอก */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px; /* เพิ่มระยะห่างระหว่าง Section */
   width: 100% !important;
   box-sizing: border-box;
-  max-width: 1600px;
+  max-width: 1440px; /* จำกัดความกว้างไม่ให้กราฟยืดจนน่าเกลียด */
 }
 
 /* --- DASHBOARD GRID --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  /* ปรับสัดส่วนใหม่: ซ้าย 260px, ขวา Auto */
+  grid-template-columns: 260px 1fr;
   gap: 24px;
   width: 100%;
 }
@@ -96,7 +99,7 @@ html, body {
 .rightGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px; /* ระยะห่างระหว่างการ์ดเล็ก */
   align-content: stretch;
 }
 
@@ -104,17 +107,18 @@ html, body {
    3. CARDS COMPONENTS
    ======================================================= */
 .statusCard {
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 24px; /* โค้งมนมากขึ้น */
+  padding: 24px;
+  /* เงาแบบ Soft Shadow */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 120px;
+  min-height: 140px; /* เพิ่มความสูงขั้นต่ำ */
   height: 100%;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.1);
   position: relative;
   overflow: hidden;
   color: #ffffff;
@@ -123,18 +127,34 @@ html, body {
 
 .statusCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  filter: brightness(1.05);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  filter: brightness(1.02);
 }
 
 .totalCard {
-  background-color: #0f172a; 
+  background: linear-gradient(145deg, #0f172a, #1e293b); /* ไล่เฉดสี */
   padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%; 
   box-sizing: border-box;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+  position: relative;
+}
+
+/* เพิ่มลวดลายวงกลมจางๆ ให้การ์ด Total */
+.totalCard::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 .cardHeader {
@@ -143,58 +163,59 @@ html, body {
   align-items: flex-start;
   margin-bottom: 12px;
   z-index: 2;
+  position: relative;
 }
 
 .cardTitle {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   opacity: 0.95;
   color: #ffffff; 
   white-space: nowrap;
 }
 
-.totalCard .cardTitle { font-size: 24px; }
+.totalCard .cardTitle { 
+    font-size: 20px; 
+    font-weight: 600;
+}
 
 .cardCount {
-  font-size: 36px;
+  font-size: 48px;
   font-weight: 800;
   line-height: 1;
   text-align: right;
   margin-top: auto;
   color: #ffffff !important;
   z-index: 2;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .totalCard .cardCount {
-  font-size: 80px;
-  margin-top: auto;
-  margin-bottom: 20px;
+  font-size: 96px; /* ตัวเลขใหญ่สะใจ */
+  margin: auto 0;
   text-align: center;
+  letter-spacing: -2px;
+  /* เทคนิคทำตัวหนังสือไล่สี (ถ้า Browser รองรับ) */
+  background: linear-gradient(to bottom, #ffffff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* ถ้าไม่รองรับจะเป็นสีขาวปกติ */
+  color: #fff; 
 }
 
-.cardDecoration {
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Chart Cards Container */
+/* =======================================================
+   4. CHART & SECTIONS
+   ======================================================= */
 .sectionCard {
   background-color: #ffffff;
-  padding: 24px;
-  border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  padding: 32px; /* เพิ่มพื้นที่หายใจภายใน */
+  border-radius: 24px;
+  /* เอา border ออก ใช้เงาแทน */
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   min-width: 0; 
-  /* [แก้ไข] เปลี่ยนเป็น visible เพื่อให้ Tooltip/ชื่อ ไม่ถูกตัด */
   overflow: visible !important; 
   width: 100%;
   box-sizing: border-box;
@@ -208,6 +229,7 @@ html, body {
   flex-wrap: wrap;
   gap: 16px;
   padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9; /* เส้นแบ่งบางๆ */
 }
 
 .sectionTitle {
@@ -216,17 +238,18 @@ html, body {
   color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
 }
 
+/* Decoration หน้าหัวข้อ */
 .sectionTitle::before {
   content: '';
   display: inline-block;
   width: 6px;
-  height: 20px;
+  height: 24px;
   background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .sectionSubtitle {
@@ -238,25 +261,24 @@ html, body {
 
 /* Filters */
 .filterContainer {
-  background-color: #ffffff; 
+  background-color: #f8fafc; 
   padding: 4px;
   border-radius: 12px;
   display: flex;
-  gap: 6px;
+  gap: 4px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   max-width: 100%;
   overflow-x: auto; 
 }
 
 .filterButton {
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid transparent;
   background-color: transparent;
   color: #64748b;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -265,17 +287,18 @@ html, body {
 .filterButtonActive {
   background-color: #ffffff;
   color: #f59e0b;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-color: #e2e8f0;
 }
 
 /* Legend & Tooltip */
 .legendContainer {
   display: flex;
   flex-direction: row;        
-  justify-content: center;       
+  justify-content: center;        
   flex-wrap: wrap;              
-  gap: 8px;                      
-  margin-top: 20px;
+  gap: 12px;                      
+  margin-top: 24px;
   width: 100%;
 }
 
@@ -283,48 +306,48 @@ html, body {
   display: inline-flex;        
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 6px 14px;             
-  border-radius: 8px;           
+  gap: 8px;
+  padding: 8px 16px;              
+  border-radius: 10px;            
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   font-size: 12px;
-  font-weight: 500;
-  color: #64748b;
+  font-weight: 600;
+  color: #475569;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
-  width: auto;                  
 }
+.legendBtn:hover { background-color: #f8fafc; }
 
-.legendDot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
 .customTooltip {
   background-color: rgba(255, 255, 255, 0.98);
   border: 1px solid #f1f5f9;
-  border-radius: 12px;
-  padding: 12px 16px;
+  border-radius: 16px;
+  padding: 16px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
-.tooltipLabel { font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
-.tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+.tooltipLabel { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
+.tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 /* Satisfaction */
-.satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.scoreBig { font-size: 56px; font-weight: 800; color: #FFAB00; line-height: 0.9; }
-.starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; width: 100%; }
-.starLabel { width: 28px; font-weight: 700; color: #334155; }
-.progressTrack { flex: 1; height: 12px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
+.satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
+.starRow { display: flex; align-items: center; gap: 16px; font-size: 14px; margin-bottom: 14px; width: 100%; }
+.starLabel { width: 32px; font-weight: 700; color: #334155; }
+.progressTrack { flex: 1; height: 10px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
 .progressBar { height: 100%; border-radius: 99px; }
-.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; }
+.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; font-size: 13px; }
 
-/* Top Header */
+/* Top Header Elements */
 .topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .topBadge {
-  background-color: #eff6ff; color: #1d4ed8; padding: 4px 12px;
-  border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe;
+  background-color: #eff6ff; color: #1d4ed8; padding: 6px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid #bfdbfe;
   display: flex; align-items: center;
 }
 .emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
@@ -334,12 +357,9 @@ html, body {
 /* Chart Wrapper */
 .chartWrapper {
     width: 100%;
-    /* [แก้ไข] เปลี่ยน height เป็น auto เพื่อให้ยืดตามข้อมูล */
     height: auto;
-    /* [เพิ่ม] กำหนดความสูงขั้นต่ำ */
     min-height: 350px;
     margin-bottom: 20px;
-    /* [แก้ไข] เปิดให้แสดงผลส่วนเกินได้ */
     overflow: visible; 
     position: relative;
 }
@@ -362,7 +382,7 @@ html, body {
 /* Tablet & Mobile (จอเล็กกว่า 992px) */
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
-  .main { padding: 16px; gap: 16px; }
+  .main { padding: 16px; gap: 20px; }
   
   /* Layout หลัก: ยุบ Total Card เป็นแถวบน */
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
@@ -370,35 +390,34 @@ html, body {
   /* --- [แก้] ปรับ Total Card แนวนอนให้สวยขึ้น --- */
   .totalCard { 
       height: auto; 
-      min-height: 100px; /* ลดความสูงลงหน่อย */
+      min-height: 110px;
       flex-direction: row; /* เรียงแนวนอน ซ้าย-ขวา */
       align-items: center; 
       justify-content: space-between;
-      padding: 20px 24px;
+      padding: 24px;
       gap: 16px;
   }
   
-  /* [แก้] ลบ Margin ของ Header ทิ้ง เพื่อให้มันอยู่กลางแนวตั้ง */
   .totalCard .cardHeader {
       margin-bottom: 0;
-      flex-direction: column; /* ให้ชื่อกับ 100% เรียงลงมา */
+      flex-direction: column; 
       align-items: flex-start;
-      gap: 4px; /* ระยะห่างระหว่าง ชื่อ กับ 100% */
+      gap: 6px; 
       justify-content: center;
   }
 
-  /* [แก้] บังคับลดขนาดฟอนต์หัวข้อของการ์ด Total ให้เล็กลง */
   .totalCard .cardTitle { 
-      font-size: 16px !important; /* บังคับทับค่า desktop (24px) */
+      font-size: 16px !important; 
       margin-bottom: 0;
   }
 
-  /* ปรับตัวเลขให้นิ่ง */
   .totalCard .cardCount { 
       margin: 0; 
       text-align: right; 
-      font-size: 48px; 
+      font-size: 56px; 
       line-height: 1;
+      /* บนมือถือไม่ต้องไล่สี เพราะอาจอ่านยากในบางจอ */
+      -webkit-text-fill-color: #fff; 
   }
 
   /* Badge 100% */
@@ -408,7 +427,7 @@ html, body {
   }
   /* ---------------------------------------------------- */
 
-  /* ✅ สำคัญ: บังคับให้การ์ดสถานะเป็น 2 คอลัมน์บนมือถือ */
+  /* ✅ Grid Card เล็ก: 2 คอลัมน์บนมือถือ */
   .rightGrid {
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 12px !important;
@@ -416,19 +435,17 @@ html, body {
 
   .statusCard { 
       padding: 16px; 
-      min-height: 100px; 
+      min-height: 120px; 
   }
   
-  /* Override ให้ Card Title ทั่วไปเล็กลง */
-  .cardTitle { font-size: 12px; white-space: normal; }
-  .cardCount { font-size: 28px; }
+  .cardTitle { font-size: 13px; white-space: normal; }
+  .cardCount { font-size: 32px; }
 
   /* กราฟเรียง 1 คอลัมน์ */
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-  /* [เพิ่ม] ลด Padding ของการ์ดกราฟในมือถือ */
   .sectionCard {
-      padding: 12px !important;
+      padding: 20px !important;
   }
 
   /* ส่วนหัวกราฟ */
@@ -436,5 +453,5 @@ html, body {
   .filterContainer { width: 100%; justify-content: space-between; }
   .filterButton { flex: 1; text-align: center; }
   
-  .scoreBig { font-size: 42px; }
+  .scoreBig { font-size: 48px; }
 }
