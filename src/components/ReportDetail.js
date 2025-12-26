@@ -33,6 +33,7 @@ const MOCK_MEDIA_DATA = [
   { type: 'video', url: 'https://www.w3schools.com/html/mov_bbb.mp4' } // ตัวอย่างวิดีโอ
 ];
 
+
 const ReportDetail = ({onGoToInternalMap }) => {
   const reportId = localStorage.getItem("selectedCaseId");
     
@@ -50,7 +51,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const fileInputRef = useRef(null);
 
   // --- 2. เปลี่ยน State เริ่มต้นให้ใช้ Mockup Data ---
-  const [mediaList, setMediaList] = useState(MOCK_MEDIA_DATA);
+  const [mediaList, setMediaList] = useState([]);
   const mediaInputRef = useRef(null);
 
   // Update Logic States
@@ -115,10 +116,44 @@ const ReportDetail = ({onGoToInternalMap }) => {
         setCaseInfo(mappedInfo);
         setTimelineData(result.timeline || []);
         
-        // หมายเหตุ: หากในอนาคตต้องการดึงรูปจริงจาก API ให้ uncomment บรรทัดข้างล่าง และลบ MOCK_MEDIA_DATA ออก
-        // setMediaList(result.attachments || []); 
+        // =======================================================
+    // 2. เพิ่มส่วน Fetch Media (ดึงรูปจาก API ใหม่ที่คุณให้มา)
+    // =======================================================
+    
+    // ดึง UUID จากผลลัพธ์รอบแรก (สำคัญมาก: Backend บอกว่าต้องใช้ UUID)
+    const caseUUID = result.info.issue_cases_id; 
 
-        setLoading(false);
+    if (caseUUID) {
+        try {
+            // ยิงไปที่ Backend ตัวใหม่
+            const mediaRes = await fetch(`https://premium-citydata-api-ab.vercel.app/api/get_url_case_media?case_id=${caseUUID}`);
+            
+            if (mediaRes.ok) {
+                const urlList = await mediaRes.json(); // ได้ค่าเป็น ["url1", "url2", ...]
+                
+                // Map ข้อมูลให้เข้ากับ UI (ต้องเช็คว่าเป็นรูปหรือวิดีโอจากนามสกุลไฟล์)
+                const formattedMedia = urlList.map(url => {
+                    // เช็คนามสกุลไฟล์ว่าเป็น video หรือไม่
+                    const isVideo = url.match(/\.(mp4|mov|webm|avi)$/i);
+                    return {
+                        type: isVideo ? 'video' : 'image',
+                        url: url
+                    };
+                });
+
+                setMediaList(formattedMedia);
+            } else {
+                console.warn("Media fetch failed or empty");
+                setMediaList([]); 
+            }
+        } catch (mediaErr) {
+            console.error("Error fetching media:", mediaErr);
+            setMediaList([]);
+        }
+    }
+    // =======================================================
+
+    setLoading(false);
       } catch (err) {
         console.error("Error fetching details:", err);
         setError(err.message);
