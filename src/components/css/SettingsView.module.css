@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Final: Custom Dropdown Fix)
+   Signin.module.css (Final Full Version - 100% Width QR Button)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -10,12 +10,17 @@
 }
 
 :root { 
-    --color-primary: #28a745;
-    --color-danger: #dc3545;
-    --color-warning: #f59e0b;
+    /* Palette สีหลัก */
+    --color-primary: #28a745;   /* สีเขียว (Solid Green) */
+    --color-danger: #dc3545;    /* สีแดง (Solid Red) */
+    --color-warning: #f59e0b;   /* สีส้มเหลือง (ปุ่มแก้ไข) */
+    
+    /* Text & Border */
     --color-text-main: #333333;
     --color-text-sub: #555555;
     --color-border: #e0e0e0;
+    
+    /* Backgrounds */
     --bg-page: #fafafa;
     --bg-card: #ffffff;
 }
@@ -30,19 +35,17 @@
     flex-direction: column; 
     gap: 24px; 
     margin: 0 auto; 
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Kanit', sans-serif; /* แนะนำฟอนต์ Kanit หรือตามธีมเว็บ */
 }
 
 .settingsSection { 
     width: 100%; 
     background: var(--bg-card); 
     border: 1px solid var(--color-border); 
-    border-radius: 24px; 
+    border-radius: 24px; /* ความโค้งกล่องหลัก */
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
-    /* overflow: visible; ต้องเปิดไว้เพื่อให้ Dropdown เด้งข้ามกล่องได้ */
-    overflow: visible; 
 }
 
 .settingsTitle { 
@@ -81,118 +84,10 @@
 }
 
 /* ========================================= */
-/* === [NEW] CUSTOM DROPDOWN STYLES === */
+/* === 3. INPUTS & DROPDOWNS (PILL SHAPE) === */
 /* ========================================= */
-.customDropdownContainer {
-    position: relative;
-    width: 100%;
-    margin-top: 8px;
-    margin-bottom: 12px;
-    font-family: 'Kanit', sans-serif;
-}
-
-/* ตัวกล่องที่แสดงผล (Trigger) */
-.customDropdownTrigger {
-    width: 100%;
-    height: 48px;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 50px;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 15px;
-    color: #333;
-}
-
-.customDropdownTrigger:hover {
-    border-color: var(--color-primary);
-}
-
-/* รายการเมนูที่เลื่อนลงมา */
-.customDropdownList {
-    position: absolute;
-    top: 55px; /* เว้นระยะจากตัวกล่อง */
-    left: 0;
-    width: 100%; /* บังคับให้กว้างเท่ากับตัวแม่ 100% เป๊ะๆ ไม่ล้นแน่นอน */
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    overflow: hidden;
-    z-index: 999; /* ลอยอยู่เหนือทุกอย่าง */
-    animation: fadeIn 0.2s ease-in-out;
-}
-
-.customDropdownOption {
-    padding: 12px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #333;
-    transition: background 0.1s;
-    border-bottom: 1px solid #f9f9f9;
-    
-    /* ตัดคำถ้ายาวเกินไป */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.customDropdownOption:last-child {
-    border-bottom: none;
-}
-
-.customDropdownOption:hover {
-    background-color: #e8f5e9; /* สีเขียวอ่อนๆ */
-    color: var(--color-primary);
-}
-
-.customDropdownOption.selected {
-    background-color: var(--color-primary);
-    color: #fff;
-}
-
-.chevronIcon {
-    color: #555;
-    font-size: 14px;
-    transition: transform 0.3s;
-}
-
-.chevronRotate {
-    transform: rotate(180deg);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========================================= */
-/* === 3. INPUTS (อื่นๆ ที่ไม่ใช่ Dropdown) === */
-/* ========================================= */
-.searchInput, .agencyInput, .agencyInputCode {
-    width: 100%;
-    padding: 12px 20px;
-    border: 1px solid #d1d5db;
-    border-radius: 50px;
-    font-size: 14px;
-    background: #ffffff;
-    outline: none;
-}
-.agencyInputCode {
-    font-family: monospace;
-    background: #f8f9fa;
-    letter-spacing: 1px;
-}
-.searchInput:focus, .agencyInput:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
-}
-
-/* เก็บ style ของ select เดิมไว้เผื่อใช้ในส่วนอื่น แต่ส่วนหลักเราใช้ CustomDropdown แล้ว */
-.settingsSection select, .filterGroup select {
+.settingsSection select,
+.filterGroup select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -204,18 +99,41 @@
     margin-bottom: 12px;
     background-color: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 50px; 
+    border-radius: 50px; /* ทรงแคปซูล */
     font-size: 15px;
     color: #333;
     font-family: inherit;
     cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    transition: all 0.2s ease;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 18px center;
     background-size: 16px;
+}
+
+.settingsSection select:hover,
+.filterGroup select:hover {
+    border-color: var(--color-primary); 
+}
+
+.settingsSection select:focus,
+.filterGroup select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
+}
+
+.searchInput { 
+    width: 100%; 
+    padding: 12px 20px; 
+    border-radius: 50px; /* ทรงแคปซูล */
+    border: 1px solid #ccc; 
+    font-size: 14px; 
+    background-color: #fff; 
+    outline: none;
+}
+.searchInput:focus {
+    border-color: var(--color-primary);
 }
 
 /* ========================================= */
@@ -240,9 +158,9 @@
     flex-direction: column; 
     gap: 6px; 
     min-width: 150px; 
-    max-width: 100%;
 }
 
+/* ปุ่ม Filter ทั่วไป */
 .filterApplyButton { 
     padding: 12px 24px; 
     font-size: 15px; 
@@ -250,7 +168,7 @@
     color: #fff; 
     background-color: var(--color-primary); 
     border: none; 
-    border-radius: 50px; 
+    border-radius: 50px; /* ทรงแคปซูล */
     cursor: pointer; 
     text-align: center; 
     white-space: nowrap;
@@ -260,6 +178,7 @@
     background-color: #218838; 
 }
 
+/* --- QR Code Section --- */
 .qrCodePlaceholder { 
     width: 100%; 
     min-height: 250px; 
@@ -281,8 +200,10 @@
     flex-direction: column; 
     gap: 16px; 
 }
+
+/* [NEW] ปุ่มสร้าง QR Code ขยายเต็ม 100% ให้เท่ากับ Input ด้านบน */
 .qrForm .filterApplyButton {
-    width: 100%;              
+    width: 100%;              /* เต็มความกว้าง */
     margin-top: 10px;
     box-shadow: 0 4px 10px rgba(40, 167, 69, 0.25);
 }
@@ -425,6 +346,7 @@
 .iconBtnCopy { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; padding: 8px; border-radius: 50%; transition: all 0.2s; margin-left: 8px; }
 .iconBtnCopy:hover { color: var(--color-primary); background-color: #e8f5e9; }
 
+/* [FIX] ปรับการแสดงผล Code ให้ชิดซ้าย */
 .agencyCodeFont { 
     font-family: monospace; 
     font-size: 15px; 
@@ -470,6 +392,7 @@
 
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
+/* ปุ่มปิดสีแดง (ไม่หมุน) */
 .agencyBtnCloseRed { 
     background: var(--color-danger); 
     border: none; 
@@ -535,6 +458,36 @@
 .agencyFormGroup { display: flex; flex-direction: column; gap: 6px; }
 .agencyLabel { font-size: 13px; font-weight: 600; color: #444; }
 
+.agencyInput { 
+    width: 100%; 
+    padding: 12px 20px; 
+    border: 1px solid #d1d5db; 
+    border-radius: 50px; /* ทรงแคปซูล */
+    font-size: 14px; 
+    background: #fff; 
+    transition: border 0.2s; 
+}
+.agencyInput:focus { 
+    outline: none; 
+    border-color: var(--color-primary); 
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
+}
+
+/* [FIX] ช่องกรอก Code ชิดซ้าย */
+.agencyInputCode { 
+    width: 100%; 
+    padding: 12px 20px; 
+    border: 1px solid #d1d5db; 
+    border-radius: 50px; 
+    font-size: 15px; 
+    font-family: monospace; 
+    background: #f8f9fa; 
+    color: #333; 
+    font-weight: 600; 
+    letter-spacing: 1px; 
+    text-align: left; 
+}
+
 .agencyRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .agencyAddressGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .agencyDivider { height: 1px; background: #f0f0f0; margin: 10px 0; }
@@ -550,6 +503,7 @@
     border-radius: 0 0 24px 24px; 
 }
 
+/* ปุ่ม Cancel สีแดง + มน */
 .agencyBtnCancel { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -563,6 +517,7 @@
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
+/* ปุ่ม Save สีเขียว + มน */
 .agencyBtnSave { 
     padding: 10px 24px; 
     border-radius: 50px; 
