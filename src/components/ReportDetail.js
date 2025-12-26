@@ -25,6 +25,14 @@ const IconArrowRight = () => (<svg width="18" height="18" fill="none" stroke="cu
 const IconUsers = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>);
 const IconPhone = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>);
 
+// --- 1. สร้าง Mockup Data สำหรับโชว์รูปตัวอย่าง ---
+const MOCK_MEDIA_DATA = [
+  { type: 'image', url: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=60' }, // รูปถนน/ก่อสร้าง
+  { type: 'image', url: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=500&q=60' }, // รูปเขตก่อสร้าง
+  { type: 'image', url: 'https://images.unsplash.com/photo-1581094794320-c488a37fcf29?auto=format&fit=crop&w=500&q=60' }, // รูปคนทำงาน
+  { type: 'video', url: 'https://www.w3schools.com/html/mov_bbb.mp4' } // ตัวอย่างวิดีโอ
+];
+
 const ReportDetail = ({onGoToInternalMap }) => {
   const reportId = localStorage.getItem("selectedCaseId");
     
@@ -41,8 +49,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Media Gallery States
-  const [mediaList, setMediaList] = useState([]);
+  // --- 2. เปลี่ยน State เริ่มต้นให้ใช้ Mockup Data ---
+  const [mediaList, setMediaList] = useState(MOCK_MEDIA_DATA);
   const mediaInputRef = useRef(null);
 
   // Update Logic States
@@ -106,6 +114,10 @@ const ReportDetail = ({onGoToInternalMap }) => {
         };
         setCaseInfo(mappedInfo);
         setTimelineData(result.timeline || []);
+        
+        // หมายเหตุ: หากในอนาคตต้องการดึงรูปจริงจาก API ให้ uncomment บรรทัดข้างล่าง และลบ MOCK_MEDIA_DATA ออก
+        // setMediaList(result.attachments || []); 
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching details:", err);
@@ -116,18 +128,12 @@ const ReportDetail = ({onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
-  // Handle Media Add (Mock Function)
-  const handleAddMedia = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const isVideo = file.type.startsWith('video');
-      const newMedia = {
-         type: isVideo ? 'video' : 'image',
-         url: URL.createObjectURL(file) 
-      };
-      setMediaList(prev => [...prev, newMedia]);
-      // Note: In real application, you would upload this file to server here.
-    }
+  // --- 3. ฟังก์ชันจำลองการกดเพิ่มรูป (ยังไม่ทำงานจริง) ---
+  const handleAddMediaMock = () => {
+    alert("ส่วนนี้เป็น Mockup: ระบบอัปโหลดจริงจะเชื่อมต่อกับ Database ในภายหลัง");
+    // ตัวอย่าง: ลองเพิ่มรูป Mockup เข้าไปเล่นๆ เพื่อดู Grid ขยาย
+    const newMock = { type: 'image', url: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=60' };
+    setMediaList([...mediaList, newMock]);
   };
 
   // Update Category Function
@@ -405,7 +411,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
       </div>
 
       {/* ========================================= */}
-      {/* NEW SECTION: MEDIA GALLERY (รูปภาพและวิดีโอ) */}
+      {/* NEW SECTION: MEDIA GALLERY (MOCKUP) */}
       {/* ========================================= */}
       <div className={styles.card}>
         <div className={styles.mediaHeader}>
@@ -417,7 +423,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
         </div>
 
         <div className={styles.mediaGrid}>
-           {/* Loop แสดงรายการรูปภาพ/วิดีโอที่มีอยู่ */}
+           {/* Loop แสดงรายการรูปภาพ/วิดีโอ Mockup */}
            {mediaList.map((item, idx) => (
              <div key={idx} className={styles.mediaItem} onClick={() => window.open(item.url, '_blank')}>
                 {item.type === 'video' ? (
@@ -431,15 +437,8 @@ const ReportDetail = ({onGoToInternalMap }) => {
              </div>
            ))}
 
-           {/* ปุ่ม Upload + */}
-           <div className={styles.addMediaBox} onClick={() => mediaInputRef.current.click()}>
-              <input 
-                type="file" 
-                ref={mediaInputRef} 
-                onChange={handleAddMedia} 
-                accept="image/*,video/*" 
-                style={{display:'none'}} 
-              />
+           {/* ปุ่ม Upload + (Mockup Action) */}
+           <div className={styles.addMediaBox} onClick={handleAddMediaMock}>
               <IconPlus />
               <span style={{fontSize:'12px', fontWeight:'600', marginTop:'4px'}}>เพิ่มรูป/วิดีโอ</span>
            </div>
