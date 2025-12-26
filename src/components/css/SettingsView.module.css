@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------
-   Signin.module.css (Final Full Version - 100% Width QR Button)
+   Signin.module.css (Fixed Version for Better Dropdown UI)
    ----------------------------------------------------------- */
 
 /* ========================================= */
@@ -35,14 +35,14 @@
     flex-direction: column; 
     gap: 24px; 
     margin: 0 auto; 
-    font-family: 'Kanit', sans-serif; /* แนะนำฟอนต์ Kanit หรือตามธีมเว็บ */
+    font-family: 'Kanit', sans-serif;
 }
 
 .settingsSection { 
     width: 100%; 
     background: var(--bg-card); 
     border: 1px solid var(--color-border); 
-    border-radius: 24px; /* ความโค้งกล่องหลัก */
+    border-radius: 24px; 
     padding: 24px 28px; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
     max-width: 100%;
@@ -84,7 +84,7 @@
 }
 
 /* ========================================= */
-/* === 3. INPUTS & DROPDOWNS (PILL SHAPE) === */
+/* === 3. INPUTS & DROPDOWNS (UPDATED) === */
 /* ========================================= */
 .settingsSection select,
 .filterGroup select {
@@ -99,12 +99,17 @@
     margin-bottom: 12px;
     background-color: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 50px; /* ทรงแคปซูล */
+    
+    /* [FIXED] ลดความโค้งมนลง เพื่อให้เข้ากับเมนูสี่เหลี่ยมที่เด้งออกมา */
+    border-radius: 12px; 
+    
     font-size: 15px;
     color: #333;
     font-family: inherit;
     cursor: pointer;
     transition: all 0.2s ease;
+    
+    /* Custom Arrow Icon */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 18px center;
@@ -114,19 +119,21 @@
 .settingsSection select:hover,
 .filterGroup select:hover {
     border-color: var(--color-primary); 
+    background-color: #fafafa; /* เพิ่มสีพื้นหลังตอน Hover นิดหน่อย */
 }
 
 .settingsSection select:focus,
 .filterGroup select:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
+    /* [ADDED] เงา Focus แบบนุ่มนวล ไม่แข็งกระด้าง */
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15); 
 }
 
 .searchInput { 
     width: 100%; 
     padding: 12px 20px; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; /* Input ธรรมดาเป็นทรงแคปซูลได้ เพราะไม่มี Popup */
     border: 1px solid #ccc; 
     font-size: 14px; 
     background-color: #fff; 
@@ -168,7 +175,7 @@
     color: #fff; 
     background-color: var(--color-primary); 
     border: none; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px;
     cursor: pointer; 
     text-align: center; 
     white-space: nowrap;
@@ -201,9 +208,8 @@
     gap: 16px; 
 }
 
-/* [NEW] ปุ่มสร้าง QR Code ขยายเต็ม 100% ให้เท่ากับ Input ด้านบน */
 .qrForm .filterApplyButton {
-    width: 100%;              /* เต็มความกว้าง */
+    width: 100%;
     margin-top: 10px;
     box-shadow: 0 4px 10px rgba(40, 167, 69, 0.25);
 }
@@ -346,7 +352,6 @@
 .iconBtnCopy { background: none; border: none; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; padding: 8px; border-radius: 50%; transition: all 0.2s; margin-left: 8px; }
 .iconBtnCopy:hover { color: var(--color-primary); background-color: #e8f5e9; }
 
-/* [FIX] ปรับการแสดงผล Code ให้ชิดซ้าย */
 .agencyCodeFont { 
     font-family: monospace; 
     font-size: 15px; 
@@ -392,7 +397,6 @@
 
 .agencyModalTitle { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
 
-/* ปุ่มปิดสีแดง (ไม่หมุน) */
 .agencyBtnCloseRed { 
     background: var(--color-danger); 
     border: none; 
@@ -462,7 +466,7 @@
     width: 100%; 
     padding: 12px 20px; 
     border: 1px solid #d1d5db; 
-    border-radius: 50px; /* ทรงแคปซูล */
+    border-radius: 50px; 
     font-size: 14px; 
     background: #fff; 
     transition: border 0.2s; 
@@ -473,7 +477,6 @@
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15); 
 }
 
-/* [FIX] ช่องกรอก Code ชิดซ้าย */
 .agencyInputCode { 
     width: 100%; 
     padding: 12px 20px; 
@@ -503,7 +506,6 @@
     border-radius: 0 0 24px 24px; 
 }
 
-/* ปุ่ม Cancel สีแดง + มน */
 .agencyBtnCancel { 
     padding: 10px 24px; 
     border-radius: 50px; 
@@ -517,7 +519,6 @@
 }
 .agencyBtnCancel:hover { background: #bb2d3b; }
 
-/* ปุ่ม Save สีเขียว + มน */
 .agencyBtnSave { 
     padding: 10px 24px; 
     border-radius: 50px; 
