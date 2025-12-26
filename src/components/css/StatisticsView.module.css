@@ -34,7 +34,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    background-color: #f8fafc; /* สีเทาอ่อนมาก ดัน Card ให้เด่น */
+    background-color: #f8fafc; 
     font-family: 'Prompt', sans-serif !important;
 }
 
@@ -89,7 +89,7 @@ html, body {
 /* --- DASHBOARD GRID --- */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 260px 1fr; /* สัดส่วนสมดุล */
+  grid-template-columns: 260px 1fr;
   gap: 24px;
   width: 100%;
 }
@@ -104,6 +104,7 @@ html, body {
 /* =======================================================
    3. CARDS COMPONENTS
    ======================================================= */
+
 /* --- Status Card (การ์ดเล็ก) --- */
 .statusCard {
   border-radius: 24px;
@@ -157,7 +158,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- Total Card (การ์ดใหญ่สีน้ำเงิน) --- */
+/* --- [แก้ไข] Total Card (การ์ดใหญ่สีน้ำเงิน) --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -167,13 +168,13 @@ html, body {
   height: 100%; 
   box-sizing: border-box;
   
-  /* [UPDATED] จัด Layout ใหม่เพื่อดึงเลขไว้ตรงกลาง */
+  /* [จุดที่แก้ 1] เปลี่ยนจาก space-between เป็น flex-start เพื่อคุมตำแหน่งเอง */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* เปลี่ยนจาก space-between เพื่อคุมเอง */
+  justify-content: flex-start; 
 }
 
-/* วงกลมตกแต่ง */
+/* วงกลมตกแต่งด้านหลัง */
 .totalCard::before {
     content: '';
     position: absolute;
@@ -191,31 +192,31 @@ html, body {
     font-weight: 600;
 }
 
-/* [UPDATED] จัดตัวเลขให้อยู่กึ่งกลางพื้นที่ว่าง */
+/* [จุดที่แก้ 2] บังคับตัวเลขให้อยู่กึ่งกลางพื้นที่ว่างที่เหลือ */
 .totalCard .cardCount {
-  /* ขยายพื้นที่ให้เต็มส่วนที่เหลือ */
+  /* ขยายพื้นที่ให้เต็มส่วนที่เหลือจากการ์ด */
   flex: 1;
   width: 100%;
   
-  /* จัดกึ่งกลางเป๊ะๆ */
+  /* จัดให้อยู่กึ่งกลางเป๊ะๆ */
   display: flex;
   align-items: center;
   justify-content: center;
   
-  /* ปรับแต่ง Font */
-  font-size: 96px;
+  /* รีเซ็ตค่าเดิม */
   text-align: center;
-  letter-spacing: -2px;
   margin: 0;
   
-  /* Padding ล่างเล็กน้อยเพื่อหลอกตาให้ดูสมดุลกับ Header ด้านบน */
-  padding-bottom: 20px; 
-
-  /* ไล่สีตัวเลข */
+  /* Font & Styling */
+  font-size: 96px;
+  letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #fff; /* fallback */
+  color: #fff;
+  
+  /* ดันขึ้นนิดหน่อย (Optical Center) เพื่อไม่ให้ดูหนักล่าง */
+  padding-bottom: 20px;
 }
 
 /* =======================================================
@@ -383,7 +384,7 @@ html, body {
 }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (MOBILE DESIGN FIX)
+   6. RESPONSIVE MEDIA QUERIES
    ======================================================= */
 
 /* Desktop กลาง-ใหญ่ */
@@ -399,13 +400,14 @@ html, body {
   
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* --- [Mobile] Total Card แนวนอน --- */
+  /* --- [Mobile] Total Card กลับเป็นแนวนอน --- */
   .totalCard { 
       height: auto; 
       min-height: 110px;
       flex-direction: row; 
       align-items: center; 
-      justify-content: space-between; /* กลับไปใช้ Space between บนมือถือ */
+      /* [จุดสำคัญ] บนมือถือให้กลับไปใช้ space-between */
+      justify-content: space-between; 
       padding: 24px;
       gap: 16px;
   }
@@ -423,10 +425,10 @@ html, body {
       margin-bottom: 0;
   }
 
-  /* [UPDATED MOBILE] Reset ค่า Flex ของตัวเลข เพื่อไม่ให้เบี้ยวในแนวนอน */
+  /* [จุดสำคัญ] Reset ค่า Flex ของตัวเลขบนมือถือ */
   .totalCard .cardCount { 
       flex: unset; /* ยกเลิกการยืดพื้นที่ */
-      width: auto; /* ยกเลิกความกว้าง 100% */
+      width: auto; 
       padding-bottom: 0; /* เอา padding หลอกตาออก */
       margin: 0; 
       text-align: right; 
@@ -440,7 +442,6 @@ html, body {
       padding: 2px 8px;
   }
 
-  /* Grid Card เล็ก 2 คอลัมน์ */
   .rightGrid {
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 12px !important;
