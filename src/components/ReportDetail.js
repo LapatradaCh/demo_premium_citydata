@@ -12,6 +12,12 @@ const IconRefresh = () => (<svg width="14" height="14" fill="none" stroke="curre
 const IconCamera = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>);
 const IconClose = () => (<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>);
 
+// New Icons for Gallery
+const IconGallery = () => (<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>);
+const IconPlus = () => (<svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>);
+const IconPlay = () => (<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>);
+
+
 // Timeline Icons
 const IconClock = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>);
 const IconCheck = () => (<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>);
@@ -34,6 +40,10 @@ const ReportDetail = ({onGoToInternalMap }) => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Media Gallery States
+  const [mediaList, setMediaList] = useState([]);
+  const mediaInputRef = useRef(null);
 
   // Update Logic States
   const [issueTypeList, setIssueTypeList] = useState([]);
@@ -106,6 +116,20 @@ const ReportDetail = ({onGoToInternalMap }) => {
     fetchCaseDetail();
   }, [reportId, refreshKey]);
 
+  // Handle Media Add (Mock Function)
+  const handleAddMedia = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const isVideo = file.type.startsWith('video');
+      const newMedia = {
+         type: isVideo ? 'video' : 'image',
+         url: URL.createObjectURL(file) 
+      };
+      setMediaList(prev => [...prev, newMedia]);
+      // Note: In real application, you would upload this file to server here.
+    }
+  };
+
   // Update Category Function
   const handleUpdateCategory = async () => {
     if (!selectedIssueType || !caseInfo) { alert("กรุณาเลือกประเภทปัญหา"); return; }
@@ -151,7 +175,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'update_status',            
-                case_id: caseInfo.real_id,           
+                case_id: caseInfo.real_id,            
                 user_id: currentUserId,              
                 new_status: statusValue,             
                 comment: statusComment,              
@@ -354,7 +378,7 @@ const ReportDetail = ({onGoToInternalMap }) => {
             </div>
         </div>
 
-        {/* --- NEW AGENCY SECTION (Card List) --- */}
+        {/* --- AGENCY SECTION --- */}
         <div className={`${styles.card} ${styles.agencyCard}`}>
             <div className={styles.sectionHeader}>
                 <IconBuilding /> หน่วยงานที่รับผิดชอบ
@@ -377,6 +401,48 @@ const ReportDetail = ({onGoToInternalMap }) => {
                     </div>
                 ))}
             </div>
+        </div>
+      </div>
+
+      {/* ========================================= */}
+      {/* NEW SECTION: MEDIA GALLERY (รูปภาพและวิดีโอ) */}
+      {/* ========================================= */}
+      <div className={styles.card}>
+        <div className={styles.mediaHeader}>
+           <div className={styles.mediaTitle}>
+             <IconGallery /> รูปภาพและวิดีโอประกอบ (หลักฐานการดำเนินงาน)
+           </div>
+           {/* แสดงจำนวนรูป */}
+           <span style={{fontSize:'13px', color:'#6B7280'}}>{mediaList.length} รายการ</span>
+        </div>
+
+        <div className={styles.mediaGrid}>
+           {/* Loop แสดงรายการรูปภาพ/วิดีโอที่มีอยู่ */}
+           {mediaList.map((item, idx) => (
+             <div key={idx} className={styles.mediaItem} onClick={() => window.open(item.url, '_blank')}>
+                {item.type === 'video' ? (
+                  <>
+                    <video src={item.url} className={styles.mediaImg} />
+                    <div className={styles.videoBadge}><IconPlay /></div>
+                  </>
+                ) : (
+                  <img src={item.url} alt={`evidence-${idx}`} className={styles.mediaImg} />
+                )}
+             </div>
+           ))}
+
+           {/* ปุ่ม Upload + */}
+           <div className={styles.addMediaBox} onClick={() => mediaInputRef.current.click()}>
+              <input 
+                type="file" 
+                ref={mediaInputRef} 
+                onChange={handleAddMedia} 
+                accept="image/*,video/*" 
+                style={{display:'none'}} 
+              />
+              <IconPlus />
+              <span style={{fontSize:'12px', fontWeight:'600', marginTop:'4px'}}>เพิ่มรูป/วิดีโอ</span>
+           </div>
         </div>
       </div>
 
