@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* =======================================================
-   1. THEME UTILITIES & COLORS (คงเดิมไว้)
+   1. THEME UTILITIES & COLORS
    ======================================================= */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
@@ -34,8 +34,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    /* เปลี่ยนพื้นหลังเป็นสีเทาอ่อนมาก เพื่อให้ Card สีขาวเด้งขึ้นมา */
-    background-color: #f8fafc; 
+    background-color: #f8fafc; /* สีเทาอ่อนมาก ดัน Card ให้เด่น */
     font-family: 'Prompt', sans-serif !important;
 }
 
@@ -56,7 +55,7 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* เงาบางลง */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   width: 100% !important;
   box-sizing: border-box;
 }
@@ -77,21 +76,20 @@ html, body {
 
 /* Main Content */
 .main {
-  padding: 32px; /* เพิ่ม padding รอบนอก */
+  padding: 32px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px; /* เพิ่มระยะห่างระหว่าง Section */
+  gap: 32px;
   width: 100% !important;
   box-sizing: border-box;
-  max-width: 1440px; /* จำกัดความกว้างไม่ให้กราฟยืดจนน่าเกลียด */
+  max-width: 1440px;
 }
 
 /* --- DASHBOARD GRID --- */
 .dashboardTopSection {
   display: grid;
-  /* ปรับสัดส่วนใหม่: ซ้าย 260px, ขวา Auto */
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 260px 1fr; /* สัดส่วนสมดุล */
   gap: 24px;
   width: 100%;
 }
@@ -99,24 +97,24 @@ html, body {
 .rightGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px; /* ระยะห่างระหว่างการ์ดเล็ก */
+  gap: 20px;
   align-content: stretch;
 }
 
 /* =======================================================
    3. CARDS COMPONENTS
    ======================================================= */
+/* --- Status Card (การ์ดเล็ก) --- */
 .statusCard {
-  border-radius: 24px; /* โค้งมนมากขึ้น */
+  border-radius: 24px;
   padding: 24px;
-  /* เงาแบบ Soft Shadow */
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 140px; /* เพิ่มความสูงขั้นต่ำ */
+  min-height: 140px;
   height: 100%;
   border: 1px solid rgba(255,255,255,0.1);
   position: relative;
@@ -129,32 +127,6 @@ html, body {
   transform: translateY(-5px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   filter: brightness(1.02);
-}
-
-.totalCard {
-  background: linear-gradient(145deg, #0f172a, #1e293b); /* ไล่เฉดสี */
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%; 
-  box-sizing: border-box;
-  border-radius: 24px;
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
-  position: relative;
-}
-
-/* เพิ่มลวดลายวงกลมจางๆ ให้การ์ด Total */
-.totalCard::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
 }
 
 .cardHeader {
@@ -174,11 +146,6 @@ html, body {
   white-space: nowrap;
 }
 
-.totalCard .cardTitle { 
-    font-size: 20px; 
-    font-weight: 600;
-}
-
 .cardCount {
   font-size: 48px;
   font-weight: 800;
@@ -190,17 +157,65 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+/* --- Total Card (การ์ดใหญ่สีน้ำเงิน) --- */
+.totalCard {
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  padding: 32px;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+  position: relative;
+  height: 100%; 
+  box-sizing: border-box;
+  
+  /* [UPDATED] จัด Layout ใหม่เพื่อดึงเลขไว้ตรงกลาง */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* เปลี่ยนจาก space-between เพื่อคุมเอง */
+}
+
+/* วงกลมตกแต่ง */
+.totalCard::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.totalCard .cardTitle { 
+    font-size: 20px; 
+    font-weight: 600;
+}
+
+/* [UPDATED] จัดตัวเลขให้อยู่กึ่งกลางพื้นที่ว่าง */
 .totalCard .cardCount {
-  font-size: 96px; /* ตัวเลขใหญ่สะใจ */
-  margin: auto 0;
+  /* ขยายพื้นที่ให้เต็มส่วนที่เหลือ */
+  flex: 1;
+  width: 100%;
+  
+  /* จัดกึ่งกลางเป๊ะๆ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* ปรับแต่ง Font */
+  font-size: 96px;
   text-align: center;
   letter-spacing: -2px;
-  /* เทคนิคทำตัวหนังสือไล่สี (ถ้า Browser รองรับ) */
+  margin: 0;
+  
+  /* Padding ล่างเล็กน้อยเพื่อหลอกตาให้ดูสมดุลกับ Header ด้านบน */
+  padding-bottom: 20px; 
+
+  /* ไล่สีตัวเลข */
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* ถ้าไม่รองรับจะเป็นสีขาวปกติ */
-  color: #fff; 
+  color: #fff; /* fallback */
 }
 
 /* =======================================================
@@ -208,9 +223,8 @@ html, body {
    ======================================================= */
 .sectionCard {
   background-color: #ffffff;
-  padding: 32px; /* เพิ่มพื้นที่หายใจภายใน */
+  padding: 32px;
   border-radius: 24px;
-  /* เอา border ออก ใช้เงาแทน */
   border: none;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   display: flex;
@@ -229,7 +243,7 @@ html, body {
   flex-wrap: wrap;
   gap: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f1f5f9; /* เส้นแบ่งบางๆ */
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .sectionTitle {
@@ -242,7 +256,6 @@ html, body {
   margin: 0;
 }
 
-/* Decoration หน้าหัวข้อ */
 .sectionTitle::before {
   content: '';
   display: inline-block;
@@ -384,16 +397,15 @@ html, body {
   .header { padding: 12px 16px; }
   .main { padding: 16px; gap: 20px; }
   
-  /* Layout หลัก: ยุบ Total Card เป็นแถวบน */
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* --- [แก้] ปรับ Total Card แนวนอนให้สวยขึ้น --- */
+  /* --- [Mobile] Total Card แนวนอน --- */
   .totalCard { 
       height: auto; 
       min-height: 110px;
-      flex-direction: row; /* เรียงแนวนอน ซ้าย-ขวา */
+      flex-direction: row; 
       align-items: center; 
-      justify-content: space-between;
+      justify-content: space-between; /* กลับไปใช้ Space between บนมือถือ */
       padding: 24px;
       gap: 16px;
   }
@@ -411,23 +423,24 @@ html, body {
       margin-bottom: 0;
   }
 
+  /* [UPDATED MOBILE] Reset ค่า Flex ของตัวเลข เพื่อไม่ให้เบี้ยวในแนวนอน */
   .totalCard .cardCount { 
+      flex: unset; /* ยกเลิกการยืดพื้นที่ */
+      width: auto; /* ยกเลิกความกว้าง 100% */
+      padding-bottom: 0; /* เอา padding หลอกตาออก */
       margin: 0; 
       text-align: right; 
       font-size: 56px; 
       line-height: 1;
-      /* บนมือถือไม่ต้องไล่สี เพราะอาจอ่านยากในบางจอ */
-      -webkit-text-fill-color: #fff; 
+      -webkit-text-fill-color: #fff; /* สีขาวปกติ */
   }
 
-  /* Badge 100% */
   .totalCard .badge-status {
       font-size: 10px;
       padding: 2px 8px;
   }
-  /* ---------------------------------------------------- */
 
-  /* ✅ Grid Card เล็ก: 2 คอลัมน์บนมือถือ */
+  /* Grid Card เล็ก 2 คอลัมน์ */
   .rightGrid {
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 12px !important;
@@ -441,14 +454,12 @@ html, body {
   .cardTitle { font-size: 13px; white-space: normal; }
   .cardCount { font-size: 32px; }
 
-  /* กราฟเรียง 1 คอลัมน์ */
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
 
   .sectionCard {
       padding: 20px !important;
   }
 
-  /* ส่วนหัวกราฟ */
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
   .filterContainer { width: 100%; justify-content: space-between; }
   .filterButton { flex: 1; text-align: center; }
