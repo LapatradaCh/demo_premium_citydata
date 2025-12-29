@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIXED FROM IMAGES) --- */
+/* --- css/OrgStatisticsView.module.css (Optimized for Mobile Screenshots) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -12,8 +12,8 @@
   min-height: 100vh;
   margin: 0;
   padding: 24px;
-  /* เผื่อพื้นที่ด้านล่างเยอะหน่อยสำหรับ Bottom Navigation Bar ในรูป */
-  padding-bottom: 120px; 
+  /* เพิ่ม Padding ล่างเผื่อทับกับ Bottom Menu ในมือถือ */
+  padding-bottom: 100px; 
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
   background-color: #ffffff;
@@ -21,7 +21,7 @@
 }
 
 /* =========================================
-   2. SIDEBAR (Desktop Only)
+   2. SIDEBAR (Desktop)
    ========================================= */
 .orgStatsSidebarDesktop {
   flex-shrink: 0;
@@ -162,7 +162,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS
+   5. KPI CARDS (Grid Layout)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -222,14 +222,6 @@
   line-height: 1.4;
 }
 
-.kpiHeader svg {
-  min-width: 18px;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  opacity: 0.9;
-}
-
 .kpiValue {
   width: 100%;
   text-align: left;
@@ -246,13 +238,47 @@
   opacity: 0.85;
   font-weight: 500;
   margin: 0;
-  white-space: normal !important;
-  word-break: break-word;
-  line-height: 1.4;
 }
 
 /* =========================================
-   6. STACKED BAR CHART (Desktop Layout)
+   6. FILTER BUTTONS
+   ========================================= */
+.headerControls {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.controlBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background: #fff;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.activeTotal {
+  background-color: #1890ff !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
+}
+
+.activeCritical {
+  background-color: #FF4D4F !important;
+  color: #ffffff !important;
+  border-color: #FF4D4F !important;
+  font-weight: 700;
+}
+
+/* =========================================
+   7. STACKED BAR CHART (Grid Base)
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -260,6 +286,7 @@
   gap: 24px;
 }
 
+/* Desktop: Label | Bar | Value */
 .mockHBarItem {
   display: grid;
   grid-template-columns: 180px 1fr 50px;
@@ -316,7 +343,7 @@
 }
 
 /* =========================================
-   7. SATISFACTION (Tab 2)
+   8. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -329,8 +356,7 @@
   padding: 20px 24px;
   border-radius: 16px;
   display: grid;
-  grid-template-columns: 1fr auto; 
-  grid-template-rows: auto auto;
+  grid-template-columns: 1fr auto;
   grid-template-areas: 
     "title score"
     "name score";
@@ -338,20 +364,8 @@
   gap: 4px 20px;
 }
 
-.highlightCardGreen {
-  background-color: #10B981;
-  color: #fff;
-}
-
-.highlightCardRed {
-  background-color: #EF4444;
-  color: #fff;
-}
-
-.highlightCardGreen *,
-.highlightCardRed * {
-  color: #fff !important;
-}
+.highlightCardGreen { background-color: #10B981; color: #fff; }
+.highlightCardRed { background-color: #EF4444; color: #fff; }
 
 .highlightTitle {
   grid-area: title;
@@ -381,18 +395,9 @@
   font-size: 42px;
   font-weight: 800;
   line-height: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
 }
 
-.highlightScoreMax {
-  font-size: 16px;
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-/* --- Report Card List --- */
+/* Report Card List */
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -440,9 +445,7 @@
   color: #333;
 }
 
-.reportCardScoreGroup {
-  text-align: right;
-}
+.reportCardScoreGroup { text-align: right; }
 
 .reportCardScoreText {
   font-size: 32px;
@@ -466,22 +469,9 @@
 }
 
 /* =========================================
-   8. SLA & DONUT
+   9. SLA & DONUT
    ========================================= */
-.slaHeaderBox {
-  background-color: #f0f9ff !important;
-  border: 1px solid #bae6fd !important;
-  border-left: 6px solid #1890ff !important;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15) !important;
-}
-
-.donutHeaderBox {
+.slaHeaderBox, .donutHeaderBox {
   background-color: #ffffff;
   border: 1px solid #f3f4f6;
   border-radius: 16px;
@@ -492,18 +482,24 @@
   align-items: center;
 }
 
+.slaHeaderBox {
+  background-color: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  border-left: 6px solid #1890ff !important;
+}
+
+/* Base SLA Chart Layout */
 .mockHorizontalBarChart {
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
-  margin-top: 40px; 
+  margin-top: 40px;
 }
 
-/* Base SLA Items */
 .mockHorizontalBarChart .mockHBarItem {
   display: grid;
-  grid-template-columns: 150px 1fr 100px; 
+  grid-template-columns: 150px 1fr 100px;
   align-items: center;
   gap: 16px;
   width: 100%;
@@ -519,7 +515,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
-  order: 0;
 }
 
 .mockHBarValue {
@@ -528,7 +523,6 @@
   text-align: right;
   white-space: nowrap;
   margin: 0;
-  order: 0;
 }
 
 .mockHBar {
@@ -537,14 +531,11 @@
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
-  margin: 0;
-  order: 0;
 }
 
 .mockHBarFill {
   height: 100%;
   border-radius: 8px;
-  transition: width 0.6s ease;
 }
 
 .slaLineContainer {
@@ -631,178 +622,203 @@
   border-radius: 50%;
 }
 
+
 /* =========================================================
-   9. MEDIA QUERIES (MOBILE OPTIMIZATIONS)
+   10. RESPONSIVE / MOBILE (MAX 768px)
+   ** ปรับปรุงจากรูปภาพที่ได้รับ **
    ========================================================= */
 
-@media screen and (max-width: 1024px) {
-  .orgStatsSidebarDesktop { display: none; }
-  .orgStatsContainer { 
-    flex-direction: column; 
-    gap: 0; 
-    padding: 0 0 120px 0; /* คง padding ล่างไว้ */
+@media screen and (max-width: 768px) {
+  /* 1. Reset Layout */
+  .orgStatsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 0 100px 0 !important;
+    gap: 0 !important;
+    overflow-x: hidden;
   }
-  
-  /* เปิดใช้งาน Mobile Dropdown */
+
+  .orgStatsSidebarDesktop { display: none !important; }
+
+  /* 2. Menu Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 16px 20px;
     background: #fff;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 50;
     border-bottom: 1px solid #f3f4f6;
   }
   
   .mobileDropdownLabel {
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 6px;
-    font-weight: 600;
+    font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; padding-left: 4px;
+  }
+  .mobileDropdownTrigger {
+    width: 100%; height: 56px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+    padding: 0 16px; display: flex; justify-content: space-between; align-items: center;
+    color: #1f2937; font-weight: 700; font-size: 16px; cursor: pointer;
+  }
+  .mobileDropdownList {
+    position: absolute; top: 100%; left: 20px; right: 20px; margin-top: 8px;
+    background: #ffffff; border-radius: 16px; border: 1px solid #f0f0f0;
+    box-shadow: 0 20px 40px -4px rgba(0,0,0,0.15); padding: 8px;
+    display: flex; flex-direction: column; gap: 4px; z-index: 999;
+  }
+  .mobileDropdownItem {
+    width: 100%; padding: 12px 16px; border: none; background: transparent;
+    display: flex; align-items: center; gap: 12px; font-size: 15px;
+    color: #4b5563; font-weight: 600; border-radius: 10px; cursor: pointer; text-align: left;
+  }
+  .mobileDropdownItem:hover { background-color: #f9fafb; color: #000; }
+  .activeItem { background-color: #ecfdf5; color: #059669; }
+  .activeCheck { margin-left: auto; color: #10B981; font-size: 20px; display: flex; align-items: center; }
+
+  /* 3. Global Card Style Reset for Mobile */
+  .chartBox {
+    border-radius: 0; box-shadow: none; border: none; margin: 0;
+    padding: 24px 20px; border-bottom: 8px solid #f4f5f7;
+  }
+  .chartBoxTitle {
+    margin-bottom: 20px; padding-bottom: 0; border-bottom: none; align-items: flex-start;
   }
 
-  .mobileDropdownTrigger {
-    width: 100%;
-    height: 56px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 0 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #1f2937;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* Mobile Content Reset */
-  .chartBox {
-    padding: 24px 20px !important;
-    border-radius: 0 !important;
-    border: none !important;
-    border-bottom: 8px solid #f4f5f7 !important;
-    box-shadow: none !important;
-  }
-  
-  /* --- 1. KPI Grid (2 Columns) --- */
+  /* 4. KPI Grid (ตามรูปที่ 3 - สีเขียว/ดำ/แดง) */
   .kpiGrid {
     padding: 0 20px;
     margin-top: 16px;
-    /* เปลี่ยนจาก 1 แถว เป็น 2 แถว เพื่อประหยัดที่ */
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
+    margin-bottom: 24px;
+    /* บังคับ 2 คอลัมน์ */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
   }
-  
-  /* ตัวที่ 3 (สีแดง) ให้กินพื้นที่เต็มด้านล่าง */
-  .kpiCard:nth-child(3) {
+  /* การ์ดใบสุดท้ายที่เป็นเลขคี่ (เช่นใบที่ 3 สีแดง) ให้ขยายเต็ม */
+  .kpiCard:last-child:nth-child(odd) {
     grid-column: span 2;
   }
 
-  /* --- 2. Stacked Bar (Tab 1) Layout Fix --- */
-  /* บังคับ Layout ใหม่ ให้ Label อยู่บรรทัดบนสุด */
+  /* 5. Main Stacked Bar (Test1 ในรูปที่ 3) */
+  /* เปลี่ยนจาก Grid แนวนอน เป็น Flex แนวตั้ง เพื่อรองรับชื่อยาว */
   .mockStackedBarChart .mockHBarItem {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    width: 100% !important;
-    gap: 8px !important;
-    margin-bottom: 16px;
-  }
-  
-  /* ชื่อแผนก และ ตัวเลข จะถูกดันไปอยู่บรรทัดบน */
-  .mockStackedBarChart .mockHBarItem > div:first-child {
-    /* นี่คือ div ของชื่อ (Label) */
+    gap: 10px !important;
+    margin-bottom: 16px !important;
     width: 100%;
-    display: flex;
-    justify-content: space-between; /* ชื่อซ้าย ค่าขวา */
-    align-items: center;
-    font-weight: 700;
-    font-size: 15px;
   }
-  
-  /* ซ่อนตัวเลข Total เดิมที่อยู่ท้ายสุด แล้วเอามาแสดงในบรรทัดเดียวกับชื่อแทน (ด้วย JS หรือถ้าแก้ CSS อย่างเดียวให้ทำแบบนี้) */
-  /* หมายเหตุ: ถ้า HTML เป็น Grid แนะนำให้ div แรกคลุมทั้งชื่อและตัวเลข ถ้าไม่ได้ ให้ใช้ CSS Hack นี้ */
-  
+
+  /* ชื่อหน่วยงาน (Label) ให้เต็มบรรทัด */
+  .mockStackedBarChart .mockHBarItem > div:first-child {
+    width: 100% !important;
+    font-weight: 700;
+    font-size: 14px;
+    color: #333;
+    /* margin-bottom: 4px; */
+  }
+
+  /* ตัวเลข Total ขวาสุด ให้ย้ายมาอยู่ขวาบนของชื่อ หรืออยู่หลังชื่อ */
+  /* ในที่นี้ซ่อน column 3 (Total) หรือปรับให้ display คู่กับชื่อก็ได้ */
+  /* วิธีแก้: ให้แท่งกราฟเต็มความกว้าง */
   .mockStackedHBar {
     width: 100% !important;
     height: 32px !important;
   }
   
-  /* Legend จัดให้ชิดกลางและสวยงาม */
+  /* ปรับ Legend ด้านล่าง */
   .mockStackedBarLegend {
-    justify-content: center;
-    gap: 12px;
+    justify-content: flex-start;
+    gap: 10px;
   }
-  
-  /* --- 3. Satisfaction (Tab 2) --- */
-  .satisfactionHighlightGrid {
-    grid-template-columns: 1fr !important; /* เรียงเป็นแนวตั้ง */
-    padding: 0 20px;
-  }
-  
-  .highlightCard {
-    /* ปรับ Grid ภายในการ์ด */
-    grid-template-columns: 1fr auto !important;
+  .mockStackedBarLegendItem {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
-  /* รายชื่ออันดับด้านล่าง */
-  .reportCardList { padding: 0 20px; }
-  .reportCardHeader { flex-direction: column; gap: 8px; }
-  .reportCardScoreGroup { text-align: left; width: 100%; display: flex; align-items: baseline; gap: 8px; }
+  /* 6. SLA Charts (รูปที่ 1) */
+  .orgStatsContent { gap: 0 !important; }
   
-  /* --- 4. SLA Chart (Tab 3) --- */
   .slaHeaderBox, .donutHeaderBox {
     margin: 0 20px 24px 20px;
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
   }
   
-  .mockHorizontalBarChart {
-    margin-top: 60px !important; /* เพิ่มพื้นที่ให้ SLA Label ด้านบนไม่ตกขอบ */
-    padding: 0 20px; /* กันตกขอบซ้ายขวา */
-    width: auto !important;
+  .slaAvgInfo, .donutTopTypeBox {
+    width: 100%; border-top: 1px dashed #eee; padding-top: 16px; text-align: left;
   }
 
-  /* จัด Layout ของแต่ละ Item ใน SLA */
+  /* SLA List Layout Adjustment */
+  .mockHorizontalBarChart {
+    margin-top: 50px !important;
+    gap: 20px !important;
+  }
+
   .mockHorizontalBarChart .mockHBarItem {
+    /* เปลี่ยน layout เป็น: บรรทัดแรก (ชื่อ + ค่า) บรรทัดสอง (Bar) */
     display: grid !important;
-    /* แถวบน: ชื่อ | ตัวเลข */
-    /* แถวล่าง: บาร์กราฟ (เต็มความกว้าง) */
     grid-template-columns: 1fr auto !important;
     grid-template-rows: auto auto !important;
-    gap: 6px 0 !important;
-    width: 100% !important;
-    margin-bottom: 16px !important;
+    gap: 8px 0 !important;
+    align-items: flex-end !important;
   }
 
-  /* ชื่อ (เช่น ต้นไม้) */
-  .mockHorizontalBarChart .mockHBarLabel {
+  .mockHBarLabel {
     grid-column: 1 / 2 !important;
     grid-row: 1 / 2 !important;
     text-align: left !important;
+    font-size: 14px;
   }
 
-  /* ค่า (เช่น 33.8 วัน) */
-  .mockHorizontalBarChart .mockHBarValue {
+  .mockHBarValue {
     grid-column: 2 / 3 !important;
     grid-row: 1 / 2 !important;
     text-align: right !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    max-width: 60%; /* ป้องกันกินพื้นที่ชื่อ */
   }
 
-  /* ตัวกราฟแท่ง */
-  .mockHorizontalBarChart .mockHBar {
+  .mockHBar {
     grid-column: 1 / 3 !important;
     grid-row: 2 / 3 !important;
     width: 100% !important;
     height: 10px !important;
   }
+  
+  .slaLabel {
+    top: -25px !important;
+    font-size: 10px !important;
+  }
 
-  /* เส้น SLA */
-  .slaLineContainer {
-    top: -15px !important;
-    bottom: -10px !important;
-    /* ปรับเส้นให้ชัดขึ้นในมือถือ */
-    border-left: 2px dashed rgba(239, 68, 68, 0.7); 
+  /* 7. Satisfaction Cards (รูปที่ 2) */
+  .satisfactionHighlightGrid {
+    padding: 0 20px;
+    grid-template-columns: 1fr !important; /* เรียงลงแนวตั้ง 1 แถว */
+  }
+  
+  .highlightCard {
+    /* ปรับ grid ด้านในให้อ่านง่าย */
+    grid-template-columns: 1fr auto !important;
+    gap: 8px;
+  }
+  
+  /* รายการอันดับล่าง (Report Card List) */
+  .reportCardList { padding: 0 20px; }
+  .reportCardHeader {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .reportCardTitleGroup { width: 100%; }
+  .reportCardName { font-size: 16px !important; line-height: 1.4; white-space: normal !important;}
+  .reportCardScoreGroup {
+    width: 100%; text-align: left !important;
+    display: flex; align-items: baseline; gap: 8px;
   }
 }
