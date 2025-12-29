@@ -1,76 +1,127 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* =======================================================
-   1. CORE LAYOUT & RESET
+   1. THEME UTILITIES & COLORS (คงเดิม)
+   ======================================================= */
+.text-total        { color: #0f172a !important; }
+.text-waiting      { color: #ff4d4f !important; }
+.text-coordinating { color: #9c27b0 !important; }
+.text-action       { color: #FFAB00 !important; } 
+.text-finished     { color: #4caf50 !important; }
+.text-forward      { color: #2196f3 !important; }
+.text-invite       { color: #00bcd4 !important; }
+.text-reject       { color: #64748b !important; }
+
+.badge-status {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  width: fit-content;
+  display: inline-block;
+  line-height: 1.4;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  letter-spacing: 0.5px;
+}
+
+/* =======================================================
+   2. MAIN LAYOUT & CONTAINER (คงเดิม)
    ======================================================= */
 html, body {
-  margin: 0; padding: 0;
-  background-color: #f8fafc;
-  font-family: 'Prompt', sans-serif !important;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #f8fafc;
+    font-family: 'Prompt', sans-serif !important;
 }
 
 .container {
   min-height: 100vh;
   padding-bottom: 80px;
-  width: 100%;
+  width: 100% !important;
   box-sizing: border-box;
+}
+
+.header {
+  background-color: #ffffff;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.headerLeft h1, .headerLeft span {
+  font-weight: 700 !important;
+  color: #0f172a;
+  font-size: 20px;
+  margin: 0;
+}
+
+.headerSubtitle {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 4px;
 }
 
 .main {
   padding: 32px;
   margin: 0 auto;
-  max-width: 1440px;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  width: 100%;
+  width: 100% !important;
+  box-sizing: border-box;
+  max-width: 1440px;
 }
 
-/* =======================================================
-   2. DASHBOARD GRID SYSTEM (จุดที่แก้ปัญหา Layout)
-   ======================================================= */
-
-/* Desktop Default: ซ้าย Total, ขวา Grid */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 280px 1fr; 
+  grid-template-columns: 260px 1fr;
   gap: 24px;
   width: 100%;
 }
 
-/* Status Cards Grid (ขวา) */
 .rightGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ปกติ 3 ช่อง */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  width: 100%;
-}
-
-/* กราฟด้านล่าง */
-.responsiveGrid2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  width: 100%;
+  align-content: stretch;
 }
 
 /* =======================================================
-   3. CARDS STYLING
+   3. CARDS COMPONENTS (คงเดิม)
    ======================================================= */
 .statusCard {
-  background-color: #fff;
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 140px;
   height: 100%;
-  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
   position: relative;
   overflow: hidden;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.statusCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  filter: brightness(1.02);
 }
 
 .cardHeader {
@@ -78,132 +129,350 @@ html, body {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
+  z-index: 2;
+  position: relative;
   width: 100%;
 }
 
-.cardTitle { font-size: 15px; font-weight: 500; color: #fff; z-index: 2; white-space: nowrap; }
-.cardCount { font-size: 48px; font-weight: 800; text-align: right; margin-top: auto; color: #fff; line-height: 1; }
-
-.badgeStatus {
-  padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
-  background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: #fff;
+.cardTitle {
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.95;
+  color: #ffffff; 
+  white-space: nowrap;
 }
 
-/* Total Card (การ์ดใหญ่) */
+.cardCount {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: right;
+  margin-top: auto;
+  color: #ffffff !important;
+  z-index: 2;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* --- Total Card --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
-  border-radius: 24px;
   padding: 32px;
-  justify-content: flex-start;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+  position: relative;
+  height: 100%; 
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
 }
+
+.totalCard::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.totalCard .cardTitle { 
+    font-size: 20px; 
+    font-weight: 600;
+}
+
 .totalCard .cardCount {
-  font-size: 80px; 
-  text-align: center; 
+  flex: 1;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  font-size: 96px;
+  letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: auto 0;
+  color: #fff;
+  padding-bottom: 20px;
 }
 
 /* =======================================================
-   4. CHART SECTIONS
+   4. CHART & SECTIONS (คงเดิม)
    ======================================================= */
 .sectionCard {
-  background: #ffffff;
+  background-color: #ffffff;
   padding: 32px;
   border-radius: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  min-width: 0; 
+  overflow: visible !important; 
   width: 100%;
-  min-width: 0;
+  box-sizing: border-box;
 }
 
 .chartHeaderWrapper {
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
 }
-.sectionTitle { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px; }
-.chartWrapper { width: 100%; min-height: 300px; position: relative; }
 
-/* Filter Buttons */
-.filterContainer { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-.filterButton { border: none; background: transparent; padding: 6px 12px; font-weight: 600; color: #64748b; cursor: pointer; }
-.filterButtonActive { background: #fff; color: #f59e0b; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-radius: 8px; }
-.legendContainer { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
-.legendBtn { border: 1px solid #e2e8f0; background: #fff; padding: 4px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 12px; }
-.legendDot { width: 8px; height: 8px; border-radius: 50%; }
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
 
-/* Satisfaction & Staff */
-.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; }
-.starRow { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.progressTrack { flex: 1; height: 8px; background: #f1f5f9; border-radius: 99px; }
+.sectionTitle::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 24px;
+  background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+  border-radius: 10px;
+}
+
+.sectionSubtitle {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Filters & Legends */
+.filterContainer, .legendContainer {
+  display: flex !important;
+  flex-direction: row !important; 
+  flex-wrap: wrap !important;     
+  gap: 8px;
+  align-items: center;
+  list-style: none; 
+  padding: 0;
+  margin: 0;
+}
+
+.filterContainer {
+  background-color: #f8fafc; 
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  width: fit-content; 
+  max-width: 100%;
+}
+
+.legendContainer {
+  justify-content: center;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.filterButton, .legendBtn {
+  width: auto !important; 
+  flex: 0 0 auto !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filterButton {
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: #64748b;
+}
+
+.legendBtn {
+  gap: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.filterButtonActive {
+  background-color: #ffffff;
+  color: #f59e0b;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-color: #e2e8f0;
+}
+
+.legendBtn:hover { background-color: #f8fafc; }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+/* Tooltip & Other components */
+.customTooltip {
+  background-color: rgba(255, 255, 255, 0.98);
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+.tooltipLabel { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
+.tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+.dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
+
+.satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
+.starRow { display: flex; align-items: center; gap: 16px; font-size: 14px; margin-bottom: 14px; width: 100%; }
+.starLabel { width: 32px; font-weight: 700; color: #334155; }
+.progressTrack { flex: 1; height: 10px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
 .progressBar { height: 100%; border-radius: 99px; }
-.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.topBadge { background: #eff6ff; color: #1d4ed8; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
-.emptyState { text-align: center; color: #9ca3af; padding: 40px; }
+.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; font-size: 13px; }
+
+.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.topBadge {
+  background-color: #eff6ff; color: #1d4ed8; padding: 6px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid #bfdbfe;
+  display: flex; align-items: center;
+}
+.emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
+.responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
+.chartWrapper { width: 100%; height: auto; min-height: 350px; margin-bottom: 20px; overflow: visible; position: relative; }
+.largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
-   5. RESPONSIVE (จุดสำคัญที่ทำให้ iPhone SE/Pro ใช้งานได้)
+   6. RESPONSIVE MEDIA QUERIES (แก้ไขเฉพาะส่วนนี้)
+   เพื่อให้รองรับตั้งแต่ iPhone SE - iPad Pro
    ======================================================= */
 
-/* Tablet & Laptop จอเล็ก (< 1200px) */
+/* 1. Laptop / Tablet Landscape (1024px - 1200px) */
+/* แก้ไขพื้นที่ Grid ที่บีบเกินไป */
 @media (max-width: 1200px) {
-  .dashboardTopSection {
-    /* เปลี่ยนจากซ้าย-ขวา เป็น บน-ล่าง */
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
-  .totalCard {
-    /* ปรับการ์ดใหญ่เป็นแนวนอน */
-    flex-direction: row !important;
-    align-items: center;
-    justify-content: space-between;
-    min-height: auto;
-    padding: 24px;
-  }
-  .totalCard .cardCount { font-size: 64px; width: auto; margin: 0; flex: unset; }
-  
-  /* Grid ขวาเหลือ 2 คอลัมน์ */
-  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; }
+    .dashboardTopSection {
+        grid-template-columns: 1fr; /* ให้เรียงแนวตั้ง เพื่อไม่ให้ Sidebar กินที่ */
+        gap: 24px;
+    }
+    
+    .totalCard {
+        /* เปลี่ยนการ์ดใหญ่เป็นแนวนอนเมื่ออยู่บนสุด */
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 120px;
+        padding: 32px 48px;
+    }
+    
+    .totalCard .cardHeader { width: auto; margin-bottom: 0; }
+    .totalCard .cardCount {
+        flex: unset;
+        font-size: 72px;
+        padding-bottom: 0;
+        width: auto;
+    }
 }
 
-/* Tablet แนวตั้ง (< 992px) */
+/* 2. Tablet / iPad (768px - 992px) */
+/* ของเดิมดีอยู่แล้ว ปรับนิดหน่อย */
 @media (max-width: 992px) {
-  .header { padding: 12px 20px; }
-  .main { padding: 20px; gap: 20px; }
-  .responsiveGrid2 { grid-template-columns: 1fr !important; }
+  .header { padding: 12px 16px; }
+  .main { padding: 16px; gap: 20px; }
+  
+  .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
+  
+  /* Mobile Total Card */
+  .totalCard { 
+      height: auto; 
+      min-height: 110px;
+      flex-direction: row; 
+      align-items: center; 
+      justify-content: space-between;
+      padding: 24px;
+      gap: 16px;
+  }
+  
+  .totalCard .cardHeader {
+      margin-bottom: 0;
+      flex-direction: column; 
+      align-items: flex-start;
+      gap: 6px; 
+      justify-content: center;
+      width: auto;
+  }
+
+  .totalCard .cardTitle { 
+      font-size: 16px !important; 
+      margin-bottom: 0;
+  }
+
+  .totalCard .cardCount { 
+      flex: unset; 
+      width: auto; 
+      padding-bottom: 0; 
+      margin: 0; 
+      text-align: right; 
+      font-size: 56px; 
+      line-height: 1;
+      -webkit-text-fill-color: #fff; 
+  }
+
+  .totalCard .badge-status { font-size: 10px; padding: 2px 8px; }
+  
+  /* ให้ Tablet เห็น 2 คอลัมน์ */
+  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  
+  .statusCard { padding: 16px; min-height: 120px; }
+  .cardTitle { font-size: 13px; white-space: normal; }
+  .cardCount { font-size: 32px; }
+  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .sectionCard { padding: 20px !important; }
+  .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .filterContainer { width: 100%; justify-content: flex-start; overflow-x: auto; }
+  .filterButton { flex: 0 0 auto; }
+  .scoreBig { font-size: 48px; }
 }
 
-/* Mobile (< 576px) - สำหรับ iPhone SE, 12, 13, 14 */
+/* 3. Mobile Small (iPhone SE, 12) (< 576px) */
+/* เพิ่มส่วนนี้เพื่อให้หน้าจอเล็กมากๆ เรียงสวย */
 @media (max-width: 576px) {
-  .header { padding: 12px 16px; }
-  .main { padding: 16px; gap: 16px; }
-
-  /* Total Card กลับมาเป็นแนวตั้งในจอเล็ก */
-  .totalCard {
-    flex-direction: column !important;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .totalCard .cardCount { font-size: 56px; text-align: left; }
-
-  /* บังคับการ์ดเล็กให้เรียง 1 แถว (สำคัญมาก) */
-  .rightGrid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-
-  /* ปรับการ์ดเล็กเป็นแนวนอน (Bar) เพื่อประหยัดที่ */
-  .statusCard {
-    flex-direction: row !important;
-    align-items: center;
-    min-height: auto !important;
-    padding: 16px 20px !important;
-  }
-  .statusCard .cardHeader { margin: 0 !important; width: auto; flex: 1; }
-  .statusCard .badgeStatus { display: none; } /* ซ่อน Badge ถ้าเกะกะ */
-  .statusCard .cardCount { margin: 0 !important; font-size: 32px !important; }
   
-  .sectionCard { padding: 20px !important; }
+  /* บังคับการ์ดเล็กให้เรียง 1 คอลัมน์ ไม่ให้บีบ */
+  .rightGrid {
+     grid-template-columns: 1fr !important;
+  }
+
+  /* ปรับการ์ดเล็กให้เป็นแนวนอน (Bar) เพื่อประหยัดพื้นที่แนวตั้ง */
+  .statusCard {
+     flex-direction: row;
+     align-items: center;
+     min-height: 80px;
+  }
+  
+  .statusCard .cardHeader {
+     margin-bottom: 0;
+     width: auto;
+     flex: 1;
+  }
+
+  .statusCard .cardCount {
+     margin-top: 0;
+  }
+
+  /* Total Card ในจอเล็กมากๆ ให้กลับมาเป็นแนวตั้ง หรือ Wrap ได้ */
+  .totalCard {
+      flex-wrap: wrap;
+  }
 }
