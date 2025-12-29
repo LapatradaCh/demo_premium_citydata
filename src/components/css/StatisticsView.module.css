@@ -3,7 +3,6 @@
 /* =======================================================
    1. CORE STYLES & VARIABLES
    ======================================================= */
-/* Text Colors Utility */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
@@ -13,7 +12,6 @@
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
-/* Badge Status Style */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -258,7 +256,7 @@ html, body {
 }
 
 /* =======================================================
-   5. FILTERS & BUTTONS (Interactive Chip Style)
+   5. FILTERS & BUTTONS (Desktop Style)
    ======================================================= */
 .filterContainer, .legendContainer {
   display: flex;
@@ -285,7 +283,7 @@ html, body {
   width: 100%;
 }
 
-/* --- Base Button Style --- */
+/* Base Button Style */
 .filterButton, .legendBtn {
   width: auto;
   flex: 0 0 auto;
@@ -321,7 +319,7 @@ html, body {
   color: #334155;
 }
 
-/* --- Active State (Desktop) --- */
+/* Active State (Desktop) */
 .filterButtonActive {
   background-color: #0f172a !important; /* Dark Blue */
   color: #ffffff !important;            /* White Text */
@@ -395,7 +393,7 @@ html, body {
     gap: 16px; 
   }
 
-  /* --- Total Card (Mobile: Horizontal) --- */
+  /* --- Total Card --- */
   .totalCard {
     display: flex !important;
     flex-direction: row !important;
@@ -405,63 +403,80 @@ html, body {
     padding: 20px 24px !important;
     min-height: 120px !important;
   }
+  .totalCard .cardHeader { width: auto !important; margin: 0 !important; display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; flex: 1; }
+  .totalCard .cardTitle { font-size: 16px !important; margin: 0 !important; }
+  .totalCard .cardCount { width: auto !important; flex: 0 0 auto !important; margin: 0 !important; padding: 0 !important; text-align: right !important; font-size: 56px !important; line-height: 1 !important; background: none !important; -webkit-text-fill-color: #fff !important; color: #fff !important; }
+  .totalCard::before { display: none; }
 
-  .totalCard .cardHeader {
-    width: auto !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 8px !important;
-    flex: 1; 
+  /* ----------------------------------------------------
+     [1] FILTER CONTAINER (Time: 1W, 1M, etc.)
+     >>> แก้ไขให้เป็นบรรทัดเดียว ไม่ Wrap
+     ---------------------------------------------------- */
+  .filterContainer {
+    width: 100%;
+    display: flex !important;       
+    flex-wrap: nowrap !important;   /* ห้าม Wrap เด็ดขาด */
+    justify-content: center !important; 
+    gap: 8px !important;            
+    padding: 8px 0 12px 0 !important;
+    
+    background: transparent !important;
+    border: none !important;
+    overflow-x: auto !important; /* ถ้าจอเล็กมากให้สไลด์ได้ */
   }
 
-  .totalCard .cardTitle { font-size: 16px !important; margin: 0 !important; }
-  .totalCard::before { display: none; }
-  
-  .totalCard .cardCount {
+  .filterContainer::-webkit-scrollbar { display: none; }
+
+  .filterButton {
+    /* ใช้ความกว้างตามตัวหนังสือ (Auto) */
     width: auto !important;
     flex: 0 0 auto !important;
+    padding: 6px 16px !important; /* ปรับ Padding ให้พอดี */
     margin: 0 !important;
-    padding: 0 !important;
-    text-align: right !important;
-    font-size: 56px !important;
-    line-height: 1 !important;
-    background: none !important;
-    -webkit-text-fill-color: #fff !important;
-    color: #fff !important;
+    
+    font-size: 13px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 99px !important;
+    color: #64748b !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Active Filter (Mobile) */
+  .filterButtonActive {
+      background-color: #0f172a !important; 
+      color: #ffffff !important;            
+      border-color: #0f172a !important;
+      font-weight: 700 !important;
   }
 
   /* ----------------------------------------------------
-     [UPDATED] FILTERS & LEGEND: Top 4 / Bottom 3
+     [2] LEGEND CONTAINER (Status: Total, Pending...)
+     >>> คงไว้ที่ 4 บน 3 ล่าง (Wrap ได้)
      ---------------------------------------------------- */
-  .filterContainer, 
   .legendContainer {
     width: 100%;
     display: flex !important;       
-    flex-wrap: wrap !important;     
-    justify-content: center !important; /* Center the bottom row */
+    flex-wrap: wrap !important;     /* อนุญาตให้ Wrap */
+    justify-content: center !important; 
     gap: 8px !important;            
     padding: 8px 0 20px 0 !important;
     
     background: transparent !important;
     border: none !important;
     overflow: visible !important;
-    grid-template-columns: none !important;
   }
 
-  .filterContainer::-webkit-scrollbar,
-  .legendContainer::-webkit-scrollbar { display: none; }
-
-  /* Set button width to fit 4 per row */
-  .filterButton, 
   .legendBtn {
-    /* (100% - gaps) / 4 */
+    /* บังคับกว้าง 1/4 เพื่อให้เรียง 4 ปุ่ม */
     width: calc(25% - 8px) !important; 
     flex: 0 0 calc(25% - 8px) !important;
     
-    /* Compact Text for Mobile */
-    padding: 6px 4px !important; 
+    padding: 6px 2px !important; 
     font-size: 11px !important; 
     margin: 0 !important;
     
@@ -477,16 +492,7 @@ html, body {
     color: #64748b !important;
     white-space: nowrap !important;
   }
-  
-  /* [FIXED] Active State in Mobile (Dark BG for Filters) */
-  .filterButtonActive {
-      background-color: #0f172a !important; 
-      color: #ffffff !important;            
-      border-color: #0f172a !important;
-      font-weight: 700 !important;
-  }
 
-  /* Active State for Legends */
   .legendBtnActive {
       background-color: #ffffff !important;
       border-width: 2px !important;
@@ -499,21 +505,14 @@ html, body {
   /* ----------------------------------------------------
      Grid & Other Adjustments
      ---------------------------------------------------- */
-  .rightGrid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-
+  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
   @media (max-width: 375px) {
     .rightGrid { grid-template-columns: 1fr !important; }
-    /* Even smaller font for very small screens */
-    .filterButton, .legendBtn { font-size: 10px !important; }
+    .legendBtn { font-size: 10px !important; }
   }
-
   .statusCard { padding: 16px; min-height: 100px; }
   .statusCard .cardCount { font-size: 32px; }
   .statusCard .cardTitle { font-size: 13px; }
-
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px; }
   .sectionCard { padding: 16px !important; }
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; }
