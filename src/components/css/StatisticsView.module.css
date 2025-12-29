@@ -356,98 +356,115 @@ html, body {
 /* =======================================================
    6. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
    ======================================================= */
+/* =================================================================
+   ส่วน Mobile Fix (วางไว้ล่างสุดของไฟล์ CSS เท่านั้น)
+   ================================================================= */
 @media screen and (max-width: 992px) {
+  
+  /* 1. Header & Layout ทั่วไป */
   .header { padding: 12px 16px !important; }
-  .main { padding: 16px !important; gap: 20px !important; }
+  .main { padding: 16px !important; gap: 16px !important; }
   .dashboardTopSection { grid-template-columns: 1fr !important; gap: 16px !important; }
-  
-  /* ------------------------------------------------------------------
-     1. แก้ TOTAL CARD: แนวนอน (ซ้าย:ข้อความ, ขวา:ตัวเลข)
-     (ใช้ !important ทุกจุดเพื่อบังคับให้เปลี่ยน)
-     ------------------------------------------------------------------ */
-  .totalCard { 
-      height: auto !important;
-      min-height: auto !important;
-      /* บังคับแนวนอน */
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 24px 28px !important;
-      gap: 0 !important;
+
+  /* ---------------------------------------------------------------
+     2. แก้ TOTAL CARD (สีน้ำเงินเข้ม) ให้ตรงปก
+     เป้าหมาย: แนวนอน | ซ้าย: ข้อความ | ขวา: เลข 5
+     --------------------------------------------------------------- */
+  .totalCard {
+    display: flex !important;
+    flex-direction: row !important;       /* บังคับแนวนอน */
+    align-items: center !important;       /* จัดกึ่งกลางแนวตั้ง */
+    justify-content: space-between !important; /* ดันซ้าย-ขวาให้ห่างกัน */
+    height: auto !important;
+    min-height: auto !important;
+    padding: 24px 28px !important;
+    gap: 0 !important;
   }
-  
-  /* กลุ่มข้อความซ้าย (Title + Badge) */
+
+  /* กลุ่มข้อความด้านซ้าย (ชื่อ + 100%) */
   .totalCard .cardHeader {
-      width: auto !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      /* เรียงลงในแนวตั้งสำหรับชื่อและ Badge */
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      justify-content: center !important;
-      gap: 6px !important;
+    display: flex !important;
+    flex-direction: column !important;    /* เรียงลง */
+    align-items: flex-start !important;   /* ชิดซ้าย */
+    justify-content: center !important;
+    width: auto !important;
+    margin: 0 !important;
+    gap: 8px !important;
   }
 
-  .totalCard .cardTitle { 
-      font-size: 16px !important; 
-      margin: 0 !important;
-      text-align: left !important;
+  .totalCard .cardTitle {
+    font-size: 16px !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .totalCard .badge-status {
+    margin: 0 !important;
+    align-self: flex-start !important;    /* บังคับ Badge ชิดซ้าย */
+  }
+
+  /* ตัวเลข 5 ด้านขวา */
+  .totalCard .cardCount {
+    display: block !important;
+    width: auto !important;
+    flex: unset !important;
+    margin: 0 !important;
+    text-align: right !important;         /* ชิดขวา */
+    font-size: 64px !important;           /* ขนาดตัวเลข */
+    line-height: 1 !important;
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  /* ---------------------------------------------------------------
+     3. แก้ปุ่ม STATUS/LEGEND (ปุ่มสีๆ)
+     เป้าหมาย: อยู่กึ่งกลาง + ตัดบรรทัดสวยๆ (เหมือนรูป Screenshot)
+     --------------------------------------------------------------- */
+  /* บังคับ Container ให้ยอมตัดบรรทัด */
+  .filterContainer, 
+  .legendContainer {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;           /* ยอมให้ปุ่มตกบรรทัด */
+    justify-content: center !important;   /* จัดกึ่งกลางจอ */
+    align-items: center !important;
+    width: 100% !important;
+    gap: 10px !important;
+    overflow: visible !important;         /* ห้ามมี Scrollbar */
+  }
+
+  /* บังคับปุ่มให้ขนาดพอดีคำ ไม่ยืดเต็มจอ */
+  .filterButton, 
+  .legendBtn {
+    flex: 0 0 auto !important;            /* ห้ามยืด */
+    width: auto !important;               /* กว้างเท่าตัวหนังสือ */
+    display: inline-flex !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* ---------------------------------------------------------------
+     4. Grid การ์ดสีๆ (คงเดิม)
+     --------------------------------------------------------------- */
+  .rightGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
   }
   
-  .totalCard .badge-status { 
-      margin: 0 !important;
-      align-self: flex-start !important;
-  }
-
-  /* ตัวเลขขวา */
-  .totalCard .cardCount { 
-      flex: unset !important; 
-      width: auto !important; 
-      margin: 0 !important; 
-      padding: 0 !important;
-      text-align: right !important; 
-      font-size: 64px !important; 
-      line-height: 1;
-      color: #ffffff !important;
-      background: none !important;
-      -webkit-text-fill-color: #ffffff !important;
-  }
-
-  /* ------------------------------------------------------------------
-     2. แก้ BUTTONS: ตัดบรรทัดและอยู่ตรงกลาง (Wrap & Center) 
-     ------------------------------------------------------------------ */
-  /* ทั้ง Filter (1W, 1M) และ Legend (สีๆ) */
-  .filterContainer, .legendContainer {
-      width: 100% !important;
-      display: flex !important;
-      flex-wrap: wrap !important;       /* สำคัญ: ให้ปุ่มตกบรรทัดได้ */
-      justify-content: center !important; /* จัดกึ่งกลางจอ */
-      gap: 10px !important;
-      overflow: visible !important;
-      height: auto !important;
-      padding-bottom: 0 !important;
+  .statusCard { 
+    padding: 16px !important; 
+    min-height: 110px !important; 
   }
   
-  /* บังคับปุ่มไม่ให้ยืดเต็มจอ */
-  .filterButton, .legendBtn {
-      width: auto !important;
-      flex: 0 0 auto !important;
-      display: inline-flex !important;
-      margin: 0 !important;
-      white-space: nowrap !important;
-  }
+  .cardTitle { font-size: 13px !important; }
+  .cardCount { font-size: 36px !important; }
 
-  /* ------------------------------------------------------------------
-     3. อื่นๆ
-     ------------------------------------------------------------------ */
-  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-  .statusCard { padding: 16px !important; min-height: 120px !important; }
-  .cardTitle { font-size: 13px !important; white-space: normal; }
-  .cardCount { font-size: 32px !important; }
+  /* ---------------------------------------------------------------
+     5. ส่วนอื่นๆ
+     --------------------------------------------------------------- */
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
-  .sectionCard { padding: 20px !important; }
-  .chartHeaderWrapper { flex-direction: column !important; align-items: center !important; gap: 12px !important; }
-  .scoreBig { font-size: 48px !important; }
+  .sectionCard { padding: 16px !important; }
+  .chartHeaderWrapper { flex-direction: column !important; align-items: center !important; gap: 12px !important; text-align: center; }
+  .sectionTitle { justify-content: center !important; }
 }
