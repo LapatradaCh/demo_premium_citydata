@@ -633,13 +633,5 @@
   .mapSidebar {
     padding: 16px;
   }
-  .searchInput {
-    padding-left: 40px;
-  }
 
-  .sidebarSearchTop {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
 }
