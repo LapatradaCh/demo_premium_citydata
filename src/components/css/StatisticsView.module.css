@@ -1,232 +1,209 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
-/* --- Utilities & Reset --- */
+/* =======================================================
+   1. CORE LAYOUT & RESET
+   ======================================================= */
+html, body {
+  margin: 0; padding: 0;
+  background-color: #f8fafc;
+  font-family: 'Prompt', sans-serif !important;
+  overflow-x: hidden;
+}
+
 .container {
   min-height: 100vh;
   padding-bottom: 80px;
-  background-color: #f8fafc;
-  font-family: 'Prompt', sans-serif !important;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden; /* ป้องกันสกรอลแนวนอน */
 }
 
-/* --- Header --- */
-.header {
-  background-color: #ffffff;
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-}
-.headerLeft h1 { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0; }
-.headerSubtitle { font-size: 13px; color: #64748b; font-weight: 500; margin-top: 4px; }
-
-/* --- Main Layout --- */
 .main {
   padding: 32px;
   margin: 0 auto;
+  max-width: 1440px;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  max-width: 1440px;
   width: 100%;
 }
 
-/* GRID ส่วนบน (Total + Status Cards) */
+/* =======================================================
+   2. DASHBOARD GRID SYSTEM (จุดที่แก้ปัญหา Layout)
+   ======================================================= */
+
+/* Desktop Default: ซ้าย Total, ขวา Grid */
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 280px 1fr; /* Default: ซ้าย 280px, ขวาเต็มที่เหลือ */
+  grid-template-columns: 280px 1fr; 
   gap: 24px;
   width: 100%;
 }
 
+/* Status Cards Grid (ขวา) */
 .rightGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Default: 3 คอลัมน์ */
+  grid-template-columns: repeat(3, 1fr); /* ปกติ 3 ช่อง */
   gap: 20px;
   width: 100%;
 }
 
-/* --- Cards Design --- */
+/* กราฟด้านล่าง */
+.responsiveGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+/* =======================================================
+   3. CARDS STYLING
+   ======================================================= */
 .statusCard {
+  background-color: #fff;
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 140px;
   height: 100%;
-  color: #ffffff;
+  color: #fff;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s;
 }
-.statusCard:hover { transform: translateY(-3px); }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
-  z-index: 2;
-  position: relative;
   width: 100%;
 }
 
 .cardTitle { font-size: 15px; font-weight: 500; color: #fff; z-index: 2; white-space: nowrap; }
-.cardCount { font-size: 48px; font-weight: 800; text-align: right; margin-top: auto; color: #fff; z-index: 2; line-height: 1; }
+.cardCount { font-size: 48px; font-weight: 800; text-align: right; margin-top: auto; color: #fff; line-height: 1; }
 
 .badgeStatus {
   padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
-  background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); color: #fff;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: #fff;
 }
 
-/* Total Card Special Style */
+/* Total Card (การ์ดใหญ่) */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
-  /* Default Desktop: แนวตั้ง */
-  flex-direction: column;
   justify-content: flex-start;
 }
-.totalCard .cardTitle { font-size: 20px; font-weight: 600; }
 .totalCard .cardCount {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  font-size: 88px; letter-spacing: -2px;
+  font-size: 80px; 
+  text-align: center; 
+  width: 100%;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  padding-bottom: 10px; margin: 0; width: 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: auto 0;
 }
 
-/* --- Charts Section --- */
+/* =======================================================
+   4. CHART SECTIONS
+   ======================================================= */
 .sectionCard {
-  background-color: #ffffff;
+  background: #ffffff;
   padding: 32px;
   border-radius: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  display: flex; flex-direction: column;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   width: 100%;
-  min-width: 0; /* สำคัญ: ป้องกัน Grid ระเบิดจาก Recharts */
+  min-width: 0;
 }
 
 .chartHeaderWrapper {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 24px; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;
+  flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
 }
-.sectionTitle { font-size: 18px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; margin: 0; }
-.sectionSubtitle { font-size: 13px; color: #64748b; margin-top: 4px; }
-.chartWrapper { width: 100%; min-height: 300px; position: relative; overflow: hidden; }
+.sectionTitle { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px; }
+.chartWrapper { width: 100%; min-height: 300px; position: relative; }
 
-/* Grid 2 Columns for Charts */
-.responsiveGrid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
-
-/* Filters & Legend */
-.filterContainer { display: flex; gap: 4px; overflow-x: auto; background: #f8fafc; padding: 4px; border-radius: 12px; border: 1px solid #e2e8f0; width: fit-content; max-width: 100%; }
-.filterButton { border: none; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; white-space: nowrap; }
-.filterButtonActive { background: #fff; color: #f59e0b; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-
-.legendContainer { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
-.legendBtn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #64748b; font-size: 12px; cursor: pointer; }
+/* Filter Buttons */
+.filterContainer { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.filterButton { border: none; background: transparent; padding: 6px 12px; font-weight: 600; color: #64748b; cursor: pointer; }
+.filterButtonActive { background: #fff; color: #f59e0b; box-shadow: 0 1px 2px rgba(0,0,0,0.1); border-radius: 8px; }
+.legendContainer { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+.legendBtn { border: 1px solid #e2e8f0; background: #fff; padding: 4px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 12px; }
 .legendDot { width: 8px; height: 8px; border-radius: 50%; }
 
 /* Satisfaction & Staff */
-.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 1; letter-spacing: -2px; }
-.starRow { display: flex; align-items: center; gap: 12px; font-size: 13px; margin-bottom: 8px; }
-.progressTrack { flex: 1; height: 8px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; }
+.starRow { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.progressTrack { flex: 1; height: 8px; background: #f1f5f9; border-radius: 99px; }
 .progressBar { height: 100%; border-radius: 99px; }
-.emptyState { text-align: center; color: #9ca3af; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100%; }
-.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-.topBadge { background: #eff6ff; color: #1d4ed8; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe; }
+.topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.topBadge { background: #eff6ff; color: #1d4ed8; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.emptyState { text-align: center; color: #9ca3af; padding: 40px; }
 
-/* =================================================================
-   RESPONSIVE MEDIA QUERIES (FORCE FIX)
-   ================================================================= */
+/* =======================================================
+   5. RESPONSIVE (จุดสำคัญที่ทำให้ iPhone SE/Pro ใช้งานได้)
+   ======================================================= */
 
-/* 1. Tablet & Laptop ขนาดเล็ก (ต่ำกว่า 1200px) */
-/* แก้ปัญหา: Grid เบียดกัน */
+/* Tablet & Laptop จอเล็ก (< 1200px) */
 @media (max-width: 1200px) {
-    .dashboardTopSection {
-        display: flex !important; /* เปลี่ยนจาก Grid เป็น Flex แนวตั้ง */
-        flex-direction: column !important;
-        gap: 20px !important;
-    }
-
-    /* Total Card เปลี่ยนเป็นแนวนอนยาวๆ */
-    .totalCard {
-        flex-direction: row !important;
-        align-items: center;
-        justify-content: space-between;
-        padding: 24px 32px;
-        min-height: auto;
-    }
-    .totalCard .cardHeader { width: auto; margin: 0; }
-    .totalCard .cardTitle { margin: 0; font-size: 18px; }
-    .totalCard .cardCount { flex: unset; width: auto; font-size: 64px; padding: 0; }
-
-    /* Right Grid บังคับ 2 คอลัมน์ */
-    .rightGrid { grid-template-columns: repeat(2, 1fr) !important; }
+  .dashboardTopSection {
+    /* เปลี่ยนจากซ้าย-ขวา เป็น บน-ล่าง */
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .totalCard {
+    /* ปรับการ์ดใหญ่เป็นแนวนอน */
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    min-height: auto;
+    padding: 24px;
+  }
+  .totalCard .cardCount { font-size: 64px; width: auto; margin: 0; flex: unset; }
+  
+  /* Grid ขวาเหลือ 2 คอลัมน์ */
+  .rightGrid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
-/* 2. Tablet แนวตั้ง (ต่ำกว่า 992px) */
+/* Tablet แนวตั้ง (< 992px) */
 @media (max-width: 992px) {
-    .header { padding: 12px 20px; }
-    .main { padding: 20px; gap: 20px; }
-    
-    /* กราฟให้เรียงเดี่ยวลงมา */
-    .responsiveGrid2 { grid-template-columns: 1fr !important; }
-    
-    .chartWrapper { min-height: 280px; }
+  .header { padding: 12px 20px; }
+  .main { padding: 20px; gap: 20px; }
+  .responsiveGrid2 { grid-template-columns: 1fr !important; }
 }
 
-/* 3. Mobile (ต่ำกว่า 768px) */
-@media (max-width: 768px) {
-    .rightGrid { gap: 12px !important; }
-    .statusCard { padding: 16px; min-height: 120px; }
-    .cardCount { font-size: 36px; }
-    .totalCard .cardCount { font-size: 56px; }
-    
-    .filterContainer { width: 100%; }
-}
-
-/* 4. Small Mobile (iPhone SE, 12 Mini) (ต่ำกว่า 576px) */
-/* จุดนี้สำคัญที่สุดสำหรับเคสของคุณ */
+/* Mobile (< 576px) - สำหรับ iPhone SE, 12, 13, 14 */
 @media (max-width: 576px) {
-    .main { padding: 16px; gap: 16px; }
-    .header { padding: 12px 16px; }
+  .header { padding: 12px 16px; }
+  .main { padding: 16px; gap: 16px; }
 
-    /* Total Card กลับมาเป็นแนวตั้งแบบ compact */
-    .totalCard {
-        padding: 20px;
-        flex-direction: column !important;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    .totalCard .cardHeader { width: 100%; margin-bottom: 0; }
-    .totalCard .cardCount { font-size: 56px; text-align: left; justify-content: flex-start; }
+  /* Total Card กลับมาเป็นแนวตั้งในจอเล็ก */
+  .totalCard {
+    flex-direction: column !important;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .totalCard .cardCount { font-size: 56px; text-align: left; }
 
-    /* บังคับการ์ดเล็กให้เรียง 1 แถวลงมา (Stack) */
-    .rightGrid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
+  /* บังคับการ์ดเล็กให้เรียง 1 แถว (สำคัญมาก) */
+  .rightGrid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
 
-    /* ปรับ Design การ์ดเล็กให้เป็นแนวนอน (Bar) เพื่อประหยัดที่ */
-    .statusCard {
-        flex-direction: row !important;
-        align-items: center;
-        min-height: auto !important;
-        padding: 16px 20px !important;
-    }
-    .statusCard .cardHeader { margin: 0 !important; width: auto; flex: 1; flex-direction: column; gap: 4px; }
-    .statusCard .badgeStatus { display: none; /* ซ่อน Badge ในมือถือจอเล็กเพื่อความสะอาดตา */ }
-    .statusCard .cardCount { margin: 0 !important; font-size: 32px !important; }
-    
-    .sectionCard { padding: 20px !important; }
-    .scoreBig { font-size: 48px; }
+  /* ปรับการ์ดเล็กเป็นแนวนอน (Bar) เพื่อประหยัดที่ */
+  .statusCard {
+    flex-direction: row !important;
+    align-items: center;
+    min-height: auto !important;
+    padding: 16px 20px !important;
+  }
+  .statusCard .cardHeader { margin: 0 !important; width: auto; flex: 1; }
+  .statusCard .badgeStatus { display: none; } /* ซ่อน Badge ถ้าเกะกะ */
+  .statusCard .cardCount { margin: 0 !important; font-size: 32px !important; }
+  
+  .sectionCard { padding: 20px !important; }
 }
