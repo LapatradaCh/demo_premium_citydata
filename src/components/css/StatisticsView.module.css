@@ -153,7 +153,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- [แก้ไข] Total Card --- */
+/* --- Total Card --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -164,7 +164,6 @@ html, body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* ใช้ flex-start เพื่อให้ Header อยู่บนสุดเสมอ */
   justify-content: flex-start; 
 }
 
@@ -186,7 +185,6 @@ html, body {
 }
 
 .totalCard .cardCount {
-  /* ให้ตัวเลขขยายพื้นที่ที่เหลือ เพื่อดันตัวเองมาตรงกลาง */
   flex: 1;
   width: 100%;
   display: flex;
@@ -194,16 +192,12 @@ html, body {
   justify-content: center;
   text-align: center;
   margin: 0;
-  
-  /* Styling */
   font-size: 96px;
   letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: #fff;
-  
-  /* ปรับแต่งตำแหน่ง: ดันขึ้นนิดนึงเพื่อให้ดูสมดุลกับ Header */
   padding-bottom: 20px;
 }
 
@@ -261,78 +255,113 @@ html, body {
   margin-top: 4px;
 }
 
-/* --- [แก้ไขสำคัญ] Filters & Legends --- 
-   บังคับให้เรียงแนวนอน (Row) และไม่ยืดเต็มจอ 
-*/
+/* =======================================================
+   5. FILTERS & LEGENDS (DESIGN ใหม่: Modern Pill Shape)
+   ======================================================= */
+
 .filterContainer, .legendContainer {
   display: flex !important;
-  flex-direction: row !important; /* บังคับแนวนอน */
-  flex-wrap: wrap !important;     /* ตกบรรทัดได้ถ้าที่เต็ม */
-  gap: 8px;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 10px; /* เพิ่มระยะห่างให้หายใจสะดวกขึ้น */
   align-items: center;
-  /* เอา list-style ออกเผื่อ HTML เป็น li */
-  list-style: none; 
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* Container ของ Filter (ปุ่มช่วงเวลา) */
 .filterContainer {
-  background-color: #f8fafc; 
+  background-color: #ffffff;
   padding: 4px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  width: fit-content; /* ให้กว้างเท่าเนื้อหา */
+  border-radius: 99px; /* แคปซูล */
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  width: fit-content;
   max-width: 100%;
 }
 
+/* Container ของ Legend (ปุ่มสถานะ) */
 .legendContainer {
   justify-content: center;
   margin-top: 24px;
   width: 100%;
+  padding: 0 10px;
 }
 
+/* สไตล์ปุ่มกด Common */
 .filterButton, .legendBtn {
-  /* บังคับไม่ให้ยืดเต็มจอ */
-  width: auto !important; 
+  width: auto !important;
   flex: 0 0 auto !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  
-  padding: 8px 16px;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  font-family: 'Prompt', sans-serif;
 }
 
+/* --- ปุ่ม Filter (1w, 1m, 1y) --- */
 .filterButton {
-  border: 1px solid transparent;
+  border: none;
   background-color: transparent;
   color: #64748b;
-}
-
-.legendBtn {
-  gap: 8px;
-  border: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  color: #475569;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .filterButtonActive {
-  background-color: #ffffff;
+  background-color: #f8fafc;
   color: #f59e0b;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transform: scale(1.05);
+}
+
+/* --- ปุ่ม Legend (ทั้งหมด, รอรับเรื่อง...) --- */
+.legendBtn {
+  gap: 8px;
+  border: 1px solid #f1f5f9;
+  background-color: #ffffff;
+  color: #64748b;
+  
+  /* Modern Pill Shape */
+  border-radius: 99px; 
+  padding: 8px 20px; 
+  font-size: 13px;
+  font-weight: 500;
+  
+  /* Soft Shadow */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+}
+
+.legendBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
   border-color: #e2e8f0;
 }
 
-.legendBtn:hover { background-color: #f8fafc; }
-.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.legendBtn:active {
+  transform: translateY(0);
+}
 
-/* Tooltip & Other components */
+/* จุดสีในปุ่ม */
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+}
+
+/* =======================================================
+   6. OTHER COMPONENTS
+   ======================================================= */
+/* Tooltip */
 .customTooltip {
   background-color: rgba(255, 255, 255, 0.98);
   border: 1px solid #f1f5f9;
@@ -345,6 +374,7 @@ html, body {
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
 .dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
+/* Satisfaction & Staff */
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
 .starRow { display: flex; align-items: center; gap: 16px; font-size: 14px; margin-bottom: 14px; width: 100%; }
@@ -365,19 +395,35 @@ html, body {
 .largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES
+   7. RESPONSIVE MEDIA QUERIES
    ======================================================= */
-@media (min-width: 992px) {
-    .chartWrapper { height: auto; min-height: 350px; }
-    .largeHeight { height: 500px; min-height: 500px; }
+
+/* 1. Laptop เล็ก / Tablet แนวนอน (1024px - 1200px) */
+@media (max-width: 1200px) {
+    .dashboardTopSection {
+        grid-template-columns: 1fr; /* แนวตั้ง */
+        gap: 20px;
+    }
+    
+    .totalCard {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 120px;
+        padding: 32px 48px;
+    }
+    
+    .totalCard .cardHeader { width: auto; margin-bottom: 0; }
+    .totalCard .cardCount { flex: unset; font-size: 72px; padding-bottom: 0; width: auto; }
 }
 
+/* 2. Tablet / Mobile จอใหญ่ (768px - 992px) */
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
   .main { padding: 16px; gap: 20px; }
+  
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* Mobile Total Card */
   .totalCard { 
       height: auto; 
       min-height: 110px;
@@ -396,34 +442,44 @@ html, body {
       justify-content: center;
       width: auto;
   }
-
-  .totalCard .cardTitle { 
-      font-size: 16px !important; 
-      margin-bottom: 0;
-  }
-
-  .totalCard .cardCount { 
-      flex: unset; 
-      width: auto; 
-      padding-bottom: 0; 
-      margin: 0; 
-      text-align: right; 
-      font-size: 56px; 
-      line-height: 1;
-      -webkit-text-fill-color: #fff; 
-  }
-
+  .totalCard .cardTitle { font-size: 16px !important; margin-bottom: 0; }
+  .totalCard .cardCount { flex: unset; width: auto; padding-bottom: 0; margin: 0; text-align: right; font-size: 56px; line-height: 1; -webkit-text-fill-color: #fff; }
   .totalCard .badge-status { font-size: 10px; padding: 2px 8px; }
+  
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  
   .statusCard { padding: 16px; min-height: 120px; }
   .cardTitle { font-size: 13px; white-space: normal; }
   .cardCount { font-size: 32px; }
+  
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
   .sectionCard { padding: 20px !important; }
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
   
-  /* บนมือถือให้ Filter เต็มจอ แต่ยังเรียงแนวนอนแบบ scroll ได้ หรือ wrap */
   .filterContainer { width: 100%; justify-content: flex-start; overflow-x: auto; }
   .filterButton { flex: 0 0 auto; }
   .scoreBig { font-size: 48px; }
+}
+
+/* 3. Mobile จอเล็ก (iPhone SE, 12, 13) (< 576px) */
+@media (max-width: 576px) {
+  /* Legend & Filter */
+  .legendContainer { gap: 8px; }
+  .legendBtn { padding: 6px 16px; font-size: 12px; }
+
+  /* Grid Stack */
+  .rightGrid { grid-template-columns: 1fr !important; }
+
+  /* Bar Style Card */
+  .statusCard {
+      flex-direction: row;
+      align-items: center;
+      min-height: 80px;
+      padding: 16px;
+  }
+  
+  .statusCard .cardHeader { margin-bottom: 0; width: auto; flex: 1; }
+  .statusCard .cardCount { margin-top: 0; font-size: 32px; }
+
+  .totalCard { flex-wrap: wrap; }
 }
