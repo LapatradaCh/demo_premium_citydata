@@ -3,7 +3,8 @@ import styles from './css/OrgStatisticsView.module.css';
 import { 
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers, 
-  ChevronDown, ChevronUp 
+  ChevronDown, ChevronUp,
+  Activity, TrendingUp // เพิ่ม icon สำหรับหน้า SLA
 } from 'lucide-react';
 
 // ==========================================
@@ -34,11 +35,19 @@ const PROBLEM_COLORS = [
   "#8B5CF6", "#EC4899", "#6366F1", "#9CA3AF"
 ];
 
+// Helper ตัดคำ
+const truncateText = (text, maxLength) => {
+    if (!text) return '';
+    const str = String(text);
+    if (str.length <= maxLength) return str;
+    return str.substring(0, maxLength) + '...';
+};
+
 // ==========================================
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD (ปรับ KPI เป็นแนวนอน) ---
+// --- TAB 1: WORKLOAD (KPI แนวนอน) ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -72,7 +81,6 @@ const WorkloadView = ({ data }) => {
       </div>
 
       <div className={styles.kpiGrid}>
-        {/* ✅ ปรับโครงสร้างให้เข้ากับ CSS Grid แนวนอน */}
         <div className={`${styles.kpiCard} ${styles.kpiCardSuccess}`}>
             <div className={styles.kpiHeader}><CheckCircle size={18} /> อัตราความสำเร็จ</div>
             <div className={styles.kpiValue}>{globalStats.successRate.toFixed(1)}%</div>
@@ -168,7 +176,7 @@ const WorkloadView = ({ data }) => {
   );
 };
 
-// --- TAB 2: SATISFACTION (ปรับให้ตรงกับดีไซน์รูปที่ 2, 6, 7) ---
+// --- TAB 2: SATISFACTION ---
 const SatisfactionView = ({ data }) => {
   const sortedData = [...data].sort((a, b) => b.satisfaction - a.satisfaction);
    
@@ -181,7 +189,6 @@ const SatisfactionView = ({ data }) => {
     <div className={styles.chartBox}>
        <h4 className={styles.chartBoxTitle}>อันดับความพึงพอใจประชาชน</h4>
        
-       {/* Highlight Cards Grid */}
        <div className={styles.satisfactionHighlightGrid}>
           {/* Best Org (Green) */}
           <div className={`${styles.highlightCard} ${styles.highlightCardGreen}`}>
@@ -203,13 +210,11 @@ const SatisfactionView = ({ data }) => {
           </div>
        </div>
 
-       {/* Ranking List */}
        <div className={styles.reportCardList}>
           {sortedData.map((item, index) => (
             <div key={index} className={styles.reportCardItem}>
                <div className={styles.reportCardHeader}>
                   <div className={styles.reportCardTitleGroup}>
-                     {/* ✅ Badge อันดับสีดำ ตัวหนังสือเหลือง */}
                      <div className={styles.reportCardRank} style={{ 
                          background: '#1F2937', 
                          color: '#F59E0B',
@@ -220,7 +225,6 @@ const SatisfactionView = ({ data }) => {
                      <div className={styles.reportCardName}>{item.name}</div>
                   </div>
                   
-                  {/* ✅ คะแนนสีเหลือง ขวาสุด */}
                   <div className={styles.reportCardScoreGroup}>
                      <div className={styles.reportCardScoreText} style={{ color: '#F59E0B' }}>
                         {item.satisfaction.toFixed(2)}
@@ -228,11 +232,10 @@ const SatisfactionView = ({ data }) => {
                   </div>
                </div>
 
-               {/* Progress Bar */}
                <div className={styles.reportCardProgressBg}>
                   <div className={styles.reportCardProgressBar} style={{ 
                       width: `${(item.satisfaction / 5) * 100}%`, 
-                      background: '#10B981' // สีเขียวตามรูป
+                      background: '#10B981'
                   }}></div>
                </div>
             </div>
@@ -242,54 +245,138 @@ const SatisfactionView = ({ data }) => {
   );
 };
 
-// --- TAB 3: EFFICIENCY (SLA) ---
+// --- TAB 3: EFFICIENCY (SLA) - [ปรับปรุงใหม่ตามดีไซน์รูปภาพ] ---
 const EfficiencyView = ({ data }) => {
-  const sortedData = [...data].sort((a, b) => a.avgTime - b.avgTime);
-  const maxVal = Math.max(...data.map(d => d.avgTime), TARGET_SLA_DAYS * 1.5) || 10;
-  const overallAvg = data.reduce((acc, curr) => acc + curr.avgTime, 0) / (data.length || 1);
+  // 1. Process Data & Mock Targets (จำลอง SLA Target ตามชื่อ หรือ Default)
+  const processedData = useMemo(() => {
+    return data.map((item) => {
+        // ดึงเวลาจริง (รองรับทั้ง avgTime จาก Org หรือ avg_resolution_time จาก Type)
+        const actualDays = item.avgTime || parseFloat(item.avg_resolution_time) || 0;
+        
+        // Mock Target Logic (สามารถปรับเป็นค่าจาก DB ได้)
+        let targetDays = TARGET_SLA_DAYS; // Default 3
+        const name = item.name || item.issue_type_name || '';
+        if (name.includes('ถนน') || name.includes('ทางเท้า')) targetDays = 7;
+        if (name.includes('ไฟ')) targetDays = 1;
+        if (name.includes('น้ำท่วม')) targetDays = 3;
+
+        const isOverdue = actualDays > targetDays;
+        const diff = Math.abs(actualDays - targetDays).toFixed(1);
+
+        return {
+            ...item,
+            displayName: name,
+            actualDays,
+            targetDays,
+            isOverdue,
+            diff,
+            progressPercent: Math.min((actualDays / targetDays) * 100, 100)
+        };
+    }).sort((a,b) => (b.actualDays/b.targetDays) - (a.actualDays/a.targetDays)); // เรียงตามความวิกฤต (Ratio)
+  }, [data]);
+
+  // 2. Summary Logic
+  const totalItems = processedData.length;
+  // const totalIssues = processedData.reduce((acc, curr) => acc + (curr.total || curr.count || 0), 0); // ถ้าจะนับจำนวนเรื่อง
+  const overdueCount = processedData.filter(d => d.isOverdue).length;
+  const slaScore = totalItems > 0 ? Math.round(((totalItems - overdueCount) / totalItems) * 100) : 0;
 
   return (
     <div className={styles.chartBox}>
-       <h4 className={styles.chartBoxTitle}>ความรวดเร็วในการแก้ไขปัญหา (SLA)</h4>
+       <div className={styles.chartBoxTitle} style={{display:'flex', alignItems:'center', gap:'8px'}}>
+           <Activity size={20} color="#6366f1" />
+           ประสิทธิภาพการแก้ไขปัญหา (SLA)
+       </div>
        
-       <div className={styles.slaHeaderBox}>
-          <div className={styles.slaTargetInfo}>
-             <div style={{fontSize:'14px', fontWeight:'700', marginBottom:'4px'}}>เป้าหมาย SLA: ภายใน {TARGET_SLA_DAYS} วัน</div>
-             <div style={{fontSize:'12px', color:'#666'}}>หากกราฟเกินเส้นประ แสดงว่าล่าช้ากว่ากำหนด</div>
-          </div>
-          <div className={styles.slaAvgInfo}>
-             <span style={{fontSize:'13px', color:'#666', display:'block', marginBottom:'4px'}}>เวลาเฉลี่ยรวมทุกเขต</span>
-             <div style={{fontSize:'24px', fontWeight:'800', lineHeight:'1'}}>
-                {overallAvg.toFixed(1)} <span style={{fontSize:'14px', fontWeight:'500'}}>วัน</span>
-             </div>
-          </div>
+       {/* Top Summary Cards */}
+       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px', marginTop: '16px' }}>
+            {/* Card 1: Total Groups */}
+            <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+                <div style={{ padding: '10px', borderRadius: '50%', background: '#eff6ff', color: '#3b82f6', minWidth:'40px', display:'flex', justifyContent:'center', alignItems:'center' }}>
+                    <Layers size={20} />
+                </div>
+                <div>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>รายการทั้งหมด</div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalItems} <span style={{fontSize:'12px', fontWeight:'normal'}}>รายการ</span></div>
+                </div>
+            </div>
+
+            {/* Card 2: Overdue */}
+            <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+                <div style={{ padding: '10px', borderRadius: '50%', background: '#fef2f2', color: '#ef4444', minWidth:'40px', display:'flex', justifyContent:'center', alignItems:'center' }}>
+                    <Clock size={20} />
+                </div>
+                <div>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>ล่าช้ากว่าเป้า</div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{overdueCount} <span style={{fontSize:'12px', fontWeight:'normal'}}>รายการ</span></div>
+                </div>
+            </div>
+
+            {/* Card 3: Score */}
+            <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+                <div style={{ padding: '10px', borderRadius: '50%', background: '#f0fdf4', color: '#22c55e', minWidth:'40px', display:'flex', justifyContent:'center', alignItems:'center' }}>
+                    <TrendingUp size={20} />
+                </div>
+                <div>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>คะแนน SLA รวม</div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e' }}>{slaScore}% <span style={{fontSize:'12px', fontWeight:'normal', color: '#64748b'}}>ผ่านเกณฑ์</span></div>
+                </div>
+            </div>
        </div>
 
-       <div className={styles.mockHorizontalBarChart}>
-          <div className={styles.slaLineContainer} style={{ left: `calc(180px + 20px + ${(TARGET_SLA_DAYS / maxVal) * (100 - 25)}% - 50px)` }}>
-             <span className={styles.slaLabel}>Target {TARGET_SLA_DAYS} วัน</span>
+       {/* Detailed List */}
+       <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '20px', border: '1px solid #f1f5f9' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '11px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
+              <span>รายละเอียด (เรียงตามความวิกฤต)</span>
+              <span>เป้าหมาย vs เวลาจริง</span>
           </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {processedData.slice(0, 10).map((item, idx) => {
+                   const barColor = item.isOverdue ? '#ef4444' : '#22c55e';
+                   const bgColor = item.isOverdue ? '#fef2f2' : '#f0fdf4';
+                   const borderColor = item.isOverdue ? '#fee2e2' : '#dcfce7';
 
-          {sortedData.map((item, index) => {
-             const isOver = item.avgTime > TARGET_SLA_DAYS;
-             return (
-               <div key={index} className={styles.mockHBarItem}>
-                  <span className={styles.mockHBarLabel} style={{ color: '#333' }}>{item.name}</span>
-                  <div className={styles.mockHBar}>
-                     <div 
-                        className={styles.mockHBarFill} 
-                        style={{ 
-                           width: `${(item.avgTime / maxVal) * 100}%`,
-                           background: isOver ? '#FF4D4F' : '#10B981' // แดงถ้าเกิน, เขียวถ้าผ่าน
-                        }}
-                     ></div>
-                  </div>
-                  <span className={styles.mockHBarValue} style={{ color: isOver ? '#FF4D4F' : '#1F2937' }}>
-                     {item.avgTime.toFixed(1)} วัน
-                  </span>
-               </div>
-             );
-          })}
+                   return (
+                      <div key={idx} style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, 2fr) 3fr', alignItems: 'center', gap: '16px' }}>
+                          {/* 1. Icon & Name */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                              <div style={{ 
+                                  width: '36px', height: '36px', borderRadius: '8px', 
+                                  background: bgColor, 
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                                  border: '1px solid', borderColor: borderColor,
+                                  color: barColor, flexShrink: 0, fontWeight:'bold'
+                              }}>
+                                  {item.displayName.charAt(0)}
+                              </div>
+                              <div style={{ overflow: 'hidden' }}>
+                                  <div style={{ fontWeight: '600', fontSize: '14px', color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                      {truncateText(item.displayName, 25)}
+                                  </div>
+                              </div>
+                          </div>
+
+                          {/* 2. Progress Bar & Info */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', alignItems:'center' }}>
+                                  <span style={{fontWeight:'bold', color: barColor}}>
+                                      {item.actualDays.toFixed(1)} วัน
+                                  </span>
+                                  <span style={{ fontSize: '11px', color: '#64748b' }}>
+                                     เป้า {item.targetDays} วัน 
+                                     {item.isOverdue ? <span style={{color:'#ef4444', marginLeft:'4px'}}>(+{item.diff})</span> : ''}
+                                  </span>
+                              </div>
+                              <div style={{ height: '6px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', position:'relative' }}>
+                                  {/* ขีดบอก Target (ถ้าอยากใส่เพิ่ม) */}
+                                  <div style={{ height: '100%', width: `${item.progressPercent}%`, background: barColor, borderRadius: '3px', transition:'width 0.5s' }}></div>
+                              </div>
+                          </div>
+                      </div>
+                   );
+              })}
+          </div>
        </div>
     </div>
   );
@@ -430,7 +517,9 @@ export default function OrganizationStatisticsView() {
     switch (activeTab) {
       case 'workload': return <WorkloadView data={orgData} />;
       case 'satisfaction': return <SatisfactionView data={orgData} />;
-      case 'efficiency': return <EfficiencyView data={orgData} />;
+      // *** MODIFIED: ใช้ problemData แทน orgData เพื่อให้แสดงผลแยกตามประเภท (Category) เหมือนในรูปภาพ ***
+      // หากต้องการดู SLA ของหน่วยงาน ให้เปลี่ยนกลับเป็น data={orgData}
+      case 'efficiency': return <EfficiencyView data={problemData.length > 0 ? problemData : orgData} />;
       case 'problemType': return <ProblemTypeView data={problemData} />;
       default: return null;
     }
