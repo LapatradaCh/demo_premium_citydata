@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------
- * Home1.module.css (Final Full Version: Monotone & Perfect Nav)
+ * Home1.module.css (Updated: Mobile 3 Columns & Clean Layout)
  * ---------------------------------------------------------------- */
 
 /* ============================================ */
@@ -8,10 +8,9 @@
 
 .appContainer {
   font-family: 'Kanit', 'Inter', sans-serif;
-  color: #1F2937; /* สีดำเทาเข้ม */
+  color: #1F2937;
   line-height: 1.6;
   min-height: 100vh;
-  /* พื้นหลังสีเทาอ่อนมาก ช่วยให้การ์ดสีขาวดูเด่นมีมิติ */
   background-color: #F8F9FA; 
   position: relative;
   overflow-x: hidden;
@@ -19,7 +18,6 @@
   margin: 0;
 }
 
-/* ลาย Texture จางๆ (ถ้ามี) */
 .textureOverlay {
   position: absolute;
   inset: 0;
@@ -30,7 +28,6 @@
   z-index: 0;
 }
 
-/* ซ่อนวงกลมตกแต่งเดิมที่ไม่เข้าธีม */
 .floatingCircle1,
 .floatingCircle2,
 .floatingCircle3 {
@@ -43,7 +40,6 @@
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  /* เว้นพื้นที่ด้านล่างเผื่อเมนูลอย */
   padding: 60px 20px 140px; 
   position: relative;
   z-index: 1;
@@ -80,7 +76,6 @@
   background-color: #FFFFFF;
   font-size: 15px;
   color: #333;
-  /* เงา Soft Shadow */
   box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
   transition: all 0.3s ease;
 }
@@ -94,7 +89,6 @@
 .searchButton {
   position: absolute;
   right: 6px;
-  /* ปุ่มสีดำสนิท */
   background: #000000;
   border: none;
   border-radius: 50%;
@@ -136,7 +130,7 @@
 }
 
 /* ============================================ */
-/* --- 3. Menu Cards (3 กล่องบน) --- */
+/* --- 3. Menu Cards (3 กล่องบน - Desktop) --- */
 /* ============================================ */
 
 .extraCards {
@@ -163,7 +157,6 @@
   font-size: 16px;
   color: #111;
   cursor: pointer;
-  /* ใช้เงาแทนเส้นขอบ */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
@@ -176,7 +169,6 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
-/* ไอคอนในวงกลม */
 .cardIcon {
   width: 56px;
   height: 56px;
@@ -185,8 +177,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #F3F4F6; /* พื้นหลังเทาอ่อน */
-  color: #111111; /* ไอคอนดำ */
+  background: #F3F4F6;
+  color: #111111;
   transition: all 0.3s ease;
 }
 
@@ -248,7 +240,6 @@
   position: relative;
 }
 
-/* ขีดดำใต้หัวข้อ */
 .sectionTitle::before {
   content: '';
   position: absolute;
@@ -309,7 +300,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* ไม่ใส่ Filter เพื่อให้รูป User ยังคงสีสดใส */
 }
 
 .agencyName {
@@ -350,7 +340,6 @@
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  /* สีแดงไล่เฉด */
   background: linear-gradient(135deg, #EF4444, #DC2626);
   box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
   transition: all 0.3s ease;
@@ -444,7 +433,6 @@
   padding: 6px;
   min-width: 160px;
   border: 1px solid #eee;
-  
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -487,17 +475,66 @@
     font-size: 12px;
   }
 
-  /* --- [Mobile Cards] เรียงแนวตั้ง --- */
+  /* --- [Mobile Cards] ปรับเป็น Grid 3 ช่อง แถวเดียว --- */
   .extraCards {
-    flex-direction: column; /* เปลี่ยนเป็นแนวตั้ง */
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* บังคับ 3 คอลัมน์ */
+    gap: 12px;
+    width: 100%;
     max-width: 100%;
-    padding: 0 10px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    margin-top: 10px;
   }
 
   .extraCard {
-    width: 100%; /* เต็มจอ */
-    max-width: 500px;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    
+    /* ปรับ Layout เป็นแนวตั้ง (ไอคอนบน ตัวหนังสือล่าง) */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    padding: 16px 8px; /* ลด Padding */
+    gap: 8px;
+    height: 100%;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03); /* เงานุ่มขึ้น */
+  }
+
+  /* ปรับขนาดไอคอนให้เล็กลงให้สมดุล */
+  .cardIcon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    margin: 0;
+    background: #F3F4F6;
+  }
+
+  .cardIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ปรับขนาดตัวหนังสือ และจำกัดบรรทัด */
+  .cardTitle {
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 600;
+    
+    /* ตัดคำถ้ายาวเกินไป */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ซ่อนลูกศรในมือถือเพื่อให้ดู Clean */
+  .extraCard::after {
+    display: none;
   }
 
   /* --- [Mobile Nav] Grid ติดขอบล่าง --- */
@@ -639,15 +676,26 @@
 }
 
 @media screen and (max-width: 480px) {
-  .extraCards {
-    padding: 0 10px;
-  }
+  /* ในจอมือถือเล็ก ปรับ Grid Agency ให้เหลือ 2 คอลัมน์แทน 1 ให้ดูไม่ยาวเกินไป */
   .agencyGrid {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
+  
   .agencyItem {
-    max-width: 250px;
+    padding: 16px 8px;
+    max-width: 100%;
   }
+
+  .agencyImg {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .agencyName {
+    font-size: 13px;
+  }
+
   .logoutIcon {
     top: 15px;
     right: 15px;
