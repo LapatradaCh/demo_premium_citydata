@@ -1,48 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* =======================================================
-   1. THEME UTILITIES & COLORS
+   1. MAIN CONTAINER & LAYOUT
    ======================================================= */
-.text-total        { color: #0f172a !important; }
-.text-waiting      { color: #ff4d4f !important; }
-.text-coordinating { color: #9c27b0 !important; }
-.text-action       { color: #FFAB00 !important; } 
-.text-finished     { color: #4caf50 !important; }
-.text-forward      { color: #2196f3 !important; }
-.text-invite       { color: #00bcd4 !important; }
-.text-reject       { color: #64748b !important; }
-
-.badge-status {
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  width: fit-content;
-  display: inline-block;
-  line-height: 1.4;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(4px);
-  color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  letter-spacing: 0.5px;
-}
-
-/* =======================================================
-   2. MAIN LAYOUT & CONTAINER
-   ======================================================= */
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background-color: #f8fafc;
-    font-family: 'Prompt', sans-serif !important;
-}
-
 .container {
   min-height: 100vh;
-  padding-bottom: 80px;
-  width: 100% !important;
+  width: 100%;
   box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
+  background-color: #f8fafc;
+  padding-bottom: 80px;
 }
 
 .header {
@@ -55,22 +22,13 @@ html, body {
   top: 0;
   z-index: 100;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
-.headerLeft h1, .headerLeft span {
-  font-weight: 700 !important;
-  color: #0f172a;
-  font-size: 20px;
-  margin: 0;
 }
 
 .headerSubtitle {
-  font-size: 13px;
+  font-size: 14px;
   color: #64748b;
   font-weight: 500;
-  margin-top: 4px;
+  margin: 0;
 }
 
 .main {
@@ -78,15 +36,15 @@ html, body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  width: 100% !important;
-  box-sizing: border-box;
+  gap: 24px;
   max-width: 1440px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dashboardTopSection {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 280px 1fr;
   gap: 24px;
   width: 100%;
 }
@@ -94,43 +52,50 @@ html, body {
 .rightGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-content: stretch;
+  gap: 16px;
 }
 
 /* =======================================================
-   3. CARDS COMPONENTS
+   2. CARDS STYLING
    ======================================================= */
 .statusCard {
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 140px;
-  height: 100%;
-  border: 1px solid rgba(255,255,255,0.1);
+  min-height: 130px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
   color: #ffffff;
-  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .statusCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  filter: brightness(1.02);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+.cardDecoration {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
-  z-index: 2;
+  margin-bottom: 8px;
   position: relative;
+  z-index: 2;
   width: 100%;
 }
 
@@ -138,8 +103,17 @@ html, body {
   font-size: 15px;
   font-weight: 500;
   opacity: 0.95;
-  color: #ffffff; 
   white-space: nowrap;
+}
+
+.badgeStatus {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
 }
 
 .cardCount {
@@ -148,40 +122,28 @@ html, body {
   line-height: 1;
   text-align: right;
   margin-top: auto;
-  color: #ffffff !important;
+  position: relative;
   z-index: 2;
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- Total Card (Desktop Default) --- */
+/* --- TOTAL CARD (Desktop Default) --- */
 .totalCard {
-  background: linear-gradient(145deg, #0f172a, #1e293b);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   padding: 32px;
-  border-radius: 24px;
   box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
-  position: relative;
-  height: 100%; 
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; 
+  justify-content: flex-start;
 }
 
-.totalCard::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
+.totalCard .cardHeader {
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.totalCard .cardTitle { 
-    font-size: 20px; 
-    font-weight: 600;
+.totalCard .cardTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #cbd5e1;
 }
 
 .totalCard .cardCount {
@@ -190,32 +152,25 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  margin: 0;
-  
   font-size: 96px;
   letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #fff;
-  
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 /* =======================================================
-   4. CHART & SECTIONS
+   3. SECTIONS & CHARTS
    ======================================================= */
 .sectionCard {
   background-color: #ffffff;
-  padding: 32px;
+  padding: 24px;
   border-radius: 24px;
-  border: none;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
-  min-width: 0; 
-  overflow: visible !important; 
   width: 100%;
   box-sizing: border-box;
 }
@@ -227,8 +182,8 @@ html, body {
   margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 16px;
-  padding-bottom: 12px;
   border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
 }
 
 .sectionTitle {
@@ -237,80 +192,37 @@ html, body {
   color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin: 0;
-}
-
-.sectionTitle::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 24px;
-  background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
-  border-radius: 10px;
 }
 
 .sectionSubtitle {
   font-size: 13px;
   color: #64748b;
-  font-weight: 500;
   margin-top: 4px;
+  margin-left: 2px;
 }
 
-.filterContainer, .legendContainer {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: wrap !important;
-  gap: 8px;
-  align-items: center;
-  list-style: none; 
-  padding: 0;
-  margin: 0;
-}
-
+/* --- FILTERS & LEGENDS --- */
 .filterContainer {
-  background-color: #f8fafc; 
+  display: flex;
+  gap: 8px;
+  background-color: #f8fafc;
   padding: 4px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
-  width: fit-content;
-  max-width: 100%;
-}
-
-.legendContainer {
-  justify-content: center;
-  margin-top: 24px;
-  width: 100%;
-}
-
-.filterButton, .legendBtn {
-  width: auto !important; 
-  flex: 0 0 auto !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
 .filterButton {
+  padding: 6px 14px;
+  border-radius: 8px;
   border: 1px solid transparent;
   background-color: transparent;
   color: #64748b;
-}
-
-.legendBtn {
-  gap: 8px;
-  border: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  color: #475569;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .filterButtonActive {
@@ -320,142 +232,195 @@ html, body {
   border-color: #e2e8f0;
 }
 
-.legendBtn:hover { background-color: #f8fafc; }
-.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-
-.customTooltip {
-  background-color: rgba(255, 255, 255, 0.98);
-  border: 1px solid #f1f5f9;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  z-index: 999;
+.legendContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
 }
-.tooltipLabel { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
-.tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
-.dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
-.satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-.scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
-.starRow { display: flex; align-items: center; gap: 16px; font-size: 14px; margin-bottom: 14px; width: 100%; }
-.starLabel { width: 32px; font-weight: 700; color: #334155; }
-.progressTrack { flex: 1; height: 10px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
+.legendBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.chartWrapper {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.responsiveGrid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+/* Satisfaction & Other Components */
+.satisfactionHeader { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px; }
+.scoreBig { font-size: 56px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
+.starRow { display: flex; align-items: center; gap: 12px; font-size: 14px; margin-bottom: 12px; }
+.starLabel { width: 30px; font-weight: 700; color: #334155; }
+.progressTrack { flex: 1; height: 8px; background-color: #f1f5f9; border-radius: 99px; overflow: hidden; }
 .progressBar { height: 100%; border-radius: 99px; }
-.starPercent { width: 40px; text-align: right; color: #475569; font-weight: 600; font-size: 13px; }
+.starPercent { width: 36px; text-align: right; color: #475569; font-weight: 600; font-size: 12px; }
 
 .topHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-.topBadge {
-  background-color: #eff6ff; color: #1d4ed8; padding: 6px 16px;
-  border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid #bfdbfe;
-  display: flex; align-items: center;
-}
-.emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
-.responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
-.chartWrapper { width: 100%; height: auto; min-height: 350px; margin-bottom: 20px; overflow: visible; position: relative; }
-.largeHeight { height: 500px; min-height: 500px; }
+.topBadge { background-color: #eff6ff; color: #1d4ed8; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 1px solid #bfdbfe; }
+.emptyState { text-align: center; color: #9ca3af; padding: 20px; width: 100%; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
+   4. RESPONSIVE / MOBILE FIXES (แก้ไขให้ตรงตาม JS)
    ======================================================= */
-@media (min-width: 992px) {
-    .chartWrapper { height: auto; min-height: 350px; }
-    .largeHeight { height: 500px; min-height: 500px; }
-}
-
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
   .main { padding: 16px; gap: 16px; }
-  .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
-
-  /* -----------------------------------------------------------
-     [FIX 1] TOTAL CARD: ข้อความชิดซ้าย, ตัวเลขชิดขวา
-     ----------------------------------------------------------- */
-  .totalCard { 
-      display: flex !important;
-      flex-direction: row !important; /* จัดแนวนอน */
-      justify-content: space-between !important; /* ดันซ้ายสุดกับขวาสุด */
-      align-items: center !important; /* กึ่งกลางแนวตั้ง */
-      height: auto !important; 
-      min-height: auto !important;
-      padding: 20px 24px !important;
-      gap: 16px;
-  }
   
-  /* กรุ๊ปข้อความด้านซ้าย (ชื่อ + เปอร์เซ็นต์) */
+  .dashboardTopSection { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
+
+  /* ----------------------------------------------------
+     [FIX] TOTAL CARD (แนวนอน + ชิดซ้าย)
+     ---------------------------------------------------- */
+  .totalCard {
+    /* บังคับ Flex Row */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    
+    /* Reset ความสูง */
+    height: auto !important;
+    min-height: auto !important;
+    padding: 20px 24px !important;
+    gap: 0 !important;
+  }
+
+  /* จัดการ Decoration ไม่ให้บัง */
+  .totalCard .cardDecoration {
+    right: -40px;
+    top: -40px;
+    opacity: 0.5;
+  }
+
+  /* ส่วนข้อความซ้าย (Header) */
   .totalCard .cardHeader {
-      display: flex !important;
-      flex-direction: column !important; /* เรียงลงมา */
-      align-items: flex-start !important; /* [สำคัญ] ชิดซ้าย */
-      text-align: left !important; /* [สำคัญ] ชิดซ้าย */
-      width: auto !important;
-      margin: 0 !important;
-      gap: 4px; 
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important; /* ให้ Title อยู่บน Badge อยู่ล่าง */
+    align-items: flex-start !important; /* ชิดซ้าย */
+    gap: 6px !important;
   }
 
-  .totalCard .cardTitle { 
-      font-size: 16px !important; 
-      margin: 0 !important;
-      text-align: left !important;
+  .totalCard .cardTitle {
+    font-size: 16px !important;
+    margin: 0 !important;
+    color: #e2e8f0 !important;
+  }
+
+  .totalCard .badgeStatus {
+    margin: 0 !important;
+  }
+
+  /* ส่วนตัวเลขขวา (Count) */
+  .totalCard .cardCount {
+    width: auto !important;
+    flex: unset !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: right !important;
+    font-size: 60px !important;
+    -webkit-text-fill-color: #fff !important;
+    background: none !important;
+    color: #fff !important;
+  }
+
+  /* ----------------------------------------------------
+     [FIX] FILTERS (แถวเดียว + สไลด์)
+     ---------------------------------------------------- */
+  .filterContainer {
+    width: 100%;
+    display: flex !important;
+    flex-wrap: nowrap !important; /* ห้ามตกบรรทัด */
+    overflow-x: auto !important; /* สไลด์แนวนอน */
+    white-space: nowrap !important;
+    justify-content: flex-start !important;
+    padding-bottom: 8px; /* เผื่อ Scrollbar */
+    gap: 10px;
+    
+    /* ซ่อน Scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
-  /* ตัวเลขด้านขวา */
-  .totalCard .cardCount { 
-      flex: 0 0 auto !important; /* ไม่ยืด */
-      width: auto !important; 
-      margin: 0 !important; 
-      padding: 0 !important;
-      text-align: right !important; /* [สำคัญ] ชิดขวา */
-      font-size: 64px !important; 
-      line-height: 1;
-      -webkit-text-fill-color: #fff; 
+  .filterContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterButton {
+    flex: 0 0 auto !important; /* ห้ามบีบปุ่ม */
+  }
+
+  /* ----------------------------------------------------
+     GRID & OTHER ADJUSTMENTS
+     ---------------------------------------------------- */
+  .rightGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .statusCard {
+    padding: 16px;
+    min-height: 110px;
+  }
+
+  .cardCount {
+    font-size: 32px;
   }
   
-  .totalCard .badge-status { 
-      margin-left: 0 !important; 
-      align-self: flex-start !important;
+  .cardTitle {
+    font-size: 13px;
+    white-space: normal;
   }
 
-  /* -----------------------------------------------------------
-     [FIX 2] BUTTONS: เรียงแถวเดียว + สไลด์แนวนอน
-     ----------------------------------------------------------- */
-  .filterContainer { 
-      display: flex !important;
-      flex-direction: row !important;
-      width: 100% !important;
-      
-      /* ทำให้สไลด์แนวนอนได้ (Horizontal Scroll) */
-      overflow-x: auto !important; 
-      white-space: nowrap !important;
-      flex-wrap: nowrap !important; /* ห้ามตกบรรทัดเด็ดขาด */
-      
-      justify-content: flex-start !important; /* เรียงจากซ้าย */
-      gap: 10px !important;
-      padding-bottom: 8px; /* เว้นที่ให้ scrollbar */
-      
-      /* ซ่อน Scrollbar ให้สวยงาม */
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+  /* Layout กราฟ */
+  .responsiveGrid2 {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .sectionCard {
+    padding: 16px !important;
+  }
+
+  .chartHeaderWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
   
-  .filterContainer::-webkit-scrollbar { 
-      display: none; 
+  .scoreBig {
+    font-size: 42px;
   }
-
-  .filterButton { 
-      flex: 0 0 auto !important; /* ห้ามบีบปุ่ม */
-      margin: 0 !important;
-  }
-
-  /* -----------------------------------------------------------
-     Other Grid Fixes
-     ----------------------------------------------------------- */
-  .rightGrid { 
-      grid-template-columns: repeat(2, 1fr) !important; 
-      gap: 12px !important; 
-  }
-
-  .statusCard { padding: 16px; min-height: 120px; }
-  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
-  .sectionCard { padding: 16px !important; }
-  .scoreBig { font-size: 48px; }
 }
