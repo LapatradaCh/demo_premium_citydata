@@ -264,6 +264,9 @@
   justify-content: space-between;
   min-height: 190px;
   cursor: pointer;
+  
+  /* ✅ เพิ่ม: เพื่อให้แน่ใจว่าถ้าข้อความล้นจะไม่ถูกซ่อนโดยการ์ด (ถ้าต้องการให้ล้นออกนอกการ์ดจริงๆ) */
+  overflow: visible; 
 }
 
 .cardHeaderSection {
@@ -273,6 +276,9 @@
   gap: 14px;
   width: 100%;
   position: relative;
+  
+  /* ✅ เพิ่ม: เพื่อไม่ให้ flex บีบอัดลูกข้างใน */
+  overflow: visible; 
 }
 
 .reportImage {
@@ -288,34 +294,48 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0; 
+  
+  /* ✅ แก้ไข: เอา min-width: 0 ออก เพื่อไม่ให้มันพยายามหดข้อความ */
+  /* min-width: 0;  <-- ลบอันนี้ออก */
+  width: auto; /* ให้กว้างตามเนื้อหา */
+  position: relative;
+  overflow: visible; /* ให้ข้อความล้นออกมาได้ */
 }
 
+/* === ส่วนหัวข้อ: ชื่อเคส === */
 .reportHeader {
   font-weight: 800;
   font-size: 16.5px;
   color: #111;
   margin: 0;
-  white-space: nowrap;       
-  overflow: hidden;           
-  text-overflow: ellipsis;  
+  
+  /* ✅ แก้ไข: เพื่อให้หลุดขอบ ไม่ตัดคำ */
+  white-space: nowrap;     /* บังคับบรรทัดเดียว */
+  overflow: visible;       /* ห้ามซ่อนส่วนเกิน (ให้ล้นออกมา) */
+  text-overflow: clip;     /* ไม่เอา ... (ตัดทิ้งดื้อๆ หรือปล่อยล้น) */
+  width: max-content;      /* บังคับความกว้างให้เท่ากับข้อความจริงๆ (ยาวเหยียด) */
+  z-index: 10;             /* ให้ลอยทับสิ่งอื่น */
 }
 
+/* === ส่วนรายละเอียด: test, ทดสอบไฟฟ้า... === */
 .reportDetailText {
   font-size: 14.5px;
   font-weight: 600;
   color: #666;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  /* ✅ แก้ไข: เพื่อให้หลุดขอบ ไม่ตัดคำ */
+  white-space: nowrap;     /* บังคับบรรทัดเดียว */
+  overflow: visible;       /* ห้ามซ่อนส่วนเกิน */
+  text-overflow: clip;     /* ไม่เอา ... */
+  width: max-content;      /* บังคับความกว้างให้เท่ากับข้อความ */
 }
 
 /* --- Status Tag --- */
 .reportStatusGroup {
   position: absolute; 
   top: 18px;            
-  right: 0;            
+  right: 0;             
   z-index: 5;
 }
 
@@ -389,7 +409,7 @@
 /* ปรับแต่ง Label หัวข้อ */
 .infoCol label, .infoColFull label {
   font-size: 12px;
-  font-weight: 600;       
+  font-weight: 600;        
   color: #85929e;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -520,7 +540,7 @@
   width: 48px;
   height: 48px;
   background: #fff7e6;  /* พื้นหลังสีส้มอ่อน */
-  color: #fa8c16;       /* ไอคอนสีส้ม */
+  color: #fa8c16;        /* ไอคอนสีส้ม */
   border-radius: 12px;
   display: flex;
   align-items: center;
