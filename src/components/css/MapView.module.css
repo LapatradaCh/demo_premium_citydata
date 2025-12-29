@@ -118,33 +118,39 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT (เหมือนเดิม)
+   2. MAIN LAYOUT (แก้ไข: เต็มจอ ไม่มีช่องว่าง)
    ========================================= */
 
 .mapViewContainer {
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 0; /* ลบช่องว่างระหว่างเมนูกับแผนที่ */
   width: 100%;
-  max-width: 1200px;
+  max-width: 100%; /* ให้ขยายเต็มความกว้างหน้าจอ */
   align-items: flex-start;
   height: 75vh;
   min-height: 500px;
+  background-color: #ffffff; /* พื้นหลังสีขาว */
 }
 
 .mapSidebar {
   flex-shrink: 0;
   width: 340px;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
+  
+  /* ลบสไตล์การ์ด (Card Style) ออก */
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  border-right: 1px solid #f0f0f0; /* เพิ่มเส้นกั้นบางๆ ด้านขวาแทน */
+  
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   height: 100%;
   overflow-y: hidden;
+  z-index: 10; /* ให้ Sidebar อยู่เหนือกว่าเล็กน้อยเผื่อมีเงา */
 }
 
 .mapSidebarTitle {
@@ -404,18 +410,21 @@
 
 
 /* =========================================
-   5. MAP CONTENT (เหมือนเดิม)
+   5. MAP CONTENT (แก้ไข: ลบกรอบมน)
    ========================================= */
 
 .mapContent {
   flex-grow: 1;
   min-width: 0;
   height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
+  
+  /* ลบสไตล์การ์ดออก */
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  
   position: relative;
+  overflow: hidden;
 }
 
 .mapPlaceholder {
@@ -606,7 +615,7 @@
 
 
 /* =========================================
-   7. RESPONSIVE (เหมือนเดิม)
+   7. RESPONSIVE (ปรับปรุงให้รองรับแบบเต็มจอ)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -619,6 +628,9 @@
     width: 100%;
     height: 500px;
     box-sizing: border-box;
+    /* ในมือถือ เอาเส้นกั้นขวาออก ใส่เส้นกั้นล่างแทน */
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
   }
   .mapContent {
     width: 100%;
@@ -628,7 +640,8 @@
 
 @media screen and (max-width: 480px) {
   .mapViewContainer {
-    gap: 16px;
+    /* gap: 16px; <-- ลบออกในมือถือด้วย */
+    gap: 0;
   }
   .mapSidebar {
     padding: 16px;
