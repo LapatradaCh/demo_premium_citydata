@@ -366,7 +366,7 @@ html, body {
   }
 
   /* ----------------------------------------------------
-     TOTAL CARD: แนวนอน (ข้อความซ้าย - เลขขวา)
+     TOTAL CARD: จัดเรียงแนวนอน (ข้อความซ้าย - เลขขวา)
      ---------------------------------------------------- */
   .totalCard {
     display: flex !important;
@@ -409,36 +409,47 @@ html, body {
   .totalCard::before { display: none; }
 
   /* ----------------------------------------------------
-     [FIXED] FILTERS: จัดเรียงแบบ Grid 4 คอลัมน์ (จะได้ 4 บน 3 ล่าง)
+     [FIXED] FILTERS: แบบ Legend (จุดสี + ข้อความ)
+     จัดกึ่งกลาง, ไม่มีกรอบ, ไหลเป็นแถว (4 บน 3 ล่าง)
      ---------------------------------------------------- */
   .filterContainer {
     width: 100%;
-    display: grid !important; /* ใช้ Grid แทน Flex */
-    /* สร้าง 4 คอลัมน์ ขนาดตามเนื้อหาของปุ่ม */
-    grid-template-columns: repeat(4, max-content) !important;
-    /* จัดกลุ่มปุ่มทั้งหมดให้อยู่กึ่งกลาง Container */
-    justify-content: center !important;
-    /* ระยะห่าง (แนวตั้ง 10px, แนวนอน 8px) */
-    gap: 10px 8px !important;
-    padding: 12px 0 !important; /* เพิ่ม padding บนล่างให้ดูไม่อึดอัด */
-
-    /* ล้างค่า style เดิมที่ไม่ต้องการในโหมดนี้ */
-    border: none !important;
+    display: flex !important;       
+    flex-wrap: wrap !important;     /* ให้ตกบรรทัดได้ */
+    justify-content: center !important; /* จัดกึ่งกลาง */
+    gap: 12px 16px !important;      /* ระยะห่าง */
+    padding: 8px 0 20px 0 !important;
+    
+    /* ล้าง style เดิม */
     background: transparent !important;
-    overflow: visible !important; /* ไม่ต้องสไลด์แล้ว */
+    border: none !important;
+    overflow: visible !important;
+    grid-template-columns: none !important;
   }
   
-  /* ซ่อน Scrollbar ที่อาจจะตกค้างมา */
   .filterContainer::-webkit-scrollbar { display: none; }
 
   .filterButton {
-    /* ให้ปุ่มเต็มพื้นที่ cell ของ grid */
-    width: 100% !important;
+    /* ทำให้ปุ่มดูเหมือนข้อความธรรมดา */
+    width: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
     margin: 0 !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;            /* ระยะห่างจุดกับข้อความ */
+    
     white-space: nowrap !important;
-    /* จัด content ในปุ่มให้อยู่ตรงกลาง */
-    display: inline-flex !important;
-    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  .filterButton:hover {
+    transform: translateY(-1px);
+    opacity: 0.8;
   }
 
   /* ----------------------------------------------------
