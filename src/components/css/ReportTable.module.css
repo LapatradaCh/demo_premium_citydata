@@ -10,12 +10,12 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ❌ พัง 1: บังคับตำแหน่งแบบ Hardcode ให้หลุดจอไปเลย */
-  left: 100px; 
-  transform: none; /* เอาการจัดกึ่งกลางออก */
+  /* ✅ กลับมาจัดกึ่งกลางสวยงาม */
+  left: 50%;
+  transform: translateX(-50%);
   
-  width: 800px; /* บังคับกว้างเวอร์ๆ */
-  min-width: 800px;
+  width: max-content; 
+  min-width: 300px;    
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -27,11 +27,9 @@
   align-items: center;
   gap: 12px;
   position: relative;
-  
-  /* ❌ พัง 2: บังคับความกว้างเกินจอคอมทั่วไป (Search Bar ยาวทะลุโลก) */
-  width: 2500px; 
-  max-width: none; /* ยกเลิกการจำกัดความกว้าง */
-  margin: 0 0 24px 0; /* ชิดซ้าย ไม่จัดกลาง */
+  width: 100%;
+  max-width: 1100px; /* ✅ จำกัดความกว้างพอดีตา */
+  margin: 0 auto 24px auto; 
 }
 
 .searchInputWrapper {
@@ -74,13 +72,12 @@
 }
 
 .filterToggleButton {
-  /* ❌ พัง 3: ปุ่ม Filter ใหญ่ยักษ์ */
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0 50px; /* padding เวอร์ๆ */
+  padding: 0 24px;
   font-size: 13.5px;
   font-weight: 600;
   color: #fff;
@@ -91,7 +88,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   height: 42px;
-  width: 400px; /* fix width ให้ปุ่มกว้างกินที่ */
+  width: auto;
 }
 
 /* === MODAL === */
@@ -108,16 +105,16 @@
 
 .filterModal {
   position: fixed;
-  /* ❌ พัง 4: Modal ไม่กลาง และกว้างเกินจอ */
-  top: 20%;
-  left: 20px;
-  transform: none; /* ไม่จัดกลาง */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* ✅ จัดกึ่งกลางจอ */
   z-index: 2000;
   background: #ffffff;
   border-radius: 28px;
   
-  width: 1500px; /* กว้างทะลุจอ */
-  max-width: none;
+  /* ✅ Desktop ปรับให้ดูดี ไม่กว้างเกิน */
+  width: 90%;
+  max-width: 550px; 
   
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -200,7 +197,7 @@
 }
 
 .filterApplyButton {
-  align-self: center; 
+  align-self: center;  
   width: auto;         
   min-width: 180px;    
   
@@ -230,24 +227,20 @@
   font-weight: 700;
   margin-top: 28px;
   margin-bottom: 16px;
-  /* ❌ พัง 5: Summary กว้างเกิน */
-  width: 2000px;
-  max-width: none;
-  margin-left: 0;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .reportTableContainer {
-  /* ❌ พัง 6: เปลี่ยนจาก Grid เป็น Flex แนวนอนยาวๆ ไม่ตัดบรรทัด */
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
-  
-  width: 5000px; /* บังคับพื้นที่วางยาวเหยียด 5000px */
+  width: 100%;
+  /* ✅ ใช้ Grid เหมือนเดิม เพื่อให้การ์ดเรียงสวยงามและขึ้นบรรทัดใหม่เมื่อจอเล็ก */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px; 
-  max-width: none; /* ยกเลิกการจำกัดความกว้าง */
-  margin: 0; /* ชิดซ้าย */
-  
-  padding-bottom: 50px; /* เผื่อพื้นที่ Scroll */
+  max-width: 1100px; 
+  margin: 0 auto;
 }
 
 .reportTableRow {
@@ -261,15 +254,9 @@
   position: relative;
   gap: 16px;
   justify-content: space-between;
-  
-  /* ❌ พัง 7: การ์ดแต่ละใบกว้างเกือบเท่าจอคอม */
-  min-width: 800px; /* การ์ดหนึ่งใบกว้าง 800px */
-  width: 800px;
-  
   min-height: 190px;
   cursor: pointer;
   overflow: visible; 
-  flex-shrink: 0; /* ห้ามหด */
 }
 
 .cardHeaderSection {
@@ -283,10 +270,9 @@
 }
 
 .reportImage {
-  /* ❌ พัง 8: รูปเบี้ยวๆ */
-  width: 200px;          
-  height: 50px;
-  object-fit: fill; /* รูปยืดผิดสัดส่วน */
+  width: 70px;           
+  height: 70px;
+  object-fit: cover;
   border-radius: 16px;
   flex-shrink: 0; 
 }
@@ -301,6 +287,7 @@
   overflow: visible; 
 }
 
+/* === ส่วนหัวข้อ: ชื่อเคส === */
 .reportHeader {
   font-weight: 800;
   font-size: 16.5px;
@@ -313,6 +300,7 @@
   z-index: 10;             
 }
 
+/* === ส่วนรายละเอียด === */
 .reportDetailText {
   font-size: 14.5px;
   font-weight: 600;
@@ -328,8 +316,7 @@
 .reportStatusGroup {
   position: absolute; 
   top: 18px;            
-  /* ❌ พัง 9: Tag ลอยออกนอกการ์ด */
-  right: -50px;              
+  right: 0;              
   z-index: 5;
 }
 
@@ -368,7 +355,7 @@
   justify-content: center;
 }
 
-/* === MODAL รายละเอียด (คงเดิมไว้ หรือจะแก้ให้พังด้วยก็ได้) === */
+/* === MODAL รายละเอียด === */
 .detailHeaderBlock { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 8px; }
 .detailImage { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .detailTitleInfo { flex: 1; }
@@ -393,30 +380,22 @@
 .orgInfoText { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .orgInfoText label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; }
 
-/* === Media Queries (ทำให้พังหนักกว่าเดิมในมือถือ) === */
+/* === Media Queries === */
 @media screen and (max-width: 768px) {
-  /* ❌ พัง 10: แทนที่จะย่อ ในมือถือดันขยายให้ใหญ่ขึ้นอีก */
-  .reportTableRow { 
-    padding: 20px; 
-    min-width: 1200px; /* มือถือแต่การ์ดกว้าง 1200px */
-  }
-  
+  .reportTableRow { padding: 20px; gap: 12px; }
   .infoRow { grid-template-columns: 1fr; }
 
+  /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
   .filterModal {
-    width: 900px; /* Modal ล้นจอมือถือแน่นอน */
-    max-width: none;
-    left: 0;
+    max-width: 360px; /* กลับมาขนาดที่พอดี */
+    width: 90%;
   }
 
+  /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
   .calendarPopup {
-    left: 0;
-    transform: none;
-    width: 600px; /* ปฏิทินกว้างกว่าจอมือถือ */
-    min-width: 600px;
-  }
-  
-  .searchTop {
-    width: 1500px; /* Search bar ยาวทะลุมือถือ */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;      
+    min-width: 300px;
   }
 }
