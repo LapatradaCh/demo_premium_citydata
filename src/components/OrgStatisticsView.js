@@ -4,14 +4,12 @@ import {
   BarChart2, Star, Clock, AlertCircle, 
   CheckCircle, PieChart, Layers, 
   ChevronDown, ChevronUp,
-  Activity, TrendingUp // เพิ่ม icon สำหรับหน้า SLA
+  Activity, TrendingUp 
 } from 'lucide-react';
 
 // ==========================================
 // 1. CONFIG & UTILS
 // ==========================================
-const TARGET_SLA_DAYS = 3.0; 
-
 const COLORS = {
   pending: "#FF4D4F",     
   inProgress: "#FFC107", 
@@ -35,7 +33,6 @@ const PROBLEM_COLORS = [
   "#8B5CF6", "#EC4899", "#6366F1", "#9CA3AF"
 ];
 
-// Helper ตัดคำ
 const truncateText = (text, maxLength) => {
     if (!text) return '';
     const str = String(text);
@@ -47,7 +44,7 @@ const truncateText = (text, maxLength) => {
 // 2. SUB-COMPONENTS
 // ==========================================
 
-// --- TAB 1: WORKLOAD (KPI แนวนอน) ---
+// --- TAB 1: WORKLOAD ---
 const WorkloadView = ({ data }) => {
   const [sortBy, setSortBy] = useState('total'); 
 
@@ -245,23 +242,29 @@ const SatisfactionView = ({ data }) => {
   );
 };
 
-// --- TAB 3: EFFICIENCY (SLA) - [ปรับปรุงใหม่ตามดีไซน์รูปภาพ] ---
+// --- TAB 3: EFFICIENCY (SLA) - [ปรับปรุง: รองรับค่าจาก DB] ---
 const EfficiencyView = ({ data }) => {
-  // 1. Process Data & Mock Targets (จำลอง SLA Target ตามชื่อ หรือ Default)
+  // 1. Process Data using Real DB Values
   const processedData = useMemo(() => {
     return data.map((item) => {
-        // ดึงเวลาจริง (รองรับทั้ง avgTime จาก Org หรือ avg_resolution_time จาก Type)
-        const actualDays = item.avgTime || parseFloat(item.avg_resolution_time) || 0;
-        
-        // Mock Target Logic (สามารถปรับเป็นค่าจาก DB ได้)
-        let targetDays = TARGET_SLA_DAYS; // Default 3
-        const name = item.name || item.issue_type_name || '';
-        if (name.includes('ถนน') || name.includes('ทางเท้า')) targetDays = 7;
-        if (name.includes('ไฟ')) targetDays = 1;
-        if (name.includes('น้ำท่วม')) targetDays = 3;
+        const name = item.issue_type_name || item.name || '-';
 
+        // A. SLA Target (จาก DB)
+        // รับค่า 'sla_target_days' จาก API, ถ้าไม่มีให้ Default = 3
+        const targetDays = item.sla_target_days ? parseFloat(item.sla_target_days) : 3.0;
+
+        // B. Actual Time (จาก DB)
+        // API ส่งมาเป็น 'avg_resolution_time' หน่วยเป็น "ชั่วโมง"
+        // ต้องหาร 24 เพื่อแปลงเป็น "วัน"
+        const rawHours = parseFloat(item.avg_resolution_time || item.avgTime || 0);
+        const actualDays = rawHours / 24;
+
+        // C. Calculate Status
         const isOverdue = actualDays > targetDays;
         const diff = Math.abs(actualDays - targetDays).toFixed(1);
+
+        // D. Progress Bar % (Max 100%)
+        const progressPercent = targetDays > 0 ? Math.min((actualDays / targetDays) * 100, 100) : 0;
 
         return {
             ...item,
@@ -270,14 +273,18 @@ const EfficiencyView = ({ data }) => {
             targetDays,
             isOverdue,
             diff,
-            progressPercent: Math.min((actualDays / targetDays) * 100, 100)
+            progressPercent
         };
-    }).sort((a,b) => (b.actualDays/b.targetDays) - (a.actualDays/a.targetDays)); // เรียงตามความวิกฤต (Ratio)
+    }).sort((a,b) => {
+        // เรียงตามความวิกฤต (Ratio: ใช้จริง / เป้าหมาย)
+        const ratioA = a.targetDays > 0 ? a.actualDays / a.targetDays : 0;
+        const ratioB = b.targetDays > 0 ? b.actualDays / b.targetDays : 0;
+        return ratioB - ratioA;
+    });
   }, [data]);
 
   // 2. Summary Logic
   const totalItems = processedData.length;
-  // const totalIssues = processedData.reduce((acc, curr) => acc + (curr.total || curr.count || 0), 0); // ถ้าจะนับจำนวนเรื่อง
   const overdueCount = processedData.filter(d => d.isOverdue).length;
   const slaScore = totalItems > 0 ? Math.round(((totalItems - overdueCount) / totalItems) * 100) : 0;
 
@@ -290,7 +297,7 @@ const EfficiencyView = ({ data }) => {
        
        {/* Top Summary Cards */}
        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px', marginTop: '16px' }}>
-            {/* Card 1: Total Groups */}
+            {/* Card 1: Total */}
             <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
                 <div style={{ padding: '10px', borderRadius: '50%', background: '#eff6ff', color: '#3b82f6', minWidth:'40px', display:'flex', justifyContent:'center', alignItems:'center' }}>
                     <Layers size={20} />
@@ -369,7 +376,6 @@ const EfficiencyView = ({ data }) => {
                                   </span>
                               </div>
                               <div style={{ height: '6px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', position:'relative' }}>
-                                  {/* ขีดบอก Target (ถ้าอยากใส่เพิ่ม) */}
                                   <div style={{ height: '100%', width: `${item.progressPercent}%`, background: barColor, borderRadius: '3px', transition:'width 0.5s' }}></div>
                               </div>
                           </div>
@@ -517,9 +523,10 @@ export default function OrganizationStatisticsView() {
     switch (activeTab) {
       case 'workload': return <WorkloadView data={orgData} />;
       case 'satisfaction': return <SatisfactionView data={orgData} />;
-      // *** MODIFIED: ใช้ problemData แทน orgData เพื่อให้แสดงผลแยกตามประเภท (Category) เหมือนในรูปภาพ ***
-      // หากต้องการดู SLA ของหน่วยงาน ให้เปลี่ยนกลับเป็น data={orgData}
-      case 'efficiency': return <EfficiencyView data={problemData.length > 0 ? problemData : orgData} />;
+      case 'efficiency': 
+        // *** ส่ง problemData เพื่อดู SLA รายประเภท ***
+        // หรือถ้า problemData ยังโหลดไม่เสร็จ/ไม่มี ให้ใช้ orgData (แต่ฟิลด์อาจไม่ครบ)
+        return <EfficiencyView data={problemData.length > 0 ? problemData : []} />;
       case 'problemType': return <ProblemTypeView data={problemData} />;
       default: return null;
     }
