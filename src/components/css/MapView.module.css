@@ -112,18 +112,20 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT (ส่วนสำคัญที่สุด)
+   2. MAIN LAYOUT
    ========================================= */
 
 .mapViewContainer {
   display: flex;
-  flex-direction: row; /* บังคับแนวนอนเสมอ */
+  flex-direction: row;
   gap: 24px;
   width: 100%;
   
-  /* !!! จุดสำคัญ: บังคับความกว้างขั้นต่ำ 1200px !!! 
-     ถ้าจอเล็กกว่านี้ จะเกิด Scrollbar แนวนอนทันที และจะไม่ยอมพับลงมา */
-  min-width: 1200px;
+  /* ปรับเหลือ 900px:
+     - 340px (Sidebar) + 500px (Map)
+     - จะทำให้ Sidebar ไม่เบียด และแผนที่ยังมีที่ยืน 
+     - ในมือถือจะล้นขอบนิดหน่อยให้พอเลื่อนได้ แต่ไม่กว้างจนหาไม่เจอ */
+  min-width: 900px;
   
   align-items: flex-start;
   height: 75vh;
@@ -601,10 +603,10 @@
 
 
 /* =========================================
-   7. RESPONSIVE (ปิดถาวร)
+   7. RESPONSIVE (DISABLED)
    ========================================= */
 
-/* ตั้ง max-width เป็น 0px เพื่อให้แน่ใจว่าจะไม่มีวันทำงาน */
+/* ปิดการทำงานของ Mobile Responsive ทั้งหมด */
 @media screen and (max-width: 0px) {
   .mapViewContainer {
     flex-direction: column;
