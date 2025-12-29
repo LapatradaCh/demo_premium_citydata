@@ -14,10 +14,10 @@
   padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  background-color: #F3F4F6; /* พื้นหลังเทาอ่อน ขับให้การ์ดเด่น */
+  /* แก้ไขตรงนี้ */
+  background-color: #ffffff; /* เปลี่ยนจาก #F3F4F6 เป็น #ffffff เพื่อให้เป็นสีขาว */
   color: #1F2937;
 }
-
 /* =========================================
    2. SIDEBAR (Desktop Only)
    ========================================= */
