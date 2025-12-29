@@ -1,7 +1,7 @@
 /* --- css/MapView.module.css --- */
 
 /* =========================================
-   1. SHARED COMPONENTS (เหมือนเดิม)
+   1. SHARED COMPONENTS
    ========================================= */
 
 .customClusterIcon {
@@ -112,15 +112,19 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT
+   2. MAIN LAYOUT (ส่วนสำคัญที่สุด)
    ========================================= */
 
 .mapViewContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* บังคับแนวนอนเสมอ */
   gap: 24px;
   width: 100%;
-  max-width: 1200px;
+  
+  /* !!! จุดสำคัญ: บังคับความกว้างขั้นต่ำ 1200px !!! 
+     ถ้าจอเล็กกว่านี้ จะเกิด Scrollbar แนวนอนทันที และจะไม่ยอมพับลงมา */
+  min-width: 1200px;
+  
   align-items: flex-start;
   height: 75vh;
   min-height: 500px;
@@ -151,7 +155,7 @@
 
 
 /* =========================================
-   3. SEARCH & FILTER (เหมือนเดิม)
+   3. SEARCH & FILTER
    ========================================= */
 
 .sidebarSearchTop {
@@ -246,7 +250,7 @@
 
 
 /* =========================================
-   4. REPORT LIST (เหมือนเดิม)
+   4. REPORT LIST
    ========================================= */
 
 .sidebarReportListContainer {
@@ -597,16 +601,11 @@
 
 
 /* =========================================
-   7. RESPONSIVE
+   7. RESPONSIVE (ปิดถาวร)
    ========================================= */
 
-/* ปรับ max-width ให้ต่ำลงมาอีก (600px) 
-   เพื่อให้ iPad หรือจอเล็กๆ ยังคง "ฝืน" เป็นแนวนอน (ซ้าย-ขวา) 
-   แบบที่คุณอยากได้ (ดูแน่นๆ แต่ไม่พับ)
-   
-   จะยอมพับเป็นแนวตั้งแค่ตอนเป็นมือถือจริงๆ เท่านั้น
-*/
-@media screen and (max-width: 600px) {
+/* ตั้ง max-width เป็น 0px เพื่อให้แน่ใจว่าจะไม่มีวันทำงาน */
+@media screen and (max-width: 0px) {
   .mapViewContainer {
     flex-direction: column;
     height: auto;
@@ -623,7 +622,7 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 0px) {
   .mapViewContainer {
     gap: 16px;
   }
