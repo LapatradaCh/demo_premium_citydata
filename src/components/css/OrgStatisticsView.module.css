@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL VERSION WITH IMAGE 2 STYLE LEGEND) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -661,7 +661,7 @@
 }
 
 /* =========================================
-   10. RESPONSIVE / MOBILE (FIXED LEGEND STYLE)
+   10. RESPONSIVE / MOBILE (UPDATED LEGEND STYLE)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -715,8 +715,7 @@
   
   .activeItem { background-color: #f0fdf4 !important; color: #15803d !important; }
 
-  /* --- FIX: UPDATED LEGEND STYLE (LIKE IMAGE 2) --- */
-  /* ปรับแต่งส่วนรายการสถานะด้านล่างกราฟให้เป็น Card สีขาวแยกแต่ละใบ */
+  /* --- FIX: ปรับปรุงเฉพาะส่วน LEGEND ให้เป็น Card สีขาว เหมือนรูปภาพ --- */
   .donutLegendGrid, .mockStackedBarLegend {
     display: flex !important;
     flex-direction: column !important;
@@ -725,37 +724,37 @@
     padding: 20px 0 0 0 !important;
     margin-top: 16px !important;
     border-top: 1px solid #f3f4f6 !important;
-    justify-content: flex-start !important;
   }
 
   .donutLegendItem, .mockStackedBarLegendItem {
     width: 100% !important;
     background: #ffffff !important;
-    padding: 14px 20px !important;
-    border-radius: 16px !important;
+    padding: 16px 20px !important;
+    border-radius: 18px !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    font-size: 15px !important;
+    justify-content: flex-start !important;
+    font-size: 16px !important;
     color: #1f2937 !important;
     border: 1px solid #f3f4f6 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    transition: transform 0.2s;
   }
 
-  /* ชื่อรายการ (Label) */
+  /* ชื่อรายการ */
   .donutLegendItem span:nth-child(2),
   .mockStackedBarLegendItem span:nth-child(2) {
     flex-grow: 1;
-    font-weight: 600;
-    margin-left: 4px;
-    text-align: left;
+    font-weight: 700;
+    margin-left: 8px;
   }
 
-  /* ตัวเลขสถิติฝั่งขวา */
+  /* ตัวเลขและเปอร์เซ็นต์ (ด้านขวาสุด) */
   .donutLegendItem span:last-child,
   .mockStackedBarLegendItem span:last-child {
     font-weight: 800;
     color: #111827;
+    text-align: right;
   }
   
   .legendDot, .donutColorDot { 
@@ -766,25 +765,25 @@
     border-radius: 50%;
   }
 
-  /* --- GLOBAL CARD & KPI --- */
+  /* --- GLOBAL CARD & KPI (คงเดิม) --- */
   .chartBox { border-radius: 20px !important; padding: 24px 20px !important; border-bottom: 8px solid #f9fafb !important; }
   .kpiGrid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
   .kpiCard { min-height: 160px !important; padding: 20px !important; }
   .kpiCard:last-child:nth-child(odd) { grid-column: span 2 !important; }
 
-  /* --- STACKED BAR --- */
+  /* --- STACKED BAR (คงเดิม) --- */
   .mockStackedBarChart .mockHBarItem {
     display: flex !important; flex-direction: column !important;
     align-items: flex-start !important; gap: 8px !important; width: 100% !important;
     margin-bottom: 24px !important;
   }
 
-  /* --- SATISFACTION --- */
+  /* --- SATISFACTION (คงเดิม) --- */
   .satisfactionHighlightGrid { grid-template-columns: 1fr !important; gap: 16px !important; }
   .highlightCard { padding: 24px !important; box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2) !important; }
   .reportCardItem { padding: 20px !important; border: 1px solid #eee !important; }
 
-  /* --- SLA --- */
+  /* --- SLA (คงเดิม) --- */
   .slaHeaderBox, .donutHeaderBox { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; border-top: 4px solid #3B82F6 !important; }
   .mockHorizontalBarChart .mockHBarItem { display: grid !important; grid-template-columns: 1fr auto !important; grid-template-rows: auto auto !important; gap: 8px 0 !important; }
   .mockHBar { grid-column: 1 / 3; grid-row: 2; height: 10px !important; width: 100% !important; }
