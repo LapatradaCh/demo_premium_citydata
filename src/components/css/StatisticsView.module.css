@@ -257,7 +257,7 @@ html, body {
   margin-top: 4px;
 }
 
-/* Filters & Legends (Desktop) */
+/* --- Desktop Filters & Legends --- */
 .filterContainer, .legendContainer {
   display: flex;
   flex-direction: row;
@@ -286,9 +286,11 @@ html, body {
 
 .filterButton, .legendBtn {
   width: auto;
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -367,26 +369,26 @@ html, body {
   .main { padding: 16px; gap: 20px; }
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* --- 1. Total Card: จัดแนวนอน (ซ้าย:ข้อความ ขวา:ตัวเลข) --- */
+  /* --- 1. Total Card: บังคับแนวนอน (ซ้าย:ข้อความ ขวา:ตัวเลข) --- */
   .totalCard { 
       height: auto !important;
       min-height: auto !important;
-      /* บังคับแนวนอน */
       display: flex !important;
-      flex-direction: row !important;
+      flex-direction: row !important; /* แนวนอน */
       align-items: center !important;
       justify-content: space-between !important;
       padding: 24px !important;
   }
   
-  /* กล่องข้อความด้านซ้าย (ชื่อ + 100%) */
+  /* กลุ่มข้อความซ้าย: เรียงลง (Title บน, Badge ล่าง) */
   .totalCard .cardHeader {
       width: auto !important;
       margin: 0 !important;
-      /* เรียงลงในแนวตั้ง */
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 4px !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important; /* แนวตั้งในกล่องซ้าย */
+      align-items: flex-start !important; /* ชิดซ้าย */
+      gap: 6px !important;
       justify-content: center !important;
   }
 
@@ -401,43 +403,38 @@ html, body {
       align-self: flex-start !important;
   }
 
-  /* ตัวเลขด้านขวา */
+  /* ตัวเลขขวา */
   .totalCard .cardCount { 
       flex: unset !important; 
       width: auto !important; 
       margin: 0 !important; 
+      padding: 0 !important;
       text-align: right !important; 
       font-size: 56px !important; 
       line-height: 1;
       -webkit-text-fill-color: #fff; 
   }
 
-  /* --- 2. Legend Buttons: จัดกึ่งกลางและตัดบรรทัด (ตามรูป screenshot) --- */
-  .legendContainer {
+  /* --- 2. Legend Buttons: จัดกึ่งกลาง + ตัดบรรทัด (Wrap) --- */
+  .filterContainer, .legendContainer {
       width: 100% !important;
       display: flex !important;
-      flex-wrap: wrap !important; /* ยอมให้ตัดบรรทัด */
-      justify-content: center !important; /* จัดกึ่งกลาง */
-      gap: 10px !important;
-  }
-  
-  /* Filter (1W, 1M) สไลด์แนวนอน */
-  .filterContainer {
-      width: 100% !important;
-      display: flex !important;
-      flex-wrap: nowrap !important;
-      overflow-x: auto !important;
-      justify-content: flex-start !important;
+      flex-direction: row !important;
+      flex-wrap: wrap !important;     /* อนุญาตให้ตกบรรทัด */
+      justify-content: center !important; /* จัดกึ่งกลางจอ */
+      gap: 8px !important;
+      overflow: visible !important;   /* ห้าม Scroll */
   }
 
-  /* บังคับปุ่มไม่ให้ยืดเต็มจอ */
+  /* บังคับปุ่มไม่ให้ยืดเต็มจอ ให้ขนาดพอดีตัวหนังสือ */
   .filterButton, .legendBtn {
       width: auto !important;
       flex: 0 0 auto !important;
+      display: inline-flex !important;
       margin: 0 !important;
   }
 
-  /* --- ส่วนอื่นๆ คงเดิม --- */
+  /* --- 3. Grid ทั่วไป --- */
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
   .statusCard { padding: 16px; min-height: 120px; }
   .cardTitle { font-size: 13px; white-space: normal; }
