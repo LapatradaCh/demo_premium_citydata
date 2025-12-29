@@ -366,11 +366,11 @@ html, body {
   }
 
   /* ----------------------------------------------------
-     [FIXED] TOTAL CARD: แนวนอน (ข้อความซ้าย - เลขขวา)
+     TOTAL CARD: แนวนอน (ข้อความซ้าย - เลขขวา)
      ---------------------------------------------------- */
   .totalCard {
     display: flex !important;
-    flex-direction: row !important; /* บังคับแนวนอน */
+    flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
     height: auto !important;
@@ -378,7 +378,6 @@ html, body {
     min-height: 120px !important;
   }
 
-  /* ส่วนข้อความด้านซ้าย */
   .totalCard .cardHeader {
     width: auto !important;
     margin: 0 !important;
@@ -394,49 +393,52 @@ html, body {
     margin: 0 !important;
   }
 
-  /* ส่วนตัวเลขด้านขวา */
   .totalCard .cardCount {
     width: auto !important;
     flex: 0 0 auto !important;
     margin: 0 !important;
     padding: 0 !important;
     text-align: right !important;
-    font-size: 56px !important; /* ขนาดพอดีมือถือ ไม่ใหญ่เกิน */
+    font-size: 56px !important;
     line-height: 1 !important;
     background: none !important;
-    -webkit-text-fill-color: #fff !important; /* ยกเลิก Gradient ให้ตัวหนังสือชัด */
+    -webkit-text-fill-color: #fff !important;
     color: #fff !important;
   }
 
   .totalCard::before { display: none; }
 
   /* ----------------------------------------------------
-     [FIXED] FILTERS: สไลด์แนวนอน ไม่ขึ้นบรรทัดใหม่
+     [FIXED] FILTERS: จัดเรียงแบบ Grid 4 คอลัมน์ (จะได้ 4 บน 3 ล่าง)
      ---------------------------------------------------- */
   .filterContainer {
     width: 100%;
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important; /* ห้าม wrap */
-    overflow-x: auto !important;  /* ให้สไลด์ */
-    overflow-y: hidden;
-    align-items: center;
-    gap: 8px !important;
-    padding: 4px 4px 12px 4px !important;
+    display: grid !important; /* ใช้ Grid แทน Flex */
+    /* สร้าง 4 คอลัมน์ ขนาดตามเนื้อหาของปุ่ม */
+    grid-template-columns: repeat(4, max-content) !important;
+    /* จัดกลุ่มปุ่มทั้งหมดให้อยู่กึ่งกลาง Container */
+    justify-content: center !important;
+    /* ระยะห่าง (แนวตั้ง 10px, แนวนอน 8px) */
+    gap: 10px 8px !important;
+    padding: 12px 0 !important; /* เพิ่ม padding บนล่างให้ดูไม่อึดอัด */
+
+    /* ล้างค่า style เดิมที่ไม่ต้องการในโหมดนี้ */
     border: none !important;
     background: transparent !important;
-    
-    /* ซ่อน Scrollbar */
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    overflow: visible !important; /* ไม่ต้องสไลด์แล้ว */
   }
   
+  /* ซ่อน Scrollbar ที่อาจจะตกค้างมา */
   .filterContainer::-webkit-scrollbar { display: none; }
 
   .filterButton {
-    flex: 0 0 auto !important;
-    white-space: nowrap !important;
+    /* ให้ปุ่มเต็มพื้นที่ cell ของ grid */
+    width: 100% !important;
     margin: 0 !important;
+    white-space: nowrap !important;
+    /* จัด content ในปุ่มให้อยู่ตรงกลาง */
+    display: inline-flex !important;
+    justify-content: center !important;
   }
 
   /* ----------------------------------------------------
