@@ -661,7 +661,7 @@
 }
 
 /* =========================================
-   10. RESPONSIVE / MOBILE (UPDATED DROPDOWN)
+   10. RESPONSIVE / MOBILE (UPDATED LEGEND)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -685,7 +685,7 @@
 
   .orgStatsSidebarDesktop { display: none !important; }
 
-  /* --- ปรับปรุง MOBILE DROPDOWN ตามรูปภาพ --- */
+  /* --- ปรับปรุง MOBILE DROPDOWN --- */
   .orgStatsMobileDropdown {
     display: flex !important;
     flex-direction: column;
@@ -752,7 +752,6 @@
     transition: all 0.2s;
   }
   
-  /* สีเขียวอ่อนแบบในรูปเมื่อเลือก (Satisfaction active) */
   .activeItem { 
     background-color: #f0fdf4 !important; 
     color: #15803d !important; 
@@ -761,43 +760,11 @@
 
   .mobileDropdownLabel { font-size: 12px; color: #9ca3af; margin-bottom: 8px; padding-left: 6px; font-weight: 700; text-transform: uppercase; }
 
-  /* --- ส่วนอื่นคงเดิม --- */
-  .chartBox {
-    border-radius: 20px !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 24px 20px !important;
-    border-bottom: 8px solid #f9fafb !important;
-    margin-bottom: 0 !important;
-  }
-  
-  .chartBoxTitle { margin-bottom: 24px; border-bottom: none; }
-
-  .kpiGrid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-    margin-top: 10px;
-  }
-  
-  .kpiCard {
-    min-height: 160px !important;
-    padding: 20px !important;
-    justify-content: space-between !important;
-    box-shadow: 0 8px 16px -4px rgba(0,0,0,0.1) !important;
-  }
-  .kpiCard:last-child:nth-child(odd) {
-    grid-column: span 2 !important;
-  }
-
-  .kpiHeader { font-size: 13px !important; }
-  .kpiValue { font-size: 36px !important; margin: 8px 0 16px 0 !important; font-weight: 800 !important; }
-  .kpiSubtext { font-size: 12px !important; }
-
+  /* --- แก้ไขส่วน LEGEND ให้เป็นแบบรูปที่ 2 (แนวตั้ง) --- */
   .donutLegendGrid, .mockStackedBarLegend {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
     width: 100% !important;
     padding-top: 24px !important;
     margin-top: 16px !important;
@@ -806,87 +773,71 @@
 
   .donutLegendItem, .mockStackedBarLegendItem {
     width: 100% !important;
-    background: transparent !important;
-    padding: 0 !important;
-    font-size: 12px !important;
-    color: #4b5563 !important;
-    border: none !important;
-    box-shadow: none !important;
+    background: #ffffff !important;
+    padding: 16px 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    border: 1px solid #f3f4f6 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
   
-  .legendDot, .donutColorDot { margin-right: 6px !important; width: 8px !important; height: 8px !important; }
+  /* ตัวครอบข้อความและจุดสี (ซ้าย) */
+  .donutLegendItem::before, .mockStackedBarLegendItem::before {
+    content: '';
+    display: none;
+  }
+
+  .legendDot, .donutColorDot { 
+    margin-right: 12px !important; 
+    width: 10px !important; 
+    height: 10px !important; 
+    flex-shrink: 0;
+  }
+
+  /* --- ส่วนอื่นๆ ของ Mobile --- */
+  .chartBox {
+    border-radius: 20px !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 24px 20px !important;
+    border-bottom: 8px solid #f9fafb !important;
+  }
+  
+  .kpiGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  
+  .kpiCard {
+    min-height: 160px !important;
+    padding: 20px !important;
+  }
 
   .mockStackedBarChart .mockHBarItem {
     display: flex !important; flex-direction: column !important;
     align-items: flex-start !important; gap: 8px !important; width: 100% !important;
     margin-bottom: 24px !important;
   }
-  .mockStackedBarChart .mockHBarItem > div:first-child {
-    width: 100% !important; font-size: 14px !important; font-weight: 700; color: #111;
-  }
-  .mockStackedBarChart .mockHBarItem > .mockStackedHBar {
-    width: 100% !important; height: 36px !important;
-  }
-  .mockStackedBarChart .mockHBarItem > div:last-child {
-    width: 100% !important; text-align: right !important; color: #6b7280; font-size: 12px;
-  }
 
-  .satisfactionHighlightGrid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-  
-  .highlightCard {
-    padding: 24px !important;
-    grid-template-columns: 1fr auto !important;
-    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2) !important;
-  }
-  
-  .highlightName { font-size: 20px !important; }
-  .highlightScore { font-size: 48px !important; }
+  .satisfactionHighlightGrid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .highlightCard { padding: 24px !important; }
+  .reportCardItem { padding: 20px !important; }
 
-  .reportCardList { gap: 12px !important; }
-  .reportCardItem {
-    padding: 20px !important;
-    border: 1px solid #eee !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
-  }
-  .reportCardHeader {
-    flex-direction: column !important; align-items: flex-start !important; gap: 12px !important;
-  }
-  .reportCardTitleGroup { width: 100%; }
-  .reportCardName { font-size: 16px !important; line-height: 1.5; white-space: normal !important; }
-  .reportCardScoreGroup {
-    width: 100%; text-align: left !important;
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .reportCardScoreText { font-size: 32px !important; }
-
-  .slaHeaderBox, .donutHeaderBox {
-    flex-direction: column !important; align-items: flex-start !important;
-    gap: 16px !important; border-left: none !important; border-top: 4px solid #3B82F6 !important;
-  }
-  
-  .slaAvgInfo, .donutTopTypeBox {
-    width: 100%; border-top: 1px dashed #eee; padding-top: 16px;
-  }
-
-  .headerControls { margin-top: 16px; width: 100%; flex-wrap: wrap; gap: 8px; }
-  .controlBtn { flex: 1; text-align: center; justify-content: center; }
-
-  .mockHorizontalBarChart { margin-top: 48px !important; gap: 24px !important; }
   .mockHorizontalBarChart .mockHBarItem {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
     grid-template-rows: auto auto !important;
     gap: 8px 0 !important;
-    margin-bottom: 0 !important;
     align-items: flex-end !important;
   }
   
-  .mockHBarLabel { grid-column: 1 / 2; grid-row: 1; font-size: 14px; width: auto !important; }
-  .mockHBarValue { grid-column: 2 / 3; grid-row: 1; font-size: 14px; font-weight: 700; width: auto !important; }
-  .mockHBar { grid-column: 1 / 3; grid-row: 2; height: 10px !important; margin-top: 4px !important; width: 100% !important; }
-  
-  .slaLabel { top: -28px !important; font-size: 10px !important; padding: 2px 8px !important; }
+  .mockHBarLabel { grid-column: 1 / 2; grid-row: 1; }
+  .mockHBarValue { grid-column: 2 / 3; grid-row: 1; }
+  .mockHBar { grid-column: 1 / 3; grid-row: 2; width: 100% !important; }
 }
