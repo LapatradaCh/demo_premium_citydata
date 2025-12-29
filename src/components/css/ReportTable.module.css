@@ -10,16 +10,16 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ กลับมาจัดกึ่งกลางสวยงาม */
+  /* ✅ แก้ไขตรงนี้: จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
   left: 50%;
   transform: translateX(-50%);
   
-  width: max-content; 
-  min-width: 300px;    
+  /* คงค่าเดิมไว้ */
+  width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
+  min-width: 300px;   /* ขนาดขั้นต่ำ */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
-
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
@@ -28,7 +28,7 @@
   gap: 12px;
   position: relative;
   width: 100%;
-  max-width: 1100px; /* ✅ จำกัดความกว้างพอดีตา */
+  max-width: 1100px; 
   margin: 0 auto 24px auto; 
 }
 
@@ -107,14 +107,14 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* ✅ จัดกึ่งกลางจอ */
+  transform: translate(-50%, -50%);
   z-index: 2000;
   background: #ffffff;
   border-radius: 28px;
   
-  /* ✅ Desktop ปรับให้ดูดี ไม่กว้างเกิน */
+  /* ✅ (Desktop) ปรับให้กว้างขึ้น ดูสมดุลกับจอคอม */
   width: 90%;
-  max-width: 550px; 
+  max-width: 550px; /* เพิ่มจาก 360px เป็น 550px หรือ 600px */
   
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -123,6 +123,7 @@
   border: none; 
 }
 
+/* ลด padding เพื่อลดความสูงส่วนหัว */
 .filterModalHeader {
   display: flex;
   justify-content: space-between;
@@ -137,6 +138,7 @@
   font-weight: 700;
 }
 
+/* ปุ่มปิด Header */
 .filterModalClose {
   background: #ff4d4f; 
   border: none;
@@ -196,30 +198,37 @@
   background-color: #fafafa;
 }
 
+/* ค้นหาคลาส .filterApplyButton แล้วแก้โค้ดข้างในใหม่ตามนี้ครับ */
+
 .filterApplyButton {
-  align-self: center;  
-  width: auto;         
-  min-width: 180px;    
+  /* --- จัดกึ่งกลาง --- */
+  align-self: center;  /* สั่งให้ตัวเองอยู่ตรงกลาง (เพราะพ่อเป็น Flex Column) */
+  width: auto;         /* เลิกใช้ความกว้างเต็ม 100% */
+  min-width: 180px;    /* กำหนดความกว้างขั้นต่ำให้ปุ่มดูสวย ไม่สั้นเกินไป */
   
-  background-color: #28a745; 
+  /* --- สีและรูปร่าง --- */
+  background-color: #28a745; /* ✅ สีเขียวตามที่ขอ */
   color: #fff;
   padding: 12px 32px;
-  border-radius: 28px; 
+  border-radius: 28px; /* ปรับให้มนขึ้นเหมือนแคปซูล */
   border: none;
   
+  /* --- การจัดวาง --- */
   margin-top: 16px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   
+  /* (Optional) เพิ่มเงาสีเขียวจางๆ ให้ดูมีมิติ */
   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
   transition: all 0.2s ease;
 }
 
+/* (Optional) เพิ่ม Effect ตอนเอาเมาส์ชี้ */
 .filterApplyButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  background-color: #218838; 
+  background-color: #218838; /* เขียวเข้มขึ้นนิดหน่อยตอน Hover */
 }
 
 /* --- Report Table Grid --- */
@@ -235,7 +244,6 @@
 
 .reportTableContainer {
   width: 100%;
-  /* ✅ ใช้ Grid เหมือนเดิม เพื่อให้การ์ดเรียงสวยงามและขึ้นบรรทัดใหม่เมื่อจอเล็ก */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px; 
@@ -256,7 +264,6 @@
   justify-content: space-between;
   min-height: 190px;
   cursor: pointer;
-  overflow: visible; 
 }
 
 .cardHeaderSection {
@@ -266,11 +273,10 @@
   gap: 14px;
   width: 100%;
   position: relative;
-  overflow: visible; 
 }
 
 .reportImage {
-  width: 70px;           
+  width: 70px;          
   height: 70px;
   object-fit: cover;
   border-radius: 16px;
@@ -282,41 +288,34 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  width: auto; 
-  position: relative;
-  overflow: visible; 
+  min-width: 0; 
 }
 
-/* === ส่วนหัวข้อ: ชื่อเคส === */
 .reportHeader {
   font-weight: 800;
   font-size: 16.5px;
   color: #111;
   margin: 0;
-  white-space: nowrap;     
-  overflow: visible;       
-  text-overflow: clip;     
-  width: max-content;      
-  z-index: 10;             
+  white-space: nowrap;       
+  overflow: hidden;           
+  text-overflow: ellipsis;  
 }
 
-/* === ส่วนรายละเอียด === */
 .reportDetailText {
   font-size: 14.5px;
   font-weight: 600;
   color: #666;
   margin: 0;
-  white-space: nowrap;     
-  overflow: visible;       
-  text-overflow: clip;     
-  width: max-content;      
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* --- Status Tag --- */
 .reportStatusGroup {
   position: absolute; 
   top: 18px;            
-  right: 0;              
+  right: 0;            
   z-index: 5;
 }
 
@@ -356,29 +355,193 @@
 }
 
 /* === MODAL รายละเอียด === */
-.detailHeaderBlock { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 8px; }
-.detailImage { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.detailHeaderBlock {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.detailImage {
+  width: 100px; height: 100px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 .detailTitleInfo { flex: 1; }
 .detailCaseCode { margin: 0; font-size: 20px; font-weight: 800; color: #1a1a1a; }
 .detailMainTitle { margin: 4px 0 0 0; font-size: 16px; font-weight: 700; color: #444; line-height: 1.4; }
-.detailGridInfo { border-top: 1px solid #f0f0f0; padding-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+.detailGridInfo {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .infoRow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
 .infoCol, .infoColFull { display: flex; flex-direction: column; gap: 4px; }
-.infoCol label, .infoColFull label { font-size: 12px; font-weight: 600; color: #85929e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
-.infoValueText { font-size: 16px; font-weight: 700; color: #1a1a1a; line-height: 1.5; }
-.infoDescriptionBox { font-size: 15px; line-height: 1.6; color: #333; background: #ffffff; padding: 16px 20px; border-radius: 4px 12px 12px 4px; border: 1px solid #eaeaea; border-left: 4px solid #000; margin: 8px 0; font-weight: 500; }
-.detailLocationBlock { background: #f8f9fa; padding: 16px; border-radius: 16px; border: 1px solid #e9ecef; display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; align-items: start; }
-.mapLocationCard { background: #eef4ff; border: 1px solid #d0e2ff; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; text-decoration: none; transition: all 0.2s ease; cursor: pointer; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; }
-.mapLocationCard:hover { background: #fff; border-color: #1890ff; box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15); transform: translateY(-2px); }
-.mapIconBox { width: 48px; height: 48px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1890ff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); flex-shrink: 0; }
-.mapInfoText { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.mapInfoText label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; cursor: pointer; }
-.coordsText { font-size: 15px; font-weight: 800; color: #1a1a1a; font-family: monospace; word-break: break-all; line-height: 1.4; }
-.clickToView { font-size: 11px; color: #1890ff; font-weight: 600; margin-top: 2px; }
-.orgInfoCard { background: #ffffff; border: 1px solid #eaeaea; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-.orgIconBox { width: 48px; height: 48px; background: #fff7e6; color: #fa8c16; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.orgInfoText { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.orgInfoText label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; }
+
+/* ปรับแต่ง Label หัวข้อ */
+.infoCol label, .infoColFull label {
+  font-size: 12px;
+  font-weight: 600;       
+  color: #85929e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ปรับแต่ง Value เนื้อหา */
+.infoValueText {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+/* ปรับกล่องรายละเอียด */
+.infoDescriptionBox {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 4px 12px 12px 4px;
+  border: 1px solid #eaeaea;
+  border-left: 4px solid #000;
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+/* พื้นที่แสดงแผนที่และหน่วยงาน (แนวตั้ง 1 Column) */
+.detailLocationBlock {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  
+  display: grid;
+  grid-template-columns: 1fr; /* 1 แถวเต็ม */
+  gap: 12px;                  /* ระยะห่างระหว่างการ์ด */
+  
+  margin-top: 20px;
+  align-items: start;
+}
+
+/* === Map Location Button Style === */
+.mapLocationCard {
+  background: #eef4ff;
+  border: 1px solid #d0e2ff;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mapLocationCard:hover {
+  background: #fff;
+  border-color: #1890ff;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.mapIconBox {
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #1890ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.mapInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; 
+}
+
+.mapInfoText label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.coordsText {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
+  font-family: monospace;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.clickToView {
+  font-size: 11px;
+  color: #1890ff;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* === Org Card Style === */
+.orgInfoCard {
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.orgIconBox {
+  width: 48px;
+  height: 48px;
+  background: #fff7e6;  /* พื้นหลังสีส้มอ่อน */
+  color: #fa8c16;       /* ไอคอนสีส้ม */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.orgInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.orgInfoText label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+}
 
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
@@ -387,8 +550,7 @@
 
   /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
   .filterModal {
-    max-width: 360px; /* กลับมาขนาดที่พอดี */
-    width: 90%;
+    max-width: 360px; /* ลดขนาดกลับมาเท่าเดิมสำหรับมือถือ */
   }
 
   /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
