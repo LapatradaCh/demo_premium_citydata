@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap');
 
 /* =======================================================
-   1. THEME UTILITIES & COLORS (คงเดิม)
+   1. THEME UTILITIES & COLORS
    ======================================================= */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
@@ -28,7 +28,7 @@
 }
 
 /* =======================================================
-   2. MAIN LAYOUT & CONTAINER (คงเดิม)
+   2. MAIN LAYOUT & CONTAINER
    ======================================================= */
 html, body {
     margin: 0;
@@ -99,7 +99,7 @@ html, body {
 }
 
 /* =======================================================
-   3. CARDS COMPONENTS (คงเดิม)
+   3. CARDS COMPONENTS
    ======================================================= */
 .statusCard {
   border-radius: 24px;
@@ -153,7 +153,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- Total Card --- */
+/* --- [แก้ไข] Total Card --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -164,6 +164,7 @@ html, body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  /* ใช้ flex-start เพื่อให้ Header อยู่บนสุดเสมอ */
   justify-content: flex-start; 
 }
 
@@ -185,6 +186,7 @@ html, body {
 }
 
 .totalCard .cardCount {
+  /* ให้ตัวเลขขยายพื้นที่ที่เหลือ เพื่อดันตัวเองมาตรงกลาง */
   flex: 1;
   width: 100%;
   display: flex;
@@ -192,17 +194,21 @@ html, body {
   justify-content: center;
   text-align: center;
   margin: 0;
+  
+  /* Styling */
   font-size: 96px;
   letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: #fff;
+  
+  /* ปรับแต่งตำแหน่ง: ดันขึ้นนิดนึงเพื่อให้ดูสมดุลกับ Header */
   padding-bottom: 20px;
 }
 
 /* =======================================================
-   4. CHART & SECTIONS (คงเดิม)
+   4. CHART & SECTIONS
    ======================================================= */
 .sectionCard {
   background-color: #ffffff;
@@ -255,13 +261,16 @@ html, body {
   margin-top: 4px;
 }
 
-/* Filters & Legends */
+/* --- [แก้ไขสำคัญ] Filters & Legends --- 
+   บังคับให้เรียงแนวนอน (Row) และไม่ยืดเต็มจอ 
+*/
 .filterContainer, .legendContainer {
   display: flex !important;
-  flex-direction: row !important; 
-  flex-wrap: wrap !important;     
+  flex-direction: row !important; /* บังคับแนวนอน */
+  flex-wrap: wrap !important;     /* ตกบรรทัดได้ถ้าที่เต็ม */
   gap: 8px;
   align-items: center;
+  /* เอา list-style ออกเผื่อ HTML เป็น li */
   list-style: none; 
   padding: 0;
   margin: 0;
@@ -272,7 +281,7 @@ html, body {
   padding: 4px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
-  width: fit-content; 
+  width: fit-content; /* ให้กว้างเท่าเนื้อหา */
   max-width: 100%;
 }
 
@@ -283,6 +292,7 @@ html, body {
 }
 
 .filterButton, .legendBtn {
+  /* บังคับไม่ให้ยืดเต็มจอ */
   width: auto !important; 
   flex: 0 0 auto !important;
   display: inline-flex;
@@ -355,42 +365,16 @@ html, body {
 .largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (แก้ไขเฉพาะส่วนนี้)
-   เพื่อให้รองรับตั้งแต่ iPhone SE - iPad Pro
+   6. RESPONSIVE MEDIA QUERIES
    ======================================================= */
-
-/* 1. Laptop / Tablet Landscape (1024px - 1200px) */
-/* แก้ไขพื้นที่ Grid ที่บีบเกินไป */
-@media (max-width: 1200px) {
-    .dashboardTopSection {
-        grid-template-columns: 1fr; /* ให้เรียงแนวตั้ง เพื่อไม่ให้ Sidebar กินที่ */
-        gap: 24px;
-    }
-    
-    .totalCard {
-        /* เปลี่ยนการ์ดใหญ่เป็นแนวนอนเมื่ออยู่บนสุด */
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 120px;
-        padding: 32px 48px;
-    }
-    
-    .totalCard .cardHeader { width: auto; margin-bottom: 0; }
-    .totalCard .cardCount {
-        flex: unset;
-        font-size: 72px;
-        padding-bottom: 0;
-        width: auto;
-    }
+@media (min-width: 992px) {
+    .chartWrapper { height: auto; min-height: 350px; }
+    .largeHeight { height: 500px; min-height: 500px; }
 }
 
-/* 2. Tablet / iPad (768px - 992px) */
-/* ของเดิมดีอยู่แล้ว ปรับนิดหน่อย */
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
   .main { padding: 16px; gap: 20px; }
-  
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
   /* Mobile Total Card */
@@ -430,49 +414,16 @@ html, body {
   }
 
   .totalCard .badge-status { font-size: 10px; padding: 2px 8px; }
-  
-  /* ให้ Tablet เห็น 2 คอลัมน์ */
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-  
   .statusCard { padding: 16px; min-height: 120px; }
   .cardTitle { font-size: 13px; white-space: normal; }
   .cardCount { font-size: 32px; }
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
   .sectionCard { padding: 20px !important; }
   .chartHeaderWrapper { flex-direction: column; align-items: flex-start; gap: 12px; }
+  
+  /* บนมือถือให้ Filter เต็มจอ แต่ยังเรียงแนวนอนแบบ scroll ได้ หรือ wrap */
   .filterContainer { width: 100%; justify-content: flex-start; overflow-x: auto; }
   .filterButton { flex: 0 0 auto; }
   .scoreBig { font-size: 48px; }
-}
-
-/* 3. Mobile Small (iPhone SE, 12) (< 576px) */
-/* เพิ่มส่วนนี้เพื่อให้หน้าจอเล็กมากๆ เรียงสวย */
-@media (max-width: 576px) {
-  
-  /* บังคับการ์ดเล็กให้เรียง 1 คอลัมน์ ไม่ให้บีบ */
-  .rightGrid {
-     grid-template-columns: 1fr !important;
-  }
-
-  /* ปรับการ์ดเล็กให้เป็นแนวนอน (Bar) เพื่อประหยัดพื้นที่แนวตั้ง */
-  .statusCard {
-     flex-direction: row;
-     align-items: center;
-     min-height: 80px;
-  }
-  
-  .statusCard .cardHeader {
-     margin-bottom: 0;
-     width: auto;
-     flex: 1;
-  }
-
-  .statusCard .cardCount {
-     margin-top: 0;
-  }
-
-  /* Total Card ในจอเล็กมากๆ ให้กลับมาเป็นแนวตั้ง หรือ Wrap ได้ */
-  .totalCard {
-      flex-wrap: wrap;
-  }
 }
