@@ -359,112 +359,138 @@ html, body {
 /* =================================================================
    ส่วน Mobile Fix (วางไว้ล่างสุดของไฟล์ CSS เท่านั้น)
    ================================================================= */
-@media screen and (max-width: 992px) {
+@media (max-width: 992px) {
+  .header { padding: 12px 16px; }
+  .main { padding: 16px; gap: 16px; }
   
-  /* 1. Header & Layout ทั่วไป */
-  .header { padding: 12px 16px !important; }
-  .main { padding: 16px !important; gap: 16px !important; }
-  .dashboardTopSection { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .dashboardTopSection { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
 
-  /* ---------------------------------------------------------------
-     2. แก้ TOTAL CARD (สีน้ำเงินเข้ม) ให้ตรงปก
-     เป้าหมาย: แนวนอน | ซ้าย: ข้อความ | ขวา: เลข 5
-     --------------------------------------------------------------- */
+  /* ----------------------------------------------------
+     [FIX] TOTAL CARD (แนวนอน + ชิดซ้าย)
+     ---------------------------------------------------- */
   .totalCard {
+    /* บังคับ Flex Row */
     display: flex !important;
-    flex-direction: row !important;       /* บังคับแนวนอน */
-    align-items: center !important;       /* จัดกึ่งกลางแนวตั้ง */
-    justify-content: space-between !important; /* ดันซ้าย-ขวาให้ห่างกัน */
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    
+    /* Reset ความสูง */
     height: auto !important;
     min-height: auto !important;
-    padding: 24px 28px !important;
+    padding: 20px 24px !important;
     gap: 0 !important;
   }
 
-  /* กลุ่มข้อความด้านซ้าย (ชื่อ + 100%) */
+  /* จัดการ Decoration ไม่ให้บัง */
+  .totalCard .cardDecoration {
+    right: -40px;
+    top: -40px;
+    opacity: 0.5;
+  }
+
+  /* ส่วนข้อความซ้าย (Header) */
   .totalCard .cardHeader {
-    display: flex !important;
-    flex-direction: column !important;    /* เรียงลง */
-    align-items: flex-start !important;   /* ชิดซ้าย */
-    justify-content: center !important;
     width: auto !important;
     margin: 0 !important;
-    gap: 8px !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important; /* ให้ Title อยู่บน Badge อยู่ล่าง */
+    align-items: flex-start !important; /* ชิดซ้าย */
+    gap: 6px !important;
   }
 
   .totalCard .cardTitle {
     font-size: 16px !important;
     margin: 0 !important;
-    text-align: left !important;
+    color: #e2e8f0 !important;
   }
 
-  .totalCard .badge-status {
+  .totalCard .badgeStatus {
     margin: 0 !important;
-    align-self: flex-start !important;    /* บังคับ Badge ชิดซ้าย */
   }
 
-  /* ตัวเลข 5 ด้านขวา */
+  /* ส่วนตัวเลขขวา (Count) */
   .totalCard .cardCount {
-    display: block !important;
     width: auto !important;
     flex: unset !important;
     margin: 0 !important;
-    text-align: right !important;         /* ชิดขวา */
-    font-size: 64px !important;           /* ขนาดตัวเลข */
-    line-height: 1 !important;
-    color: #ffffff !important;
+    padding: 0 !important;
+    text-align: right !important;
+    font-size: 60px !important;
+    -webkit-text-fill-color: #fff !important;
     background: none !important;
-    -webkit-text-fill-color: #ffffff !important;
+    color: #fff !important;
   }
 
-  /* ---------------------------------------------------------------
-     3. แก้ปุ่ม STATUS/LEGEND (ปุ่มสีๆ)
-     เป้าหมาย: อยู่กึ่งกลาง + ตัดบรรทัดสวยๆ (เหมือนรูป Screenshot)
-     --------------------------------------------------------------- */
-  /* บังคับ Container ให้ยอมตัดบรรทัด */
-  .filterContainer, 
-  .legendContainer {
+  /* ----------------------------------------------------
+     [FIX] FILTERS (แถวเดียว + สไลด์)
+     ---------------------------------------------------- */
+  .filterContainer {
+    width: 100%;
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;           /* ยอมให้ปุ่มตกบรรทัด */
-    justify-content: center !important;   /* จัดกึ่งกลางจอ */
-    align-items: center !important;
-    width: 100% !important;
-    gap: 10px !important;
-    overflow: visible !important;         /* ห้ามมี Scrollbar */
-  }
-
-  /* บังคับปุ่มให้ขนาดพอดีคำ ไม่ยืดเต็มจอ */
-  .filterButton, 
-  .legendBtn {
-    flex: 0 0 auto !important;            /* ห้ามยืด */
-    width: auto !important;               /* กว้างเท่าตัวหนังสือ */
-    display: inline-flex !important;
-    margin: 0 !important;
+    flex-wrap: nowrap !important; /* ห้ามตกบรรทัด */
+    overflow-x: auto !important; /* สไลด์แนวนอน */
     white-space: nowrap !important;
+    justify-content: flex-start !important;
+    padding-bottom: 8px; /* เผื่อ Scrollbar */
+    gap: 10px;
+    
+    /* ซ่อน Scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .filterContainer::-webkit-scrollbar {
+    display: none;
   }
 
-  /* ---------------------------------------------------------------
-     4. Grid การ์ดสีๆ (คงเดิม)
-     --------------------------------------------------------------- */
+  .filterButton {
+    flex: 0 0 auto !important; /* ห้ามบีบปุ่ม */
+  }
+
+  /* ----------------------------------------------------
+     GRID & OTHER ADJUSTMENTS
+     ---------------------------------------------------- */
   .rightGrid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
   }
-  
-  .statusCard { 
-    padding: 16px !important; 
-    min-height: 110px !important; 
+
+  .statusCard {
+    padding: 16px;
+    min-height: 110px;
+  }
+
+  .cardCount {
+    font-size: 32px;
   }
   
-  .cardTitle { font-size: 13px !important; }
-  .cardCount { font-size: 36px !important; }
+  .cardTitle {
+    font-size: 13px;
+    white-space: normal;
+  }
 
-  /* ---------------------------------------------------------------
-     5. ส่วนอื่นๆ
-     --------------------------------------------------------------- */
-  .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
-  .sectionCard { padding: 16px !important; }
-  .chartHeaderWrapper { flex-direction: column !important; align-items: center !important; gap: 12px !important; text-align: center; }
-  .sectionTitle { justify-content: center !important; }
+  /* Layout กราฟ */
+  .responsiveGrid2 {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .sectionCard {
+    padding: 16px !important;
+  }
+
+  .chartHeaderWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .scoreBig {
+    font-size: 42px;
+  }
 }
