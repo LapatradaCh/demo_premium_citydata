@@ -612,17 +612,17 @@
 @media screen and (max-width: 1024px) {
   .mapViewContainer {
     flex-direction: column;
-    height:  5000px;
+    height:  500px;
     min-height: 80vh;
   }
   .mapSidebar {
-    width: 400%;
-    height: 5000px;
+    width: 150%;
+    height: 500px;
     box-sizing: border-box;
   }
   .mapContent {
-    width: 400%;
-    height: 5000px;
+    width: 150%;
+    height: 500px;
   }
 }
 
