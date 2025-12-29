@@ -3,6 +3,7 @@
 /* =======================================================
    1. CORE STYLES & VARIABLES
    ======================================================= */
+/* Utility Colors (ใช้สำหรับ Text) */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
@@ -153,7 +154,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- TOTAL CARD (Desktop Default) --- */
+/* --- TOTAL CARD --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -255,12 +256,15 @@ html, body {
   margin-top: 4px;
 }
 
-/* --- FILTERS & BUTTONS (Desktop) --- */
+/* =======================================================
+   5. [UPDATED] FILTERS & BUTTONS (Interactive Style)
+   ส่วนนี้ปรับแต่งให้ปุ่มดูน่ากด มีเงา มีมิติ ทั้ง Desktop และ Mobile
+   ======================================================= */
 .filterContainer, .legendContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px; /* เพิ่มระยะห่างนิดหน่อย */
   align-items: center;
   list-style: none; 
   padding: 0;
@@ -268,10 +272,8 @@ html, body {
 }
 
 .filterContainer {
-  background-color: #f8fafc; 
-  padding: 4px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  background-color: transparent; 
+  border: none;
   width: fit-content;
   max-width: 100%;
 }
@@ -282,44 +284,59 @@ html, body {
   width: 100%;
 }
 
+/* --- สไตล์ปุ่มกดทั่วไป (Chip Style) --- */
 .filterButton, .legendBtn {
   width: auto;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px; /* ระยะห่างระหว่างจุดกับข้อความ */
+  
   padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 99px; /* ทรงแคปซูล */
+  
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s ease;
   white-space: nowrap;
-}
-
-.filterButton {
-  border: 1px solid transparent;
-  background-color: transparent;
-  color: #64748b;
-}
-
-.legendBtn {
-  gap: 8px;
+  cursor: pointer;
+  
+  /* พื้นหลังและขอบเริ่มต้น */
+  background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  color: #475569;
+  color: #64748b;
+  
+  /* เพิ่มเงาเพื่อให้ดูมีมิติ */
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.filterButtonActive {
-  background-color: #ffffff;
-  color: #f59e0b;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-color: #e2e8f0;
+/* Hover State: ลอยขึ้นและเงาชัด */
+.filterButton:hover, .legendBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  color: #334155;
 }
 
-.legendBtn:hover { background-color: #f8fafc; }
-.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+/* Active State: ปุ่มที่ถูกเลือก (ควบคุมผ่าน JS + CSS) */
+.filterButtonActive, .legendBtnActive {
+  background-color: #ffffff; /* หรือสีตามต้องการ */
+  border-width: 1px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  /* JS จะจัดการสี border และ text */
+  opacity: 1;
+}
+
+/* Legend Dot (จุดสี) */
+.legendDot { 
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%; 
+  display: inline-block; 
+  flex-shrink: 0; 
+}
 
 /* Tooltip & Other components */
 .customTooltip {
@@ -332,7 +349,6 @@ html, body {
 }
 .tooltipLabel { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
-.dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
@@ -351,14 +367,10 @@ html, body {
 .emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 .chartWrapper { width: 100%; height: auto; min-height: 350px; margin-bottom: 20px; overflow: visible; position: relative; }
-.largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
    6. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
    ======================================================= */
-/* =================================================================
-   ส่วน Mobile Fix (นำไปวางทับ Media Query เดิมที่อยู่ล่างสุด)
-   ================================================================= */
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
   .main { padding: 16px; gap: 16px; }
@@ -368,9 +380,7 @@ html, body {
     gap: 16px; 
   }
 
-  /* ----------------------------------------------------
-     1. TOTAL CARD: แนวนอน (ข้อความซ้าย - เลขขวา)
-     ---------------------------------------------------- */
+  /* --- Total Card (Horizontal) --- */
   .totalCard {
     display: flex !important;
     flex-direction: row !important;
@@ -411,60 +421,47 @@ html, body {
 
   .totalCard::before { display: none; }
 
-  /* ----------------------------------------------------
-     2. FILTERS & LEGENDS (แก้จุดนี้ครับ)
-     รวม .legendContainer และ .legendBtn เข้าไปด้วย
-     เพื่อให้ปุ่มสถานะกลายเป็นแบบจุดสี ไม่มีกรอบ
-     ---------------------------------------------------- */
+  /* --- FILTERS & LEGEND (Mobile: Clickable Buttons) --- */
   .filterContainer, 
   .legendContainer {
     width: 100%;
     display: flex !important;       
-    flex-wrap: wrap !important;     
+    flex-wrap: wrap !important; /* ยอมให้ปุ่มตกบรรทัด */     
     justify-content: center !important; 
-    gap: 12px 16px !important;      
+    gap: 10px !important; /* ระยะห่างปุ่ม */
     padding: 8px 0 20px 0 !important;
     
     background: transparent !important;
     border: none !important;
     overflow: visible !important;
     grid-template-columns: none !important;
-    margin-top: 0 !important; /* รีเซ็ต margin ของ legend */
   }
-  
-  .filterContainer::-webkit-scrollbar,
-  .legendContainer::-webkit-scrollbar { display: none; }
 
+  /* ใช้สไตล์เดียวกับ Desktop เพื่อให้ดูเป็นปุ่มกดได้ชัดเจน */
   .filterButton, 
   .legendBtn {
-    width: auto !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;           
-    
-    white-space: nowrap !important;
+    /* ขนาดตัวอักษรพอเหมาะกับนิ้ว */
+    padding: 8px 14px !important;
     font-size: 13px !important;
-    font-weight: 500 !important;
-    color: #64748b !important; /* สีตั้งต้น */
-  }
-  
-  /* ตัวที่เป็น Active ให้สีเข้มขึ้นหรือตาม JS กำหนด */
-  .filterButtonActive,
-  .legendBtnActive {
-     font-weight: 700 !important;
-     opacity: 1 !important;
+    margin: 0 !important;
+    width: auto !important;
+    
+    /* คงเอกลักษณ์ปุ่ม (Chip) */
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    border-radius: 99px !important;
+    display: inline-flex !important;
+    justify-content: center;
   }
 
-  .filterButton:hover, .legendBtn:hover {
-    transform: translateY(-1px);
-    opacity: 0.8;
+  .filterButton:active, .legendBtn:active {
+    transform: scale(0.95); /* กดแล้วยุบลงนิดนึง */
   }
+
+  /* ซ่อน Scrollbar */
+  .filterContainer::-webkit-scrollbar,
+  .legendContainer::-webkit-scrollbar { display: none; }
 
   /* ----------------------------------------------------
      GRID & OTHER ADJUSTMENTS
