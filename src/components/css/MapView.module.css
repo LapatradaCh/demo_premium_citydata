@@ -1,7 +1,7 @@
 /* --- css/MapView.module.css --- */
 
 /* =========================================
-   1. SHARED COMPONENTS
+   1. SHARED COMPONENTS (คงเดิม)
    ========================================= */
 
 .customClusterIcon {
@@ -35,7 +35,6 @@
   margin-bottom: 2px;
 }
 
-/* Input/Select ใน Modal */
 .filterGroup select,
 .timeRangeButton {
   width: 100%;
@@ -68,7 +67,6 @@
   outline: none;
 }
 
-/* ปุ่ม "ตกลง" ใน Modal */
 .filterApplyButton {
   padding: 12px 20px;
   font-size: 15px;
@@ -93,7 +91,6 @@
   transform: scale(0.98);
 }
 
-/* Status Tags */
 .statusTag {
   padding: 4px 10px;
   border-radius: 22px;
@@ -123,13 +120,12 @@
   flex-direction: row;
   gap: 24px;
   width: 100%;
-  
-  /* !!! จุดสำคัญ: บังคับความกว้างขั้นต่ำเพื่อให้ล้นจอใน Mobile/Tablet !!! */
-  min-width: 1100px;
-  
+  max-width: 1200px;
   align-items: flex-start;
   height: 75vh;
   min-height: 500px;
+  
+  /* เอา min-width ออก เพื่อไม่ให้ล้นจอจนพังในมือถือ */
 }
 
 .mapSidebar {
@@ -603,11 +599,14 @@
 
 
 /* =========================================
-   7. RESPONSIVE (DISABLED)
+   7. RESPONSIVE
    ========================================= */
 
-/* ปรับ max-width เป็น 1px เพื่อไม่ให้ code ส่วนนี้ทำงาน */
-@media screen and (max-width: 1px) {
+/* ปรับจุดตัด Responsive เป็น 768px (ขนาด Tablet ทั่วไป) 
+   - ถ้าหน้าจอ > 768px (Tablet แนวนอน, Laptop, iPad) -> จะเป็น 2 คอลัมน์ (ซ้าย-ขวา) ตามที่คุณต้องการ
+   - ถ้าหน้าจอ <= 768px (มือถือ, Tablet แนวตั้ง) -> จะเปลี่ยนเป็นแนวตั้ง (Stack) เพื่อให้ใช้งานได้จริง ไม่เละ
+*/
+@media screen and (max-width: 768px) {
   .mapViewContainer {
     flex-direction: column;
     height: auto;
@@ -624,7 +623,7 @@
   }
 }
 
-@media screen and (max-width: 1px) {
+@media screen and (max-width: 480px) {
   .mapViewContainer {
     gap: 16px;
   }
