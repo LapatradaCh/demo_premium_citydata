@@ -1,4 +1,619 @@
-/* --- css/MapView.module.css --- */
+A/* --- css/MapView.module.css --- */
+
+/* =========================================
+   1. SHARED COMPONENTS
+   ========================================= */
+
+.customClusterIcon {
+  background: #0f172a;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.filterGroup {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
+}
+
+.filterGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  padding-left: 4px;
+  margin-bottom: 2px;
+}
+
+.filterGroup select,
+.timeRangeButton {
+  width: 100%;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid #d0d0d0;
+  padding: 10px 14px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  color: #111;
+}
+
+.filterGroup select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+.filterGroup select:focus,
+.timeRangeButton:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.filterApplyButton {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: center;
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.filterApplyButton:hover {
+  background-color: #43a047;
+}
+
+.filterApplyButton:active {
+  transform: scale(0.98);
+}
+
+.statusTag {
+  padding: 4px 10px;
+  border-radius: 22px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.statusTag.pending      { background: #ff4d4f; color: white; }
+.statusTag.in_progress  { background: #FFAB00; color: white; }
+.statusTag.completed    { background: #4caf50; color: white; }
+.statusTag.forwarded    { background: #2196f3; color: white; }
+.statusTag.invited      { background: #9c27b0; color: white; }
+.statusTag.rejected     { background: #64748b; color: white; }
+.statusTag.other        { background: #999; color: white; }
+
+
+/* =========================================
+   2. MAIN LAYOUT (จุดที่แก้ไขหนักๆ)
+   ========================================= */
+
+.mapViewContainer {
+  /* ใช้ !important เพื่อทับทุกคำสั่งที่พยายามจะเปลี่ยนมัน */
+  display: flex !important;
+  flex-direction: row !important;   /* บังคับแนวนอน */
+  flex-wrap: nowrap !important;     /* ห้ามขึ้นบรรทัดใหม่เด็ดขาด */
+  
+  gap: 24px;
+  width: 100%;
+  
+  /* บังคับความกว้างขั้นต่ำ 1200px เพื่อให้จอมือถือต้อง Scroll แนวนอน */
+  min-width: 1200px !important; 
+  
+  align-items: flex-start;
+  height: 75vh;
+  min-height: 500px;
+  
+  /* ถ้ามันล้น ให้ Scroll ได้ */
+  overflow-x: auto;
+}
+
+.mapSidebar {
+  /* ล็อคความกว้าง Sidebar ไม่ให้ยืดหด */
+  flex-shrink: 0 !important;
+  width: 340px !important;
+  min-width: 340px !important;
+  
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.mapSidebarTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   3. SEARCH & FILTER
+   ========================================= */
+
+.sidebarSearchTop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.searchInputWrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px 12px 48px;
+  border-radius: 28px;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  font-size: 14px;
+  color: #111;
+  transition: all 0.2s ease;
+  height: 48px;
+}
+
+.searchInput:focus {
+  background-color: #fff;
+  border-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.filterToggleButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: auto;
+  min-width: 100px;
+  height: 48px;
+  padding: 0 16px;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.filterToggleButton:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.filterToggleButton:active {
+  transform: translateY(0);
+  background-color: #000;
+}
+
+.filterToggleButton svg {
+  font-size: 16px;
+}
+
+.filterToggleButton span {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+
+/* =========================================
+   4. REPORT LIST
+   ========================================= */
+
+.sidebarReportListContainer {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.sidebarReportListContainer::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebarReportListContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebarReportListContainer::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.reportSummary {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  text-align: left;
+  padding-left: 2px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.reportTableContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reportTableRow {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  grid-template-areas:
+    "image header status"
+    "image details details"
+    "image location location"
+    "image toggle toggle";
+  align-items: start;
+  gap: 4px 10px;
+  padding: 16px;
+  font-size: 13px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.reportTableRow:hover {
+  border-color: #ddd;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.reportImage {
+  grid-area: image;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 10px;
+  background-color: #eee;
+}
+
+.reportHeader {
+  grid-area: header;
+  display: flex;
+  flex-direction: column;
+}
+
+.reportIdText {
+  font-size: 11px;
+  font-weight: 700;
+  color: #007bff;
+  margin-bottom: 2px;
+}
+
+.reportDetailText {
+  white-space: normal;
+  word-break: break-word;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.reportStatusGroup {
+  grid-area: status;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mainDetails, .locationDetails {
+  grid-area: details;
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.locationDetails {
+  grid-area: location;
+  border-top: 1px dashed #eee;
+  padding-top: 8px;
+  margin-top: 8px;
+  color: #888;
+}
+
+.toggleDetailsButton {
+  grid-area: toggle;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #007bff;
+  background-color: #f0f7ff;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.toggleDetailsButton:hover {
+  background-color: #e0efff;
+  color: #0056b3;
+  transform: translateY(-1px);
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+
+/* =========================================
+   5. MAP CONTENT
+   ========================================= */
+
+.mapContent {
+  /* บังคับให้ขยายเต็มพื้นที่ที่เหลือ */
+  flex-grow: 1 !important;
+  min-width: 0;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.mapPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url("https://developers.google.com/static/maps/images/landing/hero_maps_static_api.png");
+  background-size: cover;
+  background-position: center;
+}
+.mapPlaceholder > span {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mapLegend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+}
+.legendItem img {
+  width: 16px;
+  height: 25px;
+}
+
+/* =========================================
+   6. FILTER MODAL
+   ========================================= */
+/* ส่วนนี้เหมือนเดิม */
+.filterModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1999;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.filterModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: #ffffff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+
+.filterModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.filterModalHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.filterModalClose {
+  background-color: #dc3545;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.filterModalClose:hover {
+  background-color: #c82333;
+  transform: scale(1.08);
+}
+
+.filterModalClose svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.filterModalContent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+}
+
+.reportFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.mapToggles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mapToggles .toggleButton {
+  width: 100%;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 12px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+.mapToggles .toggleButtonActive {
+  width: 100%;
+  text-align: center;
+  border: 1px solid #000;
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px;
+  cursor: default;
+}
+
+.mapToggles .toggleButton:hover {
+  border-color: #000;
+  background-color: #f8f8f8;
+}
+
+/* =========================================
+   7. RESPONSIVE - ลบออกไปเลย
+   ========================================= */
+
+/* ผมลบ Media Query ออกทั้งหมด เพื่อไม่ให้มันทำงาน 
+   (เหลือไว้แค่คอมเม้นท์ว่า "ลบแล้ว") *//* --- css/MapView.module.css --- */
 
 /* =========================================
    1. SHARED COMPONENTS
