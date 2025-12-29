@@ -153,7 +153,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- [แก้ไข] Total Card --- */
+/* --- Total Card (Desktop Default) --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -164,7 +164,6 @@ html, body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* ใช้ flex-start เพื่อให้ Header อยู่บนสุดเสมอ */
   justify-content: flex-start; 
 }
 
@@ -186,7 +185,6 @@ html, body {
 }
 
 .totalCard .cardCount {
-  /* ให้ตัวเลขขยายพื้นที่ที่เหลือ เพื่อดันตัวเองมาตรงกลาง */
   flex: 1;
   width: 100%;
   display: flex;
@@ -195,7 +193,6 @@ html, body {
   text-align: center;
   margin: 0;
   
-  /* Styling */
   font-size: 96px;
   letter-spacing: -2px;
   background: linear-gradient(to bottom, #ffffff, #94a3b8);
@@ -203,7 +200,6 @@ html, body {
   -webkit-text-fill-color: transparent;
   color: #fff;
   
-  /* ปรับแต่งตำแหน่ง: ดันขึ้นนิดนึงเพื่อให้ดูสมดุลกับ Header */
   padding-bottom: 20px;
 }
 
@@ -261,16 +257,13 @@ html, body {
   margin-top: 4px;
 }
 
-/* --- [แก้ไขสำคัญ] Filters & Legends --- 
-   บังคับให้เรียงแนวนอน (Row) และไม่ยืดเต็มจอ 
-*/
+/* Filters & Legends (Desktop) */
 .filterContainer, .legendContainer {
-  display: flex !important;
-  flex-direction: row !important; /* บังคับแนวนอน */
-  flex-wrap: wrap !important;      /* ตกบรรทัดได้ถ้าที่เต็ม */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  /* เอา list-style ออกเผื่อ HTML เป็น li */
   list-style: none; 
   padding: 0;
   margin: 0;
@@ -281,7 +274,7 @@ html, body {
   padding: 4px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
-  width: fit-content; /* ให้กว้างเท่าเนื้อหา */
+  width: fit-content;
   max-width: 100%;
 }
 
@@ -292,13 +285,10 @@ html, body {
 }
 
 .filterButton, .legendBtn {
-  /* บังคับไม่ให้ยืดเต็มจอ */
-  width: auto !important; 
-  flex: 0 0 auto !important;
+  width: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -377,39 +367,44 @@ html, body {
   .main { padding: 16px; gap: 20px; }
   .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
   
-  /* ----------------------------------------------------
-     1. แก้ TOTAL CARD: แนวนอน (ซ้าย-ขวา) 
-     ---------------------------------------------------- */
+  /* --- 1. Total Card: จัดแนวนอน (ซ้าย:ข้อความ ขวา:ตัวเลข) --- */
   .totalCard { 
       height: auto !important;
       min-height: auto !important;
+      /* บังคับแนวนอน */
+      display: flex !important;
       flex-direction: row !important;
       align-items: center !important;
       justify-content: space-between !important;
       padding: 24px !important;
-      gap: 0 !important;
   }
   
+  /* กล่องข้อความด้านซ้าย (ชื่อ + 100%) */
   .totalCard .cardHeader {
       width: auto !important;
       margin: 0 !important;
-      padding: 0 !important;
-      flex-direction: column !important; /* จัดให้ชื่ออยู่บน Badge อยู่ล่าง */
-      align-items: flex-start !important; /* ชิดซ้าย */
-      gap: 6px !important;
-      justify-content: flex-start !important;
+      /* เรียงลงในแนวตั้ง */
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+      justify-content: center !important;
   }
 
   .totalCard .cardTitle { 
       font-size: 16px !important; 
       margin-bottom: 0;
+      text-align: left !important;
   }
   
-  /* ตัวเลข */
+  .totalCard .badge-status { 
+      margin: 0 !important;
+      align-self: flex-start !important;
+  }
+
+  /* ตัวเลขด้านขวา */
   .totalCard .cardCount { 
       flex: unset !important; 
       width: auto !important; 
-      padding-bottom: 0 !important; 
       margin: 0 !important; 
       text-align: right !important; 
       font-size: 56px !important; 
@@ -417,47 +412,32 @@ html, body {
       -webkit-text-fill-color: #fff; 
   }
 
-  .totalCard .badge-status { 
-      margin: 0 !important;
-  }
-
-  /* ----------------------------------------------------
-     2. แก้ BUTTONS: ไม่ให้ขยายใหญ่ + สไลด์แนวนอน 
-     ---------------------------------------------------- */
-  .filterContainer {
-      width: 100% !important;
-      display: flex !important;
-      flex-wrap: nowrap !important; /* ห้ามตกบรรทัด */
-      overflow-x: auto !important; /* สไลด์แนวนอน */
-      justify-content: flex-start !important;
-      gap: 8px !important;
-      padding-bottom: 4px; /* เผื่อที่ scrollbar */
-      /* ซ่อน Scrollbar */
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-  }
-  .filterContainer::-webkit-scrollbar { display: none; }
-
-  /* [สำคัญ] บังคับปุ่มไม่ให้ขยายเต็มจอ */
-  .filterButton, .legendBtn {
-      width: auto !important;
-      flex: 0 0 auto !important; 
-      white-space: nowrap !important;
-      margin: 0 !important;
-  }
-
-  /* Legend ปุ่มสีๆ ให้ Wrap ได้แต่ไม่ขยายใหญ่ */
+  /* --- 2. Legend Buttons: จัดกึ่งกลางและตัดบรรทัด (ตามรูป screenshot) --- */
   .legendContainer {
       width: 100% !important;
       display: flex !important;
-      flex-wrap: wrap !important;
-      justify-content: center !important;
-      gap: 8px !important;
+      flex-wrap: wrap !important; /* ยอมให้ตัดบรรทัด */
+      justify-content: center !important; /* จัดกึ่งกลาง */
+      gap: 10px !important;
+  }
+  
+  /* Filter (1W, 1M) สไลด์แนวนอน */
+  .filterContainer {
+      width: 100% !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      justify-content: flex-start !important;
   }
 
-  /* ----------------------------------------------------
-     Grid และส่วนอื่นๆ คงเดิม
-     ---------------------------------------------------- */
+  /* บังคับปุ่มไม่ให้ยืดเต็มจอ */
+  .filterButton, .legendBtn {
+      width: auto !important;
+      flex: 0 0 auto !important;
+      margin: 0 !important;
+  }
+
+  /* --- ส่วนอื่นๆ คงเดิม --- */
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
   .statusCard { padding: 16px; min-height: 120px; }
   .cardTitle { font-size: 13px; white-space: normal; }
