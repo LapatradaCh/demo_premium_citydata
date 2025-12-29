@@ -322,7 +322,7 @@ html, body {
 
 /* Active State: ปุ่มที่ถูกเลือก (ควบคุมผ่าน JS + CSS) */
 .filterButtonActive, .legendBtnActive {
-  background-color: #ffffff; /* หรือสีตามต้องการ */
+  background-color: #000000; 
   border-width: 1px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   /* JS จะจัดการสี border และ text */
