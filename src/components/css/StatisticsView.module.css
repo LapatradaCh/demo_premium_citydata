@@ -3,7 +3,7 @@
 /* =======================================================
    1. CORE STYLES & VARIABLES
    ======================================================= */
-/* Utility Colors (ใช้สำหรับ Text) */
+/* Text Colors Utility */
 .text-total        { color: #0f172a !important; }
 .text-waiting      { color: #ff4d4f !important; }
 .text-coordinating { color: #9c27b0 !important; }
@@ -13,6 +13,7 @@
 .text-invite       { color: #00bcd4 !important; }
 .text-reject       { color: #64748b !important; }
 
+/* Badge Status Style */
 .badge-status {
   padding: 4px 12px;
   border-radius: 8px;
@@ -154,7 +155,7 @@ html, body {
   text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- TOTAL CARD --- */
+/* --- TOTAL CARD (Desktop Default) --- */
 .totalCard {
   background: linear-gradient(145deg, #0f172a, #1e293b);
   padding: 32px;
@@ -257,14 +258,13 @@ html, body {
 }
 
 /* =======================================================
-   5. [UPDATED] FILTERS & BUTTONS (Interactive Style)
-   ส่วนนี้ปรับแต่งให้ปุ่มดูน่ากด มีเงา มีมิติ ทั้ง Desktop และ Mobile
+   5. FILTERS & BUTTONS (Interactive Chip Style)
    ======================================================= */
 .filterContainer, .legendContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px; /* เพิ่มระยะห่างนิดหน่อย */
+  gap: 10px; /* ระยะห่างระหว่างปุ่ม */
   align-items: center;
   list-style: none; 
   padding: 0;
@@ -273,6 +273,7 @@ html, body {
 
 .filterContainer {
   background-color: transparent; 
+  padding: 0;
   border: none;
   width: fit-content;
   max-width: 100%;
@@ -284,52 +285,67 @@ html, body {
   width: 100%;
 }
 
-/* --- สไตล์ปุ่มกดทั่วไป (Chip Style) --- */
+/* --- Base Button Style (สำหรับทั้ง Filter และ Legend) --- */
 .filterButton, .legendBtn {
   width: auto;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* ระยะห่างระหว่างจุดกับข้อความ */
+  gap: 8px; /* ระยะห่างจุดกับข้อความ */
   
   padding: 8px 16px;
-  border-radius: 99px; /* ทรงแคปซูล */
+  border-radius: 99px; /* รูปทรงแคปซูล */
   
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
   
-  /* พื้นหลังและขอบเริ่มต้น */
+  /* ปกติ: พื้นขาว ขอบเทา */
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   color: #64748b;
   
-  /* เพิ่มเงาเพื่อให้ดูมีมิติ */
+  /* เงาเพื่อให้ดูมีมิติ */
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover State: ลอยขึ้นและเงาชัด */
+/* Hover Effect: ลอยขึ้น + เงาชัด */
 .filterButton:hover, .legendBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   border-color: #cbd5e1;
   background-color: #f8fafc;
   color: #334155;
 }
 
-/* Active State: ปุ่มที่ถูกเลือก (ควบคุมผ่าน JS + CSS) */
-.filterButtonActive, .legendBtnActive {
-  background-color: #000000; 
-  border-width: 1px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-  /* JS จะจัดการสี border และ text */
-  opacity: 1;
+/* --- Active State: ปุ่มที่ถูกเลือก --- */
+
+/* 1. ปุ่มกรองเวลา (1W, 1M) -> เปลี่ยนสีพื้นหลังให้ชัด */
+.filterButtonActive {
+  background-color: #0f172a !important; /* พื้นหลังน้ำเงินเข้ม */
+  color: #ffffff !important;            /* ตัวหนังสือขาว */
+  border-color: #0f172a !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25) !important;
+  font-weight: 700 !important;
+  transform: translateY(-1px);
 }
 
-/* Legend Dot (จุดสี) */
+/* 2. ปุ่มสถานะ (Legend) -> เน้นขอบและขยายขนาด */
+.legendBtnActive {
+  background-color: #ffffff !important;
+  border-width: 2px !important;         /* ขอบหนาขึ้น */
+  /* สีขอบจะใช้ inline style จาก React ตามสีสถานะ */
+  
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  transform: scale(1.05) !important;    /* ขยายใหญ่กว่าปกตินิดนึง */
+  opacity: 1 !important;
+  z-index: 1;
+}
+
+/* Legend Dot */
 .legendDot { 
   width: 10px; 
   height: 10px; 
@@ -338,7 +354,9 @@ html, body {
   flex-shrink: 0; 
 }
 
-/* Tooltip & Other components */
+/* =======================================================
+   6. OTHER COMPONENTS (Tooltip, Stars, etc.)
+   ======================================================= */
 .customTooltip {
   background-color: rgba(255, 255, 255, 0.98);
   border: 1px solid #f1f5f9;
@@ -349,6 +367,7 @@ html, body {
 }
 .tooltipLabel { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
 .tooltipItem { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+.dotIndicator { width: 8px; height: 8px; border-radius: 50%; }
 
 .satisfactionHeader { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .scoreBig { font-size: 64px; font-weight: 800; color: #FFAB00; line-height: 0.9; letter-spacing: -2px; }
@@ -367,9 +386,10 @@ html, body {
 .emptyState { text-align: center; color: #9ca3af; padding: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
 .responsiveGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; }
 .chartWrapper { width: 100%; height: auto; min-height: 350px; margin-bottom: 20px; overflow: visible; position: relative; }
+.largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
+   7. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
    ======================================================= */
 @media (max-width: 992px) {
   .header { padding: 12px 16px; }
@@ -380,7 +400,7 @@ html, body {
     gap: 16px; 
   }
 
-  /* --- Total Card (Horizontal) --- */
+  /* --- Total Card (Mobile: แนวนอน) --- */
   .totalCard {
     display: flex !important;
     flex-direction: row !important;
@@ -421,14 +441,15 @@ html, body {
 
   .totalCard::before { display: none; }
 
-  /* --- FILTERS & LEGEND (Mobile: Clickable Buttons) --- */
+  /* --- Filters & Legend (Mobile) --- */
+  /* บังคับให้แสดงผลเป็นปุ่มเหมือน Desktop แต่จัดเรียงแบบไหล (Wrap) ตรงกลาง */
   .filterContainer, 
   .legendContainer {
     width: 100%;
     display: flex !important;       
-    flex-wrap: wrap !important; /* ยอมให้ปุ่มตกบรรทัด */     
+    flex-wrap: wrap !important;     
     justify-content: center !important; 
-    gap: 10px !important; /* ระยะห่างปุ่ม */
+    gap: 10px !important;      
     padding: 8px 0 20px 0 !important;
     
     background: transparent !important;
@@ -437,34 +458,36 @@ html, body {
     grid-template-columns: none !important;
   }
 
-  /* ใช้สไตล์เดียวกับ Desktop เพื่อให้ดูเป็นปุ่มกดได้ชัดเจน */
-  .filterButton, 
-  .legendBtn {
-    /* ขนาดตัวอักษรพอเหมาะกับนิ้ว */
-    padding: 8px 14px !important;
-    font-size: 13px !important;
-    margin: 0 !important;
-    width: auto !important;
-    
-    /* คงเอกลักษณ์ปุ่ม (Chip) */
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
-    border-radius: 99px !important;
-    display: inline-flex !important;
-    justify-content: center;
-  }
-
-  .filterButton:active, .legendBtn:active {
-    transform: scale(0.95); /* กดแล้วยุบลงนิดนึง */
-  }
-
-  /* ซ่อน Scrollbar */
+  /* ซ่อน Scrollbar ที่อาจค้างอยู่ */
   .filterContainer::-webkit-scrollbar,
   .legendContainer::-webkit-scrollbar { display: none; }
 
+  .filterButton, 
+  .legendBtn {
+    /* คงสไตล์ปุ่มแคปซูลไว้ */
+    width: auto !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    padding: 8px 16px !important;
+    margin: 0 !important;
+    
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    font-size: 13px !important;
+    border-radius: 99px !important;
+  }
+  
+  /* เพิ่ม Interaction กดแล้วยุบลงนิดนึง */
+  .filterButton:active, .legendBtn:active {
+      transform: scale(0.95);
+  }
+
   /* ----------------------------------------------------
-     GRID & OTHER ADJUSTMENTS
+     Grid & Other Adjustments
      ---------------------------------------------------- */
   .rightGrid {
     grid-template-columns: repeat(2, 1fr) !important;
