@@ -10,10 +10,6 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ แก้ไขตรงนี้: จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
-  left: 50%;
-  transform: translateX(-50%);
-  
   /* คงค่าเดิมไว้ */
   width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
   min-width: 300px;   /* ขนาดขั้นต่ำ */
