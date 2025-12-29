@@ -321,7 +321,7 @@ html, body {
   color: #334155;
 }
 
-/* --- Active State: ปุ่มที่ถูกเลือก --- */
+/* --- Active State: ปุ่มที่ถูกเลือก (Desktop) --- */
 
 /* 1. ปุ่มกรองเวลา (1W, 1M) -> เปลี่ยนสีพื้นหลังให้ชัด */
 .filterButtonActive {
@@ -442,7 +442,6 @@ html, body {
   .totalCard::before { display: none; }
 
   /* --- Filters & Legend (Mobile) --- */
-  /* บังคับให้แสดงผลเป็นปุ่มเหมือน Desktop แต่จัดเรียงแบบไหล (Wrap) ตรงกลาง */
   .filterContainer, 
   .legendContainer {
     width: 100%;
@@ -466,11 +465,12 @@ html, body {
   .legendBtn {
     /* คงสไตล์ปุ่มแคปซูลไว้ */
     width: auto !important;
-    background-color: #ffffff !important;
+    background-color: #ffffff !important; /* พื้นหลังสีขาว */
     border: 1px solid #e2e8f0 !important;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
     padding: 8px 16px !important;
     margin: 0 !important;
+    color: #64748b !important; /* สีข้อความปกติ */
     
     display: inline-flex !important;
     align-items: center !important;
@@ -479,6 +479,20 @@ html, body {
     
     font-size: 13px !important;
     border-radius: 99px !important;
+  }
+  
+  /* [FIXED] ปุ่มที่ถูกเลือกในโหมดมือถือ ให้แสดงสีที่ถูกต้อง */
+  .filterButtonActive {
+      background-color: #0f172a !important; /* พื้นหลังน้ำเงินเข้ม */
+      color: #ffffff !important;            /* ตัวหนังสือขาว */
+      border-color: #0f172a !important;
+  }
+
+  .legendBtnActive {
+      background-color: #ffffff !important;
+      /* สีขอบตามสถานะจะถูกจัดการโดย React inline style */
+      border-width: 2px !important;
+      color: #0f172a !important; /* ให้ตัวหนังสือเข้มขึ้น */
   }
   
   /* เพิ่ม Interaction กดแล้วยุบลงนิดนึง */
