@@ -605,3 +605,41 @@
 }
 
 
+/* =========================================
+   7. RESPONSIVE (เหมือนเดิม)
+   ========================================= */
+
+@media screen and (max-width: 1024px) {
+  .mapViewContainer {
+    flex-direction: column;
+    height: auto;
+    min-height: 80vh;
+  }
+  .mapSidebar {
+    width: 100%;
+    height: 500px;
+    box-sizing: border-box;
+  }
+  .mapContent {
+    width: 100%;
+    height: 500px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mapViewContainer {
+    gap: 16px;
+  }
+  .mapSidebar {
+    padding: 16px;
+  }
+  .searchInput {
+    padding-left: 40px;
+  }
+
+  .sidebarSearchTop {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}
