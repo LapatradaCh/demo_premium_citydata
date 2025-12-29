@@ -112,20 +112,22 @@
 
 
 /* =========================================
-   2. MAIN LAYOUT
+   2. MAIN LAYOUT (หัวใจสำคัญของการแก้ไข)
    ========================================= */
 
 .mapViewContainer {
   display: flex;
-  flex-direction: row;
+  
+  /* บังคับแนวนอน (ซ้าย-ขวา) เสมอ ด้วย !important */
+  flex-direction: row !important; 
+  
   gap: 24px;
   width: 100%;
   
-  /* ปรับเหลือ 900px:
-     - 340px (Sidebar) + 500px (Map)
-     - จะทำให้ Sidebar ไม่เบียด และแผนที่ยังมีที่ยืน 
-     - ในมือถือจะล้นขอบนิดหน่อยให้พอเลื่อนได้ แต่ไม่กว้างจนหาไม่เจอ */
-  min-width: 900px;
+  /* กำหนดความกว้างขั้นต่ำ 1100px 
+     - ในมือถือ Sidebar ตัวกรองจะกินพื้นที่ด้านซ้าย 
+     - ส่วนแผนที่จะล้นออกไปทางขวา (ต้องเลื่อน Scrollbar ดู) */
+  min-width: 1100px;
   
   align-items: flex-start;
   height: 75vh;
@@ -606,7 +608,7 @@
    7. RESPONSIVE (DISABLED)
    ========================================= */
 
-/* ปิดการทำงานของ Mobile Responsive ทั้งหมด */
+/* ปิดการทำงานถาวร ไม่ให้เปลี่ยน Layout ตามขนาดหน้าจอ */
 @media screen and (max-width: 0px) {
   .mapViewContainer {
     flex-direction: column;
