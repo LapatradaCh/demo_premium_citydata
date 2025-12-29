@@ -13,7 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* พื้นหลังหลักขาว */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -60,11 +60,11 @@
 
 /* Description Box */
 .descriptionContainer {
-  background-color: #F8FAFC;
+  background-color: #FFFFFF; /* ปรับจากเทาอ่อนเป็นขาว */
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E5E7EB;
 }
 
 .descLabel {
@@ -80,16 +80,18 @@
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
-  border: 1px solid transparent; margin-left: auto;
+  border: 1px solid #E5E7EB; margin-left: auto;
+  background-color: #FFFFFF; /* เน้นขาวทั้งหมด */
 }
 
-.statusPending { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-.statusCoordinating { background-color: #FAF5FF; color: #9333EA; border-color: #E9D5FF; }
-.statusProgress { background-color: #FEFCE8; color: #CA8A04; border-color: #FEF08A; }
-.statusDone { background-color: #F0FDF4; color: #16A34A; border-color: #BBF7D0; }
-.statusForward { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-.statusReject { background-color: #F3F4F6; color: #374151; border-color: #D1D5DB; }
-.statusDefault { background-color: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
+/* คงสีตัวหนังสือไว้เพื่อให้แยกสถานะได้ แต่พื้นหลังเป็นขาว */
+.statusPending { color: #DC2626; border-color: #FECACA; }
+.statusCoordinating { color: #9333EA; border-color: #E9D5FF; }
+.statusProgress { color: #CA8A04; border-color: #FEF08A; }
+.statusDone { color: #16A34A; border-color: #BBF7D0; }
+.statusForward { color: #2563EB; border-color: #BFDBFE; }
+.statusReject { color: #374151; border-color: #D1D5DB; }
+.statusDefault { color: #4B5563; border-color: #E5E7EB; }
 
 /* --- Meta Info Boxes --- */
 .metaGrid {
@@ -101,7 +103,7 @@
 
 .metaBox {
   background-color: #FFFFFF;
-  border: 1px solid #F1F5F9;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -112,9 +114,8 @@
 }
 
 .metaBox:hover {
-  border-color: #E2E8F0;
+  border-color: #CBD5E1;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .metaHeader {
@@ -126,10 +127,12 @@
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
+  background-color: #FFFFFF; /* เปลี่ยนจากสีฟ้า/เหลืองเป็นขาว */
+  border: 1px solid #F1F5F9;
 }
 
-.iconBlue { background-color: #EFF6FF; color: #3B82F6; }
-.iconYellow { background-color: #FFFBEB; color: #F59E0B; }
+.iconBlue { color: #3B82F6; }
+.iconYellow { color: #F59E0B; }
 
 .metaLabel {
   font-size: 13px; color: #64748B; font-weight: 600;
@@ -152,7 +155,7 @@
 }
 
 .ratingNumber {
-  background-color: #FFF7ED; color: #C2410C; font-size: 13px;
+  background-color: #FFFFFF; color: #C2410C; font-size: 13px;
   padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
 }
 
@@ -165,19 +168,11 @@
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
   transition: all 0.2s;
 }
-.btnSecondary:hover { border-color: #CBD5E1; background-color: #F8FAFC; color: #1E293B; }
 
 .btnPrimary {
   background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-  transition: all 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-.btnPrimary:hover { 
-  background-color: #1E293B; 
-  transform: translateY(-1px);
-  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15);
 }
 
 /* Image Card */
@@ -188,9 +183,7 @@
   padding: 0; min-height: 300px; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-.realImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-.imageCard:hover .realImage { transform: scale(1.05); }
-.imagePlaceholder { color: #9CA3AF; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.realImage { width: 100%; height: 100%; object-fit: cover; }
 
 /* ========================================= */
 /* 3. MIDDLE SECTION (LOCATION & AGENCY) */
@@ -203,36 +196,30 @@
 
 .buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
 .actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
-.internalMapBtn { background-color: #1F2937; color: #fff; border: 1px solid #1F2937; }
-.internalMapBtn:hover { background-color: #000; }
+.internalMapBtn { background-color: #1F2937; color: #fff; }
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
-.googleMapBtn:hover { background-color: #F9FAFB; border-color: #9CA3AF; }
 
-/* --- AGENCY LIST (Card Style) --- */
+/* --- AGENCY LIST --- */
 .agencyList {
   display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
 }
 
 .agencyItem {
   display: flex; align-items: center; gap: 16px;
-  background-color: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 12px;
-  padding: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px;
+  padding: 16px; transition: all 0.2s;
   position: relative; overflow: hidden;
 }
 
-.agencyItem:hover {
-  border-color: #CBD5E1; background-color: #F8FAFC;
-  transform: translateX(4px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
+/* ลบแถบสีฟ้าด้านข้างหน่วยงานออก */
 .agencyItem::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 4px; background-color: #3B82F6; border-radius: 4px 0 0 4px;
+  display: none;
 }
 
 .agencyIconBox {
   width: 40px; height: 40px; border-radius: 10px;
-  background-color: #EFF6FF; color: #2563EB;
+  background-color: #FFFFFF; color: #2563EB; /* พื้นหลังขาว */
+  border: 1px solid #F1F5F9;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
@@ -241,153 +228,42 @@
 }
 
 .agencyTag {
-  font-size: 11px; color: #64748B; background-color: #F1F5F9;
+  font-size: 11px; color: #64748B; background-color: #FFFFFF;
   padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
 }
 
 /* ========================================= */
-/* 4. TIMELINE */
+/* 4. TIMELINE (Keep simple) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
 .timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
 
-.timeLeft { text-align: right; padding-right: 15px; padding-top: 2px; }
-.statusTitle { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
-.statusTime { font-size: 12px; color: #9CA3AF; line-height: 1.4; }
-
-.timeCenter { display: flex; flex-direction: column; align-items: center; position: relative; }
-.line { width: 2px; background-color: #E5E7EB; flex-grow: 1; margin-top: 4px; min-height: 40px; }
-.timelineRow:last-child .line { display: none; }
-.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
-.bgRed { background: linear-gradient(135deg, #ef4444, #b91c1c); } .textRed { color: #b91c1c; }
-.bgPurple { background: linear-gradient(135deg, #a855f7, #7e22ce); } .textPurple { color: #7e22ce; }
-.bgYellow { background: linear-gradient(135deg, #eab308, #a16207); } .textYellow { color: #a16207; }
-.bgGreen { background: linear-gradient(135deg, #22c55e, #15803d); } .textGreen { color: #15803d; }
-.bgBlue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); } .textBlue { color: #1d4ed8; }
-.bgDefault { background: linear-gradient(135deg, #6B7280, #374151); } .textDefault { color: #374151; }
+.timeLeft { text-align: right; padding-right: 15px; }
+.timeCenter { display: flex; flex-direction: column; align-items: center; }
+.line { width: 2px; background-color: #F1F5F9; flex-grow: 1; }
+.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; }
 
 .timeRight { padding-left: 15px; padding-bottom: 30px; }
-.durationText { font-size: 14px; font-weight: 700; color: #1F2937; margin-bottom: 4px; }
-.detailBody { font-size: 14px; color: #6B7280; line-height: 1.5; }
-
-.mobileHeader { display: none; }
 
 /* ========================================= */
 /* 5. MODALS & FORMS */
 /* ========================================= */
 .modalOverlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center; z-index: 9999;
-  animation: fadeIn 0.2s ease-out;
 }
 
 .modalContent {
   background-color: #FFFFFF; width: 90%; max-width: 420px;
   border-radius: 16px; padding: 24px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  display: flex; flex-direction: column; gap: 20px;
-  max-height: 90vh; overflow-y: auto;
-  position: relative;
-  animation: slideUp 0.3s ease-out;
-}
-
-.modalHeader { display: flex; justify-content: space-between; align-items: center; }
-.modalTitle { font-size: 20px; font-weight: 700; color: #111827; margin: 0; }
-
-/* Close Button */
-.closeButton {
-  background-color: #EF4444; color: #FFFFFF; border: none;
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-}
-.closeButton:hover { background-color: #DC2626; transform: scale(1.1); }
-.closeButton svg { width: 24px; height: 24px; stroke-width: 3px; }
-
-/* Forms */
-.formGroup { display: flex; flex-direction: column; gap: 8px; }
-.formLabel { font-size: 14px; font-weight: 600; color: #374151; }
-.formInput, .formSelect, .formTextarea {
-  padding: 10px 12px; border: 1px solid #D1D5DB; border-radius: 8px;
-  font-family: 'Sarabun', sans-serif; font-size: 14px; width: 100%; outline: none;
-  box-sizing: border-box;
-}
-.formInput:focus, .formSelect:focus, .formTextarea:focus { border-color: #111827; }
-
-/* Upload Box */
-.uploadBox {
-  border: 2px dashed #D1D5DB; border-radius: 8px; padding: 20px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; cursor: pointer; background-color: #F9FAFB; color: #6B7280; font-size: 13px;
-}
-.uploadBox:hover { border-color: #9CA3AF; background-color: #F3F4F6; }
-
-/* --- Modal Buttons (Rounded) --- */
-.modalActions { display: flex; gap: 12px; margin-top: 10px; }
-
-/* ปุ่มยกเลิก */
-.btnCancel { 
-  flex: 1; 
-  padding: 12px; border-radius: 50px; border: none; 
-  background-color: #EF4444; color: #FFFFFF; 
-  font-weight: 600; cursor: pointer; transition: all 0.2s;
-}
-.btnCancel:hover { background-color: #DC2626; }
-
-/* ✅ ปุ่มยืนยัน (สีเขียว #28a745) */
-.btnConfirm { 
-  flex: 1; 
-  padding: 12px; border-radius: 50px; border: none; 
-  background-color: #28a745; 
-  color: #FFFFFF; 
-  font-weight: 600; cursor: pointer; transition: all 0.2s;
-}
-.btnConfirm:hover { background-color: #218838; }
-
-/* Type Selector */
-.typeGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.typeItem {
-  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-  padding: 12px; border-radius: 12px; border: 1px solid transparent;
-}
-.typeItem:hover { background-color: #F9FAFB; border-color: #E5E7EB; }
-.typeItem.selected { background-color: #F3F4F6; border-color: #111827; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-@media (max-width: 768px) {
-  .topSection, .middleSection { grid-template-columns: 1fr; }
-  .metaGrid { grid-template-columns: 1fr; }
-  .imageCard { min-height: 250px; }
-  .timelineRow { grid-template-columns: 40px 1fr; }
-  .timeLeft { display: none; }
-  .mobileHeader { display: block; margin-bottom: 4px; }
 }
 
 /* ========================================= */
-/* 6. MEDIA GALLERY SECTION (NEW) */
+/* 6. MEDIA GALLERY (จุดสำคัญที่ต้องการเปลี่ยน) */
 /* ========================================= */
-.mediaHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.mediaTitle {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111827;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .mediaGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -396,17 +272,18 @@
 
 .mediaItem {
   position: relative;
-  aspect-ratio: 1; /* ให้เป็นสี่เหลี่ยมจัตุรัส */
+  aspect-ratio: 1;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #E5E7EB;
   cursor: pointer;
   transition: transform 0.2s;
+  background-color: #FFFFFF; /* เปลี่ยนจากสีน้ำเงินในรูปเป็นขาว */
 }
 
 .mediaItem:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-color: #CBD5E1;
 }
 
 .mediaImg {
@@ -426,23 +303,16 @@
   justify-content: center;
   cursor: pointer;
   color: #64748B;
-  background-color: #F8FAFC;
+  background-color: #FFFFFF; /* เปลี่ยนจากฟ้าอ่อนเป็นขาว */
   transition: all 0.2s;
 }
 
 .addMediaBox:hover {
-  border-color: #3B82F6;
-  background-color: #EFF6FF;
-  color: #3B82F6;
+  border-color: #94A3B8;
+  background-color: #F8FAFC;
 }
 
-.videoBadge {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.5);
-  border-radius: 50%;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
+@media (max-width: 768px) {
+  .topSection, .middleSection { grid-template-columns: 1fr; }
+  .metaGrid { grid-template-columns: 1fr; }
 }
