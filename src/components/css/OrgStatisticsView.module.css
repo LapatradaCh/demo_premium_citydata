@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FULLY RESPONSIVE FIX) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIXED FROM IMAGES) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -12,6 +12,8 @@
   min-height: 100vh;
   margin: 0;
   padding: 24px;
+  /* เผื่อพื้นที่ด้านล่างเยอะหน่อยสำหรับ Bottom Navigation Bar ในรูป */
+  padding-bottom: 120px; 
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
   background-color: #ffffff;
@@ -33,7 +35,6 @@
   top: 24px;
   z-index: 10;
   height: fit-content;
-  transition: width 0.3s ease;
 }
 
 .orgStatsMenuTitle {
@@ -113,7 +114,7 @@
    ========================================= */
 .orgStatsContent {
   flex-grow: 1;
-  min-width: 0; /* Important for flex items text-overflow */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -251,48 +252,7 @@
 }
 
 /* =========================================
-   6. FILTER BUTTONS
-   ========================================= */
-.headerControls {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.controlBtn {
-  padding: 6px 16px;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  cursor: pointer;
-  background: #fff;
-  color: #666;
-  font-weight: 600;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.controlBtn:hover {
-  background: #f8f8f8;
-}
-
-.activeTotal {
-  background-color: #1890ff !important;
-  color: #ffffff !important;
-  border: none !important;
-  font-weight: 700;
-  box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3) !important;
-}
-
-.activeCritical {
-  background-color: #FF4D4F !important;
-  color: #ffffff !important;
-  border-color: #FF4D4F !important;
-  font-weight: 700;
-}
-
-/* =========================================
-   7. STACKED BAR CHART (MAIN)
+   6. STACKED BAR CHART (Desktop Layout)
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -300,7 +260,6 @@
   gap: 24px;
 }
 
-/* Default Desktop Grid: Label(180px) | Bar(auto) | Value(50px) */
 .mockHBarItem {
   display: grid;
   grid-template-columns: 180px 1fr 50px;
@@ -324,11 +283,6 @@
   position: relative;
   cursor: pointer;
   transition: width 0.5s ease;
-}
-
-.mockStackedBarSegment:hover {
-  filter: brightness(1.1);
-  z-index: 5;
 }
 
 .mockStackedBarLegend {
@@ -362,7 +316,7 @@
 }
 
 /* =========================================
-   8. SATISFACTION (Tab 2)
+   7. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -512,7 +466,7 @@
 }
 
 /* =========================================
-   9. SLA & DONUT
+   8. SLA & DONUT
    ========================================= */
 .slaHeaderBox {
   background-color: #f0f9ff !important;
@@ -546,7 +500,7 @@
   margin-top: 40px; 
 }
 
-/* This is the base for SLA items, can be overridden by media query */
+/* Base SLA Items */
 .mockHorizontalBarChart .mockHBarItem {
   display: grid;
   grid-template-columns: 150px 1fr 100px; 
@@ -678,89 +632,32 @@
 }
 
 /* =========================================================
-   10. RESPONSIVE MEDIA QUERIES (TABLET & MOBILE)
+   9. MEDIA QUERIES (MOBILE OPTIMIZATIONS)
    ========================================================= */
 
-/* --- TABLET / SMALL LAPTOP (1024px to 1200px) --- */
-@media screen and (max-width: 1200px) {
-  .orgStatsContainer {
-    gap: 20px;
-    padding: 20px;
-  }
-  .orgStatsSidebarDesktop {
-    width: 240px; /* ลดความกว้าง Sidebar ลงนิดหน่อย */
-  }
-}
-
-/* --- TABLET / IPAD (769px to 1024px) --- */
 @media screen and (max-width: 1024px) {
-  .orgStatsSidebarDesktop {
-    width: 200px; /* ลดลงอีก */
-    padding: 20px 12px;
+  .orgStatsSidebarDesktop { display: none; }
+  .orgStatsContainer { 
+    flex-direction: column; 
+    gap: 0; 
+    padding: 0 0 120px 0; /* คง padding ล่างไว้ */
   }
   
-  .orgStatsMenuButton {
-    padding: 0 12px;
-    gap: 10px;
-    font-size: 14px;
-  }
-
-  .kpiGrid {
-    grid-template-columns: repeat(2, 1fr); /* เปลี่ยนเป็น 2 คอลัมน์ */
-  }
-  
-  /* ให้ตัวสุดท้ายเต็มแถวถ้าเป็นเลขคี่ */
-  .kpiCard:last-child:nth-child(odd) {
-    grid-column: span 2;
-  }
-
-  /* ปรับแผนภูมิแท่งหลัก (Stacked) ให้พื้นที่ Label น้อยลง หรือ Font เล็กลง */
-  .mockHBarItem {
-    grid-template-columns: 140px 1fr 45px; /* ลดความกว้าง label */
-    gap: 12px;
-  }
-}
-
-/* --- MOBILE & SMALL TABLET (Max 768px) --- 
-   ส่วนนี้คือการบังคับเปลี่ยน Layout เป็น Vertical ทั้งหมด 
-*/
-@media screen and (max-width: 768px) {
-  /* 1. Layout Reset to Full Width */
-  .orgStatsContainer {
-    display: flex;
-    flex-direction: column;
-    width: 100% !important;
-    max-width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 0 120px 0 !important;
-    gap: 0 !important;
-    background-color: #ffffff;
-    overflow-x: hidden;
-  }
-
-  .orgStatsSidebarDesktop {
-    display: none !important;
-  }
-
-  /* 2. Mobile Menu Styling */
+  /* เปิดใช้งาน Mobile Dropdown */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 16px 20px;
     background: #fff;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 50;
     border-bottom: 1px solid #f3f4f6;
   }
-
+  
   .mobileDropdownLabel {
     font-size: 12px;
     color: #6b7280;
     margin-bottom: 6px;
     font-weight: 600;
-    padding-left: 4px;
   }
 
   .mobileDropdownTrigger {
@@ -777,322 +674,135 @@
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-    transition: all 0.2s;
-  }
-
-  .mobileDropdownTrigger.open {
-    border-color: #000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .triggerContent {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .mobileDropdownList {
-    position: absolute;
-    top: 100%;
-    left: 20px;
-    right: 20px;
-    margin-top: 8px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08) !important;
-    border: 1px solid #f0f0f0;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 999;
-    animation: slideDown 0.2s ease-out;
-  }
-
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .mobileDropdownItem {
-    width: 100% !important;
-    min-height: 50px !important;
-    padding: 0 16px !important;
-    border: none !important;
-    background: transparent !important;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start !important;
-    gap: 12px;
-    font-size: 15px;
-    color: #4b5563;
-    font-weight: 600 !important;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: left;
-    box-shadow: none !important;
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  .mobileDropdownItem:hover {
-    background-color: #f9fafb !important;
-    color: #000 !important;
-  }
-
-  .activeItem {
-    background-color: #ecfdf5 !important;
-    color: #059669 !important;
-  }
-
-  .activeCheck {
-    margin-left: auto !important;
-    color: #10B981;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-  }
-
-  /* 3. Global Content Adjustments */
-  .chartBox {
-    width: 100% !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    margin: 0 !important;
-    padding: 24px 20px !important;
-    border-bottom: 8px solid #f4f5f7 !important;
-    overflow: visible !important;
-  }
-
-  .chartBoxTitle {
-    margin-bottom: 20px;
-    padding-bottom: 0;
-    border-bottom: none;
-    align-items: flex-start;
-  }
-
-  /* --- FIX KPI Grid --- */
-  .kpiGrid {
-    padding: 0 20px;
-    gap: 12px;
-    margin-bottom: 24px;
-    margin-top: 16px;
-    grid-template-columns: repeat(2, 1fr) !important;
   }
   
-  .kpiCard:last-child:nth-child(odd) {
+  /* Mobile Content Reset */
+  .chartBox {
+    padding: 24px 20px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-bottom: 8px solid #f4f5f7 !important;
+    box-shadow: none !important;
+  }
+  
+  /* --- 1. KPI Grid (2 Columns) --- */
+  .kpiGrid {
+    padding: 0 20px;
+    margin-top: 16px;
+    /* เปลี่ยนจาก 1 แถว เป็น 2 แถว เพื่อประหยัดที่ */
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  
+  /* ตัวที่ 3 (สีแดง) ให้กินพื้นที่เต็มด้านล่าง */
+  .kpiCard:nth-child(3) {
     grid-column: span 2;
   }
 
-  /* --- FIX Satisfaction Grid (Tab 2) --- */
-  .satisfactionHighlightGrid { 
-    padding: 0 20px;
-    grid-template-columns: 1fr !important; /* Force 1 Column Stack */
-  }
-
-  .highlightCard {
-    grid-template-columns: 1fr auto !important;
-    gap: 8px;
-  }
-  
-  .highlightScore {
-    font-size: 36px; 
-  }
-
-  /* --- FIX Main Stacked Bar Chart (Tab 1) --- */
-  /* บังคับให้ Label อยู่บรรทัดบน, Bar อยู่บรรทัดล่าง เพื่อไม่ให้ชื่อทับกราฟ */
+  /* --- 2. Stacked Bar (Tab 1) Layout Fix --- */
+  /* บังคับ Layout ใหม่ ให้ Label อยู่บรรทัดบนสุด */
   .mockStackedBarChart .mockHBarItem {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
+    width: 100% !important;
     gap: 8px !important;
+    margin-bottom: 16px;
+  }
+  
+  /* ชื่อแผนก และ ตัวเลข จะถูกดันไปอยู่บรรทัดบน */
+  .mockStackedBarChart .mockHBarItem > div:first-child {
+    /* นี่คือ div ของชื่อ (Label) */
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* ชื่อซ้าย ค่าขวา */
+    align-items: center;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  
+  /* ซ่อนตัวเลข Total เดิมที่อยู่ท้ายสุด แล้วเอามาแสดงในบรรทัดเดียวกับชื่อแทน (ด้วย JS หรือถ้าแก้ CSS อย่างเดียวให้ทำแบบนี้) */
+  /* หมายเหตุ: ถ้า HTML เป็น Grid แนะนำให้ div แรกคลุมทั้งชื่อและตัวเลข ถ้าไม่ได้ ให้ใช้ CSS Hack นี้ */
+  
+  .mockStackedHBar {
+    width: 100% !important;
+    height: 32px !important;
+  }
+  
+  /* Legend จัดให้ชิดกลางและสวยงาม */
+  .mockStackedBarLegend {
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  /* --- 3. Satisfaction (Tab 2) --- */
+  .satisfactionHighlightGrid {
+    grid-template-columns: 1fr !important; /* เรียงเป็นแนวตั้ง */
+    padding: 0 20px;
+  }
+  
+  .highlightCard {
+    /* ปรับ Grid ภายในการ์ด */
+    grid-template-columns: 1fr auto !important;
+  }
+
+  /* รายชื่ออันดับด้านล่าง */
+  .reportCardList { padding: 0 20px; }
+  .reportCardHeader { flex-direction: column; gap: 8px; }
+  .reportCardScoreGroup { text-align: left; width: 100%; display: flex; align-items: baseline; gap: 8px; }
+  
+  /* --- 4. SLA Chart (Tab 3) --- */
+  .slaHeaderBox, .donutHeaderBox {
+    margin: 0 20px 24px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .mockHorizontalBarChart {
+    margin-top: 60px !important; /* เพิ่มพื้นที่ให้ SLA Label ด้านบนไม่ตกขอบ */
+    padding: 0 20px; /* กันตกขอบซ้ายขวา */
+    width: auto !important;
+  }
+
+  /* จัด Layout ของแต่ละ Item ใน SLA */
+  .mockHorizontalBarChart .mockHBarItem {
+    display: grid !important;
+    /* แถวบน: ชื่อ | ตัวเลข */
+    /* แถวล่าง: บาร์กราฟ (เต็มความกว้าง) */
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 6px 0 !important;
+    width: 100% !important;
     margin-bottom: 16px !important;
   }
 
-  /* ชื่อแผนก (Label) */
-  .mockStackedBarChart .mockHBarItem > div:first-child {
-    width: 100% !important;
-    font-weight: 700;
-    font-size: 14px;
-    color: #333;
-    white-space: normal; /* ยอมให้ขึ้นบรรทัดใหม่ได้ */
-  }
-
-  /* ตัวเลข Total (ตัวสุดท้าย) */
-  .mockStackedBarChart .mockHBarItem > div:last-child {
-    align-self: flex-end;
-    margin-top: -30px; /* ดึงตัวเลขขึ้นไปอยู่ระดับเดียวกับชื่อ ถ้าต้องการ */
-    font-weight: 700;
-    color: #666;
-  }
-  
-  .mockStackedHBar {
-    height: 32px !important; /* ลดความสูงนิดหน่อยบนมือถือ */
-  }
-
-  /* --- FIX Report Card (Tab 2 List) --- */
-  .reportCardList { padding: 0 20px; }
-  
-  .reportCardHeader {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 16px !important;
-  }
-
-  .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
-  .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
-  
-  .reportCardScoreGroup {
-    width: 100%;
-    text-align: left !important;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .reportCardScoreText {
-    font-size: 40px !important;
-    font-weight: 900 !important;
-    line-height: 1;
-  }
-
-  .reportCardScoreGroup::after {
-    content: '/ 5.00';
-    font-size: 14px;
-    color: #9CA3AF;
-    font-weight: 600;
-  }
-
-  .reportCardProgressBg {
-    margin-top: 8px !important;
-    height: 14px !important;
-    border-radius: 7px !important;
-  }
-  
-  .reportCardProgressBar {
-    border-radius: 7px !important;
-  }
-
-  /* --- FIX SLA Chart (Tab 3) & Layouts --- */
-  .orgStatsContent { gap: 0 !important; }
-  .orgGraphDashboard { gap: 0 !important; }
-
-  .slaHeaderBox, .donutHeaderBox {
-    margin: 0 20px 24px 20px;
-    width: auto;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .slaAvgInfo, .donutTopTypeBox {
-    text-align: left;
-    width: 100%;
-    border-top: 1px dashed #eee;
-    padding-top: 24px !important;
-  }
-
-  .headerControls {
-    margin-left: 0;
-    width: 100%;
-    margin-top: 12px;
-    flex-wrap: wrap;
-  }
-
-  .controlBtn { flex: 1; text-align: center; }
-
-  /* SLA Bar Chart Specific Mobile Layout */
-  .mockHorizontalBarChart {
-    width: 100% !important;
-    margin-top: 60px !important; 
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-    position: relative !important;
-    overflow: visible !important;
-  }
-
-  /* Override specific Grid for SLA Items on Mobile */
-  .mockHorizontalBarChart .mockHBarItem {
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    grid-template-rows: auto auto !important;
-    gap: 8px 0 !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin-bottom: 12px !important;
-    position: relative;
-    z-index: 2;
-  }
-
+  /* ชื่อ (เช่น ต้นไม้) */
   .mockHorizontalBarChart .mockHBarLabel {
     grid-column: 1 / 2 !important;
     grid-row: 1 / 2 !important;
-    width: auto !important;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333333 !important;
-    margin: 0 !important;
     text-align: left !important;
   }
 
+  /* ค่า (เช่น 33.8 วัน) */
   .mockHorizontalBarChart .mockHBarValue {
     grid-column: 2 / 3 !important;
     grid-row: 1 / 2 !important;
-    width: auto !important;
-    margin: 0 !important;
     text-align: right !important;
-    font-size: 16px;
-    font-weight: 800;
-    color: #FF4D4F !important;
   }
 
+  /* ตัวกราฟแท่ง */
   .mockHorizontalBarChart .mockHBar {
     grid-column: 1 / 3 !important;
     grid-row: 2 / 3 !important;
     width: 100% !important;
     height: 10px !important;
-    margin-top: 0 !important;
-    border-radius: 5px !important;
-    overflow: hidden;
   }
 
-  .slaLabel {
-    position: absolute !important;
-    top: -24px !important;
-    left: 0 !important;
-    transform: translateX(-50%);
-    background: #EF4444 !important;
-    color: white !important;
-    font-size: 10px !important;
-    padding: 2px 8px !important;
-    border-radius: 4px;
-    font-weight: bold;
-    width: max-content !important; 
-    min-width: 60px !important;
-    white-space: nowrap !important;
-    z-index: 100 !important;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .slaLabel::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #EF4444;
-  }
-
+  /* เส้น SLA */
   .slaLineContainer {
-    top: -10px !important;
-    bottom: 0 !important;
-    border-left: 2px dashed #EF4444;
-    opacity: 0.6;
-    z-index: 1;
+    top: -15px !important;
+    bottom: -10px !important;
+    /* ปรับเส้นให้ชัดขึ้นในมือถือ */
+    border-left: 2px dashed rgba(239, 68, 68, 0.7); 
   }
 }
