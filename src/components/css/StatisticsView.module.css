@@ -354,20 +354,16 @@ html, body {
 .largeHeight { height: 500px; min-height: 500px; }
 
 /* =======================================================
-   6. RESPONSIVE MEDIA QUERIES
+   6. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
    ======================================================= */
-@media (min-width: 992px) {
-    .chartWrapper { height: auto; min-height: 350px; }
-    .largeHeight { height: 500px; min-height: 500px; }
-}
-
-@media (max-width: 992px) {
-  .header { padding: 12px 16px; }
-  .main { padding: 16px; gap: 20px; }
-  .dashboardTopSection { grid-template-columns: 1fr; gap: 16px; }
+@media screen and (max-width: 992px) {
+  .header { padding: 12px 16px !important; }
+  .main { padding: 16px !important; gap: 20px !important; }
+  .dashboardTopSection { grid-template-columns: 1fr !important; gap: 16px !important; }
   
   /* ------------------------------------------------------------------
-     1. แก้ TOTAL CARD: แนวนอน (ซ้าย:ข้อความ, ขวา:ตัวเลข) 
+     1. แก้ TOTAL CARD: แนวนอน (ซ้าย:ข้อความ, ขวา:ตัวเลข)
+     (ใช้ !important ทุกจุดเพื่อบังคับให้เปลี่ยน)
      ------------------------------------------------------------------ */
   .totalCard { 
       height: auto !important;
@@ -378,6 +374,7 @@ html, body {
       align-items: center !important;
       justify-content: space-between !important;
       padding: 24px 28px !important;
+      gap: 0 !important;
   }
   
   /* กลุ่มข้อความซ้าย (Title + Badge) */
@@ -386,6 +383,7 @@ html, body {
       margin: 0 !important;
       padding: 0 !important;
       /* เรียงลงในแนวตั้งสำหรับชื่อและ Badge */
+      display: flex !important;
       flex-direction: column !important;
       align-items: flex-start !important;
       justify-content: center !important;
@@ -400,6 +398,7 @@ html, body {
   
   .totalCard .badge-status { 
       margin: 0 !important;
+      align-self: flex-start !important;
   }
 
   /* ตัวเลขขวา */
@@ -411,7 +410,9 @@ html, body {
       text-align: right !important; 
       font-size: 64px !important; 
       line-height: 1;
-      -webkit-text-fill-color: #fff; 
+      color: #ffffff !important;
+      background: none !important;
+      -webkit-text-fill-color: #ffffff !important;
   }
 
   /* ------------------------------------------------------------------
@@ -426,26 +427,27 @@ html, body {
       gap: 10px !important;
       overflow: visible !important;
       height: auto !important;
+      padding-bottom: 0 !important;
   }
   
   /* บังคับปุ่มไม่ให้ยืดเต็มจอ */
   .filterButton, .legendBtn {
       width: auto !important;
       flex: 0 0 auto !important;
-      margin: 0 !important;
       display: inline-flex !important;
+      margin: 0 !important;
       white-space: nowrap !important;
   }
 
   /* ------------------------------------------------------------------
-     3. อื่นๆ คงเดิม
+     3. อื่นๆ
      ------------------------------------------------------------------ */
   .rightGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-  .statusCard { padding: 16px; min-height: 120px; }
-  .cardTitle { font-size: 13px; white-space: normal; }
-  .cardCount { font-size: 32px; }
+  .statusCard { padding: 16px !important; min-height: 120px !important; }
+  .cardTitle { font-size: 13px !important; white-space: normal; }
+  .cardCount { font-size: 32px !important; }
   .responsiveGrid2 { grid-template-columns: 1fr !important; gap: 16px !important; }
   .sectionCard { padding: 20px !important; }
-  .chartHeaderWrapper { flex-direction: column; align-items: center; gap: 12px; } /* จัดกลางให้สวย */
-  .scoreBig { font-size: 48px; }
+  .chartHeaderWrapper { flex-direction: column !important; align-items: center !important; gap: 12px !important; }
+  .scoreBig { font-size: 48px !important; }
 }
