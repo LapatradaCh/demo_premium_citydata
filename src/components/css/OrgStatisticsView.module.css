@@ -1,7 +1,7 @@
-/* --- css/OrgStatisticsView.module.css (FIXED MOBILE RESPONSE) --- */
+/* --- css/OrgStatisticsView.module.css (FULLY RESPONSIVE FIX) --- */
 
 /* =========================================
-   1. GLOBAL & LAYOUT (เหมือนเดิม)
+   1. GLOBAL & LAYOUT
    ========================================= */
 .orgStatsContainer {
   display: flex;
@@ -33,6 +33,7 @@
   top: 24px;
   z-index: 10;
   height: fit-content;
+  transition: width 0.3s ease;
 }
 
 .orgStatsMenuTitle {
@@ -112,7 +113,7 @@
    ========================================= */
 .orgStatsContent {
   flex-grow: 1;
-  min-width: 0;
+  min-width: 0; /* Important for flex items text-overflow */
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -160,7 +161,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS (Vertical Left Layout)
+   5. KPI CARDS
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -291,7 +292,7 @@
 }
 
 /* =========================================
-   7. STACKED BAR CHART
+   7. STACKED BAR CHART (MAIN)
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -299,6 +300,7 @@
   gap: 24px;
 }
 
+/* Default Desktop Grid: Label(180px) | Bar(auto) | Value(50px) */
 .mockHBarItem {
   display: grid;
   grid-template-columns: 180px 1fr 50px;
@@ -360,7 +362,7 @@
 }
 
 /* =========================================
-   8. SATISFACTION (Tab 2) - SCORE ON RIGHT
+   8. SATISFACTION (Tab 2)
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -372,7 +374,6 @@
 .highlightCard {
   padding: 20px 24px;
   border-radius: 16px;
-  /* Grid ซ้าย-ขวา */
   display: grid;
   grid-template-columns: 1fr auto; 
   grid-template-rows: auto auto;
@@ -545,7 +546,8 @@
   margin-top: 40px; 
 }
 
-.mockHBarItem {
+/* This is the base for SLA items, can be overridden by media query */
+.mockHorizontalBarChart .mockHBarItem {
   display: grid;
   grid-template-columns: 150px 1fr 100px; 
   align-items: center;
@@ -675,24 +677,55 @@
   border-radius: 50%;
 }
 
-/* =========================================
-   10. RESPONSIVE (MOBILE FORCED FIX)
-   ========================================= */
-@media screen and (max-width: 1024px) {
+/* =========================================================
+   10. RESPONSIVE MEDIA QUERIES (TABLET & MOBILE)
+   ========================================================= */
+
+/* --- TABLET / SMALL LAPTOP (1024px to 1200px) --- */
+@media screen and (max-width: 1200px) {
   .orgStatsContainer {
     gap: 20px;
-    padding: 16px;
+    padding: 20px;
   }
   .orgStatsSidebarDesktop {
-    width: 220px;
-  }
-  .kpiGrid {
-    grid-template-columns: repeat(2, 1fr);
+    width: 240px; /* ลดความกว้าง Sidebar ลงนิดหน่อย */
   }
 }
 
+/* --- TABLET / IPAD (769px to 1024px) --- */
+@media screen and (max-width: 1024px) {
+  .orgStatsSidebarDesktop {
+    width: 200px; /* ลดลงอีก */
+    padding: 20px 12px;
+  }
+  
+  .orgStatsMenuButton {
+    padding: 0 12px;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr); /* เปลี่ยนเป็น 2 คอลัมน์ */
+  }
+  
+  /* ให้ตัวสุดท้ายเต็มแถวถ้าเป็นเลขคี่ */
+  .kpiCard:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+
+  /* ปรับแผนภูมิแท่งหลัก (Stacked) ให้พื้นที่ Label น้อยลง หรือ Font เล็กลง */
+  .mockHBarItem {
+    grid-template-columns: 140px 1fr 45px; /* ลดความกว้าง label */
+    gap: 12px;
+  }
+}
+
+/* --- MOBILE & SMALL TABLET (Max 768px) --- 
+   ส่วนนี้คือการบังคับเปลี่ยน Layout เป็น Vertical ทั้งหมด 
+*/
 @media screen and (max-width: 768px) {
-  /* 1. Layout Reset */
+  /* 1. Layout Reset to Full Width */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -709,7 +742,7 @@
     display: none !important;
   }
 
-  /* 2. Mobile Menu */
+  /* 2. Mobile Menu Styling */
   .orgStatsMobileDropdown {
     display: flex;
     flex-direction: column;
@@ -820,6 +853,7 @@
     align-items: center;
   }
 
+  /* 3. Global Content Adjustments */
   .chartBox {
     width: 100% !important;
     border-radius: 0 !important;
@@ -838,7 +872,7 @@
     align-items: flex-start;
   }
 
-  /* --- FIX 1: KPI Grid on Mobile --- */
+  /* --- FIX KPI Grid --- */
   .kpiGrid {
     padding: 0 20px;
     gap: 12px;
@@ -851,28 +885,98 @@
     grid-column: span 2;
   }
 
-  /* --- FIX 2: Satisfaction Grid (Green/Red Cards) --- */
-  /* บังคับให้เรียงลงเป็น 1 คอลัมน์ ไม่บีบกัน */
+  /* --- FIX Satisfaction Grid (Tab 2) --- */
   .satisfactionHighlightGrid { 
     padding: 0 20px;
-    grid-template-columns: 1fr !important; /* Force 1 Column */
+    grid-template-columns: 1fr !important; /* Force 1 Column Stack */
   }
 
-  /* --- FIX 3: Satisfaction Card Layout --- */
-  /* ขยายตัวเลขให้เต็มพื้นที่ ไม่ต้องเบียด */
   .highlightCard {
-    grid-template-columns: 1fr auto !important; /* ยังคงซ้ายขวา แต่พื้นที่กว้างขึ้นเพราะ 1 col */
+    grid-template-columns: 1fr auto !important;
     gap: 8px;
   }
   
-  /* ลดขนาด Font ตัวเลขบนมือถือเล็กน้อยถ้าจำเป็น */
   .highlightScore {
     font-size: 36px; 
   }
 
+  /* --- FIX Main Stacked Bar Chart (Tab 1) --- */
+  /* บังคับให้ Label อยู่บรรทัดบน, Bar อยู่บรรทัดล่าง เพื่อไม่ให้ชื่อทับกราฟ */
+  .mockStackedBarChart .mockHBarItem {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* ชื่อแผนก (Label) */
+  .mockStackedBarChart .mockHBarItem > div:first-child {
+    width: 100% !important;
+    font-weight: 700;
+    font-size: 14px;
+    color: #333;
+    white-space: normal; /* ยอมให้ขึ้นบรรทัดใหม่ได้ */
+  }
+
+  /* ตัวเลข Total (ตัวสุดท้าย) */
+  .mockStackedBarChart .mockHBarItem > div:last-child {
+    align-self: flex-end;
+    margin-top: -30px; /* ดึงตัวเลขขึ้นไปอยู่ระดับเดียวกับชื่อ ถ้าต้องการ */
+    font-weight: 700;
+    color: #666;
+  }
+  
+  .mockStackedHBar {
+    height: 32px !important; /* ลดความสูงนิดหน่อยบนมือถือ */
+  }
+
+  /* --- FIX Report Card (Tab 2 List) --- */
+  .reportCardList { padding: 0 20px; }
+  
+  .reportCardHeader {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
+  .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
+  
+  .reportCardScoreGroup {
+    width: 100%;
+    text-align: left !important;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .reportCardScoreText {
+    font-size: 40px !important;
+    font-weight: 900 !important;
+    line-height: 1;
+  }
+
+  .reportCardScoreGroup::after {
+    content: '/ 5.00';
+    font-size: 14px;
+    color: #9CA3AF;
+    font-weight: 600;
+  }
+
+  .reportCardProgressBg {
+    margin-top: 8px !important;
+    height: 14px !important;
+    border-radius: 7px !important;
+  }
+  
+  .reportCardProgressBar {
+    border-radius: 7px !important;
+  }
+
+  /* --- FIX SLA Chart (Tab 3) & Layouts --- */
   .orgStatsContent { gap: 0 !important; }
   .orgGraphDashboard { gap: 0 !important; }
-  .reportCardList { padding: 0 20px; }
 
   .slaHeaderBox, .donutHeaderBox {
     margin: 0 20px 24px 20px;
@@ -898,6 +1002,7 @@
 
   .controlBtn { flex: 1; text-align: center; }
 
+  /* SLA Bar Chart Specific Mobile Layout */
   .mockHorizontalBarChart {
     width: 100% !important;
     margin-top: 60px !important; 
@@ -908,7 +1013,8 @@
     overflow: visible !important;
   }
 
-  .mockHBarItem {
+  /* Override specific Grid for SLA Items on Mobile */
+  .mockHorizontalBarChart .mockHBarItem {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
     grid-template-rows: auto auto !important;
@@ -920,7 +1026,7 @@
     z-index: 2;
   }
 
-  .mockHBarLabel {
+  .mockHorizontalBarChart .mockHBarLabel {
     grid-column: 1 / 2 !important;
     grid-row: 1 / 2 !important;
     width: auto !important;
@@ -931,7 +1037,7 @@
     text-align: left !important;
   }
 
-  .mockHBarValue {
+  .mockHorizontalBarChart .mockHBarValue {
     grid-column: 2 / 3 !important;
     grid-row: 1 / 2 !important;
     width: auto !important;
@@ -942,7 +1048,7 @@
     color: #FF4D4F !important;
   }
 
-  .mockHBar {
+  .mockHorizontalBarChart .mockHBar {
     grid-column: 1 / 3 !important;
     grid-row: 2 / 3 !important;
     width: 100% !important;
@@ -988,45 +1094,5 @@
     border-left: 2px dashed #EF4444;
     opacity: 0.6;
     z-index: 1;
-  }
-
-  .reportCardHeader {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 16px !important;
-  }
-
-  .reportCardTitleGroup { width: 100%; margin-bottom: 4px; }
-  .reportCardName { font-size: 16px !important; white-space: normal !important; line-height: 1.4; }
-  
-  .reportCardScoreGroup {
-    width: 100%;
-    text-align: left !important;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .reportCardScoreText {
-    font-size: 40px !important;
-    font-weight: 900 !important;
-    line-height: 1;
-  }
-
-  .reportCardScoreGroup::after {
-    content: '/ 5.00';
-    font-size: 14px;
-    color: #9CA3AF;
-    font-weight: 600;
-  }
-
-  .reportCardProgressBg {
-    margin-top: 8px !important;
-    height: 14px !important;
-    border-radius: 7px !important;
-  }
-  
-  .reportCardProgressBar {
-    border-radius: 7px !important;
   }
 }
