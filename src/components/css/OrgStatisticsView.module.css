@@ -75,8 +75,9 @@
 }
 
 .orgStatsMenuButton svg {
+  width: 24px; /* Fixed width for alignment */
+  min-width: 24px;
   font-size: 20px;
-  width: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -470,7 +471,7 @@
 }
 
 /* =========================================
-   9. SLA PAGE
+   9. SLA PAGE & DONUT HEADER
    ========================================= */
 .slaHeaderBox {
   background-color: #ffffff;
