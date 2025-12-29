@@ -247,10 +247,150 @@ const StatisticsView = ({ organizationId }) => {
       isAnimationActive: false,
   };
 
-  // Style สำหรับ Legend ภายในกราฟ BarChart
   const internalLegendStyle = {
       fontSize: '11px',
       paddingTop: '10px'
+  };
+
+  // --- NEW: Function to render SLA Section ---
+  const renderSLASection = () => {
+    if (!problemTypeData || problemTypeData.length === 0) return null;
+
+    // 1. Process Data & Mock Targets
+    const processedData = problemTypeData.map((item) => {
+      // ** ตั้งค่าเป้าหมาย SLA (สมมติ) ตามคีย์เวิร์ดชื่อประเภท **
+      let targetDays = 3; // Default 3 วัน
+      if (item.name.includes('ถนน') || item.name.includes('ทางเท้า')) targetDays = 7;
+      if (item.name.includes('ไฟฟ้า')) targetDays = 1;
+      if (item.name.includes('น้ำท่วม')) targetDays = 3;
+      if (item.name.includes('ขยะ')) targetDays = 2;
+
+      // API ส่งมาเป็นชั่วโมง -> แปลงเป็นวัน
+      const actualDays = item.avgTime / 24; 
+      const isOverdue = actualDays > targetDays;
+      const diff = Math.abs(actualDays - targetDays).toFixed(1);
+
+      return {
+        ...item,
+        actualDays,
+        targetDays,
+        isOverdue,
+        diff,
+        // คำนวณ % ความยาวหลอด
+        progressPercent: Math.min((actualDays / targetDays) * 100, 100)
+      };
+    });
+
+    // 2. Summary Logic
+    const totalIssues = processedData.reduce((acc, curr) => acc + curr.count, 0);
+    const overdueCount = processedData.filter(d => d.isOverdue).length;
+    const slaScore = Math.round(((processedData.length - overdueCount) / processedData.length) * 100);
+
+    return (
+      <section className={styles.sectionCard}>
+        {/* Header */}
+        <div className={styles.sectionHeader}>
+          <div>
+            <h2 className={styles.sectionTitle}>
+              <Activity color="#6366f1" size={20} />
+              ประสิทธิภาพการแก้ไขปัญหา (SLA)
+            </h2>
+            <p className={styles.sectionSubtitle}>ติดตามระยะเวลาการดำเนินงานเทียบกับเป้าหมาย</p>
+          </div>
+          {/* Reuse Filter Buttons if needed, or remove */}
+          {/* {renderFilterButtons()} */}
+        </div>
+
+        {/* Top Summary Cards */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+          gap: '12px', 
+          marginBottom: '24px',
+          marginTop: '16px' 
+        }}>
+           {/* Card 1: Total */}
+           <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+              <div style={{ padding: '10px', borderRadius: '50%', background: '#eff6ff', color: '#3b82f6', minWidth:'40px', textAlign:'center', display:'flex', justifyContent:'center', alignItems:'center' }}><Activity size={20} /></div>
+              <div>
+                  <div style={{ fontSize: '12px', color: '#64748b' }}>เรื่องร้องเรียนทั้งหมด</div>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalIssues} <span style={{fontSize:'12px', fontWeight:'normal'}}>เรื่อง</span></div>
+              </div>
+           </div>
+
+           {/* Card 2: Overdue */}
+           <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+              <div style={{ padding: '10px', borderRadius: '50%', background: '#fef2f2', color: '#ef4444', minWidth:'40px', textAlign:'center', display:'flex', justifyContent:'center', alignItems:'center' }}><Clock size={20} /></div>
+              <div>
+                  <div style={{ fontSize: '12px', color: '#64748b' }}>ล่าช้ากว่าเป้า</div>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{overdueCount} <span style={{fontSize:'12px', fontWeight:'normal'}}>ประเภท</span></div>
+              </div>
+           </div>
+
+           {/* Card 3: Score */}
+           <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '12px', background: '#fff' }}>
+              <div style={{ padding: '10px', borderRadius: '50%', background: '#f0fdf4', color: '#22c55e', minWidth:'40px', textAlign:'center', display:'flex', justifyContent:'center', alignItems:'center' }}><TrendingUp size={20} /></div>
+              <div>
+                  <div style={{ fontSize: '12px', color: '#64748b' }}>คะแนน SLA รวม</div>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e' }}>{slaScore}% <span style={{fontSize:'12px', fontWeight:'normal', color: '#64748b'}}>ผ่านเกณฑ์</span></div>
+              </div>
+           </div>
+        </div>
+
+        {/* Detailed List */}
+        <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '20px', border: '1px solid #f1f5f9' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '11px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>
+              <span>รายละเอียดแยกตามประเภท</span>
+              <span>*เรียงตามความวิกฤต</span>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {processedData.sort((a,b) => (b.actualDays/b.targetDays) - (a.actualDays/a.targetDays)).slice(0, 5).map((item, idx) => {
+                   const barColor = item.isOverdue ? '#ef4444' : '#22c55e';
+                   
+                   return (
+                      <div key={idx} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '200px 1fr 140px', alignItems: 'center', gap: '16px' }}>
+                          {/* 1. Icon & Name */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                              <div style={{ 
+                                  width: '40px', height: '40px', borderRadius: '8px', 
+                                  background: item.isOverdue ? '#fef2f2' : '#f0fdf4', 
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                                  border: '1px solid', borderColor: item.isOverdue ? '#fee2e2' : '#dcfce7',
+                                  color: barColor, flexShrink: 0
+                              }}>
+                                  <span style={{fontWeight:'bold', fontSize:'16px'}}>{item.name.charAt(0)}</span>
+                              </div>
+                              <div style={{ overflow: 'hidden' }}>
+                                  <div style={{ fontWeight: '600', fontSize: '14px', color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{truncateText(item.name, 20)}</div>
+                                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>{item.count} เรื่อง</div>
+                              </div>
+                          </div>
+
+                          {/* 2. Progress Bar */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 'bold', color: barColor }}>
+                                  <span>{item.actualDays.toFixed(1)} วัน <span style={{fontSize:'11px', fontWeight:'normal', color:'#94a3b8'}}>(ใช้จริง)</span></span>
+                              </div>
+                              <div style={{ height: '6px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
+                                  <div style={{ height: '100%', width: `${item.progressPercent}%`, background: barColor, borderRadius: '3px' }}></div>
+                              </div>
+                          </div>
+
+                          {/* 3. Target Info */}
+                          <div style={{ textAlign: isMobile ? 'left' : 'right', fontSize: '12px', marginTop: isMobile ? '4px' : '0' }}>
+                              <div style={{ color: '#64748b' }}>เป้าหมาย (SLA): {item.targetDays} วัน</div>
+                              <div style={{ color: barColor, fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'flex-start' : 'flex-end', gap: '4px' }}>
+                                  {item.isOverdue ? `↗ เกิน ${item.diff} วัน` : `✓ ภายในกำหนด`}
+                              </div>
+                          </div>
+                      </div>
+                   );
+              })}
+          </div>
+        </div>
+      </section>
+    );
   };
 
   return (
@@ -349,7 +489,7 @@ const StatisticsView = ({ organizationId }) => {
 
         <div className={styles.responsiveGrid2}>
             
-          {/* --- Efficiency Graph --- */}
+          {/* --- Efficiency Graph (Left Side) --- */}
           <section className={styles.sectionCard}>
             <div className={styles.sectionHeader}>
               <div><h2 className={styles.sectionTitle}><Clock color="#f97316" size={20} />เวลาแต่ละขั้นตอน</h2><p className={styles.sectionSubtitle}>วิเคราะห์คอขวด (ชม.)</p></div>
@@ -381,41 +521,9 @@ const StatisticsView = ({ organizationId }) => {
             </div>
           </section>
 
-          {/* --- Problem Type Graph --- */}
-          <section className={styles.sectionCard}>
-            <div className={styles.sectionHeader}>
-              <div><h2 className={styles.sectionTitle}><Activity color="#6366f1" size={20} />ประเภท vs เวลา</h2><p className={styles.sectionSubtitle}>จำนวน/เวลาเฉลี่ย ({timeRange.toUpperCase()})</p></div>
-            </div>
-            
-            <div className={styles.chartWrapper}>
-                {problemTypeData.length > 0 ? (
-                  <ChartWrapper height={300}>
-                    <ComposedChart 
-                        data={problemTypeData.slice(0, 5)} 
-                        layout="vertical" 
-                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
-                    >
-                      <CartesianGrid stroke="#f3f4f6" />
-                      <XAxis type="number" hide />
-                      <YAxis 
-                        dataKey="name" 
-                        type="category" 
-                        width={isMobile ? 80 : 100} 
-                        tickFormatter={(value) => truncateText(value, 10)}
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{fontSize: 10}} 
-                        reversed={true}
-                      />
-                      <Tooltip />
-                      <Legend verticalAlign="bottom" height={36} wrapperStyle={internalLegendStyle} iconType="circle" />
-                      <Bar {...commonProps} dataKey="count" name="จำนวน" barSize={12} fill={STATUS_COLORS['ส่งต่อ']} />
-                      <Bar {...commonProps} dataKey="avgTime" name="เวลา(ชม.)" barSize={12} fill={STATUS_COLORS['กำลังดำเนินการ']} />
-                    </ComposedChart>
-                  </ChartWrapper>
-                ) : <p className={styles.emptyState} style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>ไม่มีข้อมูล</p>}
-            </div>
-          </section>
+          {/* --- SLA Section (New Replacement) --- */}
+          {renderSLASection()}
+
         </div>
 
         <div className={styles.responsiveGrid2}>
@@ -446,7 +554,7 @@ const StatisticsView = ({ organizationId }) => {
                 ) : <div className={styles.emptyState}>ไม่มีข้อมูล</div>}
             </section>
 
-            {/* --- แก้ไข: ประสิทธิภาพเจ้าหน้าที่ (Dynamic Height & Text) --- */}
+            {/* --- Staff Performance --- */}
             <section className={styles.sectionCard}>
                 <div className={styles.topHeader}>
                     <h3 className={styles.sectionTitle}><Users size={18} /> ประสิทธิภาพเจ้าหน้าที่</h3>
@@ -455,7 +563,6 @@ const StatisticsView = ({ organizationId }) => {
                 
                 <div className={styles.chartWrapper}>
                     {staffData.length > 0 ? (
-                      /* คำนวณความสูงตามจำนวนคน ขั้นต่ำ 400px */
                       <ChartWrapper height={Math.max(400, staffData.length * 60)}>
                         <BarChart layout="vertical" data={staffData} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
@@ -463,11 +570,9 @@ const StatisticsView = ({ organizationId }) => {
                           <YAxis 
                             dataKey="name" 
                             type="category" 
-                            /* เพิ่มความกว้างให้ชื่อ */
                             width={isMobile ? 120 : 160}
                             axisLine={false} 
                             tickLine={false} 
-                            /* เพิ่มลิมิตตัวอักษรเป็น 20 */
                             tickFormatter={(val) => truncateText(val, 20)}
                             tick={{fontSize: 11, fontWeight: 500, fill: '#374151'}} 
                             reversed={true}
