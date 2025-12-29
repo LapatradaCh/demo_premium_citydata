@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIXED VERSION) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FULL VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -14,10 +14,11 @@
   padding: 24px;
   box-sizing: border-box;
   font-family: 'Sarabun', sans-serif;
-  /* แก้ไขตรงนี้ */
-  background-color: #ffffff; /* เปลี่ยนจาก #F3F4F6 เป็น #ffffff เพื่อให้เป็นสีขาว */
+  /* พื้นหลังสีขาวตามที่ขอ */
+  background-color: #ffffff; 
   color: #1F2937;
 }
+
 /* =========================================
    2. SIDEBAR (Desktop Only)
    ========================================= */
@@ -27,7 +28,7 @@
   background: #ffffff;
   border-radius: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  border: 1px solid #ffffff;
+  border: 1px solid #f3f4f6;
   padding: 24px 16px;
   position: sticky;
   top: 24px;
@@ -103,9 +104,8 @@
 /* =========================================
    3. MOBILE DROPDOWN (Desktop: Hide)
    ========================================= */
-/* ซ่อนบน Desktop แสดงบน Mobile */
 .orgStatsMobileDropdown {
-  display: none; 
+  display: none; /* ซ่อนบน Desktop */
 }
 
 /* =========================================
@@ -130,8 +130,8 @@
   background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-  border: 1px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -144,7 +144,7 @@
   color: #111827;
   margin: 0 0 24px 0;
   padding-bottom: 16px;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 2px solid #f9fafb;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -161,7 +161,7 @@
 }
 
 /* =========================================
-   5. KPI CARDS (Beautiful Gradient)
+   5. KPI CARDS (Workload)
    ========================================= */
 .kpiGrid {
   display: grid;
@@ -189,7 +189,6 @@
   transform: translateY(-3px);
 }
 
-/* ใส่ Gradient ให้ดูแพง */
 .kpiCardSuccess {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
   color: #fff !important;
@@ -221,12 +220,6 @@
   font-weight: 700;
   margin: 0;
   opacity: 0.95;
-}
-
-.kpiHeader svg {
-  width: 20px;
-  height: 20px;
-  opacity: 0.9;
 }
 
 .kpiValue {
@@ -269,28 +262,20 @@
   white-space: nowrap;
 }
 
-.controlBtn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-  color: #374151;
-}
-
 .activeTotal {
   background-color: #2563EB !important;
   color: #ffffff !important;
   border: 1px solid #2563EB !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2) !important;
 }
 
 .activeCritical {
   background-color: #DC2626 !important;
   color: #ffffff !important;
   border: 1px solid #DC2626 !important;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2) !important;
 }
 
 /* =========================================
-   7. STACKED BAR CHART
+   7. STACKED BAR CHART (Workload)
    ========================================= */
 .mockStackedBarChart {
   display: flex;
@@ -353,7 +338,7 @@
 }
 
 /* =========================================
-   8. SATISFACTION (Redesigned)
+   8. SATISFACTION
    ========================================= */
 .satisfactionHighlightGrid {
   display: grid;
@@ -367,16 +352,13 @@
   border-radius: 24px;
   display: grid;
   grid-template-columns: 1fr auto; 
-  grid-template-areas: 
-    "title score"
-    "name score";
+  grid-template-areas: "title score" "name score";
   align-items: center;
   gap: 8px 24px;
   position: relative;
   overflow: hidden;
 }
 
-/* Gradient for Satisfaction Cards */
 .highlightCardGreen {
   background: linear-gradient(135deg, #10B981 0%, #047857 100%);
   color: #fff;
@@ -389,9 +371,7 @@
   box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4);
 }
 
-.highlightCardGreen *, .highlightCardRed * {
-  color: #fff !important;
-}
+.highlightCardGreen *, .highlightCardRed * { color: #fff !important; }
 
 .highlightTitle {
   grid-area: title;
@@ -422,19 +402,9 @@
   font-size: 56px;
   font-weight: 800;
   line-height: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.highlightScoreMax {
-  font-size: 18px;
-  font-weight: 600;
-  opacity: 0.7;
-}
-
-/* Report Card List - Cleaner Look */
+/* Report Card List */
 .reportCardList {
   display: flex;
   flex-direction: column;
@@ -447,12 +417,6 @@
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s;
-}
-
-.reportCardItem:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
 }
 
 .reportCardHeader {
@@ -478,7 +442,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .reportCardName {
@@ -525,7 +488,6 @@
 .slaHeaderBox {
   background: linear-gradient(to right, #eff6ff, #ffffff);
   border-left: 6px solid #3B82F6 !important;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.05) !important;
 }
 
 .mockHorizontalBarChart {
@@ -536,7 +498,8 @@
   margin-top: 40px; 
 }
 
-.mockHBarItem {
+/* Default Desktop SLA List */
+.mockHorizontalBarChart .mockHBarItem {
   display: grid;
   grid-template-columns: 150px 1fr 100px; 
   align-items: center;
@@ -549,11 +512,6 @@
   font-weight: 600;
   color: #374151;
   text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
-  order: 0;
 }
 
 .mockHBarValue {
@@ -561,9 +519,6 @@
   font-weight: 700;
   text-align: right;
   color: #111827;
-  white-space: nowrap;
-  margin: 0;
-  order: 0;
 }
 
 .mockHBar {
@@ -572,8 +527,6 @@
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
-  margin: 0;
-  order: 0;
 }
 
 .mockHBarFill {
@@ -603,7 +556,6 @@
   padding: 4px 10px;
   border-radius: 6px;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
   white-space: nowrap;
 }
 
@@ -668,7 +620,7 @@
 }
 
 /* =========================================
-   10. RESPONSIVE / MOBILE (FINAL FIXES)
+   10. RESPONSIVE / MOBILE (MAX 768px)
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -678,7 +630,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* 1. Layout & Container */
+  /* 1. Container & Layout */
   .orgStatsContainer {
     display: flex;
     flex-direction: column;
@@ -687,122 +639,77 @@
     margin: 0 !important;
     padding: 16px 16px 100px 16px !important;
     gap: 24px !important;
-    background-color: #ffffff;
+    background-color: #ffffff; /* ขาวสะอาด */
     overflow-x: hidden;
   }
 
-  /* ซ่อน Sidebar Desktop ตัวเก่า */
   .orgStatsSidebarDesktop { display: none !important; }
 
-  /* 2. MOBILE DROPDOWN (กดแล้วยืดลงล่าง) */
-  /* หมายเหตุ: ต้องมี HTML class "orgStatsMobileDropdown" อยู่ในหน้าเว็บ */
+  /* 2. MENU DROPDOWN */
   .orgStatsMobileDropdown {
-    display: flex !important; /* บังคับให้แสดงผล */
+    display: flex !important;
     flex-direction: column;
     width: 100%;
     margin-bottom: 8px;
     position: relative;
     z-index: 50;
   }
-
-  /* ปุ่มกดสำหรับเปิด Dropdown */
   .mobileDropdownTrigger {
-    width: 100%; 
-    height: 56px; 
-    background: #fff; 
-    border: 1px solid #e5e7eb; 
-    border-radius: 14px;
-    padding: 0 16px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    color: #1f2937; 
-    font-weight: 700; 
-    font-size: 16px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    width: 100%; height: 56px; background: #fff; 
+    border: 1px solid #e5e7eb; border-radius: 14px;
+    padding: 0 16px; display: flex; justify-content: space-between; align-items: center;
+    color: #1f2937; font-weight: 700; font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     cursor: pointer;
   }
-
-  /* รายการเมนูที่จะยืดลงมา */
   .mobileDropdownList {
-    position: absolute; 
-    top: 64px; /* อยู่ใต้ปุ่ม Trigger */
-    left: 0; 
-    right: 0;
-    background: #fff; 
-    border-radius: 16px; 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-    border: 1px solid #f3f4f6;
-    padding: 8px; 
-    z-index: 999;
-    /* แสดงผลเมื่อมี HTML render หรือ class open */
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    position: absolute; top: 64px; left: 0; right: 0;
+    background: #fff; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    border: 1px solid #f3f4f6; padding: 8px; z-index: 999;
+    display: flex; flex-direction: column; gap: 4px;
   }
-
   .mobileDropdownItem {
-    width: 100%; 
-    padding: 12px 16px; 
-    border-radius: 10px;
-    background: transparent; 
-    border: none; 
-    display: flex; 
-    align-items: center;
-    gap: 12px;
-    font-size: 15px; 
-    font-weight: 600; 
-    color: #4b5563;
-    text-align: left;
+    width: 100%; padding: 12px 16px; border-radius: 10px;
+    background: transparent; border: none; display: flex; align-items: center; gap: 12px;
+    font-size: 15px; font-weight: 600; color: #4b5563; text-align: left;
   }
-  
   .activeItem { background-color: #f0fdf4; color: #166534; }
-  .mobileDropdownLabel { font-size: 12px; color: #9ca3af; margin-bottom: 6px; padding-left: 4px;}
+  .mobileDropdownLabel { font-size: 12px; color: #9ca3af; margin-bottom: 6px; padding-left: 4px; }
 
 
-  /* 3. Global Card Mobile */
+  /* 3. CHART BOX (Card Container) */
   .chartBox {
     border-radius: 20px !important;
     box-shadow: none !important;
     border: none !important;
-    padding: 24px 20px !important;
-    border-bottom: 8px solid #f9fafb !important;
+    padding: 20px !important;
+    border-bottom: 8px solid #f9fafb !important; /* เส้นกั้นด้านล่าง */
     margin-bottom: 0 !important;
   }
-  
   .chartBoxTitle { margin-bottom: 24px; border-bottom: none; }
 
-  /* --- FIX 1: KPI CARDS (Gradient & Grid) --- */
+  /* 4. KPI WORKLOAD (2 Columns, Last spans) */
   .kpiGrid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
     margin-top: 10px;
   }
-  
   .kpiCard {
     min-height: 160px !important;
     padding: 20px !important;
     justify-content: space-between !important;
     box-shadow: 0 8px 16px -4px rgba(0,0,0,0.1) !important;
   }
-  /* การ์ดใบสุดท้ายเต็มจอ */
   .kpiCard:last-child:nth-child(odd) {
     grid-column: span 2 !important;
   }
+  .kpiValue { font-size: 36px !important; margin: 8px 0 16px 0 !important; }
 
-  .kpiHeader { font-size: 13px !important; opacity: 0.9; margin-bottom: 0 !important; }
-  .kpiValue { 
-    font-size: 36px !important; 
-    margin: 8px 0 16px 0 !important; 
-    font-weight: 800 !important;
-  }
-  .kpiSubtext { font-size: 12px !important; opacity: 0.8 !important; }
-
-  /* --- FIX 2: LEGEND (Status Table) --- */
+  /* 5. WORKLOAD LEGEND (Grid 3 cols) */
   .donutLegendGrid, .mockStackedBarLegend {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important; /* ตาราง 3 คอลัมน์ */
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 12px 8px !important;
     width: 100% !important;
     padding-top: 24px !important;
@@ -810,100 +717,109 @@
     border-top: 1px solid #f3f4f6 !important;
     justify-content: start !important;
   }
-
   .donutLegendItem, .mockStackedBarLegendItem {
-    width: 100% !important;
+    width: 100% !important; background: transparent !important; padding: 0 !important;
+    border-radius: 0 !important; display: flex !important; align-items: center !important;
+    justify-content: flex-start !important; font-size: 12px !important; color: #4b5563 !important;
+    border: none !important; box-shadow: none !important;
+  }
+
+  /* 6. SATISFACTION */
+  .satisfactionHighlightGrid {
+    grid-template-columns: 1fr !important; gap: 16px !important;
+  }
+  .highlightCard {
+    padding: 24px !important; grid-template-columns: 1fr auto !important;
+    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2) !important;
+  }
+  .reportCardList { gap: 12px !important; }
+  .reportCardItem {
+    padding: 20px !important; border: 1px solid #eee !important;
+  }
+  .reportCardHeader {
+    flex-direction: column !important; align-items: flex-start !important; gap: 12px !important;
+  }
+  .reportCardScoreGroup { width: 100%; text-align: left !important; }
+
+  /* 7. SLA (FIX: Card Style List for Readability) */
+  /* กล่องสรุปด้านบน 3 ใบ */
+  .slaHeaderBox {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
     background: transparent !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    font-size: 12px !important;
-    color: #4b5563 !important;
     border: none !important;
+    padding: 0 !important;
     box-shadow: none !important;
   }
-  
-  .legendDot, .donutColorDot { margin-right: 6px !important; width: 8px !important; height: 8px !important; }
+  .slaHeaderBox > div {
+    /* ถ้า HTML เป็น div ลูก */
+    background: #fff !important; border: 1px solid #eee !important;
+    border-radius: 16px !important; padding: 16px 20px !important;
+    display: flex !important; flex-direction: row !important;
+    justify-content: space-between !important; align-items: center !important;
+    min-height: auto !important;
+  }
+  .slaAvgInfo, .donutTopTypeBox { width: 100%; border-top: none; padding-top: 0; }
 
-  /* --- FIX 3: Stacked Bar (Name on Top) --- */
+  /* รายการ SLA ด้านล่าง (ต้นไม้, Test, ไฟฟ้า) */
+  .mockHorizontalBarChart {
+    margin-top: 20px !important; gap: 16px !important;
+  }
+  .mockHorizontalBarChart .mockHBarItem {
+    background: #fff !important;
+    border: 1px solid #eee !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important;
+    
+    /* Grid Layout: Row1=Label/Value, Row2=Bar */
+    display: grid !important;
+    grid-template-columns: 1fr auto !important; 
+    grid-template-rows: auto auto !important;
+    gap: 8px 0 !important;
+    margin-bottom: 0 !important;
+    align-items: center !important;
+  }
+  
+  .mockHBarLabel {
+    grid-column: 1 / 2 !important; grid-row: 1 / 2 !important;
+    font-size: 15px !important; font-weight: 700 !important;
+    width: auto !important;
+  }
+  
+  .mockHBarValue {
+    grid-column: 2 / 3 !important; grid-row: 1 / 2 !important;
+    font-size: 16px !important; font-weight: 800 !important;
+    text-align: right !important; width: auto !important;
+    display: flex !important; flex-direction: column !important; align-items: flex-end !important;
+  }
+  
+  .mockHBar {
+    grid-column: 1 / 3 !important; grid-row: 2 / 3 !important;
+    height: 10px !important; width: 100% !important;
+    margin-top: 12px !important; border-radius: 5px !important;
+  }
+  
+  .slaLabel { top: -24px !important; font-size: 10px !important; }
+
+  /* 8. Stacked Bar Workload */
   .mockStackedBarChart .mockHBarItem {
     display: flex !important; flex-direction: column !important;
-    align-items: flex-start !important; gap: 8px !important; width: 100% !important;
+    align-items: flex-start !important; gap: 8px !important;
     margin-bottom: 24px !important;
   }
   .mockStackedBarChart .mockHBarItem > div:first-child {
-    width: 100% !important; font-size: 14px !important; font-weight: 700; color: #111;
+    width: 100% !important; font-size: 14px !important; font-weight: 700;
   }
   .mockStackedBarChart .mockHBarItem > .mockStackedHBar {
     width: 100% !important; height: 36px !important;
   }
   .mockStackedBarChart .mockHBarItem > div:last-child {
-    width: 100% !important; text-align: right !important; color: #6b7280; font-size: 12px;
-  }
-
-  /* --- FIX 4: SATISFACTION (Card Style) --- */
-  .satisfactionHighlightGrid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    width: 100% !important; text-align: right !important; font-size: 12px; color: #888;
   }
   
-  .highlightCard {
-    padding: 24px !important;
-    grid-template-columns: 1fr auto !important;
-    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2) !important;
-  }
-  
-  .highlightName { font-size: 20px !important; }
-  .highlightScore { font-size: 48px !important; }
-
-  /* Leaderboard List */
-  .reportCardList { gap: 12px !important; }
-  .reportCardItem {
-    padding: 20px !important;
-    border: 1px solid #eee !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
-  }
-  .reportCardHeader {
-    flex-direction: column !important; align-items: flex-start !important; gap: 12px !important;
-  }
-  .reportCardTitleGroup { width: 100%; }
-  .reportCardName { font-size: 16px !important; line-height: 1.5; white-space: normal !important; }
-  .reportCardScoreGroup {
-    width: 100%; text-align: left !important;
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .reportCardScoreText { font-size: 32px !important; }
-
-
-  /* --- FIX 5: SLA List --- */
-  .slaHeaderBox, .donutHeaderBox {
-    flex-direction: column !important; align-items: flex-start !important;
-    gap: 16px !important; border-left: none !important; border-top: 4px solid #3B82F6 !important;
-  }
-  
-  .slaAvgInfo, .donutTopTypeBox {
-    width: 100%; border-top: 1px dashed #eee; padding-top: 16px;
-  }
-
-  .headerControls { margin-top: 16px; width: 100%; flex-wrap: wrap; gap: 8px; }
+  /* Buttons Filter */
+  .headerControls { margin-top: 12px; width: 100%; flex-wrap: wrap; gap: 8px; }
   .controlBtn { flex: 1; text-align: center; justify-content: center; }
-
-  /* SLA Grid Layout */
-  .mockHorizontalBarChart { margin-top: 48px !important; gap: 24px !important; }
-  .mockHorizontalBarChart .mockHBarItem {
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    grid-template-rows: auto auto !important;
-    gap: 8px 0 !important;
-    margin-bottom: 0 !important;
-    align-items: flex-end !important;
-  }
-  
-  .mockHBarLabel { grid-column: 1 / 2; grid-row: 1; font-size: 14px; width: auto !important; }
-  .mockHBarValue { grid-column: 2 / 3; grid-row: 1; font-size: 14px; font-weight: 700; width: auto !important; }
-  .mockHBar { grid-column: 1 / 3; grid-row: 2; height: 10px !important; margin-top: 4px !important; width: 100% !important; }
-  
-  .slaLabel { top: -28px !important; font-size: 10px !important; padding: 2px 8px !important; }
 }
