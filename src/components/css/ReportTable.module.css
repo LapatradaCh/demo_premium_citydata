@@ -10,16 +10,16 @@
   border-radius: 18px;
   padding: 18px;
   
-  /* ✅ แก้ไขตรงนี้: จัดกึ่งกลางเสมอ (ทั้ง Desktop และ Mobile) */
-  left: 50%;
-  transform: translateX(-50%);
+  /* ปรับให้กว้างและไม่อยู่ตรงกลาง (จะได้ล้นๆ) */
+  left: 0;
+  transform: none; 
   
-  /* คงค่าเดิมไว้ */
-  width: max-content; /* ให้กว้างเท่าเนื้อหาปฏิทิน */
-  min-width: 300px;   /* ขนาดขั้นต่ำ */
+  width: max-content; 
+  min-width: 300px;   
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
+
 /* --- Report Table Specific --- */
 .searchTop {
   display: flex;
@@ -27,8 +27,10 @@
   align-items: center;
   gap: 12px;
   position: relative;
+  
+  /* ✅ แก้ไข: บังคับความกว้างขั้นต่ำให้ทะลุจอ */
   width: 100%;
-  max-width: 1100px; 
+  min-width: 1300px; /* จอคอมทั่วไปประมาณ 1200-1920 ตัวนี้จะเริ่มล้นใน Laptop เล็ก และล้นยับในมือถือ */
   margin: 0 auto 24px auto; 
 }
 
@@ -112,9 +114,9 @@
   background: #ffffff;
   border-radius: 28px;
   
-  /* ✅ (Desktop) ปรับให้กว้างขึ้น ดูสมดุลกับจอคอม */
-  width: 90%;
-  max-width: 550px; /* เพิ่มจาก 360px เป็น 550px หรือ 600px */
+  /* ✅ แก้ไข: Modal กว้างคงที่ ไม่สนใจขนาดจอ */
+  width: 800px; /* กว้างกว่ามือถือและ Tablet แน่นอน */
+  max-width: none; /* ห้ามหด */
   
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -201,34 +203,26 @@
 /* ค้นหาคลาส .filterApplyButton แล้วแก้โค้ดข้างในใหม่ตามนี้ครับ */
 
 .filterApplyButton {
-  /* --- จัดกึ่งกลาง --- */
-  align-self: center;  /* สั่งให้ตัวเองอยู่ตรงกลาง (เพราะพ่อเป็น Flex Column) */
-  width: auto;         /* เลิกใช้ความกว้างเต็ม 100% */
-  min-width: 180px;    /* กำหนดความกว้างขั้นต่ำให้ปุ่มดูสวย ไม่สั้นเกินไป */
-  
-  /* --- สีและรูปร่าง --- */
-  background-color: #28a745; /* ✅ สีเขียวตามที่ขอ */
+  align-self: center;  
+  width: auto;         
+  min-width: 180px;    
+  background-color: #28a745; 
   color: #fff;
   padding: 12px 32px;
-  border-radius: 28px; /* ปรับให้มนขึ้นเหมือนแคปซูล */
+  border-radius: 28px; 
   border: none;
-  
-  /* --- การจัดวาง --- */
   margin-top: 16px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  
-  /* (Optional) เพิ่มเงาสีเขียวจางๆ ให้ดูมีมิติ */
   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
   transition: all 0.2s ease;
 }
 
-/* (Optional) เพิ่ม Effect ตอนเอาเมาส์ชี้ */
 .filterApplyButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  background-color: #218838; /* เขียวเข้มขึ้นนิดหน่อยตอน Hover */
+  background-color: #218838; 
 }
 
 /* --- Report Table Grid --- */
@@ -237,17 +231,20 @@
   margin-top: 28px;
   margin-bottom: 16px;
   width: 100%;
-  max-width: 1100px;
+  
+  /* ✅ แก้ไข: Summary ก็ล้น */
+  min-width: 1300px;
+  
   margin-left: auto;
   margin-right: auto;
 }
 
 .reportTableContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* ✅ แก้ไข: เรียงแนวตั้ง (Column) แต่ไม่จำกัดความกว้าง */
+  display: flex;
+  flex-direction: column; 
   gap: 24px; 
-  max-width: 1100px; 
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -264,6 +261,11 @@
   justify-content: space-between;
   min-height: 190px;
   cursor: pointer;
+  overflow: visible; 
+  
+  /* ✅ แก้ไขจุดสำคัญ: บังคับการ์ดให้กว้างกว่าจอ ทำให้ล้นไปทางขวา */
+  width: 100%;
+  min-width: 1300px; /* อันนี้แหละที่จะทำให้ล้นขอบขวา */
 }
 
 .cardHeaderSection {
@@ -273,10 +275,11 @@
   gap: 14px;
   width: 100%;
   position: relative;
+  overflow: visible; 
 }
 
 .reportImage {
-  width: 70px;          
+  width: 70px;           
   height: 70px;
   object-fit: cover;
   border-radius: 16px;
@@ -288,34 +291,41 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0; 
+  width: auto; 
+  position: relative;
+  overflow: visible; 
 }
 
+/* === ส่วนหัวข้อ: ชื่อเคส === */
 .reportHeader {
   font-weight: 800;
   font-size: 16.5px;
   color: #111;
   margin: 0;
-  white-space: nowrap;       
-  overflow: hidden;           
-  text-overflow: ellipsis;  
+  white-space: nowrap;     
+  overflow: visible;       
+  text-overflow: clip;     
+  width: max-content;      
+  z-index: 10;             
 }
 
+/* === ส่วนรายละเอียด: test, ทดสอบไฟฟ้า... === */
 .reportDetailText {
   font-size: 14.5px;
   font-weight: 600;
   color: #666;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;     
+  overflow: visible;       
+  text-overflow: clip;     
+  width: max-content;      
 }
 
 /* --- Status Tag --- */
 .reportStatusGroup {
   position: absolute; 
   top: 18px;            
-  right: 0;            
+  right: 0;              
   z-index: 5;
 }
 
@@ -389,7 +399,7 @@
 /* ปรับแต่ง Label หัวข้อ */
 .infoCol label, .infoColFull label {
   font-size: 12px;
-  font-weight: 600;       
+  font-weight: 600;        
   color: #85929e;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -520,7 +530,7 @@
   width: 48px;
   height: 48px;
   background: #fff7e6;  /* พื้นหลังสีส้มอ่อน */
-  color: #fa8c16;       /* ไอคอนสีส้ม */
+  color: #fa8c16;        /* ไอคอนสีส้ม */
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -545,19 +555,25 @@
 
 /* === Media Queries === */
 @media screen and (max-width: 768px) {
-  .reportTableRow { padding: 20px; gap: 12px; }
-  .infoRow { grid-template-columns: 1fr; }
-
-  /* ✅ Mobile Only: ปรับให้ Modal เล็กลงพอดีกับมือถือ */
-  .filterModal {
-    max-width: 360px; /* ลดขนาดกลับมาเท่าเดิมสำหรับมือถือ */
+  /* ✅ Mobile: ไม่มีการปรับขนาดลง 
+     แต่ยืนยันขนาดเดิมเพื่อให้ล้นจอ (Non-responsive)
+  */
+  
+  .reportTableRow { 
+    /* ยืนยันให้กว้างทะลุจอมือถือ */
+    min-width: 1300px; 
+  }
+  
+  .searchTop {
+    /* Search Bar ก็ล้น */
+    min-width: 1300px;
   }
 
-  /* ✅ Mobile Only: ปฏิทินอยู่ตรงกลางจอ */
-  .calendarPopup {
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;      
-    min-width: 300px;
+  .infoRow { grid-template-columns: 1fr; }
+
+  .filterModal {
+    /* Modal ก็ล้น */
+    width: 600px; 
+    max-width: none;
   }
 }
