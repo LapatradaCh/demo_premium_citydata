@@ -661,7 +661,7 @@
 }
 
 /* =========================================
-   10. RESPONSIVE / MOBILE (UPDATED DROPDOWN)
+   10. RESPONSIVE / MOBILE
    ========================================= */
 
 @media screen and (max-width: 1024px) {
@@ -685,7 +685,7 @@
 
   .orgStatsSidebarDesktop { display: none !important; }
 
-  /* --- ปรับปรุง MOBILE DROPDOWN ตามรูปภาพ --- */
+  /* --- MOBILE DROPDOWN --- */
   .orgStatsMobileDropdown {
     display: flex !important;
     flex-direction: column;
@@ -752,7 +752,6 @@
     transition: all 0.2s;
   }
   
-  /* สีเขียวอ่อนแบบในรูปเมื่อเลือก (Satisfaction active) */
   .activeItem { 
     background-color: #f0fdf4 !important; 
     color: #15803d !important; 
@@ -761,7 +760,7 @@
 
   .mobileDropdownLabel { font-size: 12px; color: #9ca3af; margin-bottom: 8px; padding-left: 6px; font-weight: 700; text-transform: uppercase; }
 
-  /* --- ส่วนอื่นคงเดิม --- */
+  /* --- CHARTS & CARDS --- */
   .chartBox {
     border-radius: 20px !important;
     box-shadow: none !important;
@@ -790,11 +789,42 @@
     grid-column: span 2 !important;
   }
 
-  .kpiHeader { font-size: 13px !important; }
-  .kpiValue { font-size: 36px !important; margin: 8px 0 16px 0 !important; font-weight: 800 !important; }
-  .kpiSubtext { font-size: 12px !important; }
+  /* --- FIXED DONUT LEGEND (FOR IMAGE 2) --- */
+  .donutContainer { gap: 16px !important; }
+  
+  .donutLegendGrid {
+    display: flex !important;          /* เปลี่ยนจาก Grid เป็น Flex ตามรูป 2 */
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px 16px !important;
+    width: 100% !important;
+    padding-top: 24px !important;
+    margin-top: 16px !important;
+    border-top: 1px solid #f3f4f6 !important;
+  }
 
-  .donutLegendGrid, .mockStackedBarLegend {
+  .donutLegendItem {
+    width: auto !important;            /* ให้ความกว้างอิสระ */
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 14px !important;        /* ปรับขนาดตามความสวยงาม */
+    color: #4b5563 !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  .donutColorDot {
+    margin: 0 !important;
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  /* --- OTHER MOBILE STYLES --- */
+  .mockStackedBarLegend {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 12px 8px !important;
@@ -804,33 +834,23 @@
     border-top: 1px solid #f3f4f6 !important;
   }
 
-  .donutLegendItem, .mockStackedBarLegendItem {
+  .mockStackedBarLegendItem {
     width: 100% !important;
     background: transparent !important;
     padding: 0 !important;
     font-size: 12px !important;
     color: #4b5563 !important;
     border: none !important;
-    box-shadow: none !important;
   }
   
-  .legendDot, .donutColorDot { margin-right: 6px !important; width: 8px !important; height: 8px !important; }
+  .legendDot { margin-right: 6px !important; width: 8px !important; height: 8px !important; }
 
   .mockStackedBarChart .mockHBarItem {
     display: flex !important; flex-direction: column !important;
     align-items: flex-start !important; gap: 8px !important; width: 100% !important;
     margin-bottom: 24px !important;
   }
-  .mockStackedBarChart .mockHBarItem > div:first-child {
-    width: 100% !important; font-size: 14px !important; font-weight: 700; color: #111;
-  }
-  .mockStackedBarChart .mockHBarItem > .mockStackedHBar {
-    width: 100% !important; height: 36px !important;
-  }
-  .mockStackedBarChart .mockHBarItem > div:last-child {
-    width: 100% !important; text-align: right !important; color: #6b7280; font-size: 12px;
-  }
-
+  
   .satisfactionHighlightGrid {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
@@ -851,26 +871,12 @@
     border: 1px solid #eee !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
   }
-  .reportCardHeader {
-    flex-direction: column !important; align-items: flex-start !important; gap: 12px !important;
-  }
-  .reportCardTitleGroup { width: 100%; }
-  .reportCardName { font-size: 16px !important; line-height: 1.5; white-space: normal !important; }
-  .reportCardScoreGroup {
-    width: 100%; text-align: left !important;
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .reportCardScoreText { font-size: 32px !important; }
 
   .slaHeaderBox, .donutHeaderBox {
     flex-direction: column !important; align-items: flex-start !important;
     gap: 16px !important; border-left: none !important; border-top: 4px solid #3B82F6 !important;
   }
   
-  .slaAvgInfo, .donutTopTypeBox {
-    width: 100%; border-top: 1px dashed #eee; padding-top: 16px;
-  }
-
   .headerControls { margin-top: 16px; width: 100%; flex-wrap: wrap; gap: 8px; }
   .controlBtn { flex: 1; text-align: center; justify-content: center; }
 
