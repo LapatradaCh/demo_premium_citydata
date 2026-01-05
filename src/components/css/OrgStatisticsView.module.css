@@ -1,4 +1,4 @@
-/* --- css/OrgStatisticsView.module.css (FINAL FIXED FOR LEGEND) --- */
+/* --- css/OrgStatisticsView.module.css (FINAL FIXED VERSION) --- */
 
 /* =========================================
    1. GLOBAL & LAYOUT
@@ -182,10 +182,6 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.2s;
-}
-
-.kpiCard:hover {
-  transform: translateY(-3px);
 }
 
 .kpiCardSuccess {
@@ -637,7 +633,6 @@
   pointer-events: none;
 }
 
-/* Default Desktop Grid Legend */
 .donutLegendGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -794,69 +789,131 @@
   .kpiValue { font-size: 36px !important; margin: 8px 0 16px 0 !important; font-weight: 800 !important; }
   .kpiSubtext { font-size: 12px !important; }
 
-  /* =========================================
-     FIXED DONUT LEGEND FOR MOBILE (รูปที่ 2)
-     ========================================= */
+  /* FIXED DONUT LEGEND (ทำให้เหมือนรูปที่ 2) */
   .donutLegendGrid {
-    display: flex !important;          /* จาก Grid เป็น Flex */
-    flex-direction: row !important;    /* เรียงแนวนอน */
-    flex-wrap: wrap !important;        /* ตัดบรรทัดได้ถ้าล้น */
-    justify-content: center !important; /* กึ่งกลางกราฟ */
-    gap: 10px 16px !important;         /* ระยะห่างแต่ละรายการ */
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px 16px !important; /* ปรับ gap ให้กระชับขึ้น */
     width: 100% !important;
-    margin-top: 24px !important;
-    padding: 0 !important;             /* ล้าง Padding */
-    background: transparent !important; /* ล้างพื้นหลัง */
+    padding: 16px 0 !important;
+    margin-top: 10px !important;
+    border: none !important;
   }
 
   .donutLegendItem {
-    width: auto !important;            /* ความกว้างตามเนื้อหา */
-    background: transparent !important; /* ลบพื้นหลังสีขาว */
-    padding: 0 !important;             /* ลบ Padding */
-    border: none !important;           /* ลบเส้นขอบ */
-    box-shadow: none !important;       /* ลบเงา */
-    font-size: 13px !important;
-    font-weight: 600 !important;
+    width: auto !important; /* ยกเลิกการบังคับความกว้าง */
+    min-width: 0 !important;
+    flex: 0 1 auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 14px !important; /* ปรับขนาดตัวอักษรให้เหมือนในรูป */
     color: #4b5563 !important;
+    border: none !important;
+    box-shadow: none !important;
     display: flex !important;
     align-items: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
   }
 
-  .donutColorDot {
-    width: 8px !important;             /* จุดสีเล็กลงตามรูป */
-    height: 8px !important;
-    margin: 0 !important;
+  .donutColorDot { 
+    margin: 0 !important; 
+    width: 10px !important; 
+    height: 10px !important; 
     flex-shrink: 0;
+    border-radius: 50% !important;
+  }
+
+  /* สำหรับ Stacked Bar Legend (ถ้าต้องการให้เหมือนกัน) */
+  .mockStackedBarLegend {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px 15px !important;
+    padding-top: 15px !important;
+  }
+
+  .mockStackedBarLegendItem {
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 13px !important;
   }
 
   /* --- OTHERS --- */
-  .mockStackedBarLegend {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 8px 16px !important;
-  }
-
   .mockStackedBarChart .mockHBarItem {
     display: flex !important; flex-direction: column !important;
     align-items: flex-start !important; gap: 8px !important; width: 100% !important;
     margin-bottom: 24px !important;
   }
+  .mockStackedBarChart .mockHBarItem > div:first-child {
+    width: 100% !important; font-size: 14px !important; font-weight: 700; color: #111;
+  }
+  .mockStackedBarChart .mockHBarItem > .mockStackedHBar {
+    width: 100% !important; height: 36px !important;
+  }
+  .mockStackedBarChart .mockHBarItem > div:last-child {
+    width: 100% !important; text-align: right !important; color: #6b7280; font-size: 12px;
+  }
+
+  .satisfactionHighlightGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
   
-  .satisfactionHighlightGrid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .highlightCard {
+    padding: 24px !important;
+    grid-template-columns: 1fr auto !important;
+    box-shadow: 0 12px 24px -8px rgba(0,0,0,0.2) !important;
+  }
+  
+  .highlightName { font-size: 20px !important; }
+  .highlightScore { font-size: 48px !important; }
+
   .reportCardList { gap: 12px !important; }
-  
+  .reportCardItem {
+    padding: 20px !important;
+    border: 1px solid #eee !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+  }
+  .reportCardHeader {
+    flex-direction: column !important; align-items: flex-start !important; gap: 12px !important;
+  }
+  .reportCardTitleGroup { width: 100%; }
+  .reportCardName { font-size: 16px !important; line-height: 1.5; white-space: normal !important; }
+  .reportCardScoreGroup {
+    width: 100%; text-align: left !important;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .reportCardScoreText { font-size: 32px !important; }
+
   .slaHeaderBox, .donutHeaderBox {
     flex-direction: column !important; align-items: flex-start !important;
     gap: 16px !important; border-left: none !important; border-top: 4px solid #3B82F6 !important;
   }
+  
+  .slaAvgInfo, .donutTopTypeBox {
+    width: 100%; border-top: 1px dashed #eee; padding-top: 16px;
+  }
 
+  .headerControls { margin-top: 16px; width: 100%; flex-wrap: wrap; gap: 8px; }
+  .controlBtn { flex: 1; text-align: center; justify-content: center; }
+
+  .mockHorizontalBarChart { margin-top: 48px !important; gap: 24px !important; }
   .mockHorizontalBarChart .mockHBarItem {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
     grid-template-rows: auto auto !important;
     gap: 8px 0 !important;
+    margin-bottom: 0 !important;
     align-items: flex-end !important;
   }
+  
+  .mockHBarLabel { grid-column: 1 / 2; grid-row: 1; font-size: 14px; width: auto !important; }
+  .mockHBarValue { grid-column: 2 / 3; grid-row: 1; font-size: 14px; font-weight: 700; width: auto !important; }
+  .mockHBar { grid-column: 1 / 3; grid-row: 2; height: 10px !important; margin-top: 4px !important; width: 100% !important; }
+  
+  .slaLabel { top: -28px !important; font-size: 10px !important; padding: 2px 8px !important; }
 }
