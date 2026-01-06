@@ -186,7 +186,7 @@ const MapView = ({ subTab }) => {
         }
 
         // สร้าง URL
-        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_statuses"; 
+        const baseUrl = "https://premium-citydata-api-ab.vercel.app/api/get_issue_status"; 
         const url = orgId 
           ? `${baseUrl}?organization_id=${orgId}` 
           : baseUrl;
