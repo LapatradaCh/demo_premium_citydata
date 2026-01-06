@@ -1,4 +1,4 @@
-/* --- css/ReportDetail.module.css (Full Responsive & Improved Timeline) --- */
+/* --- css/ReportDetail.module.css (Full Responsive & Fixed Timeline) --- */
 
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
@@ -74,6 +74,7 @@
   font-size: 15px; color: #1F2937; line-height: 1.6; margin: 0; white-space: pre-line;
 }
 
+/* Status Badges */
 .statusBadge {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
@@ -88,8 +89,8 @@
 .statusDone { color: #16A34A; border-color: #BBF7D0; }
 .statusForward { color: #2563EB; border-color: #BFDBFE; }
 .statusReject { color: #374151; border-color: #D1D5DB; }
-.statusDefault { color: #4B5563; border-color: #E5E7EB; }
 
+/* Meta Info */
 .metaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -109,66 +110,33 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.metaBox:hover {
-  border-color: #CBD5E1;
-  transform: translateY(-2px);
-}
-
-.metaHeader {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-}
-
 .iconWrapper {
   width: 32px; height: 32px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
   background-color: #FFFFFF;
   border: 1px solid #F1F5F9;
 }
 
-.iconBlue { color: #3B82F6; }
-.iconYellow { color: #F59E0B; }
-
-.metaLabel {
-  font-size: 13px; color: #64748B; font-weight: 600;
-}
-
 .metaValue {
   font-size: 16px; color: #0F172A; font-weight: 700;
-  display: flex; align-items: center; gap: 8px; padding-left: 4px;
+  display: flex; align-items: center; gap: 8px;
 }
 
-.starContainer {
-  display: flex; align-items: center; gap: 2px;
-  color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
-}
-
-.starFilled {
-  color: #F59E0B; position: absolute; top: 0; left: 0;
-  white-space: nowrap; overflow: hidden;
-}
-
-.ratingNumber {
-  background-color: #FFFFFF; color: #C2410C; font-size: 13px;
-  padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
-}
-
+/* Action Buttons */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
-
+.btnPrimary {
+  background: #0F172A; color: #FFFFFF;
+  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
+}
 .btnSecondary {
   background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-  transition: all 0.2s;
 }
 
-.btnPrimary {
-  background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
-  padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
-}
-
+/* Image Card */
 .imageCard {
   background-color: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -179,104 +147,90 @@
 .realImage { width: 100%; height: 100%; object-fit: cover; }
 
 /* ========================================= */
-/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
+/* 4. TIMELINE (แก้ไขจุดทับกัน & จัดระเบียบใหม่) */
 /* ========================================= */
-.sectionHeader { 
-  font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
-  display: flex; align-items: center; gap: 8px; 
+.timelineContainer { 
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
 }
-.locationText { font-size: 15px; color: #4B5563; line-height: 1.5; margin: 0; }
-
-.buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
-.actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
-.internalMapBtn { background-color: #1F2937; color: #fff; }
-.googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
-
-.agencyList {
-  display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
-}
-
-.agencyItem {
-  display: flex; align-items: center; gap: 16px;
-  background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px;
-  padding: 16px; transition: all 0.2s;
-  position: relative; overflow: hidden;
-}
-
-.agencyItem::before { display: none; }
-
-.agencyIconBox {
-  width: 40px; height: 40px; border-radius: 10px;
-  background-color: #FFFFFF; color: #2563EB;
-  border: 1px solid #F1F5F9;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-.agencyName {
-  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
-}
-
-.agencyTag {
-  font-size: 11px; color: #64748B; background-color: #FFFFFF;
-  padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
-}
-
-/* ========================================= */
-/* 4. TIMELINE (Improved for Readability) */
-/* ========================================= */
-.bottomSection { min-height: 200px; }
-.timelineContainer { margin-top: 24px; }
 
 .timelineRow { 
-  display: grid; 
-  grid-template-columns: 100px 40px 1fr; 
-  position: relative; 
+  display: flex; 
+  gap: 0;
+  position: relative;
+  min-height: 90px;
 }
 
+/* ฝั่งซ้าย: วันเวลา (ล็อกความกว้างป้องกันทับ) */
 .timeLeft { 
+  width: 100px;
+  min-width: 100px;
   text-align: right; 
-  padding-right: 15px; 
+  padding-right: 20px; 
   font-size: 13px; 
   color: #64748B; 
-  line-height: 1.5;
-  font-weight: 500;
+  line-height: 1.4;
+  font-weight: 600;
+  padding-top: 5px;
 }
 
-.timeCenter { display: flex; flex-direction: column; align-items: center; }
+/* ฝั่งกลาง: เส้นแนวตั้งและจุด */
+.timeCenter { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  position: relative;
+  width: 32px; /* ล็อกความกว้างช่อง Icon */
+}
 
 .line { 
   width: 2px; 
-  background-color: #F1F5F9; 
-  flex-grow: 1; 
+  background-color: #E2E8F0; 
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
+/* จุดวงกลมสถานะ */
 .iconCircle { 
-  width: 14px; 
-  height: 14px; 
+  width: 26px; 
+  height: 26px; 
   border-radius: 50%; 
-  background-color: #CBD5E1; 
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 0 0 1px #E2E8F0;
-  z-index: 2; 
-  margin-top: 4px;
+  background-color: #FFFFFF; 
+  border: 2px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2; /* ให้อยู่เหนือเส้นเสมอ */
+  position: relative;
+  margin-top: 2px;
+  color: #64748B;
+  box-sizing: border-box;
 }
 
 /* Highlight สำหรับรายการล่าสุด */
 .timelineRow:first-child .iconCircle {
-  background-color: #3B82F6;
-  box-shadow: 0 0 0 1px #3B82F6;
+  background-color: #EFF6FF;
+  border-color: #3B82F6;
+  color: #3B82F6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+/* ฝั่งขวา: รายละเอียดเนื้อหา */
 .timeRight { 
-  padding-left: 15px; 
-  padding-bottom: 32px; 
+  flex: 1;
+  padding-left: 20px; 
+  padding-bottom: 30px; 
 }
 
-/* จัดการเนื้อหา Timeline ให้อ่านง่าย */
 .statusTitle {
   font-size: 15px;
   font-weight: 700;
-  color: #111827;
+  color: #1E293B;
   margin-bottom: 4px;
   display: block;
 }
@@ -284,85 +238,63 @@
 .statusBy {
   font-size: 13px;
   color: #94A3B8;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   display: block;
 }
 
 .statusDetail {
   font-size: 14px;
   color: #475569;
+  line-height: 1.6;
   background-color: #F8FAFC;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border-left: 3px solid #E2E8F0;
-  line-height: 1.5;
+  padding: 12px 16px;
+  border-radius: 0 12px 12px 12px;
+  border: 1px solid #F1F5F9;
 }
 
 /* ========================================= */
-/* 5. MEDIA GALLERY */
+/* 6. RESPONSIVE BREAKPOINTS */
 /* ========================================= */
-.mediaGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 16px;
-}
-
-.mediaItem {
-  position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
-  border: 1px solid #E5E7EB; cursor: pointer; transition: transform 0.2s;
-  background-color: #FFFFFF;
-}
-
-.mediaItem:hover { transform: scale(1.02); border-color: #CBD5E1; }
-.mediaImg { width: 100%; height: 100%; object-fit: cover; }
-
-.addMediaBox {
-  aspect-ratio: 1; border: 2px dashed #CBD5E1; border-radius: 12px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; color: #64748B; background-color: #FFFFFF; transition: all 0.2s;
-}
-
-/* ========================================= */
-/* 6. RESPONSIVE DESIGN (Breakpoints) */
-/* ========================================= */
-
-@media (max-width: 1024px) {
-  .container { padding: 20px; }
-  .title { font-size: 24px; }
-}
 
 @media (max-width: 768px) {
-  .topSection, .middleSection {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
+  .topSection, .middleSection { grid-template-columns: 1fr; }
   .metaGrid { grid-template-columns: 1fr; }
-
-  .imageCard { min-height: 250px; }
-
   .actionRow { flex-direction: column; }
-
-  .mediaGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+  
+  .imageCard { min-height: 250px; }
+  
+  /* Timeline Mobile */
+  .timeLeft {
+    width: 80px;
+    min-width: 80px;
+    padding-right: 12px;
+    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
+  /* ปรับ Timeline ให้เป็นแนวตั้งบนมือถือเล็กมาก */
   .timelineRow {
-    grid-template-columns: 85px 30px 1fr;
+    flex-direction: column;
+    padding-left: 35px;
+    min-height: auto;
   }
   
-  .timeLeft { 
-    font-size: 12px; 
-    padding-right: 10px;
+  .timeLeft {
+    width: auto;
+    min-width: auto;
+    text-align: left;
+    padding: 0 0 8px 0;
   }
   
-  .card { padding: 16px; }
-}
+  .timeCenter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
 
-@media (max-width: 375px) {
-  .title { font-size: 20px; }
-  .statusBadge { padding: 4px 10px; font-size: 12px; }
+  .timeRight {
+    padding-left: 10px;
+  }
 }
