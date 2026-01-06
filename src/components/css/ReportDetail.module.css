@@ -1,4 +1,4 @@
-/* --- css/ReportDetail.module.css (Full Version) --- */
+/* --- css/ReportDetail.module.css (Full Responsive & Improved Timeline) --- */
 
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
@@ -222,18 +222,81 @@
 }
 
 /* ========================================= */
-/* 4. TIMELINE */
+/* 4. TIMELINE (Improved for Readability) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
-.timelineContainer { margin-top: 20px; }
-.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
+.timelineContainer { margin-top: 24px; }
 
-.timeLeft { text-align: right; padding-right: 15px; }
+.timelineRow { 
+  display: grid; 
+  grid-template-columns: 100px 40px 1fr; 
+  position: relative; 
+}
+
+.timeLeft { 
+  text-align: right; 
+  padding-right: 15px; 
+  font-size: 13px; 
+  color: #64748B; 
+  line-height: 1.5;
+  font-weight: 500;
+}
+
 .timeCenter { display: flex; flex-direction: column; align-items: center; }
-.line { width: 2px; background-color: #F1F5F9; flex-grow: 1; }
-.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; }
 
-.timeRight { padding-left: 15px; padding-bottom: 30px; }
+.line { 
+  width: 2px; 
+  background-color: #F1F5F9; 
+  flex-grow: 1; 
+}
+
+.iconCircle { 
+  width: 14px; 
+  height: 14px; 
+  border-radius: 50%; 
+  background-color: #CBD5E1; 
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 0 1px #E2E8F0;
+  z-index: 2; 
+  margin-top: 4px;
+}
+
+/* Highlight สำหรับรายการล่าสุด */
+.timelineRow:first-child .iconCircle {
+  background-color: #3B82F6;
+  box-shadow: 0 0 0 1px #3B82F6;
+}
+
+.timeRight { 
+  padding-left: 15px; 
+  padding-bottom: 32px; 
+}
+
+/* จัดการเนื้อหา Timeline ให้อ่านง่าย */
+.statusTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.statusBy {
+  font-size: 13px;
+  color: #94A3B8;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.statusDetail {
+  font-size: 14px;
+  color: #475569;
+  background-color: #F8FAFC;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #E2E8F0;
+  line-height: 1.5;
+}
 
 /* ========================================= */
 /* 5. MEDIA GALLERY */
@@ -260,54 +323,46 @@
 }
 
 /* ========================================= */
-/* 6. RESPONSIVE BREAKPOINTS (เพิ่มเติม) */
+/* 6. RESPONSIVE DESIGN (Breakpoints) */
 /* ========================================= */
 
-/* สำหรับ Tablet (เช่น iPad Air, iPad Pro) */
 @media (max-width: 1024px) {
   .container { padding: 20px; }
   .title { font-size: 24px; }
 }
 
-/* สำหรับ Mobile (เช่น iPhone XR, iPhone 12 Pro, Pixel 7) */
 @media (max-width: 768px) {
   .topSection, .middleSection {
-    grid-template-columns: 1fr; /* เปลี่ยนเป็น 1 คอลัมน์ */
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 
-  .metaGrid {
-    grid-template-columns: 1fr; /* Meta Box เรียงลงมา */
-  }
+  .metaGrid { grid-template-columns: 1fr; }
 
-  .imageCard {
-    min-height: 240px; /* ลดความสูงรูปหลักลงให้พอดีจอ */
-  }
+  .imageCard { min-height: 250px; }
 
-  .actionRow {
-    flex-direction: column; /* ปุ่มวางซ้อนกันเพื่อให้กดง่ายขึ้น */
-  }
+  .actionRow { flex-direction: column; }
 
   .mediaGrid {
-    grid-template-columns: repeat(3, 1fr); /* บังคับ 3 รูปต่อแถวบนมือถือ */
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
-
-  .card { padding: 16px; } /* ลด padding ในการ์ดลง */
 }
 
-/* สำหรับ Small Mobile (เช่น iPhone SE) */
+@media (max-width: 480px) {
+  .timelineRow {
+    grid-template-columns: 85px 30px 1fr;
+  }
+  
+  .timeLeft { 
+    font-size: 12px; 
+    padding-right: 10px;
+  }
+  
+  .card { padding: 16px; }
+}
+
 @media (max-width: 375px) {
   .title { font-size: 20px; }
-  
-  .timelineRow {
-    grid-template-columns: 80px 30px 1fr; /* ลดขนาดฝั่งเวลาเพื่อให้ข้อความไม่เบียด */
-  }
-
-  .timeLeft { font-size: 12px; }
-  
-  .statusBadge {
-    padding: 4px 10px;
-    font-size: 12px;
-  }
+  .statusBadge { padding: 4px 10px; font-size: 12px; }
 }
