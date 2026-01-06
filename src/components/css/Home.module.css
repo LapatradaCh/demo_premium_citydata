@@ -73,17 +73,17 @@
   transform: scale(1.15) rotate(-8deg);
 }
 
-/* --- Main Wrapper (ป้องกันจอล้น) --- */
 .dashboardContent {
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  /* max-width: 1280px;  <-- ลบ หรือ comment บรรทัดนี้ออก เพื่อให้พื้นหลังขาวขยายเต็มจอ */
+  /* margin: 0 auto;     <-- ลบ หรือ comment บรรทัดนี้ออก เพราะเราจะใช้ flex จัดกลางแทน */
+  
   padding: 30px 40px 120px 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* บรรทัดนี้ช่วยจัดเนื้อหา (Search, Cards) ให้อยู่ตรงกลางจออยู่แล้ว */
   gap: 24px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* สีขาวจะแสดงเต็มจอแล้วตอนนี้ */
   color: #1a1a1a;
   overflow-x: hidden;
   box-sizing: border-box;
