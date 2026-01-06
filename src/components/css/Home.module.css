@@ -75,12 +75,15 @@
 
 .dashboardContent {
   width: 100%;
+  /* max-width: 1280px;  <-- ลบ หรือ comment บรรทัดนี้ออก เพื่อให้พื้นหลังขาวขยายเต็มจอ */
+  /* margin: 0 auto;     <-- ลบ หรือ comment บรรทัดนี้ออก เพราะเราจะใช้ flex จัดกลางแทน */
+  
   padding: 30px 40px 120px 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* บรรทัดนี้ช่วยจัดเนื้อหา (Search, Cards) ให้อยู่ตรงกลางจออยู่แล้ว */
   gap: 24px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* สีขาวจะแสดงเต็มจอแล้วตอนนี้ */
   color: #1a1a1a;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -257,10 +260,10 @@
   margin-top: 40px;
 }
 
-/* --- Bottom Nav (Desktop Style) - EDITED --- */
+/* --- Bottom Nav (Desktop Style) --- */
 .bottomNav {
   position: fixed;
-  bottom: 24px;
+  bottom: 24px; /* ขยับขึ้นจากขอบล่างนิดหน่อย */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -269,8 +272,8 @@
   gap: 12px;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(14px);
-  padding: 10px 14px; 
-  border-radius: 24px;
+  padding: 14px 24px; /* เพิ่มพื้นที่รอบเมนู */
+  border-radius: 50px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
@@ -284,41 +287,41 @@
 .bottomNav button {
   background: none;
   border: none;
-  font-size: 15px;
+  font-size: 15px; /* ปรับขนาดฟอนต์ให้ชัดขึ้น */
   font-weight: 700;
   cursor: pointer;
   color: #444;
-  /* แก้ไข: ใช้ width แทน min-width เพื่อให้ทุกกล่องเท่ากันเป๊ะ */
-  width: 140px; 
-  padding: 12px 0; /* ลด padding ข้างเพราะเรา fix width แล้ว */
-  border-radius: 18px; 
+  padding: 16px 28px; /* เพิ่ม Padding แนวตั้ง (16px) ให้เมนูดู "สูง" ขึ้น */
+  border-radius: 30px;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center; /* จัดกลางเนื้อหาในกล่อง */
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   white-space: nowrap;
+  min-width: 140px; /* เพิ่มความกว้างขั้นต่ำเล็กน้อยให้ดูสมดุลกับความสูง */
 }
 
 .bottomNav button:not(.active):hover {
   background: #f2f2f2;
   color: #000;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 /* Active State Desktop */
 .bottomNav .active {
   color: #ffffff !important;
   background-color: #111111 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
+/* แก้ไขไอคอนหาย: บังคับขนาดและแสดงผลเสมอ */
 .bottomNav button svg {
   display: inline-block !important;
-  font-size: 20px !important;
-  width: 20px !important;
-  height: 20px !important;
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
   flex-shrink: 0;
 }
 
@@ -385,7 +388,7 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 4px;
-    padding: 12px 10px 30px 10px;
+    padding: 12px 10px 30px 10px; /* เพิ่มพื้นที่ล่างสำหรับมือถือ */
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -408,12 +411,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 65px;
-    width: 100% !important; /* บังคับเต็ม Grid ในมือถือ */
-    min-width: unset !important; 
+    height: 65px; /* เพิ่มความสูงในโหมดมือถือ */
+    width: 100%;
+    min-width: unset; 
     padding: 0;
     margin: 0;
-    border-radius: 0; 
   }
 
   .bottomNav button svg {
@@ -431,17 +433,17 @@
   }
 
   .bottomNav button.active {
-    background-color: transparent !important; 
-    color: #000 !important;
-    box-shadow: none !important;
+    background-color: #000000 !important;
+    color: #fff !important;
+    border-radius: 18px;
   }
 
   .bottomNav button.active svg {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   .bottomNav button.active span {
-    color: #000000 !important;
+    color: #ffffff !important;
   }
 
   .subMenuPopup {
