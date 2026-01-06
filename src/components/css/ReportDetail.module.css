@@ -199,45 +199,46 @@
 .agencyItem {
   display: flex; align-items: center; gap: 16px;
   background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px;
-  padding: 16px; transition: all 0.2s;
+  padding: 12px 16px; transition: all 0.2s;
   position: relative; overflow: hidden;
 }
 
 .agencyItem::before { display: none; }
 
 .agencyIconBox {
-  width: 40px; height: 40px; border-radius: 10px;
+  width: 36px; height: 36px; border-radius: 10px;
   background-color: #FFFFFF; color: #2563EB;
   border: 1px solid #F1F5F9;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
 .agencyName {
-  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
+  font-size: 14px; font-weight: 600; color: #1E293B; flex-grow: 1;
 }
 
 .agencyTag {
-  font-size: 11px; color: #64748B; background-color: #FFFFFF;
-  padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
+  font-size: 10px; color: #94A3B8; background-color: #FFFFFF;
+  padding: 2px 8px; border-radius: 20px; border: 1px solid #F1F5F9;
 }
 
 /* ========================================= */
-/* 4. TIMELINE (แก้ไขจุดทับกัน & ตกแต่งตามรูปที่ 1) */
+/* 4. TIMELINE (ปรับตามรูปที่ 2 - Minimal Style) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
-.timelineContainer { margin-top: 20px; }
+.timelineContainer { margin-top: 24px; padding-left: 8px; }
 
 .timelineRow { 
   display: grid; 
-  grid-template-columns: 110px 40px 1fr; 
+  grid-template-columns: 120px 40px 1fr; 
   position: relative; 
+  min-height: 70px;
 }
 
 .timeLeft { 
   text-align: right; 
-  padding-right: 15px; 
-  font-size: 14px; 
-  color: #4B5563; 
+  padding-right: 20px; 
+  font-size: 13px; 
+  color: #9CA3AF; 
   line-height: 1.6;
 }
 
@@ -248,49 +249,55 @@
   position: relative;
 }
 
-/* เส้นแนวตั้ง - แก้ไขให้อยู่เลเยอร์ล่าง */
+/* เส้นแนวตั้ง - บางลงและสีจางลง */
 .line { 
-  width: 2px; 
-  background-color: #F1F5F9; 
+  width: 1px; 
+  background-color: #E5E7EB; 
   flex-grow: 1; 
   z-index: 1;
 }
 
-/* ไอคอนนาฬิกา - ใส่พื้นหลังขาวบังเส้นและยกเลเยอร์ขึ้นป้องกันจุดทับกัน */
+.timelineRow:last-child .line {
+  display: none;
+}
+
+/* ไอคอนสถานะ - นำ Border หนาออกเพื่อให้ดูคลีนเหมือนรูปที่ 2 */
 .iconCircle { 
-  width: 32px; 
-  height: 32px; 
-  border-radius: 50%; 
+  width: 24px; 
+  height: 24px; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
   z-index: 2; 
-  color: #64748B;
+  color: #9CA3AF;
   background-color: #FFFFFF; 
-  border: 1.5px solid #F1F5F9;
-  box-sizing: border-box;
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
-/* จุดสถานะปัจจุบัน (สีแดง) ตามรูปที่ 1 */
+/* สถานะปัจจุบัน (แถวแรก) ใช้สีแดง */
 .timelineRow:first-child .iconCircle {
-  color: #DC2626;
-  border-color: #FECACA;
+  color: #EF4444;
+}
+
+/* สถานะก่อนหน้า ใช้สีเทาอ่อน */
+.timelineRow:not(:first-child) .iconCircle {
+  color: #9CA3AF;
 }
 
 .timeRight { 
   padding-left: 15px; 
-  padding-bottom: 40px; 
-  font-size: 15px;
-  line-height: 1.6;
-  color: #374151;
+  padding-bottom: 30px; 
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4B5563;
 }
 
-/* หัวข้อตัวหนาใน Timeline */
 .timeRight strong {
   display: block;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 2px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
 }
 
 /* ========================================= */
@@ -352,9 +359,8 @@
   .card { padding: 16px; }
 
   /* Timeline Mobile */
-  .timelineRow { grid-template-columns: 95px 35px 1fr; }
-  .timeLeft { font-size: 12px; padding-right: 10px; }
-  .iconCircle { width: 28px; height: 28px; }
+  .timelineRow { grid-template-columns: 90px 35px 1fr; }
+  .timeLeft { font-size: 11px; padding-right: 12px; }
 }
 
 @media (max-width: 375px) {
@@ -364,7 +370,7 @@
     grid-template-columns: 80px 30px 1fr;
   }
 
-  .timeLeft { font-size: 11px; }
+  .timeLeft { font-size: 10px; }
   
   .statusBadge {
     padding: 4px 10px;
