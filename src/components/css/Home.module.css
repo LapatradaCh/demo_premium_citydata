@@ -269,8 +269,8 @@
   gap: 12px;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(14px);
-  padding: 10px 14px; /* ปรับลดพื้นที่ Padding รอบนอกให้กระชับ */
-  border-radius: 24px; /* ปรับกรอบเมนูรวมให้มนพอดีๆ */
+  padding: 10px 14px; 
+  border-radius: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
@@ -288,17 +288,17 @@
   font-weight: 700;
   cursor: pointer;
   color: #444;
-  /* แก้ไข: ปรับ Padding ให้สั้นลง และ Radius ให้เป็นกล่องเหลี่ยมมน */
-  padding: 12px 24px; 
+  /* แก้ไข: ใช้ width แทน min-width เพื่อให้ทุกกล่องเท่ากันเป๊ะ */
+  width: 140px; 
+  padding: 12px 0; /* ลด padding ข้างเพราะเรา fix width แล้ว */
   border-radius: 18px; 
   transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* จัดกลางเนื้อหาในกล่อง */
   gap: 8px;
   white-space: nowrap;
-  min-width: auto; /* เอา min-width ออกเพื่อให้ปุ่มหดตามตัวหนังสือ */
 }
 
 .bottomNav button:not(.active):hover {
@@ -314,7 +314,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ไอคอน */
 .bottomNav button svg {
   display: inline-block !important;
   font-size: 20px !important;
@@ -410,11 +409,11 @@
     align-items: center;
     justify-content: center;
     height: 65px;
-    width: 100%;
-    min-width: unset; 
+    width: 100% !important; /* บังคับเต็ม Grid ในมือถือ */
+    min-width: unset !important; 
     padding: 0;
     margin: 0;
-    border-radius: 0; /* มือถือไม่ต้องมี border-radius ที่ปุ่ม เพราะไม่มีพื้นหลัง */
+    border-radius: 0; 
   }
 
   .bottomNav button svg {
@@ -432,12 +431,11 @@
   }
 
   .bottomNav button.active {
-    background-color: transparent !important; /* มือถือ active ไม่เอาพื้นหลังดำเต็ม */
+    background-color: transparent !important; 
     color: #000 !important;
     box-shadow: none !important;
   }
 
-  /* ใส่ลูกเล่นให้ปุ่ม Active ในมือถือแทน */
   .bottomNav button.active svg {
     color: #000000 !important;
   }
