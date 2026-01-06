@@ -173,7 +173,7 @@ const MapView = ({ subTab }) => {
     fetchIssueTypes();
   }, []);
 
-  // --- 2. Fetch Statuses (ดึงจาก Backend ที่สร้างไว้) ---
+  // --- 2. Fetch Statuses ---
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
@@ -209,9 +209,9 @@ const MapView = ({ subTab }) => {
     };
 
     fetchStatuses();
-  }, []); // Run ครั้งแรกครั้งเดียว
+  }, []);
 
-  // --- 3. Fetch Reports (Loop Pagination) ---
+  // --- 3. Fetch Reports ---
   useEffect(() => {
     const fetchAllCases = async () => {
       try {
@@ -270,15 +270,13 @@ const MapView = ({ subTab }) => {
     fetchAllCases();
   }, [subTab]);
 
-  // --- 4. Filtering Logic (ใช้ useMemo เพื่อประสิทธิภาพ) ---
+  // --- 4. Filtering Logic ---
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       
-      // ✅ กรองด้วย "ชื่อประเภท" (issue_type_name) เพื่อแก้ปัญหา ID ไม่ตรงกัน
       const reportTypeName = report.issue_type_name || ""; 
       const matchType = selectedType === "all" || reportTypeName === selectedType;
 
-      // ✅ กรองด้วย "สถานะ"
       const reportStatus = report.status || "";
       const matchStatus = selectedStatus === "all" || reportStatus === selectedStatus;
 
@@ -316,81 +314,15 @@ const MapView = ({ subTab }) => {
         </button>
       </div>
 
-      {showFilters && (
-        <>
-          <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
-          <div className={styles.filterModal}>
-            <div className={styles.filterModalHeader}>
-              <h3>{modalTitle}</h3>
-              <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}><FaTimes /></button>
-            </div>
-            <div className={styles.filterModalContent}>
-              <div className={styles.reportFilters}>
-                <div className={styles.filterGroup}>
-                   <label>รูปแบบแสดงผล</label>
-                   <div className={styles.mapToggles}>
-                    <button className={mapMode === "pins" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("pins")}>หมุด (Pins)</button>
-                    <button className={mapMode === "heatmap" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("heatmap")}>Heatmap</button>
-                   </div>
-                </div>
-                {mainFilters.map((label, i) => (
-                  <div className={styles.filterGroup} key={i}>
-                    <label>{label}</label>
-                    
-                    {/* --- Filter: ประเภท --- */}
-                    {label === "ประเภท" && (
-                       <select 
-                          value={selectedType} 
-                          onChange={(e) => setSelectedType(e.target.value)}
-                       >
-                         <option value="all">ทั้งหมด</option>
-                         {issueTypes.map((type, index) => (
-                           // ✅ ใช้ Name เป็น Value เพื่อให้ตรงกับข้อมูลใน Report
-                           <option 
-                             key={type.issue_type_id || type.id || index} 
-                             value={type.issue_type_name || type.name}
-                           >
-                             {type.issue_type_name || type.name || "ระบุไม่ได้"}
-                           </option>
-                         ))}
-                       </select>
-                    )}
-
-                    {/* --- Filter: สถานะ --- */}
-                    {label === "สถานะ" && (
-                       <select 
-                          value={selectedStatus}
-                          onChange={(e) => setSelectedStatus(e.target.value)}
-                       >
-                         <option value="all">ทั้งหมด</option>
-                         {statusOptions.length > 0 ? (
-                           statusOptions.map((status, index) => (
-                             <option key={index} value={status}>
-                               {status}
-                             </option>
-                           ))
-                         ) : (
-                           <option disabled>ไม่พบข้อมูลสถานะ</option>
-                         )}
-                       </select>
-                    )}
-                    
-                  </div>
-                ))}               
-              </div>
-              <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
-            </div>
-          </div>
-        </>
-      )}
+      {/* ✅ ย้ายส่วนของ Modal ออกจากตรงนี้แล้ว (Move out) 
+         เพื่อให้ Sidebar ไม่บัง Modal
+      */}
 
       <div className={styles.sidebarReportListContainer}>
         <div className={styles.reportSummary}>
-          {/* ✅ ใช้ filteredReports.length เพื่อแสดงจำนวนที่กรองแล้ว */}
           <strong>{summaryTitle}</strong> ({loading ? "โหลด..." : `${filteredReports.length} รายการ`})
         </div>
         <div className={styles.reportTableContainer}>
-          {/* ✅ ใช้ filteredReports ในการแสดงผล List */}
           {loading ? <p>กำลังโหลดข้อมูล...</p> : filteredReports.length === 0 ? <p>ไม่พบข้อมูลตามเงื่อนไข</p> : (
             filteredReports.map((report) => (
               <div key={report.issue_cases_id} className={styles.reportTableRow}>
@@ -433,15 +365,12 @@ const MapView = ({ subTab }) => {
                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
 
-             {/* Auto Zoom: ใช้ filteredReports */}
              {filteredReports.length > 0 && <FitBoundsToMarkers markers={filteredReports} />}
 
-             {/* Heatmap Mode: ใช้ filteredReports */}
              {mapMode === "heatmap" && (
                 <HeatmapLayer data={filteredReports} />
              )}
 
-             {/* Pins Mode: ใช้ filteredReports */}
              {mapMode === "pins" && (
                 <MarkerClusterGroup 
                    chunkedLoading
@@ -462,7 +391,6 @@ const MapView = ({ subTab }) => {
                           <div className={styles.popupContent}>
                             <strong>#{report.case_code}</strong><br/>
                             {report.title}<br/>
-                            {/* แสดงประเภทและสถานะใน Popup */}
                             <span style={{fontSize: '0.85em', color: '#666'}}>ประเภท: {report.issue_type_name || "-"}</span><br/>
                             <span className={`${styles.statusTag} ${getStatusClass(report.status)}`}>{report.status}</span>
                           </div>
@@ -505,6 +433,77 @@ const MapView = ({ subTab }) => {
             </div>
         )}
       </div>
+
+      {/* ✅ MODAL: ย้ายมาวางตรงนี้ (นอกสุดของ Return หลัก) 
+        เพื่อให้ z-index ทำงานได้ถูกต้อง ไม่โดน Map บัง 
+      */}
+      {showFilters && (
+        <>
+          <div className={styles.filterModalBackdrop} onClick={() => setShowFilters(false)}></div>
+          <div className={styles.filterModal}>
+            <div className={styles.filterModalHeader}>
+              <h3>{modalTitle}</h3>
+              <button className={styles.filterModalClose} onClick={() => setShowFilters(false)}><FaTimes /></button>
+            </div>
+            <div className={styles.filterModalContent}>
+              <div className={styles.reportFilters}>
+                <div className={styles.filterGroup}>
+                   <label>รูปแบบแสดงผล</label>
+                   <div className={styles.mapToggles}>
+                    <button className={mapMode === "pins" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("pins")}>หมุด (Pins)</button>
+                    <button className={mapMode === "heatmap" ? styles.toggleButtonActive : styles.toggleButton} onClick={() => setMapMode("heatmap")}>Heatmap</button>
+                   </div>
+                </div>
+                {mainFilters.map((label, i) => (
+                  <div className={styles.filterGroup} key={i}>
+                    <label>{label}</label>
+                    
+                    {/* --- Filter: ประเภท --- */}
+                    {label === "ประเภท" && (
+                       <select 
+                          value={selectedType} 
+                          onChange={(e) => setSelectedType(e.target.value)}
+                       >
+                          <option value="all">ทั้งหมด</option>
+                          {issueTypes.map((type, index) => (
+                            <option 
+                              key={type.issue_type_id || type.id || index} 
+                              value={type.issue_type_name || type.name}
+                            >
+                              {type.issue_type_name || type.name || "ระบุไม่ได้"}
+                            </option>
+                          ))}
+                       </select>
+                    )}
+
+                    {/* --- Filter: สถานะ --- */}
+                    {label === "สถานะ" && (
+                       <select 
+                          value={selectedStatus}
+                          onChange={(e) => setSelectedStatus(e.target.value)}
+                       >
+                          <option value="all">ทั้งหมด</option>
+                          {statusOptions.length > 0 ? (
+                            statusOptions.map((status, index) => (
+                              <option key={index} value={status}>
+                                {status}
+                              </option>
+                            ))
+                          ) : (
+                            <option disabled>ไม่พบข้อมูลสถานะ</option>
+                          )}
+                       </select>
+                    )}
+                    
+                  </div>
+                ))}                
+              </div>
+              <button className={styles.filterApplyButton} onClick={() => setShowFilters(false)}>ตกลง</button>
+            </div>
+          </div>
+        </>
+      )}
+
     </div>
   );
 };
