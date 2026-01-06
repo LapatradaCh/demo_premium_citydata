@@ -269,19 +269,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 8px; /* ปรับช่องไฟให้สมดุล */
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px);
-  padding: 10px 16px;
+  padding: 10px 12px; /* ปรับ Padding ให้พอดี */
   border-radius: 32px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+  min-width: fit-content; /* ปรับตามขนาดปุ่มข้างใน */
 }
 
 /* Container สำหรับปุ่มแต่ละปุ่มใน Desktop */
 .bottomNavButtonContainer {
-  position: relative; /* สำคัญ: เพื่อให้ popup อ้างอิงกับปุ่มนี้ */
+  position: relative;
   display: block;
+  flex: 1; /* บังคับให้ขยายเท่าๆ กัน */
+  min-width: 120px; /* กำหนดขนาดขั้นต่ำเพื่อให้ขนาดปุ่มดูสมมาตร */
 }
 
 .bottomNav button {
@@ -291,19 +294,21 @@
   font-weight: 600;
   cursor: pointer;
   color: #555;
-  padding: 8px 12px;
+  padding: 10px 16px; /* เพิ่ม padding ด้านข้าง */
   border-radius: 20px;
   transition: all 0.25s ease;
-  display: inline-flex;
+  display: flex; /* เปลี่ยนเป็น flex เพื่อจัดกึ่งกลางง่ายขึ้น */
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  justify-content: center; /* จัดเนื้อหาในปุ่มให้อยู่ตรงกลางเป๊ะ */
+  gap: 8px;
+  width: 100%; /* ให้ปุ่มกว้างเท่ากับ Container */
 }
 
 .bottomNav button:not(.active):hover {
   background: #e9e9e9;
   color: #111;
-  transform: translateY(-3px) scale(1.03);
+  transform: translateY(-3px);
 }
 
 /* Active State Desktop */
@@ -319,7 +324,7 @@
 }
 
 .bottomNav button svg {
-  font-size: 34px;
+  font-size: 20px; /* ปรับขนาดไอคอนให้เหมาะสม */
 }
 
 .bottomNav button span {
@@ -433,7 +438,7 @@
   }
 
   /* ==================================================== */
-  /* --- Bottom Nav Mobile (สำคัญ! แก้เรื่องตำแหน่ง Popup) --- */
+  /* --- Bottom Nav Mobile --- */
   /* ==================================================== */
 
   .bottomNav {
@@ -442,45 +447,36 @@
     left: 0;
     right: 0;
     width: 100%;
-    
     box-sizing: border-box;
-    
     background: #ffffff;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 4px;
-    
     padding: 12px 10px 24px 10px;
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     z-index: 1000;
     transform: none;
+    min-width: auto;
   }
 
-  /* เพิ่มการจัดการ container เพื่อให้คลิกง่ายขึ้น */
   .bottomNavButtonContainer {
       width: 100%;
       display: flex;
       justify-content: center;
+      min-width: unset; /* ล้างค่า Desktop */
   }
 
-  /* --- ปุ่มทั่วไป (Inactive) --- */
   .bottomNav button {
-    /* สำคัญมาก: กำหนดให้ปุ่มเป็นจุดอ้างอิง (Relative) */
     position: relative !important; 
-    
-    /* สำคัญมาก: อนุญาตให้ Popup ลอยออกนอกกรอบปุ่ม */
     overflow: visible !important; 
-
     background: transparent !important;
     border: none;
     box-shadow: none !important;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
     height: 56px;
     width: 100%;
     border-radius: 16px;
@@ -489,29 +485,20 @@
     transition: all 0.2s ease;
   }
 
-  /* ไอคอนสีเทา */
   .bottomNav button svg {
     font-size: 22px;
     width: 22px;
     height: 22px;
     margin-bottom: 4px;
     color: #9CA3AF;
-    transition: all 0.2s ease;
   }
 
-  /* ตัวหนังสือสีเทา */
   .bottomNav button span {
     font-size: 10px;
     color: #9CA3AF;
     font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
   }
 
-  /* --- สถานะเลือก (Active) --- */
   .bottomNav button.active {
     background-color: #000000 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
@@ -528,19 +515,11 @@
     font-weight: 600;
   }
 
-  /* --- แก้ไขตำแหน่ง Popup ในมือถือ ให้ตรงกับปุ่ม --- */
   .subMenuPopup {
     position: absolute;
-    
-    /* อยู่เหนือปุ่ม 100% บวกระยะห่าง 8px */
     bottom: calc(100% + 8px);
-    
-    /* เริ่มต้นที่กึ่งกลางของปุ่ม */
     left: 50% !important;
-    
-    /* ย้อนกลับมา 50% ของความกว้างตัวเอง เพื่อให้กึ่งกลาง Popup ตรงกับกึ่งกลางปุ่มเป๊ะ */
     transform: translateX(-50%) !important;
-    
     min-width: 140px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.15);
     z-index: 1002;
@@ -551,12 +530,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    
-    /* ป้องกันข้อความยาวเกิน */
     white-space: nowrap;
   }
   
-  /* ลูกศรชี้ลง (อยู่ตรงกลาง Popup เสมอ) */
   .subMenuPopup::after {
     content: '';
     position: absolute;
@@ -568,38 +544,28 @@
     border-color: #ffffff transparent transparent transparent;
   }
 
-  /* ============================================================ */
-  /* --- 🔴 FIX: ป้องกันเมนูล้นจอ (แก้ไข Selector ให้ถูก Div) --- */
-  /* ============================================================ */
-
-  /* สำหรับปุ่มแรกสุด (เช่น เมนูแผนที่) ให้จัดชิดซ้าย ไม่ให้ล้นออกนอกจอ */
-  /* ใช้ > div:first-child เพราะ React Wrap ปุ่มด้วย Div */
   .bottomNav > div:first-child .subMenuPopup {
     left: 4px !important;
-    transform: none !important; /* ยกเลิกการจัดกึ่งกลาง */
-  }
-
-  /* เลื่อนลูกศรของปุ่มแรกให้ตรงกับไอคอน */
-  .bottomNav > div:first-child .subMenuPopup::after {
-    left: 28px; /* กะระยะให้ตรงกับไอคอน */
-    transform: none;
-  }
-
-  /* สำหรับปุ่มสุดท้าย (เช่น เมนูตั้งค่า) ให้จัดชิดขวา ไม่ให้ล้นจอฝั่งขวา */
-  .bottomNav > div:last-child .subMenuPopup {
-    left: auto !important;
-    right: 4px !important; /* ชิดขวา */
     transform: none !important;
   }
 
-  /* เลื่อนลูกศรของปุ่มสุดท้ายให้ตรงกับไอคอน */
+  .bottomNav > div:first-child .subMenuPopup::after {
+    left: 28px;
+    transform: none;
+  }
+
+  .bottomNav > div:last-child .subMenuPopup {
+    left: auto !important;
+    right: 4px !important;
+    transform: none !important;
+  }
+
   .bottomNav > div:last-child .subMenuPopup::after {
     left: auto;
     right: 28px;
     transform: none;
   }
 
-  /* Logout Mobile */
   .logoutIcon button {
     width: auto;
     gap: 4px;
