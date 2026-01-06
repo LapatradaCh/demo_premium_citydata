@@ -1,5 +1,4 @@
-/* --- css/ReportDetail.module.css (Full Responsive & Decorate Only) --- */
-
+/* --- css/ReportDetail.module.css --- */
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
@@ -13,7 +12,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* พื้นหลังหลักขาว */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -58,8 +57,9 @@
   font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
 }
 
+/* Description Box */
 .descriptionContainer {
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* ปรับจากเทาอ่อนเป็นขาว */
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -74,14 +74,16 @@
   font-size: 15px; color: #1F2937; line-height: 1.6; margin: 0; white-space: pre-line;
 }
 
+/* Status Badges */
 .statusBadge {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
   border: 1px solid #E5E7EB; margin-left: auto;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* เน้นขาวทั้งหมด */
 }
 
+/* คงสีตัวหนังสือไว้เพื่อให้แยกสถานะได้ แต่พื้นหลังเป็นขาว */
 .statusPending { color: #DC2626; border-color: #FECACA; }
 .statusCoordinating { color: #9333EA; border-color: #E9D5FF; }
 .statusProgress { color: #CA8A04; border-color: #FEF08A; }
@@ -90,6 +92,7 @@
 .statusReject { color: #374151; border-color: #D1D5DB; }
 .statusDefault { color: #4B5563; border-color: #E5E7EB; }
 
+/* --- Meta Info Boxes --- */
 .metaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -123,7 +126,7 @@
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; /* เปลี่ยนจากสีฟ้า/เหลืองเป็นขาว */
   border: 1px solid #F1F5F9;
 }
 
@@ -139,6 +142,7 @@
   display: flex; align-items: center; gap: 8px; padding-left: 4px;
 }
 
+/* Rating Stars */
 .starContainer {
   display: flex; align-items: center; gap: 2px;
   color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
@@ -154,6 +158,7 @@
   padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
 }
 
+/* --- Action Buttons --- */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
 
 .btnSecondary {
@@ -169,6 +174,7 @@
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
 }
 
+/* Image Card */
 .imageCard {
   background-color: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -192,6 +198,7 @@
 .internalMapBtn { background-color: #1F2937; color: #fff; }
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 
+/* --- AGENCY LIST --- */
 .agencyList {
   display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
 }
@@ -199,109 +206,62 @@
 .agencyItem {
   display: flex; align-items: center; gap: 16px;
   background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px;
-  padding: 12px 16px; transition: all 0.2s;
+  padding: 16px; transition: all 0.2s;
   position: relative; overflow: hidden;
 }
 
-.agencyItem::before { display: none; }
+/* ลบแถบสีฟ้าด้านข้างหน่วยงานออก */
+.agencyItem::before {
+  display: none;
+}
 
 .agencyIconBox {
-  width: 36px; height: 36px; border-radius: 10px;
-  background-color: #FFFFFF; color: #2563EB;
+  width: 40px; height: 40px; border-radius: 10px;
+  background-color: #FFFFFF; color: #2563EB; /* พื้นหลังขาว */
   border: 1px solid #F1F5F9;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
 .agencyName {
-  font-size: 14px; font-weight: 600; color: #1E293B; flex-grow: 1;
+  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
 }
 
 .agencyTag {
-  font-size: 10px; color: #94A3B8; background-color: #FFFFFF;
-  padding: 2px 8px; border-radius: 20px; border: 1px solid #F1F5F9;
+  font-size: 11px; color: #64748B; background-color: #FFFFFF;
+  padding: 2px 8px; border-radius: 20px; border: 1px solid #E2E8F0;
 }
 
 /* ========================================= */
-/* 4. TIMELINE (ปรับตามรูปที่ 2 - Minimal Style) */
+/* 4. TIMELINE (Keep simple) */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
-.timelineContainer { margin-top: 24px; padding-left: 8px; }
+.timelineContainer { margin-top: 20px; }
+.timelineRow { display: grid; grid-template-columns: 110px 40px 1fr; position: relative; }
 
-.timelineRow { 
-  display: grid; 
-  grid-template-columns: 120px 40px 1fr; 
-  position: relative; 
-  min-height: 70px;
+.timeLeft { text-align: right; padding-right: 15px; }
+.timeCenter { display: flex; flex-direction: column; align-items: center; }
+.line { width: 2px; background-color: #F1F5F9; flex-grow: 1; }
+.iconCircle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; color: #fff; }
+
+.timeRight { padding-left: 15px; padding-bottom: 30px; }
+
+/* ========================================= */
+/* 5. MODALS & FORMS */
+/* ========================================= */
+.modalOverlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
 }
 
-.timeLeft { 
-  text-align: right; 
-  padding-right: 20px; 
-  font-size: 13px; 
-  color: #9CA3AF; 
-  line-height: 1.6;
-}
-
-.timeCenter { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  position: relative;
-}
-
-/* เส้นแนวตั้ง - บางลงและสีจางลง */
-.line { 
-  width: 1px; 
-  background-color: #E5E7EB; 
-  flex-grow: 1; 
-  z-index: 1;
-}
-
-.timelineRow:last-child .line {
-  display: none;
-}
-
-/* ไอคอนสถานะ - นำ Border หนาออกเพื่อให้ดูคลีนเหมือนรูปที่ 2 */
-.iconCircle { 
-  width: 24px; 
-  height: 24px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  z-index: 2; 
-  color: #9CA3AF;
-  background-color: #FFFFFF; 
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-/* สถานะปัจจุบัน (แถวแรก) ใช้สีแดง */
-.timelineRow:first-child .iconCircle {
-  color: #EF4444;
-}
-
-/* สถานะก่อนหน้า ใช้สีเทาอ่อน */
-.timelineRow:not(:first-child) .iconCircle {
-  color: #9CA3AF;
-}
-
-.timeRight { 
-  padding-left: 15px; 
-  padding-bottom: 30px; 
-  font-size: 14px;
-  line-height: 1.5;
-  color: #4B5563;
-}
-
-.timeRight strong {
-  display: block;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 4px;
+.modalContent {
+  background-color: #FFFFFF; width: 90%; max-width: 420px;
+  border-radius: 16px; padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 /* ========================================= */
-/* 5. MEDIA GALLERY */
+/* 6. MEDIA GALLERY (จุดสำคัญที่ต้องการเปลี่ยน) */
 /* ========================================= */
 .mediaGrid {
   display: grid;
@@ -310,70 +270,48 @@
 }
 
 .mediaItem {
-  position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
-  border: 1px solid #E5E7EB; cursor: pointer; transition: transform 0.2s;
-  background-color: #FFFFFF;
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background-color: #FFFFFF; /* เปลี่ยนจากสีน้ำเงินในรูปเป็นขาว */
 }
 
-.mediaItem:hover { transform: scale(1.02); border-color: #CBD5E1; }
-.mediaImg { width: 100%; height: 100%; object-fit: cover; }
+.mediaItem:hover {
+  transform: scale(1.02);
+  border-color: #CBD5E1;
+}
 
+.mediaImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ปุ่มเพิ่มรูป (Dashed Box) */
 .addMediaBox {
-  aspect-ratio: 1; border: 2px dashed #CBD5E1; border-radius: 12px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; color: #64748B; background-color: #FFFFFF; transition: all 0.2s;
+  aspect-ratio: 1;
+  border: 2px dashed #CBD5E1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748B;
+  background-color: #FFFFFF; /* เปลี่ยนจากฟ้าอ่อนเป็นขาว */
+  transition: all 0.2s;
 }
 
-/* ========================================= */
-/* 6. RESPONSIVE BREAKPOINTS */
-/* ========================================= */
-
-@media (max-width: 1024px) {
-  .container { padding: 20px; }
-  .title { font-size: 24px; }
+.addMediaBox:hover {
+  border-color: #94A3B8;
+  background-color: #F8FAFC;
 }
 
 @media (max-width: 768px) {
-  .topSection, .middleSection {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .metaGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .imageCard {
-    min-height: 240px;
-  }
-
-  .actionRow {
-    flex-direction: column;
-  }
-
-  .mediaGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .card { padding: 16px; }
-
-  /* Timeline Mobile */
-  .timelineRow { grid-template-columns: 90px 35px 1fr; }
-  .timeLeft { font-size: 11px; padding-right: 12px; }
-}
-
-@media (max-width: 375px) {
-  .title { font-size: 20px; }
-  
-  .timelineRow {
-    grid-template-columns: 80px 30px 1fr;
-  }
-
-  .timeLeft { font-size: 10px; }
-  
-  .statusBadge {
-    padding: 4px 10px;
-    font-size: 12px;
-  }
+  .topSection, .middleSection { grid-template-columns: 1fr; }
+  .metaGrid { grid-template-columns: 1fr; }
 }
