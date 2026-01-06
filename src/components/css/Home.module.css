@@ -263,94 +263,98 @@
 /* --- Bottom Nav (Desktop Style) --- */
 .bottomNav {
   position: fixed;
-  bottom: 16px;
+  bottom: 24px; /* ขยับขึ้นจากขอบล่างนิดหน่อย */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px; /* เพิ่มระยะห่างระหว่างปุ่ม */
-  background: rgba(255, 255, 255, 0.96);
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(14px);
-  padding: 12px 20px; /* เพิ่ม Padding แถบเมนู */
-  border-radius: 50px; /* ทำให้ขอบมนสวยเหมือนในรูป */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 14px 24px; /* เพิ่มพื้นที่รอบเมนู */
+  border-radius: 50px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 }
 
-/* Container สำหรับปุ่มแต่ละปุ่มใน Desktop */
 .bottomNavButtonContainer {
   position: relative;
   display: block;
-  flex: none; /* ยกเลิกการขยายตัว (แก้ปัญหายืด) */
+  flex: none;
 }
 
 .bottomNav button {
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 15px; /* ปรับขนาดฟอนต์ให้ชัดขึ้น */
   font-weight: 700;
   cursor: pointer;
   color: #444;
-  padding: 12px 24px; /* ปรับ Padding ในปุ่มให้สมดุล */
-  border-radius: 25px;
-  transition: all 0.25s ease;
+  padding: 16px 28px; /* เพิ่ม Padding แนวตั้ง (16px) ให้เมนูดู "สูง" ขึ้น */
+  border-radius: 30px;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 10px;
   white-space: nowrap;
-  min-width: 130px; /* กำหนดความกว้างขั้นต่ำคงที่เพื่อให้ปุ่มเท่ากัน */
+  min-width: 140px; /* เพิ่มความกว้างขั้นต่ำเล็กน้อยให้ดูสมดุลกับความสูง */
 }
 
 .bottomNav button:not(.active):hover {
-  background: #f0f0f0;
-  color: #111;
-  transform: translateY(-2px);
+  background: #f2f2f2;
+  color: #000;
+  transform: translateY(-3px);
 }
 
 /* Active State Desktop */
 .bottomNav .active {
-  color: #fff !important;
-  background-color: #111 !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: #ffffff !important;
+  background-color: #111111 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
+/* แก้ไขไอคอนหาย: บังคับขนาดและแสดงผลเสมอ */
 .bottomNav button svg {
-  font-size: 20px;
+  display: inline-block !important;
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+  flex-shrink: 0;
 }
 
 /* --- Sub Menu Desktop --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 15px);
   left: 50%;
   transform: translateX(-50%);
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   z-index: 1001;
-  padding: 6px;
-  min-width: 160px;
-  border: 1px solid #eee;
+  padding: 8px;
+  min-width: 170px;
+  border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .subMenuItem {
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.2s ease;
   font-weight: 500;
 }
 
 .subMenuItem:hover {
-  background: #f4f4f4;
+  background: #f5f5f5;
 }
 
 .subMenuItem.active {
@@ -384,9 +388,9 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 4px;
-    padding: 12px 10px 24px 10px;
+    padding: 12px 10px 30px 10px; /* เพิ่มพื้นที่ล่างสำหรับมือถือ */
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     transform: none;
   }
@@ -407,43 +411,55 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 56px;
+    height: 65px; /* เพิ่มความสูงในโหมดมือถือ */
     width: 100%;
-    min-width: unset; /* ล้างค่า Desktop */
+    min-width: unset; 
     padding: 0;
     margin: 0;
   }
 
   .bottomNav button svg {
-    font-size: 22px;
-    margin-bottom: 4px;
+    font-size: 24px !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin-bottom: 6px;
     color: #9CA3AF;
   }
 
   .bottomNav button span {
-    font-size: 10px;
+    font-size: 11px;
     color: #9CA3AF;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .bottomNav button.active {
     background-color: #000000 !important;
     color: #fff !important;
+    border-radius: 18px;
   }
 
   .bottomNav button.active svg {
-    color: #ffffff;
+    color: #ffffff !important;
   }
 
   .bottomNav button.active span {
-    color: #ffffff;
+    color: #ffffff !important;
   }
 
-  /* ปรับแต่ง Popup มือถือ */
   .subMenuPopup {
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 10px);
     left: 50% !important;
     transform: translateX(-50%) !important;
-    min-width: 140px;
+    min-width: 150px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logoutIcon {
+    top: 15px;
+    right: 15px;
+  }
+  .title {
+    font-size: 1.5rem;
   }
 }
