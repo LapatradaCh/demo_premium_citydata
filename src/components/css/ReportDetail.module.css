@@ -1,4 +1,5 @@
-/* --- css/ReportDetail.module.css --- */
+/* --- css/ReportDetail.module.css (Full Version) --- */
+
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
 /* ========================================= */
@@ -12,7 +13,7 @@
   font-family: 'Sarabun', sans-serif;
   color: #374151;
   padding: 32px 24px;
-  background-color: #FFFFFF; /* พื้นหลังหลักขาว */
+  background-color: #FFFFFF;
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -57,9 +58,8 @@
   font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 12px 0; line-height: 1.3; 
 }
 
-/* Description Box */
 .descriptionContainer {
-  background-color: #FFFFFF; /* ปรับจากเทาอ่อนเป็นขาว */
+  background-color: #FFFFFF;
   padding: 16px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -74,16 +74,14 @@
   font-size: 15px; color: #1F2937; line-height: 1.6; margin: 0; white-space: pre-line;
 }
 
-/* Status Badges */
 .statusBadge {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px 16px; border-radius: 50px;
   font-size: 14px; font-weight: 700; width: fit-content;
   border: 1px solid #E5E7EB; margin-left: auto;
-  background-color: #FFFFFF; /* เน้นขาวทั้งหมด */
+  background-color: #FFFFFF;
 }
 
-/* คงสีตัวหนังสือไว้เพื่อให้แยกสถานะได้ แต่พื้นหลังเป็นขาว */
 .statusPending { color: #DC2626; border-color: #FECACA; }
 .statusCoordinating { color: #9333EA; border-color: #E9D5FF; }
 .statusProgress { color: #CA8A04; border-color: #FEF08A; }
@@ -92,7 +90,6 @@
 .statusReject { color: #374151; border-color: #D1D5DB; }
 .statusDefault { color: #4B5563; border-color: #E5E7EB; }
 
-/* --- Meta Info Boxes --- */
 .metaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -126,7 +123,7 @@
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background-color: #FFFFFF; /* เปลี่ยนจากสีฟ้า/เหลืองเป็นขาว */
+  background-color: #FFFFFF;
   border: 1px solid #F1F5F9;
 }
 
@@ -142,7 +139,6 @@
   display: flex; align-items: center; gap: 8px; padding-left: 4px;
 }
 
-/* Rating Stars */
 .starContainer {
   display: flex; align-items: center; gap: 2px;
   color: #E2E8F0; font-size: 18px; position: relative; line-height: 1;
@@ -158,7 +154,6 @@
   padding: 2px 8px; border-radius: 6px; font-weight: 800; border: 1px solid #FFEDD5;
 }
 
-/* --- Action Buttons --- */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
 
 .btnSecondary {
@@ -174,7 +169,6 @@
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
 }
 
-/* Image Card */
 .imageCard {
   background-color: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -198,7 +192,6 @@
 .internalMapBtn { background-color: #1F2937; color: #fff; }
 .googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
 
-/* --- AGENCY LIST --- */
 .agencyList {
   display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
 }
@@ -210,14 +203,11 @@
   position: relative; overflow: hidden;
 }
 
-/* ลบแถบสีฟ้าด้านข้างหน่วยงานออก */
-.agencyItem::before {
-  display: none;
-}
+.agencyItem::before { display: none; }
 
 .agencyIconBox {
   width: 40px; height: 40px; border-radius: 10px;
-  background-color: #FFFFFF; color: #2563EB; /* พื้นหลังขาว */
+  background-color: #FFFFFF; color: #2563EB;
   border: 1px solid #F1F5F9;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
@@ -232,7 +222,7 @@
 }
 
 /* ========================================= */
-/* 4. TIMELINE (Keep simple) */
+/* 4. TIMELINE */
 /* ========================================= */
 .bottomSection { min-height: 200px; }
 .timelineContainer { margin-top: 20px; }
@@ -246,22 +236,7 @@
 .timeRight { padding-left: 15px; padding-bottom: 30px; }
 
 /* ========================================= */
-/* 5. MODALS & FORMS */
-/* ========================================= */
-.modalOverlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-}
-
-.modalContent {
-  background-color: #FFFFFF; width: 90%; max-width: 420px;
-  border-radius: 16px; padding: 24px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-/* ========================================= */
-/* 6. MEDIA GALLERY (จุดสำคัญที่ต้องการเปลี่ยน) */
+/* 5. MEDIA GALLERY */
 /* ========================================= */
 .mediaGrid {
   display: grid;
@@ -270,48 +245,69 @@
 }
 
 .mediaItem {
-  position: relative;
-  aspect-ratio: 1;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #E5E7EB;
-  cursor: pointer;
-  transition: transform 0.2s;
-  background-color: #FFFFFF; /* เปลี่ยนจากสีน้ำเงินในรูปเป็นขาว */
+  position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+  border: 1px solid #E5E7EB; cursor: pointer; transition: transform 0.2s;
+  background-color: #FFFFFF;
 }
 
-.mediaItem:hover {
-  transform: scale(1.02);
-  border-color: #CBD5E1;
-}
+.mediaItem:hover { transform: scale(1.02); border-color: #CBD5E1; }
+.mediaImg { width: 100%; height: 100%; object-fit: cover; }
 
-.mediaImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ปุ่มเพิ่มรูป (Dashed Box) */
 .addMediaBox {
-  aspect-ratio: 1;
-  border: 2px dashed #CBD5E1;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #64748B;
-  background-color: #FFFFFF; /* เปลี่ยนจากฟ้าอ่อนเป็นขาว */
-  transition: all 0.2s;
+  aspect-ratio: 1; border: 2px dashed #CBD5E1; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; color: #64748B; background-color: #FFFFFF; transition: all 0.2s;
 }
 
-.addMediaBox:hover {
-  border-color: #94A3B8;
-  background-color: #F8FAFC;
+/* ========================================= */
+/* 6. RESPONSIVE BREAKPOINTS (เพิ่มเติม) */
+/* ========================================= */
+
+/* สำหรับ Tablet (เช่น iPad Air, iPad Pro) */
+@media (max-width: 1024px) {
+  .container { padding: 20px; }
+  .title { font-size: 24px; }
 }
 
+/* สำหรับ Mobile (เช่น iPhone XR, iPhone 12 Pro, Pixel 7) */
 @media (max-width: 768px) {
-  .topSection, .middleSection { grid-template-columns: 1fr; }
-  .metaGrid { grid-template-columns: 1fr; }
+  .topSection, .middleSection {
+    grid-template-columns: 1fr; /* เปลี่ยนเป็น 1 คอลัมน์ */
+    gap: 16px;
+  }
+
+  .metaGrid {
+    grid-template-columns: 1fr; /* Meta Box เรียงลงมา */
+  }
+
+  .imageCard {
+    min-height: 240px; /* ลดความสูงรูปหลักลงให้พอดีจอ */
+  }
+
+  .actionRow {
+    flex-direction: column; /* ปุ่มวางซ้อนกันเพื่อให้กดง่ายขึ้น */
+  }
+
+  .mediaGrid {
+    grid-template-columns: repeat(3, 1fr); /* บังคับ 3 รูปต่อแถวบนมือถือ */
+    gap: 8px;
+  }
+
+  .card { padding: 16px; } /* ลด padding ในการ์ดลง */
+}
+
+/* สำหรับ Small Mobile (เช่น iPhone SE) */
+@media (max-width: 375px) {
+  .title { font-size: 20px; }
+  
+  .timelineRow {
+    grid-template-columns: 80px 30px 1fr; /* ลดขนาดฝั่งเวลาเพื่อให้ข้อความไม่เบียด */
+  }
+
+  .timeLeft { font-size: 12px; }
+  
+  .statusBadge {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
 }
