@@ -269,73 +269,62 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px; /* ปรับช่องไฟให้สมดุล */
+  gap: 12px; /* เพิ่มระยะห่างระหว่างปุ่ม */
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px);
-  padding: 10px 12px; /* ปรับ Padding ให้พอดี */
-  border-radius: 32px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 12px 20px; /* เพิ่ม Padding แถบเมนู */
+  border-radius: 50px; /* ทำให้ขอบมนสวยเหมือนในรูป */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   z-index: 1000;
-  min-width: fit-content; /* ปรับตามขนาดปุ่มข้างใน */
 }
 
 /* Container สำหรับปุ่มแต่ละปุ่มใน Desktop */
 .bottomNavButtonContainer {
   position: relative;
   display: block;
-  flex: 1; /* บังคับให้ขยายเท่าๆ กัน */
-  min-width: 120px; /* กำหนดขนาดขั้นต่ำเพื่อให้ขนาดปุ่มดูสมมาตร */
+  flex: none; /* ยกเลิกการขยายตัว (แก้ปัญหายืด) */
 }
 
 .bottomNav button {
   background: none;
   border: none;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  color: #555;
-  padding: 10px 16px; /* เพิ่ม padding ด้านข้าง */
-  border-radius: 20px;
+  color: #444;
+  padding: 12px 24px; /* ปรับ Padding ในปุ่มให้สมดุล */
+  border-radius: 25px;
   transition: all 0.25s ease;
-  display: flex; /* เปลี่ยนเป็น flex เพื่อจัดกึ่งกลางง่ายขึ้น */
+  display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center; /* จัดเนื้อหาในปุ่มให้อยู่ตรงกลางเป๊ะ */
-  gap: 8px;
-  width: 100%; /* ให้ปุ่มกว้างเท่ากับ Container */
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+  min-width: 130px; /* กำหนดความกว้างขั้นต่ำคงที่เพื่อให้ปุ่มเท่ากัน */
 }
 
 .bottomNav button:not(.active):hover {
-  background: #e9e9e9;
+  background: #f0f0f0;
   color: #111;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 /* Active State Desktop */
 .bottomNav .active {
-  color: #fff;
-  font-weight: 700;
-  background-color: #111;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.bottomNav .active:hover {
-  transform: translateY(-2px);
+  color: #fff !important;
+  background-color: #111 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .bottomNav button svg {
-  font-size: 20px; /* ปรับขนาดไอคอนให้เหมาะสม */
-}
-
-.bottomNav button span {
-  font-size: 13px;
-  white-space: nowrap;
+  font-size: 20px;
 }
 
 /* --- Sub Menu Desktop --- */
 .subMenuPopup {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
   background: #ffffff;
@@ -375,7 +364,6 @@
 
 @media screen and (max-width: 768px) {
 
-  /* --- Layout Safety (แก้จอล้น) --- */
   .dashboardContent {
     width: 100%;
     max-width: 100vw;
@@ -384,62 +372,6 @@
     box-sizing: border-box;
     position: relative;
   }
-
-  .dashboardContent * {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* --- Header Mobile --- */
-  .logoSectionTop {
-    padding: 12px 16px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .logoImg {
-    width: 36px;
-    height: 36px;
-  }
-  .unitName {
-    font-size: 15px;
-  }
-
-  /* --- Inputs & Elements --- */
-  input, select, textarea, button {
-    width: 100%;
-  }
-  .searchContainer {
-    width: 100%;
-    padding: 0;
-  }
-  .searchInput {
-    width: 100%;
-    padding: 12px 90px 12px 18px;
-  }
-
-  /* --- Grid Mobile --- */
-  .agencyGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    width: 100%;
-    margin: 0;
-  }
-  .agencyItem {
-    width: 100%;
-    margin: 0;
-  }
-  .extraCards {
-    gap: 15px;
-    width: 100%;
-  }
-  .extraCard {
-    padding: 20px;
-    width: 100%;
-  }
-
-  /* ==================================================== */
-  /* --- Bottom Nav Mobile --- */
-  /* ==================================================== */
 
   .bottomNav {
     position: fixed;
@@ -457,14 +389,12 @@
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     z-index: 1000;
     transform: none;
-    min-width: auto;
   }
 
   .bottomNavButtonContainer {
       width: 100%;
       display: flex;
       justify-content: center;
-      min-width: unset; /* ล้างค่า Desktop */
   }
 
   .bottomNav button {
@@ -479,16 +409,13 @@
     justify-content: center;
     height: 56px;
     width: 100%;
-    border-radius: 16px;
+    min-width: unset; /* ล้างค่า Desktop */
     padding: 0;
     margin: 0;
-    transition: all 0.2s ease;
   }
 
   .bottomNav button svg {
     font-size: 22px;
-    width: 22px;
-    height: 22px;
     margin-bottom: 4px;
     color: #9CA3AF;
   }
@@ -501,85 +428,22 @@
 
   .bottomNav button.active {
     background-color: #000000 !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
-    transform: none !important;
+    color: #fff !important;
   }
 
   .bottomNav button.active svg {
     color: #ffffff;
-    transform: scale(1.05);
   }
 
   .bottomNav button.active span {
     color: #ffffff;
-    font-weight: 600;
   }
 
+  /* ปรับแต่ง Popup มือถือ */
   .subMenuPopup {
-    position: absolute;
     bottom: calc(100% + 8px);
     left: 50% !important;
     transform: translateX(-50%) !important;
     min-width: 140px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-    z-index: 1002;
-    background: #fff;
-    border-radius: 12px;
-    padding: 6px;
-    border: 1px solid #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    white-space: nowrap;
-  }
-  
-  .subMenuPopup::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px 6px 0;
-    border-style: solid;
-    border-color: #ffffff transparent transparent transparent;
-  }
-
-  .bottomNav > div:first-child .subMenuPopup {
-    left: 4px !important;
-    transform: none !important;
-  }
-
-  .bottomNav > div:first-child .subMenuPopup::after {
-    left: 28px;
-    transform: none;
-  }
-
-  .bottomNav > div:last-child .subMenuPopup {
-    left: auto !important;
-    right: 4px !important;
-    transform: none !important;
-  }
-
-  .bottomNav > div:last-child .subMenuPopup::after {
-    left: auto;
-    right: 28px;
-    transform: none;
-  }
-
-  .logoutIcon button {
-    width: auto;
-    gap: 4px;
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .logoutIcon {
-    top: 15px;
-    right: 15px;
-  }
-  .title {
-    font-size: 1.5rem;
   }
 }
