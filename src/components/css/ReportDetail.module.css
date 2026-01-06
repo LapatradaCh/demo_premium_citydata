@@ -1,4 +1,4 @@
-/* --- css/ReportDetail.module.css (Full Responsive & Fixed Timeline) --- */
+/* --- css/ReportDetail.module.css (Full Responsive & Clean Original Style) --- */
 
 /* ========================================= */
 /* 1. CONTAINER & GLOBAL LAYOUT */
@@ -29,12 +29,6 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 12px 24px rgba(0,0,0,0.08);
-  border-color: #CBD5E1;
 }
 
 /* Grid Layout */
@@ -90,7 +84,7 @@
 .statusForward { color: #2563EB; border-color: #BFDBFE; }
 .statusReject { color: #374151; border-color: #D1D5DB; }
 
-/* Meta Info */
+/* Meta Info Boxes */
 .metaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -106,8 +100,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .iconWrapper {
@@ -118,20 +110,17 @@
   border: 1px solid #F1F5F9;
 }
 
-.metaValue {
-  font-size: 16px; color: #0F172A; font-weight: 700;
-  display: flex; align-items: center; gap: 8px;
-}
-
-/* Action Buttons */
+/* --- Action Buttons --- */
 .actionRow { display: flex; gap: 12px; margin-top: auto; }
-.btnPrimary {
-  background: #0F172A; color: #FFFFFF;
+
+.btnSecondary {
+  background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
 }
-.btnSecondary {
-  background: #FFFFFF; border: 1px solid #E2E8F0; color: #475569;
+
+.btnPrimary {
+  background: #0F172A; border: 1px solid #0F172A; color: #FFFFFF;
   padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;
 }
@@ -147,113 +136,133 @@
 .realImage { width: 100%; height: 100%; object-fit: cover; }
 
 /* ========================================= */
-/* 4. TIMELINE (แก้ไขจุดทับกัน & จัดระเบียบใหม่) */
+/* 3. MIDDLE SECTION (LOCATION & AGENCY) */
 /* ========================================= */
-.timelineContainer { 
-  display: flex;
-  flex-direction: column;
-  padding-top: 16px;
+.sectionHeader { 
+  font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 12px; 
+  display: flex; align-items: center; gap: 8px; 
+}
+.locationText { font-size: 15px; color: #4B5563; line-height: 1.5; margin: 0; }
+
+.buttonGroup { display: flex; gap: 10px; margin-top: 16px; }
+.actionButton { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;}
+.internalMapBtn { background-color: #1F2937; color: #fff; }
+.googleMapBtn { background-color: #fff; border: 1px solid #D1D5DB; color: #374151; }
+
+.agencyList {
+  display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 0; list-style: none;
 }
 
+.agencyItem {
+  display: flex; align-items: center; gap: 16px;
+  background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px;
+  padding: 16px;
+}
+
+.agencyName {
+  font-size: 15px; font-weight: 600; color: #1E293B; flex-grow: 1;
+}
+
+/* ========================================= */
+/* 4. TIMELINE (ยึดตามรูปแบบเดิมในรูปภาพ) */
+/* ========================================= */
+.bottomSection { min-height: 200px; }
+.timelineContainer { margin-top: 20px; }
+
+/* จัดการ Grid ให้เป๊ะเพื่อให้เส้นและนาฬิกาตรงกันเสมอ */
 .timelineRow { 
-  display: flex; 
-  gap: 0;
-  position: relative;
-  min-height: 90px;
+  display: grid; 
+  grid-template-columns: 110px 40px 1fr; 
+  position: relative; 
 }
 
-/* ฝั่งซ้าย: วันเวลา (ล็อกความกว้างป้องกันทับ) */
 .timeLeft { 
-  width: 100px;
-  min-width: 100px;
   text-align: right; 
-  padding-right: 20px; 
-  font-size: 13px; 
-  color: #64748B; 
-  line-height: 1.4;
-  font-weight: 600;
-  padding-top: 5px;
+  padding-right: 15px; 
+  font-size: 14px; 
+  color: #374151; 
+  line-height: 1.6;
 }
 
-/* ฝั่งกลาง: เส้นแนวตั้งและจุด */
+/* ส่วนกลาง: เส้นนาฬิกา */
 .timeCenter { 
   display: flex; 
   flex-direction: column; 
-  align-items: center;
+  align-items: center; 
   position: relative;
-  width: 32px; /* ล็อกความกว้างช่อง Icon */
 }
 
+/* เส้นแนวตั้ง */
 .line { 
   width: 2px; 
-  background-color: #E2E8F0; 
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  background-color: #F1F5F9; 
+  flex-grow: 1; 
   z-index: 1;
 }
 
-/* จุดวงกลมสถานะ */
+/* ไอคอนนาฬิกา (ปรับให้ซ้อนทับเส้นพอดี) */
 .iconCircle { 
-  width: 26px; 
-  height: 26px; 
+  width: 32px; 
+  height: 32px; 
   border-radius: 50%; 
-  background-color: #FFFFFF; 
-  border: 2px solid #CBD5E1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2; /* ให้อยู่เหนือเส้นเสมอ */
-  position: relative;
-  margin-top: 2px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 2; 
   color: #64748B;
-  box-sizing: border-box;
+  background-color: #FFFFFF; /* พื้นหลังขาวเพื่อบังเส้นด้านหลัง */
+  border: 1.5px solid #F1F5F9;
+  margin-top: 0; /* ปรับให้ตรงแนวบรรทัดแรก */
 }
 
-/* Highlight สำหรับรายการล่าสุด */
+/* สถานะปัจจุบัน (สีแดงตามรูป) */
 .timelineRow:first-child .iconCircle {
-  background-color: #EFF6FF;
-  border-color: #3B82F6;
-  color: #3B82F6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  color: #DC2626;
+  border-color: #FECACA;
 }
 
-/* ฝั่งขวา: รายละเอียดเนื้อหา */
 .timeRight { 
-  flex: 1;
-  padding-left: 20px; 
-  padding-bottom: 30px; 
-}
-
-.statusTitle {
+  padding-left: 15px; 
+  padding-bottom: 40px; /* เพิ่มช่องว่างระหว่างรายการให้อ่านง่ายขึ้น */
   font-size: 15px;
-  font-weight: 700;
-  color: #1E293B;
-  margin-bottom: 4px;
-  display: block;
-}
-
-.statusBy {
-  font-size: 13px;
-  color: #94A3B8;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.statusDetail {
-  font-size: 14px;
-  color: #475569;
   line-height: 1.6;
-  background-color: #F8FAFC;
-  padding: 12px 16px;
-  border-radius: 0 12px 12px 12px;
-  border: 1px solid #F1F5F9;
+  color: #374151;
+}
+
+/* เน้นหัวข้อตัวหนาแบบในรูป */
+.timeRight strong {
+  display: block;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
 }
 
 /* ========================================= */
-/* 6. RESPONSIVE BREAKPOINTS */
+/* 5. MEDIA GALLERY */
+/* ========================================= */
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 16px;
+}
+
+.mediaItem {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  background-color: #FFFFFF;
+}
+
+.mediaImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ========================================= */
+/* 6. RESPONSIVE DESIGN */
 /* ========================================= */
 
 @media (max-width: 768px) {
@@ -261,40 +270,13 @@
   .metaGrid { grid-template-columns: 1fr; }
   .actionRow { flex-direction: column; }
   
-  .imageCard { min-height: 250px; }
-  
-  /* Timeline Mobile */
-  .timeLeft {
-    width: 80px;
-    min-width: 80px;
-    padding-right: 12px;
-    font-size: 12px;
-  }
+  /* ปรับ Timeline บนมือถือ */
+  .timelineRow { grid-template-columns: 90px 40px 1fr; }
+  .timeLeft { font-size: 12px; }
+  .timeRight { font-size: 14px; }
 }
 
 @media (max-width: 480px) {
-  /* ปรับ Timeline ให้เป็นแนวตั้งบนมือถือเล็กมาก */
-  .timelineRow {
-    flex-direction: column;
-    padding-left: 35px;
-    min-height: auto;
-  }
-  
-  .timeLeft {
-    width: auto;
-    min-width: auto;
-    text-align: left;
-    padding: 0 0 8px 0;
-  }
-  
-  .timeCenter {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-  }
-
-  .timeRight {
-    padding-left: 10px;
-  }
+  .timelineRow { grid-template-columns: 75px 35px 1fr; }
+  .iconCircle { width: 28px; height: 28px; font-size: 12px; }
 }
