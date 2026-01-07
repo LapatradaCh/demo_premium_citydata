@@ -92,6 +92,7 @@ const Login = () => {
       if (!idToken) throw new Error("Could not get ID Token from LIFF.");
 
       const decodedToken = jwtDecode(idToken);
+      console.log(decodedToken);
       const userEmail = decodedToken.email;
 
       if (!userEmail) {
