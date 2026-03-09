@@ -80,7 +80,6 @@ const QuickCreatePage = ({
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
-  const [orgImage, setOrgImage] = useState(null);
   const [orgImagePreview, setOrgImagePreview] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
