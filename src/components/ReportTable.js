@@ -13,7 +13,6 @@ const truncateText = (text, maxLength) => {
   }
   return text.substring(0, maxLength) + "...";
 };
-
 // ------------------------- Date Filter
 const DateFilter = () => {
   const [show, setShow] = useState(false);
