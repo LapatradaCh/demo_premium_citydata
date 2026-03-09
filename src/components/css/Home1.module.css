@@ -348,7 +348,7 @@
   box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
 }
 /* ============================================ */
-/* --- 6. Bottom Nav (Modern Floating & Glass) --- */
+/* --- 6. Bottom Nav (ทรง Capsule & Elevated) --- */
 /* ============================================ */
 
 .bottomNav {
@@ -359,20 +359,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.9); /* Glassmorphism */
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  padding: 10px 16px;
-  border-radius: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  gap: 12px;
+  background: #ffffff; /* สีขาวนวลตามรูป */
+  padding: 12px 24px;
+  border-radius: 100px; /* ขอบนอกโค้ดมนแบบ Capsule */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ นุ่มๆ */
   z-index: 1000;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .bottomNavButtonContainer {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bottomNav button {
@@ -381,37 +381,126 @@
   font-size: 14px; 
   font-weight: 600;
   cursor: pointer;
-  color: #555;
-  padding: 10px 20px;
-  border-radius: 30px;
+  color: #444;
+  padding: 10px 24px;
+  border-radius: 100px; /* ปุ่มข้างในเป็นทรง Capsule */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   white-space: nowrap;
 }
 
-/* Hover Effect สำหรับ Desktop */
+/* Hover Effect สำหรับปุ่มที่ไม่ได้กด */
 .bottomNav button:not(.active):hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   color: #000;
-  transform: translateY(-3px);
 }
 
-/* Active State (สีดำแบบที่คุณชอบ) */
+/* --- 🟢 ส่วนที่เหมือนในรูปที่สุด: Active State --- */
 .bottomNav .active {
   color: #ffffff !important;
-  background-color: #000000 !important;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  background-color: #111111 !important; /* สีดำเข้ม */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* เงาใต้ปุ่มที่ถูกเลือก */
+  transform: translateY(-2px); /* ยกตัวขึ้นเล็กน้อย */
 }
 
 .bottomNav button svg {
   font-size: 20px !important;
   width: 20px !important;
   height: 20px !important;
+  flex-shrink: 0;
 }
 
+/* --- Sub Menu Popup (ปรับให้มนเข้ากับดีไซน์ใหม่) --- */
+.subMenuPopup {
+  position: absolute;
+  bottom: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  padding: 10px;
+  min-width: 170px;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.subMenuItem {
+  padding: 12px 18px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  text-align: center;
+}
+
+.subMenuItem:hover {
+  background: #f8f9fa;
+  color: #000;
+}
+
+.subMenuItem.active {
+  background: #000;
+  color: #fff;
+}
+
+/* ============================================ */
+/* --- 7. Media Queries (Mobile Optimized) --- */
+/* ============================================ */
+
+@media screen and (max-width: 768px) {
+  .bottomNav {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    border-radius: 30px 30px 0 0; /* มนเฉพาะขอบบน */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 15px 10px 30px 10px;
+    gap: 5px;
+    background: #ffffff;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .bottomNavButtonContainer {
+    width: 100%;
+  }
+
+  .bottomNav button {
+    flex-direction: column;
+    padding: 10px 0;
+    height: auto;
+    width: 100%;
+    min-width: unset;
+    border-radius: 20px;
+    gap: 6px;
+  }
+
+  .bottomNav button svg {
+    font-size: 22px !important;
+    margin-bottom: 0;
+  }
+
+  .bottomNav button span {
+    font-size: 11px;
+  }
+
+  .bottomNav button.active {
+    background: #000 !important;
+    transform: translateY(-5px); /* ยกตัวขึ้นเด่นๆ ในมือถือ */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+}
 /* --- Sub Menu Popup (Desktop & Mobile กึ่งกลาง) --- */
 .subMenuPopup {
   position: absolute;
