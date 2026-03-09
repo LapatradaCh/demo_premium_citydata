@@ -11,7 +11,6 @@ import L from "leaflet";
 
 // 3. Import leaflet.heat
 import "leaflet.heat";
-
 import {
   FaSearch,
   FaFilter,
