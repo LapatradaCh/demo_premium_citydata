@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './css/Home1.module.css'; // ตรวจสอบ path CSS
+import styles from './css/Home1.module.css'; // ตรวจสอบ path CSS ให้ถูกต้อง
 
 // Import Icons for Content (Search & Cards)
 import { Search, X, Key, LogIn, Building2 } from 'lucide-react';
 
-// Import Icons for Bottom Menu & Logout (จาก React Icons เหมือน Home.js)
+// Import Icons for Bottom Menu & Logout
 import {
   FaMapMarkedAlt,
   FaClipboardList,
@@ -23,8 +23,8 @@ const Home1 = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- State สำหรับ Bottom Menu (เหมือน Home.js) ---
-  const [activeTab, setActiveTab] = useState("หน่วยงาน"); // Default เป็นหน่วยงาน
+  // --- State สำหรับ Bottom Menu ---
+  const [activeTab, setActiveTab] = useState("หน่วยงาน");
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [activeSubTabs, setActiveSubTabs] = useState({
     แผนที่: "แผนที่สาธารณะ",
@@ -33,7 +33,7 @@ const Home1 = () => {
     ผลลัพธ์: "แก้ปัญหาสูงสุด",
   });
 
-  // --- Menu Configuration (เหมือน Home.js) ---
+  // --- Menu Configuration ---
   const menuItems = [
     { 
       name: "แผนที่", 
@@ -44,8 +44,11 @@ const Home1 = () => {
       name: "หน่วยงาน", 
       icon: FaBuilding, 
       items: null, 
-      // ถ้ากดหน่วยงานในหน้านี้ (Home1) ก็แค่อยู่หน้านี้ต่อ
-      action: () => { setActiveTab("หน่วยงาน"); navigate("/home1"); }
+      action: () => { 
+        setActiveTab("หน่วยงาน"); 
+        setOpenSubMenu(null);
+        // อยู่หน้าเดิมไม่ต้อง navigate
+      }
     },
     { 
       name: "รายการแจ้ง", 
@@ -64,7 +67,7 @@ const Home1 = () => {
     },
   ];
 
-  // (useEffect fetchAgencies และ logAgencyEntry คงเดิม...)
+  // Fetch ข้อมูลหน่วยงาน
   useEffect(() => {
     const fetchAgencies = async () => {
       setIsLoading(true);
@@ -72,8 +75,7 @@ const Home1 = () => {
       try {
         const userId = localStorage.getItem('user_id'); 
         const accessToken = localStorage.getItem('accessToken');
-        if (!userId) throw new Error('ไม่พบข้อมูลผู้ใช้');
-        if (!accessToken) throw new Error('ไม่พบ Access Token');
+        if (!userId || !accessToken) throw new Error('ไม่พบข้อมูลการเข้าระบบ');
         
         const apiUrl = `https://premium-citydata-api-ab.vercel.app/api/users_organizations?user_id=${userId}`;
         const response = await fetch(apiUrl, {
@@ -103,13 +105,7 @@ const Home1 = () => {
     fetchAgencies(); 
   }, []);
 
-  const logAgencyEntry = async (agency) => {
-    // ... (Code เดิม) ...
-    // เพื่อความกระชับ ขอละไว้ (ใช้ Logic เดิมได้เลย)
-  };
-
   const handleLogout = async () => {
-    // ... (Code Logout เดิม) ...
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("user_id"); 
     try {
@@ -147,22 +143,20 @@ const Home1 = () => {
   const handleAgencyClick = (agency) => {
     localStorage.setItem('selectedOrg', JSON.stringify(agency));
     localStorage.setItem('lastSelectedOrg', JSON.stringify(agency));
-    // logAgencyEntry(agency); // Uncomment if needed
     navigate('/home'); 
   };
 
-  // --- Handlers สำหรับ Menu (เหมือน Home.js) ---
+  // --- Handlers สำหรับ Menu (Logic เหมือน Home.js) ---
   const handleTabClick = (item) => {
     if (item.action) {
       item.action(); 
-      setActiveTab(item.name);
-      setOpenSubMenu(null);
     } else if (item.items) {
-      setActiveTab(item.name);
+      // สลับการเปิด/ปิด Sub-menu
       setOpenSubMenu(openSubMenu === item.name ? null : item.name);
     } else {
-      // กรณีอื่นๆ อาจจะให้ navigate ไป home พร้อม state
       setActiveTab(item.name);
+      setOpenSubMenu(null);
+      // ไปหน้า Home พร้อมส่ง state ว่าจะเปิด Tab ไหน
       navigate("/home", { state: { initialTab: item.name } });
     }
   };
@@ -183,11 +177,11 @@ const Home1 = () => {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.appBody}>
         {/* ปุ่ม Logout */}
         <div className={styles.logoutIcon}>
-          <button onClick={handleLogout}>
+          <button onClick={handleLogout} className={styles.logoutButton}>
             <FaSignOutAlt /> 
             <span>ออกจากระบบ</span>
           </button>
@@ -270,38 +264,47 @@ const Home1 = () => {
         </div>
       </div>
 
-      {/* ===== แถบเมนูด้านล่าง (Copy จาก Home.js) ===== */}
+      {/* ===== แถบเมนูด้านล่าง (ปรับให้เหมือน Home.js 100%) ===== */}
       <div className={styles.bottomNav}>
-        {menuItems.map((item) => (
-          <div key={item.name} className={styles.bottomNavButtonContainer}>
-            {item.items && openSubMenu === item.name && (
-              <div className={styles.subMenuPopup}>
-                {item.items.map((subItem) => (
-                  <div
-                    key={subItem}
-                    className={`${styles.subMenuItem} ${
-                      activeSubTabs[item.name] === subItem ? styles.active : ""
-                    }`}
-                    onClick={() =>
-                      handleSubMenuItemClick(item.name, subItem)
-                    }
-                  >
-                    {subItem}
-                  </div>
-                ))}
-              </div>
-            )}
-            <button
-              className={activeTab === item.name ? styles.active : ""}
-              onClick={() => handleTabClick(item)}
-            >
-              <item.icon />
-              <span>{item.name}</span>
-            </button>
-          </div>
-        ))}
+        {menuItems.map((item) => {
+          const isMainActive = activeTab === item.name;
+          const isSubMenuOpen = openSubMenu === item.name;
+
+          return (
+            <div key={item.name} className={styles.bottomNavButtonContainer}>
+              {/* Sub-menu Popup */}
+              {item.items && isSubMenuOpen && (
+                <div className={styles.subMenuPopup}>
+                  {item.items.map((subItem) => (
+                    <div
+                      key={subItem}
+                      className={`${styles.subMenuItem} ${
+                        activeSubTabs[item.name] === subItem ? styles.active : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleSubMenuItemClick(item.name, subItem);
+                      }}
+                    >
+                      {subItem}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ปุ่มเมนูหลัก */}
+              <button
+                className={isMainActive || isSubMenuOpen ? styles.active : ""}
+                onClick={() => handleTabClick(item)}
+              >
+                <item.icon />
+                <span>{item.name}</span>
+              </button>
+            </div>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 };
 
