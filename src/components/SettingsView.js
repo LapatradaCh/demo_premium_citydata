@@ -12,7 +12,6 @@ import {
 const API_BASE_URL = "https://premium-citydata-api-ab.vercel.app/api/organizations";
 const API_ORG_TYPES_URL = "https://premium-citydata-api-ab.vercel.app/api/organization-types";
 
-
 // ------------------------------------------------------------------
 // --- Helper Components ---
 // ------------------------------------------------------------------
