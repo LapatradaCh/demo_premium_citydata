@@ -348,69 +348,117 @@
   box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
 }
 /* ============================================ */
-/* --- 6. Bottom Nav (ทรง Capsule & Elevated) --- */
+/* --- 6. Bottom Nav (Ultra-Realistic Elevated) --- */
 /* ============================================ */
 
 .bottomNav {
   position: fixed;
-  bottom: 24px;
+  bottom: 30px; /* ระยะห่างจากขอบล่างตามรูป */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  background: #ffffff; /* สีขาวนวลตามรูป */
-  padding: 12px 24px;
-  border-radius: 100px; /* ขอบนอกโค้ดมนแบบ Capsule */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* เงาฟุ้งๆ นุ่มๆ */
+  gap: 10px; /* ระยะห่างระหว่างปุ่มตามรูป */
+  background: #ffffff;
+  padding: 12px 16px; /* Padding ด้านในเพื่อให้ปุ่มมีพื้นที่หายใจ */
+  border-radius: 40px; /* ทรง Capsule มนๆ */
+  
+  /* เงาแบบซ้อนชั้นเพื่อให้เหมือนรูปเป๊ะ */
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.05), 
+    0 4px 10px rgba(0, 0, 0, 0.05); 
+    
   z-index: 1000;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.02); /* เส้นขอบบางจางๆ */
 }
 
 .bottomNavButtonContainer {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .bottomNav button {
-  background: none;
+  background: #ffffff;
   border: none;
   font-size: 14px; 
   font-weight: 600;
   cursor: pointer;
-  color: #444;
-  padding: 10px 24px;
-  border-radius: 100px; /* ปุ่มข้างในเป็นทรง Capsule */
+  color: #333333; /* สีตัวหนังสือตามรูป */
+  padding: 10px 18px;
+  border-radius: 20px; /* มนแบบนุ่มนวลตามรูป */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   white-space: nowrap;
+  
+  /* เงาปุ่มปกติจางๆ */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
-/* Hover Effect สำหรับปุ่มที่ไม่ได้กด */
-.bottomNav button:not(.active):hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: #000;
-}
-
-/* --- 🟢 ส่วนที่เหมือนในรูปที่สุด: Active State --- */
+/* --- 🟢 ส่วนที่เหมือนรูปที่สุด: ปุ่มที่ถูกเลือก (Active) --- */
 .bottomNav .active {
   color: #ffffff !important;
-  background-color: #111111 !important; /* สีดำเข้ม */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* เงาใต้ปุ่มที่ถูกเลือก */
-  transform: translateY(-2px); /* ยกตัวขึ้นเล็กน้อย */
+  background-color: #111111 !important; /* สีดำสนิท */
+  
+  /* เงาปุ่ม Active ที่ดูนูนและชัดกว่าปกติ */
+  box-shadow: 
+    0 8px 15px rgba(0, 0, 0, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+    
+  transform: translateY(0); /* ในรูปปุ่มจะวางแนวเดียวกับบาร์ */
+  border-radius: 20px;
 }
 
 .bottomNav button svg {
-  font-size: 20px !important;
-  width: 20px !important;
-  height: 20px !important;
-  flex-shrink: 0;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: inherit; /* ให้ไอคอนสีตามตัวหนังสือ */
+}
+
+/* ============================================ */
+/* --- 7. Media Queries (Mobile Optimized) --- */
+/* ============================================ */
+
+@media screen and (max-width: 768px) {
+  .bottomNav {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    border-radius: 30px 30px 0 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 15px 10px 30px 10px;
+    gap: 5px;
+    background: #ffffff;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .bottomNav button {
+    flex-direction: column;
+    padding: 10px 0;
+    height: auto;
+    width: 100%;
+    box-shadow: none; /* มือถือเน้นแบนเพื่อให้ดูคลีน */
+    background: transparent;
+  }
+
+  .bottomNav button.active {
+    background: #111111 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+  }
+
+  .bottomNav button span {
+    font-size: 10px;
+    margin-top: 4px;
+  }
 }
 
 /* --- Sub Menu Popup (ปรับให้มนเข้ากับดีไซน์ใหม่) --- */
