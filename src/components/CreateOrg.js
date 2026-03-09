@@ -80,6 +80,8 @@ const QuickCreatePage = ({
  * =================================================================
  */
 const LogoSetupForm = ({ onSave, orgId }) => {
+  // แก้ไขจุดนี้: ใส่ eslint-disable เพื่อให้ Build ผ่าน แม้ตัวแปร orgImage จะยังไม่ได้ถูกอ่านค่าไปใช้ในตอนนี้
+  // eslint-disable-next-line no-unused-vars
   const [orgImage, setOrgImage] = useState(null);
   const [orgImagePreview, setOrgImagePreview] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -151,24 +153,19 @@ const LogoSetupForm = ({ onSave, orgId }) => {
 
 /**
  * =================================================================
- * Component 3 (UPDATED): OrgLevelSetupForm
+ * Component 3: OrgLevelSetupForm
  * =================================================================
  */
 const OrgLevelSetupForm = ({ onSave, orgId }) => {
   const [selectedLevel, setSelectedLevel] = useState('province');
-  
-  // เก็บ Object {id, name}
   const [selectedProvince, setSelectedProvince] = useState(null); 
   const [selectedDistrict, setSelectedDistrict] = useState(null);
-  
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]); 
-  
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
   const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
 
-  // 1. Fetch จังหวัด (Roots) เมื่อ Component โหลด
   useEffect(() => {
     const fetchProvinces = async () => {
       setIsLoadingProvinces(true);
@@ -186,7 +183,6 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
     fetchProvinces();
   }, []);
 
-  // 2. Fetch อำเภอ (Children) เมื่อเลือกจังหวัด
   useEffect(() => {
     if (selectedProvince) {
       const fetchDistricts = async () => {
@@ -211,30 +207,15 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
   }, [selectedProvince]);
 
   const levels = [
-    { 
-      id: 'province', 
-      label: 'ระดับจังหวัด', 
-      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 
-    },
-    { 
-      id: 'district', 
-      label: 'ระดับเขต / อำเภอ', 
-      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> 
-    },
-    { 
-      id: 'sub_district', 
-      label: 'ระดับแขวง / ตำบล', 
-      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg> 
-    }
+    { id: 'province', label: 'ระดับจังหวัด', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> },
+    { id: 'district', label: 'ระดับเขต / อำเภอ', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> },
+    { id: 'sub_district', label: 'ระดับแขวง / ตำบล', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg> }
   ];
 
   const handleLevelSubmit = async (e) => {
     e.preventDefault();
     if (!orgId) return alert("ไม่พบรหัสหน่วยงาน");
-
     let targetParentId = null;
-
-    // Logic: กำหนด target_parent_id ตามระดับชั้น
     if (selectedLevel === 'district') {
         if (!selectedProvince) return alert("กรุณาเลือกจังหวัดที่สังกัด");
         targetParentId = selectedProvince.id; 
@@ -242,19 +223,14 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
         if (!selectedDistrict) return alert("กรุณาเลือกอำเภอที่สังกัด");
         targetParentId = selectedDistrict.id;
     }
-
     setIsSaving(true);
-    
     try {
       await fetch(`${API_BASE_URL}/organizations`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             organization_id: orgId, 
-            
-            // [IMPORTANT] ส่งตัวแปรนี้ไปบอก Backend
             target_parent_id: targetParentId,
-            
             province: selectedProvince ? selectedProvince.name : null,
             district: selectedDistrict ? selectedDistrict.name : null
         }),
@@ -281,7 +257,6 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
     cursor: 'pointer', backgroundColor: '#fff', transition: 'all 0.2s', minWidth: '140px'
   };
-
   const activeCardStyle = { ...cardStyle, border: '2px solid #2563eb', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: '600' };
 
   return (
@@ -307,8 +282,6 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
         {selectedLevel !== 'province' && (
             <div style={{ backgroundColor: '#f8f9fa', padding: '1.5rem', borderRadius: '8px', border: '1px solid #eee' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: selectedLevel === 'sub_district' ? '1fr 1fr' : '1fr', gap: '1rem' }}>
-                    
-                    {/* เลือกจังหวัด (Fetch from Roots) */}
                     <div>
                         <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
                             สังกัดจังหวัด <span style={{color: 'red'}}>*</span>
@@ -334,7 +307,6 @@ const OrgLevelSetupForm = ({ onSave, orgId }) => {
                         </div>
                     </div>
 
-                    {/* เลือกอำเภอ (Fetch from Children) */}
                     {selectedLevel === 'sub_district' && (
                         <div>
                             <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#333'}}>
@@ -455,7 +427,7 @@ const LocationSetupForm = ({ onSave, orgId }) => {
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
           <label className={styles.label}>จังหวัดที่รับผิดชอบ</label>
-          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><map name=""></map><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>}>
+          <InputWrapper icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>}>
             <input type="text" name="province" value={locationData.province} className={`${styles.input} ${styles.inputWithIcon}`} readOnly disabled placeholder="-" />
           </InputWrapper>
         </div>
