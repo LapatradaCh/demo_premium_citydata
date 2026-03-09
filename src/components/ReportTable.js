@@ -62,7 +62,6 @@ const DateFilter = () => {
 const ReportTable = ({ subTab, onRowClick }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null); 
-  const [expandedCardId, setExpandedCardId] = useState(null); 
   const [reports, setReports] = useState([]); 
   const [loading, setLoading] = useState(true);
 
