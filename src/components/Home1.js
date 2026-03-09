@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './css/Home1.module.css'; // ตรวจสอบ path CSS
 
 // Import Icons for Content (Search & Cards)
-import { Search, X } from 'lucide-react';ฃ
+import { Search, X } from 'lucide-react';
 // Import Icons for Bottom Menu & Logout
 import {
   FaMapMarkedAlt,
