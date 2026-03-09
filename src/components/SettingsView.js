@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import styles from "./css/SettingsView.module.css"; 
 import {
   FaMapMarkedAlt, FaCog, FaTimes, FaUnlockAlt, 
-  FaSyncAlt, FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
-  FaCheckCircle, FaPhoneAlt, FaCity, FaRegCopy, FaSpinner
+  FaEye, FaEyeSlash, FaQrcode, FaLink, FaEdit, FaImage,
+   FaPhoneAlt, FaCity, FaRegCopy, FaSpinner
 } from "react-icons/fa";
 
 // ------------------------------------------------------------------
