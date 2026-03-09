@@ -6,7 +6,6 @@ import "cally";
 
 // ------------------------- Helper
 const toYYYYMMDD = (d) => (d ? d.toISOString().split("T")[0] : null);
-
 const truncateText = (text, maxLength) => {
   if (!text) return "";
   if (text.length <= maxLength) {
